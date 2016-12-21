@@ -2,7 +2,7 @@
 Nodyna is a tool to mark every dynamic statement (send, instance_exec, instance_eval, eval, define_method, const_get, and const_set) in the Ruby files. This helps developers to see where they are using the dynamic statements. Furthermore, the tool also allows developers to classificate the use of dyanamic statements.
 
 ## Dependencies
-Nodyna use the followings libraries:
+Nodyna uses the followings libraries:
 - [ruby_parser](https://github.com/seattlerb/ruby_parser), install it using the command `sudo gem install ruby_parser`
 - [sexp_processor](https://github.com/seattlerb/sexp_processor), intall it using the command `sudo gem install sexp_processor`
 
