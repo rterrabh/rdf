@@ -21,14 +21,14 @@ After installing all the dependencies, import nodyna for your project (`require_
 
 ## Dataset
 Nodyna was used to analyze the dynamic statements of the following Ruby projects:
-- [Active Admin](https://github.com/rterrabh/nodyna/tree/master/verificador)
-- [diaspora*](https://github.com/rterrabh/nodyna/tree/master/verificador)
-- [Discourse](https://github.com/rterrabh/nodyna/tree/master/verificador)
-- [Gitlab](https://github.com/rterrabh/nodyna/tree/master/verificador)
-- [Homebrew](https://github.com/rterrabh/nodyna/tree/master/verificador)
-- [Paperclip](https://github.com/rterrabh/nodyna/tree/master/verificador)
-- [Rails](https://github.com/rterrabh/nodyna/tree/master/verificador)
-- [Rails Admin](https://github.com/rterrabh/nodyna/tree/master/verificador)
-- [Ruby](https://github.com/rterrabh/nodyna/tree/master/verificador)
-- [Spree](https://github.com/rterrabh/nodyna/tree/master/verificador)
+- [Active Admin](https://github.com/rterrabh/nodyna/tree/master/dataset/activeadmin)
+- [diaspora*](https://github.com/rterrabh/nodyna/tree/master/dataset/diaspora)
+- [Discourse](https://github.com/rterrabh/nodyna/tree/master/dataset/discourse)
+- [Gitlab](https://github.com/rterrabh/nodyna/tree/master/dataset/gitlabhq)
+- [Homebrew](https://github.com/rterrabh/nodyna/tree/master/dataset/homebrew)
+- [Paperclip](https://github.com/rterrabh/nodyna/tree/master/dataset/paperclip)
+- [Rails](https://github.com/rterrabh/nodyna/tree/master/dataset/rails)
+- [Rails Admin](https://github.com/rterrabh/nodyna/tree/master/dataset/rails_admin)
+- [Ruby](https://github.com/rterrabh/nodyna/tree/master/dataset/ruby)
+- [Spree](https://github.com/rterrabh/nodyna/tree/master/dataset/spree)
 
