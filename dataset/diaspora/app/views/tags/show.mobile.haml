@@ -1,0 +1,18 @@
+-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+-#   licensed under the Affero General Public License version 3 or later.  See
+-#   the COPYRIGHT file.
+
+%h1
+  = @stream.display_tag_name
+- if user_signed_in?
+  - unless tag_followed?
+    .btn.btn-success.tag_following_action{data: {name: @stream.tag_name}}
+      = t(".follow", tag: @stream.tag_name)
+  - else
+    .btn.btn-danger.tag_following_action{data: {name: @stream.tag_name}}
+      = t(".stop_following", tag: @stream.tag_name)
+
+#main_stream.stream
+  = render 'shared/stream', :posts => @stream.stream_posts
+  = render 'shared/stream_more_button'
+

@@ -1,0 +1,39 @@
+-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
+-#   licensed under the Affero General Public License version 3 or later.  See
+-#   the COPYRIGHT file.
+
+- conversation = visibility.conversation
+.conversation-wrapper{ :"data-conversation-path" => conversation_path(conversation) }
+  .stream_element.conversation{data:  {guid: conversation.id},
+                               class: conversation_class(conversation, visibility.unread, @conversation.try(:id))}
+    .media
+      .img
+        - other_participants = conversation.ordered_participants - [current_user.person]
+        - if other_participants.first.present?
+          = person_image_tag(other_participants.first)
+          - if other_participants.count > 1
+            .participants_count
+              = other_participants.count - 1
+
+      .bg
+        .badge.badge-dafault.message_count
+          = conversation.messages.size
+        - if visibility.unread > 0
+          .badge.badge-important.unread_message_count
+            = visibility.unread
+        .subject
+          %div{ :class => direction_for(conversation.subject) }
+            = conversation.subject
+        .timestamp
+          = timeago(conversation.updated_at)
+        .last_author
+          - if conversation.last_author.present?
+            = conversation.last_author.name
+        .last_message
+          - if conversation.messages.present?
+            %em
+              = conversation.messages.last.text
+        - if other_participants.count > 1
+          .participants
+            - other_participants.drop(1).take(15).each do |participant|
+              = person_image_tag(participant)

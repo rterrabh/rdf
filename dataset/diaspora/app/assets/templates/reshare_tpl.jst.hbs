@@ -1,0 +1,37 @@
+<div class="reshare">
+  <div class="media">
+    {{#if root}}
+      {{#with root}}
+        <a href="/people/{{author.guid}}" class="img {{{hovercardable this}}}">
+          {{{personImage author 'small'}}}
+        </a>
+
+        <div class="bd">
+          <div>
+            {{#linkToAuthor author}}
+              {{name}}
+            {{/linkToAuthor}}
+
+            <span class="details grey">
+              -
+              <a href="/posts/{{id}}">
+                <time class="timeago" datetime="{{created_at}}"/>
+              </a>
+
+              {{#if interactions.reshares_count}}
+                -
+                {{t "stream.reshares" count=interactions.reshares_count}}
+              {{/if}}
+            </span>
+          </div>
+      {{/with}}
+
+        {{> status-message}}
+      </div>
+    {{else}}
+      <p>
+        {{t "stream.original_post_deleted"}}
+      </p>
+    {{/if}}
+  </div>
+</div>

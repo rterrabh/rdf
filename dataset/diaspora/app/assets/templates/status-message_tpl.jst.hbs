@@ -1,0 +1,36 @@
+{{#if largePhoto}}
+  <div class="photo_attachments">
+    <a href="#" class="stream-photo-link">
+      {{#with largePhoto}}
+        <img src="{{sizes.large}}" class="stream-photo big_stream_photo" data-small-photo="{{sizes.small}}" data-full-photo="{{sizes.large}}" rel="lightbox">
+      {{/with}}
+    </a>
+
+    {{#each smallPhotos}}
+      <a href="#" class="stream-photo-link">
+        <img src="{{sizes.small}}" class="stream-photo thumb_small" data-small-photo="{{sizes.small}}" data-full-photo="{{sizes.large}}" rel="lightbox">
+      </a>
+    {{/each}}
+  </div>
+{{/if}}
+
+<div class="collapsible">
+  <div class="markdown-content">
+    {{#if text}}
+      {{{text}}}
+    {{else}}
+      {{#unless largePhoto}}
+        {{#if isReshare}}
+          <div class="reshare">
+            <p>
+              {{t "stream.original_post_deleted"}}
+            </p>
+          </div>
+        {{/if}}
+      {{/unless}}
+    {{/if}}
+  </div>
+  <div class="oembed"></div>
+  <div class="opengraph"></div>
+  <div class="poll"></div>
+</div>

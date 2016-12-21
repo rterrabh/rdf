@@ -1,0 +1,192 @@
+/**
+ * MR -> show: Automerge widget
+ *
+ */
+.mr-state-widget {
+  background: #FAFAFA;
+  margin-bottom: 20px;
+  color: #666;
+  border: 1px solid #e5e5e5;
+  @include box-shadow(0 1px 1px rgba(0, 0, 0, 0.05));
+  @include border-radius(3px);
+
+  form {
+    margin-bottom: 0;
+    .clearfix {
+      margin-bottom: 0;
+    }
+  }
+
+  .accept-merge-holder {
+    .accept-action {
+      display: inline-block;
+    }
+
+    .accept-control {
+      display: inline-block;
+      margin: 0;
+      margin-left: 20px;
+      padding: 5px;
+      line-height: 20px;
+
+      .remove_source_checkbox {
+        margin: 0;
+      }
+    }
+  }
+
+  .ci_widget {
+    border-bottom: 1px solid #EEE;
+
+    i {
+      margin-right: 4px;
+    }
+
+    &.ci-success {
+      color: $gl-success;
+    }
+
+    &.ci-skipped {
+      background-color: #eee;
+      color: #888;
+    }
+
+    &.ci-pending,
+    &.ci-running {
+      color: $gl-warning;
+    }
+
+    &.ci-failed,
+    &.ci-canceled,
+    &.ci-error {
+      color: $gl-danger;
+    }
+  }
+
+  .mr-widget-body,
+  .ci_widget,
+  .mr-widget-footer {
+    padding: 15px;
+  }
+
+  .mr-widget-body {
+    h4 {
+      font-weight: bold;
+      margin: 5px 0;
+    }
+
+    p:last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .mr-widget-footer {
+    border-top: 1px solid #EEE;
+  }
+
+  .ci-coverage {
+    float: right;
+  }
+}
+
+@media(min-width: $screen-sm-max) {
+  .merge-request .merge-request-tabs{
+    li {
+      a {
+        padding: 15px 40px;
+        font-size: 14px;
+      }
+    }
+  }
+}
+
+.merge-request .merge-request-tabs{
+  margin-top: 30px;
+  margin-bottom: 20px;
+}
+
+.mr_source_commit,
+.mr_target_commit {
+  .commit {
+    margin: 0;
+    padding: 2px 0;
+    list-style: none;
+    &:hover {
+      background: none;
+    }
+  }
+}
+
+.label-branch {
+  color: #222;
+  font-family: $monospace_font;
+  font-weight: bold;
+  overflow: hidden;
+}
+
+.mr-list {
+  .merge-request {
+    padding: 10px 15px;
+    position: relative;
+
+    .merge-request-title {
+      margin-bottom: 5px;
+      font-size: $list-font-size;
+      font-weight: bold;
+    }
+
+    .merge-request-info {
+      color: #999;
+      font-size: 13px;
+    }
+
+  }
+
+  .merge-request-labels {
+    display: inline-block;
+  }
+
+  .merge-request-no-comments {
+    opacity: 0.5;
+  }
+}
+
+.merge-request-angle {
+  text-align: center;
+  margin: 0 auto;
+  font-size: 2em;
+  line-height: 1.1;
+}
+
+.merge-request-form-info {
+  padding-top: 15px;
+}
+
+// hide mr close link for inline diff comment form
+.diff-file .close-mr-link,
+.diff-file .reopen-mr-link {
+  display: none;
+}
+
+.merge-request-show-labels {
+  a {
+    margin-right: 5px;
+    margin-bottom: 5px;
+    display: inline-block;
+    .color-label {
+      padding: 6px 10px;
+    }
+  }
+}
+
+.merge-request-form .select2-container {
+  width: 250px !important;
+}
+
+#modal_merge_info .modal-dialog {
+  width: 600px;
+}
+
+.mr-source-target {
+  line-height: 31px;
+}

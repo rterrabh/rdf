@@ -1,0 +1,79 @@
+= content_for :meta_tags do
+  - if current_user
+    = auto_discovery_link_tag(:atom, namespace_project_path(@project.namespace, @project, format: :atom, private_token: current_user.private_token), title: "#{@project.name} activity")
+
+- if current_user && can?(current_user, :download_code, @project)
+  = render 'shared/no_ssh'
+  = render 'shared/no_password'
+
+- if prefer_readme?
+  = render 'projects/last_push'
+
+= render "home_panel"
+
+.project-stats
+  %ul.nav.nav-pills
+    %li
+      = link_to namespace_project_commits_path(@project.namespace, @project, @ref || @repository.root_ref) do
+        = pluralize(number_with_delimiter(@project.commit_count), 'commit')
+    %li
+      = link_to namespace_project_branches_path(@project.namespace, @project) do
+        = pluralize(number_with_delimiter(@repository.branch_names.count), 'branch')
+    %li
+      = link_to namespace_project_tags_path(@project.namespace, @project) do
+        = pluralize(number_with_delimiter(@repository.tag_names.count), 'tag')
+
+    - if !prefer_readme? && @repository.readme
+      %li
+        = link_to 'Readme', readme_path(@project)
+
+    - if @repository.changelog
+      %li
+        = link_to 'Changelog', changelog_path(@project)
+
+    - if @repository.license
+      %li
+        = link_to 'License', license_path(@project)
+
+    - if @repository.contribution_guide
+      %li
+        = link_to 'Contribution guide', contribution_guide_path(@project)
+
+    - if current_user && can_push_branch?(@project, @project.default_branch)
+      - unless @repository.changelog
+        %li.missing
+          = link_to add_changelog_path(@project) do
+            Add Changelog
+      - unless @repository.license
+        %li.missing
+          = link_to add_license_path(@project) do
+            Add License
+      - unless @repository.contribution_guide
+        %li.missing
+          = link_to add_contribution_guide_path(@project) do
+            Add Contribution guide
+
+- if @project.archived?
+  .text-warning.center.prepend-top-20
+    %p
+      = icon("exclamation-triangle fw")
+      Archived project! Repository is read-only
+
+%hr
+%section
+  - if prefer_readme?
+    = render 'projects/readme'
+  - else
+    = render 'projects/activity'
+
+
+- if current_user
+  - access = user_max_access_in_project(current_user, @project)
+  - if access
+    %hr
+    %p.light
+      You have #{access} access to this project.
+      - if @project.project_member_by_id(current_user)
+        = link_to leave_namespace_project_project_members_path(@project.namespace, @project),
+          data: { confirm: leave_project_message(@project) }, method: :delete, title: 'Leave project', class: 'cred' do
+          Leave this project

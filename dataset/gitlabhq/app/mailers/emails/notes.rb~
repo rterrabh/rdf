@@ -1,0 +1,46 @@
+module Emails
+  module Notes
+    def note_commit_email(recipient_id, note_id)
+      @note = Note.find(note_id)
+      @commit = @note.noteable
+      @project = @note.project
+      @target_url = namespace_project_commit_url(@project.namespace, @project,
+                                                 @commit, anchor:
+                                                 "note_#{@note.id}")
+      mail_answer_thread(@commit,
+                         #nodyna <ID:send-63> <not yet classified>
+                         from: sender(@note.author_id),
+                         to: recipient(recipient_id),
+                         subject: subject("#{@commit.title} (#{@commit.short_id})"))
+    end
+
+    def note_issue_email(recipient_id, note_id)
+      @note = Note.find(note_id)
+      @issue = @note.noteable
+      @project = @note.project
+      @target_url = namespace_project_issue_url(@project.namespace, @project,
+                                                @issue, anchor:
+                                                "note_#{@note.id}")
+      mail_answer_thread(@issue,
+                         #nodyna <ID:send-64> <not yet classified>
+                         from: sender(@note.author_id),
+                         to: recipient(recipient_id),
+                         subject: subject("#{@issue.title} (##{@issue.iid})"))
+    end
+
+    def note_merge_request_email(recipient_id, note_id)
+      @note = Note.find(note_id)
+      @merge_request = @note.noteable
+      @project = @note.project
+      @target_url = namespace_project_merge_request_url(@project.namespace,
+                                                        @project,
+                                                        @merge_request, anchor:
+                                                        "note_#{@note.id}")
+      mail_answer_thread(@merge_request,
+                         #nodyna <ID:send-65> <not yet classified>
+                         from: sender(@note.author_id),
+                         to: recipient(recipient_id),
+                         subject: subject("#{@merge_request.title} (##{@merge_request.iid})"))
+    end
+  end
+end

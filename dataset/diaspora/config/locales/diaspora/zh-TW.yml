@@ -1,0 +1,1167 @@
+#   Copyright (c) 2010-2013, Diaspora Inc.  This file is
+#   licensed under the Affero General Public License version 3 or later.  See
+#   the COPYRIGHT file.
+
+
+
+zh-TW:
+  _applications: "應用程式"
+  _comments: "意見"
+  _contacts: "聯絡人"
+  _help: "說明"
+  _home: "我家"
+  _photos: "相片"
+  _services: "服務"
+  _statistics: "統計"
+  _terms: "使用條款"
+  account: "帳號"
+  activerecord:
+    errors:
+      models:
+        contact:
+          attributes:
+            person_id:
+              taken: "對此使用者必須為不重複的聯絡人。"
+        person:
+          attributes:
+            diaspora_handle:
+              taken: "已經有人使用此帳號"
+        poll:
+          attributes:
+            poll_answers:
+              not_enough_poll_answers: "提供的投票選項不足。"
+        poll_participation:
+          attributes:
+            poll:
+              already_participated: "你已經參加這次票選了！"
+        request:
+          attributes:
+            from_id:
+              taken: "與已經存在了的請求重複。"
+        reshare:
+          attributes:
+            root_guid:
+              taken: "很棒對吧？你已經轉貼過該篇貼文了！"
+        user:
+          attributes:
+            email:
+              taken: "已經有人使用。"
+            person:
+              invalid: "不合格。"
+            username:
+              invalid: "不合格。只能夠使用字母，數字，以及底線符號。"
+              taken: "已經有人使用。"
+  admins:
+    admin_bar:
+      correlations: "關聯性"
+      pages: "分頁"
+      pod_stats: "豆莢統計資料"
+      report: "回報"
+      sidekiq_monitor: "Sidekiq 監視器"
+      user_search: "使用者搜尋"
+      weekly_user_stats: "使用者統計週報"
+    correlations:
+      correlations_count: "與登入次數間的關聯"
+    stats:
+      2weeks: "兩個禮拜"
+      50_most: "最夯的50個標籤"
+      comments:
+        other: "%{count}個意見"
+        zero: "%{count}個意見"
+      current_segment: "目前時間區間在<b>%{post_day}</b>天中，平均每個使用者有<b>%{post_yest}</b>則貼文"
+      daily: "一天"
+      display_results: "顯示時間區間<b>%{segment}</b>內的結果"
+      go: "衝"
+      month: "一個月"
+      posts:
+        other: "%{count}篇貼文"
+        zero: "%{count}篇貼文"
+      shares:
+        other: "分享%{count}次"
+        zero: "分享%{count}次"
+      tag_name: "標籤名：<b>%{name_tag}</b> 數目：<b>%{count_tag}</b>"
+      usage_statistic: "使用狀況統計"
+      users:
+        other: "%{count}個使用者"
+        zero: "%{count}個使用者"
+      week: "一個禮拜"
+    user_entry:
+      account_closed: "帳號關閉了"
+      diaspora_handle: "Disaspora 帳號"
+      email: "電子信箱"
+      id: "識別碼"
+      last_seen: "最後看見時間"
+      ? "no"
+      : 否
+      unknown: "不知道"
+      ? "yes"
+      : 是
+    user_search:
+      account_closing_scheduled: "%{name} 這個帳號已經排定要關閉了。過一段時間後就會被執行了..."
+      account_locking_scheduled: "%{name} 這個帳號已經排定要上鎖了。過一段時間後就會被執行了..."
+      account_unlocking_scheduled: "%{name} 這個帳號已經排定要解鎖了。過一段時間後就會被執行了..."
+      add_invites: "增加邀請次數"
+      are_you_sure: "確定要關閉這個帳號嗎？"
+      are_you_sure_lock_account: "你確定要把帳號上鎖嗎？"
+      are_you_sure_unlock_account: "你確定要把帳號解鎖嗎？"
+      close_account: "關閉帳號"
+      email_to: "寄電子郵件邀請"
+      under_13: "顯示低於 13 歲的使用者(基於美國兒童網路隱私保護法案, COPPA)"
+      users:
+        other: "找到%{count}個使用者"
+        zero: "找到%{count}個使用者"
+      view_profile: "看個人檔案"
+      you_currently:
+        other: "你目前還可以邀請%{user_invitation}次 %{link}"
+    weekly_user_stats:
+      amount_of:
+        other: "本週新使用者數目：%{count}"
+        zero: "本週新使用者數目：0"
+      current_server: "伺服器現在的日期是%{date}"
+  ago: "%{time}前"
+  all_aspects: "所有話題"
+  application:
+    helper:
+      unknown_person: "不明聯絡人"
+      video_title:
+        unknown: "影片標題不明"
+  are_you_sure: "確定？"
+  are_you_sure_delete_account: "確定要關閉帳號嗎？帳號無法復原喔！"
+  aspect_memberships:
+    destroy:
+      failure: "從面向中移除聯絡人失敗"
+      no_membership: "在面向中找不到選擇的聯絡人"
+      success: "從面向中移除聯絡人成功"
+  aspects:
+    add_to_aspect:
+      failure: "將聯絡人加入至面向失敗。"
+      success: "將聯絡人加入至面向成功。"
+    aspect_listings:
+      add_an_aspect: "+ 新增面向"
+      deselect_all: "全不選"
+      edit_aspect: "編輯%{name}"
+      select_all: "全選"
+    aspect_stream:
+      make_something: "做點什麼"
+      stay_updated: "隨時保持最新狀態"
+      stay_updated_explanation: "你的主流水帳會充滿了你的聯絡人，追蹤的標籤，以及其他有創意的社群成員的貼文。"
+    contacts_not_visible: "此話題中的聯絡人彼此不可見"
+    contacts_visible: "此話題中的聯絡人彼此可見"
+    create:
+      failure: "創造面向失敗。"
+      success: "新的面向%{name}已經造出來了"
+    destroy:
+      failure: "無法刪除%{name}，因為它不是空的。"
+      success: "成功刪除%{name}了。"
+    edit:
+      aspect_chat_is_enabled: "面向中的聯絡人可以和你聊天。"
+      aspect_chat_is_not_enabled: "面向中的聯絡人不能和你聊天。"
+      aspect_list_is_not_visible: "在這個面向中的連絡人沒辦法看見哪些人在同一個面向中"
+      aspect_list_is_visible: "在這個面向中的連絡人可以互相看見他們在同一個面向中"
+      confirm_remove_aspect: "確定要刪除這個話題嗎？"
+      grant_contacts_chat_privilege: "要把聊天的權限給面向中的聯絡人嗎？"
+      make_aspect_list_visible: "讓此話題中的聯絡人彼此可見嗎？"
+      remove_aspect: "刪除這個話題"
+      rename: "改名"
+      set_visibility: "設定可見範圍"
+      update: "更新"
+      updating: "更新中"
+    index:
+      diaspora_id:
+        content_1: "你的 Diaspora 帳號是："
+        content_2: "透過帳號名稱，其他人可以在 diaspora* 找到你。"
+        heading: "Diaspora 帳號"
+      donate: "捐助"
+      handle_explanation: "這是你的 Diaspora 帳號。就像電子信箱一樣，其他人可以透過它來聯絡你。"
+      help:
+        any_problem: "有問題嗎？"
+        contact_podmin: "聯絡豆莢管理員！"
+        do_you: "你是否："
+        email_feedback: "也可以%{link}你的意見來"
+        email_link: "寄信"
+        feature_suggestion: "...想建議%{link}嗎？"
+        find_a_bug: "...找到一隻%{link}嗎？"
+        have_a_question: "...有個%{link}嗎？"
+        here_to_help: "diaspora* 社群來了！"
+        mail_podmin: "莢主的電郵信箱"
+        need_help: "要幫忙嗎？"
+        tag_bug: "臭蟲"
+        tag_feature: "功能"
+        tag_question: "問題"
+        tutorial_link_text: "個別指導"
+        tutorials_and_wiki: "%{faq}，%{tutorial}，還有%{wiki}：讓你順利上手的好幫手。"
+      introduce_yourself: "這是你的流水帳。跳進來介紹你自己吧。"
+      keep_diaspora_running: "每個月固定捐款給 diaspora* 幫助研發繼續成長"
+      keep_pod_running: "讓 %{pod} 高速運轉，現在就開始固定每月捐助，來供應伺服器的咖啡耗材吧！"
+      new_here:
+        follow: "追蹤 %{link} 來歡迎 diaspora* 的新人！"
+        learn_more: "進一步了解"
+        title: "歡迎新使用者"
+      no_contacts: "沒有任何聯絡人"
+      no_tags: "+ 找個標籤來追蹤"
+      people_sharing_with_you: "跟你分享的人"
+      post_a_message: "貼訊息 >>"
+      services:
+        content: "你可以將以下服務跟 diaspora* 連結："
+        heading: "連結服務"
+      unfollow_tag: "停止追蹤 #%{tag}"
+      welcome_to_diaspora: "%{name}，歡迎來到 diaspora*！"
+    new:
+      create: "建立"
+      name: "名字(只有你自己看得到)"
+    no_contacts_message:
+      community_spotlight: "社群焦點"
+      or_spotlight: "或者你也可以和 %{link} 分享"
+      try_adding_some_more_contacts: "你可以搜尋或邀請更多聯絡人。"
+      you_should_add_some_more_contacts: "新增更多聯絡人吧！"
+    no_posts_message:
+      start_talking: "都還沒有人出聲！"
+    one: "1個話題"
+    other: "%{count}個話題"
+    seed:
+      acquaintances: "認識的人"
+      family: "家人"
+      friends: "朋友"
+      work: "工作"
+    update:
+      failure: "你的面向%{name}名稱太長了無法儲存。"
+      success: "你的面向%{name}已經編輯完成了。"
+    zero: "不屬於任何話題"
+  back: "上一步"
+  blocks:
+    create:
+      failure: "我無法忽視這個使用者。 #藉口"
+      success: "好，你再也不會在流水帳中看到這個使用者了。 #安靜無聲!"
+    destroy:
+      failure: "我無法停止忽視這個使用者。 #藉口"
+      success: "看看他們要說什麼吧！ #打招呼"
+  bookmarklet:
+    explanation: "將此連結加入書籤 => %{link}，可以隨時在diaspora*發文"
+    heading: "書籤小程式"
+    post_something: "貼到 diaspora*"
+    post_success: "貼好了！關掉中！"
+  cancel: "取消"
+  comments:
+    new_comment:
+      comment: "發表意見"
+      commenting: "意見發表中..."
+    one: "1個意見"
+    other: "%{count}則意見"
+    zero: "沒有意見"
+  contacts:
+    create:
+      failure: "建立聯繫失敗"
+    index:
+      add_a_new_aspect: "加入新面向"
+      add_contact: "加聯絡人"
+      add_to_aspect: "加聯絡人到%{name}"
+      all_contacts: "所有聯絡人"
+      community_spotlight: "社群焦點"
+      my_contacts: "我的聯絡人"
+      no_contacts: "你好像應該要多加點聯絡人！"
+      no_contacts_in_aspect: "你在這個面向中還沒有任何聯絡人。下面是你可以加入到這個面向的聯絡人列表。"
+      no_contacts_message: "來看看 %{community_spotlight}"
+      only_sharing_with_me: "和我分享的人"
+      remove_contact: "刪聯絡人"
+      start_a_conversation: "開始對話"
+      title: "聯絡人"
+      user_search: "使用者搜尋"
+      your_contacts: "你的聯絡人"
+    one: "1個聯絡人"
+    other: "%{count}個聯絡人"
+    sharing:
+      people_sharing: "跟你分享的人："
+    spotlight:
+      community_spotlight: "社群焦點"
+      suggest_member: "推薦會員"
+    zero: "聯絡人"
+  conversations:
+    conversation:
+      participants: "參加人員"
+    create:
+      fail: "無效的訊息"
+      no_contact: "喂，你要先新增聯絡人才行！"
+      sent: "訊息送出去了"
+    destroy:
+      delete_success: "對話成功刪掉了"
+      hide_success: "對話成功隱藏起來了"
+    helper:
+      new_messages:
+        other: "有%{count}則新訊息"
+        zero: "沒有新訊息"
+    index:
+      conversations_inbox: "交談 - 收件匣"
+      create_a_new_conversation: "開始新的交談"
+      inbox: "收件匣"
+      new_conversation: "開始交談"
+      no_conversation_selected: "沒有選取任何對話"
+      no_messages: "沒有訊息"
+    new:
+      abandon_changes: "放棄目前變動嗎？"
+      send: "傳送"
+      sending: "傳送中..."
+      subject: "主旨"
+      to: "收件人"
+    new_conversation:
+      fail: "訊息無效"
+    show:
+      delete: "刪除對話"
+      hide: "把對話隱藏並且消音"
+      reply: "回覆"
+      replying: "回覆中..."
+  date:
+    formats:
+      birthday: "%B%d日"
+      birthday_with_year: "%Y %B %d"
+      fullmonth_day: "%B%d日"
+  delete: "刪除"
+  email: "電子信箱"
+  error_messages:
+    helper:
+      correct_the_following_errors_and_try_again: "請修正以下錯誤後再試一次。"
+      invalid_fields: "欄位無效"
+    login_try_again: "請<a href='%{login_link}'>登入</a>後再試一次。"
+    post_not_public: "你要看的貼文沒有公開！"
+    post_not_public_or_not_exist: "你要看的貼文沒有公開，或是根本不存在！"
+  fill_me_out: "填寫此欄"
+  find_people: "找人或 #標籤"
+  help:
+    account_and_data_management:
+      close_account_a: 到你的設定頁面的最下面，按"關帳號"的按鈕。
+      close_account_q: "我要怎樣刪掉我的豆子（帳號）？"
+      data_other_podmins_a: "當你開始和其它豆莢裡的某人分享以後，你和他們分享的任何貼文，以及你的帳號資料，都會儲存（或是暫存）在他們的豆莢裡，因此他們豆莢的資料庫管理員就有辦法可以讀得到。當你刪掉貼文或是帳號資料，這些資料不但會從你的豆莢刪掉，也會從之前有儲存這些資料的其他豆莢刪掉。"
+      data_other_podmins_q: "其它豆莢的管理員可以看到多少我的資料？"
+      data_visible_to_podmin_a: "豆莢和豆莢間的通訊會全程加密（用 SSL 和 diaspora* 自己的傳輸層加密），但是存在豆莢理的資料是沒有加密的。所以，如果資料庫管理員（通常也是管理豆莢的人）想看的話，他/她可以看到你全部的個人資料，以及你發表的任何東西（其實對於大多數的，有存放個人資料的網站來說，這點都是一樣的）。因此如果你能管理你自己的豆莢，當然更能確保你的隱私，因為只能資料庫的存取權是由你控制。"
+      data_visible_to_podmin_q: "我所在豆莢的管理員可以看到多少我的資料？"
+      download_data_a: "可以的。在設定頁面的帳號頁籤的最下面，分別有兩個按鈕可以讓你下載資料。"
+      download_data_q: "我可以把豆子裡全部的資料都下載下來嗎？"
+      move_pods_a: "目前不行，未來我們會加入匯出匯入的功能，你就可以從一個豆莢匯出後，再從另一個豆莢匯入了。不過你還是可以開一個新的帳號和面向，然後把一個個聯絡人重加一次，請他們也重加你一次。"
+      move_pods_q: "要怎樣把我的豆子（帳號）搬到別的豆莢去呢？"
+      title: "帳號與資料管理"
+    aspects:
+      contacts_know_aspect_a: "不知道。無論如何他們都看不到面向的名稱。"
+      contacts_know_aspect_q: "我的聯絡人知道我把他們放到哪些面向裡面嗎？"
+      contacts_visible_q: "\"讓面向中的聯絡人可以互相看得到\"是什麼意思？"
+      remove_notification_q: "如果某人從一個話題，或所有話題中遭到移除，他們會收到通知嗎？"
+      restrict_posts_i_see_a: "可以。請點一下側邊欄的你的面向，然後用點個別的面向來選擇，或是取消選擇他們。只有被選擇的貼文才會出現在流水帳裡。"
+      restrict_posts_i_see_q: "我可以過濾只看到來自特定面向的貼文嗎？"
+      title: "面向"
+      what_is_an_aspect_a: "面向是將你在的聯絡人分群的方式。用來比喻你展現給這個世界的其中一面。比如說你在職場的一面，你在家庭中的一面，或是你對某個團體的朋友展現的一面。"
+      what_is_an_aspect_q: "什麼是面向？"
+      who_sees_post_a: "當你發表了一篇有限的貼文，就只有你那一個面向（或是那些面向，你也可以選擇好幾個面向）中的人才看得到。不在那個（或那些）面向中的聯絡人，就看不到那篇貼文，除非你把它公開。只有公開的貼文可以讓不在你任何面向中的其它人看到。"
+      who_sees_post_q: "當我貼文到一個面向時，誰看得到？"
+    faq: "常見問答"
+    foundation_website: "Diaspora 基金會網站"
+    getting_help:
+      get_support_a_hashtag: "公開用 %{question} 標籤在 diaspora* 上發問"
+      get_support_a_irc: "來%{irc}加入我們（即時聊天）"
+      get_support_a_tutorials: "來看看我們的%{tutorials}"
+      get_support_a_website: "來拜訪%{link}"
+      get_support_a_wiki: "來去%{link}搜尋"
+      get_support_q: "我的疑問在這份常見問題中沒有解答怎麼辦？我還可以在哪裡得到幫助？"
+      getting_started_a: "你運氣很好。來試看看我們專案網站上的%{tutorial_series}吧。我們會一步步帶著你完成註冊過程，並告訴你關於使用 Diaspora* 的基本事項。"
+      getting_started_q: "幫我一下！我需要有人教我怎麼開始！"
+      title: "求助"
+    getting_started_tutorial: "’出發囉‘個別指導系列"
+    irc: "IRC"
+    keyboard_shortcuts:
+      keyboard_shortcuts_li5: "r - 轉貼目前的貼文"
+      keyboard_shortcuts_li6: "m - 展開目前的貼文"
+      keyboard_shortcuts_li7: "o - 開啟目前貼文的第一條連結"
+    pods:
+      find_people_a: "你可以用網頁旁邊的電子郵件連結來邀請你的朋友。也可以追蹤 #標籤 來尋找跟你志同道合的人，當他們發表了你有興趣的貼文時，你就可以將他們加到你的面向裡。你也可以公開貼文大喊你是 #新來的"
+      find_people_q: "我剛剛加入一個豆莢，要怎麼找到其它可以分享的人？"
+      title: "豆莢"
+      use_search_box_a: "如果你知道他們的 diaspora* 識別碼全寫的話（比如說像是 username@podname.org），直接搜尋識別碼就可以了。如果你們在同一個豆莢裡，可以用他們的使用者名稱搜尋。不然就是用他們的檔案名稱（也就是畫面上看到的名字）搜尋看看。如果第一次搜尋不到，就再重試一次看看。"
+      use_search_box_q: "我要怎麼用搜尋框框找到特定的人？"
+      what_is_a_pod_a: "豆莢是一台伺服器，上面跑了 diaspora* 軟體，和整個 diaspora* 網路相連接。用\"豆莢\"這一個詞，是在比喻有如植物的豆莢包含了許多豆子一樣，伺服器上也包含了許多使用者的帳號。網路上會有許許多多的豆莢。你可以加位於其它豆莢的朋友，好跟他們交流。（你也可以想像 diaspora* 豆莢就好像電子郵件的信箱一樣：有公開供應的信箱，也有私人的信箱，甚至如果你肯下功夫，也可以維護自己的信箱。）"
+      what_is_a_pod_q: "什麼是豆莢？"
+    sharing:
+      add_to_aspect_li7: "Amy 會出現在 Ben 聯絡人頁面中的\"和我分享的人\"裡面。"
+      only_sharing_a: 這些人已經把你加到他們的面向中了，但是你的面向中沒有他們。也就是說他們有跟你分享，但是你卻沒有跟他們分享（非對稱的分享）。如果你把他們加到任何一個面向，他們就會出現在那個面向的列表中，而不會在"和我分享的人"裡面。請看上面。
+      only_sharing_q: 出現在聯絡人頁面中"和我分享的人"裡面的人是誰？
+    third_party_tools: "第三方工具"
+    tutorial: "個別指導"
+    tutorials: "個別指導"
+    wiki: "維基"
+  hide: "隱藏"
+  ignore: "忽略"
+  invitation_codes:
+    excited: "%{name} 看到你來覺得很興奮。"
+  invitations:
+    a_facebook_user: "Facebook 使用者"
+    check_token:
+      not_found: "找不到該邀請信物"
+    create:
+      already_contacts: "你已經和這個人相連了"
+      already_sent: "你邀請過這個人了。"
+      empty: "請至少輸入一個電郵信箱"
+      no_more: "你沒有邀請卡了。"
+      note_already_sent: "邀請卡已經寄到這些信箱了：%{emails}"
+      own_address: "不能寄邀請卡到你自己的信箱。"
+      rejected: "以下的電子信箱有問題："
+      sent: "邀請卡已經寄到這些信箱了：%{emails}"
+    edit:
+      accept_your_invitation: "接受邀請"
+      your_account_awaits: "你的帳號在等你！"
+    new:
+      already_invited: "這些人還沒有接受你的邀請："
+      aspect: "面向"
+      check_out_diaspora: "來 diaspora* 看看吧！"
+      codes_left:
+        other: "還可以邀請%{count}個人"
+        zero: "不能邀請更多人了"
+      comma_separated_plz: "可以用逗號分隔來輸入多個電子信箱。"
+      if_they_accept_info: "如果他們接受，就會被加入至你所邀請的面向中。"
+      invite_someone_to_join: "邀請其他人加入 diaspora*！"
+      language: "語言"
+      paste_link: "將這個連結分享給你的朋友，來邀請他們加入 diaspora*，或者也可以直接寄電子郵件給他們。"
+      personal_message: "個人訊息"
+      resend: "重寄"
+      send_an_invitation: "寄邀請卡"
+      send_invitation: "寄邀請卡"
+      sending_invitation: "正在邀請卡..."
+      to: "收件人"
+  layouts:
+    application:
+      back_to_top: "回最上面"
+      powered_by: "強力配置 diaspora*"
+      public_feed: "%{name} 在 diaspora* 的公開發文"
+      source_package: "下載原始碼套件"
+      toggle: "行動切換"
+      whats_new: "有什麼新消息嗎？"
+      your_aspects: "你的面向"
+    header:
+      admin: "管理"
+      blog: "部落格"
+      code: "源碼"
+      help: "說明"
+      login: "登入"
+      logout: "登出"
+      profile: "個人檔案"
+      recent_notifications: "最新消息"
+      settings: "設定"
+      view_all: "檢視全部"
+  likes:
+    likes:
+      people_dislike_this:
+        other: "有%{count}個人說遜"
+        zero: "沒人說遜"
+      people_like_this:
+        other: "有%{count}個人說讚"
+        zero: "沒人說讚"
+      people_like_this_comment:
+        other: "有%{count}個人說讚"
+        zero: "沒人說讚"
+  limited: "設限"
+  more: "更多"
+  next: "後面"
+  no_results: "搜尋沒有結果"
+  notifications:
+    also_commented:
+      other: "%{actors} 也評論了 %{post_author} 的%{post_link}發文"
+      zero: "%{actors} 也評論了 %{post_author} 的%{post_link}發文"
+    also_commented_deleted:
+      other: "%{actors} 對已刪掉的貼文發表了意見。"
+      zero: "%{actors} 對已刪掉的貼文發表了意見。"
+    comment_on_post:
+      other: "%{actors} 評論了你的發文%{post_link}"
+      zero: "%{actors} 評論了你的發文%{post_link}"
+    helper:
+      new_notifications:
+        other: "有%{count}個新消息"
+        zero: "沒有新消息"
+    index:
+      all_notifications: "全部的消息"
+      also_commented: "有其他意見"
+      and: "和"
+      and_others:
+        few: "和其他%{count}個人"
+        many: "和其他%{count}個人"
+        one: "和另外一個人"
+        other: "和其他%{count}個人"
+        two: "以及其他%{count}個"
+        zero: "以外沒有其他人"
+      comment_on_post: "貼文有意見"
+      liked: "有讚"
+      mark_all_as_read: "全部標示為已讀"
+      mark_all_shown_as_read: "把目前顯示的都標示成讀過了"
+      mark_read: "標示為看過了"
+      mark_unread: "標示為沒看過"
+      mentioned: "有被提到"
+      no_notifications: "目前還沒有任何消息。"
+      notifications: "消息"
+      reshared: "有被轉貼"
+      show_all: "看全部"
+      show_unread: "看沒讀過的"
+      started_sharing: "開始分享"
+    liked:
+      other: "%{actors} 說你的發文%{post_link}很讚。"
+      zero: "%{actors} 說你的發文%{post_link}很讚。"
+    liked_post_deleted:
+      other: "%{actors} 說你刪掉了的貼文很讚。"
+      zero: "%{actors} 說你刪掉了的貼文很讚。"
+    mentioned:
+      other: "%{actors} 在%{post_link}中提到了你"
+      zero: "%{actors} 在%{post_link}中提到了你"
+    mentioned_deleted:
+      other: "%{actors} 在已刪掉的貼文中點到了你。"
+      zero: "%{actors} 在已刪掉的貼文中點到了你。"
+    post: "貼文"
+    private_message:
+      other: "%{actors} 寫了訊息給你。"
+      zero: "%{actors} 寫了訊息給你。"
+    reshared:
+      other: "%{actors} 轉貼了你的發文%{post_link}。"
+      zero: "%{actors} 轉貼了你的發文%{post_link}。"
+    reshared_post_deleted:
+      other: "%{actors} 轉貼了你刪掉的貼文。"
+      zero: "%{actors} 轉貼了你刪掉的貼文。"
+    started_sharing:
+      other: "%{actors} 開始跟你分享了。"
+      zero: "%{actors} 開始跟你分享了。"
+  notifier:
+    a_limited_post_comment: "你在 diaspora* 有一則有限貼文上的新評論可看。"
+    a_post_you_shared: "一篇貼文."
+    a_private_message: "你在 diaspora* 有一則新的私人訊息。"
+    accept_invite: "接受來自 diaspora* 的邀請吧！"
+    click_here: "按這裡"
+    comment_on_post:
+      reply: "回或看 %{name} 的貼文 >"
+    confirm_email:
+      click_link: "請點以下連結，來啟用你新的電子信箱 %{unconfirmed_email}："
+      subject: "請啟用你新的電子信箱 %{unconfirmed_email}"
+    email_sent_by_diaspora: "這封電子郵件是從 %{pod_name} 寄出。如果你不想再收到這類的信件，"
+    export_email:
+      body: |-
+          嗨， %{name}，
+          你的資料已經處理好了，你可以去以下連結下載: %{url}
+
+          祝快樂！
+          Diaspora* 電郵機器人
+      subject: "%{name}，你的個人資料已經可以下載了"
+    export_failure_email:
+      body: |-
+          嗨，%{name}，
+          我們在處理你要下載的個人資料時，發生了問題。
+          要麻煩你再重試一次！
+
+          祝快樂！
+          Diaspora* 電郵機器人
+      subject: "很抱歉，%{name}，你的資料有問題"
+    export_photos_email:
+      body: |-
+          嗨，%{name}！
+          你的相片已經處理好了，請用這個連結來下載: %{url}
+
+          祝快樂，
+          Diaspora* 電郵機器人敬上。
+      subject: "可以下載相片了，%{name}"
+    export_photos_failure_email:
+      body: |-
+          嗨，%{name}！
+          我們在準備你的相片下載檔案時發生了錯誤，麻煩你重試一次！
+
+          很抱歉，
+          Diaspora* 電郵機器人敬上。
+      subject: "你的相片有問題，%{name}"
+    hello: "%{name} 你好！"
+    invite:
+      message: |-
+          你好！
+
+          有人邀請你加入 Diaspora* 喔！
+
+          請按這個連結來開始使用吧
+
+          [%{invite_url}][1]
+
+
+          祝順利！
+
+          Diaspora* 電郵機器人敬上。
+
+          [1]: %{invite_url}
+    invited_you: "%{name} 邀請你來用 diaspora*"
+    liked:
+      liked: "%{name} 說你的貼文很讚"
+      view_post: "看貼文 >"
+    mentioned:
+      mentioned: "在貼文中點到了你："
+      subject: "%{name} 在 diaspora* 點到了你"
+    private_message:
+      reply_to_or_view: "回或看這次對話 >"
+    remove_old_user:
+      body: |-
+          你好，
+
+          因為你已經有 %{after_days} 天沒有使用在 %{pod_url} 的帳號，我們覺得似乎你已經不想要它了。我們為了提供給這個 diaspora* 豆莢的使用者最好的效率，因此會定時從資料庫移除掉那些已經沒人要的帳號。
+
+          我們希望你可以繼續參與 diaspora* 社群，因此只要你還想要你的帳號，我們就會繼續保留它。
+
+          如果你還想要自己的帳號，你唯一需要做的只有在%{remove_after}之前用這個帳號來登入。登入後，建議你花點時間看看 diaspora*, 相信你會發現從上次來到現在已經改變了很多，我們也希望你會希望這些改進。你也可以追蹤一些 #標籤 來找到喜歡的內容。
+
+          登入網址是: %{login_url} 如果你忘記了要怎麽登入，也可以在那個頁面找到提示。
+
+          希望可以再次見到你！
+
+          Diaspora* 電子郵件機器人。
+      subject: "你的 diaspora* 帳號因為太久沒有活動而被標上移除記號了"
+    report_email:
+      body: |-
+          你好，
+          識別碼%{id}的%{type}被標記為有攻擊性了。
+          [%{url}](註1)
+          請盡快檢查看看！
+
+          謝謝！
+          Disaspora* 電子郵件機器人
+
+          註1: %{url}
+      subject: "有新的%{type}被標記為有攻擊性"
+      type:
+        comment: "意見"
+        post: "貼文"
+    reshared:
+      reshared: "%{name} 轉貼了你的貼文"
+      view_post: "看貼文 >"
+    single_admin:
+      admin: "你的 diaspora* 管理員"
+      subject: "關於你的 diaspora* 帳號："
+    started_sharing:
+      sharing: "開始跟你分享了！"
+      subject: "%{name} 開始在 diaspora* 跟你分享了"
+      view_profile: "看 %{name} 的個人檔案"
+    thanks: "謝謝，"
+    to_change_your_notification_settings: "來更改消息通知的設定"
+  nsfw: "NSFW(上班時不宜)"
+  ok: "確定"
+  or: "或是"
+  password: "密碼"
+  password_confirmation: "確認密碼"
+  people:
+    add_contact:
+      invited_by: "邀請你的使用者"
+    add_contact_small:
+      add_contact_from_tag: "從標籤新增聯絡人"
+    aspect_list:
+      edit_membership: "編輯所屬面向"
+    helper:
+      is_not_sharing: "%{name} 沒有跟你分享"
+      is_sharing: "%{name} 正在跟你分享中"
+      results_for: "%{params}的搜尋結果"
+    index:
+      couldnt_find_them: "找不到他們嗎？"
+      looking_for: "在找標記為 %{tag_link} 的貼文嗎？"
+      no_one_found: "...找不到任何東西。"
+      no_results: "喂！搜尋要有目標。"
+      results_for: "符合搜尋結果的使用者："
+      search_handle: "確定要用你朋友們的 diaspora* 識別碼來找到他們。"
+      searching: "搜尋中，請耐心等待..."
+      send_invite: "還是找不到人嗎？寄一封邀請卡吧！"
+    one: "1個聯絡人"
+    other: "%{count}個聯絡人"
+    person:
+      add_contact: "加入聯絡人"
+      already_connected: "已經連結了"
+      pending_request: "請求等候中"
+      thats_you: "那是你耶！"
+    profile_sidebar:
+      bio: "自我介紹"
+      born: "生日"
+      edit_my_profile: "編輯個人檔案"
+      gender: "性別"
+      in_aspects: "所屬面向"
+      location: "地點"
+      photos: "相片"
+      remove_contact: "刪除聯絡人"
+      remove_from: "要從 %{aspect} 刪除 %{name} 嗎？"
+    show:
+      closed_account: "帳號已經關閉了。"
+      does_not_exist: "聯絡人不存在！"
+      has_not_shared_with_you_yet: "%{name} 還沒跟你分享任何貼文！"
+      ignoring: "你目前會忽視 %{name} 的所有貼文。"
+      incoming_request: "%{name} 希望能和你分享"
+      mention: "指指點點"
+      message: "送訊息"
+      not_connected: "你不跟這個人分享"
+      recent_posts: "最新貼文"
+      recent_public_posts: "最新公開貼文"
+      return_to_aspects: "回你的面向主頁"
+      see_all: "看全部"
+      start_sharing: "開始分享"
+      to_accept_or_ignore: "接受或不管它。"
+    sub_header:
+      add_some: "加入一些"
+      edit: "編輯"
+      you_have_no_tags: "你沒有任何標籤！"
+    webfinger:
+      fail: "抱歉，找不到 %{handle}。"
+    zero: "沒有聯絡人"
+  photos:
+    comment_email_subject: "%{name} 的相片"
+    create:
+      integrity_error: "相片上傳失敗。你確定它是圖片嗎？"
+      runtime_error: "相片上傳失敗。你確定安全帶有扣上嗎？"
+      type_error: "相片上傳失敗。你確定有加入任何圖片嗎？"
+    destroy:
+      notice: "相片刪掉了。"
+    edit:
+      editing: "編輯中"
+    new:
+      back_to_list: "回列表"
+      new_photo: "新相片"
+      post_it: "貼上！"
+    new_photo:
+      empty: "檔案 {file} 是空的，請重新挑選檔案，且不要再選它。"
+      invalid_ext: "檔案 {file} 的副檔名不合格。只接受{extensions}。"
+      size_error: "檔案 {file} 太大了，上限是{sizeLimit}。"
+    new_profile_photo:
+      or_select_one_existing: "或從你既有的%{photos}中挑選一張"
+      upload: "上傳新的個人照！"
+    photo:
+      view_all: "檢視 %{name} 所有的相片"
+    show:
+      collection_permalink: "收集的靜態連結"
+      delete_photo: "刪除相片"
+      edit: "編輯"
+      edit_delete_photo: "編輯相片敘述或刪除相片"
+      make_profile_photo: "選為個人照"
+      show_original_post: "顯示原文"
+      update_photo: "更新相片"
+    update:
+      error: "相片編輯失敗。"
+      notice: "相片更新成功。"
+  posts:
+    presenter:
+      title: "來自 %{name} 的貼文"
+    show:
+      destroy: "刪除"
+      not_found: "抱歉，找不到該篇貼文。"
+      permalink: "靜態連結"
+      photos_by:
+        other: "%{author} 拍的%{count}張相片"
+        zero: "沒有 %{author} 拍的相片"
+      reshare_by: "%{author} 轉貼"
+  previous: "前面"
+  privacy: "隱私"
+  privacy_policy: "隱私權政策"
+  profile: "個人檔案"
+  profiles:
+    edit:
+      allow_search: "讓其他 diaspora* 使用者可以搜尋你"
+      edit_profile: "編輯個人檔案"
+      first_name: "名字(前)"
+      last_name: "名字(後)"
+      nsfw_check: "把我分享的所有東西都標示為上班時不宜(NSFW)"
+      nsfw_explanation: "在 diaspora* 社群，對於不適合在上班時看的內容，是採用上班時不宜(NSFW)這種自我管理機制。如果你會常常發表這類題材，可以勾選這個選項，那麼你分享的東西就不會直接顯示在其它人的流水帳中，除非他們去點來看。"
+      nsfw_explanation2: "如果你沒有勾選這個選項，那麼當你要分享上班時不宜的題材時，請加上 #nsfw 這個標籤。"
+      update_profile: "更新個人檔案"
+      your_bio: "你的自我介紹"
+      your_birthday: "你的生日"
+      your_gender: "你的性別"
+      your_location: "你所在的地方"
+      your_name: "你的名字"
+      your_photo: "你的相片"
+      your_private_profile: "你的私人檔案"
+      your_public_profile: "你的公開檔案"
+      your_tags: "用五個詞來表現你自己"
+      your_tags_placeholder: "像是: #電影 #貓咪 #旅行 #老師 #紐約"
+    update:
+      failed: "個人檔案更新失敗"
+      updated: "個人檔案已經更新了"
+  public: "公開"
+  reactions:
+    other: "有%{count}次回應"
+    zero: "沒有回應"
+  registrations:
+    closed: "此一 diaspora* 空間不開放註冊"
+    create:
+      success: "你已經成功加入 diaspora* 了！"
+    edit:
+      cancel_my_account: "取消我的帳號"
+      edit: "編輯 %{name}"
+      leave_blank: "(不想變更則請留白)"
+      password_to_confirm: "(我們需要你目前的密碼以確認你要變更)"
+      unhappy: "不滿意嗎？"
+      update: "更新"
+    invalid_invite: "你提供的邀請連結已經失效了！"
+    new:
+      create_my_account: "開我的帳號！"
+      email: "電子信箱"
+      enter_email: "輸入電子信箱"
+      enter_password: "輸入密碼(至少六個字)"
+      enter_password_again: "輸入與前面相同的密碼"
+      enter_username: "選個使用者名稱(名稱只能包含拉丁字母，數字，以及底線字元)"
+      join_the_movement: "參與這個運動！"
+      password: "密碼"
+      password_confirmation: "密碼確認"
+      sign_up: "註冊"
+      sign_up_message: "有♥的社交網路"
+      submitting: "提交中..."
+      terms: "一旦註冊帳號就表示你接受 %{terms_link} 。"
+      terms_link: "服務條款"
+      username: "使用者名稱"
+  report:
+    comment_label: "<b>意見</b>:<br>%{data}"
+    confirm_deletion: "確定要刪除這一項嗎？"
+    delete_link: "刪除項目"
+    not_found: "<u>目標貼文或意見找不到了。可能已經被主人給刪掉了！</u>"
+    post_label: "<b>貼文</b>: %{title}"
+    reason_label: "理由: %{text}"
+    reported_label: "<b>回報人<b> %{person}"
+    review_link: "標記為看過了"
+    status:
+      created: "一則回報產生了"
+      destroyed: "貼文已經被銷毀了"
+      failed: "發生問題了"
+      marked: "已經把這則回報標記為看過了"
+    title: "回報總覽"
+  requests:
+    create:
+      sending: "傳送中"
+      sent: "已經和 %{name} 分享了你的貼文。他們下次登入diaspora* 時就會看見。"
+    destroy:
+      error: "請選一個面向！"
+      ignore: "不理會建立聯繫的請求。"
+      success: "你們現在互相分享了。"
+    helper:
+      new_requests:
+        other: "有%{count}個新請求！"
+        zero: "沒有新請求"
+    manage_aspect_contacts:
+      existing: "既有聯絡人"
+      manage_within: "管理聯絡人於"
+    new_request_to_person:
+      sent: "送出去了！"
+  reshares:
+    comment_email_subject: "%{resharer} 轉貼了 %{author} 的貼文"
+    create:
+      failure: "轉貼這篇貼文時發生錯誤。"
+    reshare:
+      deleted: "原貼文已經被作者刪除了。"
+      reshare:
+        few: "被轉貼%{count}次"
+        many: "被轉貼%{count}次"
+        one: "被轉貼1次"
+        other: "被轉貼%{count}次"
+        two: "%{count}次轉貼"
+        zero: "轉貼"
+      reshare_confirmation: "要轉貼 %{author} 的貼文嗎？"
+      reshare_original: "轉貼原文"
+      reshared_via: "轉貼來自"
+      show_original: "顯示原文"
+  search: "搜尋"
+  services:
+    create:
+      already_authorized: "已經有 Diaspora 識別碼為 %{diaspora_id} 的使用者被授權使用該 %{service_name} 帳號了。"
+      failure: "認證失敗。"
+      read_only_access: "存取權限是唯讀，請待會重新認證。"
+      success: "認證成功。"
+    destroy:
+      success: "認證刪除成功。"
+    failure:
+      error: "與該服務連結時有錯誤"
+    finder:
+      fetching_contacts: "diaspora* 正在取得你在 %{service} 的朋友資料，請幾分鐘後再來看看。"
+      no_friends: "沒有 Facebook 朋友。"
+      service_friends: "%{service} 朋友"
+    index:
+      disconnect: "切斷連結"
+      edit_services: "編輯服務"
+      logged_in_as: "已經登入為"
+      really_disconnect: "切斷與 %{service} 的連結？"
+      services_explanation: "和其他服務連結可以將你在 diaspora* 的貼文同時發表在其他服務上"
+    inviter:
+      click_link_to_accept_invitation: "請按這個連結來接受邀請"
+      join_me_on_diaspora: "跟我一起加入 diaspora*"
+    remote_friend:
+      invite: "邀請"
+      not_on_diaspora: "尚未註冊 diaspora*"
+      resend: "重送"
+  settings: "設定"
+  share_visibilites:
+    update:
+      post_hidden_and_muted: "%{name} 的貼文已經隱藏了，異動時也不會有消息通知。"
+      see_it_on_their_profile: "如果你想看這篇貼文的更新，請到 %{name} 的個人頁面。"
+  shared:
+    add_contact:
+      add_new_contact: "加入新聯絡人"
+      create_request: "以 diaspora* 帳號搜尋"
+      diaspora_handle: "diaspora@pod.org"
+      enter_a_diaspora_username: "輸入 diaspora* 使用者名稱："
+      know_email: "知道他們的電子信箱嗎？你應該邀請他們來"
+      your_diaspora_username_is: "你的 diaspora* 使用者名稱是：%{diaspora_handle}"
+    aspect_dropdown:
+      add_to_aspect: "加聯絡人"
+      mobile_row_checked: "%{name} (移除)"
+      mobile_row_unchecked: "%{name} (新增)"
+      toggle:
+        few: "在%{count}個面向中"
+        many: "在%{count}個面向中"
+        one: "在%{count}個面向中"
+        other: "在%{count}個面向中"
+        two: "在%{count}個面向中"
+        zero: "加聯絡人"
+    contact_list:
+      all_contacts: "所有聯絡人"
+    footer:
+      logged_in_as: "已用 %{name} 登入"
+      your_aspects: "你的面向"
+    invitations:
+      by_email: "用電子郵件"
+      dont_have_now: "目前你還不能邀請任何人，但很快就可以了！"
+      from_facebook: "從 Facebook"
+      invitations_left: "剩餘%{count}張"
+      invite_someone: "邀請某人來"
+      invite_your_friends: "邀請你的朋友"
+      invites: "邀請"
+      invites_closed: "本 diaspora* 空間目前不開放邀請"
+      share_this: "將這個連結透過電子郵件、部落格，或其他你喜愛的社交網站分享出去！"
+    notification:
+      new: "%{from} 有新的%{type}"
+    public_explain:
+      atom_feed: "Atom 資訊源"
+      control_your_audience: "控制你的聽眾"
+      logged_in: "已登入至 %{service}"
+      manage: "管理已連線的服務"
+      new_user_welcome_message: "用 #雜湊標籤 來區分你的貼文，並且找到跟你有共同興趣的人。用 @指指點點 來叫出帥氣的人。"
+      outside: "不使用 diaspora* 的人也能夠看到公開訊息"
+      share: "分享"
+      title: "設定連線服務"
+      visibility_dropdown: "用這個下拉式選單來改變貼文的可見範圍。(建議你這篇首貼設為公開。)"
+    publisher:
+      all: "全部"
+      all_contacts: "所有聯絡人"
+      discard_post: "捨棄貼文"
+      formatWithMarkdown: "你可以用%{markdown_link}來對貼文做排版"
+      get_location: "取得你所在的地點"
+      make_public: "公開"
+      new_user_prefill:
+        hello: "大家好，我是 #%{new_user_tag}。"
+        i_like: "我對 %{tags} 有興趣。"
+        invited_by: "謝謝你的邀請，"
+        newhere: "新來的"
+      poll:
+        add_a_poll: "新增一輪投票"
+        add_poll_answer: "增加選項"
+        option: "選項 1"
+        question: "問題"
+        remove_poll_answer: "移除選項"
+      post_a_message_to: "在 %{aspect} 發表訊息"
+      posting: "發表中..."
+      preview: "預覽"
+      publishing_to: "發表至："
+      remove_location: "移除位置資訊"
+      share: "分享"
+      share_with: "跟他/她分享："
+      upload_photos: "上傳照片"
+      whats_on_your_mind: "在想什麼呢？"
+    reshare:
+      reshare: "轉貼"
+    stream_element:
+      connect_to_comment: "請先和作者建立聯繫才能對他們的貼文發表意見"
+      currently_unavailable: "目前無法發表意見"
+      dislike: "遜"
+      hide_and_mute: "隱藏貼文並消音"
+      ignore_user: "忽視 %{name}"
+      ignore_user_description: "是否要忽視這個使用者，並把他/她從所有面向中移除呢？"
+      like: "讚"
+      nsfw: "這篇貼文被作者標示為 NSFW (上班時不宜)。 %{link}"
+      shared_with: "分享給：%{aspect_names}"
+      show: "顯示"
+      unlike: "收回讚"
+      via: "經由%{link}"
+      via_mobile: "經由行動裝置"
+      viewable_to_anyone: "任何上網的人都能看到這篇貼文"
+  simple_captcha:
+    label: "請輸入方塊中顯示的密碼:"
+    message:
+      default: "驗證碼與圖中不符"
+      failed: "人類確認檢查失敗"
+      user: "驗證碼與圖中不符"
+    placeholder: "請輸入圖形中的內容"
+  statistics:
+    active_users_halfyear: "半年內活躍使用者數"
+    active_users_monthly: "當月活躍使用者數"
+    closed: "關閉"
+    disabled: "不適用"
+    enabled: "可用"
+    local_comments: "當地意見發表量"
+    local_posts: "當地貼文量"
+    name: "名字"
+    network: "網路"
+    open: "開放"
+    registrations: "註冊數"
+    services: "服務"
+    total_users: "使用者總數"
+    version: "版本"
+  status_messages:
+    create:
+      success: "成功推薦了：%{names}"
+    destroy:
+      failure: "刪除貼文失敗"
+    helper:
+      no_message_to_display: "沒有訊息可顯示。"
+    new:
+      mentioning: "指指點點中：%{person}"
+    too_long: "發文請在 %{count} 字內. 現在字數為 %{current_length}"
+  stream_helper:
+    hide_comments: "隱藏所有意見"
+    no_more_posts: "你已經抵達流水帳的最下游了。"
+    no_posts_yet: "目前還沒有任何貼文。"
+    show_comments:
+      other: "顯示另外%{count}個意見"
+      zero: "沒有其它意見"
+  streams:
+    activity:
+      title: "我的活動"
+    aspects:
+      title: "你的面向"
+    aspects_stream: "面向"
+    comment_stream:
+      contacts_title: "你發表過意見的貼文作者"
+      title: "有意見的貼文"
+    community_spotlight_stream: "社群焦點"
+    followed_tag:
+      add_a_tag: "新增標籤"
+      contacts_title: "這些標籤的粉絲"
+      follow: "追蹤"
+      title: "#追蹤中的標籤"
+    followed_tags_stream: "#追蹤中的標籤"
+    like_stream:
+      contacts_title: "你說讚的貼文作者"
+      title: "讚的流水帳"
+    mentioned_stream: "@指指點點"
+    mentions:
+      contacts_title: "對你指指點點過的人"
+      title: "@指指點點"
+    multi:
+      contacts_title: "出現在流水帳中的人"
+      title: "流水帳"
+    public:
+      contacts_title: "最新貼文者"
+      title: "公開活動"
+    tags:
+      contacts_title: "這個標籤的粉絲"
+      title: "有以下標籤的貼文：%{tags}"
+  tag_followings:
+    create:
+      failure: "追蹤 #%{name} 失敗。是否已經在追蹤了？"
+      none: "不能夠追蹤空白標籤！"
+      success: "喔耶！你已經開始追蹤 #%{name} 了。"
+    destroy:
+      failure: "停止追蹤標籤 #%{name} 失敗。也許你已經沒在追蹤了吧？"
+      success: "唉！你從此不再追蹤標籤 #%{name} 了。"
+  tags:
+    name_too_long: "請讓標籤長度少於 %{count} 個字元。目前字元數是 %{current_length}"
+    show:
+      follow: "追蹤 #%{tag}"
+      following: "正在追蹤 #%{tag}"
+      none: "不存在空白標籤！"
+      stop_following: "停止追蹤 #%{tag}"
+      tagged_people:
+        other: "有 %{count} 個人貼了標籤 %{tag}"
+        zero: "沒有人貼了標籤 %{tag}"
+  terms_and_conditions: "服務條款與細則"
+  undo: "還原？"
+  username: "使用者名稱"
+  users:
+    confirm_email:
+      email_confirmed: "電子信箱 %{email} 已經啟用了"
+      email_not_confirmed: "無法啟用電子信箱。連結不對嗎？"
+    destroy:
+      no_password: "請輸入你目前的密碼來關帳號。"
+      success: "你的帳號已經鎖定了。完成關閉帳號大約還需要 20 分鐘的時間，感謝你試用 diaspora*"
+      wrong_password: "輸入的密碼與你目前的密碼不符。"
+    edit:
+      also_commented: "當有人對你評論的貼文發表意見"
+      auto_follow_aspect: "自動加入的聯絡人歸類在以下哪個話題："
+      auto_follow_back: "發文自動包括與你分享發文的使用者"
+      change: "更改"
+      change_email: "更改電子信箱"
+      change_language: "更改語言"
+      change_password: "更改密碼"
+      character_minimum_expl: "至少要六個字"
+      close_account:
+        dont_go: "啊，請不要走！"
+        if_you_want_this: "如果你確定要關閉帳號，請在下方輸入你的密碼，然後按'關閉帳號'"
+        lock_username: "你的使用者名稱會被鎖定，在同一空間裡不能用舊帳號重新註冊。"
+        locked_out: "系統會將你登出，直到帳號刪除為止，你無法重新登入"
+        make_diaspora_better: "希望你能幫助我們讓 Diaspora 更好，而不是選擇離開。如果你決定要關閉帳號，這是接下來的程序："
+        mr_wiggles: "Mr Wiggles 看到你走會很難過"
+        no_turning_back: "一旦確定刪除則無法復原。如果確定要刪除帳號，請在下方輸入你的密碼"
+        what_we_delete: "我們會儘快刪除你的貼文和個人檔案。你在其他使用者貼文下的評論仍然保留，但會以 diaspora* 帳號顯示，而非你的使用者名稱。"
+      close_account_text: "關閉帳號"
+      comment_on_post: "有人對你的貼文發表意見"
+      current_password: "目前密碼"
+      current_password_expl: "登入時那一個..."
+      download_export: "下載個人檔案"
+      download_export_photos: "下載相片"
+      download_photos: "下載我的相片"
+      edit_account: "編輯帳號"
+      email_awaiting_confirmation: "我們已經將啟用連結寄到 %{unconfirmed_email} 給你。在你點該連結啟用新的信箱之前，我們還是會繼續使用你原來的信箱，也就是 %{email}。"
+      export_data: "資料匯出"
+      export_in_progress: "我們正在處理你的資料，請稍等一下再來看看。"
+      export_photos_in_progress: "正在處理你的相片中。請等一下再回來看看。"
+      following: "發文設定"
+      getting_started: "新使用者偏好設定"
+      last_exported_at: "(最後一次是在 %{timestamp} 更新)"
+      liked: "有人對你的貼文說讚"
+      mentioned: "貼文中提到你"
+      new_password: "新的密碼"
+      private_message: "收到私人訊息"
+      receive_email_notifications: "接收電子郵件通知："
+      request_export: "申請下載個人檔案資料"
+      request_export_photos: "要求下載相片"
+      request_export_photos_update: "更新相片下載檔案"
+      request_export_update: "更新個人檔案資料"
+      reshared: "有人轉貼你的發文"
+      show_community_spotlight: "要在河道中顯示社群焦點嗎？"
+      show_getting_started: "使用入門指南"
+      someone_reported: "有人寄了一封回報"
+      started_sharing: "有人和你分享貼文"
+      stream_preferences: "河道偏好設定"
+      your_email: "你的電子郵件"
+      your_handle: "你的 diaspora* 帳號"
+    getting_started:
+      awesome_take_me_to_diaspora: "帥！帶我去 diaspora* 吧"
+      community_welcome: "diaspora* 歡迎你的加入！"
+      connect_to_facebook: "diaspora* 可以連結臉書帳號%{link} ，取用你的臉書姓名和頭圖來幫你快速完成設定 ，同時開啟跨站貼文。"
+      connect_to_facebook_link: "連結 Facebook 帳號"
+      hashtag_explanation: "標籤讓你可以討論及追蹤你有興趣的話題。也是在 diaspora* 找到新朋友的好方法。"
+      hashtag_suggestions: "試試看追蹤像是 #藝術,  #電影, #gif 等標籤。"
+      saved: "存好了！"
+      well_hello_there: "嗨，你好！"
+      what_are_you_in_to: "你對什麼有興趣？"
+      who_are_you: "你是誰？"
+    privacy_settings:
+      ignored_users: "忽視的使用者"
+      no_user_ignored_message: "目前沒有忽視任何的其他人"
+      stop_ignoring: "停止忽視"
+      strip_exif: "上傳照片時移除裡面的描述資料，像是拍攝地點，拍攝人，相機型號等等(建議開啟)"
+      title: "隱私設定"
+    public:
+      does_not_exist: "不存在 %{username} 這個使用者！"
+    update:
+      email_notifications_changed: "電郵通知已經更改了"
+      follow_settings_changed: "追蹤設定改變了"
+      follow_settings_not_changed: "追蹤設定改變失敗。"
+      language_changed: "語言已經更改了"
+      language_not_changed: "語言更改失敗"
+      password_changed: "密碼已經變更了。從現在起你可以用新的密碼登入。"
+      password_not_changed: "密碼更改失敗"
+      settings_not_updated: "設定更新失敗"
+      settings_updated: "設定更新了"
+      unconfirmed_email_changed: "電子信箱已經變更了。必須要啟動使用。"
+      unconfirmed_email_not_changed: "電子信箱更改失敗"
+  webfinger:
+    fetch_failed: "擷取 %{profile_url} 的 webfinger 個人檔案失敗"
+    hcard_fetch_failed: "擷取 %{account} 的 hcard 資料時發生錯誤"
+    no_person_constructed: "從這份 hcard 資料無法組出聯絡人。"
+    not_enabled: "%{account} 的主機似乎沒有啟用 webfinger"
+    xrd_fetch_failed: "從 %{account} 這個帳號取得 xrd 時發生錯誤"
+  welcome: "歡迎！"
+  will_paginate:
+    next_label: "後面 &raquo;"
+    previous_label: "&laquo; 前面"

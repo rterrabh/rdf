@@ -1,0 +1,22 @@
+.prepend-top-20.append-bottom-20
+  .pull-right
+    .btn-group
+      = inline_diff_btn
+      = parallel_diff_btn
+  = render 'projects/diffs/stats', diffs: diffs
+
+- diff_files = safe_diff_files(diffs)
+
+- if diff_files.count < diffs.size
+  = render 'projects/diffs/warning', diffs: diffs, shown_files_count: diff_files.count
+
+.files
+  - diff_files.each_with_index do |diff_file, index|
+    = render 'projects/diffs/file', diff_file: diff_file, i: index, project: project
+
+- if @diff_timeout
+  .alert.alert-danger
+    %h4
+      Failed to collect changes
+    %p
+      Maybe diff is really big and operation failed with timeout. Try to get diff locally
