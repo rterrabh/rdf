@@ -153,6 +153,7 @@ module ActiveRecord
 
         def self.prepare(object, attribute)
           #nodyna <ID:send-211> <send VERY HIGH ex3>
+          #nodyna <ID:send-211> <send VERY HIGH ex3>
           object.public_send :"#{attribute}=", {} unless object.send(attribute)
         end
       end

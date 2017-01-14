@@ -20,6 +20,7 @@ module Digest
     unless Digest.const_defined?(name)
       raise NameError, "uninitialized constant Digest::#{name}", caller(1)
     end
+    #nodyna <ID:const_get-18> <const_get VERY HIGH ex3>
     Digest.const_get(name)
   end
 

@@ -81,11 +81,14 @@ module DelegateBelongsTo
   def delegator_for(association, attr, *args)
     return if self.class.column_names.include?(attr.to_s)
     #nodyna <ID:send-10> <send MEDIUM ex3>
+    #nodyna <ID:send-10> <send MEDIUM ex3>
     send("#{association}=", self.class.reflect_on_association(association).klass.new) if send(association).nil?
     if args.empty?
       #nodyna <ID:send-11> <send MEDIUM ex3>
+      #nodyna <ID:send-11> <send MEDIUM ex3>
       send(association).send(attr)
     else
+      #nodyna <ID:send-12> <send MEDIUM ex3>
       #nodyna <ID:send-12> <send MEDIUM ex3>
       send(association).send(attr, *args)
     end
@@ -94,7 +97,9 @@ module DelegateBelongsTo
   def delegator_for_setter(association, attr, val)
     return if self.class.column_names.include?(attr.to_s)
     #nodyna <ID:send-13> <send MEDIUM ex3>
+    #nodyna <ID:send-13> <send MEDIUM ex3>
     send("#{association}=", self.class.reflect_on_association(association).klass.new) if send(association).nil?
+    #nodyna <ID:send-14> <send MEDIUM ex3>
     #nodyna <ID:send-14> <send MEDIUM ex3>
     send(association).send("#{attr}=", val)
   end

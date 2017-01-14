@@ -1,0 +1,21 @@
+module BasicModule
+
+  #métodos para pegar informações da linha com comentário #nodyna
+  def getID(line)
+    substring = line.match(/<([^>]*)> <([^>]*)>/)
+    substring[1]
+  end
+
+  def getStatement(line)
+    id = get_ID(line)
+    str1_markerstring = ":"
+    str2_markerstring = "-"
+    id[/#{str1_markerstring}(.*?)#{str2_markerstring}/m, 1]
+  end
+
+  def getClassification(line)
+    substring = line.match(/<([^>]*)> <([^>]*)>/)
+    substring[2]
+  end
+
+end

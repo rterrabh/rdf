@@ -21,6 +21,7 @@ class Embedding < OpenStruct
   def save
     Embedding.settings.each do |s|
       #nodyna <ID:send-195> <send MEDIUM ex2>
+      #nodyna <ID:send-195> <send MEDIUM ex2>
       SiteSetting.send("#{s}=", send(s))
     end
     true

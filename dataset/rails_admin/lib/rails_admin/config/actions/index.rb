@@ -52,6 +52,7 @@ module RailsAdmin
                     primary_key_method = @association ? @association.associated_primary_key : @model_config.abstract_model.primary_key
                     label_method = @model_config.object_label_method
                     #nodyna <ID:send-6> <send VERY HIGH ex2>
+                    #nodyna <ID:send-6> <send VERY HIGH ex2>
                     @objects.collect { |o| {id: o.send(primary_key_method).to_s, label: o.send(label_method).to_s} }
                   else
                     @objects.to_json(@schema)

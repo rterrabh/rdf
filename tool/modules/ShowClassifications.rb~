@@ -1,0 +1,48 @@
+module NodynaModules
+
+  def getID(line)
+    substring = line.match(/<([^>]*)> <([^>]*)>/)
+    substring[1]
+  end
+
+  def getStatement(line)
+    id = get_ID(line)
+    str1_markerstring = ":"
+    str2_markerstring = "-"
+    id[/#{str1_markerstring}(.*?)#{str2_markerstring}/m, 1]
+  end
+
+  def getClassification(line)
+    substring = line.match(/<([^>]*)> <([^>]*)>/)
+    substring[2]
+  end
+
+  module ShowClassifications
+    def initializeCatalog()
+      catalog =  Catalog.new
+      catalog.addItem("const_get")
+      catalog.addItem("const_set")
+      catalog.addItem("eval")
+      catalog.addItem("define_method")
+      catalog.addItem("instance_eval")
+      catalog.addItem("instance_exec")
+      catalog.addItem("send")
+      return catalogo
+    end
+
+    def buildCatalog(rbfiles)
+      catalog = initializeCatalog
+      rbfiles.each do |rbfile|
+        File.open(rbfile, 'r').each do |line|
+          if line.include? "#nodyna"
+            instruction = getStatement(line)
+            classification = getClassification(line)
+            catalog.increaseClassification(instruction, classification)
+          end
+        end
+      end
+      catalog.showCatalog
+    end
+  end
+
+end

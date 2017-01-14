@@ -987,6 +987,7 @@ class User < ActiveRecord::Base
     #nodyna <ID:define_method-35> <define_method MEDIUM ex1>
     define_method("set_default_email_#{s}") do
       #nodyna <ID:send-209> <send LOW ex3>
+      #nodyna <ID:send-209> <send LOW ex3>
       self.send("email_#{s}=", SiteSetting.send("default_email_#{s}")) if has_attribute?("email_#{s}")
     end
   end
@@ -995,6 +996,7 @@ class User < ActiveRecord::Base
     #nodyna <ID:define_method-36> <define_method MEDIUM ex1>
     define_method("set_default_other_#{s}") do
       #nodyna <ID:send-210> <send LOW ex3>
+      #nodyna <ID:send-210> <send LOW ex3>
       self.send("#{s}=", SiteSetting.send("default_other_#{s}").to_i) if has_attribute?(s)
     end
   end
@@ -1002,6 +1004,7 @@ class User < ActiveRecord::Base
   %w{external_links_in_new_tab enable_quoting dynamic_favicon disable_jump_reply edit_history_public}.each do |s|
     #nodyna <ID:define_method-37> <define_method MEDIUM ex1>
     define_method("set_default_other_#{s}") do
+      #nodyna <ID:send-211> <send LOW ex3>
       #nodyna <ID:send-211> <send LOW ex3>
       self.send("#{s}=", SiteSetting.send("default_other_#{s}")) if has_attribute?(s)
     end
