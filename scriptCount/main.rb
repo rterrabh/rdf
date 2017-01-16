@@ -99,4 +99,5 @@ statements = TotalStatementsChecker.instance.checker(extractFiles(files_to_resea
 puts "Total: #{statements}"
 total += statements
 
+
 puts "Total statements: #{total}"
