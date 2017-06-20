@@ -1,9 +1,9 @@
-# RDF
-RDF (Ruby Dynamic Features Analysis Tool) is a tool to mark every dynamic statement (send, instance_exec, instance_eval, eval, define_method, const_get, and const_set) in the Ruby files. This helps developers to see where they are using the dynamic statements. Furthermore, the tool also allows developers to classificate the use of dyanamic statements.
+# Rdf
+Rdf (Ruby Dynamic Features Analysis Tool) is a tool to mark every dynamic statement (send, instance_exec, instance_eval, eval, define_method, const_get, and const_set) in the Ruby files. This helps developers to see where they are using the dynamic statements. Furthermore, the tool also allows developers to classificate the use of dyanamic statements.
 
 ## Functionalities
-RDF has the following functionalities:
-- `./rdf setup`: Put a default mark after every dynamic statement in the project to indicate that the instructions have still not been classified. The default marking is: #nodyna <ID - <instruction type>> < not yet classified >
+Rdf has the following functionalities:
+- `./rdf setup`: Put a default mark after every dynamic statement in the project to indicate that the instructions have still not been classified. The default marking is: #rdf <ID - <instruction type>> < not yet classified >
 
 - `./rdf show_locations <instruction type>`: List the files where this instruction type has already been marked.
 
@@ -12,7 +12,7 @@ RDF has the following functionalities:
 - `./rdf show_classifications`: Summarizes the number of statements by each classification.
 
 ## How to use
-Import RDF for your project (`require_relative rdf`) and then use the command `RDF.new.execute(files_to_analyze, option)` to execute RDF, where **files_to_analyze** is a array that contains all pathes of Ruby files that you want to analyze and **option** is a String that contains the command to be executed (show_locations, show_classifications, etc).
+Import Rdf for your project (`require_relative rdf`) and then use the command `Rdf.new.execute(files_to_analyze, option)` to execute Rdf, where **files_to_analyze** is a array that contains all pathes of Ruby files that you want to analyze and **option** is a String that contains the command to be executed (show_locations, show_classifications, etc).
 
 ## Basic statements counter
 The folder script counter contains a basic statements (variable declaration, for, if, etc) counter. To run the script it is necessary import the class TotalStatementsChecker (`require_relative TotalStatementsChecker`) and then call the function TotalStatementsChecker.instance.checker(**files**), where files is a list that contains the path of the files to checker.
@@ -23,7 +23,7 @@ The basic statements counter uses the followings libraries:
 - [sexp_processor](https://github.com/seattlerb/sexp_processor), intall it using the command `sudo gem install sexp_processor`
 
 ## Dataset
-RDF was used to analyze the dynamic statements of the following Ruby projects:
+Rdf was used to analyze the dynamic statements of the following Ruby projects:
 - [Active Admin](https://github.com/rterrabh/rdf/tree/master/dataset/activeadmin)
 - [diaspora*](https://github.com/rterrabh/rdf/tree/master/dataset/diaspora)
 - [Discourse](https://github.com/rterrabh/rdf/tree/master/dataset/discourse)

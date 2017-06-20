@@ -1,7 +1,7 @@
 require_relative '../catalog/Catalog'
 require_relative '../checker/Checker'
 
-module RDFModules
+module RdfModules
 
   def getID(line)
     substring = line.match(/<([^>]*)> <([^>]*)>/)

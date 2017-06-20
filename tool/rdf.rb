@@ -1,7 +1,7 @@
-require_relative 'modules/RDFModules'
+require_relative 'modules/RdfModules'
 
-class RDF
-  include RDFModules
+class Rdf
+  include RdfModules
 
   def execute(files_to_research, commands)
     files = Array.new
@@ -107,5 +107,5 @@ files_to_research << "../dataset/spree/api/**/*.rb"
 files_to_research << "../dataset/spree/backend/**/*.rb"
 files_to_research << "../dataset/spree/core/**/*.rb"
 
-rdf = RDF.new
+rdf = Rdf.new
 rdf.execute(files_to_research, ARGV)
