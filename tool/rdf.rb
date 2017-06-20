@@ -1,7 +1,7 @@
-require_relative 'modules/NodynaModules'
+require_relative 'modules/RDFModules'
 
-class Nodyna
-  include NodynaModules
+class RDF
+  include RDFModules
 
   def execute(files_to_research, commands)
     files = Array.new
@@ -10,7 +10,7 @@ class Nodyna
     end
     files.flatten!
     puts "Total files: #{files.size}"
-    puts "#{"="*32} NODYNA OUTPUT #{"="*33}"
+    puts "#{"="*34} RDF OUTPUT #{"="*34}"
 
     arguments = defineArguments(commands)
     if arguments[:command].nil?
@@ -107,5 +107,5 @@ files_to_research << "../dataset/spree/api/**/*.rb"
 files_to_research << "../dataset/spree/backend/**/*.rb"
 files_to_research << "../dataset/spree/core/**/*.rb"
 
-nodyna = Nodyna.new
-nodyna.execute(files_to_research, ARGV)
+rdf = RDF.new
+rdf.execute(files_to_research, ARGV)
