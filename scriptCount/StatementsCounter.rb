@@ -28,7 +28,10 @@ class StatementsCounter < SexpInterpreter
                      :kwsplat
                     ]
 
-  DYNAMIC_FEATURES = [:const_set, :const_get, :define_method, :eval, :instance_eval, :instance_exec, :send]
+  DYNAMIC_FEATURES = [:class_eval, :class_variable_get, :class_variable_set, :const_set, :const_get, 
+                      :define_method, :eval, :instance_eval, :instance_exec, :instance_variable_get,
+                      :instance_variable_set, :instance_exec, :module_eval, :send
+                     ]
 
   def initialize()
     super()

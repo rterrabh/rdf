@@ -21,20 +21,8 @@ module RdfModules
   end
 
   module ShowClassifications
-    def initializeCatalog()
-      catalog =  Catalog.new
-      catalog.addItem("const_get")
-      catalog.addItem("const_set")
-      catalog.addItem("eval")
-      catalog.addItem("define_method")
-      catalog.addItem("instance_eval")
-      catalog.addItem("instance_exec")
-      catalog.addItem("send")
-      return catalog
-    end
-
     def buildCatalog(rbfiles)
-      catalog = initializeCatalog
+      catalog = Catalog.new
       rbfiles.each do |rbfile|
         File.open(rbfile, 'r').each do |line|
           if line.include? "#nodyna"
@@ -44,7 +32,7 @@ module RdfModules
           end
         end
       end
-      catalog.showCatalog
+      return catalog
     end
   end
 
@@ -86,43 +74,36 @@ module RdfModules
 
   module Setup
 
-    def initializeStatements
-      statements = Hash.new
-      statements[:send] = 0
-      statements[:const_get] = 0
-      statements[:const_set] = 0
-      statements[:define_method] = 0
-      statements[:instance_eval] = 0
-      statements[:instance_exec] = 0
-      statements[:eval] = 0
-      return  statements
-    end
-
     def setup(rbfiles)
-      statements = initializeStatements
+      skipStatements = Checker.createDynamicCounter()
+      id = 1
       rbfiles.each do |rbfile|
         newFile = ""
-        saveFile = true
         File.open(rbfile, 'r').each do |line|
           if line.lstrip[0] != "#"
-            statements.each do |statement, times|
-              qtdEncontrada = Checker.hasStatement?(statement, line)
-              for i in 1..qtdEncontrada
-                statements[statement] += 1
-                newFile = "#{newFile}#{indentation(line)}#nodyna <ID:#{statement}-#{statements[statement]}> <not yet classified>\n"
+            occurences = Checker.getOccurences(line)
+            occurences.each do |statement, occurence|
+              for i in 1..occurence
+                if(skipStatements[statement] == 0)
+                  newFile = "#{newFile}#{indentation(line)}#nodyna <ID:#{statement}-#{id}> <not yet classified>\n"
+                  id += 1
+                else
+                  skipStatements[statement] -= 1
+                end
               end
             end
+            newFile = "#{newFile}#{line}"
           elsif line.include? "nodyna"
-            saveFile = false
-            break
+            statement = getStatement(line)
+            classification = getClassification(line)
+            skipStatements[statement.to_sym] += 1
+            newFile = "#{newFile}#{indentation(line)}#nodyna <ID:#{statement}-#{id}> <#{classification}>\n"
+            id += 1
           end
-          newFile = "#{newFile}#{line}"
         end
-        if saveFile
-          fh = File.open(rbfile, 'w')
-          fh.puts newFile
-          fh.close
-        end
+        fh = File.open(rbfile, 'w')
+        fh.puts newFile
+        fh.close
       end
     end
 

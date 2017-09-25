@@ -1,85 +1,55 @@
 class Checker
 
 
-  def self.hasStatement?(statement, line)
-    statement = statement.to_sym
-    if(statement == :send)
-      return hasSend?(line)
-    elsif(statement == :instance_exec)
-      return hasInstanceExec?(line)
-    elsif(statement == :instance_eval)
-      return hasInstanceEval?(line)
-    elsif(statement == :eval)
-      return hasEval?(line)
-    elsif(statement == :define_method)
-      return hasDefineMethod?(line)
-    elsif(statement == :const_get)
-      return hasConstGet?(line)
-    elsif(statement == :const_set)
-      return hasConstSet?(line)
+  DYNAMIC_FEATURES = [:class_eval, :class_variable_get, :class_variable_set, :const_set, :const_get, 
+                      :define_method, :eval, :instance_eval, :instance_exec, :instance_variable_get,
+                      :instance_variable_set, :instance_exec, :module_eval, :send
+                     ]
+
+  def self.createDynamicCounter()
+    counter = {}
+    DYNAMIC_FEATURES.each do |dynamicFeature|
+      counter[dynamicFeature] = 0
     end
-    return false
+    return counter
   end
 
-
-  private
-
-  def self.allOccurrences(statement, line)
-    index = 0
-    occurrences = []
-    while (!index.nil?)
-      index = line.index(statement, index)
-      if(!index.nil?)
-        occurrences << index
-        index += statement.length
+  def self.getOccurences(line)
+    counter = createDynamicCounter()
+    DYNAMIC_FEATURES.each do |dynamicFeature|
+      if(self.respond_to?("#{dynamicFeature}_occurences"))
+        counter[dynamicFeature] = self.send("#{dynamicFeature}_occurences", line)
+      else
+        counter[dynamicFeature] = self.getDefaultOccurences(dynamicFeature, line)
       end
     end
-    return occurrences
+    return counter
   end
 
-
-  def self.occurences(statement, line)
+  def self.getDefaultOccurences(dynamicFeature, line)
     alphabet = "_abcdefghijklmnopqrstuvwxyz"
-    totalFound = 0
-    allOccurrences(statement, line).each do |index|
-      if (index >= 1 && alphabet.index(line[index-1]) != nil)
-        next
-      elsif (index + statement.length < line.length && alphabet.index(line[index + statement.length]) != nil )
-        next
+    offset = 0
+    occurences = 0
+    index = 0
+    while(!index.nil?)
+      index = line.index(dynamicFeature.to_s, offset)
+      if(!index.nil?)
+        if(index + dynamicFeature.length == line.length)
+          occurences += 1
+        elsif(index + dynamicFeature.length < line.length && !alphabet.include?(line[index + dynamicFeature.length]) &&
+               (index == 0 || !alphabet.include?(line[index-1])))
+          occurences += 1
+        end
+        offset = index + dynamicFeature.length
       end
-      totalFound += 1
     end
-    return totalFound
+    return occurences
   end
 
-  def self.hasSend?(line)
+  def self.send_occurences(line)
     if line.include?("public_send")
       return 1
     end
-    return occurences("send", line)
-  end
-
-  def self.hasInstanceExec?(line)
-    return occurences("instance_exec", line)
-  end
-
-  def self.hasInstanceEval?(line)
-    return occurences("instance_eval", line)
-  end
-
-  def self.hasEval?(line)
-    return occurences("eval", line)
-  end
-
-  def self.hasDefineMethod?(line)
-    return occurences("define_method", line)
-  end
-
-  def self.hasConstGet?(line)
-    return occurences("const_get", line)
-  end
-
-  def self.hasConstSet?(line)
-    return occurences("const_set", line)
+    return getDefaultOccurences(:send, line)
   end
 end

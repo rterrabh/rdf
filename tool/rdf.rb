@@ -3,29 +3,36 @@ require_relative 'modules/RdfModules'
 class Rdf
   include RdfModules
 
-  def execute(files_to_research, commands)
+  def execute(files_to_research, arguments)
     files = Array.new
     files_to_research.each do |rbfiles|
       files  += Dir.glob(rbfiles)
     end
     files.flatten!
-    puts "Total files: #{files.size}"
     puts "#{"="*34} RDF OUTPUT #{"="*34}"
-
-    arguments = defineArguments(commands)
-    if arguments[:command].nil?
-      showHelp
-    elsif arguments[:command] == "setup"
+    if(arguments.nil? || arguments.size == 0)
+      showHelp()
+    elsif(arguments[0] == "setup")
+      puts "Total files: #{files.size}"
       setup(files)
-    elsif arguments[:command] == "show_classifications"
-      buildCatalog(files)
-    elsif arguments[:command] == "show_locations_without_classification"
-      statement = arguments[:args].size > 0 ? arguments[:args][0] : nil
-      showLocationsWithoutClassification(files, statement)
-    elsif arguments[:command] == "show_locations"
-      statement = arguments[:args].size > 0 ? arguments[:args][0] : nil
-      classification = arguments[:args].size > 1 ? arguments[:args][1] : nil
+    elsif(arguments[0] == "show_classifications")
+      puts "Total files: #{files.size}"
+      buildCatalog(files).showCatalog
+    elsif(arguments.size >= 2 && arguments[0] == "show_locations")
+      puts "Total files: #{files.size}"
+      statement = arguments[1]
+      classification = arguments.size >= 3 ? arguments[2] : nil
       showLocations(files, statement, classification)
+    elsif(arguments[0] == "show_locations_without_classification")
+      puts "Total files: #{files.size}"
+      statement = arguments.size >= 1 ? arguments[1] : nil
+      showLocationsWithoutClassification(files, statement)
+    elsif(arguments.size >= 3 && arguments[0] == "change_classification")
+      puts "Total files: #{files.size}"
+      oldClassification = arguments[1]
+      newClassification = arguments[2]
+    else
+      showHelp()
     end
     puts "#{"="*37} END #{"="*38}"
   end
@@ -34,40 +41,18 @@ class Rdf
     puts "Help:"
     puts "setup: Put a default mark after every dynamic statement in the project to indicate that the statement have still not been classified"
     puts ""
-    puts "show_locations <statement>: List the files where this statement type has already been marked"
+    puts "show_locations statement <classification>: List the files where this statement type has already been marked"
     puts ""
-    puts "show_locations_without_classifications: List the files where this statement type has already been marked, but has still not been classified"
+    puts "show_locations_without_classifications <statement>: List the files where this statement type has already been marked, but has still not been classified"
     puts ""
     puts "show_classificatons: Summarizes the number of statements by each classification"
-  end
-
-  def defineArguments(commands)
-    validStatements = ["send", "const_get", "const_set", "define_method", "instance_eval", "instance_exec", "eval"]
-    validCommands = ["setup", "show_locations", "show_locations_without_classification", "show_classifications"]
-    arguments = {}
-    arguments[:command] = nil
-    arguments[:args] = []
-    if(commands.size > 0)
-      if(validCommands.include?(commands[0]))
-        arguments[:command] = commands[0]
-      end
-      index = 0
-      commands.each do |command|
-        if(index == 0)
-          index += 1
-          next
-        end
-        arguments[:args] << command
-        index += 1
-      end
-    end
-    return arguments
-  end
-	
+  end	
 end
 
-files_to_research = Array.new
+files_to_research = []
 
+files_to_research << "target.rb"
+=begin
 #activeadmin
 files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
 
@@ -106,6 +91,7 @@ files_to_research << "../dataset/spree/**/lib/**/*.rb"
 files_to_research << "../dataset/spree/api/**/*.rb"
 files_to_research << "../dataset/spree/backend/**/*.rb"
 files_to_research << "../dataset/spree/core/**/*.rb"
+=end
 
 rdf = Rdf.new
 rdf.execute(files_to_research, ARGV)
