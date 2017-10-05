@@ -62,7 +62,7 @@ module ActiveRecord
               if mapping.size == 1 && !value.respond_to?(aggregate_attr)
                 expanded_attrs[field_attr] = value
               else
-                #nodyna <ID:send-161> <send VERY HIGH ex3>
+                #nodyna <ID:send-161> <SD COMPLEX (change-prone variables)>
                 expanded_attrs[field_attr] = value.send(aggregate_attr)
               end
             end

@@ -88,7 +88,7 @@ module SiteSettingExtension
       if new_choices = opts[:choices]
 
         if String === new_choices
-          #nodyna <ID:eval-25> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-25> <EV COMPLEX (change-prone variables)>
           new_choices = eval(new_choices)
         end
 
@@ -111,7 +111,7 @@ module SiteSettingExtension
       if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
         hidden_settings << name
         shadowed_settings << name
-        #nodyna <ID:send-31> <send VERY HIGH ex3>
+        #nodyna <ID:send-31> <SD COMPLEX (change-prone variables)>
         current_value = GlobalSetting.send(name)
       end
 
@@ -149,7 +149,7 @@ module SiteSettingExtension
   def settings_hash
     result = {}
     @defaults.each do |s, _|
-      #nodyna <ID:send-32> <send VERY HIGH ex2>
+      #nodyna <ID:send-32> <SD COMPLEX (array)>
       result[s] = send(s).to_s
     end
     result
@@ -162,7 +162,7 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
-    #nodyna <ID:send-33> <send VERY HIGH ex2>
+    #nodyna <ID:send-33> <SD COMPLEX (array)>
     MultiJson.dump(Hash[*@client_settings.map{|n| [n, self.send(n)]}.flatten])
   end
 
@@ -171,7 +171,7 @@ module SiteSettingExtension
     @defaults
       .reject{|s, _| hidden_settings.include?(s) && !include_hidden}
       .map do |s, v|
-        #nodyna <ID:send-34> <send VERY HIGH ex2>
+        #nodyna <ID:send-34> <SD COMPLEX (array)>
         value = send(s)
         type = types[get_data_type(s, value)]
         opts = {
@@ -221,7 +221,7 @@ module SiteSettingExtension
 
       # add shadowed
       shadowed_settings.each do |ss|
-        #nodyna <ID:send-35> <send VERY HIGH ex2>
+        #nodyna <ID:send-35> <SD COMPLEX (array)>
         new_hash[ss] = GlobalSetting.send(ss)
       end
 
@@ -312,7 +312,7 @@ module SiteSettingExtension
     end
 
     if self.respond_to? "validate_#{name}"
-      #nodyna <ID:send-36> <send VERY HIGH ex3>
+      #nodyna <ID:send-36> <SD COMPLEX (change-prone variables)>
       send("validate_#{name}", val)
     end
 
@@ -360,7 +360,7 @@ module SiteSettingExtension
   def set(name, value)
     if has_setting?(name) && is_valid_data?(name, value)
       value = filter_value(name, value)
-      #nodyna <ID:send-37> <send VERY HIGH ex3>
+      #nodyna <ID:send-37> <SD COMPLEX (change-prone variables)>
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
@@ -458,7 +458,7 @@ module SiteSettingExtension
     end
 
     define_singleton_method "#{clean_name}?" do
-      #nodyna <ID:send-38> <send VERY HIGH ex3>
+      #nodyna <ID:send-38> <SD COMPLEX (change-prone variables)>
       self.send clean_name
     end
 

@@ -28,7 +28,7 @@ class Module
 
     QualifiedConstUtils.names(path).inject(self) do |mod, name|
       return unless mod.const_defined?(name, search_parents)
-      #nodyna <ID:const_get-13> <const_get VERY HIGH ex2>
+      #nodyna <ID:const_get-13> <CG COMPLEX (array)>
       mod.const_get(name)
     end
     return true
@@ -38,7 +38,7 @@ class Module
     QualifiedConstUtils.raise_if_absolute(path)
 
     QualifiedConstUtils.names(path).inject(self) do |mod, name|
-      #nodyna <ID:const_get-14> <const_get VERY HIGH ex2>
+      #nodyna <ID:const_get-14> <CG COMPLEX (array)>
       mod.const_get(name)
     end
   end
@@ -49,7 +49,7 @@ class Module
     const_name = path.demodulize
     mod_name = path.deconstantize
     mod = mod_name.empty? ? self : qualified_const_get(mod_name)
-    #nodyna <ID:const_set-9> <const_set VERY HIGH ex3>
+    #nodyna <ID:const_set-9> <CS COMPLEX (change-prone variable)>
     mod.const_set(const_name, value)
   end
 end

@@ -13,7 +13,7 @@ class TkNamespace < TkObject
 
   Tk_Namespace_ID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-19> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-19> <IEV MODERATE (method definition)>
   (Tk_Namespace_ID = ["ns".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -326,7 +326,7 @@ class TkNamespace < TkObject
   def code(script = Proc.new)
     if script.kind_of?(String)
       cmd = proc{|*args|
-        #nodyna <ID:instance_eval-22> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-22> <IEV COMPLEX (private access)>
         ret = ScopeArgs.new(@fullname,*args).instance_eval(script)
         id = ret.object_id
         TkNamespace::Tk_NsCode_RetObjID_TBL[id] = ret
@@ -336,10 +336,10 @@ class TkNamespace < TkObject
       cmd = proc{|*args|
         if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
           obj = ScopeArgs.new(@fullname,*args)
-          #nodyna <ID:instance_exec-1> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-1> <IEX COMPLEX (block with parameters)>
           ret = obj.instance_exec(obj, &script)
         else
-          #nodyna <ID:instance_eval-23> <instance_eval VERY HIGH ex3>
+          #nodyna <ID:instance_eval-23> <IEV COMPLEX (block execution)>
           ret = ScopeArgs.new(@fullname,*args).instance_eval(&script)
         end
         id = ret.object_id
@@ -419,7 +419,7 @@ class TkNamespace < TkObject
 
   def self.eval(namespace, cmd = Proc.new, *args)
     #tk_call('namespace', 'eval', namespace, cmd, *args)
-    #nodyna <ID:eval-30> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-30> <EV COMPLEX (change-prone variables)>
     TkNamespace.new(namespace).eval(cmd, *args)
   end
 =begin

@@ -43,7 +43,7 @@ module ActiveAdmin
             suffix: (resource.route_uncountable? ? "index_path" : "path")
           )
 
-          #nodyna <ID:send-43> <send VERY HIGH ex3>
+          #nodyna <ID:send-43> <SD COMPLEX (change-prone variables)>
           routes.public_send route_name, *route_collection_params(params)
         end
 
@@ -53,7 +53,7 @@ module ActiveAdmin
         def instance_path(instance)
           route_name = route_name(resource.resources_configuration[:self][:route_instance_name])
 
-          #nodyna <ID:send-44> <send VERY HIGH ex3>
+          #nodyna <ID:send-44> <SD COMPLEX (change-prone variables)>
           routes.public_send route_name, *route_instance_params(instance)
         end
 
@@ -64,7 +64,7 @@ module ActiveAdmin
           path = resource.resources_configuration[:self][:route_instance_name]
           route_name = route_name(path, action: :edit)
 
-          #nodyna <ID:send-45> <send VERY HIGH ex3>
+          #nodyna <ID:send-45> <SD COMPLEX (change-prone variables)>
           routes.public_send route_name, *route_instance_params(instance)
         end
 
@@ -89,7 +89,7 @@ module ActiveAdmin
         # @return params to pass to instance path
         def route_instance_params(instance)
           if nested?
-            #nodyna <ID:send-46> <send VERY HIGH ex3>
+            #nodyna <ID:send-46> <SD COMPLEX (change-prone variables)>
             [instance.public_send(belongs_to_name).to_param, instance.to_param]
           else
             instance.to_param

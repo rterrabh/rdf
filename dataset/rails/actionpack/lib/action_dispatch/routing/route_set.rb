@@ -119,12 +119,12 @@ module ActionDispatch
 
         def clear!
           @path_helpers.each do |helper|
-            #nodyna <ID:send-77> <send VERY HIGH ex4>
+            #nodyna <ID:send-77> <SD COMPLEX (private methods)>
             @path_helpers_module.send :undef_method, helper
           end
 
           @url_helpers.each do |helper|
-            #nodyna <ID:send-78> <send VERY HIGH ex4>
+            #nodyna <ID:send-78> <SD COMPLEX (private methods)>
             @url_helpers_module.send  :undef_method, helper
           end
 
@@ -139,9 +139,9 @@ module ActionDispatch
           url_name  = :"#{name}_url"
 
           if routes.key? key
-            #nodyna <ID:send-79> <send VERY HIGH ex4>
+            #nodyna <ID:send-79> <SD COMPLEX (private methods)>
             @path_helpers_module.send :undef_method, path_name
-            #nodyna <ID:send-80> <send VERY HIGH ex4>
+            #nodyna <ID:send-80> <SD COMPLEX (private methods)>
             @url_helpers_module.send  :undef_method, url_name
           end
           routes[key] = route
@@ -185,7 +185,7 @@ module ActionDispatch
               include mod
 
               helpers.each do |meth|
-                #nodyna <ID:define_method-12> <define_method VERY HIGH ex1>
+                #nodyna <ID:define_method-12> <DM COMPLEX (array)>
                 define_method(meth) do |*args, &block|
                   ActiveSupport::Deprecation.warn("The method `#{meth}` cannot be used here as a full URL is required. Use `#{meth.to_s.sub(/_path$/, '_url')}` instead")
                   super(*args, &block)
@@ -245,7 +245,7 @@ module ActionDispatch
             end
 
             def optimize_routes_generation?(t)
-              #nodyna <ID:send-81> <send LOW ex4>
+              #nodyna <ID:send-81> <SD EASY (private methods)>
               t.send(:optimize_routes_generation?)
             end
 
@@ -347,7 +347,7 @@ module ActionDispatch
         def define_url_helper(mod, route, name, opts, route_key, url_strategy)
           helper = UrlHelper.create(route, opts, route_key, url_strategy)
           mod.module_eval do
-            #nodyna <ID:define_method-13> <define_method VERY HIGH ex2>
+            #nodyna <ID:define_method-13> <DM COMPLEX (events)>
             define_method(name) do |*args|
               options = nil
               options = args.pop if args.last.is_a? Hash
@@ -438,7 +438,7 @@ module ActionDispatch
         if default_scope
           mapper.with_default_scope(default_scope, &block)
         else
-          #nodyna <ID:instance_exec-4> <instance_exec VERY HIGH ex1>
+          #nodyna <ID:instance_exec-4> <IEX COMPLEX (block without parameters)>
           mapper.instance_exec(&block)
         end
       end
@@ -480,7 +480,7 @@ module ActionDispatch
 
         routes = self
         MountedHelpers.class_eval do
-          #nodyna <ID:define_method-14> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-14> <DM COMPLEX (events)>
           define_method "_#{name}" do
             RoutesProxy.new(routes, _routes_context)
           end
@@ -539,17 +539,17 @@ module ActionDispatch
 
           # plus a singleton class method called _routes ...
           included do
-            #nodyna <ID:send-82> <send VERY HIGH ex4>
+            #nodyna <ID:send-82> <SD COMPLEX (private methods)>
             singleton_class.send(:redefine_method, :_routes) { routes }
           end
 
           # And an instance method _routes. Note that
           # UrlFor (included in this module) add extra
           # conveniences for working with @_routes.
-          #nodyna <ID:define_method-15> <define_method MEDIUM ex2>
+          #nodyna <ID:define_method-15> <DM MODERATE (events)>
           define_method(:_routes) { @_routes || routes }
 
-          #nodyna <ID:define_method-16> <define_method MEDIUM ex2>
+          #nodyna <ID:define_method-16> <DM MODERATE (events)>
           define_method(:_generate_paths_by_default) do
             supports_path
           end

@@ -21,12 +21,12 @@ module URI
   DEFAULT_PARSER = Parser.new
   DEFAULT_PARSER.pattern.each_pair do |sym, str|
     unless REGEXP::PATTERN.const_defined?(sym)
-      #nodyna <ID:const_set-61> <const_set VERY HIGH ex3>
+      #nodyna <ID:const_set-61> <CS COMPLEX (change-prone variable)>
       REGEXP::PATTERN.const_set(sym, str)
     end
   end
   DEFAULT_PARSER.regexp.each_pair do |sym, str|
-    #nodyna <ID:const_set-62> <const_set VERY HIGH ex3>
+    #nodyna <ID:const_set-62> <CS COMPLEX (change-prone variable)>
     const_set(sym, str)
   end
 

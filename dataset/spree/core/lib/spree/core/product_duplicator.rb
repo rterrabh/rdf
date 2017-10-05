@@ -17,7 +17,7 @@ module Spree
       new_product.option_types = product.option_types if product.has_variants?
 
       # allow site to do some customization
-      #nodyna <ID:send-5> <send LOW ex4>
+      #nodyna <ID:send-5> <SD EASY (private methods)>
       new_product.send(:duplicate_extra, product) if new_product.respond_to?(:duplicate_extra)
       new_product.save!
       new_product

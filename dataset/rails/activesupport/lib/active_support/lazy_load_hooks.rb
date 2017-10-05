@@ -35,7 +35,7 @@ module ActiveSupport
     if options[:yield]
       block.call(base)
     else
-      #nodyna <ID:instance_eval-6> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-6> <IEV COMPLEX (block execution)>
       base.instance_eval(&block)
     end
   end

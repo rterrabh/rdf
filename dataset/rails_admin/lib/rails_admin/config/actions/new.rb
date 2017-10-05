@@ -18,7 +18,7 @@ module RailsAdmin
 
               @object = @abstract_model.new
               @authorization_adapter && @authorization_adapter.attributes_for(:new, @abstract_model).each do |name, value|
-                #nodyna <ID:send-1> <send VERY HIGH ex3>
+                #nodyna <ID:send-1> <SD COMPLEX (change-prone variables)>
                 @object.send("#{name}=", value)
               end
               if object_params = params[@abstract_model.to_param]
@@ -37,7 +37,7 @@ module RailsAdmin
 
               @object.set_attributes(params[@abstract_model.param_key])
               @authorization_adapter && @authorization_adapter.attributes_for(:create, @abstract_model).each do |name, value|
-                #nodyna <ID:send-2> <send VERY HIGH ex3>
+                #nodyna <ID:send-2> <SD COMPLEX (change-prone variables)>
                 @object.send("#{name}=", value)
               end
 

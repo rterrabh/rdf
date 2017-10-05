@@ -23,8 +23,8 @@ module ActionView
       self.registered_details << name
       initialize = registered_details.map { |n| "@details[:#{n}] = details[:#{n}] || default_#{n}" }
 
-      #nodyna <ID:send-44> <send MEDIUM ex4>
-      #nodyna <ID:define_method-4> <define_method MEDIUM ex2>
+      #nodyna <ID:send-44> <SD MODERATE (private methods)>
+      #nodyna <ID:define_method-4> <DM MODERATE (events)>
       Accessors.send :define_method, :"default_#{name}", &block
       Accessors.module_eval <<-METHOD, __FILE__, __LINE__ + 1
         def #{name}

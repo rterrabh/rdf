@@ -4,7 +4,7 @@ module Paperclip
   module Validators
     class AttachmentPresenceValidator < ActiveModel::EachValidator
       def validate_each(record, attribute, value)
-        #nodyna <ID:send-48> <send VERY HIGH ex3>
+        #nodyna <ID:send-48> <SD COMPLEX (change-prone variables)>
         if record.send("#{attribute}_file_name").blank?
           record.errors.add(attribute, :blank, options)
         end

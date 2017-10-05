@@ -171,18 +171,18 @@ class Object # :nodoc:
     metaclass = class << self; self; end
 
     if respond_to? name and not methods.map(&:to_s).include? name.to_s then
-      #nodyna <ID:send-143> <send MEDIUM ex4>
-      #nodyna <ID:define_method-45> <define_method VERY HIGH ex2>
+      #nodyna <ID:send-143> <SD MODERATE (private methods)>
+      #nodyna <ID:define_method-45> <DM COMPLEX (events)>
       metaclass.send :define_method, name do |*args|
         super(*args)
       end
     end
 
-    #nodyna <ID:send-144> <send MEDIUM ex4>
+    #nodyna <ID:send-144> <SD MODERATE (private methods)>
     metaclass.send :alias_method, new_name, name
 
-    #nodyna <ID:send-145> <send MEDIUM ex4>
-    #nodyna <ID:define_method-46> <define_method VERY HIGH ex2>
+    #nodyna <ID:send-145> <SD MODERATE (private methods)>
+    #nodyna <ID:define_method-46> <DM COMPLEX (events)>
     metaclass.send :define_method, name do |*args|
       if val_or_callable.respond_to? :call then
         val_or_callable.call(*args)
@@ -193,11 +193,11 @@ class Object # :nodoc:
 
     yield self
   ensure
-    #nodyna <ID:send-146> <send MEDIUM ex4>
+    #nodyna <ID:send-146> <SD MODERATE (private methods)>
     metaclass.send :undef_method, name
-    #nodyna <ID:send-147> <send MEDIUM ex4>
+    #nodyna <ID:send-147> <SD MODERATE (private methods)>
     metaclass.send :alias_method, name, new_name
-    #nodyna <ID:send-148> <send MEDIUM ex4>
+    #nodyna <ID:send-148> <SD MODERATE (private methods)>
     metaclass.send :undef_method, new_name
   end
 end

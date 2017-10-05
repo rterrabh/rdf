@@ -8,7 +8,7 @@ module Rails
     module ResourceHelpers # :nodoc:
 
       def self.included(base) #:nodoc:
-        #nodyna <ID:send-279> <send VERY LOW ex1>
+        #nodyna <ID:send-279> <SD TRIVIAL (public methods)>
         base.send :include, Rails::Generators::ModelHelpers
         base.class_option :model_name, type: :string, desc: "ModelName to be used"
       end

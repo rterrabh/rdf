@@ -142,7 +142,7 @@ module ActionView
     def render(view, locals, buffer=nil, &block)
       instrument("!render_template") do
         compile!(view)
-        #nodyna <ID:send-40> <send VERY HIGH ex3>
+        #nodyna <ID:send-40> <SD COMPLEX (change-prone variables)>
         view.send(method_name, locals, buffer, &block)
       end
     rescue => e

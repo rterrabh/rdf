@@ -145,7 +145,7 @@ describe Spree::Order, :type => :model do
           shared_examples "it cloned the default address" do
             it do
               default_attributes = default_address.attributes
-              #nodyna <ID:send-53> <send VERY HIGH ex3>
+              #nodyna <ID:send-53> <SD COMPLEX (change-prone variables)>
               order_attributes = order.send("#{address_kind}_address".to_sym).try(:attributes) || {}
 
               expect(order_attributes.except('id', 'created_at', 'updated_at')).to eql(default_attributes.except('id', 'created_at', 'updated_at'))

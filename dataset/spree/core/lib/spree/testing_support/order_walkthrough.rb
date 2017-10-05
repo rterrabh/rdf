@@ -31,7 +31,7 @@ class OrderWalkthrough
 
     end_state_position = states.index(state.to_sym)
     states[0...end_state_position].each do |state|
-      #nodyna <ID:send-3> <send MEDIUM ex2>
+      #nodyna <ID:send-3> <SD MODERATE (array)>
       send(state, order)
     end
 

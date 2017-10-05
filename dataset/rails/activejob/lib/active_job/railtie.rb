@@ -15,7 +15,7 @@ module ActiveJob
       options.queue_adapter ||= :inline
 
       ActiveSupport.on_load(:active_job) do
-        #nodyna <ID:send-66> <send VERY HIGH ex2>
+        #nodyna <ID:send-66> <SD COMPLEX (array)>
         options.each { |k,v| send("#{k}=", v) }
       end
     end

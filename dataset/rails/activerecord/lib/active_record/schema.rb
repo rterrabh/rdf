@@ -38,7 +38,7 @@ module ActiveRecord
     end
 
     def define(info, &block) # :nodoc:
-      #nodyna <ID:instance_eval-4> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-4> <IEV COMPLEX (block execution)>
       instance_eval(&block)
 
       unless info[:version].blank?

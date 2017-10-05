@@ -24,7 +24,7 @@ module RailsAdmin
         end
 
         def method_missing(name, *args, &block)
-          #nodyna <ID:send-54> <send VERY HIGH ex3>
+          #nodyna <ID:send-54> <SD COMPLEX (change-prone variables)>
           object.send(name, *args, &block)
         end
       end

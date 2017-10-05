@@ -37,7 +37,7 @@ module ActiveRecord
 
       module ClassMethods
         [:cache_attributes, :cached_attributes, :cache_attribute?].each do |method_name|
-          #nodyna <ID:define_method-31> <define_method MEDIUM ex1>
+          #nodyna <ID:define_method-31> <DM MODERATE (array)>
           define_method method_name do |*|
             cached_attributes_deprecation_warning(method_name)
             true
@@ -53,7 +53,7 @@ module ActiveRecord
         if Module.methods_transplantable?
           def define_method_attribute(name)
             method = ReaderMethodCache[name]
-            #nodyna <ID:define_method-32> <define_method VERY HIGH ex2>
+            #nodyna <ID:define_method-32> <DM COMPLEX (events)>
             generated_attribute_methods.module_eval { define_method name, method }
           end
         else

@@ -535,9 +535,9 @@ class User < ActiveRecord::Base
 
   def sanitize_attrs
     %w(name username skype linkedin twitter).each do |attr|
-      #nodyna <ID:send-85> <send MEDIUM ex2>
+      #nodyna <ID:send-85> <SD MODERATE (array)>
       value = self.send(attr)
-      #nodyna <ID:send-86> <send MEDIUM ex2>
+      #nodyna <ID:send-86> <SD MODERATE (array)>
       self.send("#{attr}=", Sanitize.clean(value)) if value.present?
     end
   end
@@ -585,7 +585,7 @@ class User < ActiveRecord::Base
 
   def with_defaults
     User.defaults.each do |k, v|
-      #nodyna <ID:send-87> <send VERY HIGH ex2>
+      #nodyna <ID:send-87> <SD COMPLEX (array)>
       self.send("#{k}=", v)
     end
 

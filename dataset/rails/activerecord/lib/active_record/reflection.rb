@@ -268,7 +268,7 @@ module ActiveRecord
       end
 
       def compute_class(name)
-        #nodyna <ID:send-159> <send LOW ex4>
+        #nodyna <ID:send-159> <SD EASY (private methods)>
         active_record.send(:compute_type, name)
       end
 
@@ -859,7 +859,7 @@ module ActiveRecord
       protected
 
         def actual_source_reflection # FIXME: this is a horrible name
-          #nodyna <ID:send-160> <send LOW ex4>
+          #nodyna <ID:send-160> <SD EASY (private methods)>
           source_reflection.send(:actual_source_reflection)
         end
 

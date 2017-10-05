@@ -12,7 +12,7 @@ module DRb
         if defined? @observer_peers
           @observer_peers.each do |observer, method|
             begin
-              #nodyna <ID:send-111> <send VERY HIGH ex3>
+              #nodyna <ID:send-111> <SD COMPLEX (change-prone variables)>
               observer.send(method, *arg)
             rescue
               delete_observer(observer)

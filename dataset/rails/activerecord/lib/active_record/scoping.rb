@@ -23,7 +23,7 @@ module ActiveRecord
       return unless self.class.scope_attributes?
 
       self.class.scope_attributes.each do |att,value|
-        #nodyna <ID:send-147> <send VERY HIGH ex2>
+        #nodyna <ID:send-147> <SD COMPLEX (array)>
         send("#{att}=", value) if respond_to?("#{att}=")
       end
     end

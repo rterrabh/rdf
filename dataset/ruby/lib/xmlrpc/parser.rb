@@ -147,7 +147,7 @@ module XMLRPC # :nodoc:
       else
         begin
           mod = Module
-          #nodyna <ID:const_get-26> <const_get VERY HIGH ex2>
+          #nodyna <ID:const_get-26> <CG COMPLEX (array)>
           klass.split("::").each {|const| mod = mod.const_get(const.strip)}
 
           obj = mod.allocate
@@ -651,13 +651,13 @@ module XMLRPC # :nodoc:
         if defined? XML::DOM::Builder
           return if defined? XML::DOM::Node::DOCUMENT # code below has been already executed
           klass = XML::DOM::Node
-          #nodyna <ID:const_set-25> <const_set VERY LOW ex1>
+          #nodyna <ID:const_set-25> <CS TRIVIAL (static values)>
           klass.const_set(:DOCUMENT, klass::DOCUMENT_NODE)
-          #nodyna <ID:const_set-26> <const_set VERY LOW ex1>
+          #nodyna <ID:const_set-26> <CS TRIVIAL (static values)>
           klass.const_set(:TEXT, klass::TEXT_NODE)
-          #nodyna <ID:const_set-27> <const_set VERY LOW ex1>
+          #nodyna <ID:const_set-27> <CS TRIVIAL (static values)>
           klass.const_set(:COMMENT, klass::COMMENT_NODE)
-          #nodyna <ID:const_set-28> <const_set VERY LOW ex1>
+          #nodyna <ID:const_set-28> <CS TRIVIAL (static values)>
           klass.const_set(:ELEMENT, klass::ELEMENT_NODE)
         end
       end

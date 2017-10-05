@@ -69,13 +69,13 @@ class Object
   def try!(*a, &b)
     if a.empty? && block_given?
       if b.arity.zero?
-        #nodyna <ID:instance_eval-8> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-8> <IEV COMPLEX (block execution)>
         instance_eval(&b)
       else
         yield self
       end
     else
-      #nodyna <ID:send-258> <send VERY HIGH ex3>
+      #nodyna <ID:send-258> <SD COMPLEX (change-prone variables)>
       public_send(*a, &b)
     end
   end

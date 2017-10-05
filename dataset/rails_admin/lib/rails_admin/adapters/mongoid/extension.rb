@@ -23,7 +23,7 @@ module RailsAdmin
           if attributes.detect { |k, _v| k.to_s == value.to_s }
             read_attribute(value)
           else
-            #nodyna <ID:send-52> <send VERY HIGH ex3>
+            #nodyna <ID:send-52> <SD COMPLEX (change-prone variables)>
             send(value)
           end
         end

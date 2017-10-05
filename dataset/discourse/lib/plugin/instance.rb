@@ -43,7 +43,7 @@ class Plugin::Instance
   end
 
   def enabled?
-    #nodyna <ID:send-49> <send VERY HIGH ex3>
+    #nodyna <ID:send-49> <SD COMPLEX (change-prone variables)>
     @enabled_site_setting ? SiteSetting.send(@enabled_site_setting) : true
   end
 
@@ -54,16 +54,16 @@ class Plugin::Instance
 
     klass.attributes(attr) unless attr.to_s.start_with?("include_")
 
-    #nodyna <ID:send-50> <send MEDIUM ex4>
-    #nodyna <ID:define_method-6> <define_method MEDIUM ex2>
+    #nodyna <ID:send-50> <SD MODERATE (private methods)>
+    #nodyna <ID:define_method-6> <DM MODERATE (events)>
     klass.send(:define_method, attr, &block)
 
     return unless define_include_method
 
     # Don't include serialized methods if the plugin is disabled
     plugin = self
-    #nodyna <ID:send-51> <send MEDIUM ex4>
-    #nodyna <ID:define_method-7> <define_method MEDIUM ex2>
+    #nodyna <ID:send-51> <SD MODERATE (private methods)>
+    #nodyna <ID:define_method-7> <DM MODERATE (events)>
     klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
   end
 
@@ -73,15 +73,15 @@ class Plugin::Instance
     klass = klass.to_s.classify.constantize
 
     hidden_method_name = :"#{attr}_without_enable_check"
-    #nodyna <ID:send-52> <send VERY HIGH ex4>
-    #nodyna <ID:define_method-8> <define_method VERY HIGH ex2>
+    #nodyna <ID:send-52> <SD COMPLEX (private methods)>
+    #nodyna <ID:define_method-8> <DM COMPLEX (events)>
     klass.send(:define_method, hidden_method_name, &block)
 
     plugin = self
-    #nodyna <ID:send-53> <send VERY HIGH ex4>
-    #nodyna <ID:define_method-9> <define_method VERY HIGH ex2>
+    #nodyna <ID:send-53> <SD COMPLEX (private methods)>
+    #nodyna <ID:define_method-9> <DM COMPLEX (events)>
     klass.send(:define_method, attr) do |*args|
-      #nodyna <ID:send-54> <send VERY HIGH ex2>
+      #nodyna <ID:send-54> <SD COMPLEX (array)>
       send(hidden_method_name, *args) if plugin.enabled?
     end
   end
@@ -91,13 +91,13 @@ class Plugin::Instance
     klass = klass.to_s.classify.constantize
 
     hidden_method_name = :"#{attr}_without_enable_check"
-    #nodyna <ID:send-55> <send VERY HIGH ex4>
+    #nodyna <ID:send-55> <SD COMPLEX (private methods)>
     klass.send(:define_singleton_method, hidden_method_name, &block)
 
     plugin = self
-    #nodyna <ID:send-56> <send VERY HIGH ex4>
+    #nodyna <ID:send-56> <SD COMPLEX (private methods)>
     klass.send(:define_singleton_method, attr) do |*args|
-      #nodyna <ID:send-57> <send VERY HIGH ex3>
+      #nodyna <ID:send-57> <SD COMPLEX (change-prone variables)>
       send(hidden_method_name, *args) if plugin.enabled?
     end
   end
@@ -110,13 +110,13 @@ class Plugin::Instance
     method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
     @idx += 1
     hidden_method_name = :"#{method_name}_without_enable_check"
-    #nodyna <ID:send-58> <send VERY HIGH ex4>
-    #nodyna <ID:define_method-10> <define_method VERY HIGH ex2>
+    #nodyna <ID:send-58> <SD COMPLEX (private methods)>
+    #nodyna <ID:define_method-10> <DM COMPLEX (events)>
     klass.send(:define_method, hidden_method_name, &block)
 
-    #nodyna <ID:send-59> <send VERY HIGH ex3>
+    #nodyna <ID:send-59> <SD COMPLEX (change-prone variables)>
     klass.send(callback) do |*args|
-      #nodyna <ID:send-60> <send VERY HIGH ex2>
+      #nodyna <ID:send-60> <SD COMPLEX (array)>
       send(hidden_method_name, *args) if plugin.enabled?
     end
 
@@ -125,8 +125,8 @@ class Plugin::Instance
   # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize
-    #nodyna <ID:send-61> <send MEDIUM ex4>
-    #nodyna <ID:define_method-11> <define_method MEDIUM ex2>
+    #nodyna <ID:send-61> <SD MODERATE (private methods)>
+    #nodyna <ID:define_method-11> <DM MODERATE (events)>
     klass.send(:define_method, name, &block)
 
     plugin = self
@@ -279,7 +279,7 @@ class Plugin::Instance
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
     end
 
-    #nodyna <ID:instance_eval-1> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-1> <IEV COMPLEX (block execution)>
     self.instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat auto_assets.map{|a| [a]}
@@ -319,7 +319,7 @@ class Plugin::Instance
   def auth_provider(opts)
     provider = Plugin::AuthProvider.new
     [:glyph, :background_color, :title, :message, :frame_width, :frame_height, :authenticator].each do |sym|
-      #nodyna <ID:send-62> <send MEDIUM ex2>
+      #nodyna <ID:send-62> <SD MODERATE (array)>
       provider.send "#{sym}=", opts.delete(sym)
     end
     auth_providers << provider

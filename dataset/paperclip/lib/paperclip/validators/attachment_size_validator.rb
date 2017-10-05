@@ -17,7 +17,7 @@ module Paperclip
       def validate_each(record, attr_name, value)
         base_attr_name = attr_name
         attr_name = "#{attr_name}_file_size".to_sym
-        #nodyna <ID:send-45> <send LOW ex4>
+        #nodyna <ID:send-45> <SD EASY (private methods)>
         value = record.send(:read_attribute_for_validation, attr_name)
 
         unless value.blank?
@@ -25,7 +25,7 @@ module Paperclip
             option_value = option_value.call(record) if option_value.is_a?(Proc)
             option_value = extract_option_value(option, option_value)
 
-            #nodyna <ID:send-46> <send VERY HIGH ex3>
+            #nodyna <ID:send-46> <SD COMPLEX (change-prone variables)>
             unless value.send(CHECKS[option], option_value)
               error_message_key = options[:in] ? :in_between : option
               [ attr_name, base_attr_name ].each do |error_attr_name|

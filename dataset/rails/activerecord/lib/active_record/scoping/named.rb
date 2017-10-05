@@ -151,8 +151,8 @@ module ActiveRecord
 
           extension = Module.new(&block) if block
 
-          #nodyna <ID:send-185> <send VERY HIGH ex4>
-          #nodyna <ID:define_method-23> <define_method VERY HIGH ex2>
+          #nodyna <ID:send-185> <SD COMPLEX (private methods)>
+          #nodyna <ID:define_method-23> <DM COMPLEX (events)>
           singleton_class.send(:define_method, name) do |*args|
             scope = all.scoping { body.call(*args) }
             scope = scope.extending(extension) if extension

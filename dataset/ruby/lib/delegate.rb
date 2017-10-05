@@ -58,7 +58,7 @@ class Delegator < BasicObject
 
   # :stopdoc:
   def self.const_missing(n)
-    #nodyna <ID:const_get-37> <const_get VERY HIGH ex3>
+    #nodyna <ID:const_get-37> <CG COMPLEX (change-prone variable)>
     ::Object.const_get(n)
   end
   # :startdoc:
@@ -235,9 +235,9 @@ class Delegator < BasicObject
   #
 
   [:trust, :untrust, :taint, :untaint, :freeze].each do |method|
-    #nodyna <ID:define_method-38> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-38> <DM MODERATE (array)>
     define_method method do
-      #nodyna <ID:send-89> <send MEDIUM ex3>
+      #nodyna <ID:send-89> <SD MODERATE (change-prone variables)>
       __getobj__.send(method)
       super()
     end
@@ -407,7 +407,7 @@ def DelegateClass(superclass)
       @delegate_dc_obj = obj
     end
     methods.each do |method|
-      #nodyna <ID:define_method-39> <define_method VERY HIGH ex1>
+      #nodyna <ID:define_method-39> <DM COMPLEX (array)>
       define_method(method, Delegator.delegating_block(method))
     end
   end

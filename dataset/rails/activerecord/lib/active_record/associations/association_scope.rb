@@ -188,7 +188,7 @@ module ActiveRecord
       end
 
       def eval_scope(klass, scope, owner)
-        #nodyna <ID:instance_exec-13> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-13> <IEX COMPLEX (block with parameters)>
         klass.unscoped.instance_exec(owner, &scope)
       end
     end

@@ -20,7 +20,7 @@ module Digest
     unless Digest.const_defined?(name)
       raise NameError, "uninitialized constant Digest::#{name}", caller(1)
     end
-    #nodyna <ID:const_get-18> <const_get VERY HIGH ex3>
+    #nodyna <ID:const_get-18> <CG COMPLEX (change-prone variable)>
     Digest.const_get(name)
   end
 
@@ -102,7 +102,7 @@ def Digest(name)
 rescue LoadError
   # Constants do not necessarily rely on digest/*.
   if Digest.const_defined?(const)
-    #nodyna <ID:const_get-18> <const_get VERY HIGH ex3>
+    #nodyna <ID:const_get-18> <CG COMPLEX (change-prone variable)>
     Digest.const_get(const)
   else
     raise

@@ -925,7 +925,7 @@ class User < ActiveRecord::Base
     values = []
 
     %w{watching tracking muted}.each do |s|
-      #nodyna <ID:send-208> <send MEDIUM ex2>
+      #nodyna <ID:send-208> <SD MODERATE (array)>
       category_ids = SiteSetting.send("default_categories_#{s}").split("|")
       category_ids.each do |category_id|
         values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
@@ -984,28 +984,28 @@ class User < ActiveRecord::Base
   end
 
   %w{private_messages direct always}.each do |s|
-    #nodyna <ID:define_method-35> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-35> <DM MODERATE (array)>
     define_method("set_default_email_#{s}") do
-      #nodyna <ID:send-209> <send LOW ex3>
-      #nodyna <ID:send-209> <send LOW ex3>
+      #nodyna <ID:send-209> <SD EASY (change-prone variables)>
+      #nodyna <ID:send-209> <SD EASY (change-prone variables)>
       self.send("email_#{s}=", SiteSetting.send("default_email_#{s}")) if has_attribute?("email_#{s}")
     end
   end
 
   %w{new_topic_duration_minutes auto_track_topics_after_msecs}.each do |s|
-    #nodyna <ID:define_method-36> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-36> <DM MODERATE (array)>
     define_method("set_default_other_#{s}") do
-      #nodyna <ID:send-210> <send LOW ex3>
-      #nodyna <ID:send-210> <send LOW ex3>
+      #nodyna <ID:send-210> <SD EASY (change-prone variables)>
+      #nodyna <ID:send-210> <SD EASY (change-prone variables)>
       self.send("#{s}=", SiteSetting.send("default_other_#{s}").to_i) if has_attribute?(s)
     end
   end
 
   %w{external_links_in_new_tab enable_quoting dynamic_favicon disable_jump_reply edit_history_public}.each do |s|
-    #nodyna <ID:define_method-37> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-37> <DM MODERATE (array)>
     define_method("set_default_other_#{s}") do
-      #nodyna <ID:send-211> <send LOW ex3>
-      #nodyna <ID:send-211> <send LOW ex3>
+      #nodyna <ID:send-211> <SD EASY (change-prone variables)>
+      #nodyna <ID:send-211> <SD EASY (change-prone variables)>
       self.send("#{s}=", SiteSetting.send("default_other_#{s}")) if has_attribute?(s)
     end
   end

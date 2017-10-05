@@ -13,10 +13,10 @@ module ActiveSupport
           defined = method_defined? test_name
           raise "#{test_name} is already defined in #{self}" if defined
           if block_given?
-            #nodyna <ID:define_method-64> <define_method VERY HIGH ex2>
+            #nodyna <ID:define_method-64> <DM COMPLEX (events)>
             define_method(test_name, &block)
           else
-            #nodyna <ID:define_method-65> <define_method VERY HIGH ex2>
+            #nodyna <ID:define_method-65> <DM COMPLEX (events)>
             define_method(test_name) do
               flunk "No implementation provided for #{name}"
             end

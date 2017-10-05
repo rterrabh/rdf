@@ -52,10 +52,10 @@ module Tk::BWidget::Widget
     win = window(tk_call('Widget::create', klass, path, rename))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-28> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-28> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-131> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-131> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

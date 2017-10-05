@@ -22,26 +22,26 @@ module OpenSSL
   class Cipher
     %w(AES CAST5 BF DES IDEA RC2 RC4 RC5).each{|name|
       klass = Class.new(Cipher){
-        #nodyna <ID:define_method-1> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-1> <DM MODERATE (array)>
         define_method(:initialize){|*args|
           cipher_name = args.inject(name){|n, arg| "#{n}-#{arg}" }
           super(cipher_name)
         }
       }
-      #nodyna <ID:const_set-6> <const_set MEDIUM ex2>
+      #nodyna <ID:const_set-6> <CS MEDIUM (array)>
       const_set(name, klass)
     }
 
     %w(128 192 256).each{|keylen|
       klass = Class.new(Cipher){
-        #nodyna <ID:define_method-2> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-2> <DM MODERATE (array)>
         define_method(:initialize){|mode|
           mode ||= "CBC"
           cipher_name = "AES-#{keylen}-#{mode}"
           super(cipher_name)
         }
       }
-      #nodyna <ID:const_set-7> <const_set MEDIUM ex2>
+      #nodyna <ID:const_set-7> <CS MEDIUM (array)>
       const_set("AES#{keylen}", klass)
     }
 

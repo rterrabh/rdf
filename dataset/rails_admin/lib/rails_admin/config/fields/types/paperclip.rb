@@ -14,7 +14,7 @@ module RailsAdmin
           end
 
           register_instance_option :thumb_method do
-            #nodyna <ID:send-18> <send VERY HIGH ex3>
+            #nodyna <ID:send-18> <SD COMPLEX (change-prone variables)>
             @styles ||= bindings[:object].send(name).styles.collect(&:first)
             @thumb_method ||= @styles.detect { |s| [:thumb, 'thumb', :thumbnail, 'thumbnail'].include?(s) } || @styles.first || :original
           end

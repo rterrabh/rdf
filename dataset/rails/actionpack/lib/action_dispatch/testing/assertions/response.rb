@@ -24,7 +24,7 @@ module ActionDispatch
 
         if Symbol === type
           if [:success, :missing, :redirect, :error].include?(type)
-            #nodyna <ID:send-108> <send MEDIUM ex3>
+            #nodyna <ID:send-108> <SD MODERATE (change-prone variables)>
             assert @response.send("#{type}?"), message
           else
             code = Rack::Utils::SYMBOL_TO_STATUS_CODE[type]

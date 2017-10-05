@@ -74,7 +74,7 @@ class Guardian
   def can_see?(obj)
     if obj
       see_method = method_name_for :see, obj
-      #nodyna <ID:send-42> <send VERY HIGH ex3>
+      #nodyna <ID:send-42> <SD COMPLEX (change-prone variables)>
       return (see_method ? send(see_method, obj) : true)
     end
   end
@@ -94,7 +94,7 @@ class Guardian
     end
     create_method = :"can_create_#{target}?"
 
-    #nodyna <ID:send-43> <send VERY HIGH ex3>
+    #nodyna <ID:send-43> <SD COMPLEX (change-prone variables)>
     return send(create_method, parent) if respond_to?(create_method)
 
     true
@@ -307,7 +307,7 @@ class Guardian
   def can_do?(action, obj)
     if obj && authenticated?
       action_method = method_name_for action, obj
-      #nodyna <ID:send-47> <send VERY HIGH ex3>
+      #nodyna <ID:send-47> <SD COMPLEX (change-prone variables)>
       return (action_method ? send(action_method, obj) : true)
     else
       false

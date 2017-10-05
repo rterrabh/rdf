@@ -289,7 +289,7 @@ module ActiveModel
             generate_method = "define_method_#{matcher.method_missing_target}"
 
             if respond_to?(generate_method, true)
-              #nodyna <ID:send-33> <send VERY HIGH ex3>
+              #nodyna <ID:send-33> <SD COMPLEX (change-prone variables)>
               send(generate_method, attr_name)
             else
               define_proxy_call true, generated_attribute_methods, method_name, matcher.method_missing_target, attr_name.to_s
@@ -468,7 +468,7 @@ module ActiveModel
       # Returns a struct representing the matching attribute method.
       # The struct's attributes are prefix, base and suffix.
       def match_attribute_method?(method_name)
-        #nodyna <ID:send-39> <send LOW ex4>
+        #nodyna <ID:send-39> <SD EASY (private methods)>
         matches = self.class.send(:attribute_method_matchers_matching, method_name)
         matches.detect { |match| attribute_method?(match.attr_name) }
       end

@@ -35,7 +35,7 @@ module RailsAdmin
         end
 
         # If a block has been given evaluate it and sort fields after that
-        #nodyna <ID:instance_eval-1> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-1> <IEV COMPLEX (block execution)>
         field.instance_eval(&block) if block
         field
       end
@@ -49,7 +49,7 @@ module RailsAdmin
       # or include fields by conditions if no field names
       def include_fields(*field_names, &block)
         if field_names.empty?
-          #nodyna <ID:instance_eval-2> <instance_eval VERY HIGH ex3>
+          #nodyna <ID:instance_eval-2> <IEV COMPLEX (block execution)>
           _fields.select { |f| f.instance_eval(&block) }.each do |f|
             next if f.defined
             f.defined = true
@@ -64,7 +64,7 @@ module RailsAdmin
       def exclude_fields(*field_names, &block)
         block ||= proc { |f| field_names.include?(f.name) }
         _fields.each { |f| f.defined = true } if _fields.select(&:defined).empty?
-        #nodyna <ID:instance_eval-3> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-3> <IEV COMPLEX (block execution)>
         _fields.select { |f| f.instance_eval(&block) }.each { |f| f.defined = false }
       end
 
@@ -96,7 +96,7 @@ module RailsAdmin
             f.defined = true
             f.order = _fields.count(&:defined)
           end
-          #nodyna <ID:instance_eval-4> <instance_eval VERY HIGH ex3>
+          #nodyna <ID:instance_eval-4> <IEV COMPLEX (block execution)>
           f.instance_eval(&block) if block
           f
         end
@@ -104,7 +104,7 @@ module RailsAdmin
 
       # Defines configuration for fields by their type.
       def fields_of_type(type, &block)
-        #nodyna <ID:instance_eval-5> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-5> <IEV COMPLEX (block execution)>
         _fields.select { |f| type == f.type }.map! { |f| f.instance_eval(&block) } if block
       end
 
@@ -135,7 +135,7 @@ module RailsAdmin
           @_ro_fields = @_fields = RailsAdmin::Config::Fields.factory(self)
         else
           # parent is RailsAdmin::Config::Model, recursion is on Section's classes
-          #nodyna <ID:send-13> <send VERY HIGH ex3>
+          #nodyna <ID:send-13> <SD COMPLEX (change-prone variables)>
           @_ro_fields ||= parent.send(self.class.superclass.to_s.underscore.split('/').last)._fields(true).freeze
         end
         readonly ? @_ro_fields : (@_fields ||= @_ro_fields.collect(&:clone))

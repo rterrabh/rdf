@@ -4,7 +4,7 @@ module ActiveRecord
     class BelongsToAssociation < SingularAssociation #:nodoc:
 
       def handle_dependency
-        #nodyna <ID:send-123> <send VERY HIGH ex3>
+        #nodyna <ID:send-123> <SD COMPLEX (change-prone variables)>
         target.send(options[:dependent]) if load_target
       end
 
@@ -101,7 +101,7 @@ module ActiveRecord
 
         def target_id
           if options[:primary_key]
-            #nodyna <ID:send-124> <send VERY HIGH ex3>
+            #nodyna <ID:send-124> <SD COMPLEX (change-prone variables)>
             owner.send(reflection.name).try(:id)
           else
             owner._read_attribute(reflection.foreign_key)

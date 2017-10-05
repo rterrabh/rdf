@@ -56,7 +56,7 @@ module Jobs
       # Make sure that mailer exists
       raise Discourse::InvalidParameters.new(:type) unless UserNotifications.respond_to?(args[:type])
 
-      #nodyna <ID:send-171> <send VERY HIGH ex3>
+      #nodyna <ID:send-171> <SD COMPLEX (change-prone variables)>
       message = UserNotifications.send(args[:type], @user, email_args)
       # Update the to address if we have a custom one
       if args[:to_address].present?

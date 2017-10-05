@@ -26,7 +26,7 @@ describe Stream::Multi do
       prefill_text = "sup?"
       allow(@stream).to receive(:welcome?).and_return(true)
       allow(@stream).to receive(:publisher_prefill).and_return(prefill_text)
-      #nodyna <ID:send-86> <send LOW ex4>
+      #nodyna <ID:send-86> <SD EASY (private methods)>
       expect(@stream.send(:publisher_opts)).to eq({:open => true,
                                                :prefill => prefill_text,
                                                :public => true})
@@ -35,7 +35,7 @@ describe Stream::Multi do
     it 'provides no opts if welcome? is not set' do
       prefill_text = "sup?"
       allow(@stream).to receive(:welcome?).and_return(false)
-      #nodyna <ID:send-87> <send LOW ex4>
+      #nodyna <ID:send-87> <SD EASY (private methods)>
       expect(@stream.send(:publisher_opts)).to eq({})
     end
   end
@@ -49,12 +49,12 @@ describe Stream::Multi do
     end
 
     it 'returns includes new user hashtag' do
-      #nodyna <ID:send-88> <send LOW ex4>
+      #nodyna <ID:send-88> <SD EASY (private methods)>
       expect(@stream.send(:publisher_prefill)).to match(/#NewHere/i)
     end
 
     it 'includes followed hashtags' do
-      #nodyna <ID:send-89> <send LOW ex4>
+      #nodyna <ID:send-89> <SD EASY (private methods)>
       expect(@stream.send(:publisher_prefill)).to include("#cats")
     end
 
@@ -68,7 +68,7 @@ describe Stream::Multi do
 
       it 'includes a mention of the inviter' do
         mention = "@{#{@inviter.name} ; #{@inviter.diaspora_handle}}"
-        #nodyna <ID:send-90> <send LOW ex4>
+        #nodyna <ID:send-90> <SD EASY (private methods)>
         expect(@stream.send(:publisher_prefill)).to include(mention)
       end
     end
@@ -81,13 +81,13 @@ describe Stream::Multi do
 
     it 'returns true if user is getting started' do
       alice.getting_started = true
-      #nodyna <ID:send-91> <send LOW ex4>
+      #nodyna <ID:send-91> <SD EASY (private methods)>
       expect(@stream.send(:welcome?)).to be true
     end
 
     it 'returns false if user is getting started' do
       alice.getting_started = false
-      #nodyna <ID:send-92> <send LOW ex4>
+      #nodyna <ID:send-92> <SD EASY (private methods)>
       expect(@stream.send(:welcome?)).to be false
     end
   end

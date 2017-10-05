@@ -101,7 +101,7 @@ class QueuedPost < ActiveRecord::Base
       end
 
       # Update the record in memory too, and clear the dirty flag
-      #nodyna <ID:send-190> <send MEDIUM ex2>
+      #nodyna <ID:send-190> <SD MODERATE (array)>
       updates.each {|k, v| send("#{k}=", v) }
       changes_applied
 

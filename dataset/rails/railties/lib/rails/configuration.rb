@@ -65,7 +65,7 @@ module Rails
 
       def merge_into(other) #:nodoc:
         @operations.each do |operation, args, block|
-          #nodyna <ID:send-277> <send MEDIUM ex2>
+          #nodyna <ID:send-277> <SD MODERATE (array)>
           other.send(operation, *args, &block)
         end
         other

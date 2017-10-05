@@ -242,7 +242,7 @@ module RailsAdmin
 
       # Returns action configuration object
       def actions(&block)
-        #nodyna <ID:instance_eval-22> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-22> <IEV COMPLEX (block execution)>
         RailsAdmin::Config::Actions.instance_eval(&block) if block
       end
 

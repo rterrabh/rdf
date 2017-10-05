@@ -51,10 +51,10 @@ module ActiveAdmin
       param_key = config.param_key.to_sym
 
       controller do
-        #nodyna <ID:define_method-4> <define_method VERY HIGH ex2>
+        #nodyna <ID:define_method-4> <DM COMPLEX (events)>
         define_method :permitted_params do
           params.permit *active_admin_namespace.permitted_params,
-            #nodyna <ID:instance_exec-8> <instance_exec VERY HIGH ex1>
+            #nodyna <ID:instance_exec-8> <IEX COMPLEX (block without parameters)>
             param_key => block ? instance_exec(&block) : args
         end
       end
@@ -119,7 +119,7 @@ module ActiveAdmin
 
       controller do
         before_filter(only: [name]) { @page_title = title } if title
-        #nodyna <ID:define_method-5> <define_method VERY HIGH ex2>
+        #nodyna <ID:define_method-5> <DM COMPLEX (events)>
         define_method(name, &block || Proc.new{})
       end
     end

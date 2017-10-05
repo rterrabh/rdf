@@ -22,15 +22,15 @@ module RailsAdmin
       def self.included(klass)
         # Register accessors for all the sections in this namespace
         constants.each do |name|
-          #nodyna <ID:const_get-1> <const_get VERY HIGH ex2>
+          #nodyna <ID:const_get-1> <CG COMPLEX (array)>
           section = RailsAdmin::Config::Sections.const_get(name)
           name = name.to_s.underscore.to_sym
-          #nodyna <ID:send-35> <send VERY HIGH ex4>
-          #nodyna <ID:define_method-1> <define_method VERY HIGH ex2>
+          #nodyna <ID:send-35> <SD COMPLEX (private methods)>
+          #nodyna <ID:define_method-1> <DM COMPLEX (events)>
           klass.send(:define_method, name) do |&block|
             @sections = {} unless @sections
             @sections[name] = section.new(self) unless @sections[name]
-            #nodyna <ID:instance_eval-11> <instance_eval VERY HIGH ex3>
+            #nodyna <ID:instance_eval-11> <IEV COMPLEX (block execution)>
             @sections[name].instance_eval(&block) if block
             @sections[name]
           end

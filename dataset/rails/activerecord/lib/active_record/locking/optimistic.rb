@@ -62,9 +62,9 @@ module ActiveRecord
       private
         def increment_lock
           lock_col = self.class.locking_column
-          #nodyna <ID:send-151> <send MEDIUM ex3>
+          #nodyna <ID:send-151> <SD MODERATE (change-prone variables)>
           previous_lock_value = send(lock_col).to_i
-          #nodyna <ID:send-152> <send MEDIUM ex3>
+          #nodyna <ID:send-152> <SD MODERATE (change-prone variables)>
           send(lock_col + '=', previous_lock_value + 1)
         end
 
@@ -82,7 +82,7 @@ module ActiveRecord
           return 0 if attribute_names.empty?
 
           lock_col = self.class.locking_column
-          #nodyna <ID:send-153> <send MEDIUM ex3>
+          #nodyna <ID:send-153> <SD MODERATE (change-prone variables)>
           previous_lock_value = send(lock_col).to_i
           increment_lock
 
@@ -109,7 +109,7 @@ module ActiveRecord
 
           # If something went wrong, revert the version.
           rescue Exception
-            #nodyna <ID:send-154> <send MEDIUM ex3>
+            #nodyna <ID:send-154> <SD MODERATE (change-prone variables)>
             send(lock_col + '=', previous_lock_value)
             raise
           end

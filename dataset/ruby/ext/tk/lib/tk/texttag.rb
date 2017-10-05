@@ -11,7 +11,7 @@ class TkTextTag<TkObject
 
   TTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-62> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-62> <IEV MODERATE (method definition)>
   (Tk_TextTag_ID = ['tag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -260,7 +260,7 @@ class TkTextNamedTag<TkTextTag
         tagobj = TTagID_TBL[parent.path][name]
       else
         # super(parent, name, *args)
-        #nodyna <ID:instance_eval-63> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-63> <IEV MODERATE (private access)>
         (tagobj = self.allocate).instance_eval{
           @parent = @t = parent
           @tpath = parent.path

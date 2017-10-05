@@ -13,7 +13,7 @@ module ActiveAdmin
       policy = retrieve_policy(subject)
       action = format_action(action, subject)
 
-      #nodyna <ID:send-47> <send MEDIUM ex3>
+      #nodyna <ID:send-47> <SD MODERATE (change-prone variables)>
       policy.respond_to?(action) && policy.public_send(action)
     end
 

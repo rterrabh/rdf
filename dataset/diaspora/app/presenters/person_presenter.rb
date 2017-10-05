@@ -61,7 +61,7 @@ class PersonPresenter < BasePresenter
     return :not_sharing unless contact
 
     %i(mutual sharing receiving).find do |status|
-      #nodyna <ID:send-249> <send MEDIUM ex2>
+      #nodyna <ID:send-249> <SD MODERATE (array)>
       contact.public_send("#{status}?")
     end || :not_sharing
   end

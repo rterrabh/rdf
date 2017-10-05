@@ -49,7 +49,7 @@ module REXML
       def EntityDecl.parse_source source, listener
         md = source.match( PATTERN_RE, true )
         thing = md[0].squeeze(" \t\n\r")
-        #nodyna <ID:send-105> <send VERY HIGH ex3>
+        #nodyna <ID:send-105> <SD COMPLEX (change-prone variables)>
         listener.send inspect.downcase, thing
       end
     end

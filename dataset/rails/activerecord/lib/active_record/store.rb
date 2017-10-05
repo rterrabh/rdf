@@ -82,12 +82,12 @@ module ActiveRecord
 
         _store_accessors_module.module_eval do
           keys.each do |key|
-            #nodyna <ID:define_method-36> <define_method VERY HIGH ex1>
+            #nodyna <ID:define_method-36> <DM COMPLEX (array)>
             define_method("#{key}=") do |value|
               write_store_attribute(store_attribute, key, value)
             end
 
-            #nodyna <ID:define_method-37> <define_method VERY HIGH ex1>
+            #nodyna <ID:define_method-37> <DM COMPLEX (array)>
             define_method(key) do
               read_store_attribute(store_attribute, key)
             end
@@ -137,23 +137,23 @@ module ActiveRecord
       class HashAccessor # :nodoc:
         def self.read(object, attribute, key)
           prepare(object, attribute)
-          #nodyna <ID:send-208> <send VERY HIGH ex3>
+          #nodyna <ID:send-208> <SD COMPLEX (change-prone variables)>
           object.public_send(attribute)[key]
         end
 
         def self.write(object, attribute, key, value)
           prepare(object, attribute)
           if value != read(object, attribute, key)
-            #nodyna <ID:send-209> <send VERY HIGH ex3>
+            #nodyna <ID:send-209> <SD COMPLEX (change-prone variables)>
             object.public_send :"#{attribute}_will_change!"
-            #nodyna <ID:send-210> <send VERY HIGH ex3>
+            #nodyna <ID:send-210> <SD COMPLEX (change-prone variables)>
             object.public_send(attribute)[key] = value
           end
         end
 
         def self.prepare(object, attribute)
-          #nodyna <ID:send-211> <send VERY HIGH ex3>
-          #nodyna <ID:send-211> <send VERY HIGH ex3>
+          #nodyna <ID:send-211> <SD COMPLEX (change-prone variables)>
+          #nodyna <ID:send-211> <SD COMPLEX (change-prone variables)>
           object.public_send :"#{attribute}=", {} unless object.send(attribute)
         end
       end
@@ -170,11 +170,11 @@ module ActiveRecord
 
       class IndifferentHashAccessor < ActiveRecord::Store::HashAccessor # :nodoc:
         def self.prepare(object, store_attribute)
-          #nodyna <ID:send-212> <send VERY HIGH ex3>
+          #nodyna <ID:send-212> <SD COMPLEX (change-prone variables)>
           attribute = object.send(store_attribute)
           unless attribute.is_a?(ActiveSupport::HashWithIndifferentAccess)
             attribute = IndifferentCoder.as_indifferent_hash(attribute)
-            #nodyna <ID:send-213> <send VERY HIGH ex3>
+            #nodyna <ID:send-213> <SD COMPLEX (change-prone variables)>
             object.send :"#{store_attribute}=", attribute
           end
           attribute

@@ -50,7 +50,7 @@ class Requirement
   # Overriding #satisfied? is deprecated.
   # Pass a block or boolean to the satisfy DSL method instead.
   def satisfied?
-    #nodyna <ID:instance_eval-2> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-2> <IEV COMPLEX (block execution)>
     result = self.class.satisfy.yielder { |p| instance_eval(&p) }
     @satisfied_result = result
     !!result
@@ -71,7 +71,7 @@ class Requirement
   # Note: #satisfied? should be called before invoking this method
   # as the env modifications may depend on its side effects.
   def modify_build_environment
-    #nodyna <ID:instance_eval-3> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-3> <IEV COMPLEX (block execution)>
     instance_eval(&env_proc) if env_proc
 
     # XXX If the satisfy block returns a Pathname, then make sure that it

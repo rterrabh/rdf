@@ -146,7 +146,7 @@ module Spree
 
     def actions
       return [] unless payment_source and payment_source.respond_to? :actions
-      #nodyna <ID:send-114> <send VERY HIGH ex2>
+      #nodyna <ID:send-114> <SD COMPLEX (array)>
       payment_source.actions.select { |action| !payment_source.respond_to?("can_#{action}?") or payment_source.send("can_#{action}?", self) }
     end
 

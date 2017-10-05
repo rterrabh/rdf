@@ -10,7 +10,7 @@ module Psych
           @handler = Psych::Emitter.new io
         else
           du = Handler::DumperOptions.new
-          #nodyna <ID:send-3> <send MEDIUM ex3>
+          #nodyna <ID:send-3> <SD MODERATE (change-prone variables)>
           opts.each { |option| du.send :"#{option}=", options[option] }
           @handler = Psych::Emitter.new io, du
         end

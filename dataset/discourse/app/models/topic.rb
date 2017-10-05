@@ -974,7 +974,7 @@ class Topic < ActiveRecord::Base
   end
 
   def apply_per_day_rate_limit_for(key, method_name)
-    #nodyna <ID:send-194> <send LOW ex3>
+    #nodyna <ID:send-194> <SD EASY (change-prone variables)>
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.send(method_name), 1.day.to_i)
   end
 

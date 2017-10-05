@@ -84,7 +84,7 @@ module WEBrick
       def log(meth, fmt, *args)
         msg = format("%s %s: ", @auth_scheme, @realm)
         msg << fmt % args
-        #nodyna <ID:send-71> <send MEDIUM ex3>
+        #nodyna <ID:send-71> <SD MODERATE (change-prone variables)>
         @logger.send(meth, msg)
       end
 

@@ -6,7 +6,7 @@ class UserSerializer < BasicUserSerializer
   def self.staff_attributes(*attrs)
     attributes(*attrs)
     attrs.each do |attr|
-      #nodyna <ID:define_method-26> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-26> <DM MODERATE (array)>
       define_method "include_#{attr}?" do
         scope.is_staff?
       end
@@ -16,7 +16,7 @@ class UserSerializer < BasicUserSerializer
   def self.private_attributes(*attrs)
     attributes(*attrs)
     attrs.each do |attr|
-      #nodyna <ID:define_method-27> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-27> <DM MODERATE (array)>
       define_method "include_#{attr}?" do
         can_edit
       end
@@ -27,10 +27,10 @@ class UserSerializer < BasicUserSerializer
   def self.untrusted_attributes(*attrs)
     attrs.each do |attr|
       method_name = "include_#{attr}?"
-      #nodyna <ID:define_method-28> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-28> <DM MODERATE (events)>
       define_method(method_name) do
         return false if scope.restrict_user_fields?(object)
-        #nodyna <ID:send-133> <send MEDIUM ex3>
+        #nodyna <ID:send-133> <SD MODERATE (change-prone variables)>
         send(attr).present?
       end
     end

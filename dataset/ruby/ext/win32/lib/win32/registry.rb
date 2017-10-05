@@ -215,8 +215,8 @@ For detail, see the MSDN[http://msdn.microsoft.com/library/en-us/sysinfo/base/pr
 
       # Make all
       Constants.constants.grep(/^HKEY_/) do |c|
-        #nodyna <ID:const_get-20> <const_get VERY HIGH ex2>
-        #nodyna <ID:const_set-23> <const_set VERY HIGH ex3>
+        #nodyna <ID:const_get-20> <CG COMPLEX (array)>
+        #nodyna <ID:const_set-23> <CS COMPLEX (change-prone variable)>
         Registry.const_set c, new(Constants.const_get(c), c.to_s)
       end
     end
@@ -242,7 +242,7 @@ For detail, see the MSDN[http://msdn.microsoft.com/library/en-us/sysinfo/base/pr
         "long RegQueryInfoKey(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *)",
       ].each do |fn|
         cfunc = extern fn, :stdcall
-        #nodyna <ID:const_set-24> <const_set MEDIUM ex2>
+        #nodyna <ID:const_set-24> <CS MEDIUM (array)>
         const_set cfunc.name.intern, cfunc
       end
 
@@ -387,7 +387,7 @@ For detail, see the MSDN[http://msdn.microsoft.com/library/en-us/sysinfo/base/pr
       REG_RESOURCE_LIST REG_FULL_RESOURCE_DESCRIPTOR
       REG_RESOURCE_REQUIREMENTS_LIST REG_QWORD
     ].each do |type|
-      #nodyna <ID:const_get-21> <const_get MEDIUM ex2>
+      #nodyna <ID:const_get-21> <CG MODERATE (array)>
       @@type2name[Constants.const_get(type)] = type
     end
 
@@ -897,7 +897,7 @@ For detail, see the MSDN[http://msdn.microsoft.com/library/en-us/sysinfo/base/pr
       num_values max_value_name_length max_value_length
       descriptor_length wtime
     ].each_with_index do |s, i|
-      #nodyna <ID:eval-67> <eval MEDIUM ex1>
+      #nodyna <ID:eval-67> <EV MODERATE (method definition)>
       eval <<-__END__
         def #{s}
           info[#{i}]

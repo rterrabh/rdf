@@ -23,7 +23,7 @@ module ActiveAdmin
         add_class "index"
         resource_selection_toggle_panel if active_admin_config.batch_actions.any?
         collection.each do |obj|
-          #nodyna <ID:instance_exec-22> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-22> <IEX COMPLEX (block with parameters)>
           instance_exec(obj, &page_presenter.block)
         end
       end

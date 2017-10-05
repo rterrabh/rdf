@@ -115,7 +115,7 @@ module Exception2MessageMapper
   #     define exception c with message m.
   #
   def E2MM.def_e2message(k, c, m)
-    #nodyna <ID:instance_eval-168> <instance_eval LOW ex1>
+    #nodyna <ID:instance_eval-168> <IEV EASY (private access)>
     E2MM.instance_eval{@MessageMap[[k, c]] = m}
     c
   end
@@ -130,9 +130,9 @@ module Exception2MessageMapper
   def E2MM.def_exception(k, n, m, s = StandardError)
     n = n.id2name if n.kind_of?(Fixnum)
     e = Class.new(s)
-    #nodyna <ID:instance_eval-169> <instance_eval LOW ex1>
+    #nodyna <ID:instance_eval-169> <IEV EASY (private access)>
     E2MM.instance_eval{@MessageMap[[k, e]] = m}
-    #nodyna <ID:const_set-63> <const_set MEDIUM ex3>
+    #nodyna <ID:const_set-63> <CS MODERATE (change-prone variable)>
     k.const_set(n, e)
   end
 
@@ -157,7 +157,7 @@ module Exception2MessageMapper
   def E2MM.e2mm_message(klass, exp)
     for c in klass.ancestors
       if mes = @MessageMap[[c,exp]]
-        #nodyna <ID:instance_eval-170> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-170> <IEV COMPLEX (private access)>
         m = klass.instance_eval('"' + mes + '"')
         return m
       end

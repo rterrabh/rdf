@@ -58,7 +58,7 @@ module ActiveAdmin
           def current_filter
             @current_filter ||= begin
               methods = filters.map{ |f| "#{method}_#{f}" }
-              #nodyna <ID:send-17> <send VERY HIGH ex3>
+              #nodyna <ID:send-17> <SD COMPLEX (change-prone variables)>
               methods.detect{ |m| @object.public_send m } || methods.first
             end
           end

@@ -18,7 +18,7 @@ module StaticModel
   #
   # Pass it along if we respond to it.
   def [](key)
-    #nodyna <ID:send-16> <send VERY HIGH ex3>
+    #nodyna <ID:send-16> <SD COMPLEX (change-prone variables)>
     send(key) if respond_to?(key)
   end
 

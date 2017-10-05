@@ -136,7 +136,7 @@ module ActiveSupport
             # Set the memcache expire a few minutes in the future to support race condition ttls on read
             expires_in += 5.minutes
           end
-          #nodyna <ID:send-267> <send MEDIUM ex3>
+          #nodyna <ID:send-267> <SD MODERATE (change-prone variables)>
           @data.send(method, escape_key(key), value, expires_in, options)
         rescue Dalli::DalliError => e
           logger.error("DalliError (#{e}): #{e.message}") if logger

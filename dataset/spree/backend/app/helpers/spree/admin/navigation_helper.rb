@@ -17,7 +17,7 @@ module Spree
         end
         options[:route] ||=  "admin_#{args.first}"
 
-        #nodyna <ID:send-36> <send VERY HIGH ex3>
+        #nodyna <ID:send-36> <SD COMPLEX (change-prone variables)>
         destination_url = options[:url] || spree.send("#{options[:route]}_path")
         titleized_label = Spree.t(options[:label], default: options[:label], scope: [:admin, :tab]).titleize
 

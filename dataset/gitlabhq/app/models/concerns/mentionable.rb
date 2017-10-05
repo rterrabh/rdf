@@ -33,7 +33,7 @@ module Mentionable
 
   # Construct a String that contains possible GFM references.
   def mentionable_text
-    #nodyna <ID:send-69> <send MEDIUM ex2>
+    #nodyna <ID:send-69> <SD MODERATE (array)>
     self.class.mentionable_attrs.map { |attr| send(attr) }.compact.join("\n\n")
   end
 

@@ -103,7 +103,7 @@ class SessionController < ApplicationController
     rescue => e
       details = {}
       SingleSignOn::ACCESSORS.each do |a|
-        #nodyna <ID:send-72> <send MEDIUM ex2>
+        #nodyna <ID:send-72> <SD MODERATE (array)>
         details[a] = sso.send(a)
       end
       Rails.logger.error "Failed to create or lookup user: #{e}\n\n#{details.map{|k,v| "#{k}: #{v}"}.join("\n")}"

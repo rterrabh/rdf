@@ -73,7 +73,7 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
 
   Status = Struct.new(:name, :enabled) do
     %w(pinned_globally pinned autoclosed closed).each do |status|
-      #nodyna <ID:define_method-34> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-34> <DM MODERATE (array)>
       define_method("#{status}?") { name == status }
     end
 

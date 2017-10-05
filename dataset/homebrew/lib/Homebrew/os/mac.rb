@@ -243,7 +243,7 @@ module OS
 
     def compilers_standard?
       STANDARD_COMPILERS.fetch(Xcode.version.to_s).all? do |method, build|
-        #nodyna <ID:send-7> <send MEDIUM ex2>
+        #nodyna <ID:send-7> <SD MODERATE (array)>
         send(:"#{method}_version") == build
       end
     rescue IndexError

@@ -145,7 +145,7 @@ module ActiveRecord
 
       def interpolate(sql, record = nil)
         if sql.respond_to?(:to_proc)
-          #nodyna <ID:instance_exec-7> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-7> <IEX COMPLEX (block with parameters)>
           owner.instance_exec(record, &sql)
         else
           sql

@@ -157,7 +157,7 @@ class Formula
 
   # @private
   def set_active_spec(spec_sym)
-    #nodyna <ID:send-37> <send VERY HIGH ex3>
+    #nodyna <ID:send-37> <SD COMPLEX (change-prone variables)>
     spec = send(spec_sym)
     raise FormulaSpecificationError, "#{spec_sym} spec is not available for #{full_name}" unless spec
     @active_spec = spec
@@ -169,7 +169,7 @@ class Formula
   private
 
   def set_spec(name)
-    #nodyna <ID:send-38> <send MEDIUM ex3>
+    #nodyna <ID:send-38> <SD MODERATE (change-prone variables)>
     spec = self.class.send(name)
     if spec.url
       spec.owner = self
@@ -178,7 +178,7 @@ class Formula
   end
 
   def determine_active_spec(requested)
-    #nodyna <ID:send-39> <send VERY HIGH ex3>
+    #nodyna <ID:send-39> <SD COMPLEX (change-prone variables)>
     spec = send(requested) || stable || devel || head
     spec || raise(FormulaSpecificationError, "formulae require at least a URL")
   end
@@ -1356,7 +1356,7 @@ class Formula
     when :brew
       raise "You cannot override Formula#brew in class #{name}"
     when :test
-      #nodyna <ID:define_method-13> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-13> <DM MODERATE (events)>
       define_method(:test_defined?) { true }
     when :options
       instance = allocate
@@ -1469,8 +1469,8 @@ class Formula
     #
     # <pre>sha256 "2a2ba417eebaadcb4418ee7b12fe2998f26d6e6f7fda7983412ff66a741ab6f7"</pre>
     Checksum::TYPES.each do |type|
-      #nodyna <ID:send-40> <send MEDIUM ex2>
-      #nodyna <ID:define_method-14> <define_method MEDIUM ex1>
+      #nodyna <ID:send-40> <SD MODERATE (array)>
+      #nodyna <ID:define_method-14> <DM MODERATE (array)>
       define_method(type) { |val| stable.send(type, val) }
     end
 
@@ -1516,7 +1516,7 @@ class Formula
     def stable(&block)
       @stable ||= SoftwareSpec.new
       return @stable unless block_given?
-      #nodyna <ID:instance_eval-13> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-13> <IEV COMPLEX (block execution)>
       @stable.instance_eval(&block)
     end
 
@@ -1535,7 +1535,7 @@ class Formula
     def devel(&block)
       @devel ||= SoftwareSpec.new
       return @devel unless block_given?
-      #nodyna <ID:instance_eval-14> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-14> <IEV COMPLEX (block execution)>
       @devel.instance_eval(&block)
     end
 
@@ -1554,7 +1554,7 @@ class Formula
     def head(val = nil, specs = {}, &block)
       @head ||= HeadSoftwareSpec.new
       if block_given?
-        #nodyna <ID:instance_eval-15> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-15> <IEV COMPLEX (block execution)>
         @head.instance_eval(&block)
       elsif val
         @head.url(val, specs)
@@ -1739,7 +1739,7 @@ class Formula
 
     # Pass :skip to this method to disable post-install stdlib checking
     def cxxstdlib_check(check_type)
-      #nodyna <ID:define_method-15> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-15> <DM MODERATE (events)>
       define_method(:skip_cxxstdlib_check?) { true } if check_type == :skip
     end
 
@@ -1803,7 +1803,7 @@ class Formula
     # Failed assertions and failed `system` commands will raise exceptions.
 
     def test(&block)
-      #nodyna <ID:define_method-16> <define_method VERY HIGH ex2>
+      #nodyna <ID:define_method-16> <DM COMPLEX (events)>
       define_method(:test, &block)
     end
 

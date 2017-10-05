@@ -5,7 +5,7 @@ module Spree
       def event_links
         links = []
         @order_events.sort.each do |event|
-          #nodyna <ID:send-37> <send VERY HIGH ex2>
+          #nodyna <ID:send-37> <SD COMPLEX (array)>
           if @order.send("can_#{event}?")
             links << button_link_to(Spree.t(event).capitalize, [event, :admin, @order],
                                     :method => :put,

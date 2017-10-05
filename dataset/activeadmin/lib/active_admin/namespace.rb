@@ -97,7 +97,7 @@ module ActiveAdmin
     # Override from ActiveAdmin::Settings to inherit default attributes
     # from the application
     def read_default_setting(name)
-      #nodyna <ID:send-40> <send VERY HIGH ex3>
+      #nodyna <ID:send-40> <SD COMPLEX (change-prone variables)>
       application.public_send name
     end
 
@@ -188,7 +188,7 @@ module ActiveAdmin
 
     # TODO: replace `eval` with `Class.new`
     def register_page_controller(config)
-      #nodyna <ID:eval-1> <eval VERY HIGH ex5>
+      #nodyna <ID:eval-1> <EV COMPLEX (class definition)>
       eval "class ::#{config.controller_name} < ActiveAdmin::PageController; end"
       config.controller.active_admin_config = config
     end
@@ -197,7 +197,7 @@ module ActiveAdmin
       resources.each do |resource|
         parent = (module_name || 'Object').constantize
         name   = resource.controller_name.split('::').last
-        #nodyna <ID:send-41> <send MEDIUM ex4>
+        #nodyna <ID:send-41> <SD MODERATE (private methods)>
         parent.send(:remove_const, name) if parent.const_defined? name
 
         # Remove circular references
@@ -212,14 +212,14 @@ module ActiveAdmin
     # Creates a ruby module to namespace all the classes in if required
     def register_module
       unless Object.const_defined? module_name
-        #nodyna <ID:const_set-1> <const_set VERY HIGH ex3>
+        #nodyna <ID:const_set-1> <CS COMPLEX (change-prone variable)>
         Object.const_set module_name, Module.new
       end
     end
 
     # TODO replace `eval` with `Class.new`
     def register_resource_controller(config)
-      #nodyna <ID:eval-2> <eval VERY HIGH ex5>
+      #nodyna <ID:eval-2> <EV COMPLEX (class definition)>
       eval "class ::#{config.controller_name} < ActiveAdmin::ResourceController; end"
       config.controller.active_admin_config = config
     end

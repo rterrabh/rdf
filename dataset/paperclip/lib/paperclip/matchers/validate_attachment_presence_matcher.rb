@@ -38,7 +38,7 @@ module Paperclip
         protected
 
         def error_when_not_valid?
-          #nodyna <ID:send-4> <send VERY HIGH ex3>
+          #nodyna <ID:send-4> <SD COMPLEX (change-prone variables)>
           @subject.send(@attachment_name).assign(nil)
           @subject.valid?
           @subject.errors[:"#{@attachment_name}"].present?
@@ -46,7 +46,7 @@ module Paperclip
 
         def no_error_when_valid?
           @file = StringIO.new(".")
-          #nodyna <ID:send-5> <send VERY HIGH ex3>
+          #nodyna <ID:send-5> <SD COMPLEX (change-prone variables)>
           @subject.send(@attachment_name).assign(@file)
           @subject.valid?
           expected_message = [

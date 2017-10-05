@@ -51,7 +51,7 @@ module ActionMailer
       #     arguments: '-i -t'
       def add_delivery_method(symbol, klass, default_options={})
         class_attribute(:"#{symbol}_settings") unless respond_to?(:"#{symbol}_settings")
-        #nodyna <ID:send-4> <send VERY HIGH ex3>
+        #nodyna <ID:send-4> <SD COMPLEX (change-prone variables)>
         send(:"#{symbol}_settings=", default_options)
         self.delivery_methods = delivery_methods.merge(symbol.to_sym => klass).freeze
       end
@@ -65,7 +65,7 @@ module ActionMailer
           raise "Delivery method cannot be nil"
         when Symbol
           if klass = delivery_methods[method]
-            #nodyna <ID:send-5> <send VERY HIGH ex3>
+            #nodyna <ID:send-5> <SD COMPLEX (change-prone variables)>
             mail.delivery_method(klass, (send(:"#{method}_settings") || {}).merge(options || {}))
           else
             raise "Invalid delivery method #{method.inspect}"

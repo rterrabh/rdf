@@ -198,7 +198,7 @@ module Tk
 
     def Wm.iconphoto(win, *imgs)
       if imgs.empty?
-        #nodyna <ID:instance_eval-29> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-29> <IEV COMPLEX (private access)>
         win.instance_eval{
           @wm_iconphoto = nil unless defined? @wm_iconphoto
           return @wm_iconphoto
@@ -207,7 +207,7 @@ module Tk
 
       imgs = imgs[0] if imgs.length == 1 && imgs[0].kind_of?(Array)
       tk_call_without_enc('wm', 'iconphoto', win.epath, *imgs)
-      #nodyna <ID:instance_eval-30> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-30> <IEV COMPLEX (private access)>
       win.instance_eval{ @wm_iconphoto = imgs  }
       win
     end
@@ -547,7 +547,7 @@ module Tk
   module Wm_for_General
     Wm.instance_methods.each{|m|
       if (m = m.to_s) =~ /^wm_(.*)$/
-        #nodyna <ID:eval-33> <eval VERY HIGH ex1>
+        #nodyna <ID:eval-33> <EV COMPLEX (method definition)>
         eval "def #{m}(*args, &b); Tk::Wm.#{$1}(self, *args, &b); end"
       end
     }

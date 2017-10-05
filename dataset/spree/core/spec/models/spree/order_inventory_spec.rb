@@ -23,7 +23,7 @@ describe Spree::OrderInventory, :type => :model do
 
       it "doesn't unstock items" do
         expect(shipment.stock_location).not_to receive(:unstock)
-        #nodyna <ID:send-55> <send LOW ex4>
+        #nodyna <ID:send-55> <SD EASY (private methods)>
         expect(subject.send(:add_to_shipment, shipment, 5)).to eq(5)
       end
     end
@@ -34,7 +34,7 @@ describe Spree::OrderInventory, :type => :model do
       it 'sets inventory_units state as per stock location availability' do
         expect(shipment.stock_location).to receive(:fill_status).with(subject.variant, 5).and_return([3, 2])
 
-        #nodyna <ID:send-56> <send LOW ex4>
+        #nodyna <ID:send-56> <SD EASY (private methods)>
         expect(subject.send(:add_to_shipment, shipment, 5)).to eq(5)
 
         units = shipment.inventory_units_for(subject.variant).group_by(&:state)
@@ -77,7 +77,7 @@ describe Spree::OrderInventory, :type => :model do
     end
 
     it 'should create stock_movement' do
-      #nodyna <ID:send-57> <send LOW ex4>
+      #nodyna <ID:send-57> <SD EASY (private methods)>
       expect(subject.send(:add_to_shipment, shipment, 5)).to eq(5)
 
       stock_item = shipment.stock_location.stock_item(subject.variant)
@@ -101,7 +101,7 @@ describe Spree::OrderInventory, :type => :model do
     end
 
     it 'should select first non-shipped shipment that already contains given variant' do
-      #nodyna <ID:send-58> <send LOW ex4>
+      #nodyna <ID:send-58> <SD EASY (private methods)>
       shipment = subject.send(:determine_target_shipment)
       expect(shipment.shipped?).to be false
       expect(shipment.inventory_units_for(variant)).not_to be_empty
@@ -116,7 +116,7 @@ describe Spree::OrderInventory, :type => :model do
       end
 
       it 'selects first non-shipped shipment that leaves from same stock_location' do
-        #nodyna <ID:send-59> <send LOW ex4>
+        #nodyna <ID:send-59> <SD EASY (private methods)>
         shipment = subject.send(:determine_target_shipment)
         shipment.reload
         expect(shipment.shipped?).to be false
@@ -154,13 +154,13 @@ describe Spree::OrderInventory, :type => :model do
 
         it "doesn't restock items" do
           expect(shipment.stock_location).not_to receive(:restock)
-          #nodyna <ID:send-60> <send LOW ex4>
+          #nodyna <ID:send-60> <SD EASY (private methods)>
           expect(subject.send(:remove_from_shipment, shipment, 1)).to eq(1)
         end
       end
 
       it 'should create stock_movement' do
-        #nodyna <ID:send-61> <send LOW ex4>
+        #nodyna <ID:send-61> <SD EASY (private methods)>
         expect(subject.send(:remove_from_shipment, shipment, 1)).to eq(1)
 
         stock_item = shipment.stock_location.stock_item(variant)
@@ -180,7 +180,7 @@ describe Spree::OrderInventory, :type => :model do
         expect(shipment.inventory_units_for_item[1]).not_to receive(:destroy)
         expect(shipment.inventory_units_for_item[2]).to receive(:destroy)
 
-        #nodyna <ID:send-62> <send LOW ex4>
+        #nodyna <ID:send-62> <SD EASY (private methods)>
         expect(subject.send(:remove_from_shipment, shipment, 2)).to eq(2)
       end
 
@@ -193,7 +193,7 @@ describe Spree::OrderInventory, :type => :model do
         expect(shipment.inventory_units_for_item[0]).not_to receive(:destroy)
         expect(shipment.inventory_units_for_item[1]).to receive(:destroy)
 
-        #nodyna <ID:send-63> <send LOW ex4>
+        #nodyna <ID:send-63> <SD EASY (private methods)>
         expect(subject.send(:remove_from_shipment, shipment, 1)).to eq(1)
       end
 
@@ -206,7 +206,7 @@ describe Spree::OrderInventory, :type => :model do
         expect(shipment.inventory_units_for_item[0]).not_to receive(:destroy)
         expect(shipment.inventory_units_for_item[1]).to receive(:destroy)
 
-        #nodyna <ID:send-64> <send LOW ex4>
+        #nodyna <ID:send-64> <SD EASY (private methods)>
         expect(subject.send(:remove_from_shipment, shipment, 1)).to eq(1)
       end
 
@@ -214,7 +214,7 @@ describe Spree::OrderInventory, :type => :model do
         allow(shipment.inventory_units).to receive_messages(:count => 0)
         expect(shipment).to receive(:destroy)
 
-        #nodyna <ID:send-65> <send LOW ex4>
+        #nodyna <ID:send-65> <SD EASY (private methods)>
         expect(subject.send(:remove_from_shipment, shipment, 1)).to eq(1)
       end
 
@@ -229,7 +229,7 @@ describe Spree::OrderInventory, :type => :model do
           before { order.touch :completed_at }
 
           it "removes only units that match both line item and variant" do
-            #nodyna <ID:send-66> <send LOW ex4>
+            #nodyna <ID:send-66> <SD EASY (private methods)>
             subject.send(:remove_from_shipment, shipment, shipment.inventory_units.count)
             expect(different_inventory.reload).to be_persisted
           end

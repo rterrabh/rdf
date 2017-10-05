@@ -285,7 +285,7 @@ class CSV
     def field(header_or_index, minimum_index = 0)
       # locate the pair
       finder = header_or_index.is_a?(Integer) ? :[] : :assoc
-      #nodyna <ID:send-110> <send VERY LOW ex1>
+      #nodyna <ID:send-110> <SD TRIVIAL (public methods)>
       pair   = @row[minimum_index..-1].send(finder, header_or_index)
 
       # return the field if we have a pair
@@ -2251,7 +2251,7 @@ class CSV
     class << row
       attr_reader :unconverted_fields
     end
-    #nodyna <ID:instance_eval-166> <instance_eval VERY HIGH ex1>
+    #nodyna <ID:instance_eval-166> <IEV COMPLEX (private access)>
     row.instance_eval { @unconverted_fields = fields }
     row
   end

@@ -96,7 +96,7 @@ module RailsAdmin
           versions = versions.where item_id: object.id if object
           versions = versions.where('event LIKE ?', "%#{query}%") if query.present?
           versions = versions.order(sort_reverse == 'true' ? "#{sort} DESC" : sort)
-          #nodyna <ID:send-45> <send VERY HIGH ex3>
+          #nodyna <ID:send-45> <SD COMPLEX (change-prone variables)>
           versions = all ? versions : versions.send(Kaminari.config.page_method_name, current_page).per(per_page)
           paginated_proxies = Kaminari.paginate_array([], total_count: versions.total_count)
           paginated_proxies = paginated_proxies.page(current_page).per(per_page)

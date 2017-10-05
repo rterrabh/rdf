@@ -10,7 +10,7 @@ class Spree::Base < ActiveRecord::Base
 
   if Kaminari.config.page_method_name != :page
     def self.page num
-      #nodyna <ID:send-113> <send VERY HIGH ex3>
+      #nodyna <ID:send-113> <SD COMPLEX (change-prone variables)>
       send Kaminari.config.page_method_name, num
     end
   end

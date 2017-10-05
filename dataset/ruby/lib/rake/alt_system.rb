@@ -36,7 +36,7 @@ module Rake::AltSystem # :nodoc: all
 
   class << self
     def define_module_function(name, &block)
-      #nodyna <ID:define_method-17> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-17> <DM MODERATE (events)>
       define_method(name, &block)
       module_function(name)
     end

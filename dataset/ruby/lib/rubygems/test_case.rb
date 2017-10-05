@@ -272,7 +272,7 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     @orig_ENV_HOME = ENV['HOME']
     ENV['HOME'] = @userhome
     Gem.instance_variable_set :@user_home, nil
-    #nodyna <ID:send-51> <send LOW ex4>
+    #nodyna <ID:send-51> <SD EASY (private methods)>
     Gem.send :remove_instance_variable, :@ruby_version if
       Gem.instance_variables.include? :@ruby_version
 
@@ -1039,42 +1039,42 @@ Also, a list:
   def util_set_RUBY_VERSION(version, patchlevel = nil, revision = nil)
     if Gem.instance_variables.include? :@ruby_version or
        Gem.instance_variables.include? '@ruby_version' then
-      #nodyna <ID:send-51> <send MEDIUM ex4>
+      #nodyna <ID:send-51> <SD MODERATE (private methods)>
       Gem.send :remove_instance_variable, :@ruby_version
     end
 
     @RUBY_VERSION    = RUBY_VERSION
     @RUBY_PATCHLEVEL = RUBY_PATCHLEVEL if defined?(RUBY_PATCHLEVEL)
     @RUBY_REVISION   = RUBY_REVISION   if defined?(RUBY_REVISION)
-    #nodyna <ID:send-51> <send MEDIUM ex4>
+    #nodyna <ID:send-51> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_VERSION
-    #nodyna <ID:send-51> <send MEDIUM ex4>
+    #nodyna <ID:send-51> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_PATCHLEVEL if defined?(RUBY_PATCHLEVEL)
-    #nodyna <ID:send-51> <send MEDIUM ex4>
+    #nodyna <ID:send-51> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_REVISION   if defined?(RUBY_REVISION)
 
-    #nodyna <ID:const_set-29> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-29> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_VERSION,    version
-    #nodyna <ID:const_set-30> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-30> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_PATCHLEVEL, patchlevel if patchlevel
-    #nodyna <ID:const_set-31> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-31> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_REVISION,   revision   if revision
   end
 
   def util_restore_RUBY_VERSION
-    #nodyna <ID:send-51> <send MEDIUM ex4>
+    #nodyna <ID:send-51> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_VERSION
-    #nodyna <ID:send-51> <send MEDIUM ex4>
+    #nodyna <ID:send-51> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_PATCHLEVEL if defined?(RUBY_PATCHLEVEL)
-    #nodyna <ID:send-51> <send MEDIUM ex4>
+    #nodyna <ID:send-51> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_REVISION   if defined?(RUBY_REVISION)
 
-    #nodyna <ID:const_set-32> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-32> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_VERSION,    @RUBY_VERSION
-    #nodyna <ID:const_set-33> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-33> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_PATCHLEVEL, @RUBY_PATCHLEVEL if
       defined?(@RUBY_PATCHLEVEL)
-    #nodyna <ID:const_set-34> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-34> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_REVISION,   @RUBY_REVISION   if
       defined?(@RUBY_REVISION)
   end

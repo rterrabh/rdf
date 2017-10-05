@@ -7,7 +7,7 @@ if Time.local(2010).zone != Marshal.load(Marshal.dump(Time.local(2010))).zone
       alias_method :_load_without_zone, :_load
       def _load(marshaled_time)
         time = _load_without_zone(marshaled_time)
-        #nodyna <ID:instance_eval-10> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-10> <IEV COMPLEX (private access)>
         time.instance_eval do
           if zone = defined?(@_zone) && remove_instance_variable('@_zone')
             ary = to_a
@@ -25,7 +25,7 @@ if Time.local(2010).zone != Marshal.load(Marshal.dump(Time.local(2010))).zone
     def _dump(*args)
       obj = dup
       obj.instance_variable_set('@_zone', zone)
-      #nodyna <ID:send-259> <send LOW ex4>
+      #nodyna <ID:send-259> <SD EASY (private methods)>
       obj.send :_dump_without_zone, *args
     end
   end

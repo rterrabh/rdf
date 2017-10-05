@@ -63,7 +63,7 @@ module Spree
     def method_missing(method_name, *args, &block)
       if image_style = image_style_from_method_name(method_name)
         define_image_method(image_style)
-        #nodyna <ID:send-118> <send VERY HIGH ex3>
+        #nodyna <ID:send-118> <SD COMPLEX (change-prone variables)>
         self.send(method_name, *args)
       else
         super
@@ -91,8 +91,8 @@ module Spree
     end
 
     def define_image_method(style)
-      #nodyna <ID:send-119> <send VERY HIGH ex4>
-      #nodyna <ID:define_method-11> <define_method VERY HIGH ex2>
+      #nodyna <ID:send-119> <SD COMPLEX (private methods)>
+      #nodyna <ID:define_method-11> <DM COMPLEX (events)>
       self.class.send :define_method, "#{style}_image" do |product, *options|
         options = options.first || {}
         options[:alt] ||= product.name

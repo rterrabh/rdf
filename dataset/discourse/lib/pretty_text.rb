@@ -67,14 +67,14 @@ module PrettyText
       Rails.configuration.ember.handlebars_location
     )
 
-    #nodyna <ID:eval-1> <eval VERY HIGH ex6>
+    #nodyna <ID:eval-1> <EV COMPLEX (variable definition)>
     ctx.eval("var Discourse = {}; Discourse.SiteSettings = {};")
-    #nodyna <ID:eval-2> <eval VERY HIGH ex6>
+    #nodyna <ID:eval-2> <EV COMPLEX (variable definition)>
     ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
-    #nodyna <ID:eval-3> <eval VERY HIGH ex6>
+    #nodyna <ID:eval-3> <EV COMPLEX (variable definition)>
     ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
-    #nodyna <ID:eval-4> <eval VERY HIGH ex6>
+    #nodyna <ID:eval-4> <EV COMPLEX (variable definition)>
     ctx.eval("var modules = {};")
 
     decorate_context(ctx)
@@ -94,7 +94,7 @@ module PrettyText
 
     # emojis
     emoji = ERB.new(File.read("#{app_root}/app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
-    #nodyna <ID:eval-5> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-5> <EV COMPLEX (change-prone variables)>
     ctx.eval(emoji.result)
 
     # Load server side javascripts
@@ -103,7 +103,7 @@ module PrettyText
         if(ssjs =~ /\.erb/)
           erb = ERB.new(File.read(ssjs))
           erb.filename = ssjs
-          #nodyna <ID:eval-6> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-6> <EV COMPLEX (change-prone variables)>
           ctx.eval(erb.result)
         else
           ctx.load(ssjs)
@@ -133,16 +133,16 @@ module PrettyText
   end
 
   def self.decorate_context(context)
-    #nodyna <ID:eval-7> <eval VERY HIGH ex4>
+    #nodyna <ID:eval-7> <EV COMPLEX (scope)>
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
-    #nodyna <ID:eval-8> <eval VERY HIGH ex4>
+    #nodyna <ID:eval-8> <EV COMPLEX (scope)>
     context.eval("Discourse.BaseUrl = '#{RailsMultisite::ConnectionManagement.current_hostname}'.replace(/:[\d]*$/,'');")
-    #nodyna <ID:eval-9> <eval VERY HIGH ex4>
+    #nodyna <ID:eval-9> <EV COMPLEX (scope)>
     context.eval("Discourse.BaseUri = '#{Discourse::base_uri("/")}';")
-    #nodyna <ID:eval-10> <eval VERY HIGH ex4>
+    #nodyna <ID:eval-10> <EV COMPLEX (scope)>
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
 
-    #nodyna <ID:eval-11> <eval VERY HIGH ex1>
+    #nodyna <ID:eval-11> <EV COMPLEX (method definition)>
     context.eval("Discourse.getURL = function(url) {
       if (!url) return url;
       if (!/^\\/[^\\/]/.test(url)) return url;
@@ -156,7 +156,7 @@ module PrettyText
       return u + url;
     };")
 
-    #nodyna <ID:eval-12> <eval VERY HIGH ex1>
+    #nodyna <ID:eval-12> <EV COMPLEX (method definition)>
     context.eval("Discourse.getURLWithCDN = function(url) {
       url = this.getURL(url);
       if (Discourse.CDN && /^\\/[^\\/]/.test(url)) {
@@ -185,22 +185,22 @@ module PrettyText
 
       if Post.white_listed_image_classes.present?
         Post.white_listed_image_classes.each do |klass|
-          #nodyna <ID:eval-13> <eval VERY HIGH ex3>
+          #nodyna <ID:eval-13> <EV COMPLEX (private methods)>
           context.eval("Discourse.Markdown.whiteListClass('#{klass}')")
         end
       end
 
       # custom emojis
       Emoji.custom.each do |emoji|
-        #nodyna <ID:eval-14> <eval VERY HIGH ex3>
+        #nodyna <ID:eval-14> <EV COMPLEX (private methods)>
         context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
       end
 
-      #nodyna <ID:eval-15> <eval VERY HIGH ex4>
+      #nodyna <ID:eval-15> <EV COMPLEX (scope)>
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
-      #nodyna <ID:eval-16> <eval VERY HIGH ex4>
+      #nodyna <ID:eval-16> <EV COMPLEX (scope)>
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
-      #nodyna <ID:eval-17> <eval VERY HIGH ex3>
+      #nodyna <ID:eval-17> <EV COMPLEX (private methods)>
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
@@ -226,7 +226,7 @@ module PrettyText
       v8['avatarTemplate'] = avatar_template
       v8['size'] = size
       decorate_context(v8)
-      #nodyna <ID:eval-18> <eval VERY HIGH ex3>
+      #nodyna <ID:eval-18> <EV COMPLEX (private methods)>
       v8.eval("Discourse.Utilities.avatarImg({ avatarTemplate: avatarTemplate, size: size });")
     end
   end

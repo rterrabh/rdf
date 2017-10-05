@@ -69,7 +69,7 @@ module ActiveRecord::Associations::Builder
         association = o.association(name)
         reflection = association.reflection
         if reflection.polymorphic?
-          #nodyna <ID:send-116> <send VERY HIGH ex3>
+          #nodyna <ID:send-116> <SD COMPLEX (change-prone variables)>
           klass = o.public_send("#{reflection.foreign_type}_was").constantize
         else
           klass = association.klass
@@ -85,7 +85,7 @@ module ActiveRecord::Associations::Builder
         end
       end
 
-      #nodyna <ID:send-117> <send VERY HIGH ex3>
+      #nodyna <ID:send-117> <SD COMPLEX (change-prone variables)>
       record = o.send name
       if record && record.persisted?
         if touch != true

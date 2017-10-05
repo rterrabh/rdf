@@ -114,7 +114,7 @@ module WEBrick
       proxy_auth(req, res)
 
       begin
-        #nodyna <ID:send-70> <send VERY HIGH ex3>
+        #nodyna <ID:send-70> <SD COMPLEX (change-prone variables)>
         self.send("do_#{req.request_method}", req, res)
       rescue NoMethodError
         raise HTTPStatus::MethodNotAllowed,

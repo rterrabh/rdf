@@ -42,7 +42,7 @@ diff -ur a/src/relayd.c b/src/relayd.c
 	s.mtu = (uint16_t)mtu;
 
 +#ifdef MSG_NOSIGNAL
-#nodyna <ID:send-44> <send VERY HIGH ex3>
+#nodyna <ID:send-44> <SD COMPLEX (change-prone variables)>
 	if ((send (fd, &s, sizeof (s), MSG_NOSIGNAL) != sizeof (s))
 	 || (recv (fd, &res, sizeof (res), MSG_WAITALL) != sizeof (res)))
 		return -1;
@@ -50,7 +50,7 @@ diff -ur a/src/relayd.c b/src/relayd.c
 +	int set = 1;
 +	setsockopt(fd, SOL_SOCKET, SO_NOSIGPIPE, (void *)&set, sizeof(int));
 +
-#nodyna <ID:send-45> <send VERY HIGH ex3>
+#nodyna <ID:send-45> <SD COMPLEX (change-prone variables)>
 +	if ((send (fd, &s, sizeof (s), 0) != sizeof (s))
 +	 || (recv (fd, &res, sizeof (res), MSG_WAITALL) != sizeof (res)))
 +		res = -1;

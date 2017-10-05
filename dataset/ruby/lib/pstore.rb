@@ -419,7 +419,7 @@ class PStore
 
   def on_windows?
     is_windows = RUBY_PLATFORM =~ /mswin|mingw|bccwin|wince/
-    #nodyna <ID:define_method-42> <define_method MEDIUM ex2>
+    #nodyna <ID:define_method-42> <DM MODERATE (events)>
     self.class.__send__(:define_method, :on_windows?) do
       is_windows
     end

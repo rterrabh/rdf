@@ -119,7 +119,7 @@ module ActiveSupport
             class_eval reader, __FILE__, reader_line unless options[:instance_reader] == false
             class_eval writer, __FILE__, writer_line unless options[:instance_writer] == false
           end
-          #nodyna <ID:send-274> <send MEDIUM ex2>
+          #nodyna <ID:send-274> <SD MODERATE (array)>
           send("#{name}=", yield) if block_given?
         end
       end

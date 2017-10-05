@@ -16,7 +16,7 @@ class StaffActionLogger
       action: UserHistory.actions[:delete_user],
       email: deleted_user.email,
       ip_address: deleted_user.ip_address.to_s,
-      #nodyna <ID:send-222> <send MEDIUM ex2>
+      #nodyna <ID:send-222> <SD MODERATE (array)>
       details: [:id, :username, :name, :created_at, :trust_level, :last_seen_at, :last_emailed_at].map { |x| "#{x}: #{deleted_user.send(x)}" }.join("\n")
     }))
   end

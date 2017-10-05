@@ -70,7 +70,7 @@ module RailsAdmin
         csv << generate_csv_header unless options[:skip_header]
 
         method = @objects.respond_to?(:find_each) ? :find_each : :each
-        #nodyna <ID:send-56> <send VERY LOW ex1>
+        #nodyna <ID:send-56> <SD TRIVIAL (public methods)>
         @objects.send(method) do |object|
           csv << generate_csv_row(object)
         end
@@ -93,7 +93,7 @@ module RailsAdmin
         field.with(object: object).export_value
       end +
         @associations.flat_map do |association_name, option_hash|
-          #nodyna <ID:send-57> <send VERY HIGH ex2>
+          #nodyna <ID:send-57> <SD COMPLEX (array)>
           associated_objects = [object.send(association_name)].flatten.compact
           option_hash[:fields].collect do |field|
             associated_objects.collect { |ao| field.with(object: ao).export_value.presence || @empty }.join(',')

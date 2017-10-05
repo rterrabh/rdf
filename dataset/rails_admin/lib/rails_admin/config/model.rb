@@ -44,9 +44,9 @@ module RailsAdmin
       end
 
       def object_label
-        #nodyna <ID:send-14> <send VERY HIGH ex3>
+        #nodyna <ID:send-14> <SD COMPLEX (change-prone variables)>
         bindings[:object].send(object_label_method).presence ||
-          #nodyna <ID:send-15> <send VERY LOW ex1>
+          #nodyna <ID:send-15> <SD TRIVIAL (public methods)>
           bindings[:object].send(:rails_admin_default_object_label_method)
       end
 
@@ -98,8 +98,8 @@ module RailsAdmin
       # Act as a proxy for the base section configuration that actually
       # store the configurations.
       def method_missing(m, *args, &block)
-        #nodyna <ID:send-16> <send LOW ex4>
-        #nodyna <ID:send-16> <send VERY HIGH ex3>
+        #nodyna <ID:send-16> <SD EASY (private methods)>
+        #nodyna <ID:send-16> <SD COMPLEX (change-prone variables)>
         send(:base).send(m, *args, &block)
       end
 

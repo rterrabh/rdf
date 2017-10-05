@@ -17,7 +17,7 @@ module ActiveRecord::Associations::Builder
         private
 
         def klass
-          #nodyna <ID:send-115> <send LOW ex4>
+          #nodyna <ID:send-115> <SD EASY (private methods)>
           @lhs_class.send(:compute_type, @rhs_class_name)
         end
       end

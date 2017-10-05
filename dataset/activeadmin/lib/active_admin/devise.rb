@@ -37,7 +37,7 @@ module ActiveAdmin
         root_path_method = [namespace, :root_path].compact.join('_')
 
         path = if Helpers::Routes.respond_to? root_path_method
-                 #nodyna <ID:send-34> <send VERY HIGH ex3>
+                 #nodyna <ID:send-34> <SD COMPLEX (change-prone variables)>
                  Helpers::Routes.send root_path_method
                else
                  # Guess a root_path when url_helpers not helpful

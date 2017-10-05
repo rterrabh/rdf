@@ -318,7 +318,7 @@ module ProjectsHelper
   private
 
   def filename_path(project, filename)
-    #nodyna <ID:send-130> <send MEDIUM ex3>
+    #nodyna <ID:send-130> <SD MODERATE (change-prone variables)>
     if project && blob = project.repository.send(filename)
       namespace_project_blob_path(
           project.namespace,

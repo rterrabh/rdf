@@ -77,7 +77,7 @@ module ActiveModel
     #   person.age  # => "18"
     def initialize(params={})
       params.each do |attr, value|
-        #nodyna <ID:send-8> <send VERY HIGH ex2>
+        #nodyna <ID:send-8> <SD COMPLEX (array)>
         self.public_send("#{attr}=", value)
       end if params
 

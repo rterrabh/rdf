@@ -84,7 +84,7 @@ class Gem::FakeFetcher
     data = find_data(path)
     body, code, msg = data
 
-    #nodyna <ID:send-48> <send LOW ex4>
+    #nodyna <ID:send-48> <SD EASY (private methods)>
     response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
     response.instance_variable_set(:@body, body)
     response.instance_variable_set(:@read, true)
@@ -98,7 +98,7 @@ class Gem::FakeFetcher
     @last_request = request_class.new uri.request_uri
     yield @last_request if block_given?
 
-    #nodyna <ID:send-49> <send LOW ex4>
+    #nodyna <ID:send-49> <SD EASY (private methods)>
     response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
     response.instance_variable_set(:@body, body)
     response.instance_variable_set(:@read, true)

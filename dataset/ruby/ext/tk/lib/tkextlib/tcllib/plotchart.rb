@@ -1359,7 +1359,7 @@ module Tk::Tcllib::Plotchart
   class PlotSeries < TkObject
     SeriesID_TBL = TkCore::INTERP.create_table
 
-    #nodyna <ID:instance_eval-141> <instance_eval MEDIUM ex2>
+    #nodyna <ID:instance_eval-141> <IEV MODERATE (method definition)>
     (Series_ID = ['series'.freeze, TkUtil.untrust('00000')]).instance_eval{
       @mutex = Mutex.new
       def mutex; @mutex; end

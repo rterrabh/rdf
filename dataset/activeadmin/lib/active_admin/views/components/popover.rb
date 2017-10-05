@@ -12,7 +12,7 @@ ActiveAdmin::Component
 
         super(options)
 
-        #nodyna <ID:send-60> <send VERY HIGH ex3>
+        #nodyna <ID:send-60> <SD COMPLEX (change-prone variables)>
         @contents_root = send(contents_root_tag, class: "popover_contents")
       end
 

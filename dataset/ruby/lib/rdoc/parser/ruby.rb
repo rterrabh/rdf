@@ -478,7 +478,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     unless container then
       # TODO seems broken, should starting at Object in @store
       obj = name_t.name.split("::").inject(Object) do |state, item|
-        #nodyna <ID:const_get-24> <const_get VERY HIGH ex2>
+        #nodyna <ID:const_get-24> <CG COMPLEX (array)>
         state.const_get(item)
       end rescue nil
 
@@ -1847,7 +1847,7 @@ class RDoc::Parser::Ruby < RDoc::Parser
     when TkSYMBOL
       tk.text.sub(/^:/, '')
     when TkSTRING
-      #nodyna <ID:eval-68> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-68> <EV COMPLEX (change-prone variables)>
       eval @read[-1]
     when TkDSTRING, TkIDENTIFIER then
       nil # ignore

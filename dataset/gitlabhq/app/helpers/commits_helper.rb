@@ -134,12 +134,12 @@ module CommitsHelper
   #  avatar: true will prepend the avatar image
   #  size:   size of the avatar image in px
   def commit_person_link(commit, options = {})
-    #nodyna <ID:send-125> <send MEDIUM ex3>
+    #nodyna <ID:send-125> <SD MODERATE (change-prone variables)>
     user = commit.send(options[:source])
     
-    #nodyna <ID:send-126> <send MEDIUM ex3>
+    #nodyna <ID:send-126> <SD MODERATE (change-prone variables)>
     source_name = clean(commit.send "#{options[:source]}_name".to_sym)
-    #nodyna <ID:send-127> <send MEDIUM ex3>
+    #nodyna <ID:send-127> <SD MODERATE (change-prone variables)>
     source_email = clean(commit.send "#{options[:source]}_email".to_sym)
 
     person_name = user.try(:name) || source_name

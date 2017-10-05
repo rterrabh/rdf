@@ -1,2 +1,2 @@
-#nodyna <ID:send-18> <send VERY LOW ex1>
+#nodyna <ID:send-18> <SD TRIVIAL (public methods)>
 Spree::BaseController.send(:include, Spree::ViewContext)

@@ -97,7 +97,7 @@ class Admin::BadgesController < Admin::AdminController
         params.permit(*allowed)
 
         allowed.each do |key|
-          #nodyna <ID:send-90> <send VERY HIGH ex2>
+          #nodyna <ID:send-90> <SD COMPLEX (array)>
           badge.send("#{key}=" , params[key]) if params[key]
         end
 

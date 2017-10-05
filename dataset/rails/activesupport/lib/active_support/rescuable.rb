@@ -99,7 +99,7 @@ module ActiveSupport
         # Note that this tolerance only matters if the exception was given as
         # a string, otherwise a NameError will be raised by the interpreter
         # itself when rescue_from CONSTANT is executed.
-        #nodyna <ID:const_get-7> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-7> <CG COMPLEX (change-prone variable)>
         klass = self.class.const_get(klass_name) rescue nil
         klass ||= klass_name.constantize rescue nil
         exception.is_a?(klass) if klass
@@ -110,10 +110,10 @@ module ActiveSupport
         method(rescuer)
       when Proc
         if rescuer.arity == 0
-          #nodyna <ID:instance_exec-15> <instance_exec VERY HIGH ex1>
+          #nodyna <ID:instance_exec-15> <IEX COMPLEX (block without parameters)>
           Proc.new { instance_exec(&rescuer) }
         else
-          #nodyna <ID:instance_exec-16> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-16> <IEX COMPLEX (block with parameters)>
           Proc.new { |_exception| instance_exec(_exception, &rescuer) }
         end
       end

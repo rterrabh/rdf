@@ -381,11 +381,11 @@ class ApplicationController < ActionController::Base
         error_obj = nil
         if opts[:additional_errors]
           error_target = opts[:additional_errors].find do |o|
-            #nodyna <ID:send-98> <send VERY HIGH ex2>
+            #nodyna <ID:send-98> <SD COMPLEX (array)>
             target = obj.send(o)
             target && target.errors.present?
           end
-          #nodyna <ID:send-99> <send VERY HIGH ex2>
+          #nodyna <ID:send-99> <SD COMPLEX (array)>
           error_obj = obj.send(error_target) if error_target
         end
         render_json_error(error_obj || obj)

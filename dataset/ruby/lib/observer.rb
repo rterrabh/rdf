@@ -193,7 +193,7 @@ module Observable
     if defined? @observer_state and @observer_state
       if defined? @observer_peers
         @observer_peers.each do |k, v|
-          #nodyna <ID:send-126> <send MEDIUM ex3>
+          #nodyna <ID:send-126> <SD MODERATE (change-prone variables)>
           k.send v, *arg
         end
       end

@@ -40,7 +40,7 @@ class Matrix
     # Returns the eigenvector matrix +V+
     #
     def eigenvector_matrix
-      #nodyna <ID:send-114> <send VERY HIGH ex4>
+      #nodyna <ID:send-114> <SD COMPLEX (private methods)>
       Matrix.send(:new, build_eigenvectors.transpose)
     end
     alias v eigenvector_matrix
@@ -48,7 +48,7 @@ class Matrix
     # Returns the inverse of the eigenvector matrix +V+
     #
     def eigenvector_matrix_inv
-      #nodyna <ID:send-115> <send VERY HIGH ex4>
+      #nodyna <ID:send-115> <SD COMPLEX (private methods)>
       r = Matrix.send(:new, build_eigenvectors)
       r = r.transpose.inverse unless @symmetric
       r
@@ -66,7 +66,7 @@ class Matrix
     # Returns an array of the eigenvectors
     #
     def eigenvectors
-      #nodyna <ID:send-116> <send VERY HIGH ex4>
+      #nodyna <ID:send-116> <SD COMPLEX (private methods)>
       build_eigenvectors.map{|ev| Vector.send(:new, ev)}
     end
 

@@ -1,15 +1,5 @@
 require_relative 'StatementsCounter'
-
-def extractFiles(pathes)
-  files = []
-  pathes.each do |path|
-    files += Dir.glob(path)
-  end
-  files.flatten!
-  files
-end
-
-
+require_relative '../util/Util'
 projects = {
   "Active Admin": ["../dataset/activeadmin/**/lib/**/*.rb"],
   "Diaspora": ["../dataset/diaspora/**/lib/**/*.rb", "../dataset/diaspora/app/**/*.rb", "../dataset/diaspora/config/**/*.rb"],
@@ -46,7 +36,7 @@ statements = 0
 dynamicStatements = 0
 projects.each do |projectName, dirs|
   puts "#{projectName}"
-  totalStatements, totalDynamicStatements, percMethodsUsingDynamic, dynamicStatementsCounter = StatementsCounter.instance.count(extractFiles(dirs))
+  totalStatements, totalDynamicStatements, percMethodsUsingDynamic, dynamicStatementsCounter = StatementsCounter.instance.count(Util.extractFiles(dirs))
   puts "Total Statements: #{totalStatements}"
   puts "Total Dynamic Statements: #{totalDynamicStatements}"
   puts "Methods using dynamic features: #{percMethodsUsingDynamic}%"

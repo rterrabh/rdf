@@ -30,7 +30,7 @@ module ActionDispatch
     def render(status, content_type, body)
       format = "to_#{content_type.to_sym}" if content_type
       if format && body.respond_to?(format)
-        #nodyna <ID:send-76> <send VERY HIGH ex3>
+        #nodyna <ID:send-76> <SD COMPLEX (change-prone variables)>
         render_format(status, content_type, body.public_send(format))
       else
         render_html(status)

@@ -153,9 +153,9 @@ class Post < ActiveRecord::Base
   end
 
   %w{raw_mentions linked_hosts image_count attachment_count link_count raw_links}.each do |attr|
-    #nodyna <ID:define_method-32> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-32> <DM MODERATE (array)>
     define_method(attr) do
-      #nodyna <ID:send-182> <send MEDIUM ex3>
+      #nodyna <ID:send-182> <SD MODERATE (change-prone variables)>
       post_analyzer.send(attr)
     end
   end

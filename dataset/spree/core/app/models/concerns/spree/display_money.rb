@@ -21,10 +21,10 @@ module Spree
       args.each do |money_method|
         money_method = { money_method => {} } unless money_method.is_a? Hash
         money_method.each do |method_name, opts|
-          #nodyna <ID:define_method-4> <define_method MEDIUM ex1>
+          #nodyna <ID:define_method-4> <DM MODERATE (array)>
           define_method("display_#{method_name}") do
             default_opts = respond_to?(:currency) ? { currency: currency } : {}
-            #nodyna <ID:send-80> <send MEDIUM ex2>
+            #nodyna <ID:send-80> <SD MODERATE (array)>
             Spree::Money.new(send(method_name), default_opts.merge(opts))
           end
         end

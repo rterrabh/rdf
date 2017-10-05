@@ -482,7 +482,7 @@ module ActiveRecord
       def change_column(table_name, column_name, type, options = {}) #:nodoc:
         alter_table(table_name) do |definition|
           include_default = options_include_default?(options)
-          #nodyna <ID:instance_eval-3> <instance_eval VERY HIGH ex1>
+          #nodyna <ID:instance_eval-3> <IEV COMPLEX (private access)>
           definition[column_name].instance_eval do
             self.type    = type
             self.limit   = options[:limit] if options.include?(:limit)

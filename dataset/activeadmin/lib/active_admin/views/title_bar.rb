@@ -29,7 +29,7 @@ module ActiveAdmin
         breadcrumb_config = active_admin_config && active_admin_config.breadcrumb
 
         links = if breadcrumb_config.is_a?(Proc)
-          #nodyna <ID:instance_exec-31> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-31> <IEX COMPLEX (block with parameters)>
           instance_exec(controller, &active_admin_config.breadcrumb)
         elsif breadcrumb_config.present?
           breadcrumb_links

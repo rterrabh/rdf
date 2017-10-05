@@ -11,7 +11,7 @@ class TkTimer
 
   TkCommandNames = ['after'.freeze].freeze
 
-  #nodyna <ID:instance_eval-32> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-32> <IEV MODERATE (method definition)>
   (Tk_CBID = ['a'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -21,7 +21,7 @@ class TkTimer
   Tk_CBTBL = TkUtil.untrust({})
 
   TkCore::INTERP.add_tk_procs('rb_after', 'id', <<-'EOL')
-    #nodyna <ID:eval-34> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-34> <EV COMPLEX (change-prone variables)>
     if {[set st [catch {eval {ruby_cmd TkTimer callback} $id} ret]] != 0} {
         return -code $st $ret
     } {

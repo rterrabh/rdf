@@ -178,10 +178,10 @@ class Tk::Toplevel<TkWindow
     super(parent, keys)
     cmds.each{|k,v|
       if v.kind_of? Array
-        #nodyna <ID:send-35> <send VERY HIGH ex3>
+        #nodyna <ID:send-35> <SD COMPLEX (change-prone variables)>
         self.send(k,*v)
       else
-        #nodyna <ID:send-36> <send VERY HIGH ex3>
+        #nodyna <ID:send-36> <SD COMPLEX (change-prone variables)>
         self.send(k,v)
       end
     }

@@ -486,7 +486,7 @@ class PostsController < ApplicationController
   end
 
   def too_late_to(action, post)
-    #nodyna <ID:send-73> <send MEDIUM ex3>
+    #nodyna <ID:send-73> <SD MODERATE (change-prone variables)>
     !guardian.send("can_#{action}?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
   end
 

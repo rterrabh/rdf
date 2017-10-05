@@ -3,7 +3,7 @@ class UploadsController < ApplicationController
   before_action :find_model, :authorize_access!
 
   def show
-    #nodyna <ID:send-37> <send VERY HIGH ex3>
+    #nodyna <ID:send-37> <SD COMPLEX (change-prone variables)>
     uploader = @model.send(upload_mount)
 
     unless uploader.file_storage?

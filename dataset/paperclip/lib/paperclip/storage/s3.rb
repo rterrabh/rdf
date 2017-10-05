@@ -134,7 +134,7 @@ module Paperclip
           end
         end
 
-        #nodyna <ID:instance_eval-2> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-2> <IEV COMPLEX (private access)>
         base.instance_eval do
           @s3_options     = @options[:s3_options]     || {}
           @s3_permissions = set_permissions(@options[:s3_permissions])

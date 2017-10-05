@@ -152,7 +152,7 @@ class PostRevisor
 
   def post_changed?
     POST_TRACKED_FIELDS.each do |field|
-      #nodyna <ID:send-69> <send MEDIUM ex2>
+      #nodyna <ID:send-69> <SD MODERATE (array)>
       return true if @fields.has_key?(field) && @fields[field] != @post.send(field)
     end
     false
@@ -226,7 +226,7 @@ class PostRevisor
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      #nodyna <ID:send-70> <send MEDIUM ex2>
+      #nodyna <ID:send-70> <SD MODERATE (array)>
       @post.send("#{field}=", @fields[field]) if @fields.has_key?(field)
     end
 

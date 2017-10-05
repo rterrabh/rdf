@@ -19,7 +19,7 @@ module ActiveRecord
           delegate = Class.new(klass) {
             include ClassSpecificRelation
           }
-          #nodyna <ID:const_set-5> <const_set MEDIUM ex2>
+          #nodyna <ID:const_set-5> <CS MEDIUM (array)>
           const_set klass.name.gsub('::', '_'), delegate
           cache[klass] = delegate
         end
@@ -72,9 +72,9 @@ module ActiveRecord
                 end
               RUBY
             else
-              #nodyna <ID:define_method-22> <define_method VERY HIGH ex2>
+              #nodyna <ID:define_method-22> <DM COMPLEX (events)>
               define_method method do |*args, &block|
-                #nodyna <ID:send-169> <send VERY HIGH ex3>
+                #nodyna <ID:send-169> <SD COMPLEX (change-prone variables)>
                 scoping { @klass.public_send(method, *args, &block) }
               end
             end
@@ -94,11 +94,11 @@ module ActiveRecord
       def method_missing(method, *args, &block)
         if @klass.respond_to?(method)
           self.class.delegate_to_scoped_klass(method)
-          #nodyna <ID:send-170> <send VERY HIGH ex3>
+          #nodyna <ID:send-170> <SD COMPLEX (change-prone variables)>
           scoping { @klass.public_send(method, *args, &block) }
         elsif arel.respond_to?(method)
           self.class.delegate method, :to => :arel
-          #nodyna <ID:send-171> <send VERY HIGH ex3>
+          #nodyna <ID:send-171> <SD COMPLEX (change-prone variables)>
           arel.public_send(method, *args, &block)
         else
           super
@@ -132,13 +132,13 @@ module ActiveRecord
 
     def method_missing(method, *args, &block)
       if @klass.respond_to?(method)
-        #nodyna <ID:send-172> <send VERY HIGH ex3>
+        #nodyna <ID:send-172> <SD COMPLEX (change-prone variables)>
         scoping { @klass.public_send(method, *args, &block) }
       elsif array_delegable?(method)
-        #nodyna <ID:send-173> <send VERY HIGH ex3>
+        #nodyna <ID:send-173> <SD COMPLEX (change-prone variables)>
         to_a.public_send(method, *args, &block)
       elsif arel.respond_to?(method)
-        #nodyna <ID:send-174> <send VERY HIGH ex3>
+        #nodyna <ID:send-174> <SD COMPLEX (change-prone variables)>
         arel.public_send(method, *args, &block)
       else
         super

@@ -174,7 +174,7 @@ module Win32
 			SEC_E_UNKNOWN_CREDENTIALS = 0x8009030D
 
 			@@map = {}
-                        #nodyna <ID:const_get-22> <const_get MEDIUM ex2>
+                        #nodyna <ID:const_get-22> <CG MODERATE (array)>
 			constants.each { |v| @@map[self.const_get(v.to_s)] = v }
 
 			attr_reader :value

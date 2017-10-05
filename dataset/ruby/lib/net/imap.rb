@@ -1472,7 +1472,7 @@ module Net
 
     class RawData # :nodoc:
       def send_data(imap)
-        #nodyna <ID:send-91> <send LOW ex4>
+        #nodyna <ID:send-91> <SD EASY (private methods)>
         imap.send(:put_string, @data)
       end
 
@@ -1488,7 +1488,7 @@ module Net
 
     class Atom # :nodoc:
       def send_data(imap)
-        #nodyna <ID:send-92> <send LOW ex4>
+        #nodyna <ID:send-92> <SD EASY (private methods)>
         imap.send(:put_string, @data)
       end
 
@@ -1504,7 +1504,7 @@ module Net
 
     class QuotedString # :nodoc:
       def send_data(imap)
-        #nodyna <ID:send-93> <send LOW ex4>
+        #nodyna <ID:send-93> <SD EASY (private methods)>
         imap.send(:send_quoted_string, @data)
       end
 
@@ -1520,7 +1520,7 @@ module Net
 
     class Literal # :nodoc:
       def send_data(imap)
-        #nodyna <ID:send-94> <send LOW ex4>
+        #nodyna <ID:send-94> <SD EASY (private methods)>
         imap.send(:send_literal, @data)
       end
 
@@ -1536,7 +1536,7 @@ module Net
 
     class MessageSet # :nodoc:
       def send_data(imap)
-        #nodyna <ID:send-95> <send LOW ex4>
+        #nodyna <ID:send-95> <SD EASY (private methods)>
         imap.send(:put_string, format_internal(@data))
       end
 

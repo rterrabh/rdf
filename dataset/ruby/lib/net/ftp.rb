@@ -877,7 +877,7 @@ module Net
     def abort
       line = "ABOR" + CRLF
       print "put: ABOR\n" if @debug_mode
-      #nodyna <ID:send-96> <send LOW ex4>
+      #nodyna <ID:send-96> <SD EASY (private methods)>
       @sock.send(line, Socket::MSG_OOB)
       resp = getmultiline
       unless ["426", "226", "225"].include?(resp[0, 3])
@@ -892,7 +892,7 @@ module Net
     def status
       line = "STAT" + CRLF
       print "put: STAT\n" if @debug_mode
-      #nodyna <ID:send-97> <send LOW ex4>
+      #nodyna <ID:send-97> <SD EASY (private methods)>
       @sock.send(line, Socket::MSG_OOB)
       return getresp
     end
@@ -1082,7 +1082,7 @@ module Net
 
     class BufferedSocket < BufferedIO
       [:addr, :peeraddr, :send, :shutdown].each do |method|
-        #nodyna <ID:define_method-40> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-40> <DM MODERATE (array)>
         define_method(method) { |*args|
           @io.__send__(method, *args)
         }

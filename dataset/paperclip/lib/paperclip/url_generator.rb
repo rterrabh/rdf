@@ -22,7 +22,7 @@ module Paperclip
       if @attachment_options[:default_url].respond_to?(:call)
         @attachment_options[:default_url].call(@attachment)
       elsif @attachment_options[:default_url].is_a?(Symbol)
-        #nodyna <ID:send-34> <send VERY HIGH ex3>
+        #nodyna <ID:send-34> <SD COMPLEX (change-prone variables)>
         @attachment.instance.send(@attachment_options[:default_url])
       else
         @attachment_options[:default_url]

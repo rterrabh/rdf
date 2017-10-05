@@ -44,11 +44,11 @@ module ActiveSupport
       def method_missing(name, *args, &block) # :nodoc:
         # Caches the method definition as a singleton method of the receiver.
         define_singleton_method(name) do |*a, &b|
-          #nodyna <ID:send-219> <send VERY HIGH ex3>
+          #nodyna <ID:send-219> <SD COMPLEX (change-prone variables)>
           instance.public_send(name, *a, &b)
         end
 
-        #nodyna <ID:send-220> <send VERY HIGH ex3>
+        #nodyna <ID:send-220> <SD COMPLEX (change-prone variables)>
         send(name, *args, &block)
       end
   end

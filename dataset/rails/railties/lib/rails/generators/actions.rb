@@ -54,7 +54,7 @@ module Rails
           append_file "Gemfile", "\ngroup #{name} do", force: true
 
           @in_group = true
-          #nodyna <ID:instance_eval-15> <instance_eval VERY HIGH ex3>
+          #nodyna <ID:instance_eval-15> <IEV COMPLEX (block execution)>
           instance_eval(&block)
           @in_group = false
 

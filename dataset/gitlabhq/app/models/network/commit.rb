@@ -12,7 +12,7 @@ module Network
     end
 
     def method_missing(m, *args, &block)
-      #nodyna <ID:send-92> <send VERY HIGH ex3>
+      #nodyna <ID:send-92> <SD COMPLEX (change-prone variables)>
       @commit.send(m, *args, &block)
     end
 

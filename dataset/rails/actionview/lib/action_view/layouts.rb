@@ -300,7 +300,7 @@ module ActionView
               end
             RUBY
           when Proc
-            #nodyna <ID:define_method-2> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-2> <DM MODERATE (events)>
             define_method :_layout_from_proc, &_layout
             protected :_layout_from_proc
             <<-RUBY

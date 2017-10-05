@@ -91,7 +91,7 @@ module Debrew
 
   def self.debrew
     @active = true
-    #nodyna <ID:send-2> <send VERY LOW ex1>
+    #nodyna <ID:send-2> <SD TRIVIAL (public methods)>
     Object.send(:include, Raise)
 
     begin

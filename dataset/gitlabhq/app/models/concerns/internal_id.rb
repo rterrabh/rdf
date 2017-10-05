@@ -7,7 +7,7 @@ module InternalId
   end
 
   def set_iid
-    #nodyna <ID:send-70> <send MEDIUM ex3>
+    #nodyna <ID:send-70> <SD MODERATE (change-prone variables)>
     max_iid = project.send(self.class.name.tableize).maximum(:iid)
     self.iid = max_iid.to_i + 1
   end

@@ -145,7 +145,7 @@ class Admin::UsersController < Admin::AdminController
     level = params[:level].to_i
 
 
-    #nodyna <ID:send-96> <send VERY HIGH ex3>
+    #nodyna <ID:send-96> <SD COMPLEX (change-prone variables)>
     if !@user.trust_level_locked && [0,1,2].include?(level) && Promotion.send("tl#{level+1}_met?", @user)
       @user.trust_level_locked = true
       @user.save

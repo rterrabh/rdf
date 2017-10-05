@@ -102,7 +102,7 @@ module ActionView
         end
       else
         method = _generate_paths_by_default ? :path : :url
-        #nodyna <ID:send-45> <send VERY LOW ex1>
+        #nodyna <ID:send-45> <SD TRIVIAL (public methods)>
         builder = ActionDispatch::Routing::PolymorphicRoutes::HelperMethodBuilder.send(method)
 
         case options

@@ -46,7 +46,7 @@ class Resource
     @specs = {}
     @checksum = nil
     @using = nil
-    #nodyna <ID:instance_eval-1> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-1> <IEV COMPLEX (block execution)>
     instance_eval(&block) if block_given?
   end
 
@@ -127,7 +127,7 @@ class Resource
   end
 
   Checksum::TYPES.each do |type|
-    #nodyna <ID:define_method-2> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-2> <DM MODERATE (array)>
     define_method(type) { |val| @checksum = Checksum.new(type, val) }
   end
 

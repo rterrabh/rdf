@@ -30,9 +30,9 @@ module Tilt
 
     def self.create_new_context
       ctx = V8::Context.new(timeout: 5000)
-      #nodyna <ID:eval-19> <eval VERY HIGH ex4>
+      #nodyna <ID:eval-19> <EV COMPLEX (scope)>
       ctx.eval("var self = this; #{File.read(Babel::Transpiler.script_path)}")
-      #nodyna <ID:eval-20> <eval VERY HIGH ex6>
+      #nodyna <ID:eval-20> <EV COMPLEX (variable definition)>
       ctx.eval("module = {}; exports = {};");
       ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")
       ctx
@@ -82,7 +82,7 @@ module Tilt
       klass = self.class
       klass.protect do
         klass.v8['console'] = Console.new("BABEL: #{scope.logical_path}: ")
-        #nodyna <ID:eval-22> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-22> <EV COMPLEX (change-prone variables)>
         @output = klass.v8.eval(generate_source(scope))
       end
 

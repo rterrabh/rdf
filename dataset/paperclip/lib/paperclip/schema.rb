@@ -9,15 +9,15 @@ module Paperclip
                :updated_at   => :datetime}
 
     def self.included(base)
-      #nodyna <ID:send-35> <send VERY LOW ex1>
+      #nodyna <ID:send-35> <SD TRIVIAL (public methods)>
       ActiveRecord::ConnectionAdapters::Table.send :include, TableDefinition
-      #nodyna <ID:send-36> <send VERY LOW ex1>
+      #nodyna <ID:send-36> <SD TRIVIAL (public methods)>
       ActiveRecord::ConnectionAdapters::TableDefinition.send :include, TableDefinition
-      #nodyna <ID:send-37> <send VERY LOW ex1>
+      #nodyna <ID:send-37> <SD TRIVIAL (public methods)>
       ActiveRecord::ConnectionAdapters::AbstractAdapter.send :include, Statements
 
       if defined?(ActiveRecord::Migration::CommandRecorder) # Rails 3.1+
-        #nodyna <ID:send-38> <send VERY LOW ex1>
+        #nodyna <ID:send-38> <SD TRIVIAL (public methods)>
         ActiveRecord::Migration::CommandRecorder.send :include, CommandRecorder
       end
     end

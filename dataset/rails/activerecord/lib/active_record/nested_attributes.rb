@@ -377,7 +377,7 @@ module ActiveRecord
     def assign_nested_attributes_for_one_to_one_association(association_name, attributes)
       options = self.nested_attributes_options[association_name]
       attributes = attributes.with_indifferent_access
-      #nodyna <ID:send-130> <send VERY HIGH ex3>
+      #nodyna <ID:send-130> <SD COMPLEX (change-prone variables)>
       existing_record = send(association_name)
 
       if (options[:update_only] || !attributes['id'].blank?) && existing_record &&
@@ -396,7 +396,7 @@ module ActiveRecord
         else
           method = "build_#{association_name}"
           if respond_to?(method)
-            #nodyna <ID:send-131> <send VERY HIGH ex3>
+            #nodyna <ID:send-131> <SD COMPLEX (change-prone variables)>
             send(method, assignable_attributes)
           else
             raise ArgumentError, "Cannot build association `#{association_name}'. Are you trying to build a polymorphic one-to-one association?"
@@ -496,7 +496,7 @@ module ActiveRecord
       if limit
         limit = case limit
         when Symbol
-          #nodyna <ID:send-132> <send VERY HIGH ex3>
+          #nodyna <ID:send-132> <SD COMPLEX (change-prone variables)>
           send(limit)
         when Proc
           limit.call
@@ -538,8 +538,8 @@ module ActiveRecord
       return false if has_destroy_flag?(attributes)
       case callback = self.nested_attributes_options[association_name][:reject_if]
       when Symbol
-        #nodyna <ID:send-133> <send VERY HIGH ex3>
-        #nodyna <ID:send-134> <send VERY HIGH ex3>
+        #nodyna <ID:send-133> <SD COMPLEX (change-prone variables)>
+        #nodyna <ID:send-134> <SD COMPLEX (change-prone variables)>
         method(callback).arity == 0 ? send(callback) : send(callback, attributes)
       when Proc
         callback.call(attributes)

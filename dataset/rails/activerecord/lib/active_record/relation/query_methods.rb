@@ -39,7 +39,7 @@ module ActiveRecord
       #    User.where.not(name: "Jon", role: "admin")
       #    # SELECT * FROM users WHERE name != 'Jon' AND role != 'admin'
       def not(opts, *rest)
-        #nodyna <ID:send-177> <send LOW ex4>
+        #nodyna <ID:send-177> <SD EASY (private methods)>
         where_value = @scope.send(:build_where, opts, rest).map do |rel|
           case rel
           when NilClass
@@ -902,7 +902,7 @@ module ActiveRecord
         result = [] unless single_val_method
       end
 
-      #nodyna <ID:send-178> <send VERY HIGH ex3>
+      #nodyna <ID:send-178> <SD COMPLEX (change-prone variables)>
       self.send(unscope_code, result)
     end
 
@@ -949,7 +949,7 @@ module ActiveRecord
     def build_where(opts, other = [])
       case opts
       when String, Array
-        #nodyna <ID:send-179> <send LOW ex4>
+        #nodyna <ID:send-179> <SD EASY (private methods)>
         [@klass.send(:sanitize_sql, other.empty? ? opts : ([opts] + other))]
       when Hash
         opts = PredicateBuilder.resolve_column_aliases(klass, opts)
@@ -957,7 +957,7 @@ module ActiveRecord
         tmp_opts, bind_values = create_binds(opts)
         self.bind_values += bind_values
 
-        #nodyna <ID:send-180> <send LOW ex4>
+        #nodyna <ID:send-180> <SD EASY (private methods)>
         attributes = @klass.send(:expand_hash_conditions_for_aggregates, tmp_opts)
         add_relations_to_bind_values(attributes)
 
@@ -989,9 +989,9 @@ module ActiveRecord
       end
 
       association_binds.each do |(column, value)|
-        #nodyna <ID:send-181> <send LOW ex4>
+        #nodyna <ID:send-181> <SD EASY (private methods)>
         association_relation = association_for_table(column).klass.send(:relation)
-        #nodyna <ID:send-182> <send LOW ex4>
+        #nodyna <ID:send-182> <SD EASY (private methods)>
         association_new_opts, association_bind = association_relation.send(:create_binds, value)
         new_opts[column] = association_new_opts
         binds += association_bind
@@ -1139,7 +1139,7 @@ module ActiveRecord
         when Hash
           arg.map { |field, dir|
             field = klass.attribute_alias(field) if klass.attribute_alias?(field)
-            #nodyna <ID:send-183> <send VERY HIGH ex2>
+            #nodyna <ID:send-183> <SD COMPLEX (array)>
             table[field].send(dir.downcase)
           }
         else

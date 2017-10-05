@@ -124,11 +124,11 @@ begin
   end
 
   if internal_cmd
-    #nodyna <ID:send-41> <send VERY HIGH ex3>
+    #nodyna <ID:send-41> <SD COMPLEX (change-prone variables)>
     Homebrew.send cmd.to_s.gsub("-", "_").downcase
   elsif which "brew-#{cmd}"
     %w[CACHE CELLAR LIBRARY_PATH PREFIX REPOSITORY].each do |e|
-      #nodyna <ID:const_get-3> <const_get MEDIUM ex2>
+      #nodyna <ID:const_get-3> <CG MODERATE (array)>
       ENV["HOMEBREW_#{e}"] = Object.const_get("HOMEBREW_#{e}").to_s
     end
     exec "brew-#{cmd}", *ARGV

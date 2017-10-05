@@ -23,8 +23,8 @@ class FormulaInstaller
     private(*names)
     names.each do |name|
       predicate = "#{name}?"
-      #nodyna <ID:send-26> <send MEDIUM ex3>
-      #nodyna <ID:define_method-11> <define_method MEDIUM ex1>
+      #nodyna <ID:send-26> <SD MODERATE (change-prone variables)>
+      #nodyna <ID:define_method-11> <DM MODERATE (array)>
       define_method(predicate) { !!send(name) }
       private(predicate)
     end

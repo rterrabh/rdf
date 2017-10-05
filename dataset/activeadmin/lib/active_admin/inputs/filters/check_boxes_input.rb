@@ -9,7 +9,7 @@ module ActiveAdmin
         end
 
         def selected_values
-          #nodyna <ID:send-16> <send VERY HIGH ex3>
+          #nodyna <ID:send-16> <SD COMPLEX (change-prone variables)>
           @object.public_send("#{searchable_method_name}_in") || []
         end
 

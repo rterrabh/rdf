@@ -134,7 +134,7 @@ module Test
         else
           msg = message(msg) { "Expected #{mu_pp expected} to match #{mu_pp ex.message}" }
           assert expected =~ ex.message, msg
-          #nodyna <ID:eval-126> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-126> <EV COMPLEX (change-prone variables)>
           block.binding.eval("proc{|_|$~=_}").call($~)
         end
         ex

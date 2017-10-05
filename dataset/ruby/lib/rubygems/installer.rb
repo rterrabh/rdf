@@ -547,7 +547,7 @@ class Gem::Installer
     ruby.untaint
 
     begin
-      #nodyna <ID:eval-81> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-81> <EV COMPLEX (change-prone variables)>
       eval ruby
     rescue StandardError, SyntaxError => e
       raise Gem::InstallError,

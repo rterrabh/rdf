@@ -36,7 +36,7 @@ EOT
     def run_command!(command)
       command = parse_command(command)
       if COMMAND_WHITELIST.include?(command)
-        #nodyna <ID:send-287> <send MEDIUM ex3>
+        #nodyna <ID:send-287> <SD MODERATE (change-prone variables)>
         send(command)
       else
         write_error_message(command)

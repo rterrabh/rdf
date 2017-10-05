@@ -46,7 +46,7 @@ describe Diaspora::Fetcher::Public do
   describe "#retrieve_posts" do
     before do
       person = @person
-      #nodyna <ID:instance_eval-7> <instance_eval LOW ex1>
+      #nodyna <ID:instance_eval-7> <IEV EASY (private access)>
       @fetcher.instance_eval {
         @person = person
         retrieve_posts
@@ -60,7 +60,7 @@ describe Diaspora::Fetcher::Public do
     end
 
     it "sets the @data variable to the parsed JSON data" do
-      #nodyna <ID:instance_eval-8> <instance_eval LOW ex1>
+      #nodyna <ID:instance_eval-8> <IEV EASY (private access)>
       data = @fetcher.instance_eval {
         @data
       }
@@ -74,7 +74,7 @@ describe Diaspora::Fetcher::Public do
       person = @person
       data = JSON.parse(@fixture)
 
-      #nodyna <ID:instance_eval-9> <instance_eval LOW ex1>
+      #nodyna <ID:instance_eval-9> <IEV EASY (private access)>
       @fetcher.instance_eval {
         @person = person
         @data = data
@@ -83,7 +83,7 @@ describe Diaspora::Fetcher::Public do
 
     it 'creates 10 new posts in the database' do
       before_count = Post.count
-      #nodyna <ID:instance_eval-10> <instance_eval LOW ex1>
+      #nodyna <ID:instance_eval-10> <IEV EASY (private access)>
       @fetcher.instance_eval {
         process_posts
       }
@@ -92,7 +92,7 @@ describe Diaspora::Fetcher::Public do
     end
 
     it 'sets the operation status on the person' do
-      #nodyna <ID:instance_eval-11> <instance_eval LOW ex1>
+      #nodyna <ID:instance_eval-11> <IEV EASY (private access)>
       @fetcher.instance_eval {
         process_posts
       }
@@ -109,7 +109,7 @@ describe Diaspora::Fetcher::Public do
         @data = JSON.parse(@fixture).select { |item| item['post_type'] == 'StatusMessage' }
 
         #save posts to db
-        #nodyna <ID:instance_eval-12> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-12> <IEV EASY (private access)>
         @fetcher.instance_eval {
           process_posts
         }
@@ -152,7 +152,7 @@ describe Diaspora::Fetcher::Public do
     describe '#qualifies_for_fetching?' do
       it "raises an error if the person doesn't exist" do
         expect {
-          #nodyna <ID:instance_eval-13> <instance_eval LOW ex1>
+          #nodyna <ID:instance_eval-13> <IEV EASY (private access)>
           public_fetcher.instance_eval {
             @person = Person.by_account_identifier "someone@unknown.com"
             qualifies_for_fetching?
@@ -161,7 +161,7 @@ describe Diaspora::Fetcher::Public do
       end
 
       it 'returns false if the person is unfetchable' do
-        #nodyna <ID:instance_eval-14> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-14> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval {
           @person = FactoryGirl.create(:person, {:fetch_status => Diaspora::Fetcher::Public::Status_Unfetchable})
           qualifies_for_fetching?
@@ -170,7 +170,7 @@ describe Diaspora::Fetcher::Public do
 
       it 'returns false and sets the person unfetchable for a local account' do
         user = FactoryGirl.create(:user)
-        #nodyna <ID:instance_eval-15> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-15> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval {
           @person = user.person
           qualifies_for_fetching?
@@ -182,7 +182,7 @@ describe Diaspora::Fetcher::Public do
         person = FactoryGirl.create(:person)
         person.fetch_status = Diaspora::Fetcher::Public::Status_Fetched
         person.save
-        #nodyna <ID:instance_eval-16> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-16> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval {
           @person = person
           qualifies_for_fetching?
@@ -191,7 +191,7 @@ describe Diaspora::Fetcher::Public do
 
       it "returns true, if the user is remote and hasn't been fetched" do
         person = FactoryGirl.create(:person, {:diaspora_handle => 'neo@theone.net'})
-        #nodyna <ID:instance_eval-17> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-17> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval {
           @person = person
           qualifies_for_fetching?
@@ -202,14 +202,14 @@ describe Diaspora::Fetcher::Public do
     describe '#set_fetch_status' do
       it 'sets the current status of fetching on the person' do
         person = @person
-        #nodyna <ID:instance_eval-18> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-18> <IEV EASY (private access)>
         public_fetcher.instance_eval {
           @person = person
           set_fetch_status Diaspora::Fetcher::Public::Status_Unfetchable
         }
         expect(@person.fetch_status).to eql Diaspora::Fetcher::Public::Status_Unfetchable
 
-        #nodyna <ID:instance_eval-19> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-19> <IEV EASY (private access)>
         public_fetcher.instance_eval {
           set_fetch_status Diaspora::Fetcher::Public::Status_Initial
         }
@@ -224,7 +224,7 @@ describe Diaspora::Fetcher::Public do
         expect(public_fetcher).to receive(:check_public).and_return(true)
         expect(public_fetcher).to receive(:check_type).and_return(true)
 
-        #nodyna <ID:instance_eval-20> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-20> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval { validate({}) }).to be true
       end
     end
@@ -232,13 +232,13 @@ describe Diaspora::Fetcher::Public do
     describe '#check_existing' do
       it 'returns false if a post with the same guid exists' do
         post = {'guid' => FactoryGirl.create(:status_message).guid}
-        #nodyna <ID:instance_eval-21> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-21> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval { check_existing post }).to be false
       end
 
       it 'returns true if the guid cannot be found' do
         post = {'guid' => SecureRandom.hex(8)}
-        #nodyna <ID:instance_eval-22> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-22> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval { check_existing post }).to be true
       end
     end
@@ -248,19 +248,19 @@ describe Diaspora::Fetcher::Public do
 
       before do
         person = some_person
-        #nodyna <ID:instance_eval-23> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-23> <IEV EASY (private access)>
         public_fetcher.instance_eval { @person = person }
       end
 
       it "returns false if the person doesn't match" do
         post = { 'author' => { 'guid' => SecureRandom.hex(8) } }
-        #nodyna <ID:instance_eval-24> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-24> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval { check_author post }).to be false
       end
 
       it "returns true if the persons match" do
         post = { 'author' => { 'guid' => some_person.guid } }
-        #nodyna <ID:instance_eval-25> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-25> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval { check_author post }).to be true
       end
     end
@@ -268,13 +268,13 @@ describe Diaspora::Fetcher::Public do
     describe '#check_public' do
       it "returns false if the post is not public" do
         post = {'public' => false}
-        #nodyna <ID:instance_eval-26> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-26> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval { check_public post }).to be false
       end
 
       it "returns true if the post is public" do
         post = {'public' => true}
-        #nodyna <ID:instance_eval-27> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-27> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval { check_public post }).to be true
       end
     end
@@ -282,13 +282,13 @@ describe Diaspora::Fetcher::Public do
     describe '#check_type' do
       it "returns false if the type is anything other that 'StatusMessage'" do
         post = {'post_type'=>'Reshare'}
-        #nodyna <ID:instance_eval-28> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-28> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval { check_type post }).to be false
       end
 
       it "returns true if the type is 'StatusMessage'" do
         post = {'post_type'=>'StatusMessage'}
-        #nodyna <ID:instance_eval-29> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-29> <IEV EASY (private access)>
         expect(public_fetcher.instance_eval { check_type post }).to be true
       end
     end

@@ -137,7 +137,7 @@ module IRB # :nodoc:
       end
 
       if load_file
-        #nodyna <ID:eval-100> <eval VERY HIGH ex1>
+        #nodyna <ID:eval-100> <EV COMPLEX (method definition)>
         line = __LINE__; eval %[
           def #{cmd_name}(*opts, &b)
             require "#{load_file}"
@@ -155,7 +155,7 @@ module IRB # :nodoc:
           end
         ], nil, __FILE__, line
       else
-        #nodyna <ID:eval-102> <eval VERY HIGH ex1>
+        #nodyna <ID:eval-102> <EV COMPLEX (method definition)>
         line = __LINE__; eval %[
           def #{cmd_name}(*opts, &b)
             ExtendCommand::#{cmd_class}.execute(irb_context, *opts, &b)
@@ -178,7 +178,7 @@ module IRB # :nodoc:
           (override == OVERRIDE_PRIVATE_ONLY) && !respond_to?(to) or
           (override == NO_OVERRIDE) &&  !respond_to?(to, true)
         target = self
-        #nodyna <ID:instance_eval-174> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-174> <IEV MODERATE (private access)>
         (class << self; self; end).instance_eval{
           if target.respond_to?(to, true) &&
             !target.respond_to?(EXCB.irb_original_method_name(to), true)

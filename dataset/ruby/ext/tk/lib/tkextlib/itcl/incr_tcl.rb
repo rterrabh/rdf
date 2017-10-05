@@ -40,7 +40,7 @@ module Tk
     class ItclObject < TkObject
       ITCL_CLASSNAME = ''.freeze
 
-      #nodyna <ID:instance_eval-140> <instance_eval MEDIUM ex2>
+      #nodyna <ID:instance_eval-140> <IEV MODERATE (method definition)>
       (ITCL_OBJ_ID = ['itclobj'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -128,7 +128,7 @@ module Tk
     def self.create_itcl_class(name, body)
       TkCore::INTERP._invoke('::itcl::class', name, body)
       klass = Class.new(Tk::Itcl::ItclObject)
-      #nodyna <ID:const_set-22> <const_set VERY LOW ex1>
+      #nodyna <ID:const_set-22> <CS TRIVIAL (static values)>
       klass.const_set('ITCL_CLASSNAME', name.dup.freeze)
       klass
     end

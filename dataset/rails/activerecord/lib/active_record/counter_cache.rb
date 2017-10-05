@@ -38,7 +38,7 @@ module ActiveRecord
           counter_name = reflection.counter_cache_column
 
           stmt = unscoped.where(arel_table[primary_key].eq(object.id)).arel.compile_update({
-            #nodyna <ID:send-142> <send VERY HIGH ex2>
+            #nodyna <ID:send-142> <SD COMPLEX (array)>
             arel_table[counter_name] => object.send(counter_association).count(:all)
           }, primary_key)
           connection.update stmt
@@ -140,7 +140,7 @@ module ActiveRecord
         id = super
 
         each_counter_cached_associations do |association|
-          #nodyna <ID:send-143> <send VERY HIGH ex2>
+          #nodyna <ID:send-143> <SD COMPLEX (array)>
           if send(association.reflection.name)
             association.increment_counters
             @_after_create_counter_called = true
@@ -157,7 +157,7 @@ module ActiveRecord
           each_counter_cached_associations do |association|
             foreign_key = association.reflection.foreign_key.to_sym
             unless destroyed_by_association && destroyed_by_association.foreign_key.to_sym == foreign_key
-              #nodyna <ID:send-144> <send VERY HIGH ex2>
+              #nodyna <ID:send-144> <SD COMPLEX (array)>
               if send(association.reflection.name)
                 association.decrement_counters
               end

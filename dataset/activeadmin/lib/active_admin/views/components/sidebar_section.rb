@@ -17,7 +17,7 @@ module ActiveAdmin
 
       def build_sidebar_content
         if @section.block
-          #nodyna <ID:instance_exec-21> <instance_exec VERY HIGH ex1>
+          #nodyna <ID:instance_exec-21> <IEX COMPLEX (block without parameters)>
           rvalue = instance_exec(&@section.block)
           self << rvalue if rvalue.is_a?(String)
         else

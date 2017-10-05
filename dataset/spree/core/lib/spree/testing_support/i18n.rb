@@ -70,7 +70,7 @@ module Spree
   end
 
   def self.translations
-    #nodyna <ID:send-2> <send VERY LOW ex1>
+    #nodyna <ID:send-2> <SD TRIVIAL (public methods)>
     @translations ||= I18n.backend.send(:translations)[I18n.locale][:spree]
   end
 end

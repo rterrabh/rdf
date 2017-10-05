@@ -47,7 +47,7 @@ module RailsAdmin
         # @see RailsAdmin::Config::Fields.fields_of_type
         def fields_of_type(type, &block)
           selected = section.fields.select { |f| type == f.type }
-          #nodyna <ID:instance_eval-6> <instance_eval VERY HIGH ex3>
+          #nodyna <ID:instance_eval-6> <IEV COMPLEX (block execution)>
           selected.each { |f| f.instance_eval(&block) } if block
           selected
         end

@@ -64,7 +64,7 @@ module AnalyticsHelper
   end
 
   def configured?(service)
-    #nodyna <ID:send-226> <send MEDIUM ex3>
+    #nodyna <ID:send-226> <SD MODERATE (change-prone variables)>
     AppConfig.privacy.send("#{service}_uid").present?
   end
 end

@@ -9,7 +9,7 @@ module Paperclip
     # Hash assignment of interpolations. Included only for compatibility,
     # and is not intended for normal use.
     def self.[]= name, block
-      #nodyna <ID:define_method-2> <define_method VERY HIGH ex2>
+      #nodyna <ID:define_method-2> <DM COMPLEX (events)>
       define_method(name, &block)
     end
 
@@ -29,11 +29,11 @@ module Paperclip
     # You can pass a method name on your record as a symbol, which should turn
     # an interpolation pattern for Paperclip to use.
     def self.interpolate pattern, *args
-      #nodyna <ID:send-14> <send VERY HIGH ex3>
+      #nodyna <ID:send-14> <SD COMPLEX (change-prone variables)>
       pattern = args.first.instance.send(pattern) if pattern.kind_of? Symbol
       all.reverse.inject(pattern) do |result, tag|
         result.gsub(/:#{tag}/) do |match|
-          #nodyna <ID:send-15> <send VERY HIGH ex3>
+          #nodyna <ID:send-15> <SD COMPLEX (change-prone variables)>
           send( tag, *args )
         end
       end

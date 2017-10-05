@@ -230,7 +230,7 @@ module Tk::BLT
         if TkVar_ID_TBL[name]
           TkVar_ID_TBL[name]
         else
-          #nodyna <ID:instance_eval-104> <instance_eval MEDIUM ex1>
+          #nodyna <ID:instance_eval-104> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             initialize(name)
             TkVar_ID_TBL[@id] = self

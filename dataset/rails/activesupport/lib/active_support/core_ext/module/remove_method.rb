@@ -7,7 +7,7 @@ class Module
 
   def redefine_method(method, &block)
     remove_possible_method(method)
-    #nodyna <ID:define_method-62> <define_method VERY HIGH ex2>
+    #nodyna <ID:define_method-62> <DM COMPLEX (events)>
     define_method(method, &block)
   end
 end

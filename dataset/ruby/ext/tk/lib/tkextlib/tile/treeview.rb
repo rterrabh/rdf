@@ -715,7 +715,7 @@ class Tk::Tile::Treeview::Item < TkObject
       end
 
       obj = self.allocate
-      #nodyna <ID:instance_eval-133> <instance_eval MEDIUM ex1>
+      #nodyna <ID:instance_eval-133> <IEV MODERATE (private access)>
       obj.instance_eval{
         @parent = @t = tree
         @tpath = tpath
@@ -907,7 +907,7 @@ class Tk::Tile::Treeview::Root < Tk::Tile::Treeview::Item
         obj = Tk::Tile::Treeview::Item::ItemID_TBL[tpath]['']
       else
         #super(tree, keys)
-        #nodyna <ID:instance_eval-134> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-134> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @parent = @t = tree
           @tpath = tree.path
@@ -940,7 +940,7 @@ class Tk::Tile::Treeview::Tag < TkObject
 
   TagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-135> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-135> <IEV MODERATE (method definition)>
   (Tag_ID = ['tile_treeview_tag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end

@@ -133,10 +133,10 @@ class Tk::BWidget::Dialog
     win = window(tk_send('add', *hash_kv(keys)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-10> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-10> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-111> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-111> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -147,10 +147,10 @@ class Tk::BWidget::Dialog
     win = window(tk_send('getframe'))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-11> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-11> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-112> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-112> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -161,10 +161,10 @@ class Tk::BWidget::Dialog
     win = window(@path + '.bbox')
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-12> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-12> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-113> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-113> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

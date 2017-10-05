@@ -191,7 +191,7 @@ module Rails
         # to the Railtie instance.
         def method_missing(name, *args, &block)
           if instance.respond_to?(name)
-            #nodyna <ID:send-285> <send VERY HIGH ex3>
+            #nodyna <ID:send-285> <SD COMPLEX (change-prone variables)>
             instance.public_send(name, *args, &block)
           else
             super
@@ -208,7 +208,7 @@ module Rails
     end
 
     def configure(&block)
-      #nodyna <ID:instance_eval-17> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-17> <IEV COMPLEX (block execution)>
       instance_eval(&block)
     end
 
@@ -236,7 +236,7 @@ module Rails
 
     def run_tasks_blocks(app) #:nodoc:
       extend Rake::DSL
-      #nodyna <ID:instance_exec-22> <instance_exec VERY HIGH ex2>
+      #nodyna <ID:instance_exec-22> <IEX COMPLEX (block with parameters)>
       each_registered_block(:rake_tasks) { |block| instance_exec(app, &block) }
     end
 
@@ -245,7 +245,7 @@ module Rails
     def each_registered_block(type, &block)
       klass = self.class
       while klass.respond_to?(type)
-        #nodyna <ID:send-286> <send MEDIUM ex3>
+        #nodyna <ID:send-286> <SD MODERATE (change-prone variables)>
         klass.public_send(type).each(&block)
         klass = klass.superclass
       end

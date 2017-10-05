@@ -91,7 +91,7 @@ class MiniTest::Unit # :nodoc:
       range.each do |x|
         GC.start
         t0 = Time.now
-        #nodyna <ID:instance_exec-30> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-30> <IEX COMPLEX (block with parameters)>
         instance_exec(x, &work)
         t = Time.now - t0
 
@@ -335,7 +335,7 @@ class MiniTest::Unit # :nodoc:
 
     def validation_for_fit msg, threshold
       proc do |range, times|
-        #nodyna <ID:send-149> <send MEDIUM ex3>
+        #nodyna <ID:send-149> <SD MODERATE (change-prone variables)>
         a, b, rr = send "fit_#{msg}", range, times
         assert_operator rr, :>=, threshold
         [a, b, rr]
@@ -353,7 +353,7 @@ class MiniTest::Spec
   # See ::bench_performance_linear for an example of how to use this.
 
   def self.bench name, &block
-    #nodyna <ID:define_method-47> <define_method VERY HIGH ex2>
+    #nodyna <ID:define_method-47> <DM COMPLEX (events)>
     define_method "bench_#{name.gsub(/\W+/, '_')}", &block
   end
 
@@ -370,8 +370,8 @@ class MiniTest::Spec
     return super unless block
 
     meta = (class << self; self; end)
-    #nodyna <ID:send-150> <send MEDIUM ex4>
-    #nodyna <ID:define_method-48> <define_method VERY HIGH ex2>
+    #nodyna <ID:send-150> <SD MODERATE (private methods)>
+    #nodyna <ID:define_method-48> <DM COMPLEX (events)>
     meta.send :define_method, "bench_range", &block
   end
 

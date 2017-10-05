@@ -47,7 +47,7 @@ module RailsAdmin
 
         def add_action(key, parent_class, parent, &block)
           a = "RailsAdmin::Config::Actions::#{parent_class.to_s.camelize}".constantize.new
-          #nodyna <ID:instance_eval-16> <instance_eval VERY HIGH ex2>
+          #nodyna <ID:instance_eval-16> <IEV COMPLEX (method definition)>
           a.instance_eval(%(
             #{parent} true
             def key
@@ -67,7 +67,7 @@ module RailsAdmin
             name = klass.to_s.demodulize.underscore.to_sym
           end
 
-          #nodyna <ID:instance_eval-17> <instance_eval MEDIUM ex2>
+          #nodyna <ID:instance_eval-17> <IEV MODERATE (method definition)>
           instance_eval %{
             def #{name}(&block)
               action = #{klass}.new
@@ -95,7 +95,7 @@ module RailsAdmin
         end
 
         def add_action_custom_key(action, &block)
-          #nodyna <ID:instance_eval-18> <instance_eval VERY HIGH ex3>
+          #nodyna <ID:instance_eval-18> <IEV COMPLEX (block execution)>
           action.instance_eval(&block) if block
           @@actions ||= []
           if action.custom_key.in?(@@actions.collect(&:custom_key))

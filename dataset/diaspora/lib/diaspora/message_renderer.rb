@@ -11,7 +11,7 @@ module Diaspora
         def process message, options, &block
           return '' if message.blank? # Optimize for empty message
           processor = new message, options
-          #nodyna <ID:instance_exec-1> <instance_exec MEDIUM ex1>
+          #nodyna <ID:instance_exec-1> <IEX MODERATE (block without parameters)>
           processor.instance_exec(&block)
           processor.message
         end

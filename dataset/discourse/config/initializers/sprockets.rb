@@ -16,7 +16,7 @@ if defined?(Sass::Rails::SassTemplate)
   Rails.application.assets.register_engine '.sass', DiscourseSassTemplate
   Rails.application.assets.register_engine '.scss', DiscourseScssTemplate
 else
-  #nodyna <ID:send-224> <send MEDIUM ex4>
+  #nodyna <ID:send-224> <SD MODERATE (private methods)>
   Sprockets.send(:remove_const, :SassImporter)
   Sprockets::SassImporter = DiscourseSassImporter
 end

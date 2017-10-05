@@ -29,7 +29,7 @@ module Homebrew
       FormulaAuditor.module_eval do
         instance_methods.grep(/audit_/).map do |name|
           method = instance_method(name)
-          #nodyna <ID:define_method-10> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-10> <DM COMPLEX (events)>
           define_method(name) do |*args, &block|
             begin
               time = Time.now
@@ -139,7 +139,7 @@ class FormulaAuditor
     @online = !!options[:online]
     @problems = []
     @text = FormulaText.new(formula.path)
-    #nodyna <ID:send-23> <send MEDIUM ex2>
+    #nodyna <ID:send-23> <SD MODERATE (array)>
     @specs = %w[stable devel head].map { |s| formula.send(s) }.compact
   end
 
@@ -491,7 +491,7 @@ class FormulaAuditor
     end
 
     %w[Stable Devel HEAD].each do |name|
-      #nodyna <ID:send-24> <send MEDIUM ex2>
+      #nodyna <ID:send-24> <SD MODERATE (array)>
       next unless spec = formula.send(name.downcase)
 
       ra = ResourceAuditor.new(spec).audit
@@ -508,7 +508,7 @@ class FormulaAuditor
     end
 
     %w[Stable Devel].each do |name|
-      #nodyna <ID:send-25> <send MEDIUM ex2>
+      #nodyna <ID:send-25> <SD MODERATE (array)>
       next unless spec = formula.send(name.downcase)
       version = spec.version
       if version.to_s !~ /\d/

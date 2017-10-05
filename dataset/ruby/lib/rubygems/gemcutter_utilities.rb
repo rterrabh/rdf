@@ -75,7 +75,7 @@ module Gem::GemcutterUtilities
 
     uri = URI.parse "#{self.host}/#{path}"
 
-    #nodyna <ID:const_get-28> <const_get MEDIUM ex3>
+    #nodyna <ID:const_get-28> <CG MODERATE (change-prone variables)>
     request_method = Net::HTTP.const_get method.to_s.capitalize
 
     Gem::RemoteFetcher.fetcher.request(uri, request_method, &block)

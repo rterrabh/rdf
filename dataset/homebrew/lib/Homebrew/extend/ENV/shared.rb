@@ -174,7 +174,7 @@ module SharedEnvExtension
   end
 
   COMPILERS.each do |compiler|
-    #nodyna <ID:define_method-3> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-3> <DM MODERATE (array)>
     define_method(compiler) do
       @compiler = compiler
       self.cc  = determine_cc

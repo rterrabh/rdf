@@ -348,7 +348,7 @@ describe Spree::Shipment, :type => :model do
         end
 
         after do
-          #nodyna <ID:send-33> <send MEDIUM ex4>
+          #nodyna <ID:send-33> <SD MODERATE (private methods)>
           Spree::ShipmentHandler.send(:remove_const, :UPS)
         end
       end

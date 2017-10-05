@@ -20,7 +20,7 @@ module ActiveModel
       def validate_each(record, attr_name, value)
         before_type_cast = :"#{attr_name}_before_type_cast"
 
-        #nodyna <ID:send-17> <send VERY HIGH ex3>
+        #nodyna <ID:send-17> <SD COMPLEX (change-prone variables)>
         raw_value = record.send(before_type_cast) if record.respond_to?(before_type_cast)
         raw_value ||= value
 
@@ -45,7 +45,7 @@ module ActiveModel
         options.slice(*CHECKS.keys).each do |option, option_value|
           case option
           when :odd, :even
-            #nodyna <ID:send-18> <send MEDIUM ex3>
+            #nodyna <ID:send-18> <SD MODERATE (change-prone variables)>
             unless value.to_i.send(CHECKS[option])
               record.errors.add(attr_name, option, filtered_options(value))
             end
@@ -54,11 +54,11 @@ module ActiveModel
             when Proc
               option_value = option_value.call(record)
             when Symbol
-              #nodyna <ID:send-19> <send MEDIUM ex3>
+              #nodyna <ID:send-19> <SD MODERATE (change-prone variables)>
               option_value = record.send(option_value)
             end
 
-            #nodyna <ID:send-20> <send MEDIUM ex3>
+            #nodyna <ID:send-20> <SD MODERATE (change-prone variables)>
             unless value.send(CHECKS[option], option_value)
               record.errors.add(attr_name, option, filtered_options(value).merge!(count: option_value))
             end
@@ -87,7 +87,7 @@ module ActiveModel
       def allow_only_integer?(record)
         case options[:only_integer]
         when Symbol
-          #nodyna <ID:send-21> <send VERY HIGH ex3>
+          #nodyna <ID:send-21> <SD COMPLEX (change-prone variables)>
           record.send(options[:only_integer])
         when Proc
           options[:only_integer].call(record)

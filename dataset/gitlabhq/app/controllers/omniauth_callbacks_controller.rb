@@ -3,7 +3,7 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   protect_from_forgery except: [:kerberos, :saml]
 
   Gitlab.config.omniauth.providers.each do |provider|
-    #nodyna <ID:define_method-2> <define_method VERY HIGH ex1>
+    #nodyna <ID:define_method-2> <DM COMPLEX (array)>
     define_method provider['name'] do
       handle_omniauth
     end

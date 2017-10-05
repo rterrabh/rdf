@@ -14,7 +14,7 @@ module Gitlab
     end
 
     %i(user label issue merge_request snippet commit commit_range).each do |type|
-      #nodyna <ID:define_method-1> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-1> <DM MODERATE (array)>
       define_method("#{type}s") do
         references[type]
       end

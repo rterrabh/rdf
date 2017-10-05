@@ -11,7 +11,7 @@ module ActiveAdmin
         if klass.respond_to?(:human_attribute_name)
           klass.human_attribute_name(method)
         else
-          #nodyna <ID:send-30> <send VERY HIGH ex3>
+          #nodyna <ID:send-30> <SD COMPLEX (change-prone variables)>
           method.to_s.public_send(builder.label_str_method)
         end
       end

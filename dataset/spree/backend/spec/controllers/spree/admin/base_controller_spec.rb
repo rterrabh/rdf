@@ -46,19 +46,19 @@ describe Spree::Admin::BaseController, :type => :controller do
       end
 
       it "only checks alerts if production and preference is true" do
-        #nodyna <ID:send-12> <send LOW ex4>
+        #nodyna <ID:send-12> <SD EASY (private methods)>
         expect(controller.send(:should_check_alerts?)).to be true
       end
 
       it "only checks for production" do
         allow(Rails.env).to receive_messages(:production? => false)
-        #nodyna <ID:send-13> <send LOW ex4>
+        #nodyna <ID:send-13> <SD EASY (private methods)>
         expect(controller.send(:should_check_alerts?)).to be false
       end
 
       it "only checks if preference is true" do
         Spree::Config[:check_for_spree_alerts] = false
-        #nodyna <ID:send-14> <send LOW ex4>
+        #nodyna <ID:send-14> <SD EASY (private methods)>
         expect(controller.send(:should_check_alerts?)).to be false
       end
     end

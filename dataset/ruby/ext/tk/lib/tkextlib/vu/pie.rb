@@ -117,7 +117,7 @@ end
 class Tk::Vu::PieSlice
   SliceID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-66> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-66> <IEV MODERATE (method definition)>
   (Pie_Slice_ID = ['vu:pie'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -245,7 +245,7 @@ class Tk::Vu::NamedPieSlice
           fail ArgumentError, "expect a Tk::Vu::Pie instance for 1st argument"
         end
         obj = self.allocate
-        #nodyna <ID:instance_eval-67> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-67> <IEV MODERATE (private access)>
         obj.instance_eval{
           @parent = @pie = parent
           @ppath = parent.path
@@ -255,7 +255,7 @@ class Tk::Vu::NamedPieSlice
         }
       end
     }
-    #nodyna <ID:instance_eval-68> <instance_eval MEDIUM ex1>
+    #nodyna <ID:instance_eval-68> <IEV MODERATE (private access)>
     obj.instance_eval{
       if args[-1].kind_of?(Hash)
         keys = args.unshift

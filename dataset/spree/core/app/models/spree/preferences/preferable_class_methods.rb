@@ -9,14 +9,14 @@ module Spree::Preferences
 
       # cache_key will be nil for new objects, then if we check if there
       # is a pending preference before going to default
-      #nodyna <ID:define_method-6> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-6> <DM MODERATE (events)>
       define_method preference_getter_method(name) do
         preferences.fetch(name) do
           default.call
         end
       end
 
-      #nodyna <ID:define_method-7> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-7> <DM MODERATE (events)>
       define_method preference_setter_method(name) do |value|
         value = convert_preference_value(value, type)
         preferences[name] = value
@@ -27,10 +27,10 @@ module Spree::Preferences
         preferences_will_change! if respond_to?(:preferences_will_change!)
       end
 
-      #nodyna <ID:define_method-8> <define_method VERY HIGH ex2>
+      #nodyna <ID:define_method-8> <DM COMPLEX (events)>
       define_method preference_default_getter_method(name), &default
 
-      #nodyna <ID:define_method-9> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-9> <DM MODERATE (events)>
       define_method preference_type_getter_method(name) do
         type
       end

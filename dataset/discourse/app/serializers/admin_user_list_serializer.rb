@@ -27,9 +27,9 @@ class AdminUserListSerializer < BasicUserSerializer
 
   [:days_visited, :posts_read_count, :topics_entered, :post_count].each do |sym|
     attributes sym
-    #nodyna <ID:define_method-31> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-31> <DM MODERATE (array)>
     define_method sym do
-      #nodyna <ID:send-141> <send MEDIUM ex3>
+      #nodyna <ID:send-141> <SD MODERATE (change-prone variables)>
       object.user_stat.send(sym)
     end
   end

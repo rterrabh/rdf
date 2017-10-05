@@ -95,7 +95,7 @@ class LeakChecker
         super(data)
       end
     }
-    #nodyna <ID:const_set-66> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-66> <CS TRIVIAL (static values)>
     LeakChecker.const_set(:TempfileCounter, m)
 
     class << Tempfile::Remover

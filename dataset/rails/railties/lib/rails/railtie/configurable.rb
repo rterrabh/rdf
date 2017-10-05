@@ -27,7 +27,7 @@ module Rails
         protected
 
         def method_missing(*args, &block)
-          #nodyna <ID:send-276> <send VERY HIGH ex3>
+          #nodyna <ID:send-276> <SD COMPLEX (change-prone variables)>
           instance.send(*args, &block)
         end
       end

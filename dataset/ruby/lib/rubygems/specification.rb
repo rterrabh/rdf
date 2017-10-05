@@ -1040,7 +1040,7 @@ class Gem::Specification < Gem::BasicSpecification
     code.untaint
 
     begin
-      #nodyna <ID:eval-82> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-82> <EV COMPLEX (change-prone variables)>
       spec = eval code, binding, file
 
       if Gem::Specification === spec
@@ -2062,7 +2062,7 @@ class Gem::Specification < Gem::BasicSpecification
       attributes.unshift :name
 
       attributes.each do |attr_name|
-        #nodyna <ID:send-60> <send MEDIUM ex2>
+        #nodyna <ID:send-60> <SD MODERATE (array)>
         current_value = self.send attr_name
         if current_value != default_value(attr_name) or
            self.class.required_attribute? attr_name then
@@ -2195,8 +2195,8 @@ class Gem::Specification < Gem::BasicSpecification
   # True if this gem has the same attributes as +other+.
 
   def same_attributes? spec
-    #nodyna <ID:send-61> <send MEDIUM ex3>
-    #nodyna <ID:send-62> <send MEDIUM ex3>
+    #nodyna <ID:send-61> <SD MODERATE (change-prone variables)>
+    #nodyna <ID:send-62> <SD MODERATE (change-prone variables)>
     @@attributes.all? { |name, default| self.send(name) == spec.send(name) }
   end
 
@@ -2333,7 +2333,7 @@ class Gem::Specification < Gem::BasicSpecification
 
     @@attributes.each do |attr_name|
       next if handled.include? attr_name
-      #nodyna <ID:send-63> <send MEDIUM ex3>
+      #nodyna <ID:send-63> <SD MODERATE (change-prone variables)>
       current_value = self.send(attr_name)
       if current_value != default_value(attr_name) or
          self.class.required_attribute? attr_name then
@@ -2476,7 +2476,7 @@ class Gem::Specification < Gem::BasicSpecification
     end
 
     @@required_attributes.each do |symbol|
-      #nodyna <ID:send-64> <send MEDIUM ex2>
+      #nodyna <ID:send-64> <SD MODERATE (array)>
       unless self.send symbol then
         raise Gem::InvalidSpecificationException,
               "missing value for attribute #{symbol}"
@@ -2524,7 +2524,7 @@ class Gem::Specification < Gem::BasicSpecification
     end
 
     self.class.array_attributes.each do |field|
-      #nodyna <ID:send-65> <send MEDIUM ex2>
+      #nodyna <ID:send-65> <SD MODERATE (array)>
       val = self.send field
       klass = case field
               when :dependencies
@@ -2540,7 +2540,7 @@ class Gem::Specification < Gem::BasicSpecification
     end
 
     [:authors].each do |field|
-      #nodyna <ID:send-66> <send VERY LOW ex2>
+      #nodyna <ID:send-66> <SD TRIVIAL (array)>
       val = self.send field
       raise Gem::InvalidSpecificationException, "#{field} may not be empty" if
         val.empty?
@@ -2618,7 +2618,7 @@ http://opensource.org/licenses/alphabetical
     # Warnings
 
     %w[author description email homepage summary].each do |attribute|
-      #nodyna <ID:send-67> <send MEDIUM ex2>
+      #nodyna <ID:send-67> <SD MODERATE (array)>
       value = self.send attribute
       warning "no #{attribute} specified" if value.nil? or value.empty?
     end

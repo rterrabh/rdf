@@ -39,6 +39,6 @@ module Paperclip
 end
 
 if RUBY_PLATFORM =~ /java/
-  #nodyna <ID:send-39> <send VERY LOW ex1>
+  #nodyna <ID:send-39> <SD TRIVIAL (public methods)>
   ::Tempfile.send :include, Paperclip::TempfileEncoding
 end

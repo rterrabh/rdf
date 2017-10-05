@@ -69,7 +69,7 @@ class SoftwareSpec
   end
 
   def bottle(&block)
-    #nodyna <ID:instance_eval-8> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-8> <IEV COMPLEX (block execution)>
     bottle_specification.instance_eval(&block)
   end
 
@@ -302,7 +302,7 @@ class BottleSpecification
   # Checksum methods in the DSL's bottle block optionally take
   # a Hash, which indicates the platform the checksum applies on.
   Checksum::TYPES.each do |cksum|
-    #nodyna <ID:define_method-12> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-12> <DM MODERATE (array)>
     define_method(cksum) do |val|
       digest, tag = val.shift
       collector[tag] = Checksum.new(cksum, digest)

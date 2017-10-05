@@ -36,7 +36,7 @@ module ActiveAdmin
       def navigation_menu_name
         case @navigation_menu_name ||= DEFAULT_MENU
         when Proc
-          #nodyna <ID:instance_exec-14> <instance_exec VERY HIGH ex1>
+          #nodyna <ID:instance_exec-14> <IEX COMPLEX (block without parameters)>
           controller.instance_exec(&@navigation_menu_name).to_sym
         else
           @navigation_menu_name

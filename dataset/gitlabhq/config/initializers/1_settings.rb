@@ -55,12 +55,12 @@ class Settings < Settingslogic
 
     # check that `current` (string or integer) is a contant in `modul`.
     def verify_constant(modul, current, default)
-      #nodyna <ID:const_get-1> <const_get VERY HIGH ex2>
+      #nodyna <ID:const_get-1> <CG COMPLEX (array)>
       constant = modul.constants.find{ |name| modul.const_get(name) == current }
-      #nodyna <ID:const_get-2> <const_get VERY HIGH ex3>
+      #nodyna <ID:const_get-2> <CG COMPLEX (change-prone variable)>
       value = constant.nil? ? default : modul.const_get(constant)
       if current.is_a? String
-        #nodyna <ID:const_get-3> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-3> <CG COMPLEX (change-prone variable)>
         value = modul.const_get(current.upcase) rescue default
       end
       value
@@ -135,9 +135,9 @@ Settings.gitlab['email_enabled'] ||= true if Settings.gitlab['email_enabled'].ni
 Settings.gitlab['email_from'] ||= "gitlab@#{Settings.gitlab.host}"
 Settings.gitlab['email_display_name'] ||= "GitLab"
 Settings.gitlab['email_reply_to'] ||= "noreply@#{Settings.gitlab.host}"
-#nodyna <ID:send-137> <send LOW ex4>
+#nodyna <ID:send-137> <SD EASY (private methods)>
 Settings.gitlab['base_url']   ||= Settings.send(:build_base_gitlab_url)
-#nodyna <ID:send-138> <send LOW ex4>
+#nodyna <ID:send-138> <SD EASY (private methods)>
 Settings.gitlab['url']        ||= Settings.send(:build_gitlab_url)
 Settings.gitlab['user']       ||= 'git'
 Settings.gitlab['user_home']  ||= begin
@@ -149,7 +149,7 @@ Settings.gitlab['time_zone']  ||= nil
 Settings.gitlab['signup_enabled'] ||= true if Settings.gitlab['signup_enabled'].nil?
 Settings.gitlab['signin_enabled'] ||= true if Settings.gitlab['signin_enabled'].nil?
 Settings.gitlab['twitter_sharing_enabled'] ||= true if Settings.gitlab['twitter_sharing_enabled'].nil?
-#nodyna <ID:send-139> <send LOW ex4>
+#nodyna <ID:send-139> <SD EASY (private methods)>
 Settings.gitlab['restricted_visibility_levels'] = Settings.send(:verify_constant_array, Gitlab::VisibilityLevel, Settings.gitlab['restricted_visibility_levels'], [])
 Settings.gitlab['username_changing_enabled'] = true if Settings.gitlab['username_changing_enabled'].nil?
 Settings.gitlab['issue_closing_pattern'] = '((?:[Cc]los(?:e[sd]?|ing)|[Ff]ix(?:e[sd]|ing)?|[Rr]esolv(?:e[sd]?|ing)) +(?:(?:issues? +)?#\d+(?:(?:, *| +and +)?))+)' if Settings.gitlab['issue_closing_pattern'].nil?
@@ -161,7 +161,7 @@ Settings.gitlab.default_projects_features['issues']         = true if Settings.g
 Settings.gitlab.default_projects_features['merge_requests'] = true if Settings.gitlab.default_projects_features['merge_requests'].nil?
 Settings.gitlab.default_projects_features['wiki']           = true if Settings.gitlab.default_projects_features['wiki'].nil?
 Settings.gitlab.default_projects_features['snippets']       = false if Settings.gitlab.default_projects_features['snippets'].nil?
-#nodyna <ID:send-140> <send LOW ex4>
+#nodyna <ID:send-140> <SD EASY (private methods)>
 Settings.gitlab.default_projects_features['visibility_level']    = Settings.send(:verify_constant, Gitlab::VisibilityLevel, Settings.gitlab.default_projects_features['visibility_level'], Gitlab::VisibilityLevel::PRIVATE)
 Settings.gitlab['repository_downloads_path'] = File.absolute_path(Settings.gitlab['repository_downloads_path'] || 'tmp/repositories', Rails.root)
 Settings.gitlab['restricted_signup_domains'] ||= []
@@ -189,7 +189,7 @@ Settings.gitlab_shell['ssh_host']     ||= Settings.gitlab.ssh_host
 Settings.gitlab_shell['ssh_port']     ||= 22
 Settings.gitlab_shell['ssh_user']     ||= Settings.gitlab.user
 Settings.gitlab_shell['owner_group']  ||= Settings.gitlab.user
-#nodyna <ID:send-141> <send LOW ex4>
+#nodyna <ID:send-141> <SD EASY (private methods)>
 Settings.gitlab_shell['ssh_path_prefix'] ||= Settings.send(:build_gitlab_shell_ssh_path_prefix)
 
 #

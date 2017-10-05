@@ -397,7 +397,7 @@ module Gem::Security
 
     return alt_name.value if alt_name
 
-    #nodyna <ID:send-59> <send MEDIUM ex3>
+    #nodyna <ID:send-59> <SD MODERATE (change-prone variables)>
     certificate.send x509_entry
   end
 

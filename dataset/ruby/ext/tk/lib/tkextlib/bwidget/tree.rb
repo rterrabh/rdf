@@ -309,7 +309,7 @@ class Tk::BWidget::Tree::Node
 
   TreeNode_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-122> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-122> <IEV MODERATE (method definition)>
   (TreeNode_ID = ['bw:node'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end

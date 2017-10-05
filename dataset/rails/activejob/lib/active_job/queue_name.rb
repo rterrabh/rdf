@@ -42,7 +42,7 @@ module ActiveJob
     # Returns the name of the queue the job will be run on
     def queue_name
       if @queue_name.is_a?(Proc)
-        #nodyna <ID:instance_exec-1> <instance_exec VERY HIGH ex1>
+        #nodyna <ID:instance_exec-1> <IEX COMPLEX (block without parameters)>
         @queue_name = self.class.queue_name_from_part(instance_exec(&@queue_name))
       end
       @queue_name

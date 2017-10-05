@@ -30,7 +30,7 @@ module Spree
       order.line_items.detect do |my_li|
         my_li.variant == other_order_line_item.variant &&
           order.line_item_comparison_hooks.all? do |hook|
-            #nodyna <ID:send-81> <send VERY HIGH ex2>
+            #nodyna <ID:send-81> <SD COMPLEX (array)>
             order.send(hook, my_li, other_order_line_item.serializable_hash)
           end
       end

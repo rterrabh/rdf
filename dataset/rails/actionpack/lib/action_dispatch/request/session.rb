@@ -46,7 +46,7 @@ module ActionDispatch
         def [](key)
           if key == :id
             @delegate.fetch(key) {
-              #nodyna <ID:send-103> <send LOW ex4>
+              #nodyna <ID:send-103> <SD EASY (private methods)>
               @delegate[:id] = @by.send(:extract_session_id, @env)
             }
           else
@@ -78,7 +78,7 @@ module ActionDispatch
       def destroy
         clear
         options = self.options || {}
-        #nodyna <ID:send-104> <send VERY LOW ex1>
+        #nodyna <ID:send-104> <SD TRIVIAL (public methods)>
         new_sid = @by.send(:destroy_session, @env, options[:id], options)
         options[:id] = new_sid # Reset session id with a new value or nil
 
@@ -151,7 +151,7 @@ module ActionDispatch
 
       def exists?
         return @exists unless @exists.nil?
-        #nodyna <ID:send-105> <send LOW ex4>
+        #nodyna <ID:send-105> <SD EASY (private methods)>
         @exists = @by.send(:session_exists?, @env)
       end
 

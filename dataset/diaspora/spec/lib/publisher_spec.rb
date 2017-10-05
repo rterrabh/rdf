@@ -26,12 +26,12 @@ describe Publisher do
   ["open", "public", "explain"].each do |property|
     describe "##{property}?" do
       it 'defaults to closed' do
-        #nodyna <ID:send-114> <send MEDIUM ex2>
+        #nodyna <ID:send-114> <SD MODERATE (array)>
         expect(@publisher.send("#{property}?".to_sym)).to be_falsey
       end
 
       it 'listens to the opts' do
-        #nodyna <ID:send-115> <send MEDIUM ex2>
+        #nodyna <ID:send-115> <SD MODERATE (array)>
         expect(Publisher.new(alice, {property.to_sym => true}).send("#{property}?".to_sym)).to be true
       end
     end

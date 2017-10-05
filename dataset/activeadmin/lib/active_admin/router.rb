@@ -18,7 +18,7 @@ module ActiveAdmin
     end
 
     def define_root_routes(router)
-      #nodyna <ID:instance_exec-2> <instance_exec VERY HIGH ex1>
+      #nodyna <ID:instance_exec-2> <IEX COMPLEX (block without parameters)>
       router.instance_exec @application.namespaces do |namespaces|
         namespaces.each do |namespace|
           if namespace.root?
@@ -34,7 +34,7 @@ module ActiveAdmin
 
     # Defines the routes for each resource
     def define_resource_routes(router)
-      #nodyna <ID:instance_exec-3> <instance_exec VERY HIGH ex1>
+      #nodyna <ID:instance_exec-3> <IEX COMPLEX (block without parameters)>
       router.instance_exec @application.namespaces, self do |namespaces, aa_router|
         resources = namespaces.flat_map{ |n| n.resources.values }
         resources.each do |config|
@@ -45,13 +45,13 @@ module ActiveAdmin
             belongs_to = routes
             routes     = Proc.new do
               # If it's optional, make the normal resource routes
-              #nodyna <ID:instance_exec-4> <instance_exec VERY HIGH ex1>
+              #nodyna <ID:instance_exec-4> <IEX COMPLEX (block without parameters)>
               instance_exec &belongs_to if config.belongs_to_config.optional?
 
               # Make the nested belongs_to routes
               # :only is set to nothing so that we don't clobber any existing routes on the resource
               resources config.belongs_to_config.target.resource_name.plural, only: [] do
-                #nodyna <ID:instance_exec-5> <instance_exec VERY HIGH ex1>
+                #nodyna <ID:instance_exec-5> <IEX COMPLEX (block without parameters)>
                 instance_exec &belongs_to
               end
             end
@@ -62,13 +62,13 @@ module ActiveAdmin
             nested = routes
             routes = Proc.new do
               namespace config.namespace.name do
-                #nodyna <ID:instance_exec-6> <instance_exec VERY HIGH ex1>
+                #nodyna <ID:instance_exec-6> <IEX COMPLEX (block without parameters)>
                 instance_exec &nested
               end
             end
           end
 
-          #nodyna <ID:instance_exec-7> <instance_exec VERY HIGH ex1>
+          #nodyna <ID:instance_exec-7> <IEX COMPLEX (block without parameters)>
           instance_exec &routes
         end
       end
@@ -78,7 +78,7 @@ module ActiveAdmin
       Proc.new do
         # Builds one route for each HTTP verb passed in
         build_route  = proc{ |verbs, *args|
-          #nodyna <ID:send-9> <send VERY HIGH ex2>
+          #nodyna <ID:send-9> <SD COMPLEX (array)>
           [*verbs].each{ |verb| send verb, *args }
         }
         # Deals with +ControllerAction+ instances

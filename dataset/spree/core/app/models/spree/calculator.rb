@@ -16,7 +16,7 @@ module Spree
       method = "compute_#{computable_name}".to_sym
       calculator_class = self.class
       if respond_to?(method)
-        #nodyna <ID:send-107> <send VERY HIGH ex3>
+        #nodyna <ID:send-107> <SD COMPLEX (change-prone variables)>
         self.send(method, computable)
       else
         raise NotImplementedError, "Please implement '#{method}(#{computable_name})' in your calculator: #{calculator_class.name}"

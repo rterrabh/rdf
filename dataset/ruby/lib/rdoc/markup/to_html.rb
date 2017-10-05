@@ -382,7 +382,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   # Returns true if text is valid ruby syntax
 
   def parseable? text
-    #nodyna <ID:eval-69> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-69> <EV COMPLEX (change-prone variables)>
     eval("BEGIN {return true}\n#{text}")
   rescue SyntaxError
     false

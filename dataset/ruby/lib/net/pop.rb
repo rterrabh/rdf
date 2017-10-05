@@ -696,7 +696,7 @@ module Net
     def reset
       command().rset
       mails().each do |m|
-        #nodyna <ID:instance_eval-163> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-163> <IEV COMPLEX (private access)>
         m.instance_eval {
           @deleted = false
         }

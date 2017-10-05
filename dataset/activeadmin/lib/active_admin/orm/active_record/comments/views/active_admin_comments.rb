@@ -51,7 +51,7 @@ module ActiveAdmin
           parts << active_admin_namespace.name unless active_admin_namespace.root?
           parts << active_admin_namespace.comments_registration_name.underscore.pluralize
           parts << 'path'
-          #nodyna <ID:send-38> <send VERY HIGH ex3>
+          #nodyna <ID:send-38> <SD COMPLEX (change-prone variables)>
           send parts.join '_'
         end
 

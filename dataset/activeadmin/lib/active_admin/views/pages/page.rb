@@ -5,7 +5,7 @@ module ActiveAdmin
 
         def main_content
           if page_presenter.block
-            #nodyna <ID:instance_exec-27> <instance_exec VERY HIGH ex1>
+            #nodyna <ID:instance_exec-27> <IEX COMPLEX (block without parameters)>
             instance_exec &page_presenter.block
           else
             nil

@@ -88,15 +88,15 @@ module ActiveRecord
 
         # def self.statuses statuses end
         detect_enum_conflict!(name, name.to_s.pluralize, true)
-        #nodyna <ID:send-186> <send VERY HIGH ex4>
-        #nodyna <ID:define_method-25> <define_method VERY HIGH ex2>
+        #nodyna <ID:send-186> <SD COMPLEX (private methods)>
+        #nodyna <ID:define_method-25> <DM COMPLEX (events)>
         klass.singleton_class.send(:define_method, name.to_s.pluralize) { enum_values }
 
         _enum_methods_module.module_eval do
           # def status=(value) self[:status] = statuses[value] end
-          #nodyna <ID:send-187> <send LOW ex4>
+          #nodyna <ID:send-187> <SD EASY (private methods)>
           klass.send(:detect_enum_conflict!, name, "#{name}=")
-          #nodyna <ID:define_method-26> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-26> <DM COMPLEX (events)>
           define_method("#{name}=") { |value|
             if enum_values.has_key?(value) || value.blank?
               self[name] = enum_values[value]
@@ -111,15 +111,15 @@ module ActiveRecord
           }
 
           # def status() statuses.key self[:status] end
-          #nodyna <ID:send-188> <send LOW ex4>
+          #nodyna <ID:send-188> <SD EASY (private methods)>
           klass.send(:detect_enum_conflict!, name, name)
-          #nodyna <ID:define_method-27> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-27> <DM COMPLEX (events)>
           define_method(name) { enum_values.key self[name] }
 
           # def status_before_type_cast() statuses.key self[:status] end
-          #nodyna <ID:send-189> <send LOW ex4>
+          #nodyna <ID:send-189> <SD EASY (private methods)>
           klass.send(:detect_enum_conflict!, name, "#{name}_before_type_cast")
-          #nodyna <ID:define_method-28> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-28> <DM COMPLEX (events)>
           define_method("#{name}_before_type_cast") { enum_values.key self[name] }
 
           pairs = values.respond_to?(:each_pair) ? values.each_pair : values.each_with_index
@@ -127,19 +127,19 @@ module ActiveRecord
             enum_values[value] = i
 
             # def active?() status == 0 end
-            #nodyna <ID:send-190> <send LOW ex4>
+            #nodyna <ID:send-190> <SD EASY (private methods)>
             klass.send(:detect_enum_conflict!, name, "#{value}?")
-            #nodyna <ID:define_method-29> <define_method VERY HIGH ex2>
+            #nodyna <ID:define_method-29> <DM COMPLEX (events)>
             define_method("#{value}?") { self[name] == i }
 
             # def active!() update! status: :active end
-            #nodyna <ID:send-191> <send LOW ex4>
+            #nodyna <ID:send-191> <SD EASY (private methods)>
             klass.send(:detect_enum_conflict!, name, "#{value}!")
-            #nodyna <ID:define_method-30> <define_method VERY HIGH ex2>
+            #nodyna <ID:define_method-30> <DM COMPLEX (events)>
             define_method("#{value}!") { update! name => value }
 
             # scope :active, -> { where status: 0 }
-            #nodyna <ID:send-192> <send LOW ex4>
+            #nodyna <ID:send-192> <SD EASY (private methods)>
             klass.send(:detect_enum_conflict!, name, value, true)
             klass.scope value, -> { klass.where name => i }
           end

@@ -40,7 +40,7 @@ module ActiveSupport
       # Private, for the test suite.
       def initialize_dup(orig) # :nodoc:
         %w(plurals singulars uncountables humans acronyms acronym_regex).each do |scope|
-          #nodyna <ID:send-265> <send MEDIUM ex2>
+          #nodyna <ID:send-265> <SD MODERATE (array)>
           instance_variable_set("@#{scope}", orig.send(scope).dup)
         end
       end

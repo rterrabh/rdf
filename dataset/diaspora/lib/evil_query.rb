@@ -145,7 +145,7 @@ module EvilQuery
     end
 
     def querents_posts
-      #nodyna <ID:send-83> <send VERY HIGH ex3>
+      #nodyna <ID:send-83> <SD COMPLEX (change-prone variables)>
       @querent.person.send(table_name).where(:pending => false).order("#{table_name}.created_at DESC")
     end
 
@@ -154,7 +154,7 @@ module EvilQuery
     end
 
     def persons_public_posts
-      #nodyna <ID:send-84> <send VERY HIGH ex3>
+      #nodyna <ID:send-84> <SD COMPLEX (change-prone variables)>
       @person.send(table_name).where(:public => true).select(table_name+'.id')
     end
   end

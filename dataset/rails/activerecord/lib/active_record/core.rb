@@ -202,7 +202,7 @@ module ActiveRecord
 
       def generated_association_methods
         @generated_association_methods ||= begin
-          #nodyna <ID:const_set-4> <const_set VERY LOW ex1>
+          #nodyna <ID:const_set-4> <CS TRIVIAL (static values)>
           mod = const_set(:GeneratedAssociationMethods, Module.new)
           include mod
           mod
@@ -481,7 +481,7 @@ module ActiveRecord
 
     # Returns a hash of the given methods with their names as keys and returned values as values.
     def slice(*methods)
-      #nodyna <ID:send-158> <send MEDIUM ex2>
+      #nodyna <ID:send-158> <SD MODERATE (array)>
       Hash[methods.map! { |method| [method, public_send(method)] }].with_indifferent_access
     end
 

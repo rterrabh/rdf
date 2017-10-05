@@ -275,7 +275,7 @@ module Spree
       return true unless options
 
       self.line_item_comparison_hooks.all? { |hook|
-        #nodyna <ID:send-108> <send VERY HIGH ex2>
+        #nodyna <ID:send-108> <SD COMPLEX (array)>
         self.send(hook, line_item, options)
       }
     end
@@ -423,9 +423,9 @@ module Spree
     def state_changed(name)
       state = "#{name}_state"
       if persisted?
-        #nodyna <ID:send-109> <send MEDIUM ex3>
+        #nodyna <ID:send-109> <SD MODERATE (change-prone variables)>
         old_state = self.send("#{state}_was")
-        #nodyna <ID:send-110> <send MEDIUM ex3>
+        #nodyna <ID:send-110> <SD MODERATE (change-prone variables)>
         new_state = self.send(state)
         unless old_state == new_state
           self.state_changes.create(

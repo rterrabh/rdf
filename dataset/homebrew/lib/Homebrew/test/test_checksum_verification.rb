@@ -12,7 +12,7 @@ class ChecksumVerificationTests < Homebrew::TestCase
   def formula(&block)
     super do
       url "file://#{TEST_DIRECTORY}/tarballs/testball-0.1.tbz"
-      #nodyna <ID:instance_eval-11> <instance_eval MEDIUM ex1>
+      #nodyna <ID:instance_eval-11> <IEV MODERATE (private access)>
       instance_eval(&block)
     end
   end

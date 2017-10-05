@@ -50,7 +50,7 @@ module Spree
           unprocessed_payments.each do |payment|
             break if payment_total >= total
 
-            #nodyna <ID:send-93> <send MEDIUM ex3>
+            #nodyna <ID:send-93> <SD MODERATE (change-prone variables)>
             payment.public_send(method)
 
             if payment.completed?

@@ -164,7 +164,7 @@ module AbstractController
       # set up before_action, prepend_before_action, skip_before_action, etc.
       # for each of before, after, and around.
       [:before, :after, :around].each do |callback|
-        #nodyna <ID:define_method-6> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-6> <DM MODERATE (array)>
         define_method "#{callback}_action" do |*names, &blk|
           _insert_callbacks(names, blk) do |name, options|
             set_callback(:process_action, callback, name, options)
@@ -172,7 +172,7 @@ module AbstractController
         end
         alias_method :"#{callback}_filter", :"#{callback}_action"
 
-        #nodyna <ID:define_method-7> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-7> <DM MODERATE (array)>
         define_method "prepend_#{callback}_action" do |*names, &blk|
           _insert_callbacks(names, blk) do |name, options|
             set_callback(:process_action, callback, name, options.merge(:prepend => true))
@@ -182,7 +182,7 @@ module AbstractController
 
         # Skip a before, after or around callback. See _insert_callbacks
         # for details on the allowed parameters.
-        #nodyna <ID:define_method-8> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-8> <DM MODERATE (array)>
         define_method "skip_#{callback}_action" do |*names|
           _insert_callbacks(names) do |name, options|
             skip_callback(:process_action, callback, name, options)

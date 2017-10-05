@@ -560,12 +560,12 @@ class RDoc::Markdown
   def self.extension name
     EXTENSIONS << name
 
-    #nodyna <ID:define_method-15> <define_method VERY HIGH ex2>
+    #nodyna <ID:define_method-15> <DM COMPLEX (events)>
     define_method "#{name}?" do
       extension? name
     end
 
-    #nodyna <ID:define_method-16> <define_method VERY HIGH ex2>
+    #nodyna <ID:define_method-16> <DM COMPLEX (events)>
     define_method "#{name}=" do |enable|
       extension name, enable
     end

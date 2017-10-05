@@ -105,7 +105,7 @@ module ActiveAdmin
         value = if data.is_a? Proc
           data.call item
         elsif item.respond_to? data
-          #nodyna <ID:send-59> <send VERY HIGH ex3>
+          #nodyna <ID:send-59> <SD COMPLEX (change-prone variables)>
           item.public_send data
         elsif item.respond_to? :[]
           item[data]

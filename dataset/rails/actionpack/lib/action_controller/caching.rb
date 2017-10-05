@@ -73,7 +73,7 @@ module ActionController
     end
 
     def view_cache_dependencies
-      #nodyna <ID:instance_exec-3> <instance_exec VERY HIGH ex1>
+      #nodyna <ID:instance_exec-3> <IEX COMPLEX (block without parameters)>
       self.class._view_cache_dependencies.map { |dep| instance_exec(&dep) }.compact
     end
 

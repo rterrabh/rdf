@@ -27,7 +27,7 @@ module ActiveRecord
       def self.set_name_cache(name, value)
         const_name = "ATTR_#{name}"
         unless const_defined? const_name
-          #nodyna <ID:const_set-6> <const_set VERY HIGH ex3>
+          #nodyna <ID:const_set-6> <CS COMPLEX (change-prone variable)>
           const_set const_name, value.dup.freeze
         end
       end
@@ -377,7 +377,7 @@ module ActiveRecord
     protected
 
     def clone_attribute_value(reader_method, attribute_name) # :nodoc:
-      #nodyna <ID:send-203> <send VERY HIGH ex3>
+      #nodyna <ID:send-203> <SD COMPLEX (change-prone variables)>
       value = send(reader_method, attribute_name)
       value.duplicable? ? value.clone : value
     rescue TypeError, NoMethodError

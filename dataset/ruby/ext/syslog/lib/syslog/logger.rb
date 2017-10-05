@@ -104,9 +104,9 @@ class Syslog::Logger
   # Builds a methods for level +meth+.
 
   def self.make_methods meth
-    #nodyna <ID:const_get-9> <const_get VERY HIGH ex3>
+    #nodyna <ID:const_get-9> <CG COMPLEX (change-prone variable)>
     level = ::Logger.const_get(meth.upcase)
-    #nodyna <ID:eval-2> <eval VERY HIGH ex1>
+    #nodyna <ID:eval-2> <EV COMPLEX (method definition)>
     eval <<-EOM, nil, __FILE__, __LINE__ + 1
       def #{meth}(message = nil, &block)
         add(#{level}, message, &block)

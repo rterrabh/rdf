@@ -101,7 +101,7 @@ module TkEvent
     TYPE_GROUP_TBL = Hash.new
 
     type_data.each{|id, c_name, g_flag, *t_names|
-      #nodyna <ID:const_set-21> <const_set MEDIUM ex2>
+      #nodyna <ID:const_set-21> <CS MEDIUM (array)>
       TypeNum.const_set(c_name, id)
       t_names.each{|t_name| t_name.freeze; TYPE_NAME_TBL[t_name] = id }
       TYPE_ID_TBL[id]    = t_names

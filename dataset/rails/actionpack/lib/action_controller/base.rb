@@ -194,7 +194,7 @@ module ActionController
     # required manually.
     def self.without_modules(*modules)
       modules = modules.map do |m|
-        #nodyna <ID:const_get-4> <const_get VERY HIGH ex2>
+        #nodyna <ID:const_get-4> <CG COMPLEX (array)>
         m.is_a?(Symbol) ? ActionController.const_get(m) : m
       end
 

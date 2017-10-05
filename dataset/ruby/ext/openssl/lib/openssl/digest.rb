@@ -43,17 +43,17 @@ module OpenSSL
 
     alg.each{|name|
       klass = Class.new(self) {
-        #nodyna <ID:define_method-3> <define_method MEDIUM ex2>
+        #nodyna <ID:define_method-3> <DM MODERATE (events)>
         define_method(:initialize, ->(data = nil) {super(name, data)})
       }
       singleton = (class << klass; self; end)
       singleton.class_eval{
-        #nodyna <ID:define_method-4> <define_method MEDIUM ex2>
+        #nodyna <ID:define_method-4> <DM MODERATE (events)>
         define_method(:digest){|data| new.digest(data) }
-        #nodyna <ID:define_method-5> <define_method MEDIUM ex2>
+        #nodyna <ID:define_method-5> <DM MODERATE (events)>
         define_method(:hexdigest){|data| new.hexdigest(data) }
       }
-      #nodyna <ID:const_set-8> <const_set MEDIUM ex3>
+      #nodyna <ID:const_set-8> <CS MODERATE (change-prone variable)>
       const_set(name, klass)
     }
 
@@ -83,7 +83,7 @@ module OpenSSL
   #   # => NameError: wrong constant name Foo
 
   def Digest(name)
-    #nodyna <ID:const_get-3> <const_get VERY HIGH ex3>
+    #nodyna <ID:const_get-3> <CG COMPLEX (change-prone variable)>
     OpenSSL::Digest.const_get(name)
   end
 

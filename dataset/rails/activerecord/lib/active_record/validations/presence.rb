@@ -5,7 +5,7 @@ module ActiveRecord
         super
         attributes.each do |attribute|
           next unless record.class._reflect_on_association(attribute)
-          #nodyna <ID:send-168> <send VERY HIGH ex2>
+          #nodyna <ID:send-168> <SD COMPLEX (array)>
           associated_records = Array.wrap(record.send(attribute))
 
           # Superclass validates presence. Ensure present records aren't about to be destroyed.

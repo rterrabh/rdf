@@ -105,7 +105,7 @@ module ActiveSupport
         rescue LoadError => e
           raise "Could not find cache store adapter for #{store} (#{e})"
         else
-          #nodyna <ID:const_get-19> <const_get VERY HIGH ex3>
+          #nodyna <ID:const_get-19> <CG COMPLEX (change-prone variable)>
           ActiveSupport::Cache.const_get(store.to_s.camelize)
         end
     end

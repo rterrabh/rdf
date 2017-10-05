@@ -251,7 +251,7 @@ module ActiveSupport
       names = camel_cased_word.split('::')
 
       # Trigger a built-in NameError exception including the ill-formed constant in the message.
-      #nodyna <ID:const_get-15> <const_get VERY HIGH ex3>
+      #nodyna <ID:const_get-15> <CG COMPLEX (change-prone variable)>
       Object.const_get(camel_cased_word) if names.empty?
 
       # Remove the first blank element in case of '::ClassName' notation.
@@ -259,10 +259,10 @@ module ActiveSupport
 
       names.inject(Object) do |constant, name|
         if constant == Object
-          #nodyna <ID:const_get-16> <const_get VERY HIGH ex2>
+          #nodyna <ID:const_get-16> <CG COMPLEX (array)>
           constant.const_get(name)
         else
-          #nodyna <ID:const_get-17> <const_get VERY HIGH ex2>
+          #nodyna <ID:const_get-17> <CG COMPLEX (array)>
           candidate = constant.const_get(name)
           next candidate if constant.const_defined?(name, false)
           next candidate unless Object.const_defined?(name)
@@ -276,7 +276,7 @@ module ActiveSupport
           end
 
           # owner is in Object, so raise
-          #nodyna <ID:const_get-18> <const_get VERY HIGH ex2>
+          #nodyna <ID:const_get-18> <CG COMPLEX (array)>
           constant.const_get(name, false)
         end
       end

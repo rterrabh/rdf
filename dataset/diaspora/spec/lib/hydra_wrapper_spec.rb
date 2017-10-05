@@ -37,9 +37,9 @@ describe HydraWrapper do
       allow(Base64).to receive(:decode64).and_return "#{@wrapper.encoded_object_xml} encoded"
       decoded = Base64.decode64 @wrapper.encoded_object_xml
       expect(@wrapper.dispatcher_class).to receive(:salmon).with(@wrapper.user, decoded).once.and_return true
-      #nodyna <ID:send-106> <send LOW ex4>
+      #nodyna <ID:send-106> <SD EASY (private methods)>
       @wrapper.send :xml_factory
-      #nodyna <ID:send-107> <send LOW ex4>
+      #nodyna <ID:send-107> <SD EASY (private methods)>
       @wrapper.send :xml_factory
     end
   end
@@ -48,7 +48,7 @@ describe HydraWrapper do
     it 'groups people given their receive_urls' do
       expect(@wrapper.dispatcher_class).to receive(:receive_url_for).and_return "foo.com", "bar.com", "bar.com"
 
-      #nodyna <ID:send-108> <send LOW ex4>
+      #nodyna <ID:send-108> <SD EASY (private methods)>
       expect(@wrapper.send(:grouped_people)).to eq({"foo.com" => [@people[0]], "bar.com" => @people[1,2]})
     end
   end
@@ -81,7 +81,7 @@ describe HydraWrapper do
   describe '#redirecting_to_https?!' do
     it 'does not execute unless response has a 3xx code' do
       resp = double code: 200
-      #nodyna <ID:send-109> <send LOW ex4>
+      #nodyna <ID:send-109> <SD EASY (private methods)>
       expect(@wrapper.send(:redirecting_to_https?, resp)).to be false
     end
 
@@ -95,7 +95,7 @@ describe HydraWrapper do
         }
       )
 
-      #nodyna <ID:send-110> <send LOW ex4>
+      #nodyna <ID:send-110> <SD EASY (private methods)>
       expect(@wrapper.send(:redirecting_to_https?, resp)).to be true
     end
 
@@ -109,7 +109,7 @@ describe HydraWrapper do
         }
       )
 
-      #nodyna <ID:send-111> <send LOW ex4>
+      #nodyna <ID:send-111> <SD EASY (private methods)>
       expect(@wrapper.send(:redirecting_to_https?, resp)).to be false
     end
   end

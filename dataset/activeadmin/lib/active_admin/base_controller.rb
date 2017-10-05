@@ -36,12 +36,12 @@ module ActiveAdmin
 
     # Calls the authentication method as defined in ActiveAdmin.authentication_method
     def authenticate_active_admin_user
-      #nodyna <ID:send-56> <send VERY HIGH ex3>
+      #nodyna <ID:send-56> <SD COMPLEX (change-prone variables)>
       send(active_admin_namespace.authentication_method) if active_admin_namespace.authentication_method
     end
 
     def current_active_admin_user
-      #nodyna <ID:send-57> <send VERY HIGH ex3>
+      #nodyna <ID:send-57> <SD COMPLEX (change-prone variables)>
       send(active_admin_namespace.current_user_method) if active_admin_namespace.current_user_method
     end
     helper_method :current_active_admin_user

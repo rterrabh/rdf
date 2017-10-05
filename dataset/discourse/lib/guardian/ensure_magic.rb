@@ -6,7 +6,7 @@ module EnsureMagic
       can_method = :"#{Regexp.last_match[1]}?"
 
       if respond_to?(can_method)
-        #nodyna <ID:send-15> <send VERY HIGH ex3>
+        #nodyna <ID:send-15> <SD COMPLEX (change-prone variables)>
         raise Discourse::InvalidAccess.new("#{can_method} failed") unless send(can_method, *args, &block)
         return
       end

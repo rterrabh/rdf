@@ -8,7 +8,7 @@ module RailsAdmin
           RailsAdmin::Config::Fields::Types.register(self)
 
           register_instance_option :formatted_value do
-            #nodyna <ID:send-26> <send VERY HIGH ex3>
+            #nodyna <ID:send-26> <SD COMPLEX (change-prone variables)>
             (o = value) && o.send(associated_model_config.object_label_method)
           end
 
@@ -33,7 +33,7 @@ module RailsAdmin
           end
 
           def selected_id
-            #nodyna <ID:send-27> <send VERY HIGH ex3>
+            #nodyna <ID:send-27> <SD COMPLEX (change-prone variables)>
             bindings[:object].send(foreign_key)
           end
 

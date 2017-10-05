@@ -20,8 +20,8 @@ class Embedding < OpenStruct
 
   def save
     Embedding.settings.each do |s|
-      #nodyna <ID:send-195> <send MEDIUM ex2>
-      #nodyna <ID:send-195> <send MEDIUM ex2>
+      #nodyna <ID:send-195> <SD MODERATE (array)>
+      #nodyna <ID:send-195> <SD MODERATE (array)>
       SiteSetting.send("#{s}=", send(s))
     end
     true
@@ -37,7 +37,7 @@ class Embedding < OpenStruct
   def self.find
     embedding_args = { id: 'default' }
 
-    #nodyna <ID:send-196> <send MEDIUM ex2>
+    #nodyna <ID:send-196> <SD MODERATE (array)>
     Embedding.settings.each {|s| embedding_args[s] = SiteSetting.send(s) }
     Embedding.new(embedding_args)
   end

@@ -5,7 +5,7 @@ class GitlabShellWorker
   sidekiq_options queue: :gitlab_shell
 
   def perform(action, *arg)
-    #nodyna <ID:send-119> <send VERY HIGH ex3>
+    #nodyna <ID:send-119> <SD COMPLEX (change-prone variables)>
     gitlab_shell.send(action, *arg)
   end
 end

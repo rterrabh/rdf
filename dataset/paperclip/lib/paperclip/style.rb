@@ -53,13 +53,13 @@ module Paperclip
 
     def convert_options
       @convert_options.respond_to?(:call) ? @convert_options.call(attachment.instance) :
-        #nodyna <ID:send-16> <send LOW ex4>
+        #nodyna <ID:send-16> <SD EASY (private methods)>
         (@convert_options || attachment.send(:extra_options_for, name))
     end
 
     def source_file_options
       @source_file_options.respond_to?(:call) ? @source_file_options.call(attachment.instance) :
-        #nodyna <ID:send-17> <send LOW ex4>
+        #nodyna <ID:send-17> <SD EASY (private methods)>
         (@source_file_options || attachment.send(:extra_source_file_options_for, name))
     end
 
@@ -78,7 +78,7 @@ module Paperclip
         args[k] = v.respond_to?(:call) ? v.call(attachment) : v
       end
       [:processors, :geometry, :format, :whiny, :convert_options, :source_file_options].each do |k|
-        #nodyna <ID:send-18> <send MEDIUM ex2>
+        #nodyna <ID:send-18> <SD MODERATE (array)>
         (arg = send(k)) && args[k] = arg
       end
       args
@@ -88,7 +88,7 @@ module Paperclip
     # eg. @attachment.styles[:large][:geometry]@ will still work
     def [](key)
       if [:name, :convert_options, :whiny, :processors, :geometry, :format, :animated, :source_file_options].include?(key)
-        #nodyna <ID:send-19> <send MEDIUM ex2>
+        #nodyna <ID:send-19> <SD MODERATE (array)>
         send(key)
       elsif defined? @other_args[key]
         @other_args[key]
@@ -97,7 +97,7 @@ module Paperclip
 
     def []=(key, value)
       if [:name, :convert_options, :whiny, :processors, :geometry, :format, :animated, :source_file_options].include?(key)
-        #nodyna <ID:send-20> <send MEDIUM ex2>
+        #nodyna <ID:send-20> <SD MODERATE (array)>
         send("#{key}=".intern, value)
       else
         @other_args[key] = value

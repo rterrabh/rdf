@@ -1732,7 +1732,7 @@ end
 class Tk::TreeCtrl::Column < TkObject
   TreeCtrlColumnID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-137> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-137> <IEV MODERATE (method definition)>
   (TreeCtrlColumnID = ['treectrl_column'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -1839,7 +1839,7 @@ end
 class Tk::TreeCtrl::Element < TkObject
   TreeCtrlElementID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-138> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-138> <IEV MODERATE (method definition)>
   (TreeCtrlElementID = ['treectrl_element'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -2278,7 +2278,7 @@ end
 class Tk::TreeCtrl::Style < TkObject
   TreeCtrlStyleID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-139> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-139> <IEV MODERATE (method definition)>
   (TreeCtrlStyleID = ['treectrl_style'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end

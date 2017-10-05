@@ -33,7 +33,7 @@ module Configuration
 
       @configured_services = []
       KNOWN_SERVICES.each do |service|
-        #nodyna <ID:send-85> <send MEDIUM ex2>
+        #nodyna <ID:send-85> <SD MODERATE (array)>
         @configured_services << service if services.send(service).enable?
       end
 

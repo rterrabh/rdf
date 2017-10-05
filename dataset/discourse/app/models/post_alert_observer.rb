@@ -8,14 +8,14 @@ class PostAlertObserver < ActiveRecord::Observer
   # Dispatch to an after_save_#{class_name} method
   def after_save(model)
     method_name = callback_for('after_save', model)
-    #nodyna <ID:send-178> <send VERY HIGH ex3>
+    #nodyna <ID:send-178> <SD COMPLEX (change-prone variables)>
     send(method_name, model) if respond_to?(method_name)
   end
 
   # Dispatch to an after_create_#{class_name} method
   def after_create(model)
     method_name = callback_for('after_create', model)
-    #nodyna <ID:send-179> <send VERY HIGH ex3>
+    #nodyna <ID:send-179> <SD COMPLEX (change-prone variables)>
     send(method_name, model) if respond_to?(method_name)
   end
 

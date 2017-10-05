@@ -16,7 +16,7 @@ class TkVariable
   #TkVar_ID_TBL = {}
   TkVar_CB_TBL = TkCore::INTERP.create_table
   TkVar_ID_TBL = TkCore::INTERP.create_table
-  #nodyna <ID:instance_eval-39> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-39> <IEV MODERATE (method definition)>
   (Tk_VARIABLE_ID = ["v".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -33,7 +33,7 @@ class TkVariable
   #TkCore::INTERP.add_tk_procs('rb_var', 'args',
   #     "ruby [format \"TkVariable.callback %%Q!%s!\" $args]")
   TkCore::INTERP.add_tk_procs('rb_var', 'args', <<-'EOL')
-    #nodyna <ID:eval-35> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-35> <EV COMPLEX (change-prone variables)>
     if {[set st [catch {eval {ruby_cmd TkVariable callback} $args} ret]] != 0} {
        set idx [string first "\n\n" $ret]
        if {$idx > 0} {
@@ -1667,7 +1667,7 @@ class TkVarAccess<TkVariable
         v.value = args[0] unless args.empty?
         return v
       else
-        #nodyna <ID:instance_eval-40> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-40> <IEV MODERATE (private access)>
         (v = self.allocate).instance_eval{
           @id = name
           TkVar_ID_TBL[@id] = self
@@ -1676,7 +1676,7 @@ class TkVarAccess<TkVariable
       end
     }
 
-    #nodyna <ID:instance_eval-41> <instance_eval MEDIUM ex1>
+    #nodyna <ID:instance_eval-41> <IEV MODERATE (private access)>
     v.instance_eval{ initialize(name, *args) }
     v
   end
@@ -1700,7 +1700,7 @@ class TkVarAccess<TkVariable
         v.value = args[0] unless args.empty?
         return v
       else
-        #nodyna <ID:instance_eval-42> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-42> <IEV MODERATE (private access)>
         (v = self.allocate).instance_eval{
           @id = name
           TkVar_ID_TBL[@id] = self
@@ -1711,10 +1711,10 @@ class TkVarAccess<TkVariable
 
     INTERP._invoke_without_enc('global', name)
     if args.empty? && INTERP._invoke_without_enc('array', 'exist', name) == '0'
-      #nodyna <ID:instance_eval-43> <instance_eval MEDIUM ex1>
+      #nodyna <ID:instance_eval-43> <IEV MODERATE (private access)>
       v.instance_eval{ initialize(name, {}) }  # force creating
     else
-      #nodyna <ID:instance_eval-44> <instance_eval MEDIUM ex1>
+      #nodyna <ID:instance_eval-44> <IEV MODERATE (private access)>
       v.instance_eval{ initialize(name, *args) }
     end
     v

@@ -617,15 +617,15 @@ class Tk::Canvas<TkWindow
     typename = tk_send('type', id)
     unless type = TkcItem.type2class(typename)
       (itemclass = typename.dup)[0,1] = typename[0,1].upcase
-      #nodyna <ID:const_set-13> <const_set VERY HIGH ex3>
+      #nodyna <ID:const_set-13> <CS COMPLEX (change-prone variable)>
       type = TkcItem.const_set(itemclass, Class.new(TkcItem))
-      #nodyna <ID:const_set-14> <const_set VERY LOW ex1>
+      #nodyna <ID:const_set-14> <CS TRIVIAL (static values)>
       type.const_set("CItemTypeName", typename.freeze)
       TkcItem::CItemTypeToClass[typename] = type
     end
 
     canvas = self
-    #nodyna <ID:instance_eval-31> <instance_eval MEDIUM ex1>
+    #nodyna <ID:instance_eval-31> <IEV MODERATE (private access)>
     (obj = type.allocate).instance_eval{
       @parent = @c = canvas
       @path = canvas.path

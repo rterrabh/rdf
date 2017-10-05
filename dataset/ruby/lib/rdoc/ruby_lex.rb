@@ -857,7 +857,7 @@ class RDoc::RubyLex
   end
 
   IDENT_RE = if defined? Encoding then
-               #nodyna <ID:eval-70> <eval VERY HIGH ex2>
+               #nodyna <ID:eval-70> <EV COMPLEX (change-prone variables)>
                eval '/[\w\u{0080}-\u{FFFFF}]/u' # 1.8 can't parse \u{}
              else
                /[\w\x80-\xFF]/

@@ -4,7 +4,7 @@ module RailsAdmin
 
     module Configurable
       def self.included(base)
-        #nodyna <ID:send-37> <send VERY HIGH ex4>
+        #nodyna <ID:send-37> <SD COMPLEX (private methods)>
         base.send :extend, ClassMethods
       end
 
@@ -37,17 +37,17 @@ module RailsAdmin
 
           # If it's a boolean create an alias for it and remove question mark
           if option_name.end_with?('?')
-            #nodyna <ID:send-38> <send MEDIUM ex4>
-            #nodyna <ID:define_method-2> <define_method MEDIUM ex2>
+            #nodyna <ID:send-38> <SD MODERATE (private methods)>
+            #nodyna <ID:define_method-2> <DM MODERATE (events)>
             scope.send(:define_method, "#{option_name.chop!}?") do
-              #nodyna <ID:send-39> <send MEDIUM ex3>
+              #nodyna <ID:send-39> <SD MODERATE (change-prone variables)>
               send(option_name)
             end
           end
 
           # Define getter/setter by the option name
-          #nodyna <ID:send-40> <send MEDIUM ex4>
-          #nodyna <ID:define_method-3> <define_method MEDIUM ex2>
+          #nodyna <ID:send-40> <SD MODERATE (private methods)>
+          #nodyna <ID:define_method-3> <DM MODERATE (events)>
           scope.send(:define_method, option_name) do |*args, &block|
             if !args[0].nil? || block # rubocop:disable NonNilCheck
               # Invocation with args --> This is the declaration of the option, i.e. setter
@@ -62,16 +62,16 @@ module RailsAdmin
                 # label { "#{label}".upcase }
                 # This will use the default definition when called recursively.
                 if instance_variable_get("@#{option_name}_recurring")
-                  #nodyna <ID:instance_eval-13> <instance_eval VERY HIGH ex3>
+                  #nodyna <ID:instance_eval-13> <IEV COMPLEX (block execution)>
                   value = instance_eval(&default)
                 else
                   instance_variable_set("@#{option_name}_recurring", true)
-                  #nodyna <ID:instance_eval-14> <instance_eval VERY HIGH ex3>
+                  #nodyna <ID:instance_eval-14> <IEV COMPLEX (block execution)>
                   value = instance_eval(&value)
                   instance_variable_set("@#{option_name}_recurring", false)
                 end
               when nil
-                #nodyna <ID:instance_eval-15> <instance_eval VERY HIGH ex3>
+                #nodyna <ID:instance_eval-15> <IEV COMPLEX (block execution)>
                 value = instance_eval(&default)
               end
               value
@@ -80,12 +80,12 @@ module RailsAdmin
         end
 
         def register_deprecated_instance_option(option_name, replacement_option_name = nil, scope = self)
-          #nodyna <ID:send-41> <send MEDIUM ex4>
-          #nodyna <ID:define_method-4> <define_method MEDIUM ex2>
+          #nodyna <ID:send-41> <SD MODERATE (private methods)>
+          #nodyna <ID:define_method-4> <DM MODERATE (events)>
           scope.send(:define_method, option_name) do |*args, &block|
             if replacement_option_name
               ActiveSupport::Deprecation.warn("The #{option_name} configuration option is deprecated, please use #{replacement_option_name}.")
-              #nodyna <ID:send-42> <send MEDIUM ex3>
+              #nodyna <ID:send-42> <SD MODERATE (change-prone variables)>
               send(replacement_option_name, *args, &block)
             else
               if block_given?

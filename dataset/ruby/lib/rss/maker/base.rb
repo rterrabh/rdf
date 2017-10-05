@@ -23,9 +23,9 @@ module RSS
         end
 
         def inherited(subclass)
-          #nodyna <ID:const_set-59> <const_set VERY LOW ex1>
+          #nodyna <ID:const_set-59> <CS TRIVIAL (static values)>
           subclass.const_set(:OTHER_ELEMENTS, [])
-          #nodyna <ID:const_set-60> <const_set VERY LOW ex1>
+          #nodyna <ID:const_set-60> <CS TRIVIAL (static values)>
           subclass.const_set(:NEED_INITIALIZE_VARIABLES, [])
         end
 
@@ -79,7 +79,7 @@ module RSS
           class_name ||= Utils.to_class_name(name)
           add_other_element(name)
           add_need_initialize_variable(name) do |object|
-            #nodyna <ID:send-108> <send VERY HIGH ex3>
+            #nodyna <ID:send-108> <SD COMPLEX (change-prone variables)>
             object.send("make_#{name}")
           end
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
@@ -199,7 +199,7 @@ module RSS
               value = init_value.call(self)
             elsif init_value.is_a?(String)
               # just for backward compatibility
-              #nodyna <ID:instance_eval-165> <instance_eval VERY HIGH ex3>
+              #nodyna <ID:instance_eval-165> <IEV COMPLEX (block execution)>
               value = instance_eval(init_value, __FILE__, __LINE__)
             else
               value = init_value
@@ -410,7 +410,7 @@ module RSS
       %w(xml_stylesheets channel image items textinput).each do |element|
         attr_reader element
         add_need_initialize_variable(element) do |object|
-          #nodyna <ID:send-109> <send MEDIUM ex2>
+          #nodyna <ID:send-109> <SD MODERATE (array)>
           object.send("make_#{element}")
         end
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)

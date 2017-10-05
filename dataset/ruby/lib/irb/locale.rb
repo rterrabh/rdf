@@ -128,11 +128,11 @@ module IRB # :nodoc:
     def real_load(path, priv)
       src = MagicFile.open(path){|f| f.read}
       if priv
-        #nodyna <ID:eval-97> <eval VERY HIGH ex4>
-        #nodyna <ID:eval-98> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-97> <EV COMPLEX (scope)>
+        #nodyna <ID:eval-98> <EV COMPLEX (change-prone variables)>
         eval("self", TOPLEVEL_BINDING).extend(Module.new {eval(src, nil, path)})
       else
-        #nodyna <ID:eval-99> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-99> <EV COMPLEX (change-prone variables)>
         eval(src, TOPLEVEL_BINDING, path)
       end
     end

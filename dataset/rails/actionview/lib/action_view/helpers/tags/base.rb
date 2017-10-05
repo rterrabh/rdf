@@ -25,7 +25,7 @@ module ActionView
         private
 
         def value(object)
-          #nodyna <ID:send-54> <send VERY HIGH ex3>
+          #nodyna <ID:send-54> <SD COMPLEX (change-prone variables)>
           object.public_send @method_name if object
         end
 
@@ -34,7 +34,7 @@ module ActionView
             method_before_type_cast = @method_name + "_before_type_cast"
 
             if value_came_from_user?(object) && object.respond_to?(method_before_type_cast)
-              #nodyna <ID:send-55> <send VERY HIGH ex3>
+              #nodyna <ID:send-55> <SD COMPLEX (change-prone variables)>
               object.public_send(method_before_type_cast)
             else
               value(object)
@@ -44,7 +44,7 @@ module ActionView
 
         def value_came_from_user?(object)
           method_name = "#{@method_name}_came_from_user?"
-          #nodyna <ID:send-56> <send VERY HIGH ex3>
+          #nodyna <ID:send-56> <SD COMPLEX (change-prone variables)>
           !object.respond_to?(method_name) || object.public_send(method_name)
         end
 

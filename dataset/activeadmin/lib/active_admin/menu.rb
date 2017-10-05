@@ -85,7 +85,7 @@ module ActiveAdmin
       # If this ID is already taken, transfer the children of the existing item to the new item.
       def _add(options)
         item = ActiveAdmin::MenuItem.new(options)
-        #nodyna <ID:send-39> <send LOW ex4>
+        #nodyna <ID:send-39> <SD EASY (private methods)>
         item.send :children=, self[item.id].children if self[item.id]
         self[item.id] = item
       end

@@ -40,7 +40,7 @@ module Roleable
   end
 
   def set_permission(permission_name, value)
-    #nodyna <ID:send-180> <send MEDIUM ex3>
+    #nodyna <ID:send-180> <SD MODERATE (change-prone variables)>
     self.send("#{permission_name}=", value)
     save_and_refresh_staff_groups!
   end

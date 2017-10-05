@@ -107,7 +107,7 @@ module SharedEnvTests
 
   def test_switching_compilers_updates_compiler
     [:clang, :llvm, :gcc, :gcc_4_0].each do |compiler|
-      #nodyna <ID:send-28> <send MEDIUM ex2>
+      #nodyna <ID:send-28> <SD MODERATE (array)>
       @env.send(compiler)
       assert_equal compiler, @env.compiler
     end

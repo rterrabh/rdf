@@ -70,7 +70,7 @@ class Stream::Multi < Stream::Base
 
   # @return [Symbol]
   def is_in?(sym, post)
-    #nodyna <ID:send-1> <send VERY HIGH ex3>
+    #nodyna <ID:send-1> <SD COMPLEX (change-prone variables)>
     if self.send("#{sym.to_s}_post_ids").find{|x| (x == post.id) || (x.to_s == post.id.to_s)}
       "#{sym.to_s}_stream".to_sym
     end

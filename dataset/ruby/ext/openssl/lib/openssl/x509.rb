@@ -25,7 +25,7 @@ module OpenSSL
         if arg.size > 1
           create_ext(*arg)
         else
-          #nodyna <ID:send-1> <send VERY HIGH ex3>
+          #nodyna <ID:send-1> <SD COMPLEX (change-prone variables)>
           send("create_ext_from_"+arg[0].class.name.downcase, arg[0])
         end
       end

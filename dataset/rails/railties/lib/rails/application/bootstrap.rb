@@ -67,7 +67,7 @@ INFO
            "   config.log_level = :info\n\n"
         end
 
-        #nodyna <ID:const_get-23> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-23> <CG COMPLEX (change-prone variable)>
         Rails.logger.level = ActiveSupport::Logger.const_get(config.log_level.to_s.upcase)
       end
 

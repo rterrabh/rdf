@@ -37,7 +37,7 @@ module Tk::BLT
             end
             obj.configure if keys && ! keys.empty?
           else
-            #nodyna <ID:instance_eval-89> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-89> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               initialize(parent, pos, name, keys)
               TabID_TBL[@tpath] = {} unless TabID_TBL[@tpath]

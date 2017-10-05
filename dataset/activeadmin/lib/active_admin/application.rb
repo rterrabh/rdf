@@ -214,10 +214,10 @@ module ActiveAdmin
     #   ActiveAdmin.before_filter :authenticate_admin!
     #
     %w(before_filter skip_before_filter after_filter skip_after_filter around_filter skip_filter).each do |name|
-      #nodyna <ID:define_method-8> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-8> <DM MODERATE (events)>
       define_method name do |*args, &block|
         controllers_for_filters.each do |controller|
-          #nodyna <ID:send-42> <send MEDIUM ex3>
+          #nodyna <ID:send-42> <SD MODERATE (change-prone variables)>
           controller.public_send name, *args, &block
         end
       end

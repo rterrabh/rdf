@@ -5,7 +5,7 @@ module Psych
       # Create a new streaming emitter.  Emitter will print to +io+.  See
       # Psych::Stream for an example.
       def new io
-        #nodyna <ID:const_get-8> <const_get VERY LOW ex1>
+        #nodyna <ID:const_get-8> <CG TRIVIAL (static values)>
         emitter      = const_get(:Emitter).new(io)
         class_loader = ClassLoader.new
         ss           = ScalarScanner.new class_loader

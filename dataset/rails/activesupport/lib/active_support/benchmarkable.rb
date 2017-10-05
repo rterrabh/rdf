@@ -39,7 +39,7 @@ module ActiveSupport
 
         result = nil
         ms = Benchmark.ms { result = options[:silence] ? silence { yield } : yield }
-        #nodyna <ID:send-236> <send VERY HIGH ex3>
+        #nodyna <ID:send-236> <SD COMPLEX (change-prone variables)>
         logger.send(options[:level], '%s (%.1fms)' % [ message, ms ])
         result
       else

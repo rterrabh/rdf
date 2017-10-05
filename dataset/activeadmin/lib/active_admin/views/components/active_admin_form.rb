@@ -32,7 +32,7 @@ module ActiveAdmin
         end
 
         @opening_tag, @closing_tag = split_string_on(form_string, "</form>")
-        #nodyna <ID:instance_eval-1> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-1> <IEV COMPLEX (block execution)>
         instance_eval(&block) if block_given?
 
         # Rails 4 sets multipart automatically if a file field is present,

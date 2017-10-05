@@ -20,13 +20,13 @@ module ActiveSupport
         uncached = "#{method_name}_without_cache"
         alias_method uncached, method_name
 
-        #nodyna <ID:define_method-1> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-1> <DM MODERATE (array)>
         define_method(method_name) do |*args|
           # this avoids recursive locks
           found = true
           data = cache.fetch(args){found = false}
           unless found
-            #nodyna <ID:send-1> <send MEDIUM ex2>
+            #nodyna <ID:send-1> <SD MODERATE (array)>
             cache[args] = data = send(uncached, *args)
           end
           # so cache is never corrupted
@@ -47,10 +47,10 @@ module ActiveSupport
         args.each do |method_name|
           orig = "#{method_name}_without_clear_memoize"
           alias_method orig, method_name
-          #nodyna <ID:define_method-2> <define_method MEDIUM ex1>
+          #nodyna <ID:define_method-2> <DM MODERATE (array)>
           define_method(method_name) do |*args|
             ActiveSupport::Inflector.clear_memoize!
-            #nodyna <ID:send-2> <send MEDIUM ex3>
+            #nodyna <ID:send-2> <SD MODERATE (change-prone variables)>
             send(orig, *args)
           end
         end

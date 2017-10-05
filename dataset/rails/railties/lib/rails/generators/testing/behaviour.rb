@@ -104,7 +104,7 @@ module Rails
           def capture(stream)
             stream = stream.to_s
             captured_stream = Tempfile.new(stream)
-            #nodyna <ID:eval-7> <eval VERY HIGH ex2>
+            #nodyna <ID:eval-7> <EV COMPLEX (change-prone variables)>
             stream_io = eval("$#{stream}")
             origin_stream = stream_io.dup
             stream_io.reopen(captured_stream)

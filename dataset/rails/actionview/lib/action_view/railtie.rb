@@ -23,7 +23,7 @@ module ActionView
     initializer "action_view.set_configs" do |app|
       ActiveSupport.on_load(:action_view) do
         app.config.action_view.each do |k,v|
-          #nodyna <ID:send-64> <send VERY HIGH ex2>
+          #nodyna <ID:send-64> <SD COMPLEX (array)>
           send "#{k}=", v
         end
       end
@@ -39,7 +39,7 @@ module ActionView
 
     initializer "action_view.setup_action_pack" do |app|
       ActiveSupport.on_load(:action_controller) do
-        #nodyna <ID:send-65> <send VERY LOW ex1>
+        #nodyna <ID:send-65> <SD TRIVIAL (public methods)>
         ActionView::RoutingUrlFor.send(:include, ActionDispatch::Routing::UrlFor)
       end
     end

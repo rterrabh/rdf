@@ -169,7 +169,7 @@ class Commit
   end
 
   def method_missing(m, *args, &block)
-    #nodyna <ID:send-78> <send VERY HIGH ex3>
+    #nodyna <ID:send-78> <SD COMPLEX (change-prone variables)>
     @raw.send(m, *args, &block)
   end
 

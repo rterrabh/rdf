@@ -205,7 +205,7 @@ class Gem::CommandManager
       rescue LoadError => e
         load_error = e
       end
-      #nodyna <ID:const_get-29> <const_get VERY HIGH ex3>
+      #nodyna <ID:const_get-29> <CG COMPLEX (change-prone variable)>
       Gem::Commands.const_get(const_name).new
     rescue Exception => e
       e = load_error if load_error

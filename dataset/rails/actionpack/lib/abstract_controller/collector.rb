@@ -33,12 +33,12 @@ module AbstractController
           "format.html { |html| html.tablet { ... } }"
       end
 
-      #nodyna <ID:const_get-2> <const_get VERY HIGH ex3>
+      #nodyna <ID:const_get-2> <CG COMPLEX (change-prone variable)>
       mime_constant = Mime.const_get(const_name)
 
       if Mime::SET.include?(mime_constant)
         AbstractController::Collector.generate_method_for_mime(mime_constant)
-        #nodyna <ID:send-67> <send VERY HIGH ex3>
+        #nodyna <ID:send-67> <SD COMPLEX (change-prone variables)>
         send(symbol, &block)
       else
         super

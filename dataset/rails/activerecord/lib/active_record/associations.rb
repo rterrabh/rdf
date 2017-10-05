@@ -1691,7 +1691,7 @@ module ActiveRecord
         # FIXME: we should move this to the internal constants. Also people
         # should never directly access this constant so I'm not happy about
         # setting it.
-        #nodyna <ID:const_set-3> <const_set VERY HIGH ex3>
+        #nodyna <ID:const_set-3> <CS COMPLEX (change-prone variable)>
         const_set join_model.name, join_model
 
         middle_reflection = builder.middle_reflection join_model

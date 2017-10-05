@@ -125,7 +125,7 @@ class Module
     #     ...
     #   end
     def concern(topic, &module_definition)
-      #nodyna <ID:const_set-8> <const_set VERY HIGH ex3>
+      #nodyna <ID:const_set-8> <CS COMPLEX (change-prone variable)>
       const_set topic, Module.new {
         extend ::ActiveSupport::Concern
         module_eval(&module_definition)

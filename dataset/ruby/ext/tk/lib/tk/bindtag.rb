@@ -9,7 +9,7 @@ class TkBindTag
   #BTagID_TBL = {}
   BTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-58> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-58> <IEV MODERATE (method definition)>
   (Tk_BINDTAG_ID = ["btag".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -49,7 +49,7 @@ class TkBindTag
       if BTagID_TBL[name]
         obj = BTagID_TBL[name]
       else
-        #nodyna <ID:instance_eval-60> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-60> <IEV MODERATE (private access)>
         (obj = BTagID_TBL[name] = self.allocate).instance_eval{
           @id = name
         }
@@ -120,7 +120,7 @@ class TkDatabaseClass<TkBindTag
       if BTagID_TBL[name]
         BTagID_TBL[name]
       else
-        #nodyna <ID:instance_eval-61> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-61> <IEV MODERATE (private access)>
         BTagID_TBL[name] = self.allocate.instance_eval{
           initialize(name, *args, &b)
           self

@@ -175,7 +175,7 @@ module ActionView
         test_case_instance = self
         _helpers.module_eval do
           unless private_method_defined?(:_test_case)
-            #nodyna <ID:define_method-3> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-3> <DM MODERATE (events)>
             define_method(:_test_case) { test_case_instance }
             private :_test_case
           end
@@ -205,7 +205,7 @@ module ActionView
       def view
         @view ||= begin
           view = @controller.view_context
-          #nodyna <ID:send-43> <send VERY LOW ex1>
+          #nodyna <ID:send-43> <SD TRIVIAL (public methods)>
           view.singleton_class.send :include, _helpers
           view.extend(Locals)
           view.rendered_views = self.rendered_views

@@ -11,7 +11,7 @@ class TkImage<TkObject
 
   Tk_IMGTBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-24> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-24> <IEV MODERATE (method definition)>
   (Tk_Image_ID = ['i'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -45,7 +45,7 @@ class TkImage<TkObject
             keys = _symbolkey2str(keys)
             keys.delete('imagename')
             keys.delete('without_creating')
-            #nodyna <ID:instance_eval-25> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-25> <IEV MODERATE (private access)>
             obj.instance_eval{
               tk_call_without_enc('image', 'create',
                                   @type, @path, *hash_kv(keys, true))
@@ -55,7 +55,7 @@ class TkImage<TkObject
         end
       end
     end
-    #nodyna <ID:instance_eval-26> <instance_eval MEDIUM ex1>
+    #nodyna <ID:instance_eval-26> <IEV MODERATE (private access)>
     (obj = self.allocate).instance_eval{
       Tk_IMGTBL.mutex.synchronize{
         initialize(keys)

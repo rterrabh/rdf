@@ -12,7 +12,7 @@ module RailsAdmin
           register_instance_option :image? do
             false unless value
             if abstract_model.model.new.respond_to?("#{name}_name")
-              #nodyna <ID:send-28> <send VERY HIGH ex3>
+              #nodyna <ID:send-28> <SD COMPLEX (change-prone variables)>
               bindings[:object].send("#{name}_name").to_s.split('.').last =~ /jpg|jpeg|png|gif/i
             else
               true # Dragonfly really is image oriented

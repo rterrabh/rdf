@@ -5,7 +5,7 @@ module ActiveAdmin
       DISPLAY_NAME_FALLBACK = ->{
         name, klass = "", self.class
         name << klass.model_name.human         if klass.respond_to? :model_name
-        #nodyna <ID:send-21> <send VERY HIGH ex3>
+        #nodyna <ID:send-21> <SD COMPLEX (change-prone variables)>
         name << " ##{send(klass.primary_key)}" if klass.respond_to? :primary_key
         name.present? ? name : to_s
       }

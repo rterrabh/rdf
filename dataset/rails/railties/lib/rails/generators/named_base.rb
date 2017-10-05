@@ -194,7 +194,7 @@ module Rails
         # the presence of "AdminDecorator".
         #
         def self.check_class_collision(options={})
-          #nodyna <ID:define_method-68> <define_method MEDIUM ex2>
+          #nodyna <ID:define_method-68> <DM MODERATE (events)>
           define_method :check_class_collision do
             name = if self.respond_to?(:controller_class_name) # for ScaffoldBase
               controller_class_name

@@ -18,13 +18,13 @@ module ActiveModel
         members = if delimiter.respond_to?(:call)
                     delimiter.call(record)
                   elsif delimiter.respond_to?(:to_sym)
-                    #nodyna <ID:send-26> <send VERY HIGH ex3>
+                    #nodyna <ID:send-26> <SD COMPLEX (change-prone variables)>
                     record.send(delimiter)
                   else
                     delimiter
                   end
 
-        #nodyna <ID:send-27> <send MEDIUM ex3>
+        #nodyna <ID:send-27> <SD MODERATE (change-prone variables)>
         members.send(inclusion_method(members), value)
       end
 

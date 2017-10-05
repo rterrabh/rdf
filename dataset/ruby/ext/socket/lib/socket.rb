@@ -163,7 +163,7 @@ class Addrinfo
     opts = Hash === args.last ? args.pop : {}
     remote_addr_args = args
     remote_addrinfo = family_addrinfo(*remote_addr_args)
-    #nodyna <ID:send-8> <send LOW ex4>
+    #nodyna <ID:send-8> <SD EASY (private methods)>
     remote_addrinfo.send(:connect_internal, self, opts[:timeout], &block)
   end
 
@@ -683,7 +683,7 @@ class Socket < BasicSocket
         }
       else
         yield msg, UDPSource.new(sender_addrinfo, ai) {|reply_msg|
-          #nodyna <ID:send-9> <send VERY HIGH ex3>
+          #nodyna <ID:send-9> <SD COMPLEX (change-prone variables)>
           r.send reply_msg, 0, sender_addrinfo
         }
       end

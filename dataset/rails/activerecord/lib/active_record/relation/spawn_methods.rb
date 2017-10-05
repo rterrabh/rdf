@@ -38,7 +38,7 @@ module ActiveRecord
 
     def merge!(other) # :nodoc:
       if !other.is_a?(Relation) && other.respond_to?(:to_proc)
-        #nodyna <ID:instance_exec-14> <instance_exec VERY HIGH ex1>
+        #nodyna <ID:instance_exec-14> <IEX COMPLEX (block without parameters)>
         instance_exec(&other)
       else
         klass = other.is_a?(Hash) ? Relation::HashMerger : Relation::Merger

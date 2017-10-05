@@ -55,7 +55,7 @@ module ActiveAdmin
       def find_collection(options = {})
         collection = scoped_collection
         collection_applies(options).each do |applyer|
-          #nodyna <ID:send-26> <send VERY HIGH ex2>
+          #nodyna <ID:send-26> <SD COMPLEX (array)>
           collection = send("apply_#{applyer}", collection)
         end
         collection
@@ -105,7 +105,7 @@ module ActiveAdmin
       #
       # @return [ActiveRecord::Base] An active record object.
       def find_resource
-        #nodyna <ID:send-27> <send VERY HIGH ex3>
+        #nodyna <ID:send-27> <SD COMPLEX (change-prone variables)>
         scoped_collection.send method_for_find, params[:id]
       end
 
@@ -137,7 +137,7 @@ module ActiveAdmin
       #
       # @return [ActiveRecord::Base] An un-saved active record base object
       def build_new_resource
-        #nodyna <ID:send-28> <send VERY HIGH ex3>
+        #nodyna <ID:send-28> <SD COMPLEX (change-prone variables)>
         scoped_collection.send method_for_build, *resource_params
       end
 
@@ -274,7 +274,7 @@ module ActiveAdmin
         page_method_name = Kaminari.config.page_method_name
         page = params[Kaminari.config.param_name]
 
-        #nodyna <ID:send-29> <send VERY HIGH ex3>
+        #nodyna <ID:send-29> <SD COMPLEX (change-prone variables)>
         chain.public_send(page_method_name, page).per(per_page)
       end
 

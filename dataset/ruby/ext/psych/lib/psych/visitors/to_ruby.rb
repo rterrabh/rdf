@@ -173,7 +173,7 @@ module Psych
               member = accept(k)
               value  = accept(v)
               if struct_members.include?(class_loader.symbolize(member))
-                #nodyna <ID:send-4> <send VERY HIGH ex3>
+                #nodyna <ID:send-4> <SD COMPLEX (change-prone variables)>
                 s.send("#{member}=", value)
               else
                 members[member.to_s.sub(/^@/, '')] = value

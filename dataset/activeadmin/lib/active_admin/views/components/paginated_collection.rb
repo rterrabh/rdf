@@ -68,7 +68,7 @@ module ActiveAdmin
           build_pagination
           div(page_entries_info(options).html_safe, class: "pagination_information")
 
-          #nodyna <ID:instance_exec-20> <instance_exec VERY HIGH ex1>
+          #nodyna <ID:instance_exec-20> <IEX COMPLEX (block without parameters)>
           download_links = @download_links.is_a?(Proc) ? instance_exec(&@download_links) : @download_links
 
           if download_links.is_a?(Array) && !download_links.empty?

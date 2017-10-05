@@ -788,7 +788,7 @@ class Resolv
 
           def send
             raise "@sock is nil." if @sock.nil?
-            #nodyna <ID:send-74> <send VERY HIGH ex3>
+            #nodyna <ID:send-74> <SD COMPLEX (change-prone variables)>
             @sock.send(@msg, 0, @host, @port)
           end
         end
@@ -832,7 +832,7 @@ class Resolv
         class Sender < Requester::Sender # :nodoc:
           def send
             raise "@sock is nil." if @sock.nil?
-            #nodyna <ID:send-76> <send VERY HIGH ex3>
+            #nodyna <ID:send-76> <SD COMPLEX (change-prone variables)>
             @sock.send(@msg, 0)
           end
           attr_reader :data
@@ -1731,11 +1731,11 @@ class Resolv
 
         def self.create(type_value, class_value) # :nodoc:
           c = Class.new(Generic)
-          #nodyna <ID:const_set-37> <const_set VERY LOW ex1>
+          #nodyna <ID:const_set-37> <CS TRIVIAL (static values)>
           c.const_set(:TypeValue, type_value)
-          #nodyna <ID:const_set-38> <const_set VERY LOW ex1>
+          #nodyna <ID:const_set-38> <CS TRIVIAL (static values)>
           c.const_set(:ClassValue, class_value)
-          #nodyna <ID:const_set-39> <const_set VERY HIGH ex3>
+          #nodyna <ID:const_set-39> <CS COMPLEX (change-prone variable)>
           Generic.const_set("Type#{type_value}_Class#{class_value}", c)
           ClassHash[[type_value, class_value]] = c
           return c
@@ -2120,12 +2120,12 @@ class Resolv
 
         ClassInsensitiveTypes.each {|s|
           c = Class.new(s)
-          #nodyna <ID:const_set-40> <const_set VERY LOW ex2>
+          #nodyna <ID:const_set-40> <CS TRIVIAL (array)>
           c.const_set(:TypeValue, s::TypeValue)
-          #nodyna <ID:const_set-41> <const_set VERY LOW ex2>
+          #nodyna <ID:const_set-41> <CS TRIVIAL (array)>
           c.const_set(:ClassValue, ClassValue)
           ClassHash[[s::TypeValue, ClassValue]] = c
-          #nodyna <ID:const_set-42> <const_set VERY HIGH ex3>
+          #nodyna <ID:const_set-42> <CS COMPLEX (change-prone variable)>
           self.const_set(s.name.sub(/.*::/, ''), c)
         }
 

@@ -285,7 +285,7 @@ class Pathname
 
   def verify_checksum(expected)
     raise ChecksumMissingError if expected.nil? || expected.empty?
-    #nodyna <ID:send-5> <send VERY HIGH ex3>
+    #nodyna <ID:send-5> <SD COMPLEX (change-prone variables)>
     actual = Checksum.new(expected.hash_type, send(expected.hash_type).downcase)
     raise ChecksumMismatchError.new(self, expected, actual) unless expected == actual
   end

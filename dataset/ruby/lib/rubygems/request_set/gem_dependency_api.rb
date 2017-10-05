@@ -275,7 +275,7 @@ class Gem::RequestSet::GemDependencyAPI
   # Loads the gem dependency file and returns self.
 
   def load
-    #nodyna <ID:instance_eval-151> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-151> <IEV COMPLEX (block execution)>
     instance_eval File.read(@path).untaint, @path, 1
 
     self
@@ -758,7 +758,7 @@ Gem dependencies file #{@path} requires #{name} more than once.
     end
 
     if engine_version then
-      #nodyna <ID:const_get-27> <const_get VERY HIGH ex3>
+      #nodyna <ID:const_get-27> <CG COMPLEX (change-prone variable)>
       my_engine_version = Object.const_get "#{Gem.ruby_engine.upcase}_VERSION"
 
       if engine_version != my_engine_version then

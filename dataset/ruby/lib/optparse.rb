@@ -880,7 +880,7 @@ XXX
   #
   def self.with(*args, &block)
     opts = new(*args)
-    #nodyna <ID:instance_eval-156> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-156> <IEV COMPLEX (block execution)>
     opts.instance_eval(&block)
     opts
   end
@@ -1548,7 +1548,7 @@ XXX
   #
   def visit(id, *args, &block)
     @stack.reverse_each do |el|
-      #nodyna <ID:send-78> <send MEDIUM ex3>
+      #nodyna <ID:send-78> <SD MODERATE (change-prone variables)>
       el.send(id, *args, &block)
     end
     nil
@@ -1700,7 +1700,7 @@ XXX
     if n
       Rational(d, n)
     elsif s
-      #nodyna <ID:eval-83> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-83> <EV COMPLEX (change-prone variables)>
       eval(s)
     end
   }
@@ -1737,7 +1737,7 @@ XXX
   DecimalNumeric = floatpat     # decimal integer is allowed as float also.
   accept(DecimalNumeric, floatpat) {|s,|
     begin
-      #nodyna <ID:eval-84> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-84> <EV COMPLEX (change-prone variables)>
       eval(s)
     rescue SyntaxError
       raise OptionParser::InvalidArgument, s
@@ -1856,7 +1856,7 @@ XXX
   # Raises when ambiguously completable string is encountered.
   #
   class AmbiguousOption < ParseError
-    #nodyna <ID:const_set-43> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-43> <CS TRIVIAL (static values)>
     const_set(:Reason, 'ambiguous option'.freeze)
   end
 
@@ -1864,7 +1864,7 @@ XXX
   # Raises when there is an argument for a switch which takes no argument.
   #
   class NeedlessArgument < ParseError
-    #nodyna <ID:const_set-44> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-44> <CS TRIVIAL (static values)>
     const_set(:Reason, 'needless argument'.freeze)
   end
 
@@ -1872,7 +1872,7 @@ XXX
   # Raises when a switch with mandatory argument has no argument.
   #
   class MissingArgument < ParseError
-    #nodyna <ID:const_set-45> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-45> <CS TRIVIAL (static values)>
     const_set(:Reason, 'missing argument'.freeze)
   end
 
@@ -1880,7 +1880,7 @@ XXX
   # Raises when switch is undefined.
   #
   class InvalidOption < ParseError
-    #nodyna <ID:const_set-46> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-46> <CS TRIVIAL (static values)>
     const_set(:Reason, 'invalid option'.freeze)
   end
 
@@ -1888,7 +1888,7 @@ XXX
   # Raises when the given argument does not match required format.
   #
   class InvalidArgument < ParseError
-    #nodyna <ID:const_set-47> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-47> <CS TRIVIAL (static values)>
     const_set(:Reason, 'invalid argument'.freeze)
   end
 
@@ -1896,7 +1896,7 @@ XXX
   # Raises when the given argument word can't be completed uniquely.
   #
   class AmbiguousArgument < InvalidArgument
-    #nodyna <ID:const_set-48> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-48> <CS TRIVIAL (static values)>
     const_set(:Reason, 'ambiguous argument'.freeze)
   end
 
@@ -1982,7 +1982,7 @@ XXX
     #
     def self.extend_object(obj)
       super
-      #nodyna <ID:instance_eval-157> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-157> <IEV COMPLEX (private access)>
       obj.instance_eval {@optparse = nil}
     end
     def initialize(*args)
@@ -1996,11 +1996,11 @@ XXX
   # and DecimalNumeric. See Acceptable argument classes (in source code).
   #
   module Acceptables
-    #nodyna <ID:const_set-49> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-49> <CS TRIVIAL (static values)>
     const_set(:DecimalInteger, OptionParser::DecimalInteger)
-    #nodyna <ID:const_set-50> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-50> <CS TRIVIAL (static values)>
     const_set(:OctalInteger, OptionParser::OctalInteger)
-    #nodyna <ID:const_set-51> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-51> <CS TRIVIAL (static values)>
     const_set(:DecimalNumeric, OptionParser::DecimalNumeric)
   end
 end

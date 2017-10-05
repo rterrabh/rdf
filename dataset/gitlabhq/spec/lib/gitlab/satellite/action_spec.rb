@@ -35,7 +35,7 @@ describe 'Gitlab::Satellite::Action' do
       satellite_action = Gitlab::Satellite::Action.new(user, project)
       project.satellite.lock do
         #Now clean it up, use send to get around prepare_satellite! being protected
-        #nodyna <ID:send-1> <send VERY LOW ex1>
+        #nodyna <ID:send-1> <SD TRIVIAL (public methods)>
         satellite_action.send(:prepare_satellite!, repo)
       end
 
@@ -63,7 +63,7 @@ describe 'Gitlab::Satellite::Action' do
       expect(File.exists?(project.satellite.lock_file)).to be_falsey
 
       satellite_action = Gitlab::Satellite::Action.new(user, project)
-      #nodyna <ID:send-2> <send VERY LOW ex1>
+      #nodyna <ID:send-2> <SD TRIVIAL (public methods)>
       satellite_action.send(:in_locked_and_timed_satellite) do |sat_repo|
         expect(repo).to eq(sat_repo)
         expect(File.exists? project.satellite.lock_file).to be_truthy
@@ -84,7 +84,7 @@ describe 'Gitlab::Satellite::Action' do
       end
 
       satellite_action = Gitlab::Satellite::Action.new(user, project)
-      #nodyna <ID:send-3> <send VERY LOW ex1>
+      #nodyna <ID:send-3> <SD TRIVIAL (public methods)>
       satellite_action.send(:in_locked_and_timed_satellite) do |sat_repo|
         called = true
         expect(repo).to eq(sat_repo)

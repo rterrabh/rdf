@@ -598,7 +598,7 @@ module ActionDispatch
 
         def with_default_scope(scope, &block)
           scope(scope) do
-            #nodyna <ID:instance_exec-5> <instance_exec VERY HIGH ex1>
+            #nodyna <ID:instance_exec-5> <IEX COMPLEX (block without parameters)>
             instance_exec(&block)
           end
         end
@@ -628,7 +628,7 @@ module ActionDispatch
             app.routes.define_mounted_helper(name)
             app.routes.extend Module.new {
               def optimize_routes_generation?; false; end
-              #nodyna <ID:define_method-17> <define_method MEDIUM ex2>
+              #nodyna <ID:define_method-17> <DM MODERATE (events)>
               define_method :find_script_name do |options|
                 if options.key? :script_name
                   super(options)
@@ -636,7 +636,7 @@ module ActionDispatch
                   prefix_options = options.slice(*_route.segment_keys)
                   # we must actually delete prefix segment keys to avoid passing them to next url_for
                   _route.segment_keys.each { |k| options.delete(k) }
-                  #nodyna <ID:send-90> <send VERY HIGH ex3>
+                  #nodyna <ID:send-90> <SD COMPLEX (change-prone variables)>
                   _routes.url_helpers.send("#{name}_path", prefix_options)
                 end
               end
@@ -811,7 +811,7 @@ module ActionDispatch
             end
 
             if value
-              #nodyna <ID:send-91> <send VERY HIGH ex3>
+              #nodyna <ID:send-91> <SD COMPLEX (change-prone variables)>
               scope[option] = send("merge_#{option}_scope", @scope[option], value)
             end
           end
@@ -1529,7 +1529,7 @@ module ActionDispatch
 
         def decomposed_match(path, options) # :nodoc:
           if on = options.delete(:on)
-            #nodyna <ID:send-92> <send VERY HIGH ex3>
+            #nodyna <ID:send-92> <SD COMPLEX (change-prone variables)>
             send(on) { decomposed_match(path, options) }
           else
             case @scope.scope_level
@@ -1594,21 +1594,21 @@ module ActionDispatch
 
           def apply_common_behavior_for(method, resources, options, &block) #:nodoc:
             if resources.length > 1
-              #nodyna <ID:send-93> <send MEDIUM ex2>
+              #nodyna <ID:send-93> <SD MODERATE (array)>
               resources.each { |r| send(method, r, options, &block) }
               return true
             end
 
             if options.delete(:shallow)
               shallow do
-                #nodyna <ID:send-94> <send MEDIUM ex3>
+                #nodyna <ID:send-94> <SD MODERATE (change-prone variables)>
                 send(method, resources.pop, options, &block)
               end
               return true
             end
 
             if resource_scope?
-              #nodyna <ID:send-95> <send MEDIUM ex3>
+              #nodyna <ID:send-95> <SD MODERATE (change-prone variables)>
               nested { send(method, resources.pop, options, &block) }
               return true
             end
@@ -1620,7 +1620,7 @@ module ActionDispatch
             scope_options = options.slice!(*RESOURCE_OPTIONS)
             unless scope_options.empty?
               scope(scope_options) do
-                #nodyna <ID:send-96> <send MEDIUM ex3>
+                #nodyna <ID:send-96> <SD MODERATE (change-prone variables)>
                 send(method, resources.pop, options, &block)
               end
               return true
@@ -1869,7 +1869,7 @@ module ActionDispatch
         # callable, they're accessible from the Mapper that's passed to
         # <tt>call</tt>.
         def concern(name, callable = nil, &block)
-          #nodyna <ID:instance_exec-6> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-6> <IEX COMPLEX (block with parameters)>
           callable ||= lambda { |mapper, options| mapper.instance_exec(options, &block) }
           @concerns[name] = callable
         end

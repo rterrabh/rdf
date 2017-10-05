@@ -19,7 +19,7 @@ module API
         #   GET /projects/:id/issues/:noteable_id/notes
         #   GET /projects/:id/snippets/:noteable_id/notes
         get ":id/#{noteables_str}/:#{noteable_id_str}/notes" do
-          #nodyna <ID:send-7> <send MEDIUM ex3>
+          #nodyna <ID:send-7> <SD MODERATE (change-prone variables)>
           @noteable = user_project.send(:"#{noteables_str}").find(params[:"#{noteable_id_str}"])
           present paginate(@noteable.notes), with: Entities::Note
         end
@@ -34,7 +34,7 @@ module API
         #   GET /projects/:id/issues/:noteable_id/notes/:note_id
         #   GET /projects/:id/snippets/:noteable_id/notes/:note_id
         get ":id/#{noteables_str}/:#{noteable_id_str}/notes/:note_id" do
-          #nodyna <ID:send-8> <send MEDIUM ex3>
+          #nodyna <ID:send-8> <SD MODERATE (change-prone variables)>
           @noteable = user_project.send(:"#{noteables_str}").find(params[:"#{noteable_id_str}"])
           @note = @noteable.notes.find(params[:note_id])
           present @note, with: Entities::Note

@@ -15,10 +15,10 @@ module ActiveModel
         method_name = options[:with]
 
         if record.method(method_name).arity == 0
-          #nodyna <ID:send-28> <send VERY HIGH ex3>
+          #nodyna <ID:send-28> <SD COMPLEX (change-prone variables)>
           record.send method_name
         else
-          #nodyna <ID:send-29> <send VERY HIGH ex3>
+          #nodyna <ID:send-29> <SD COMPLEX (change-prone variables)>
           record.send method_name, attr
         end
       end

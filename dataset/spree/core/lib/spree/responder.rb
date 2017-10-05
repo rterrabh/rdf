@@ -17,15 +17,15 @@ module Spree
 
     def to_html
       super and return if !(on_success || on_failure)
-      #nodyna <ID:instance_exec-1> <instance_exec VERY HIGH ex1>
-      #nodyna <ID:instance_exec-1> <instance_exec VERY HIGH ex1>
+      #nodyna <ID:instance_exec-1> <IEX COMPLEX (block without parameters)>
+      #nodyna <ID:instance_exec-1> <IEX COMPLEX (block without parameters)>
       has_errors? ? controller.instance_exec(&on_failure) : controller.instance_exec(&on_success)
     end
 
     def to_format
       super and return if !(on_success || on_failure)
-      #nodyna <ID:instance_exec-2> <instance_exec VERY HIGH ex1>
-      #nodyna <ID:instance_exec-2> <instance_exec VERY HIGH ex1>
+      #nodyna <ID:instance_exec-2> <IEX COMPLEX (block without parameters)>
+      #nodyna <ID:instance_exec-2> <IEX COMPLEX (block without parameters)>
       has_errors? ? controller.instance_exec(&on_failure) : controller.instance_exec(&on_success)
     end
 

@@ -62,7 +62,7 @@ module ActiveRecord::Associations::Builder
       validate_options
 
       if scope && scope.arity == 0
-        #nodyna <ID:instance_exec-9> <instance_exec VERY HIGH ex1>
+        #nodyna <ID:instance_exec-9> <IEX COMPLEX (block without parameters)>
         @scope = proc { instance_exec(&scope) }
       end
     end

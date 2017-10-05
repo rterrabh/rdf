@@ -35,7 +35,7 @@ module RSS
     end
 
     def def_convert(depth=0)
-      #nodyna <ID:instance_eval-164> <instance_eval MEDIUM ex2>
+      #nodyna <ID:instance_eval-164> <IEV MODERATE (method definition)>
       instance_eval(<<-EOC, *get_file_and_line_from_caller(depth))
       def convert(value)
         if value.kind_of?(String)

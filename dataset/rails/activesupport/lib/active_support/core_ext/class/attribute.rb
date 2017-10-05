@@ -76,7 +76,7 @@ class Class
 
     attrs.each do |name|
       define_singleton_method(name) { nil }
-      #nodyna <ID:send-251> <send MEDIUM ex3>
+      #nodyna <ID:send-251> <SD MODERATE (change-prone variables)>
       define_singleton_method("#{name}?") { !!public_send(name) } if instance_predicate
 
       ivar = "@#{name}"
@@ -84,19 +84,19 @@ class Class
       define_singleton_method("#{name}=") do |val|
         singleton_class.class_eval do
           remove_possible_method(name)
-          #nodyna <ID:define_method-57> <define_method MEDIUM ex2>
+          #nodyna <ID:define_method-57> <DM MODERATE (events)>
           define_method(name) { val }
         end
 
         if singleton_class?
           class_eval do
             remove_possible_method(name)
-            #nodyna <ID:define_method-58> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-58> <DM MODERATE (events)>
             define_method(name) do
               if instance_variable_defined? ivar
                 instance_variable_get ivar
               else
-                #nodyna <ID:send-252> <send MEDIUM ex3>
+                #nodyna <ID:send-252> <SD MODERATE (change-prone variables)>
                 singleton_class.send name
               end
             end
@@ -107,17 +107,17 @@ class Class
 
       if instance_reader
         remove_possible_method name
-        #nodyna <ID:define_method-59> <define_method MEDIUM ex2>
+        #nodyna <ID:define_method-59> <DM MODERATE (events)>
         define_method(name) do
           if instance_variable_defined?(ivar)
             instance_variable_get ivar
           else
-            #nodyna <ID:send-253> <send MEDIUM ex3>
+            #nodyna <ID:send-253> <SD MODERATE (change-prone variables)>
             self.class.public_send name
           end
         end
-        #nodyna <ID:send-254> <send MEDIUM ex3>
-        #nodyna <ID:define_method-60> <define_method MEDIUM ex2>
+        #nodyna <ID:send-254> <SD MODERATE (change-prone variables)>
+        #nodyna <ID:define_method-60> <DM MODERATE (events)>
         define_method("#{name}?") { !!public_send(name) } if instance_predicate
       end
 

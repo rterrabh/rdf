@@ -23,7 +23,7 @@ module IRB # :nodoc:
 
       if @eval_history
         @eval_history_values.push @line_no, @last_value
-        #nodyna <ID:instance_eval-173> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-173> <IEV EASY (private access)>
         @workspace.evaluate self, "__ = IRB.CurrentContext.instance_eval{@eval_history_values}"
       end
 

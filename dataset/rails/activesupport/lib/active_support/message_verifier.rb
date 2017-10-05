@@ -66,7 +66,7 @@ module ActiveSupport
 
       def generate_digest(data)
         require 'openssl' unless defined?(OpenSSL)
-        #nodyna <ID:const_get-12> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-12> <CG COMPLEX (change-prone variable)>
         OpenSSL::HMAC.hexdigest(OpenSSL::Digest.const_get(@digest).new, @secret, data)
       end
   end

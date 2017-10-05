@@ -75,7 +75,7 @@ module ActiveAdmin
 
         # Call the block passed in. This will set the
         # title and body methods
-        #nodyna <ID:instance_exec-18> <instance_exec VERY HIGH ex1>
+        #nodyna <ID:instance_exec-18> <IEX COMPLEX (block without parameters)>
         instance_exec &page_presenter.block if page_presenter.block
 
         add_class "index"
@@ -146,10 +146,10 @@ module ActiveAdmin
       def render_method_on_post_or_call_proc(post, proc)
         case proc
         when String, Symbol
-          #nodyna <ID:send-58> <send VERY HIGH ex3>
+          #nodyna <ID:send-58> <SD COMPLEX (change-prone variables)>
           post.public_send proc
         else
-          #nodyna <ID:instance_exec-19> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-19> <IEX COMPLEX (block with parameters)>
           instance_exec post, &proc
         end
       end

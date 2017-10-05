@@ -65,7 +65,7 @@ module Spree
             search.each do |name, scope_attribute|
               scope_name = name.to_sym
               if base_scope.respond_to?(:search_scopes) && base_scope.search_scopes.include?(scope_name.to_sym)
-                #nodyna <ID:send-17> <send VERY HIGH ex3>
+                #nodyna <ID:send-17> <SD COMPLEX (change-prone variables)>
                 base_scope = base_scope.send(scope_name, *scope_attribute)
               else
                 base_scope = base_scope.merge(Spree::Product.ransack({scope_name => scope_attribute}).result)

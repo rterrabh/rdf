@@ -33,7 +33,7 @@ module RailsAdmin
         scope = query_scope(scope, options[:query]) if options[:query]
         scope = filter_scope(scope, options[:filters]) if options[:filters]
         if options[:page] && options[:per]
-          #nodyna <ID:send-50> <send VERY HIGH ex3>
+          #nodyna <ID:send-50> <SD COMPLEX (change-prone variables)>
           scope = scope.send(Kaminari.config.page_method_name, options[:page]).per(options[:per])
         end
         scope = scope.reorder("#{options[:sort]} #{options[:sort_reverse] ? 'asc' : 'desc'}") if options[:sort]

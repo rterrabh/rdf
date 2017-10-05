@@ -17,7 +17,7 @@ module MiniTest
       msg = "MiniTest::MINI_DIR was removed. Don't violate other's internals."
       warn "WAR\NING: #{msg}"
       warn "WAR\NING: Used by #{caller.first}."
-      #nodyna <ID:const_set-67> <const_set VERY LOW ex1>
+      #nodyna <ID:const_set-67> <CS TRIVIAL (static values)>
       const_set :MINI_DIR, "bad value"
     else
       super
@@ -336,9 +336,9 @@ module MiniTest
       err_msg = Regexp === stderr ? :assert_match : :assert_equal if stderr
       out_msg = Regexp === stdout ? :assert_match : :assert_equal if stdout
 
-      #nodyna <ID:send-136> <send VERY LOW ex1>
+      #nodyna <ID:send-136> <SD TRIVIAL (public methods)>
       y = send err_msg, stderr, err, "In stderr" if err_msg
-      #nodyna <ID:send-137> <send VERY LOW ex1>
+      #nodyna <ID:send-137> <SD TRIVIAL (public methods)>
       x = send out_msg, stdout, out, "In stdout" if out_msg
 
       (!stdout || x) && (!stderr || y)

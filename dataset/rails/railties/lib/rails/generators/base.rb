@@ -267,7 +267,7 @@ module Rails
         def extract_last_module(nesting)
           nesting.inject(Object) do |last_module, nest|
             break unless last_module.const_defined?(nest, false)
-            #nodyna <ID:const_get-22> <const_get VERY HIGH ex2>
+            #nodyna <ID:const_get-22> <CG COMPLEX (array)>
             last_module.const_get(nest)
           end
         end
@@ -349,7 +349,7 @@ module Rails
                               desc: "Path to the Ruby binary of your choice", banner: "PATH"
 
           no_tasks {
-            #nodyna <ID:define_method-67> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-67> <DM MODERATE (events)>
             define_method :shebang do
               @shebang ||= begin
                 command = if options[:ruby] == Thor::Util.ruby_command

@@ -26,7 +26,7 @@ describe WebfingerProfile do
       
       [:links, :hcard, :guid, :seed_location, :public_key].each do |field|
         it 'should sets the #{field} field' do
-          #nodyna <ID:send-133> <send MEDIUM ex2>
+          #nodyna <ID:send-133> <SD MODERATE (array)>
           expect(profile.send(field)).to be_present
         end
       end
@@ -36,7 +36,7 @@ describe WebfingerProfile do
     def manual_nil_check(profile)
       profile.instance_variables.each do |var|
         var = var.to_s.gsub('@', '')
-        #nodyna <ID:send-134> <send MEDIUM ex2>
+        #nodyna <ID:send-134> <SD MODERATE (array)>
         return false if profile.send(var).nil? == true
       end
       true

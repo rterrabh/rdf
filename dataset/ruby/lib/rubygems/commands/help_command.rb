@@ -298,7 +298,7 @@ platform.
 
     if help then
       if Symbol === help then
-        #nodyna <ID:send-69> <send VERY HIGH ex3>
+        #nodyna <ID:send-69> <SD COMPLEX (change-prone variables)>
         send help
       else
         say help

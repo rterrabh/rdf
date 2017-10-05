@@ -58,7 +58,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def self.find_authenticator(name)
     BUILTIN_AUTH.each do |authenticator|
       if authenticator.name == name
-        #nodyna <ID:send-71> <send VERY HIGH ex3>
+        #nodyna <ID:send-71> <SD COMPLEX (change-prone variables)>
         raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{name}_logins?")
         return authenticator
       end

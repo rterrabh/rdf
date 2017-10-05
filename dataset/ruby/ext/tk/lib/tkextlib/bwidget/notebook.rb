@@ -91,10 +91,10 @@ class Tk::BWidget::NoteBook
     win = window(tk_send('add', tagid(page)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-16> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-16> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-117> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-117> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -115,10 +115,10 @@ class Tk::BWidget::NoteBook
     win = window(tk_send('getframe', tagid(page)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-17> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-17> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-118> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-118> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -133,10 +133,10 @@ class Tk::BWidget::NoteBook
     win = window(tk_send('insert', index, tagid(page), *hash_kv(keys)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-18> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-18> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-119> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-119> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

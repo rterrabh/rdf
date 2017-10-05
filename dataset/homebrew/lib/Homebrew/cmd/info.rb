@@ -130,7 +130,7 @@ module Homebrew
     unless f.deps.empty?
       ohai "Dependencies"
       %w[build required recommended optional].map do |type|
-        #nodyna <ID:send-8> <send MEDIUM ex2>
+        #nodyna <ID:send-8> <SD MODERATE (array)>
         deps = f.deps.send(type).uniq
         puts "#{type.capitalize}: #{decorate_dependencies deps}" unless deps.empty?
       end

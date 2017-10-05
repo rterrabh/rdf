@@ -231,7 +231,7 @@ module ActiveRecord
     end
 
     def operation_over_aggregate_column(column, operation, distinct)
-      #nodyna <ID:send-184> <send VERY HIGH ex3>
+      #nodyna <ID:send-184> <SD COMPLEX (change-prone variables)>
       operation == 'count' ? column.count(distinct) : column.send(operation)
     end
 

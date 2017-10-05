@@ -16,8 +16,8 @@ module RailsAdmin
           end
 
           register_instance_option :enum do
-            #nodyna <ID:send-25> <send VERY HIGH ex3>
-            #nodyna <ID:send-25> <send VERY HIGH ex3>
+            #nodyna <ID:send-25> <SD COMPLEX (change-prone variables)>
+            #nodyna <ID:send-25> <SD COMPLEX (change-prone variables)>
             bindings[:object].class.respond_to?(enum_method) ? bindings[:object].class.send(enum_method) : bindings[:object].send(enum_method)
           end
 

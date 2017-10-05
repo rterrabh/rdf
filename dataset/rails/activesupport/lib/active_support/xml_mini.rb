@@ -185,7 +185,7 @@ module ActiveSupport
           name
         else
           require "active_support/xml_mini/#{name.downcase}"
-          #nodyna <ID:const_get-8> <const_get VERY HIGH ex3>
+          #nodyna <ID:const_get-8> <CG COMPLEX (change-prone variable)>
           ActiveSupport.const_get("XmlMini_#{name}")
         end
       end

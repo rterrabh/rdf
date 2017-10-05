@@ -218,7 +218,7 @@ module ActiveRecord
       if !klass.descends_from_active_record?
         sti_type = klass.sti_name
       end
-      #nodyna <ID:send-148> <send VERY HIGH ex3>
+      #nodyna <ID:send-148> <SD COMPLEX (change-prone variables)>
       became.public_send("#{klass.inheritance_column}=", sti_type)
       became
     end
@@ -238,7 +238,7 @@ module ActiveRecord
     def update_attribute(name, value)
       name = name.to_s
       verify_readonly_attribute(name)
-      #nodyna <ID:send-149> <send VERY HIGH ex3>
+      #nodyna <ID:send-149> <SD COMPLEX (change-prone variables)>
       send("#{name}=", value)
       save(validate: false)
     end
@@ -346,7 +346,7 @@ module ActiveRecord
     # method toggles directly the underlying value without calling any setter.
     # Returns +self+.
     def toggle(attribute)
-      #nodyna <ID:send-150> <send VERY HIGH ex3>
+      #nodyna <ID:send-150> <SD COMPLEX (change-prone variables)>
       self[attribute] = !send("#{attribute}?")
       self
     end

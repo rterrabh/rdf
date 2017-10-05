@@ -392,7 +392,7 @@ class Project < ActiveRecord::Base
 
         if template.nil?
           # If no template, we should create an instance. Ex `create_gitlab_ci_service`
-          #nodyna <ID:send-95> <send MEDIUM ex3>
+          #nodyna <ID:send-95> <SD MODERATE (change-prone variables)>
           service = self.send :"create_#{service_name}_service"
         else
           Service.create_from_template(self.id, template)
@@ -493,7 +493,7 @@ class Project < ActiveRecord::Base
   end
 
   def execute_hooks(data, hooks_scope = :push_hooks)
-    #nodyna <ID:send-97> <send MEDIUM ex3>
+    #nodyna <ID:send-97> <SD MODERATE (change-prone variables)>
     hooks.send(hooks_scope).each do |hook|
       hook.async_execute(data, hooks_scope.to_s)
     end
@@ -501,7 +501,7 @@ class Project < ActiveRecord::Base
 
   def execute_services(data, hooks_scope = :push_hooks)
     # Call only service hooks that are active for this scope
-    #nodyna <ID:send-98> <send MEDIUM ex3>
+    #nodyna <ID:send-98> <SD MODERATE (change-prone variables)>
     services.send(hooks_scope).each do |service|
       service.async_execute(data)
     end

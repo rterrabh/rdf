@@ -158,11 +158,11 @@ class PhotosController < ApplicationController
       file.print request.raw_post.force_encoding('BINARY')
 
       # create several required methods for this temporal file
-      #nodyna <ID:send-182> <send MEDIUM ex4>
-      #nodyna <ID:define_method-1> <define_method MEDIUM ex2>
+      #nodyna <ID:send-182> <SD MODERATE (private methods)>
+      #nodyna <ID:define_method-1> <DM MODERATE (events)>
       Tempfile.send(:define_method, "content_type") {return att_content_type}
-      #nodyna <ID:send-183> <send MEDIUM ex4>
-      #nodyna <ID:define_method-2> <define_method MEDIUM ex2>
+      #nodyna <ID:send-183> <SD MODERATE (private methods)>
+      #nodyna <ID:define_method-2> <DM MODERATE (events)>
       Tempfile.send(:define_method, "original_filename") {return file_name}
       file
     end

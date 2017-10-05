@@ -17,7 +17,7 @@ class Win32API
       handle[func],
       @proto.chars.map { |win_type| TYPEMAP[win_type.tr("VPpNnLlIi", "0SSI")] },
       TYPEMAP[export.tr("VPpNnLlIi", "0SSI")],
-      #nodyna <ID:const_get-19> <const_get VERY LOW ex1>
+      #nodyna <ID:const_get-19> <CG TRIVIAL (static values)>
       Fiddle::Importer.const_get(:CALL_TYPE_TO_ABI)[calltype]
     )
   rescue Fiddle::DLError => e

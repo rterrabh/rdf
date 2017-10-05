@@ -17,7 +17,7 @@ module Jobs
       user_id = args[:user_id] || upload.user_id
       user = User.find(user_id)
 
-      #nodyna <ID:send-158> <send VERY HIGH ex3>
+      #nodyna <ID:send-158> <SD COMPLEX (change-prone variables)>
       self.send("create_thumbnails_for_#{type}", upload, user)
     end
 

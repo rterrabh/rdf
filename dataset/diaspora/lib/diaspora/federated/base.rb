@@ -15,7 +15,7 @@ module Diaspora
       include Diaspora::Logging
 
       def self.included(model)
-        #nodyna <ID:instance_eval-2> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-2> <IEV EASY (private access)>
         model.instance_eval do
           include ROXML
           include Diaspora::Federated::Base::InstanceMethods

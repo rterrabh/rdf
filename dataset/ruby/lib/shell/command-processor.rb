@@ -180,10 +180,10 @@ class Shell
           end
         else
           if file2
-            #nodyna <ID:send-79> <send VERY HIGH ex3>
+            #nodyna <ID:send-79> <SD COMPLEX (change-prone variables)>
             FileTest.send(command, file1, file2)
           else
-            #nodyna <ID:send-80> <send VERY HIGH ex3>
+            #nodyna <ID:send-80> <SD COMPLEX (change-prone variables)>
             FileTest.send(command, file1)
           end
         end
@@ -272,7 +272,7 @@ class Shell
     #   sh.transact { system("ls", "-l") | head > STDOUT }
     def transact(&block)
       begin
-        #nodyna <ID:instance_eval-159> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-159> <IEV COMPLEX (block execution)>
         @shell.instance_eval(&block)
       ensure
         check_point
@@ -398,7 +398,7 @@ class Shell
     #
     def self.def_system_command(command, path = command)
       begin
-        #nodyna <ID:eval-85> <eval VERY HIGH ex1>
+        #nodyna <ID:eval-85> <EV COMPLEX (method definition)>
         eval((d = %Q[def #{command}(*opts)
                   SystemCommand.new(@shell, '#{path}', *opts)
                end]), nil, __FILE__, __LINE__ - 1)
@@ -443,7 +443,7 @@ class Shell
         if iterator?
           @alias_map[ali.intern] = proc
 
-          #nodyna <ID:eval-86> <eval VERY HIGH ex1>
+          #nodyna <ID:eval-86> <EV COMPLEX (method definition)>
           eval((d = %Q[def #{ali}(*opts)
                           @shell.__send__(:#{command},
                                           *(CommandProcessor.alias_map[:#{ali}].call *opts))
@@ -451,7 +451,7 @@ class Shell
 
         else
            args = opts.collect{|opt| '"' + opt + '"'}.join(",")
-           #nodyna <ID:eval-87> <eval VERY HIGH ex1>
+           #nodyna <ID:eval-87> <EV COMPLEX (method definition)>
            eval((d = %Q[def #{ali}(*opts)
                           @shell.__send__(:#{command}, #{args}, *opts)
                         end]), nil, __FILE__, __LINE__ - 1)
@@ -540,7 +540,7 @@ class Shell
         Shell.notify "Define #{meth}(#{arg_str})", Shell.debug?
         Shell.notify("Definition of #{meth}: ", d,
                      Shell.debug.kind_of?(Integer) && Shell.debug > 1)
-        #nodyna <ID:eval-88> <eval VERY HIGH ex1>
+        #nodyna <ID:eval-88> <EV COMPLEX (method definition)>
         eval d
       end
     end

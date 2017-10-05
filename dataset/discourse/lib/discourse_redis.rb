@@ -39,7 +39,7 @@ class DiscourseRedis
   # prefix the key with the namespace
   def method_missing(meth, *args, &block)
     if @redis.respond_to?(meth)
-      #nodyna <ID:send-16> <send VERY HIGH ex3>
+      #nodyna <ID:send-16> <SD COMPLEX (change-prone variables)>
       DiscourseRedis.ignore_readonly { @redis.send(meth, *args, &block) }
     else
       super
@@ -55,10 +55,10 @@ class DiscourseRedis
    :sdiff, :set, :setbit, :setex, :setnx, :setrange, :sinter, :sismember, :smembers, :sort, :spop, :srandmember, :srem, :strlen,
    :sunion, :ttl, :type, :watch, :zadd, :zcard, :zcount, :zincrby, :zrange, :zrangebyscore, :zrank, :zrem, :zremrangebyrank,
    :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore].each do |m|
-    #nodyna <ID:define_method-3> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-3> <DM MODERATE (array)>
     define_method m do |*args|
       args[0] = "#{namespace}:#{args[0]}"
-      #nodyna <ID:send-17> <send MEDIUM ex3>
+      #nodyna <ID:send-17> <SD MODERATE (change-prone variables)>
       DiscourseRedis.ignore_readonly { @redis.send(m, *args) }
     end
   end

@@ -130,7 +130,7 @@ module Singleton
 
   class << Singleton # :nodoc:
     def __init__(klass) # :nodoc:
-      #nodyna <ID:instance_eval-153> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-153> <IEV COMPLEX (private access)>
       klass.instance_eval {
         @singleton__instance__ = nil
         @singleton__mutex__ = Mutex.new

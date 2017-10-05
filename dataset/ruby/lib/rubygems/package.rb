@@ -298,7 +298,7 @@ EOM
         if defined?(OpenSSL::Digest) then
           OpenSSL::Digest.new algorithm
         else
-          #nodyna <ID:const_get-30> <const_get VERY HIGH ex3>
+          #nodyna <ID:const_get-30> <CG COMPLEX (change-prone variable)>
           Digest.const_get(algorithm).new
         end
 

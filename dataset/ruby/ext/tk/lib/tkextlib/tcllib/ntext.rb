@@ -17,7 +17,7 @@ module Tk::Tcllib
 end
 
 # variables
-#nodyna <ID:instance_eval-142> <instance_eval LOW ex1>
+#nodyna <ID:instance_eval-142> <IEV EASY (private access)>
 Tk::Tcllib::Ntext.instance_eval{
   # boolean
   @classicAnchor = TkVarAccess.new('::ntext::classicAnchor')

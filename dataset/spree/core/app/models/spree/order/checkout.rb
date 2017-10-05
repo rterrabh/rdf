@@ -34,7 +34,7 @@ module Spree
             #
             # This method may be called multiple times depending on if the
             # checkout_flow is re-defined in a decorator or not.
-            #nodyna <ID:instance_eval-4> <instance_eval VERY HIGH ex3>
+            #nodyna <ID:instance_eval-4> <IEV COMPLEX (block execution)>
             instance_eval(&checkout_flow)
 
             klass = self

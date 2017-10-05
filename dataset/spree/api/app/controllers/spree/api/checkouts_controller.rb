@@ -74,7 +74,7 @@ module Spree
 
         def state_callback(before_or_after = :before)
           method_name = :"#{before_or_after}_#{@order.state}"
-          #nodyna <ID:send-10> <send VERY HIGH ex3>
+          #nodyna <ID:send-10> <SD COMPLEX (change-prone variables)>
           send(method_name) if respond_to?(method_name, true)
         end
 

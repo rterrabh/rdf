@@ -25,14 +25,14 @@ class SiteCustomization < ActiveRecord::Base
 
   before_save do
     SiteCustomization.css_fields.each do |stylesheet_attr|
-      #nodyna <ID:send-215> <send MEDIUM ex2>
+      #nodyna <ID:send-215> <SD MODERATE (array)>
       if self.send("#{stylesheet_attr}_changed?")
         begin
-          #nodyna <ID:send-216> <send MEDIUM ex2>
-          #nodyna <ID:send-216> <send MEDIUM ex2>
+          #nodyna <ID:send-216> <SD MODERATE (array)>
+          #nodyna <ID:send-216> <SD MODERATE (array)>
           self.send("#{stylesheet_attr}_baked=", compile_stylesheet(self.send(stylesheet_attr)))
         rescue Sass::SyntaxError => e
-          #nodyna <ID:send-217> <send MEDIUM ex2>
+          #nodyna <ID:send-217> <SD MODERATE (array)>
           self.send("#{stylesheet_attr}_baked=", DiscourseSassCompiler.error_as_css(e, "custom stylesheet"))
         end
       end
@@ -41,7 +41,7 @@ class SiteCustomization < ActiveRecord::Base
 
   def any_stylesheet_changed?
     SiteCustomization.css_fields.each do |fieldname|
-      #nodyna <ID:send-218> <send MEDIUM ex2>
+      #nodyna <ID:send-218> <SD MODERATE (array)>
       return true if self.send("#{fieldname}_changed?")
     end
     false
@@ -131,7 +131,7 @@ class SiteCustomization < ActiveRecord::Base
     val = if styles.present?
       styles.map do |style|
         lookup = target == :mobile ? "mobile_#{field}" : field
-        #nodyna <ID:send-219> <send MEDIUM ex2>
+        #nodyna <ID:send-219> <SD MODERATE (array)>
         style.send(lookup)
       end.compact.join("\n")
     end
@@ -158,7 +158,7 @@ class SiteCustomization < ActiveRecord::Base
   end
 
   def stylesheet_link_tag(target=:desktop)
-    #nodyna <ID:send-220> <send MEDIUM ex3>
+    #nodyna <ID:send-220> <SD MODERATE (change-prone variables)>
     content = self.send(SiteCustomization.field_for_target(target))
     SiteCustomization.stylesheet_link_tag(key, target, content)
   end

@@ -5,7 +5,7 @@
 module Diaspora
   module Commentable
     def self.included(model)
-      #nodyna <ID:instance_eval-4> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-4> <IEV COMPLEX (private access)>
       model.instance_eval do
         has_many :comments, :as => :commentable, :dependent => :destroy
       end

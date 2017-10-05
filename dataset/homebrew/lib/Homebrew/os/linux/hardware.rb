@@ -53,7 +53,7 @@ module LinuxCPUs
   end
 
   %w[aes altivec avx avx2 lm sse3 ssse3 sse4 sse4_2].each do |flag|
-    #nodyna <ID:define_method-8> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-8> <DM MODERATE (array)>
     define_method(flag + "?") { flags.include? flag }
   end
   alias_method :is_64_bit?, :lm?

@@ -228,7 +228,7 @@ class TkcTag<TkObject
 
   CTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-34> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-34> <IEV MODERATE (method definition)>
   (Tk_CanvasTag_ID = ['ctag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -342,7 +342,7 @@ class TkcTagString<TkcTag
         obj = CTagID_TBL[parent.path][name]
       else
         # super(parent, name, *args)
-        #nodyna <ID:instance_eval-35> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-35> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @c = parent
           @cpath = parent.path
@@ -416,7 +416,7 @@ class TkcTagCurrent<TkcTagString
 end
 
 class TkcGroup<TkcTag
-  #nodyna <ID:instance_eval-36> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-36> <IEV MODERATE (method definition)>
   (Tk_cGroup_ID = ['tkcg'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end

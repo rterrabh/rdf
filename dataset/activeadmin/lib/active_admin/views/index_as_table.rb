@@ -207,7 +207,7 @@ module ActiveAdmin
 
         table_for collection, table_options do |t|
           table_config_block = page_presenter.block || default_table
-          #nodyna <ID:instance_exec-28> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-28> <IEX COMPLEX (block with parameters)>
           instance_exec(t, &table_config_block)
         end
       end
@@ -309,14 +309,14 @@ module ActiveAdmin
             if dropdown
               dropdown_menu dropdown_name do
                 defaults(resource) if defaults
-                #nodyna <ID:instance_exec-29> <instance_exec VERY HIGH ex2>
+                #nodyna <ID:instance_exec-29> <IEX COMPLEX (block with parameters)>
                 instance_exec(resource, &block) if block_given?
               end
             else
               table_actions do
                 defaults(resource, css_class: :member_link) if defaults
                 if block_given?
-                  #nodyna <ID:instance_exec-30> <instance_exec VERY HIGH ex2>
+                  #nodyna <ID:instance_exec-30> <IEX COMPLEX (block with parameters)>
                   block_result = instance_exec(resource, &block)
                   text_node block_result unless block_result.is_a? Arbre::Element
                 end

@@ -93,7 +93,7 @@ module ActiveRecord
             ensure_mutable
 
             through_record = through_association.build(*options_for_through_record)
-            #nodyna <ID:send-126> <send VERY HIGH ex3>
+            #nodyna <ID:send-126> <SD COMPLEX (change-prone variables)>
             through_record.send("#{source_reflection.name}=", record)
             through_record
           end
@@ -123,10 +123,10 @@ module ActiveRecord
           inverse = source_reflection.inverse_of
           if inverse
             if inverse.collection?
-              #nodyna <ID:send-127> <send VERY HIGH ex3>
+              #nodyna <ID:send-127> <SD COMPLEX (change-prone variables)>
               record.send(inverse.name) << build_through_record(record)
             elsif inverse.has_one?
-              #nodyna <ID:send-128> <send VERY HIGH ex3>
+              #nodyna <ID:send-128> <SD COMPLEX (change-prone variables)>
               record.send("#{inverse.name}=", build_through_record(record))
             end
           end
@@ -201,7 +201,7 @@ module ActiveRecord
           candidates = Array.wrap(through_association.target)
           candidates.find_all do |c|
             attributes.all? do |key, value|
-              #nodyna <ID:send-129> <send VERY HIGH ex2>
+              #nodyna <ID:send-129> <SD COMPLEX (array)>
               c.public_send(key) == value
             end
           end

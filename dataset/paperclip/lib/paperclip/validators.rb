@@ -44,9 +44,9 @@ module Paperclip
               validator_options = {} if validator_options == true
               conditional_options = options.slice(:if, :unless)
               Array.wrap(validator_options).each do |local_options|
-                #nodyna <ID:const_get-3> <const_get VERY HIGH ex2>
+                #nodyna <ID:const_get-3> <CG COMPLEX (array)>
                 method_name = Paperclip::Validators.const_get(constant.to_s).helper_method_name
-                #nodyna <ID:send-2> <send VERY HIGH ex3>
+                #nodyna <ID:send-2> <SD COMPLEX (change-prone variables)>
                 send(method_name, attributes, local_options.merge(conditional_options))
               end
             end
@@ -66,7 +66,7 @@ module Paperclip
       def create_validating_before_filter(attribute, validator_class, options)
         if_clause = options.delete(:if)
         unless_clause = options.delete(:unless)
-        #nodyna <ID:send-3> <send VERY HIGH ex3>
+        #nodyna <ID:send-3> <SD COMPLEX (change-prone variables)>
         send(:"before_#{attribute}_post_process", :if => if_clause, :unless => unless_clause) do |*args|
           validator_class.new(options.dup).validate(self)
         end

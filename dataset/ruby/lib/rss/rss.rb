@@ -711,19 +711,19 @@ EOC
       end
 
       def inherited(klass)
-        #nodyna <ID:const_set-52> <const_set VERY LOW ex1>
+        #nodyna <ID:const_set-52> <CS TRIVIAL (static values)>
         klass.const_set(:MUST_CALL_VALIDATORS, {})
-        #nodyna <ID:const_set-53> <const_set VERY LOW ex1>
+        #nodyna <ID:const_set-53> <CS TRIVIAL (static values)>
         klass.const_set(:MODELS, [])
-        #nodyna <ID:const_set-54> <const_set VERY LOW ex1>
+        #nodyna <ID:const_set-54> <CS TRIVIAL (static values)>
         klass.const_set(:GET_ATTRIBUTES, [])
-        #nodyna <ID:const_set-55> <const_set VERY LOW ex1>
+        #nodyna <ID:const_set-55> <CS TRIVIAL (static values)>
         klass.const_set(:HAVE_CHILDREN_ELEMENTS, [])
-        #nodyna <ID:const_set-56> <const_set VERY LOW ex1>
+        #nodyna <ID:const_set-56> <CS TRIVIAL (static values)>
         klass.const_set(:TO_ELEMENT_METHODS, [])
-        #nodyna <ID:const_set-57> <const_set VERY LOW ex1>
+        #nodyna <ID:const_set-57> <CS TRIVIAL (static values)>
         klass.const_set(:NEED_INITIALIZE_VARIABLES, [])
-        #nodyna <ID:const_set-58> <const_set VERY LOW ex1>
+        #nodyna <ID:const_set-58> <CS TRIVIAL (static values)>
         klass.const_set(:PLURAL_FORMS, {})
 
         tag_name = klass.name.split(/::/).last

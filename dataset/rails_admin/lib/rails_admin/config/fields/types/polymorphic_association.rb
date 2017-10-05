@@ -20,7 +20,7 @@ module RailsAdmin
           end
 
           register_instance_option :formatted_value do
-            #nodyna <ID:send-22> <send VERY HIGH ex3>
+            #nodyna <ID:send-22> <SD COMPLEX (change-prone variables)>
             (o = value) && o.send(RailsAdmin.config(o).object_label_method)
           end
 
@@ -50,7 +50,7 @@ module RailsAdmin
             return [] if type.blank?
             config = RailsAdmin.config(type)
             config.abstract_model.all.collect do |object|
-              #nodyna <ID:send-23> <send VERY HIGH ex2>
+              #nodyna <ID:send-23> <SD COMPLEX (array)>
               [object.send(config.object_label_method), object.id]
             end
           end
@@ -74,7 +74,7 @@ module RailsAdmin
 
           # Reader for field's value
           def value
-            #nodyna <ID:send-24> <send VERY HIGH ex3>
+            #nodyna <ID:send-24> <SD COMPLEX (change-prone variables)>
             bindings[:object].send(association.name)
           end
         end

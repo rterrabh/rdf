@@ -24,7 +24,7 @@ module Paperclip
 
       if defined?(ActiveRecord)
         Paperclip.options[:logger] = ActiveRecord::Base.logger
-        #nodyna <ID:send-43> <send VERY LOW ex1>
+        #nodyna <ID:send-43> <SD TRIVIAL (public methods)>
         ActiveRecord::Base.send(:include, Paperclip::Glue)
       end
     end

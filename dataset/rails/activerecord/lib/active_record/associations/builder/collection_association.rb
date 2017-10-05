@@ -35,7 +35,7 @@ module ActiveRecord::Associations::Builder
     def define_extensions(model)
       if @mod
         extension_module_name = "#{model.name.demodulize}#{name.to_s.camelize}AssociationExtension"
-        #nodyna <ID:const_set-2> <const_set VERY HIGH ex3>
+        #nodyna <ID:const_set-2> <CS COMPLEX (change-prone variable)>
         model.parent.const_set(extension_module_name, @mod)
       end
     end
@@ -48,16 +48,16 @@ module ActiveRecord::Associations::Builder
       callbacks = Array(options[callback_name.to_sym]).map do |callback|
         case callback
         when Symbol
-          #nodyna <ID:send-118> <send MEDIUM ex3>
+          #nodyna <ID:send-118> <SD MODERATE (change-prone variables)>
           ->(method, owner, record) { owner.send(callback, record) }
         when Proc
           ->(method, owner, record) { callback.call(owner, record) }
         else
-          #nodyna <ID:send-119> <send VERY HIGH ex3>
+          #nodyna <ID:send-119> <SD COMPLEX (change-prone variables)>
           ->(method, owner, record) { callback.send(method, owner, record) }
         end
       end
-      #nodyna <ID:send-120> <send VERY HIGH ex3>
+      #nodyna <ID:send-120> <SD COMPLEX (change-prone variables)>
       model.send "#{full_callback_name}=", callbacks
     end
 
@@ -87,10 +87,10 @@ module ActiveRecord::Associations::Builder
     def wrap_scope(scope, mod)
       if scope
         if scope.arity > 0
-          #nodyna <ID:instance_exec-10> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-10> <IEX COMPLEX (block with parameters)>
           proc { |owner| instance_exec(owner, &scope).extending(mod) }
         else
-          #nodyna <ID:instance_exec-11> <instance_exec VERY HIGH ex1>
+          #nodyna <ID:instance_exec-11> <IEX COMPLEX (block without parameters)>
           proc { instance_exec(&scope).extending(mod) }
         end
       else

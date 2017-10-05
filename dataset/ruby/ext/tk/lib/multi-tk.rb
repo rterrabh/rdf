@@ -29,7 +29,7 @@ class << TclTkIp
       raise SecurityError, 'only ThreadGroup::Default can call TclTkIp.new'
     end
     obj = __new__(*args)
-    #nodyna <ID:instance_eval-6> <instance_eval VERY HIGH ex1>
+    #nodyna <ID:instance_eval-6> <IEV COMPLEX (private access)>
     obj.instance_eval{
       @force_default_encoding ||= TkUtil.untrust([false])
       @encoding ||= TkUtil.untrust([nil])
@@ -88,7 +88,7 @@ class MultiTkIp
   WITH_ENCODING = defined?(::Encoding.default_external)
   #WITH_ENCODING = Object.const_defined?(:Encoding) && ::Encoding.class == Class
 
-  #nodyna <ID:instance_eval-7> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-7> <IEV MODERATE (method definition)>
   (@@SLAVE_IP_ID = ['slave'.freeze, TkUtil.untrust('0')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -356,9 +356,9 @@ class MultiTkIp
         name = _fromUTF8(name)
         begin
           # ip._eval_without_enc("#{name} eval {foreach i [after info] {after cancel $i}}")
-          #nodyna <ID:eval-8> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-8> <EV COMPLEX (change-prone variables)>
           after_ids = ip._eval_without_enc("#{name} eval {after info}")
-          #nodyna <ID:eval-9> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-9> <EV COMPLEX (change-prone variables)>
           ip._eval_without_enc("#{name} eval {foreach i {#{after_ids}} {after cancel $i}}")
         rescue Exception
         end
@@ -719,7 +719,7 @@ class MultiTkIp
   end
 
   @@DEFAULT_MASTER = self.allocate
-  #nodyna <ID:instance_eval-8> <instance_eval MEDIUM ex1>
+  #nodyna <ID:instance_eval-8> <IEV MODERATE (private access)>
   @@DEFAULT_MASTER.instance_eval{
     @tk_windows = TkUtil.untrust({})
 
@@ -811,7 +811,7 @@ class MultiTkIp
       end
     end
 
-    #nodyna <ID:instance_eval-9> <instance_eval VERY HIGH ex1>
+    #nodyna <ID:instance_eval-9> <IEV COMPLEX (private access)>
     @interp.instance_eval{
       @force_default_encoding ||= TkUtil.untrust([false])
       @encoding ||= TkUtil.untrust([nil])
@@ -905,7 +905,7 @@ class MultiTkIp
           Thread.stop
         rescue @assign_request=>req
           begin
-            #nodyna <ID:instance_eval-10> <instance_eval VERY HIGH ex1>
+            #nodyna <ID:instance_eval-10> <IEV COMPLEX (private access)>
             req.ret[0] = req.target.instance_eval{
               @cmd_receiver, @receiver_watchdog =
                 _create_receiver_and_watchdog(@safe_level[0])
@@ -1199,7 +1199,7 @@ class MultiTkIp
     # safe interpreter
     ip_name = _create_slave_ip_name
     slave_ip = @interp.create_slave(ip_name, true)
-    #nodyna <ID:instance_eval-12> <instance_eval VERY HIGH ex1>
+    #nodyna <ID:instance_eval-12> <IEV COMPLEX (private access)>
     slave_ip.instance_eval{
       @force_default_encoding ||= TkUtil.untrust([false])
       @encoding ||= TkUtil.untrust([nil])
@@ -1248,7 +1248,7 @@ class MultiTkIp
 
     ip_name = _create_slave_ip_name
     slave_ip = @interp.create_slave(ip_name, false)
-    #nodyna <ID:instance_eval-13> <instance_eval VERY HIGH ex1>
+    #nodyna <ID:instance_eval-13> <IEV COMPLEX (private access)>
     slave_ip.instance_eval{
       @force_default_encoding ||= TkUtil.untrust([false])
       @encoding ||= TkUtil.untrust([nil])
@@ -1324,7 +1324,7 @@ class MultiTkIp
       # create master-ip
       unless WITH_RUBY_VM
         @interp = TclTkIp.new(name, _keys2opts(tk_opts))
-        #nodyna <ID:instance_eval-14> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-14> <IEV MODERATE (private access)>
         @interp.instance_eval{
           @force_default_encoding ||= TkUtil.untrust([false])
           @encoding ||= TkUtil.untrust([nil])
@@ -1406,7 +1406,7 @@ class MultiTkIp
         end
       end
 
-      #nodyna <ID:instance_eval-16> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-16> <IEV COMPLEX (private access)>
       @interp.instance_eval{
         @force_default_encoding ||= TkUtil.untrust([false])
         @encoding ||= TkUtil.untrust([nil])
@@ -1855,7 +1855,7 @@ class MultiTkIp
     @@TK_TABLE_LIST << obj
     obj.instance_variable_set(:@id, id)
     obj.instance_variable_set(:@mutex, Mutex.new)
-    #nodyna <ID:instance_eval-18> <instance_eval MEDIUM ex2>
+    #nodyna <ID:instance_eval-18> <IEV MODERATE (method definition)>
     obj.instance_eval{
       def self.mutex
         @mutex
@@ -2390,7 +2390,7 @@ end
 
     eval_proc_core(true,
                    proc{|safe|
-                     #nodyna <ID:eval-14> <eval VERY HIGH ex2>
+                     #nodyna <ID:eval-14> <EV COMPLEX (change-prone variables)>
                      Kernel.eval("$SAFE=#{safe} if $SAFE < #{safe};" << cmd,
                                  *eval_args)
                    })
@@ -2405,7 +2405,7 @@ end
     Thread.new{
       eval_proc_core(true,
                      proc{|safe|
-                       #nodyna <ID:eval-15> <eval VERY HIGH ex2>
+                       #nodyna <ID:eval-15> <EV COMPLEX (change-prone variables)>
                        Kernel.eval("$SAFE=#{safe} if $SAFE < #{safe};" << cmd,
                                    *eval_args)
                      })
@@ -2478,7 +2478,7 @@ class << MultiTkIp
 
   def eval(*args, &blk)
     # class ==> interp object
-    #nodyna <ID:eval-20> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-20> <EV COMPLEX (change-prone variables)>
     __getip.eval(*args, &blk)
   end
   def bg_eval(*args, &blk)

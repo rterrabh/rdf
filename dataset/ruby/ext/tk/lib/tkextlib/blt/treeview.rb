@@ -1044,7 +1044,7 @@ class Tk::BLT::Treeview::Node < TkObject
 
   TreeNodeID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-70> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-70> <IEV MODERATE (method definition)>
   (TreeNode_ID = ['blt_treeview_node'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -1066,7 +1066,7 @@ class Tk::BLT::Treeview::Node < TkObject
             # self.new(tree, nil, nil, 'node'=>Integer(id))
             unless (tk_call(@tpath, 'get', id)).empty?
               id = Integer(id)
-              #nodyna <ID:instance_eval-71> <instance_eval MEDIUM ex1>
+              #nodyna <ID:instance_eval-71> <IEV MODERATE (private access)>
               (obj = self.allocate).instance_eval{
                 @parent = @tree = tree
                 @tpath = @parent.path
@@ -1106,7 +1106,7 @@ class Tk::BLT::Treeview::Node < TkObject
       end
 
       #super(tree, pos, parent, keys)
-      #nodyna <ID:instance_eval-72> <instance_eval MEDIUM ex1>
+      #nodyna <ID:instance_eval-72> <IEV MODERATE (private access)>
       (obj = self.allocate).instance_eval{
         initialize(tree, pos, parent, keys)
         TreeNodeID_TBL[tpath][@id] = self
@@ -1168,7 +1168,7 @@ class Tk::BLT::Treeview::Tag < TkObject
 
   TreeTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-73> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-73> <IEV MODERATE (method definition)>
   (TreeTag_ID = ['blt_treeview_tag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -1187,7 +1187,7 @@ class Tk::BLT::Treeview::Tag < TkObject
           TreeTagID_TBL[tpath][name]
         else
           #self.new(tree, name)
-          #nodyna <ID:instance_eval-74> <instance_eval MEDIUM ex1>
+          #nodyna <ID:instance_eval-74> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             @parent = @tree = tree
             @tpath = @parent.path
@@ -1206,7 +1206,7 @@ class Tk::BLT::Treeview::Tag < TkObject
   def self.new_by_name(tree, name, *ids)
     TreeTagID_TBL.mutex.synchronize{
       unless (obj = TreeTagID_TBL[tree.path][name])
-        #nodyna <ID:instance_eval-75> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-75> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           initialize(tree, name, ids)
           TreeTagID_TBL[@tpath] = {} unless TreeTagID_TBL[@tpath]
@@ -1219,7 +1219,7 @@ class Tk::BLT::Treeview::Tag < TkObject
 
   def self.new(tree, *ids)
     TreeTagID_TBL.mutex.synchronize{
-      #nodyna <ID:instance_eval-76> <instance_eval MEDIUM ex1>
+      #nodyna <ID:instance_eval-76> <IEV MODERATE (private access)>
       (obj = self.allocate).instance_eval{
         if tree.kind_of?(Array)
           initialize(tree[0], tree[1], ids)

@@ -162,9 +162,9 @@ module JsLocaleHelper
     ctx.load(Rails.root + 'lib/javascripts/messageformat.js')
     path = Rails.root + "lib/javascripts/locale/#{locale}.js"
     ctx.load(path) if File.exists?(path)
-    #nodyna <ID:eval-26> <eval VERY HIGH ex6>
+    #nodyna <ID:eval-26> <EV COMPLEX (variable definition)>
     ctx.eval("mf = new MessageFormat('#{locale}');")
-    #nodyna <ID:eval-27> <eval VERY HIGH ex3>
+    #nodyna <ID:eval-27> <EV COMPLEX (private methods)>
     ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
 
   rescue V8::Error => e

@@ -23,7 +23,7 @@ module ActiveSupport
     PROCESSING_INSTRUCTION_NODE TEXT_NODE}
 
     node_type_map = {}
-    #nodyna <ID:send-225> <send MEDIUM ex2>
+    #nodyna <ID:send-225> <SD MODERATE (array)>
     NODE_TYPE_NAMES.each { |type| node_type_map[Node.send(type)] = type }
 
     # Parse an XML Document string or IO into a simple hash using Java's jdom.

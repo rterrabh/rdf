@@ -217,10 +217,10 @@ module ActionDispatch
 
 
           if options.empty?
-            #nodyna <ID:send-85> <send VERY HIGH ex3>
+            #nodyna <ID:send-85> <SD COMPLEX (change-prone variables)>
             recipient.send(method, *args)
           else
-            #nodyna <ID:send-86> <send VERY HIGH ex3>
+            #nodyna <ID:send-86> <SD COMPLEX (change-prone variables)>
             recipient.send(method, *args, options)
           end
         end
@@ -238,7 +238,7 @@ module ActionDispatch
         end
 
         def handle_string_call(target, str)
-          #nodyna <ID:send-87> <send VERY HIGH ex3>
+          #nodyna <ID:send-87> <SD COMPLEX (change-prone variables)>
           target.send get_method_for_string str
         end
 
@@ -247,7 +247,7 @@ module ActionDispatch
         end
 
         def handle_class_call(target, klass)
-          #nodyna <ID:send-88> <send VERY HIGH ex3>
+          #nodyna <ID:send-88> <SD COMPLEX (change-prone variables)>
           target.send get_method_for_class klass
         end
 
@@ -269,7 +269,7 @@ module ActionDispatch
 
         def handle_model_call(target, model)
           method, args = handle_model model
-          #nodyna <ID:send-89> <send VERY HIGH ex3>
+          #nodyna <ID:send-89> <SD COMPLEX (change-prone variables)>
           target.send(method, *args)
         end
 

@@ -97,7 +97,7 @@ module Digest
     end
 
     def initialize_copy(other) # :nodoc:
-      #nodyna <ID:instance_eval-143> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-143> <IEV COMPLEX (private access)>
       @sha2 = other.instance_eval { @sha2.clone }
     end
 

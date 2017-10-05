@@ -14,7 +14,7 @@ module Rails
          empty_directory_with_keep_file create_file chmod shebang).each do |method|
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{method}(*args, &block)
-            #nodyna <ID:send-281> <send MEDIUM ex3>
+            #nodyna <ID:send-281> <SD MODERATE (change-prone variables)>
             @generator.send(:#{method}, *args, &block)
           end
         RUBY
@@ -22,7 +22,7 @@ module Rails
 
       # TODO: Remove once this is fully in place
       def method_missing(meth, *args, &block)
-        #nodyna <ID:send-281> <send VERY HIGH ex3>
+        #nodyna <ID:send-281> <SD COMPLEX (change-prone variables)>
         @generator.send(meth, *args, &block)
       end
   end

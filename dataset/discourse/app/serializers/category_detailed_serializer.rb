@@ -72,10 +72,10 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def count_with_subcategories(method)
-    #nodyna <ID:send-142> <send MEDIUM ex3>
+    #nodyna <ID:send-142> <SD MODERATE (change-prone variables)>
     count = object.send(method) || 0
     object.subcategories.each do |category|
-      #nodyna <ID:send-143> <send MEDIUM ex2>
+      #nodyna <ID:send-143> <SD MODERATE (array)>
       count += (category.send(method) || 0)
     end
     count

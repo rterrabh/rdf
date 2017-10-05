@@ -11,7 +11,7 @@ class TkFont
 
   TkCommandNames = ['font'.freeze].freeze
 
-  #nodyna <ID:instance_eval-47> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-47> <IEV MODERATE (method definition)>
   (Tk_FontID = ["@font".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -455,7 +455,7 @@ class TkFont
         # create dummy
         # TkFont.new(nil, nil).call_font_configure([path, key], *args)
         dummy_fnt = TkFont.allocate
-        #nodyna <ID:instance_eval-48> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-48> <IEV EASY (private access)>
         dummy_fnt.instance_eval{ init_dummy_fontobj() }
         dummy_fnt
       else
@@ -503,7 +503,7 @@ class TkFont
         # create dummy
         # TkFont.new(nil, nil).call_font_configure([path, key], *args)
         dummy_fnt = TkFont.allocate
-        #nodyna <ID:instance_eval-49> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-49> <IEV EASY (private access)>
         dummy_fnt.instance_eval{ init_dummy_fontobj() }
         dummy_fnt
       else
@@ -2247,7 +2247,7 @@ class TkNamedFont < TkFont
     obj = nil
     Tk_FontNameTBL.mutex.synchronize{
       unless (obj = Tk_FontNameTBL[name])
-        #nodyna <ID:instance_eval-50> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-50> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @id = @compoundfont = name.to_s
           @latinfont = nil
@@ -2257,7 +2257,7 @@ class TkNamedFont < TkFont
         }
       end
     }
-    #nodyna <ID:instance_eval-51> <instance_eval MEDIUM ex1>
+    #nodyna <ID:instance_eval-51> <IEV MODERATE (private access)>
     obj.instance_eval{ initialize(name, keys) }
     obj
   end

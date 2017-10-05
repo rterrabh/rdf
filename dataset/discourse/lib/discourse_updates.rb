@@ -74,7 +74,7 @@ module DiscourseUpdates
     end
 
     ['last_installed_version', 'latest_version', 'missing_versions_count', 'critical_updates_available'].each do |name|
-      #nodyna <ID:eval-31> <eval MEDIUM ex1>
+      #nodyna <ID:eval-31> <EV MODERATE (method definition)>
       eval "define_method :#{name}= do |arg|
         $redis.set #{name}_key, arg
       end"

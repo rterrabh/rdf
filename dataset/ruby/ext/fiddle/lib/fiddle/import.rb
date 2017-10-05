@@ -305,7 +305,7 @@ module Fiddle
     def bind_function(name, ctype, argtype, call_type = nil, &block)
       abi = CALL_TYPE_TO_ABI[call_type]
       closure = Class.new(Fiddle::Closure) {
-        #nodyna <ID:define_method-14> <define_method VERY HIGH ex2>
+        #nodyna <ID:define_method-14> <DM COMPLEX (events)>
         define_method(:call, block)
       }.new(ctype, argtype, abi)
 

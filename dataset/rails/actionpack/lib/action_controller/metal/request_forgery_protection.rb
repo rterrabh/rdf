@@ -109,7 +109,7 @@ module ActionController #:nodoc:
       private
 
       def protection_method_class(name)
-        #nodyna <ID:const_get-3> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-3> <CG COMPLEX (change-prone variable)>
         ActionController::RequestForgeryProtection::ProtectionMethods.const_get(name.to_s.classify)
       rescue NameError
         raise ArgumentError, 'Invalid request forgery protection method, use :null_session, :exception, or :reset_session'

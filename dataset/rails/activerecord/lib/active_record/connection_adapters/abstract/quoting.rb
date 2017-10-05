@@ -83,7 +83,7 @@ module ActiveRecord
           zone_conversion_method = ActiveRecord::Base.default_timezone == :utc ? :getutc : :getlocal
 
           if value.respond_to?(zone_conversion_method)
-            #nodyna <ID:send-139> <send MEDIUM ex3>
+            #nodyna <ID:send-139> <SD MODERATE (change-prone variables)>
             value = value.send(zone_conversion_method)
           end
         end

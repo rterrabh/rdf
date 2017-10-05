@@ -87,10 +87,10 @@ module ActiveAdmin
         if attr.is_a?(Proc)
           attr.call(record)
         elsif attr =~ /\A(.+)_id\z/ && reflection_for(record.class, $1.to_sym)
-          #nodyna <ID:send-61> <send VERY HIGH ex3>
+          #nodyna <ID:send-61> <SD COMPLEX (change-prone variables)>
           record.public_send $1
         elsif record.respond_to? attr
-          #nodyna <ID:send-62> <send VERY HIGH ex3>
+          #nodyna <ID:send-62> <SD COMPLEX (change-prone variables)>
           record.public_send attr
         elsif record.respond_to? :[]
           record[attr]

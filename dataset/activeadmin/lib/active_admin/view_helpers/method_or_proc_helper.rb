@@ -15,10 +15,10 @@ module MethodOrProcHelper
   def call_method_or_exec_proc(symbol_or_proc, *args)
     case symbol_or_proc
     when Symbol, String
-      #nodyna <ID:send-18> <send VERY HIGH ex3>
+      #nodyna <ID:send-18> <SD COMPLEX (change-prone variables)>
       send(symbol_or_proc, *args)
     when Proc
-      #nodyna <ID:instance_exec-11> <instance_exec VERY HIGH ex2>
+      #nodyna <ID:instance_exec-11> <IEX COMPLEX (block with parameters)>
       instance_exec(*args, &symbol_or_proc)
     end
   end
@@ -55,11 +55,11 @@ module MethodOrProcHelper
 
     case symbol_or_proc
     when Symbol, String
-      #nodyna <ID:send-19> <send VERY HIGH ex3>
+      #nodyna <ID:send-19> <SD COMPLEX (change-prone variables)>
       receiver.public_send symbol_or_proc.to_sym, *args
     when Proc
       if options[:exec]
-        #nodyna <ID:instance_exec-12> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-12> <IEX COMPLEX (block with parameters)>
         instance_exec(receiver, *args, &symbol_or_proc)
       else
         symbol_or_proc.call(receiver, *args)
@@ -87,10 +87,10 @@ module MethodOrProcHelper
     context ||= self # default to `self`
     case obj
     when Proc
-      #nodyna <ID:instance_exec-13> <instance_exec VERY HIGH ex2>
+      #nodyna <ID:instance_exec-13> <IEX COMPLEX (block with parameters)>
       context.instance_exec *args, &obj
     when Symbol
-      #nodyna <ID:send-20> <send VERY HIGH ex3>
+      #nodyna <ID:send-20> <SD COMPLEX (change-prone variables)>
       context.public_send obj, *args
     else
       obj

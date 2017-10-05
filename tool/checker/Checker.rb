@@ -27,7 +27,7 @@ class Checker
   end
 
   def self.getDefaultOccurences(dynamicFeature, line)
-    alphabet = "_abcdefghijklmnopqrstuvwxyz"
+    alphabet = "_abcdefghijklmnopqrstuvwxyz123456789"
     offset = 0
     occurences = 0
     index = 0

@@ -47,7 +47,7 @@ class CompilerFailure
   def initialize(name, version, &block)
     @name = name
     @version = version
-    #nodyna <ID:instance_eval-7> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-7> <IEV COMPLEX (block execution)>
     instance_eval(&block) if block_given?
   end
 
@@ -138,7 +138,7 @@ class CompilerSelector
     when GNU_GCC_REGEXP
       versions.non_apple_gcc_version(name)
     else
-      #nodyna <ID:send-27> <send MEDIUM ex3>
+      #nodyna <ID:send-27> <SD MODERATE (change-prone variables)>
       versions.send("#{name}_build_version")
     end
   end

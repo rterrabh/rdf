@@ -120,7 +120,7 @@ class IssuableFinder
 
     if project
       if Ability.abilities.allowed?(current_user, :read_project, project)
-        #nodyna <ID:send-124> <send VERY HIGH ex3>
+        #nodyna <ID:send-124> <SD COMPLEX (change-prone variables)>
         project.send(table_name)
       else
         []

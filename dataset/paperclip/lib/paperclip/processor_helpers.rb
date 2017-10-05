@@ -9,7 +9,7 @@ module Paperclip
       else
         name = name.to_s.camelize
         load_processor(name) unless Paperclip.const_defined?(name)
-        #nodyna <ID:const_get-2> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-2> <CG COMPLEX (change-prone variable)>
         processor = Paperclip.const_get(name)
         @known_processors[name.to_s] = processor
       end

@@ -29,7 +29,7 @@ module ActiveRecord
           def define_method_attribute=(name)
             method = WriterMethodCache[name]
             generated_attribute_methods.module_eval {
-              #nodyna <ID:define_method-33> <define_method VERY HIGH ex2>
+              #nodyna <ID:define_method-33> <DM COMPLEX (events)>
               define_method "#{name}=", method
             }
           end

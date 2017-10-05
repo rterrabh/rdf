@@ -340,7 +340,7 @@ module ActiveSupport
 
           # Redefine the === method so we can write shorter rules for grapheme cluster breaks
           @boundary.each do |k,_|
-            #nodyna <ID:instance_eval-12> <instance_eval VERY HIGH ex2>
+            #nodyna <ID:instance_eval-12> <IEV COMPLEX (method definition)>
             @boundary[k].instance_eval do
               def ===(other)
                 detect { |i| i === other } ? true : false
@@ -371,7 +371,7 @@ module ActiveSupport
         database.codepoints
         string.each_codepoint.map do |codepoint|
           cp = database.codepoints[codepoint]
-          #nodyna <ID:send-273> <send MEDIUM ex3>
+          #nodyna <ID:send-273> <SD MODERATE (change-prone variables)>
           if cp and (ncp = cp.send(mapping)) and ncp > 0
             ncp
           else

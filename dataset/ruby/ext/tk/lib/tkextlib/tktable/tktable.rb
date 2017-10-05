@@ -131,7 +131,7 @@ class Tk::TkTable::CellTag
 
   CellTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-64> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-64> <IEV MODERATE (method definition)>
   (CellTag_ID = ['tktbl:celltag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -232,7 +232,7 @@ class Tk::TkTable::NamedCellTag < Tk::TkTable::CellTag
         obj = CellTagID_TBL[parent.path][name]
       else
         #super(parent, name, keys)
-        #nodyna <ID:instance_eval-65> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-65> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @parent = @t = parent
           @tpath = parent.path

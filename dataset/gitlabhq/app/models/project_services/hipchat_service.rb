@@ -57,7 +57,7 @@ class HipchatService < Service
     return unless supported_events.include?(data[:object_kind])
     message = create_message(data)
     return unless message.present?
-    #nodyna <ID:send-79> <send VERY HIGH ex4>
+    #nodyna <ID:send-79> <SD COMPLEX (private methods)>
     gate[room].send('GitLab', message, message_options)
   end
 

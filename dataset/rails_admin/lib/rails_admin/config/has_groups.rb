@@ -10,7 +10,7 @@ module RailsAdmin
       def group(name, &block)
         group = parent.groups.detect { |g| name == g.name }
         group ||= (parent.groups << RailsAdmin::Config::Fields::Group.new(self, name)).last
-        #nodyna <ID:instance_eval-9> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-9> <IEV COMPLEX (block execution)>
         group.tap { |g| g.section = self }.instance_eval(&block) if block
         group
       end

@@ -454,10 +454,10 @@ module ActionView
       def option_groups_from_collection_for_select(collection, group_method, group_label_method, option_key_method, option_value_method, selected_key = nil)
         collection.map do |group|
           option_tags = options_from_collection_for_select(
-            #nodyna <ID:send-58> <send VERY HIGH ex3>
+            #nodyna <ID:send-58> <SD COMPLEX (change-prone variables)>
             group.send(group_method), option_key_method, option_value_method, selected_key)
 
-          #nodyna <ID:send-59> <send VERY HIGH ex3>
+          #nodyna <ID:send-59> <SD COMPLEX (change-prone variables)>
           content_tag(:optgroup, option_tags, label: group.send(group_label_method))
         end.join.html_safe
       end
@@ -750,7 +750,7 @@ module ActionView
         def extract_values_from_collection(collection, value_method, selected)
           if selected.is_a?(Proc)
             collection.map do |element|
-              #nodyna <ID:send-60> <send VERY HIGH ex3>
+              #nodyna <ID:send-60> <SD COMPLEX (change-prone variables)>
               element.send(value_method) if selected.call(element)
             end.compact
           else
@@ -759,7 +759,7 @@ module ActionView
         end
 
         def value_for_collection(item, value)
-          #nodyna <ID:send-61> <send VERY HIGH ex3>
+          #nodyna <ID:send-61> <SD COMPLEX (change-prone variables)>
           value.respond_to?(:call) ? value.call(item) : item.send(value)
         end
 

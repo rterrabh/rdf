@@ -12,7 +12,7 @@ module ActiveAdmin
 
     # Runs the registration block inside this object
     def run_registration_block(&block)
-      #nodyna <ID:instance_exec-10> <instance_exec VERY HIGH ex1>
+      #nodyna <ID:instance_exec-10> <IEX COMPLEX (block without parameters)>
       instance_exec &block if block_given?
     end
 

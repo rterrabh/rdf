@@ -5,8 +5,8 @@ module Spree
     end
 
     def self.add_search_scope(name, &block)
-      #nodyna <ID:send-84> <send MEDIUM ex4>
-      #nodyna <ID:define_method-5> <define_method MEDIUM ex2>
+      #nodyna <ID:send-84> <SD MODERATE (private methods)>
+      #nodyna <ID:define_method-5> <DM MODERATE (events)>
       self.singleton_class.send(:define_method, name.to_sym, &block)
       search_scopes << name.to_sym
     end

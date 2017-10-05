@@ -465,7 +465,7 @@ class Checks
   end
 
   (Keg::TOP_LEVEL_DIRECTORIES + ["lib/pkgconfig"]).each do |d|
-    #nodyna <ID:define_method-9> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-9> <DM MODERATE (array)>
     define_method("check_access_#{d.sub("/", "_")}") do
       dir = HOMEBREW_PREFIX.join(d)
       if dir.exist? && !dir.writable_real? then <<-EOS.undent
@@ -1292,7 +1292,7 @@ module Homebrew
     first_warning = true
     methods.each do |method|
       begin
-        #nodyna <ID:send-13> <send VERY HIGH ex3>
+        #nodyna <ID:send-13> <SD COMPLEX (change-prone variables)>
         out = checks.send(method)
       rescue NoMethodError
         Homebrew.failed = true

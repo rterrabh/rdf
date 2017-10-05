@@ -39,7 +39,7 @@ module Spree
       end
 
       def eval_block(&block)
-        #nodyna <ID:send-16> <send VERY LOW ex1>
+        #nodyna <ID:send-16> <SD TRIVIAL (public methods)>
         Spree::Core::Engine.routes.send :eval_block, block
       end
     end

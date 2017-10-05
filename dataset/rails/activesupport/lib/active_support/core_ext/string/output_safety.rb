@@ -28,7 +28,7 @@ class ERB
 
     module_function :h
 
-    #nodyna <ID:send-239> <send VERY HIGH ex4>
+    #nodyna <ID:send-239> <SD COMPLEX (private methods)>
     singleton_class.send(:remove_method, :html_escape)
     module_function :html_escape
 

@@ -58,7 +58,7 @@ module RailsAdmin
         end
 
         def read_only?
-          #nodyna <ID:instance_eval-21> <instance_eval VERY HIGH ex3>
+          #nodyna <ID:instance_eval-21> <IEV COMPLEX (block execution)>
           (klass.all.instance_eval(&scope).readonly_value if scope.is_a? Proc) ||
             association.nested? ||
             false

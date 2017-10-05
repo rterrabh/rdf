@@ -125,7 +125,7 @@ module ActiveRecord
         end
 
         def reflection_scope
-          #nodyna <ID:instance_exec-8> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-8> <IEX COMPLEX (block with parameters)>
           @reflection_scope ||= reflection.scope ? klass.unscoped.instance_exec(nil, &reflection.scope) : klass.unscoped
         end
 

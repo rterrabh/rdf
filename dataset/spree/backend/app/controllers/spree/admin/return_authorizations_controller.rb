@@ -8,7 +8,7 @@ module Spree
       update.fails  :load_form_data
 
       def fire
-        #nodyna <ID:send-25> <send VERY HIGH ex3>
+        #nodyna <ID:send-25> <SD COMPLEX (change-prone variables)>
         @return_authorization.send("#{params[:e]}!")
         flash[:success] = Spree.t(:return_authorization_updated)
         redirect_to :back

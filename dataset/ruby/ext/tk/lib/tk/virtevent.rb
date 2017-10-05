@@ -9,7 +9,7 @@ class TkVirtualEvent<TkObject
 
   TkCommandNames = ['event'.freeze].freeze
 
-  #nodyna <ID:instance_eval-52> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-52> <IEV MODERATE (method definition)>
   (TkVirtualEventID = ["VirtEvent".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -34,7 +34,7 @@ class TkVirtualEvent<TkObject
           TkVirtualEvent::TkVirtualEventTBL[event]
         else
           # super(event, *sequences)
-          #nodyna <ID:instance_eval-53> <instance_eval MEDIUM ex1>
+          #nodyna <ID:instance_eval-53> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             initialize(event, *sequences)
             TkVirtualEvent::TkVirtualEventTBL[@id] = self

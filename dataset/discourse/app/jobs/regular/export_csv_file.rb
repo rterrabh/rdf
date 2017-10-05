@@ -27,7 +27,7 @@ module Jobs
       export_method = "#{@entity}_export".to_sym
       data =
         if respond_to?(export_method)
-          #nodyna <ID:send-160> <send VERY HIGH ex3>
+          #nodyna <ID:send-160> <SD COMPLEX (change-prone variables)>
           send(export_method)
         else
           raise Discourse::InvalidParameters.new(:entity)

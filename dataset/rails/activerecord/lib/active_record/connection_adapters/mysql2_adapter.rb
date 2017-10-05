@@ -175,7 +175,7 @@ module ActiveRecord
           items.each_with_index do |item, i|
             item = 'NULL' if item.nil?
             justifier = item.is_a?(Numeric) ? 'rjust' : 'ljust'
-            #nodyna <ID:send-136> <send VERY LOW ex1>
+            #nodyna <ID:send-136> <SD TRIVIAL (public methods)>
             cells << item.to_s.send(justifier, widths[i])
           end
           '| ' + cells.join(' | ') + ' |'

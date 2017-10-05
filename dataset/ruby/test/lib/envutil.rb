@@ -178,7 +178,7 @@ module EnvUtil
 
   def labeled_module(name, &block)
     Module.new do
-      #nodyna <ID:define_method-49> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-49> <DM MODERATE (events)>
       singleton_class.class_eval {define_method(:to_s) {name}; alias inspect to_s}
       class_eval(&block) if block
     end
@@ -187,7 +187,7 @@ module EnvUtil
 
   def labeled_class(name, superclass = Object, &block)
     Class.new(superclass) do
-      #nodyna <ID:define_method-50> <define_method MEDIUM ex2>
+      #nodyna <ID:define_method-50> <DM MODERATE (events)>
       singleton_class.class_eval {define_method(:to_s) {name}; alias inspect to_s}
       class_eval(&block) if block
     end
@@ -244,7 +244,7 @@ module Test
           line = 0
         end
         assert_nothing_raised(SyntaxError, mesg) do
-          #nodyna <ID:eval-124> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-124> <EV COMPLEX (change-prone variables)>
           assert_equal(:ok, catch {|tag| eval(code, binding, fname, line)}, mesg)
         end
       ensure
@@ -268,7 +268,7 @@ module Test
           line = 0
         end
         e = assert_raise(SyntaxError, mesg) do
-          #nodyna <ID:eval-125> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-125> <EV COMPLEX (change-prone variables)>
           catch {|tag| eval(code, binding, fname, line)}
         end
         assert_match(error, e.message, mesg)

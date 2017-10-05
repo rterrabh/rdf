@@ -18,7 +18,7 @@ module ActiveSupport
 
         @stubs[key] = Stub.new(object, method_name, new_name)
 
-        #nodyna <ID:send-268> <send VERY HIGH ex4>
+        #nodyna <ID:send-268> <SD COMPLEX (private methods)>
         object.singleton_class.send :alias_method, new_name, method_name
         object.define_singleton_method(method_name) { return_value }
       end
@@ -34,11 +34,11 @@ module ActiveSupport
 
         def unstub_object(stub)
           singleton_class = stub.object.singleton_class
-          #nodyna <ID:send-269> <send VERY HIGH ex4>
+          #nodyna <ID:send-269> <SD COMPLEX (private methods)>
           singleton_class.send :undef_method, stub.method_name
-          #nodyna <ID:send-270> <send VERY HIGH ex4>
+          #nodyna <ID:send-270> <SD COMPLEX (private methods)>
           singleton_class.send :alias_method, stub.method_name, stub.original_method
-          #nodyna <ID:send-271> <send VERY HIGH ex4>
+          #nodyna <ID:send-271> <SD COMPLEX (private methods)>
           singleton_class.send :undef_method, stub.original_method
         end
     end

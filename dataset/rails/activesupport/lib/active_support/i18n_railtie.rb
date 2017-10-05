@@ -44,7 +44,7 @@ module I18n
         when :load_path
           I18n.load_path += value
         else
-          #nodyna <ID:send-263> <send VERY HIGH ex2>
+          #nodyna <ID:send-263> <SD COMPLEX (array)>
           I18n.send("#{setting}=", value)
         end
       end
@@ -63,7 +63,7 @@ module I18n
     end
 
     def self.include_fallbacks_module
-      #nodyna <ID:send-264> <send VERY LOW ex1>
+      #nodyna <ID:send-264> <SD TRIVIAL (public methods)>
       I18n.backend.class.send(:include, I18n::Backend::Fallbacks)
     end
 

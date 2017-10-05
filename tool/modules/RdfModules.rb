@@ -3,21 +3,32 @@ require_relative '../checker/Checker'
 
 module RdfModules
 
+
+  def generateMark(idNumber, statement, classification)
+    return "#nodyna <#{statement}-#{idNumber}> <#{classification}>"
+  end
+
+  def generateMarkWithFullyId(id, classification)
+    return "#nodyna <#{id}> <#{classification}>"
+  end
+
   def getID(line)
-    substring = line.match(/<([^>]*)> <([^>]*)>/)
-    substring[1]
+    return line.match(/<([^>]*)> <([^>]*)>/)[1]
   end
 
   def getStatement(line)
     id = getID(line)
-    str1_markerstring = ":"
-    str2_markerstring = "-"
-    id[/#{str1_markerstring}(.*?)#{str2_markerstring}/m, 1]
+    occurences = Checker.getOccurences(id)
+    occurences.each do |dynamic_feature, occurence|
+      if(occurence > 0)
+        return dynamic_feature
+      end
+    end
+    return nil
   end
 
   def getClassification(line)
-    substring = line.match(/<([^>]*)> <([^>]*)>/)
-    substring[2]
+    return line.match(/<([^>]*)> <([^>]*)>/)[2]
   end
 
   module ShowClassifications
@@ -46,12 +57,12 @@ module RdfModules
           number += 1
           if line.include? "#nodyna"
             if statement and classification
-              if getStatement(line) == statement and getClassification(line) == classification
+              if getStatement(line) == statement.to_sym and getClassification(line) == classification
                 puts "#{rbfile}.#{number}.#{getClassification(line)}.#{getID(line)}"
                 total += 1
               end
             elsif statement
-              if getStatement(line) == statement
+              if getStatement(line) == statement.to_sym
                 puts "#{rbfile}.#{number}.#{getClassification(line)}.#{getID(line)}"
                 total += 1
               end
@@ -72,6 +83,32 @@ module RdfModules
     end
   end
 
+
+  module ChangeClassification
+
+    def changeClassification(rbfiles, oldClassification, newClassification)
+      rbfiles.each do |rbfile|
+        newFile = ""
+        File.open(rbfile, 'r').each do |line|
+          if line.include? "#nodyna"
+            classification = getClassification(line)
+            id = getID(line)
+            if(classification == oldClassification)
+              newFile = "#{newFile}#{indentation(line)}#{generateMarkWithFullyId(id, newClassification)}\n"
+            else
+              newFile = "#{newFile}#{line}"
+            end
+          else
+            newFile = "#{newFile}#{line}"
+          end
+        end
+        fh = File.open(rbfile, 'w')
+        fh.puts newFile
+        fh.close
+      end
+    end
+  end
+
   module Setup
 
     def setup(rbfiles)
@@ -85,7 +122,7 @@ module RdfModules
             occurences.each do |statement, occurence|
               for i in 1..occurence
                 if(skipStatements[statement] == 0)
-                  newFile = "#{newFile}#{indentation(line)}#nodyna <ID:#{statement}-#{id}> <not yet classified>\n"
+                  newFile = "#{newFile}#{indentation(line)}#{generateMark(id, statement, "not yet classified")}\n"
                   id += 1
                 else
                   skipStatements[statement] -= 1
@@ -94,10 +131,15 @@ module RdfModules
             end
             newFile = "#{newFile}#{line}"
           elsif line.include? "nodyna"
+            idClassification = getID(line)
             statement = getStatement(line)
+            if(statement.nil?)
+              statement = "?"
+            else
+              skipStatements[statement.to_sym] += 1
+            end
             classification = getClassification(line)
-            skipStatements[statement.to_sym] += 1
-            newFile = "#{newFile}#{indentation(line)}#nodyna <ID:#{statement}-#{id}> <#{classification}>\n"
+            newFile = "#{newFile}#{indentation(line)}#{generateMark(id, statement, classification)}\n"
             id += 1
           end
         end
@@ -123,4 +165,5 @@ module RdfModules
   include ShowClassifications
   include ShowLocations
   include Setup
+  include ChangeClassification
 end

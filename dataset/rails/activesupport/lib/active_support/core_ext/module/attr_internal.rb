@@ -30,7 +30,7 @@ class Module
       # class_eval is necessary on 1.9 or else the methods are made private
       class_eval do
         # use native attr_* methods as they are faster on some Ruby implementations
-        #nodyna <ID:send-261> <send MEDIUM ex3>
+        #nodyna <ID:send-261> <SD MODERATE (change-prone variables)>
         send("attr_#{type}", internal_name)
       end
       attr_name, internal_name = "#{attr_name}=", "#{internal_name}=" if type == :writer

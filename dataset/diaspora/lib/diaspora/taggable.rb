@@ -19,7 +19,7 @@ module Diaspora
         end
         protected :tag_name_max_length
       end
-      #nodyna <ID:instance_eval-5> <instance_eval VERY HIGH ex2>
+      #nodyna <ID:instance_eval-5> <IEV COMPLEX (method definition)>
       model.instance_eval do
         before_validation :build_tags # build tags before validation fixs the too long tag name issue #5737
 
@@ -37,7 +37,7 @@ module Diaspora
     end
 
     def tag_strings
-      #nodyna <ID:send-55> <send MEDIUM ex3>
+      #nodyna <ID:send-55> <SD MODERATE (change-prone variables)>
       MessageRenderer::Processor.normalize(send(self.class.field_with_tags) || "")
         .scan(/(?:^|\s)#([#{ActsAsTaggableOn::Tag.tag_text_regexp}]+|<3)/u)
         .map(&:first)

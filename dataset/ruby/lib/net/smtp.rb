@@ -729,7 +729,7 @@ module Net
     def authenticate(user, secret, authtype = DEFAULT_AUTH_TYPE)
       check_auth_method authtype
       check_auth_args user, secret
-      #nodyna <ID:send-90> <send VERY HIGH ex3>
+      #nodyna <ID:send-90> <SD COMPLEX (change-prone variables)>
       send auth_method(authtype), user, secret
     end
 

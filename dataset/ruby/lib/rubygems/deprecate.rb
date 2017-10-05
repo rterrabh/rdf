@@ -50,7 +50,7 @@ module Gem::Deprecate
     class_eval {
       old = "_deprecated_#{name}"
       alias_method old, name
-      #nodyna <ID:define_method-18> <define_method VERY HIGH ex2>
+      #nodyna <ID:define_method-18> <DM COMPLEX (events)>
       define_method name do |*args, &block|
         klass = self.kind_of? Module
         target = klass ? "#{self}." : "#{self.class}#"
@@ -60,7 +60,7 @@ module Gem::Deprecate
           "\n#{target}#{name} called from #{Gem.location_of_caller.join(":")}",
         ]
         warn "#{msg.join}." unless Gem::Deprecate.skip
-        #nodyna <ID:send-50> <send VERY HIGH ex3>
+        #nodyna <ID:send-50> <SD COMPLEX (change-prone variables)>
         send old, *args, &block
       end
     }

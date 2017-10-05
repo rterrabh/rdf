@@ -13,7 +13,7 @@ RailsAdmin::Config::Fields.register_factory do |parent, properties, fields|
         [:foreign_key, :foreign_type, :foreign_inverse_of]
       else
         [:foreign_key]
-      #nodyna <ID:send-32> <send MEDIUM ex2>
+      #nodyna <ID:send-32> <SD MODERATE (array)>
       end.collect { |k| association.send(k) }.compact
     end
 

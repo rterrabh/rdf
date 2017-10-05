@@ -40,25 +40,25 @@ module Spree::Preferences::Preferable
 
   def get_preference(name)
     has_preference! name
-    #nodyna <ID:send-89> <send VERY HIGH ex3>
+    #nodyna <ID:send-89> <SD COMPLEX (change-prone variables)>
     send self.class.preference_getter_method(name)
   end
 
   def set_preference(name, value)
     has_preference! name
-    #nodyna <ID:send-90> <send VERY HIGH ex3>
+    #nodyna <ID:send-90> <SD COMPLEX (change-prone variables)>
     send self.class.preference_setter_method(name), value
   end
 
   def preference_type(name)
     has_preference! name
-    #nodyna <ID:send-91> <send VERY HIGH ex3>
+    #nodyna <ID:send-91> <SD COMPLEX (change-prone variables)>
     send self.class.preference_type_getter_method(name)
   end
 
   def preference_default(name)
     has_preference! name
-    #nodyna <ID:send-92> <send VERY HIGH ex3>
+    #nodyna <ID:send-92> <SD COMPLEX (change-prone variables)>
     send self.class.preference_default_getter_method(name)
   end
 

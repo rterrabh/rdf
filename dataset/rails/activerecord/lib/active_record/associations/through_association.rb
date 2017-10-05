@@ -45,7 +45,7 @@ module ActiveRecord
             join_attributes = {
               source_reflection.foreign_key =>
                 records.map { |record|
-                  #nodyna <ID:send-110> <send VERY HIGH ex3>
+                  #nodyna <ID:send-110> <SD COMPLEX (change-prone variables)>
                   record.send(source_reflection.association_primary_key(reflection.klass))
                 }
             }

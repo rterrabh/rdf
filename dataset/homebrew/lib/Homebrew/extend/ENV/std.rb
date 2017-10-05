@@ -56,7 +56,7 @@ module Stdenv
 
     append "LDFLAGS", "-Wl,-headerpad_max_install_names"
 
-    #nodyna <ID:send-3> <send VERY HIGH ex3>
+    #nodyna <ID:send-3> <SD COMPLEX (change-prone variables)>
     send(compiler)
 
     if cc =~ GNU_GCC_REGEXP
@@ -102,11 +102,11 @@ module Stdenv
   alias_method :j1, :deparallelize
 
   # These methods are no-ops for compatibility.
-  #nodyna <ID:define_method-4> <define_method MEDIUM ex1>
+  #nodyna <ID:define_method-4> <DM MODERATE (array)>
   %w[fast O4 Og].each { |opt| define_method(opt) {} }
 
   %w[O3 O2 O1 O0 Os].each do |opt|
-    #nodyna <ID:define_method-5> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-5> <DM MODERATE (array)>
     define_method opt do
       remove_from_cflags(/-O./)
       append_to_cflags "-#{opt}"
@@ -138,7 +138,7 @@ module Stdenv
   alias_method :gcc_4_2, :gcc
 
   GNU_GCC_VERSIONS.each do |n|
-    #nodyna <ID:define_method-6> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-6> <DM MODERATE (array)>
     define_method(:"gcc-#{n}") do
       super()
       set_cpu_cflags

@@ -25,7 +25,7 @@ module Spree
     end
 
     def self.default(user = nil, kind = "bill")
-      #nodyna <ID:send-106> <send VERY HIGH ex3>
+      #nodyna <ID:send-106> <SD COMPLEX (change-prone variables)>
       if user && user_address = user.send(:"#{kind}_address")
         user_address.clone
       else

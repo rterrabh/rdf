@@ -150,7 +150,7 @@ module ActionDispatch
           old_controller, @controller = @controller, @controller.clone
           _routes = @routes
 
-          #nodyna <ID:send-106> <send VERY LOW ex1>
+          #nodyna <ID:send-106> <SD TRIVIAL (public methods)>
           @controller.singleton_class.send(:include, _routes.url_helpers)
           @controller.view_context_class = Class.new(@controller.view_context_class) do
             include _routes.url_helpers
@@ -167,7 +167,7 @@ module ActionDispatch
       # ROUTES TODO: These assertions should really work in an integration context
       def method_missing(selector, *args, &block)
         if defined?(@controller) && @controller && defined?(@routes) && @routes && @routes.named_routes.route_defined?(selector)
-          #nodyna <ID:send-107> <send VERY HIGH ex3>
+          #nodyna <ID:send-107> <SD COMPLEX (change-prone variables)>
           @controller.send(selector, *args, &block)
         else
           super

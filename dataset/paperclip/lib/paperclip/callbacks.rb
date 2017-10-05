@@ -2,7 +2,7 @@ module Paperclip
   module Callbacks
     def self.included(base)
       base.extend(Defining)
-      #nodyna <ID:send-10> <send VERY LOW ex1>
+      #nodyna <ID:send-10> <SD TRIVIAL (public methods)>
       base.send(:include, Running)
     end
 
@@ -10,7 +10,7 @@ module Paperclip
       def define_paperclip_callbacks(*callbacks)
         define_callbacks(*[callbacks, {:terminator => callback_terminator}].flatten)
         callbacks.each do |callback|
-          #nodyna <ID:eval-6> <eval VERY HIGH ex1>
+          #nodyna <ID:eval-6> <EV COMPLEX (method definition)>
           eval <<-end_callbacks
             def before_#{callback}(*args, &blk)
               set_callback(:#{callback}, :before, *args, &blk)

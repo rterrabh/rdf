@@ -324,7 +324,7 @@ module IRB
           end
         when /^\s*\{.*\}\s*$/
           begin
-            #nodyna <ID:eval-103> <eval VERY HIGH ex2>
+            #nodyna <ID:eval-103> <EV COMPLEX (change-prone variables)>
             inspector = eval "proc#{opt}"
           rescue Exception
             puts "Can't switch inspect mode(#{opt})."
@@ -400,7 +400,7 @@ module IRB
       for ivar in instance_variables.sort{|e1, e2| e1 <=> e2}
         ivar = ivar.to_s
         name = ivar.sub(/^@(.*)$/, '\1')
-        #nodyna <ID:instance_eval-175> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-175> <IEV COMPLEX (block execution)>
         val = instance_eval(ivar)
         case ivar
         when *NOPRINTING_IVARS

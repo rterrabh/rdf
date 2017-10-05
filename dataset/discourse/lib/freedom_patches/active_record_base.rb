@@ -3,7 +3,7 @@ class ActiveRecord::Base
   # Execute SQL manually
   def self.exec_sql(*args)
     conn = ActiveRecord::Base.connection
-    #nodyna <ID:send-3> <send VERY HIGH ex4>
+    #nodyna <ID:send-3> <SD COMPLEX (private methods)>
     sql = ActiveRecord::Base.send(:sanitize_sql_array, args)
     conn.raw_connection.exec(sql)
   end
@@ -13,7 +13,7 @@ class ActiveRecord::Base
   end
 
   def self.sql_fragment(*sql_array)
-    #nodyna <ID:send-4> <send VERY HIGH ex4>
+    #nodyna <ID:send-4> <SD COMPLEX (private methods)>
     ActiveRecord::Base.send(:sanitize_sql_array, sql_array)
   end
 

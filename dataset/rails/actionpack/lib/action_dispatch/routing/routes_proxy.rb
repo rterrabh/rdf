@@ -13,7 +13,7 @@ module ActionDispatch
       end
 
       def url_options
-        #nodyna <ID:send-83> <send LOW ex4>
+        #nodyna <ID:send-83> <SD EASY (private methods)>
         scope.send(:_with_routes, routes) do
           scope.url_options
         end
@@ -32,7 +32,7 @@ module ActionDispatch
               routes.url_helpers.#{method}(*args)
             end
           RUBY
-          #nodyna <ID:send-84> <send VERY HIGH ex3>
+          #nodyna <ID:send-84> <SD COMPLEX (change-prone variables)>
           send(method, *args)
         else
           super

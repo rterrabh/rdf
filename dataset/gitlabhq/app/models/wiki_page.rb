@@ -176,7 +176,7 @@ class WikiPage
 
   def save(method, *args)
     project_wiki = wiki
-    #nodyna <ID:send-77> <send MEDIUM ex3>
+    #nodyna <ID:send-77> <SD MODERATE (change-prone variables)>
     if valid? && project_wiki.send(method, *args)
 
       page_details = if method == :update_page

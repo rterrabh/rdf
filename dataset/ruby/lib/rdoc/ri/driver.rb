@@ -238,7 +238,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
              "formatter is bs for paged output and ansi",
              "otherwise. Valid formatters are:",
              formatters.join(' '), formatters) do |value|
-        #nodyna <ID:const_get-23> <const_get MEDIUM ex2>
+        #nodyna <ID:const_get-23> <CG MODERATE (array)>
         options[:formatter] = RDoc::Markup.const_get "To#{value.capitalize}"
       end
 

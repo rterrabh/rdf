@@ -153,7 +153,7 @@ module Rails
         end
       end
 
-      #nodyna <ID:instance_eval-13> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-13> <IEV COMPLEX (block execution)>
       instance_eval(&@block) if @block
       self
     end

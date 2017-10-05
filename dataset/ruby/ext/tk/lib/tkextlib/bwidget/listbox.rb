@@ -212,7 +212,7 @@ class Tk::BWidget::ListBox::Item
 
   ListItem_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-121> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-121> <IEV MODERATE (method definition)>
   (ListItem_ID = ['bw:item'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end

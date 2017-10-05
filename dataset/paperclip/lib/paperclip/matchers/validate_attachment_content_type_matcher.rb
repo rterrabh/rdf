@@ -80,7 +80,7 @@ module Paperclip
         end
 
         def type_allowed?(type)
-          #nodyna <ID:send-9> <send VERY HIGH ex3>
+          #nodyna <ID:send-9> <SD COMPLEX (change-prone variables)>
           @subject.send("#{@attachment_name}_content_type=", type)
           @subject.valid?
           @subject.errors[:"#{@attachment_name}_content_type"].blank?

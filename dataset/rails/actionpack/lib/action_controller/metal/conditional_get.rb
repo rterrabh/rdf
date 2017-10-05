@@ -193,7 +193,7 @@ module ActionController
 
     private
       def combine_etags(options)
-        #nodyna <ID:instance_exec-2> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-2> <IEX COMPLEX (block with parameters)>
         etags = etaggers.map { |etagger| instance_exec(options, &etagger) }.compact
         etags.unshift options[:etag]
       end

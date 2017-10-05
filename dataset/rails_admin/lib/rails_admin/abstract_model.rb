@@ -84,12 +84,12 @@ module RailsAdmin
       associations.each do |association|
         case association.type
         when :has_one
-          #nodyna <ID:send-43> <send VERY HIGH ex2>
+          #nodyna <ID:send-43> <SD COMPLEX (array)>
           if child = object.send(association.name)
             yield(association, child)
           end
         when :has_many
-          #nodyna <ID:send-44> <send VERY HIGH ex2>
+          #nodyna <ID:send-44> <SD COMPLEX (array)>
           object.send(association.name).each do |child| # rubocop:disable ShadowingOuterLocalVariable
             yield(association, child)
           end

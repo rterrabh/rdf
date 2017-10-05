@@ -309,11 +309,11 @@ module ActionView
 
           if sources.size > 1
             content_tag(type, options) do
-              #nodyna <ID:send-62> <send MEDIUM ex2>
+              #nodyna <ID:send-62> <SD MODERATE (array)>
               safe_join sources.map { |source| tag("source", :src => send("path_to_#{type}", source)) }
             end
           else
-            #nodyna <ID:send-63> <send MEDIUM ex3>
+            #nodyna <ID:send-63> <SD MODERATE (change-prone variables)>
             options[:src] = send("path_to_#{type}", sources.first)
             content_tag(type, nil, options)
           end

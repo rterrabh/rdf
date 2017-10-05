@@ -445,7 +445,7 @@ describe Spree::Variant, :type => :model do
     end
 
     it "clears the in_stock cache key" do
-      #nodyna <ID:send-67> <send LOW ex4>
+      #nodyna <ID:send-67> <SD EASY (private methods)>
       expect(Rails.cache).to receive(:delete).with(variant.send(:in_stock_cache_key))
       variant.touch
     end

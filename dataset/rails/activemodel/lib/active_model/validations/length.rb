@@ -46,7 +46,7 @@ module ActiveModel
           next unless check_value = options[key]
 
           if !value.nil? || skip_nil_check?(key)
-            #nodyna <ID:send-22> <send MEDIUM ex3>
+            #nodyna <ID:send-22> <SD MODERATE (change-prone variables)>
             next if value_length.send(validity_check, check_value)
           end
 

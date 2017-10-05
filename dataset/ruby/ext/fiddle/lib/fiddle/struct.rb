@@ -49,19 +49,19 @@ module Fiddle
     #
     def create(klass, types, members)
       new_class = Class.new(klass){
-        #nodyna <ID:define_method-9> <define_method VERY HIGH ex2>
+        #nodyna <ID:define_method-9> <DM COMPLEX (events)>
         define_method(:initialize){|addr|
           @entity = klass.entity_class.new(addr, types)
           @entity.assign_names(members)
         }
-        #nodyna <ID:define_method-10> <define_method MEDIUM ex2>
+        #nodyna <ID:define_method-10> <DM MODERATE (events)>
         define_method(:to_ptr){ @entity }
-        #nodyna <ID:define_method-11> <define_method MEDIUM ex2>
+        #nodyna <ID:define_method-11> <DM MODERATE (events)>
         define_method(:to_i){ @entity.to_i }
         members.each{|name|
-          #nodyna <ID:define_method-12> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-12> <DM COMPLEX (events)>
           define_method(name){ @entity[name] }
-          #nodyna <ID:define_method-13> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-13> <DM COMPLEX (events)>
           define_method(name + "="){|val| @entity[name] = val }
         }
       }

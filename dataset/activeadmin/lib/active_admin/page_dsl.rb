@@ -21,7 +21,7 @@ module ActiveAdmin
     def page_action(name, options = {}, &block)
       config.page_actions << ControllerAction.new(name, options)
       controller do
-        #nodyna <ID:define_method-9> <define_method VERY HIGH ex2>
+        #nodyna <ID:define_method-9> <DM COMPLEX (events)>
         define_method(name, &block || Proc.new{})
       end
     end

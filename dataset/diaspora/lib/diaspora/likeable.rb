@@ -5,7 +5,7 @@
 module Diaspora
   module Likeable
     def self.included(model)
-      #nodyna <ID:instance_eval-3> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-3> <IEV COMPLEX (private access)>
       model.instance_eval do
         has_many :likes, -> { where(positive: true) }, dependent: :delete_all, as: :target
         has_many :dislikes, -> { where(positive: false) }, class_name: 'Like', dependent: :delete_all, as: :target

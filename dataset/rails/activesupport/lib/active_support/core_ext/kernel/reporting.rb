@@ -92,7 +92,7 @@ module Kernel
     ) #not thread-safe
     stream = stream.to_s
     captured_stream = Tempfile.new(stream)
-    #nodyna <ID:eval-3> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-3> <EV COMPLEX (change-prone variables)>
     stream_io = eval("$#{stream}")
     origin_stream = stream_io.dup
     stream_io.reopen(captured_stream)

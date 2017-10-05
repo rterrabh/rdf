@@ -115,7 +115,7 @@ module ActiveRecord
           if counter_must_be_updated_by_has_many?(reflection)
             counter = cached_counter_attribute_name(reflection)
             owner[counter] += difference
-            #nodyna <ID:send-125> <send VERY HIGH ex4>
+            #nodyna <ID:send-125> <SD COMPLEX (private methods)>
             owner.send(:clear_attribute_changes, counter) # eww
           end
         end

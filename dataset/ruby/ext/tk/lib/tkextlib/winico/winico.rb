@@ -141,7 +141,7 @@ class Tk::Winico
               else
                 # Tk::Winico.new(nil, nil, id)
                 obj = Tk::Winico.allocate
-                #nodyna <ID:instance_eval-105> <instance_eval MEDIUM ex1>
+                #nodyna <ID:instance_eval-105> <IEV MODERATE (private access)>
                 obj.instance_eval{ @path = @id = id }
                 Tk::Winico::WinicoID_TBL[id] = obj
               end

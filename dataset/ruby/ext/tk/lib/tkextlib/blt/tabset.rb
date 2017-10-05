@@ -13,7 +13,7 @@ module Tk::BLT
 
       TabID_TBL = TkCore::INTERP.create_table
 
-      #nodyna <ID:instance_eval-102> <instance_eval MEDIUM ex2>
+      #nodyna <ID:instance_eval-102> <IEV MODERATE (method definition)>
       (TabsetTab_ID = ['blt_tabset_tab'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -58,7 +58,7 @@ module Tk::BLT
             end
             obj.configure if keys && ! keys.empty?
           else
-            #nodyna <ID:instance_eval-103> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-103> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               initialize(parent, pos, name, keys)
               TabID_TBL[@tpath] = {} unless TabID_TBL[@tpath]

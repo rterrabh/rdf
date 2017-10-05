@@ -38,7 +38,7 @@ module ActiveAdmin
         attr_writer name
 
         # Create an accessor that looks up the default value if none is set.
-        #nodyna <ID:define_method-10> <define_method VERY HIGH ex2>
+        #nodyna <ID:define_method-10> <DM COMPLEX (events)>
         define_method name do
           if instance_variable_defined? "@#{name}"
             instance_variable_get "@#{name}"
@@ -47,9 +47,9 @@ module ActiveAdmin
           end
         end
 
-        #nodyna <ID:define_method-11> <define_method VERY HIGH ex2>
+        #nodyna <ID:define_method-11> <DM COMPLEX (events)>
         define_method "#{name}?" do
-          #nodyna <ID:send-53> <send VERY HIGH ex3>
+          #nodyna <ID:send-53> <SD COMPLEX (change-prone variables)>
           value = public_send(name)
           if value.is_a? Array
             value.any?
@@ -98,7 +98,7 @@ module ActiveAdmin
 
         def settings_inherited_by(heir)
           (@setting_heirs ||= []) << heir
-          #nodyna <ID:send-54> <send VERY LOW ex1>
+          #nodyna <ID:send-54> <SD TRIVIAL (public methods)>
           heir.send :include, ActiveAdmin::Settings
         end
 

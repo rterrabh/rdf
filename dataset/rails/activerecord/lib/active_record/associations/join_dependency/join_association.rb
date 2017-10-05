@@ -47,13 +47,13 @@ module ActiveRecord
               if item.is_a?(Relation)
                 item
               else
-                #nodyna <ID:instance_exec-12> <instance_exec VERY HIGH ex2>
+                #nodyna <ID:instance_exec-12> <IEX COMPLEX (block with parameters)>
                 ActiveRecord::Relation.create(klass, table).instance_exec(node, &item)
               end
             end
             scope_chain_index += 1
 
-            #nodyna <ID:send-121> <send LOW ex4>
+            #nodyna <ID:send-121> <SD EASY (private methods)>
             scope_chain_items.concat [klass.send(:build_default_scope, ActiveRecord::Relation.create(klass, table))].compact
 
             rel = scope_chain_items.inject(scope_chain_items.shift) do |left, right|
@@ -104,7 +104,7 @@ module ActiveRecord
           if klass.finder_needs_type_condition?
             constraint = table.create_and([
               constraint,
-              #nodyna <ID:send-122> <send LOW ex4>
+              #nodyna <ID:send-122> <SD EASY (private methods)>
               klass.send(:type_condition, table)
             ])
           end

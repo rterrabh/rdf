@@ -8,7 +8,7 @@ module Spree
 
       # Dynamically defines our stores checkout steps to ensure we check authorization on each step.
       Spree::Order.checkout_steps.keys.each do |step|
-        #nodyna <ID:define_method-1> <define_method VERY HIGH ex1>
+        #nodyna <ID:define_method-1> <DM COMPLEX (array)>
         define_method step do
           find_order
           authorize! :update, @order, params[:token]

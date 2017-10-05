@@ -51,7 +51,7 @@ module ActiveRecord
       def ids_reader
         if loaded?
           load_target.map do |record|
-            #nodyna <ID:send-111> <send VERY HIGH ex3>
+            #nodyna <ID:send-111> <SD COMPLEX (change-prone variables)>
             record.send(reflection.association_primary_key)
           end
         else
@@ -576,7 +576,7 @@ module ActiveRecord
 
         def callbacks_for(callback_name)
           full_callback_name = "#{callback_name}_for_#{reflection.name}"
-          #nodyna <ID:send-112> <send VERY HIGH ex3>
+          #nodyna <ID:send-112> <SD COMPLEX (change-prone variables)>
           owner.class.send(full_callback_name)
         end
 
@@ -603,7 +603,7 @@ module ActiveRecord
           if reflection.is_a?(ActiveRecord::Reflection::ThroughReflection)
             assoc = owner.association(reflection.through_reflection.name)
             assoc.reader.any? { |source|
-              #nodyna <ID:send-113> <send VERY HIGH ex3>
+              #nodyna <ID:send-113> <SD COMPLEX (change-prone variables)>
               target_association = source.send(reflection.source_reflection.name)
 
               if target_association.respond_to?(:include?)
@@ -637,7 +637,7 @@ module ActiveRecord
           args.shift if args.first.is_a?(Hash) && args.first.empty?
 
           collection = fetch_first_nth_or_last_using_find?(args) ? scope : load_target
-          #nodyna <ID:send-114> <send MEDIUM ex3>
+          #nodyna <ID:send-114> <SD MODERATE (change-prone variables)>
           collection.send(type, *args).tap do |record|
             set_inverse_instance record if record.is_a? ActiveRecord::Base
           end

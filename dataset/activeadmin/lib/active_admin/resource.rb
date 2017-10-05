@@ -122,7 +122,7 @@ module ActiveAdmin
     def belongs_to(target, options = {})
       @belongs_to = Resource::BelongsTo.new(self, target, options)
       self.navigation_menu_name = target unless @belongs_to.optional?
-      #nodyna <ID:send-22> <send LOW ex4>
+      #nodyna <ID:send-22> <SD EASY (private methods)>
       controller.send :belongs_to, target, options.dup
     end
 
@@ -145,7 +145,7 @@ module ActiveAdmin
     end
 
     def find_resource(id)
-      #nodyna <ID:send-23> <send VERY HIGH ex3>
+      #nodyna <ID:send-23> <SD COMPLEX (change-prone variables)>
       resource = resource_class.public_send(method_for_find, id)
       decorator_class ? decorator_class.new(resource) : resource
     end

@@ -9,11 +9,11 @@ ActiveAdmin::Application.inheritable_setting :show_comments_in_menu,      true
 ActiveAdmin::Application.inheritable_setting :comments_registration_name, 'Comment'
 
 # Insert helper modules
-#nodyna <ID:send-35> <send VERY LOW ex1>
+#nodyna <ID:send-35> <SD TRIVIAL (public methods)>
 ActiveAdmin::Namespace.send :include, ActiveAdmin::Comments::NamespaceHelper
-#nodyna <ID:send-36> <send VERY LOW ex1>
+#nodyna <ID:send-36> <SD TRIVIAL (public methods)>
 ActiveAdmin::Resource.send  :include, ActiveAdmin::Comments::ResourceHelper
-#nodyna <ID:send-37> <send VERY LOW ex1>
+#nodyna <ID:send-37> <SD TRIVIAL (public methods)>
 ActiveAdmin.application.view_factory.show_page.send :include, ActiveAdmin::Comments::ShowPageHelper
 
 # Load the model as soon as it's referenced. By that point, Rails & Kaminari will be ready

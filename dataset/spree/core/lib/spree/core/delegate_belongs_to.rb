@@ -38,12 +38,12 @@ module DelegateBelongsTo
       attrs.concat get_association_column_names(association) if attrs.delete :defaults
       attrs.each do |attr|
         class_def attr do |*args|
-          #nodyna <ID:send-7> <send LOW ex4>
+          #nodyna <ID:send-7> <SD EASY (private methods)>
           send(:delegator_for, association, attr, *args)
         end
 
         class_def "#{attr}=" do |val|
-          #nodyna <ID:send-8> <send LOW ex4>
+          #nodyna <ID:send-8> <SD EASY (private methods)>
           send(:delegator_for_setter, association, attr, val)
         end
       end
@@ -66,46 +66,46 @@ module DelegateBelongsTo
       # initialize_association :belongs_to, :contact
       def initialize_association(type, association, opts={})
         raise 'Illegal or unimplemented association type.' unless [:belongs_to].include?(type.to_s.to_sym)
-        #nodyna <ID:send-9> <send MEDIUM ex3>
+        #nodyna <ID:send-9> <SD MODERATE (change-prone variables)>
         send type, association, opts if reflect_on_association(association).nil?
       end
 
     private
       def class_def(name, method=nil, &blk)
-        #nodyna <ID:define_method-3> <define_method VERY HIGH ex2>
-        #nodyna <ID:define_method-3> <define_method VERY HIGH ex2>
+        #nodyna <ID:define_method-3> <DM COMPLEX (events)>
+        #nodyna <ID:define_method-3> <DM COMPLEX (events)>
         class_eval { method.nil? ? define_method(name, &blk) : define_method(name, method) }
       end
   end
 
   def delegator_for(association, attr, *args)
     return if self.class.column_names.include?(attr.to_s)
-    #nodyna <ID:send-10> <send MEDIUM ex3>
-    #nodyna <ID:send-10> <send MEDIUM ex3>
+    #nodyna <ID:send-10> <SD MODERATE (change-prone variables)>
+    #nodyna <ID:send-10> <SD MODERATE (change-prone variables)>
     send("#{association}=", self.class.reflect_on_association(association).klass.new) if send(association).nil?
     if args.empty?
-      #nodyna <ID:send-11> <send MEDIUM ex3>
-      #nodyna <ID:send-11> <send MEDIUM ex3>
+      #nodyna <ID:send-11> <SD MODERATE (change-prone variables)>
+      #nodyna <ID:send-11> <SD MODERATE (change-prone variables)>
       send(association).send(attr)
     else
-      #nodyna <ID:send-12> <send MEDIUM ex3>
-      #nodyna <ID:send-12> <send MEDIUM ex3>
+      #nodyna <ID:send-12> <SD MODERATE (change-prone variables)>
+      #nodyna <ID:send-12> <SD MODERATE (change-prone variables)>
       send(association).send(attr, *args)
     end
   end
 
   def delegator_for_setter(association, attr, val)
     return if self.class.column_names.include?(attr.to_s)
-    #nodyna <ID:send-13> <send MEDIUM ex3>
-    #nodyna <ID:send-13> <send MEDIUM ex3>
+    #nodyna <ID:send-13> <SD MODERATE (change-prone variables)>
+    #nodyna <ID:send-13> <SD MODERATE (change-prone variables)>
     send("#{association}=", self.class.reflect_on_association(association).klass.new) if send(association).nil?
-    #nodyna <ID:send-14> <send MEDIUM ex3>
-    #nodyna <ID:send-14> <send MEDIUM ex3>
+    #nodyna <ID:send-14> <SD MODERATE (change-prone variables)>
+    #nodyna <ID:send-14> <SD MODERATE (change-prone variables)>
     send(association).send("#{attr}=", val)
   end
   protected :delegator_for
   protected :delegator_for_setter
 end
 
-#nodyna <ID:send-15> <send VERY LOW ex1>
+#nodyna <ID:send-15> <SD TRIVIAL (public methods)>
 ActiveRecord::Base.send :include, DelegateBelongsTo

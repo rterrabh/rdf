@@ -21,7 +21,7 @@ module ActiveRecord
 
       if match && match.valid?
         match.define
-        #nodyna <ID:send-193> <send VERY HIGH ex3>
+        #nodyna <ID:send-193> <SD COMPLEX (change-prone variables)>
         send(name, *arguments, &block)
       else
         super

@@ -59,14 +59,14 @@ class AccountDeleter
 
   def delete_standard_user_associations
     normal_ar_user_associates_to_delete.each do |asso|
-      #nodyna <ID:send-2> <send MEDIUM ex2>
+      #nodyna <ID:send-2> <SD MODERATE (array)>
       self.user.send(asso).each{|model| model.destroy }
     end
   end
 
   def delete_standard_person_associations
     normal_ar_person_associates_to_delete.each do |asso|
-      #nodyna <ID:send-3> <send MEDIUM ex2>
+      #nodyna <ID:send-3> <SD MODERATE (array)>
       self.person.send(asso).destroy_all
     end
   end

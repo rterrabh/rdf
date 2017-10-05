@@ -270,7 +270,7 @@ class Gem::RemoteFetcher
       raise ArgumentError, "uri scheme is invalid: #{uri.scheme.inspect}"
     end
 
-    #nodyna <ID:send-47> <send VERY HIGH ex3>
+    #nodyna <ID:send-47> <SD COMPLEX (change-prone variables)>
     data = send "fetch_#{uri.scheme}", uri, mtime, head
 
     if data and !head and uri.to_s =~ /\.gz$/

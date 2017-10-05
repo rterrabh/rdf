@@ -30,8 +30,8 @@ class Report
   end
 
   def Report.add_report(name, &block)
-    #nodyna <ID:define_method-33> <define_method VERY HIGH ex2>
-    #nodyna <ID:instance_eval-2> <instance_eval VERY HIGH ex1>
+    #nodyna <ID:define_method-33> <DM COMPLEX (events)>
+    #nodyna <ID:instance_eval-2> <IEV COMPLEX (private access)>
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
   end
 
@@ -45,7 +45,7 @@ class Report
     report_method = :"report_#{type}"
 
     if respond_to?(report_method)
-      #nodyna <ID:send-191> <send VERY HIGH ex3>
+      #nodyna <ID:send-191> <SD COMPLEX (change-prone variables)>
       send(report_method, report)
     elsif type =~ /_reqs$/
       req_report(report, type.split(/_reqs$/)[0].to_sym)
@@ -144,7 +144,7 @@ class Report
 
   def self.basic_report_about(report, subject_class, report_method, *args)
     report.data = []
-    #nodyna <ID:send-192> <send MEDIUM ex3>
+    #nodyna <ID:send-192> <SD MODERATE (change-prone variables)>
     subject_class.send(report_method, *args).each do |date, count|
       report.data << { x: date, y: count }
     end

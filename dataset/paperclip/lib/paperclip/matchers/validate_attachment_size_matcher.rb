@@ -58,7 +58,7 @@ module Paperclip
 
         def override_method object, method, &replacement
           (class << object; self; end).class_eval do
-            #nodyna <ID:define_method-1> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-1> <DM MODERATE (events)>
             define_method(method, &replacement)
           end
         end
@@ -68,14 +68,14 @@ module Paperclip
           override_method(file, :size){ new_size }
           override_method(file, :to_tempfile){ file }
 
-          #nodyna <ID:send-6> <send VERY HIGH ex3>
+          #nodyna <ID:send-6> <SD COMPLEX (change-prone variables)>
           @subject.send(@attachment_name).post_processing = false
-          #nodyna <ID:send-7> <send VERY HIGH ex3>
+          #nodyna <ID:send-7> <SD COMPLEX (change-prone variables)>
           @subject.send(@attachment_name).assign(file)
           @subject.valid?
           @subject.errors[:"#{@attachment_name}_file_size"].blank?
         ensure
-          #nodyna <ID:send-8> <send VERY HIGH ex3>
+          #nodyna <ID:send-8> <SD COMPLEX (change-prone variables)>
           @subject.send(@attachment_name).post_processing = true
         end
 

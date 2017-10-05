@@ -191,7 +191,7 @@ module Forwardable
     begin
       module_eval(str, __FILE__, line_no)
     rescue
-      #nodyna <ID:instance_eval-154> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-154> <IEV COMPLEX (private access)>
       instance_eval(str, __FILE__, line_no)
     end
 
@@ -281,7 +281,7 @@ module SingleForwardable
       end
     }
 
-    #nodyna <ID:instance_eval-155> <instance_eval VERY HIGH ex1>
+    #nodyna <ID:instance_eval-155> <IEV COMPLEX (private access)>
     instance_eval(str, __FILE__, __LINE__)
   end
 

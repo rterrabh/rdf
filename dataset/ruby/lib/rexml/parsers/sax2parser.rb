@@ -193,7 +193,7 @@ module REXML
         # notify observers
         procs.each { |ob| ob.call( *arguments ) } if procs
         listeners.each { |l|
-          #nodyna <ID:send-102> <send VERY HIGH ex3>
+          #nodyna <ID:send-102> <SD COMPLEX (change-prone variables)>
           l.send( symbol.to_s, *arguments )
         } if listeners
       end

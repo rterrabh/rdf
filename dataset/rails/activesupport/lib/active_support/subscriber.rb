@@ -97,7 +97,7 @@ module ActiveSupport
       event.payload.merge!(payload)
 
       method = name.split('.').first
-      #nodyna <ID:send-238> <send VERY HIGH ex3>
+      #nodyna <ID:send-238> <SD COMPLEX (change-prone variables)>
       send(method, event)
     end
 

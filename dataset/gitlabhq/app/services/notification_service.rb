@@ -134,7 +134,7 @@ class NotificationService
     notify_method = "note_#{note.noteable_type.underscore}_email".to_sym
 
     recipients.each do |recipient|
-      #nodyna <ID:send-132> <send VERY HIGH ex2>
+      #nodyna <ID:send-132> <SD COMPLEX (array)>
       mailer.send(notify_method, recipient.id, note.id)
     end
   end
@@ -344,7 +344,7 @@ class NotificationService
     recipients = build_recipients(target, project, target.author)
 
     recipients.each do |recipient|
-      #nodyna <ID:send-133> <send MEDIUM ex2>
+      #nodyna <ID:send-133> <SD MODERATE (array)>
       mailer.send(method, recipient.id, target.id)
     end
   end
@@ -353,7 +353,7 @@ class NotificationService
     recipients = build_recipients(target, project, current_user)
 
     recipients.each do |recipient|
-      #nodyna <ID:send-134> <send MEDIUM ex2>
+      #nodyna <ID:send-134> <SD MODERATE (array)>
       mailer.send(method, recipient.id, target.id, current_user.id)
     end
   end
@@ -363,7 +363,7 @@ class NotificationService
     recipients = build_recipients(target, project, current_user)
 
     recipients.each do |recipient|
-      #nodyna <ID:send-135> <send MEDIUM ex2>
+      #nodyna <ID:send-135> <SD MODERATE (array)>
       mailer.send(method, recipient.id, target.id, assignee_id_was, current_user.id)
     end
   end
@@ -372,7 +372,7 @@ class NotificationService
     recipients = build_recipients(target, project, current_user)
 
     recipients.each do |recipient|
-      #nodyna <ID:send-136> <send MEDIUM ex2>
+      #nodyna <ID:send-136> <SD MODERATE (array)>
       mailer.send(method, recipient.id, target.id, status, current_user.id)
     end
   end

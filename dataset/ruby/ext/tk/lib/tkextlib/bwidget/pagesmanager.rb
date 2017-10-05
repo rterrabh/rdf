@@ -28,10 +28,10 @@ class Tk::BWidget::PagesManager
     win = window(tk_send('add', tagid(page)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-26> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-26> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-129> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-129> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -52,10 +52,10 @@ class Tk::BWidget::PagesManager
     win = window(tk_send('getframe', tagid(page)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-27> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-27> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-130> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-130> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

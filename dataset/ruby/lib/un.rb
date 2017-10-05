@@ -87,7 +87,7 @@ def cp
     options[:preserve] = true if options.delete :p
     dest = argv.pop
     argv = argv[0] if argv.size == 1
-    #nodyna <ID:send-122> <send VERY LOW ex1>
+    #nodyna <ID:send-122> <SD TRIVIAL (public methods)>
     FileUtils.send cmd, argv, dest, options
   end
 end
@@ -109,7 +109,7 @@ def ln
     options[:force] = true if options.delete :f
     dest = argv.pop
     argv = argv[0] if argv.size == 1
-    #nodyna <ID:send-123> <send VERY LOW ex1>
+    #nodyna <ID:send-123> <SD TRIVIAL (public methods)>
     FileUtils.send cmd, argv, dest, options
   end
 end
@@ -145,7 +145,7 @@ def rm
     cmd = "rm"
     cmd += "_r" if options.delete :r
     options[:force] = true if options.delete :f
-    #nodyna <ID:send-124> <send VERY LOW ex1>
+    #nodyna <ID:send-124> <SD TRIVIAL (public methods)>
     FileUtils.send cmd, argv, options
   end
 end
@@ -163,7 +163,7 @@ def mkdir
   setup("p") do |argv, options|
     cmd = "mkdir"
     cmd += "_p" if options.delete :p
-    #nodyna <ID:send-125> <send VERY LOW ex1>
+    #nodyna <ID:send-125> <SD TRIVIAL (public methods)>
     FileUtils.send cmd, argv, options
   end
 end

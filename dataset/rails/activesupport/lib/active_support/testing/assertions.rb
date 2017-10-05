@@ -64,7 +64,7 @@ module ActiveSupport
         expressions = Array(expression)
 
         exps = expressions.map { |e|
-          #nodyna <ID:eval-4> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-4> <EV COMPLEX (change-prone variables)>
           e.respond_to?(:call) ? e : lambda { eval(e, block.binding) }
         }
         before = exps.map { |e| e.call }

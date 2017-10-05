@@ -194,9 +194,9 @@ module ActiveSupport #:nodoc:
       end
 
       %w(capitalize downcase reverse tidy_bytes upcase).each do |method|
-        #nodyna <ID:define_method-66> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-66> <DM MODERATE (array)>
         define_method("#{method}!") do |*args|
-          #nodyna <ID:send-272> <send MEDIUM ex2>
+          #nodyna <ID:send-272> <SD MODERATE (array)>
           @wrapped_string = send(method, *args).to_s
           self
         end

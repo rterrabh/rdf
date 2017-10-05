@@ -33,7 +33,7 @@ module Spree
       if @provider.nil? || !@provider.respond_to?(method)
         super
       else
-        #nodyna <ID:send-96> <send VERY HIGH ex3>
+        #nodyna <ID:send-96> <SD COMPLEX (change-prone variables)>
         provider.send(method, *args)
       end
     end

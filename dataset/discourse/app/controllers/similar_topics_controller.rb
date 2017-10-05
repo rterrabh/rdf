@@ -33,7 +33,7 @@ class SimilarTopicsController < ApplicationController
 
     def check_length_of(key, attr)
       str = (key == :raw) ? "body" : key.to_s
-      #nodyna <ID:send-114> <send VERY HIGH ex3>
+      #nodyna <ID:send-114> <SD COMPLEX (change-prone variables)>
       raise Discourse::InvalidParameters.new(key) if attr.length < SiteSetting.send("min_#{str}_similar_length")
     end
 

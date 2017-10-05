@@ -163,7 +163,7 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
   def parent
     if parent_data.present?
       @parent ||= parent_data[:model_class].
-          #nodyna <ID:send-26> <send MEDIUM ex3>
+          #nodyna <ID:send-26> <SD MODERATE (change-prone variables)>
           send("find_by_#{parent_data[:find_by]}", params["#{resource.model_name}_id"])
       instance_variable_set("@#{resource.model_name}", @parent)
     else
@@ -173,7 +173,7 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
 
   def find_resource
     if parent_data.present?
-      #nodyna <ID:send-27> <send VERY HIGH ex3>
+      #nodyna <ID:send-27> <SD COMPLEX (change-prone variables)>
       parent.send(controller_name).find(params[:id])
     else
       model_class.find(params[:id])
@@ -182,7 +182,7 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
 
   def build_resource
     if parent_data.present?
-      #nodyna <ID:send-28> <send VERY HIGH ex3>
+      #nodyna <ID:send-28> <SD COMPLEX (change-prone variables)>
       parent.send(controller_name).build
     else
       model_class.new
@@ -190,7 +190,7 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
   end
 
   def collection
-    #nodyna <ID:send-29> <send VERY HIGH ex3>
+    #nodyna <ID:send-29> <SD COMPLEX (change-prone variables)>
     return parent.send(controller_name) if parent_data.present?
     if model_class.respond_to?(:accessible_by) &&
         !current_ability.has_block?(params[:action], model_class)
@@ -220,11 +220,11 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
 
   def edit_object_url(object, options = {})
     if parent_data.present?
-      #nodyna <ID:send-30> <send VERY HIGH ex3>
+      #nodyna <ID:send-30> <SD COMPLEX (change-prone variables)>
       spree.send "edit_admin_#{resource.model_name}_#{resource.object_name}_url",
                  parent, object, options
     else
-      #nodyna <ID:send-31> <send VERY HIGH ex3>
+      #nodyna <ID:send-31> <SD COMPLEX (change-prone variables)>
       spree.send "edit_admin_#{resource.object_name}_url", object, options
     end
   end
@@ -232,10 +232,10 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
   def object_url(object = nil, options = {})
     target = object ? object : @object
     if parent_data.present?
-      #nodyna <ID:send-32> <send VERY HIGH ex3>
+      #nodyna <ID:send-32> <SD COMPLEX (change-prone variables)>
       spree.send "admin_#{resource.model_name}_#{resource.object_name}_url", parent, target, options
     else
-      #nodyna <ID:send-33> <send VERY HIGH ex3>
+      #nodyna <ID:send-33> <SD COMPLEX (change-prone variables)>
       spree.send "admin_#{resource.object_name}_url", target, options
     end
   end

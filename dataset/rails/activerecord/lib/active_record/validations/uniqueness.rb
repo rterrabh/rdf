@@ -80,7 +80,7 @@ module ActiveRecord
       def scope_relation(record, table, relation)
         Array(options[:scope]).each do |scope_item|
           if reflection = record.class._reflect_on_association(scope_item)
-            #nodyna <ID:send-167> <send VERY HIGH ex3>
+            #nodyna <ID:send-167> <SD COMPLEX (change-prone variables)>
             scope_value = record.send(reflection.foreign_key)
             scope_item  = reflection.foreign_key
           else

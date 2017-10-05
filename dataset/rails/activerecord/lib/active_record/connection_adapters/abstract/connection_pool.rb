@@ -435,7 +435,7 @@ module ActiveRecord
       end
 
       def new_connection
-        #nodyna <ID:send-138> <send VERY HIGH ex3>
+        #nodyna <ID:send-138> <SD COMPLEX (change-prone variables)>
         Base.send(spec.adapter_method, spec.config)
       end
 

@@ -112,7 +112,7 @@ module Homebrew
 
   def bottle_output(bottle)
     erb = ERB.new BOTTLE_ERB
-    #nodyna <ID:instance_eval-4> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-4> <IEV COMPLEX (block execution)>
     erb.result(bottle.instance_eval { binding }).gsub(/^\s*$\n/, "")
   end
 
@@ -217,7 +217,7 @@ module Homebrew
 
   module BottleMerger
     def bottle(&block)
-      #nodyna <ID:instance_eval-5> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-5> <IEV COMPLEX (block execution)>
       instance_eval(&block)
     end
   end
@@ -235,7 +235,7 @@ module Homebrew
       ohai formula_name
 
       bottle = BottleSpecification.new.extend(BottleMerger)
-      #nodyna <ID:instance_eval-6> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-6> <IEV COMPLEX (block execution)>
       bottle_blocks.each { |block| bottle.instance_eval(block) }
 
       output = bottle_output bottle

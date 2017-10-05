@@ -149,7 +149,7 @@ module Psych
         if target.respond_to?(:encode_with)
           dump_coder target
         else
-          #nodyna <ID:send-7> <send VERY HIGH ex3>
+          #nodyna <ID:send-7> <SD COMPLEX (change-prone variables)>
           send(@dispatch_cache[target.class], target)
         end
       end

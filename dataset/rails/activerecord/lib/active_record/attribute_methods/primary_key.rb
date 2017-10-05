@@ -56,7 +56,7 @@ module ActiveRecord
           super
 
           if attr_name == primary_key && attr_name != 'id'
-            #nodyna <ID:send-199> <send VERY HIGH ex4>
+            #nodyna <ID:send-199> <SD COMPLEX (private methods)>
             generated_attribute_methods.send(:alias_method, :id, primary_key)
           end
         end

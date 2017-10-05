@@ -41,7 +41,7 @@ module RailsAdmin
         scope = scope.where(query_conditions(options[:query])) if options[:query]
         scope = scope.where(filter_conditions(options[:filters])) if options[:filters]
         if options[:page] && options[:per]
-          #nodyna <ID:send-47> <send VERY HIGH ex3>
+          #nodyna <ID:send-47> <SD COMPLEX (change-prone variables)>
           scope = scope.send(Kaminari.config.page_method_name, options[:page]).per(options[:per])
         end
         scope = sort_by(options, scope) if options[:sort]
@@ -181,10 +181,10 @@ module RailsAdmin
         model = target_association.klass
         case target_association.type
         when :belongs_to, :has_and_belongs_to_many
-          #nodyna <ID:send-48> <send VERY HIGH ex2>
+          #nodyna <ID:send-48> <SD COMPLEX (array)>
           [{target_association.foreign_key.to_s => {'$in' => model.where('$or' => conditions).all.collect { |r| r.send(target_association.primary_key) }}}]
         when :has_many
-          #nodyna <ID:send-49> <send VERY HIGH ex2>
+          #nodyna <ID:send-49> <SD COMPLEX (array)>
           [{target_association.primary_key.to_s => {'$in' => model.where('$or' => conditions).all.collect { |r| r.send(target_association.foreign_key) }}}]
         end
       end

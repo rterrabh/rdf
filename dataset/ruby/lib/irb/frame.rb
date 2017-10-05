@@ -69,7 +69,7 @@ module IRB
 
     # Returns the binding context of the caller from the last frame initialized
     def Frame.sender
-      #nodyna <ID:eval-123> <eval VERY HIGH ex4>
+      #nodyna <ID:eval-123> <EV COMPLEX (scope)>
       eval "self", @backtrace.top
     end
 

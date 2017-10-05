@@ -261,7 +261,7 @@ class PP < PrettyPrint
           text '='
           group(1) {
             breakable ''
-            #nodyna <ID:instance_eval-158> <instance_eval VERY HIGH ex3>
+            #nodyna <ID:instance_eval-158> <IEV COMPLEX (block execution)>
             pp(obj.instance_eval(v))
           }
         }

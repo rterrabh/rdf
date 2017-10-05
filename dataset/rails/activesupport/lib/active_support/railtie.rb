@@ -39,7 +39,7 @@ module ActiveSupport
     initializer "active_support.set_configs" do |app|
       app.config.active_support.each do |k, v|
         k = "#{k}="
-        #nodyna <ID:send-266> <send VERY HIGH ex2>
+        #nodyna <ID:send-266> <SD COMPLEX (array)>
         ActiveSupport.send(k, v) if ActiveSupport.respond_to? k
       end
     end

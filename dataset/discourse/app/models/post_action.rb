@@ -270,7 +270,7 @@ SQL
 
     if post_action
       post_action.recover!
-      #nodyna <ID:send-173> <send MEDIUM ex2>
+      #nodyna <ID:send-173> <SD MODERATE (array)>
       action_attrs.each { |attr, val| post_action.send("#{attr}=", val) }
       post_action.save
     else
@@ -336,13 +336,13 @@ SQL
     return @rate_limiter if @rate_limiter.present?
 
     %w(like flag bookmark).each do |type|
-      #nodyna <ID:send-174> <send MEDIUM ex2>
+      #nodyna <ID:send-174> <SD MODERATE (array)>
       if send("is_#{type}?")
-        #nodyna <ID:send-175> <send MEDIUM ex2>
+        #nodyna <ID:send-175> <SD MODERATE (array)>
         limit = SiteSetting.send("max_#{type}s_per_day")
 
         if is_like? && user && user.trust_level >= 2
-          #nodyna <ID:send-176> <send VERY HIGH ex3>
+          #nodyna <ID:send-176> <SD COMPLEX (change-prone variables)>
           multiplier = SiteSetting.send("tl#{user.trust_level}_additional_likes_per_day_multiplier").to_f
           multiplier = 1.0 if multiplier < 1.0
 

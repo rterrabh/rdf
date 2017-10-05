@@ -107,7 +107,7 @@ module ActiveModel
       hash = {}
       attribute_names.each { |n| hash[n] = read_attribute_for_serialization(n) }
 
-      #nodyna <ID:send-11> <send VERY HIGH ex2>
+      #nodyna <ID:send-11> <SD COMPLEX (array)>
       Array(options[:methods]).each { |m| hash[m.to_s] = send(m) if respond_to?(m) }
 
       serializable_add_includes(options) do |association, records, opts|
@@ -155,7 +155,7 @@ module ActiveModel
         end
 
         includes.each do |association, opts|
-          #nodyna <ID:send-13> <send VERY HIGH ex2>
+          #nodyna <ID:send-13> <SD COMPLEX (array)>
           if records = send(association)
             yield association, records, opts
           end

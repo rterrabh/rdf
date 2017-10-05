@@ -7,7 +7,7 @@ class UsernameValidator
   #
   # Example: UsernameValidator.perform_validation(user, 'name')
   def self.perform_validation(object, field_name)
-    #nodyna <ID:send-212> <send MEDIUM ex3>
+    #nodyna <ID:send-212> <SD MODERATE (change-prone variables)>
     validator = UsernameValidator.new(object.send(field_name))
     unless validator.valid_format?
       validator.errors.each { |e| object.errors.add(field_name.to_sym, e) }

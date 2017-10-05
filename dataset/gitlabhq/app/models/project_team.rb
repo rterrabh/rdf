@@ -153,9 +153,9 @@ class ProjectTeam
     group_members = group ? group.group_members : []
 
     if level
-      #nodyna <ID:send-93> <send MEDIUM ex3>
+      #nodyna <ID:send-93> <SD MODERATE (change-prone variables)>
       project_members = project_members.send(level)
-      #nodyna <ID:send-94> <send MEDIUM ex3>
+      #nodyna <ID:send-94> <SD MODERATE (change-prone variables)>
       group_members = group_members.send(level) if group
     end
 

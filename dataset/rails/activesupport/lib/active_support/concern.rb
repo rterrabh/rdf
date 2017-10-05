@@ -114,10 +114,10 @@ module ActiveSupport
         return false
       else
         return false if base < self
-        #nodyna <ID:send-275> <send VERY LOW ex1>
+        #nodyna <ID:send-275> <SD TRIVIAL (public methods)>
         @_dependencies.each { |dep| base.send(:include, dep) }
         super
-        #nodyna <ID:const_get-20> <const_get VERY LOW ex1>
+        #nodyna <ID:const_get-20> <CG TRIVIAL (static values)>
         base.extend const_get(:ClassMethods) if const_defined?(:ClassMethods)
         base.class_eval(&@_included_block) if instance_variable_defined?(:@_included_block)
       end
@@ -135,9 +135,9 @@ module ActiveSupport
 
     def class_methods(&class_methods_module_definition)
       mod = const_defined?(:ClassMethods, false) ?
-        #nodyna <ID:const_get-21> <const_get VERY LOW ex1>
+        #nodyna <ID:const_get-21> <CG TRIVIAL (static values)>
         const_get(:ClassMethods) :
-        #nodyna <ID:const_set-10> <const_set VERY LOW ex1>
+        #nodyna <ID:const_set-10> <CS TRIVIAL (static values)>
         const_set(:ClassMethods, Module.new)
 
       mod.module_eval(&class_methods_module_definition)

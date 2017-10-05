@@ -169,13 +169,13 @@ module RSS
     module InheritedReader
       def inherited_reader(constant_name)
         base_class = inherited_base
-        #nodyna <ID:const_get-40> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-40> <CG COMPLEX (change-prone variable)>
         result = base_class.const_get(constant_name)
         found_base_class = false
         ancestors.reverse_each do |klass|
           if found_base_class
             if klass.const_defined?(constant_name)
-              #nodyna <ID:const_get-41> <const_get VERY HIGH ex3>
+              #nodyna <ID:const_get-41> <CG COMPLEX (change-prone variable)>
               result = yield(result, klass.const_get(constant_name))
             end
           else

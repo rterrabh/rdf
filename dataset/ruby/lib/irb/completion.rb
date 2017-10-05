@@ -92,9 +92,9 @@ module IRB
         receiver = $1
         message = Regexp.quote($2)
         begin
-          #nodyna <ID:eval-113> <eval VERY HIGH ex4>
+          #nodyna <ID:eval-113> <EV COMPLEX (scope)>
           candidates = eval("#{receiver}.constants.collect{|m| m.to_s}", bind)
-          #nodyna <ID:eval-114> <eval VERY HIGH ex4>
+          #nodyna <ID:eval-114> <EV COMPLEX (scope)>
           candidates |= eval("#{receiver}.methods.collect{|m| m.to_s}", bind)
         rescue Exception
           candidates = []
@@ -117,7 +117,7 @@ module IRB
         message = Regexp.quote($6)
 
         begin
-          #nodyna <ID:eval-115> <eval VERY HIGH ex4>
+          #nodyna <ID:eval-115> <EV COMPLEX (scope)>
           candidates = eval(receiver, bind).methods.collect{|m| m.to_s}
         rescue Exception
           candidates = []
@@ -131,7 +131,7 @@ module IRB
         message = Regexp.quote($3)
 
         begin
-          #nodyna <ID:eval-116> <eval VERY HIGH ex4>
+          #nodyna <ID:eval-116> <EV COMPLEX (scope)>
           candidates = eval(receiver, bind).methods.collect{|m| m.to_s}
         rescue Exception
           candidates = []
@@ -149,13 +149,13 @@ module IRB
         sep = $2
         message = Regexp.quote($3)
 
-        #nodyna <ID:eval-117> <eval VERY HIGH ex3>
+        #nodyna <ID:eval-117> <EV COMPLEX (private methods)>
         gv = eval("global_variables", bind).collect{|m| m.to_s}
-        #nodyna <ID:eval-118> <eval VERY HIGH ex3>
+        #nodyna <ID:eval-118> <EV COMPLEX (private methods)>
         lv = eval("local_variables", bind).collect{|m| m.to_s}
-        #nodyna <ID:eval-119> <eval VERY HIGH ex3>
+        #nodyna <ID:eval-119> <EV COMPLEX (private methods)>
         iv = eval("instance_variables", bind).collect{|m| m.to_s}
-        #nodyna <ID:eval-120> <eval VERY HIGH ex3>
+        #nodyna <ID:eval-120> <EV COMPLEX (private methods)>
         cv = eval("self.class.constants", bind).collect{|m| m.to_s}
 
         if (gv | lv | iv | cv).include?(receiver) or /^[A-Z]/ =~ receiver && /\./ !~ receiver
@@ -165,7 +165,7 @@ module IRB
           # Foo::Bar.func
           begin
             candidates = []
-            #nodyna <ID:eval-121> <eval VERY HIGH ex2>
+            #nodyna <ID:eval-121> <EV COMPLEX (change-prone variables)>
             rec = eval(receiver, bind)
             if sep == "::" and rec.kind_of?(Module)
               candidates = rec.constants.collect{|m| m.to_s}
@@ -206,7 +206,7 @@ module IRB
         select_message(receiver, message, candidates)
 
       else
-        #nodyna <ID:eval-122> <eval VERY HIGH ex3>
+        #nodyna <ID:eval-122> <EV COMPLEX (private methods)>
         candidates = eval("methods | private_methods | local_variables | instance_variables | self.class.constants", bind).collect{|m| m.to_s}
 
         (candidates|ReservedWords).grep(/^#{Regexp.quote(input)}/)

@@ -273,7 +273,7 @@ module ActiveRecord
       end
 
       [:string, :text, :integer, :bigint, :float, :decimal, :datetime, :timestamp, :time, :date, :binary, :boolean].each do |column_type|
-        #nodyna <ID:define_method-19> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-19> <DM MODERATE (array)>
         define_method column_type do |*args|
           options = args.extract_options!
           column_names = args
@@ -568,7 +568,7 @@ module ActiveRecord
       #  t.string(:goat)
       #  t.string(:goat, :sheep)
       [:string, :text, :integer, :float, :decimal, :datetime, :timestamp, :time, :date, :binary, :boolean].each do |column_type|
-        #nodyna <ID:define_method-20> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-20> <DM MODERATE (array)>
         define_method column_type do |*args|
           options = args.extract_options!
           args.each do |column_name|

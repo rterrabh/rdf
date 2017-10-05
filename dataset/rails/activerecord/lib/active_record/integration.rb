@@ -97,10 +97,10 @@ module ActiveRecord
         if method_name.nil?
           super()
         else
-          #nodyna <ID:define_method-21> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-21> <DM COMPLEX (events)>
           define_method :to_param do
             if (default = super()) &&
-                 #nodyna <ID:send-141> <send VERY HIGH ex3>
+                 #nodyna <ID:send-141> <SD COMPLEX (change-prone variables)>
                  (result = send(method_name).to_s).present? &&
                    (param = result.squish.truncate(20, separator: /\s/, omission: nil).parameterize).present?
               "#{default}-#{param}"

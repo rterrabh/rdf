@@ -28,13 +28,13 @@ describe Postzord::Receiver do
 
     it "should return false if the author matches" do
       allow(@receiver).to receive(:xml_author).and_return(alice.diaspora_handle)
-      #nodyna <ID:send-126> <send LOW ex4>
+      #nodyna <ID:send-126> <SD EASY (private methods)>
       expect(@receiver.send(:author_does_not_match_xml_author?)).to be_falsey
     end
 
     it "should return true if the author does not match" do
       allow(@receiver).to receive(:xml_author).and_return(bob.diaspora_handle)
-      #nodyna <ID:send-127> <send LOW ex4>
+      #nodyna <ID:send-127> <SD EASY (private methods)>
       expect(@receiver.send(:author_does_not_match_xml_author?)).to be_truthy
     end
   end
@@ -46,7 +46,7 @@ describe Postzord::Receiver do
 
     it "should return false if object is not relayable" do
       @receiver.instance_variable_set(:@object, nil)
-      #nodyna <ID:send-128> <send LOW ex4>
+      #nodyna <ID:send-128> <SD EASY (private methods)>
       expect(@receiver.send(:relayable_without_parent?)).to be_falsey
     end
 
@@ -57,13 +57,13 @@ describe Postzord::Receiver do
       end
 
       it "should return false if object has parent" do
-        #nodyna <ID:send-129> <send LOW ex4>
+        #nodyna <ID:send-129> <SD EASY (private methods)>
         expect(@receiver.send(:relayable_without_parent?)).to be_falsey
       end
 
       it "should return true if object has no parent" do
         @comment.parent = nil
-        #nodyna <ID:send-130> <send LOW ex4>
+        #nodyna <ID:send-130> <SD EASY (private methods)>
         expect(@receiver.send(:relayable_without_parent?)).to be_truthy
       end
     end

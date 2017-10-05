@@ -22,7 +22,7 @@ module ActionMailer
     end
 
     def __getobj__ #:nodoc:
-      #nodyna <ID:send-3> <send VERY HIGH ex4>
+      #nodyna <ID:send-3> <SD COMPLEX (private methods)>
       @obj ||= @mailer.send(:new, @mail_method, *@args).message
     end
 

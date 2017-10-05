@@ -37,20 +37,20 @@ module Homebrew
 
     if recursive
       deps = f.recursive_dependencies do |dependent, dep|
-        #nodyna <ID:send-15> <send MEDIUM ex2>
+        #nodyna <ID:send-15> <SD MODERATE (array)>
         Dependency.prune if ignores.any? { |ignore| dep.send(ignore) } && !dependent.build.with?(dep)
       end
       reqs = f.recursive_requirements do |dependent, req|
-        #nodyna <ID:send-16> <send MEDIUM ex2>
+        #nodyna <ID:send-16> <SD MODERATE (array)>
         Requirement.prune if ignores.any? { |ignore| req.send(ignore) } && !dependent.build.with?(req)
       end
     else
       deps = f.deps.reject do |dep|
-        #nodyna <ID:send-17> <send MEDIUM ex2>
+        #nodyna <ID:send-17> <SD MODERATE (array)>
         ignores.any? { |ignore| dep.send(ignore) }
       end
       reqs = f.requirements.reject do |req|
-        #nodyna <ID:send-18> <send MEDIUM ex2>
+        #nodyna <ID:send-18> <SD MODERATE (array)>
         ignores.any? { |ignore| req.send(ignore) }
       end
     end

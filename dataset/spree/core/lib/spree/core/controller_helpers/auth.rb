@@ -35,7 +35,7 @@ module Spree
           disallowed_urls = []
           authentication_routes.each do |route|
             if respond_to?(route)
-              #nodyna <ID:send-4> <send MEDIUM ex2>
+              #nodyna <ID:send-4> <SD MODERATE (array)>
               disallowed_urls << send(route)
             end
           end

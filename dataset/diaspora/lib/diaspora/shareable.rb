@@ -6,7 +6,7 @@
 module Diaspora
   module Shareable
     def self.included(model)
-      #nodyna <ID:instance_eval-6> <instance_eval VERY HIGH ex2>
+      #nodyna <ID:instance_eval-6> <IEV COMPLEX (method definition)>
       model.instance_eval do
 
         has_many :aspect_visibilities, :as => :shareable, :validate => false

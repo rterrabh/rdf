@@ -72,7 +72,7 @@ module Spree
 
       def to_hash
         Hash[hash_methods.map do |method|
-          #nodyna <ID:send-100> <send MEDIUM ex2>
+          #nodyna <ID:send-100> <SD MODERATE (array)>
           [method, send(method)]
         end]
       end

@@ -230,7 +230,7 @@ module Test
         if options.delete(:gc_stress)
           MiniTest::Unit::TestCase.class_eval do
             oldrun = instance_method(:run)
-            #nodyna <ID:define_method-51> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-51> <DM MODERATE (events)>
             define_method(:run) do |runner|
               begin
                 gc_stress, GC.stress = GC.stress, true
@@ -638,7 +638,7 @@ module Test
             @options[:parallel] = false
             suites, rep = rep.partition {|r| r[:testcase] && r[:file] && r[:report].any? {|e| !e[2].is_a?(MiniTest::Skip)}}
             suites.map {|r| r[:file]}.uniq.each {|file| require file}
-            #nodyna <ID:eval-127> <eval VERY HIGH ex2>
+            #nodyna <ID:eval-127> <EV COMPLEX (change-prone variables)>
             suites.map! {|r| eval("::"+r[:testcase])}
             del_status_line or puts
             unless suites.empty?
@@ -730,10 +730,10 @@ module Test
         end
         type = "#{type}_methods"
         total = if filter
-                  #nodyna <ID:send-151> <send VERY HIGH ex3>
+                  #nodyna <ID:send-151> <SD COMPLEX (change-prone variables)>
                   suites.inject(0) {|n, suite| n + suite.send(type).grep(filter).size}
                 else
-                  #nodyna <ID:send-152> <send VERY HIGH ex3>
+                  #nodyna <ID:send-152> <SD COMPLEX (change-prone variables)>
                   suites.inject(0) {|n, suite| n + suite.send(type).size}
                 end
         @test_count = 0

@@ -63,7 +63,7 @@ module ActionMailer
       # as they would if the mail was actually being delivered.
       def call(email)
         preview = self.new
-        #nodyna <ID:send-6> <send VERY HIGH ex3>
+        #nodyna <ID:send-6> <SD COMPLEX (change-prone variables)>
         message = preview.public_send(email)
         inform_preview_interceptors(message)
         message

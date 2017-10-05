@@ -25,7 +25,7 @@ module JSON
     def parser=(parser) # :nodoc:
       @parser = parser
       remove_const :Parser if JSON.const_defined_in?(self, :Parser)
-      #nodyna <ID:const_set-1> <const_set VERY LOW ex1>
+      #nodyna <ID:const_set-1> <CS TRIVIAL (static values)>
       const_set :Parser, parser
     end
 
@@ -37,7 +37,7 @@ module JSON
       path.to_s.split(/::/).inject(Object) do |p, c|
         case
         when c.empty?                     then p
-        #nodyna <ID:const_get-1> <const_get VERY HIGH ex2>
+        #nodyna <ID:const_get-1> <CG COMPLEX (array)>
         when JSON.const_defined_in?(p, c) then p.const_get(c)
         else
           begin
@@ -56,7 +56,7 @@ module JSON
       generator_methods = generator::GeneratorMethods
       for const in generator_methods.constants
         klass = deep_const_get(const)
-        #nodyna <ID:const_get-2> <const_get VERY HIGH ex2>
+        #nodyna <ID:const_get-2> <CG COMPLEX (array)>
         modul = generator_methods.const_get(const)
         klass.class_eval do
           instance_methods(false).each do |m|
@@ -66,11 +66,11 @@ module JSON
         end
       end
       self.state = generator::State
-      #nodyna <ID:const_set-2> <const_set VERY LOW ex1>
+      #nodyna <ID:const_set-2> <CS TRIVIAL (static values)>
       const_set :State, self.state
-      #nodyna <ID:const_set-3> <const_set VERY LOW ex1>
+      #nodyna <ID:const_set-3> <CS TRIVIAL (static values)>
       const_set :SAFE_STATE_PROTOTYPE, State.new
-      #nodyna <ID:const_set-4> <const_set VERY LOW ex1>
+      #nodyna <ID:const_set-4> <CS TRIVIAL (static values)>
       const_set :FAST_STATE_PROTOTYPE, State.new(
         :indent         => '',
         :space          => '',
@@ -78,7 +78,7 @@ module JSON
         :array_nl       => "",
         :max_nesting    => false
       )
-      #nodyna <ID:const_set-5> <const_set VERY LOW ex1>
+      #nodyna <ID:const_set-5> <CS TRIVIAL (static values)>
       const_set :PRETTY_STATE_PROTOTYPE, State.new(
         :indent         => '  ',
         :space          => ' ',

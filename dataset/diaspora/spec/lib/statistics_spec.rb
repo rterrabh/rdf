@@ -111,7 +111,7 @@ describe Statistics do
     it "#{method}_sql calls where_sql" do
       expect(@stats).to receive(:where_clause_sql)
 
-      #nodyna <ID:send-113> <send MEDIUM ex2>
+      #nodyna <ID:send-113> <SD MODERATE (array)>
       @stats.send("#{method}_sql".to_sym)
     end
 

@@ -8,7 +8,7 @@ class BasePresenter
     end
 
     def as_collection(collection, method=:as_json, *args)
-      #nodyna <ID:send-247> <send MEDIUM ex2>
+      #nodyna <ID:send-247> <SD MODERATE (array)>
       collection.map{|object| self.new(object, *args).send(method) }
     end
   end
@@ -19,7 +19,7 @@ class BasePresenter
   end
 
   def method_missing(method, *args)
-    #nodyna <ID:send-248> <send VERY HIGH ex3>
+    #nodyna <ID:send-248> <SD COMPLEX (change-prone variables)>
     @presentable.public_send(method, *args)
   end
 

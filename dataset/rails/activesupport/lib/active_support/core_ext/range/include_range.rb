@@ -13,7 +13,7 @@ class Range
     if value.is_a?(::Range)
       # 1...10 includes 1..9 but it does not include 1..10.
       operator = exclude_end? && !value.exclude_end? ? :< : :<=
-      #nodyna <ID:send-257> <send MEDIUM ex3>
+      #nodyna <ID:send-257> <SD MODERATE (change-prone variables)>
       include_without_range?(value.first) && value.last.send(operator, last)
     else
       include_without_range?(value)

@@ -8,7 +8,7 @@ module TkOptionDB
   extend Tk
 
   TkCommandNames = ['option'.freeze].freeze
-  #nodyna <ID:instance_eval-56> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-56> <IEV MODERATE (method definition)>
   (CmdClassID = ['CMD_CLASS'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -135,7 +135,7 @@ module TkOptionDB
   # support procs on the resource database
   @@resource_proc_class = Class.new
 
-  #nodyna <ID:const_set-15> <const_set VERY LOW ex1>
+  #nodyna <ID:const_set-15> <CS TRIVIAL (static values)>
   @@resource_proc_class.const_set(:CARRIER, '.'.freeze)
 
   @@resource_proc_class.instance_variable_set('@method_tbl',
@@ -198,7 +198,7 @@ module TkOptionDB
         res_proc = proc{
           begin
             #eval("$SAFE = #{self::SAFE_MODE};\nProc.new" + proc_str)
-            #nodyna <ID:eval-56> <eval VERY HIGH ex2>
+            #nodyna <ID:eval-56> <EV COMPLEX (change-prone variables)>
             eval("$SAFE = #{@safe_mode};\nProc.new" + proc_str)
           rescue SyntaxError=>err
             raise SyntaxError,
@@ -289,7 +289,7 @@ module TkOptionDB
     else
       cmd_klass = Class.new(TkOptionDB.module_eval('@@resource_proc_class'))
     end
-    #nodyna <ID:const_set-16> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-16> <CS TRIVIAL (static values)>
     cmd_klass.const_set(:CARRIER, carrier.dup.freeze)
 
     cmd_klass.instance_variable_set('@method_tbl', TkCore::INTERP.create_table)

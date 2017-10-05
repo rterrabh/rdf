@@ -174,9 +174,9 @@ class BottleSpecificationTests < Homebrew::TestCase
   def test_other_setters
     double = Object.new
     %w[root_url prefix cellar revision].each do |method|
-      #nodyna <ID:send-29> <send MEDIUM ex2>
+      #nodyna <ID:send-29> <SD MODERATE (array)>
       @spec.send(method, double)
-      #nodyna <ID:send-30> <send MEDIUM ex2>
+      #nodyna <ID:send-30> <SD MODERATE (array)>
       assert_equal double, @spec.send(method)
     end
   end

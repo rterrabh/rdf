@@ -12,10 +12,10 @@ class TopListSerializer < ApplicationSerializer
   TopTopic.periods.each do |period|
     attribute period
 
-    #nodyna <ID:define_method-25> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-25> <DM MODERATE (array)>
     define_method(period) do
-      #nodyna <ID:send-127> <send MEDIUM ex3>
-      #nodyna <ID:send-127> <send MEDIUM ex3>
+      #nodyna <ID:send-127> <SD MODERATE (change-prone variables)>
+      #nodyna <ID:send-127> <SD MODERATE (change-prone variables)>
       TopicListSerializer.new(object.send(period), scope: scope).as_json if object.send(period)
     end
 

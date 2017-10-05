@@ -71,7 +71,7 @@ module ActiveAdmin
       def find_index_class(symbol_or_class)
         case symbol_or_class
         when Symbol
-          #nodyna <ID:const_get-1> <const_get VERY HIGH ex3>
+          #nodyna <ID:const_get-1> <CG COMPLEX (change-prone variable)>
           ::ActiveAdmin::Views.const_get("IndexAs" + symbol_or_class.to_s.camelcase)
         when Class
           symbol_or_class

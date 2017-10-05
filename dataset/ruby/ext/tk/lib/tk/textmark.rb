@@ -9,7 +9,7 @@ class TkTextMark<TkObject
 
   TMarkID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-45> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-45> <IEV MODERATE (method definition)>
   (Tk_TextMark_ID = ['mark'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -147,7 +147,7 @@ class TkTextNamedMark<TkTextMark
         obj = TMarkID_TBL[parent.path][name]
       else
         # super(parent, name, *args)
-        #nodyna <ID:instance_eval-46> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-46> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @parent = @t = parent
           @tpath = parent.path

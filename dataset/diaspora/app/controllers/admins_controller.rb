@@ -88,7 +88,7 @@ class AdminsController < Admin::AdminController
   def create_hash(model, opts={})
     opts[:range] ||= 1.day
     plural = model.to_s.underscore.pluralize
-    #nodyna <ID:eval-1> <eval MEDIUM ex6>
+    #nodyna <ID:eval-1> <EV MODERATE (variable definition)>
     eval(<<DATA
       @#{plural} = {
         :day_before => #{model}.where(:created_at => ((Time.now.midnight - #{opts[:range]*2})..Time.now.midnight - #{opts[:range]})).count,
@@ -116,13 +116,13 @@ DATA
 
     def assign_attributes(values)
       values.each do |k, v|
-        #nodyna <ID:send-180> <send MEDIUM ex2>
+        #nodyna <ID:send-180> <SD MODERATE (array)>
         public_send("#{k}=", v)
       end
     end
 
     def any_searchfield_present?
-      #nodyna <ID:send-181> <send MEDIUM ex2>
+      #nodyna <ID:send-181> <SD MODERATE (array)>
       if %w(username email guid under13).all? { |attr| public_send(attr).blank? }
         errors.add :base, "no fields for search set"
       end

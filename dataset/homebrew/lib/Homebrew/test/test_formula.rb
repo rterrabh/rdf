@@ -198,12 +198,12 @@ class FormulaTests < Homebrew::TestCase
       end
     end
     assert_equal :stable, f.active_spec_sym
-    #nodyna <ID:send-32> <send VERY HIGH ex4>
+    #nodyna <ID:send-32> <SD COMPLEX (private methods)>
     assert_equal f.stable, f.send(:active_spec)
     assert_equal "1.0_1", f.pkg_version.to_s
     f.set_active_spec(:devel)
     assert_equal :devel, f.active_spec_sym
-    #nodyna <ID:send-33> <send VERY HIGH ex4>
+    #nodyna <ID:send-33> <SD COMPLEX (private methods)>
     assert_equal f.devel, f.send(:active_spec)
     assert_equal "1.0beta_1", f.pkg_version.to_s
     assert_raises(FormulaSpecificationError) { f.set_active_spec(:head) }
@@ -250,14 +250,14 @@ class FormulaTests < Homebrew::TestCase
     f = formula { url "foo-1.0" }
 
     %w[stable devel head].each do |spec|
-      #nodyna <ID:send-34> <send MEDIUM ex2>
+      #nodyna <ID:send-34> <SD MODERATE (array)>
       assert_kind_of SoftwareSpec, f.class.send(spec)
     end
   end
 
   def test_incomplete_instance_specs_are_not_accessible
     f = formula { url "foo-1.0" }
-    #nodyna <ID:send-35> <send MEDIUM ex2>
+    #nodyna <ID:send-35> <SD MODERATE (array)>
     %w[devel head].each { |spec| assert_nil f.send(spec) }
   end
 
@@ -269,7 +269,7 @@ class FormulaTests < Homebrew::TestCase
     end
 
     %w[stable devel head].each do |spec|
-      #nodyna <ID:send-36> <send MEDIUM ex2>
+      #nodyna <ID:send-36> <SD MODERATE (array)>
       assert_equal "foo", f.class.send(spec).deps.first.name
     end
   end

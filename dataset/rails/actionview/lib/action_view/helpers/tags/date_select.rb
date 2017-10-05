@@ -11,7 +11,7 @@ module ActionView
         end
 
         def render
-          #nodyna <ID:send-52> <send VERY HIGH ex3>
+          #nodyna <ID:send-52> <SD COMPLEX (change-prone variables)>
           error_wrapping(datetime_selector(@options, @html_options).send("select_#{select_type}").html_safe)
         end
 
@@ -58,7 +58,7 @@ module ActionView
             time = Time.current
 
             [:year, :month, :day, :hour, :min, :sec].each do |key|
-              #nodyna <ID:send-53> <send MEDIUM ex2>
+              #nodyna <ID:send-53> <SD MODERATE (array)>
               default[key] ||= time.send(key)
             end
 

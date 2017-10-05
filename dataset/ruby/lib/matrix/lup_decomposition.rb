@@ -47,7 +47,7 @@ class Matrix
     def p
       rows = Array.new(@row_count){Array.new(@row_count, 0)}
       @pivots.each_with_index{|p, i| rows[i][p] = 1}
-      #nodyna <ID:send-112> <send VERY HIGH ex4>
+      #nodyna <ID:send-112> <SD COMPLEX (private methods)>
       Matrix.send :new, rows, @row_count
     end
 
@@ -124,7 +124,7 @@ class Matrix
             end
           end
         end
-        #nodyna <ID:send-113> <send VERY HIGH ex4>
+        #nodyna <ID:send-113> <SD COMPLEX (private methods)>
         Matrix.send :new, m, nx
       else # same algorithm, specialized for simpler case of a vector
         b = convert_to_array(b)

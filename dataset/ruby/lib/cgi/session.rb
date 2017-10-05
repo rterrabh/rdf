@@ -280,7 +280,7 @@ class CGI
         @new_session=true
         retry
       end
-      #nodyna <ID:instance_eval-152> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-152> <IEV COMPLEX (private access)>
       request.instance_eval do
         @output_hidden = {session_key => session_id} unless option['no_hidden']
         @output_cookies =  [

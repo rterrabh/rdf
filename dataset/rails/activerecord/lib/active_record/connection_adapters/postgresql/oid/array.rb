@@ -54,7 +54,7 @@ module ActiveRecord
             if value.is_a?(::Array)
               value.map { |item| type_cast_array(item, method) }
             else
-              #nodyna <ID:send-135> <send MEDIUM ex3>
+              #nodyna <ID:send-135> <SD MODERATE (change-prone variables)>
               @subtype.public_send(method, value)
             end
           end

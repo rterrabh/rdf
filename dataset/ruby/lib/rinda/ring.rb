@@ -439,7 +439,7 @@ module Rinda
     def send_message(address, message) # :nodoc:
       soc = make_socket(address)
 
-      #nodyna <ID:send-107> <send VERY HIGH ex3>
+      #nodyna <ID:send-107> <SD COMPLEX (change-prone variables)>
       soc.send(message, 0)
     rescue
       nil

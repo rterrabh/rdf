@@ -448,7 +448,7 @@ module REXML
               expr( arg, [n], cont )
             }
             Functions.context = cont
-            #nodyna <ID:send-101> <send MEDIUM ex3>
+            #nodyna <ID:send-101> <SD MODERATE (change-prone variables)>
             res << Functions.send( func_name, *args )
           }
           return res

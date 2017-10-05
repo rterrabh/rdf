@@ -22,7 +22,7 @@ module IRB # :nodoc:
       else
         case IRB.conf[:CONTEXT_MODE]
         when 0	# binding in proc on TOPLEVEL_BINDING
-          #nodyna <ID:eval-104> <eval VERY HIGH ex4>
+          #nodyna <ID:eval-104> <EV COMPLEX (scope)>
           @binding = eval("proc{binding}.call",
                           TOPLEVEL_BINDING,
                           __FILE__,
@@ -41,11 +41,11 @@ EOF
           unless defined? BINDING_QUEUE
             require "thread"
 
-            #nodyna <ID:const_set-64> <const_set VERY LOW ex1>
+            #nodyna <ID:const_set-64> <CS TRIVIAL (static values)>
             IRB.const_set(:BINDING_QUEUE, SizedQueue.new(1))
             Thread.abort_on_exception = true
             Thread.start do
-              #nodyna <ID:eval-105> <eval VERY HIGH ex4>
+              #nodyna <ID:eval-105> <EV COMPLEX (scope)>
               eval "require \"irb/ws-for-case-2\"", TOPLEVEL_BINDING, __FILE__, __LINE__
             end
             Thread.pass
@@ -53,7 +53,7 @@ EOF
           @binding = BINDING_QUEUE.pop
 
         when 3	# binding in function on TOPLEVEL_BINDING(default)
-          #nodyna <ID:eval-106> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-106> <EV COMPLEX (change-prone variables)>
           @binding = eval("def irb_binding; private; binding; end; irb_binding",
                           TOPLEVEL_BINDING,
                           __FILE__,
@@ -61,26 +61,26 @@ EOF
         end
       end
       if main.empty?
-        #nodyna <ID:eval-107> <eval VERY HIGH ex4>
+        #nodyna <ID:eval-107> <EV COMPLEX (scope)>
         @main = eval("self", @binding)
       else
         @main = main[0]
         IRB.conf[:__MAIN__] = @main
         case @main
         when Module
-          #nodyna <ID:eval-108> <eval VERY HIGH ex4>
+          #nodyna <ID:eval-108> <EV COMPLEX (scope)>
           @binding = eval("IRB.conf[:__MAIN__].module_eval('binding', __FILE__, __LINE__)", @binding, __FILE__, __LINE__)
         else
           begin
-            #nodyna <ID:eval-176> <eval VERY HIGH ex4>
-            #nodyna <ID:instance_eval-176> <instance_eval VERY HIGH ex1>
+            #nodyna <ID:eval-176> <EV COMPLEX (scope)>
+            #nodyna <ID:instance_eval-176> <IEV COMPLEX (private access)>
             @binding = eval("IRB.conf[:__MAIN__].instance_eval('binding', __FILE__, __LINE__)", @binding, __FILE__, __LINE__)
           rescue TypeError
             IRB.fail CantChangeBinding, @main.inspect
           end
         end
       end
-      #nodyna <ID:eval-110> <eval VERY HIGH ex4>
+      #nodyna <ID:eval-110> <EV COMPLEX (scope)>
       eval("_=nil", @binding)
     end
 
@@ -92,7 +92,7 @@ EOF
 
     # Evaluate the given +statements+ within the  context of this workspace.
     def evaluate(context, statements, file = __FILE__, line = __LINE__)
-      #nodyna <ID:eval-111> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-111> <EV COMPLEX (change-prone variables)>
       eval(statements, @binding, file, line)
     end
 

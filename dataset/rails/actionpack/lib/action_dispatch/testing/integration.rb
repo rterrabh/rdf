@@ -333,7 +333,7 @@ module ActionDispatch
 
       %w(get post patch put head delete cookies assigns
          xml_http_request xhr get_via_redirect post_via_redirect).each do |method|
-        #nodyna <ID:define_method-18> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-18> <DM MODERATE (array)>
         define_method(method) do |*args|
           reset! unless integration_session
 

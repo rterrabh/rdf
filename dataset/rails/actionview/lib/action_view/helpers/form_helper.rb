@@ -1897,10 +1897,10 @@ module ActionView
           association = convert_to_model(association)
 
           if association.respond_to?(:persisted?)
-            #nodyna <ID:send-48> <send VERY HIGH ex3>
+            #nodyna <ID:send-48> <SD COMPLEX (change-prone variables)>
             association = [association] if @object.send(association_name).respond_to?(:to_ary)
           elsif !association.respond_to?(:to_ary)
-            #nodyna <ID:send-49> <send VERY HIGH ex3>
+            #nodyna <ID:send-49> <SD COMPLEX (change-prone variables)>
             association = @object.send(association_name)
           end
 

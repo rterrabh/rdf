@@ -10,7 +10,7 @@ module Sass
         assert_type color, :Color
         alpha = (color.alpha * 255).round
         alphastr = alpha.to_s(16).rjust(2, '0')
-        #nodyna <ID:send-55> <send VERY LOW ex1>
+        #nodyna <ID:send-55> <SD TRIVIAL (public methods)>
         Sass::Script::String.new("##{alphastr}#{color.send(:hex_str)[1..-1]}".upcase)
       end
       declare :ie_hex_str, [:color]

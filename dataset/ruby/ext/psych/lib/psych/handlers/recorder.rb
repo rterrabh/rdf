@@ -30,7 +30,7 @@ module Psych
       end
 
       EVENTS.each do |event|
-        #nodyna <ID:define_method-8> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-8> <DM MODERATE (array)>
         define_method event do |*args|
           @events << [event, args]
         end

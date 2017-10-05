@@ -257,7 +257,7 @@ class Ability
 
 
     [:issue, :merge_request].each do |name|
-      #nodyna <ID:define_method-3> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-3> <DM MODERATE (array)>
       define_method "#{name}_abilities" do |user, subject|
         rules = []
 
@@ -274,7 +274,7 @@ class Ability
     end
 
     [:note, :project_snippet, :personal_snippet].each do |name|
-      #nodyna <ID:define_method-4> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-4> <DM MODERATE (array)>
       define_method "#{name}_abilities" do |user, subject|
         rules = []
 

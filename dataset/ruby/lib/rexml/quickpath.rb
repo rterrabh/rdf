@@ -189,7 +189,7 @@ module REXML
       elements.each do |element|
         Functions.pair[0] += 1
         Functions.node = element
-        #nodyna <ID:eval-96> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-96> <EV COMPLEX (change-prone variables)>
         res = eval( predicate )
         case res
         when true
@@ -213,7 +213,7 @@ module REXML
 
     def QuickPath::method_missing( id, *args )
       begin
-        #nodyna <ID:send-99> <send VERY HIGH ex3>
+        #nodyna <ID:send-99> <SD COMPLEX (change-prone variables)>
         Functions.send( id.id2name, *args )
       rescue Exception
         raise "METHOD: #{id.id2name}(#{args.join ', '})\n#{$!.message}"
@@ -227,7 +227,7 @@ module REXML
       elements.each do |element|
         Functions.pair[0] += 1
         Functions.node = element
-        #nodyna <ID:send-100> <send VERY HIGH ex3>
+        #nodyna <ID:send-100> <SD COMPLEX (change-prone variables)>
         res = Functions.send( fname, *args )
         case res
         when true

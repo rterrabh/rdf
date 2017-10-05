@@ -255,7 +255,7 @@ module ActionController #:nodoc:
 
       def any(*args, &block)
         if args.any?
-          #nodyna <ID:send-73> <send MEDIUM ex2>
+          #nodyna <ID:send-73> <SD MODERATE (array)>
           args.each { |type| send(type, &block) }
         else
           custom(Mime::ALL, &block)

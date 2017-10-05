@@ -9,7 +9,7 @@ module Diaspora
   module Federated
     module Shareable
       def self.included(model)
-        #nodyna <ID:instance_eval-1> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-1> <IEV COMPLEX (private access)>
         model.instance_eval do
           # we are order dependant so you don't have to be!
           include Diaspora::Federated::Base

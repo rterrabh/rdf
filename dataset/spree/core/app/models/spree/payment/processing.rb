@@ -115,7 +115,7 @@ module Spree
 
       def gateway_action(source, action, success_state)
         protect_from_connection_error do
-          #nodyna <ID:send-97> <send MEDIUM ex3>
+          #nodyna <ID:send-97> <SD MODERATE (change-prone variables)>
           response = payment_method.send(action, money.money.cents,
                                          source,
                                          gateway_options)
@@ -136,10 +136,10 @@ module Spree
               self.cvv_response_message = response.cvv_result['message']
             end
           end
-          #nodyna <ID:send-98> <send MEDIUM ex3>
+          #nodyna <ID:send-98> <SD MODERATE (change-prone variables)>
           self.send("#{success_state}!")
         else
-          #nodyna <ID:send-99> <send MEDIUM ex3>
+          #nodyna <ID:send-99> <SD MODERATE (change-prone variables)>
           self.send(failure_state)
           gateway_error(response)
         end

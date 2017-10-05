@@ -95,7 +95,7 @@ module Homebrew
     return unless download.file?
 
     puts "Downloaded to: #{download}" unless already_fetched
-    #nodyna <ID:send-22> <send MEDIUM ex2>
+    #nodyna <ID:send-22> <SD MODERATE (array)>
     puts Checksum::TYPES.map { |t| "#{t.to_s.upcase}: #{download.send(t)}" }
 
     f.verify_download_integrity(download)

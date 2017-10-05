@@ -68,7 +68,7 @@ module Spree
       end
 
       def where(array, opts = {})
-        #nodyna <ID:send-117> <send VERY HIGH ex2>
+        #nodyna <ID:send-117> <SD COMPLEX (array)>
         array.select { |a| opts.all? { |k, v| a.respond_to?(k) && a.send(k) == v } }
       end
     end

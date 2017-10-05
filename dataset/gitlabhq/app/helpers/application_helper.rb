@@ -298,10 +298,10 @@ module ApplicationHelper
       if project.nil?
         nil
       elsif current_controller?(:issues)
-        #nodyna <ID:send-128> <send VERY HIGH ex3>
+        #nodyna <ID:send-128> <SD COMPLEX (change-prone variables)>
         project.issues.send(entity).count
       elsif current_controller?(:merge_requests)
-        #nodyna <ID:send-129> <send VERY HIGH ex3>
+        #nodyna <ID:send-129> <SD COMPLEX (change-prone variables)>
         project.merge_requests.send(entity).count
       end
 

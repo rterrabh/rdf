@@ -41,7 +41,7 @@ class Formula
   end
 
   def self.require_universal_deps
-    #nodyna <ID:define_method-1> <define_method MEDIUM ex2>
+    #nodyna <ID:define_method-1> <DM MODERATE (events)>
     define_method(:require_universal_deps?) { true }
   end
 

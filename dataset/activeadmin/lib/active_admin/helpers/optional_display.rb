@@ -20,10 +20,10 @@ module ActiveAdmin
 
       case condition = @options[:if]
       when Symbol, String
-        #nodyna <ID:send-52> <send VERY HIGH ex3>
+        #nodyna <ID:send-52> <SD COMPLEX (change-prone variables)>
         render_context.public_send condition
       when Proc
-        #nodyna <ID:instance_exec-16> <instance_exec VERY HIGH ex1>
+        #nodyna <ID:instance_exec-16> <IEX COMPLEX (block without parameters)>
         render_context.instance_exec &condition
       else
         true

@@ -286,7 +286,7 @@ describe Spree::Address, :type => :model do
 
   context "defines require_phone? helper method" do
     let(:address) { stub_model(Spree::Address) }
-    #nodyna <ID:instance_eval-3> <instance_eval LOW ex1>
+    #nodyna <ID:instance_eval-3> <IEV EASY (private access)>
     specify { expect(address.instance_eval{ require_phone? }).to be true}
   end
 end

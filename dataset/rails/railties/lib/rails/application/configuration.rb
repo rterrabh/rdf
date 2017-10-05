@@ -173,7 +173,7 @@ module Rails
                 "Please add `activerecord-session_store` to your Gemfile to use it."
             end
           when Symbol
-            #nodyna <ID:const_get-24> <const_get VERY HIGH ex3>
+            #nodyna <ID:const_get-24> <CG COMPLEX (change-prone variable)>
             ActionDispatch::Session.const_get(@session_store.to_s.camelize)
           else
             @session_store

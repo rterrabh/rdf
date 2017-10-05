@@ -314,7 +314,7 @@ module ActiveModel
     #   # => {:name=>["can't be empty"]}
     def add_on_empty(attributes, options = {})
       Array(attributes).each do |attribute|
-        #nodyna <ID:send-30> <send VERY LOW ex1>
+        #nodyna <ID:send-30> <SD TRIVIAL (public methods)>
         value = @base.send(:read_attribute_for_validation, attribute)
         is_empty = value.respond_to?(:empty?) ? value.empty? : false
         add(attribute, :empty, options) if value.nil? || is_empty
@@ -329,7 +329,7 @@ module ActiveModel
     #   # => {:name=>["can't be blank"]}
     def add_on_blank(attributes, options = {})
       Array(attributes).each do |attribute|
-        #nodyna <ID:send-31> <send VERY LOW ex1>
+        #nodyna <ID:send-31> <SD TRIVIAL (public methods)>
         value = @base.send(:read_attribute_for_validation, attribute)
         add(attribute, :blank, options) if value.blank?
       end
@@ -432,7 +432,7 @@ module ActiveModel
       defaults.flatten!
 
       key = defaults.shift
-      #nodyna <ID:send-32> <send VERY LOW ex1>
+      #nodyna <ID:send-32> <SD TRIVIAL (public methods)>
       value = (attribute != :base ? @base.send(:read_attribute_for_validation, attribute) : nil)
 
       options = {

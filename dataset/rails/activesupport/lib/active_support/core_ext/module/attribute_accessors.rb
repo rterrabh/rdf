@@ -135,7 +135,7 @@ class Module
           end
         EOS
       end
-      #nodyna <ID:send-260> <send MEDIUM ex2>
+      #nodyna <ID:send-260> <SD MODERATE (array)>
       send("#{sym}=", yield) if block_given?
     end
   end

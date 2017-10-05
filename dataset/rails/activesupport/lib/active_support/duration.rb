@@ -154,7 +154,7 @@ module ActiveSupport
       end
 
       def method_missing(method, *args, &block) #:nodoc:
-        #nodyna <ID:send-218> <send VERY HIGH ex3>
+        #nodyna <ID:send-218> <SD COMPLEX (change-prone variables)>
         value.send(method, *args, &block)
       end
   end

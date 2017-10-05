@@ -101,7 +101,7 @@ module ActiveSupport
     # end of the returned String.
     def color(text, color, bold=false)
       return text unless colorize_logging
-      #nodyna <ID:const_get-11> <const_get MEDIUM ex3>
+      #nodyna <ID:const_get-11> <CG MODERATE (change-prone variables)>
       color = self.class.const_get(color.upcase) if color.is_a?(Symbol)
       bold  = bold ? BOLD : ""
       "#{bold}#{color}#{text}#{CLEAR}"

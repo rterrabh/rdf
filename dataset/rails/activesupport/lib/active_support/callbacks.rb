@@ -78,7 +78,7 @@ module ActiveSupport
     #     save
     #   end
     def run_callbacks(kind, &block)
-      #nodyna <ID:send-228> <send MEDIUM ex3>
+      #nodyna <ID:send-228> <SD MODERATE (change-prone variables)>
       send "_run_#{kind}_callbacks", &block
     end
 
@@ -146,7 +146,7 @@ module ActiveSupport
               result = user_callback.call target, value
               env.halted = halted_lambda.call(target, result)
               if env.halted
-                #nodyna <ID:send-229> <send LOW ex4>
+                #nodyna <ID:send-229> <SD EASY (private methods)>
                 target.send :halted_callback_hook, filter
               end
             end
@@ -166,7 +166,7 @@ module ActiveSupport
               result = user_callback.call target, value
               env.halted = halted_lambda.call(target, result)
               if env.halted
-                #nodyna <ID:send-230> <send LOW ex4>
+                #nodyna <ID:send-230> <SD EASY (private methods)>
                 target.send :halted_callback_hook, filter
               end
             end
@@ -432,37 +432,37 @@ module ActiveSupport
       def make_lambda(filter)
         case filter
         when Symbol
-          #nodyna <ID:send-231> <send VERY HIGH ex3>
+          #nodyna <ID:send-231> <SD COMPLEX (change-prone variables)>
           lambda { |target, _, &blk| target.send filter, &blk }
         when String
-          #nodyna <ID:eval-2> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-2> <EV COMPLEX (change-prone variables)>
           l = eval "lambda { |value| #{filter} }"
-          #nodyna <ID:instance_exec-17> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-17> <IEX COMPLEX (block with parameters)>
           lambda { |target, value| target.instance_exec(value, &l) }
         when Conditionals::Value then filter
         when ::Proc
           if filter.arity > 1
             return lambda { |target, _, &block|
               raise ArgumentError unless block
-              #nodyna <ID:instance_exec-18> <instance_exec VERY HIGH ex2>
+              #nodyna <ID:instance_exec-18> <IEX COMPLEX (block with parameters)>
               target.instance_exec(target, block, &filter)
             }
           end
 
           if filter.arity <= 0
-            #nodyna <ID:instance_exec-19> <instance_exec VERY HIGH ex1>
+            #nodyna <ID:instance_exec-19> <IEX COMPLEX (block without parameters)>
             lambda { |target, _| target.instance_exec(&filter) }
           else
-            #nodyna <ID:instance_exec-20> <instance_exec VERY HIGH ex2>
+            #nodyna <ID:instance_exec-20> <IEX COMPLEX (block with parameters)>
             lambda { |target, _| target.instance_exec(target, &filter) }
           end
         else
           scopes = Array(chain_config[:scope])
-          #nodyna <ID:send-232> <send VERY HIGH ex3>
+          #nodyna <ID:send-232> <SD COMPLEX (change-prone variables)>
           method_to_call = scopes.map{ |s| public_send(s) }.join("_")
 
           lambda { |target, _, &blk|
-            #nodyna <ID:send-233> <send VERY HIGH ex3>
+            #nodyna <ID:send-233> <SD COMPLEX (change-prone variables)>
             filter.public_send method_to_call, target, &blk
           }
         end
@@ -795,12 +795,12 @@ module ActiveSupport
       protected
 
       def get_callbacks(name)
-        #nodyna <ID:send-234> <send MEDIUM ex3>
+        #nodyna <ID:send-234> <SD MODERATE (change-prone variables)>
         send "_#{name}_callbacks"
       end
 
       def set_callbacks(name, callbacks)
-        #nodyna <ID:send-235> <send MEDIUM ex3>
+        #nodyna <ID:send-235> <SD MODERATE (change-prone variables)>
         send "_#{name}_callbacks=", callbacks
       end
     end

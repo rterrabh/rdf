@@ -285,12 +285,12 @@ class DEBUGGER__
 
     def debug_eval(str, binding)
       begin
-        #nodyna <ID:eval-75> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-75> <EV COMPLEX (change-prone variables)>
         eval(str, binding)
       rescue StandardError, ScriptError => e
-        #nodyna <ID:eval-76> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-76> <EV COMPLEX (change-prone variables)>
         at = eval("caller(1)", binding)
-        #nodyna <ID:eval-77> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-77> <EV COMPLEX (change-prone variables)>
         stdout.printf "%s:%s\n", at.shift, e.to_s.sub(/\(eval\):1:(in `.*?':)?/, '')
         for i in at
           stdout.printf "\tfrom %s\n", i
@@ -301,7 +301,7 @@ class DEBUGGER__
 
     def debug_silent_eval(str, binding)
       begin
-        #nodyna <ID:eval-78> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-78> <EV COMPLEX (change-prone variables)>
         eval(str, binding)
       rescue StandardError, ScriptError
         nil
@@ -311,7 +311,7 @@ class DEBUGGER__
     def var_list(ary, binding)
       ary.sort!
       for v in ary
-        #nodyna <ID:eval-79> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-79> <EV COMPLEX (change-prone variables)>
         stdout.printf "  %s => %s\n", v, eval(v.to_s, binding).inspect
       end
     end
@@ -322,12 +322,12 @@ class DEBUGGER__
         var_list(global_variables, binding)
 
       when /^\s*l(?:ocal)?\s*$/
-        #nodyna <ID:eval-80> <eval VERY HIGH ex3>
+        #nodyna <ID:eval-80> <EV COMPLEX (private methods)>
         var_list(eval("local_variables", binding), binding)
 
       when /^\s*i(?:nstance)?\s+/
         obj = debug_eval($', binding)
-        #nodyna <ID:instance_eval-146> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-146> <IEV COMPLEX (private access)>
         var_list(obj.instance_variables, obj.instance_eval{binding()})
 
       when /^\s*c(?:onst(?:ant)?)?\s+/
@@ -376,11 +376,11 @@ class DEBUGGER__
     end
 
     def thnum
-      #nodyna <ID:instance_eval-147> <instance_eval MEDIUM ex1>
+      #nodyna <ID:instance_eval-147> <IEV MODERATE (private access)>
       num = DEBUGGER__.instance_eval{@thread_list[Thread.current]}
       unless num
         DEBUGGER__.make_thread_list
-        #nodyna <ID:instance_eval-148> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-148> <IEV MODERATE (private access)>
         num = DEBUGGER__.instance_eval{@thread_list[Thread.current]}
       end
       num
@@ -1010,10 +1010,10 @@ EOHELP
       end
       @stdout.printf "%d ", num
       @stdout.print th.inspect, "\t"
-      #nodyna <ID:instance_eval-149> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-149> <IEV COMPLEX (private access)>
       file = context(th).instance_eval{@file}
       if file
-        #nodyna <ID:instance_eval-150> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-150> <IEV COMPLEX (private access)>
         @stdout.print file,":",context(th).instance_eval{@line}
       end
       @stdout.print "\n"

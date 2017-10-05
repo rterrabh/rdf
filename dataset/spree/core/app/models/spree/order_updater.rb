@@ -26,7 +26,7 @@ module Spree
     end
 
     def run_hooks
-      #nodyna <ID:send-95> <send VERY HIGH ex2>
+      #nodyna <ID:send-95> <SD COMPLEX (array)>
       update_hooks.each { |hook| order.send hook }
     end
 

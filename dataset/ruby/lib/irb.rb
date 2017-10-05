@@ -573,12 +573,12 @@ module IRB
     # for more information.
     def suspend_input_method(input_method)
       back_io = @context.io
-      #nodyna <ID:instance_eval-161> <instance_eval LOW ex1>
+      #nodyna <ID:instance_eval-161> <IEV EASY (private access)>
       @context.instance_eval{@io = input_method}
       begin
         yield back_io
       ensure
-        #nodyna <ID:instance_eval-162> <instance_eval LOW ex1>
+        #nodyna <ID:instance_eval-162> <IEV EASY (private access)>
         @context.instance_eval{@io = back_io}
       end
     end
@@ -672,10 +672,10 @@ module IRB
         when "@signal_status"
           ary.push format("%s=:%s", iv, @signal_status.id2name)
         when "@context"
-          #nodyna <ID:eval-91> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-91> <EV COMPLEX (change-prone variables)>
           ary.push format("%s=%s", iv, eval(iv).__to_s__)
         else
-          #nodyna <ID:eval-92> <eval VERY HIGH ex2>
+          #nodyna <ID:eval-92> <EV COMPLEX (change-prone variables)>
           ary.push format("%s=%s", iv, eval(iv))
         end
       end

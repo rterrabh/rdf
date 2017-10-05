@@ -73,7 +73,7 @@ class Autospec::Manager
   end
 
   [:start, :stop, :abort].each do |verb|
-    #nodyna <ID:define_method-12> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-12> <DM MODERATE (array)>
     define_method("#{verb}_runners") do
       puts "@@@@@@@@@@@@ #{verb}_runners" if @debug
       @runners.each(&verb)

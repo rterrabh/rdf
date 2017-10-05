@@ -100,19 +100,19 @@ module ActionDispatch
 
           case value
           when Regexp, String
-            #nodyna <ID:send-98> <send VERY HIGH ex2>
+            #nodyna <ID:send-98> <SD COMPLEX (array)>
             value === request.send(method).to_s
           when Array
-            #nodyna <ID:send-99> <send VERY HIGH ex2>
+            #nodyna <ID:send-99> <SD COMPLEX (array)>
             value.include?(request.send(method))
           when TrueClass
-            #nodyna <ID:send-100> <send VERY HIGH ex2>
+            #nodyna <ID:send-100> <SD COMPLEX (array)>
             request.send(method).present?
           when FalseClass
-            #nodyna <ID:send-101> <send VERY HIGH ex2>
+            #nodyna <ID:send-101> <SD COMPLEX (array)>
             request.send(method).blank?
           else
-            #nodyna <ID:send-102> <send VERY HIGH ex2>
+            #nodyna <ID:send-102> <SD COMPLEX (array)>
             value === request.send(method)
           end
         end

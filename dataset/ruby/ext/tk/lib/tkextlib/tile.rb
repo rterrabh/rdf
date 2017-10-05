@@ -166,7 +166,7 @@ module Tk
           warn "Warning: can't define '#{cmd}' command (already exist)" if $DEBUG
           next
         end
-        #nodyna <ID:eval-66> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-66> <EV COMPLEX (change-prone variables)>
         TkNamespace.eval(ns){
           TkCore::INTERP.add_tk_procs(proc_name, 'imgdir {patterns {*.gif}}',
                                       <<-'EOS')

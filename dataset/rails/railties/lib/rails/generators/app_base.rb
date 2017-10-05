@@ -123,14 +123,14 @@ module Rails
       def builder
         @builder ||= begin
           builder_class = get_builder_class
-          #nodyna <ID:send-282> <send VERY LOW ex1>
+          #nodyna <ID:send-282> <SD TRIVIAL (public methods)>
           builder_class.send(:include, ActionMethods)
           builder_class.new(self)
         end
       end
 
       def build(meth, *args)
-        #nodyna <ID:send-283> <send VERY HIGH ex3>
+        #nodyna <ID:send-283> <SD COMPLEX (change-prone variables)>
         builder.send(meth, *args) if builder.respond_to?(meth)
       end
 

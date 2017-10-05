@@ -413,7 +413,7 @@ class CGI
   module QueryExtension
 
     %w[ CONTENT_LENGTH SERVER_PORT ].each do |env|
-      #nodyna <ID:define_method-19> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-19> <DM MODERATE (array)>
       define_method(env.sub(/^HTTP_/, '').downcase) do
         (val = env_table[env]) && Integer(val)
       end
@@ -427,7 +427,7 @@ class CGI
         HTTP_ACCEPT HTTP_ACCEPT_CHARSET HTTP_ACCEPT_ENCODING
         HTTP_ACCEPT_LANGUAGE HTTP_CACHE_CONTROL HTTP_FROM HTTP_HOST
         HTTP_NEGOTIATE HTTP_PRAGMA HTTP_REFERER HTTP_USER_AGENT ].each do |env|
-      #nodyna <ID:define_method-20> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-20> <DM MODERATE (array)>
       define_method(env.sub(/^HTTP_/, '').downcase) do
         env_table[env]
       end
@@ -558,11 +558,11 @@ class CGI
             end
           end
           class << params[name].last;self;end.class_eval do
-            #nodyna <ID:define_method-21> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-21> <DM MODERATE (events)>
             define_method(:read){self}
-            #nodyna <ID:define_method-22> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-22> <DM MODERATE (events)>
             define_method(:original_filename){""}
-            #nodyna <ID:define_method-23> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-23> <DM MODERATE (events)>
             define_method(:content_type){""}
           end
         else

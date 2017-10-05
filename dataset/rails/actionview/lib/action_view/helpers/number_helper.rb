@@ -385,7 +385,7 @@ module ActionView
         options = escape_unsafe_options(options.symbolize_keys)
 
         wrap_with_output_safety_handling(number, options.delete(:raise)) {
-          #nodyna <ID:send-57> <send MEDIUM ex3>
+          #nodyna <ID:send-57> <SD MODERATE (change-prone variables)>
           ActiveSupport::NumberHelper.public_send(method, number, options)
         }
       end

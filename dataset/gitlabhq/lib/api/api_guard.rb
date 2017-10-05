@@ -112,7 +112,7 @@ module APIGuard
       error_classes = [ MissingTokenError, TokenNotFoundError,
                         ExpiredError, RevokedError, InsufficientScopeError]
 
-      #nodyna <ID:send-6> <send LOW ex4>
+      #nodyna <ID:send-6> <SD EASY (private methods)>
       base.send :rescue_from, *error_classes, oauth2_bearer_token_error_handler
     end
 

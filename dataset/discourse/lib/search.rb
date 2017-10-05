@@ -287,7 +287,7 @@ class Search
 
       if @results.type_filter.present?
         raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
-        #nodyna <ID:send-20> <send VERY HIGH ex3>
+        #nodyna <ID:send-20> <SD COMPLEX (change-prone variables)>
         send("#{@results.type_filter}_search")
       else
         @limit = Search.per_facet + 1
@@ -403,10 +403,10 @@ class Search
 
       @filters.each do |block, match|
         if block.arity == 1
-          #nodyna <ID:instance_exec-1> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-1> <IEX COMPLEX (block with parameters)>
           posts = instance_exec(posts, &block) || posts
         else
-          #nodyna <ID:instance_exec-2> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-2> <IEX COMPLEX (block with parameters)>
           posts = instance_exec(posts, match, &block) || posts
         end
       end if @filters

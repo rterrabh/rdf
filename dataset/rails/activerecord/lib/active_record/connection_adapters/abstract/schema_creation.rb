@@ -11,7 +11,7 @@ module ActiveRecord
 
         def accept(o)
           m = @cache[o.class] ||= "visit_#{o.class.name.split('::').last}"
-          #nodyna <ID:send-137> <send VERY HIGH ex3>
+          #nodyna <ID:send-137> <SD COMPLEX (change-prone variables)>
           send m, o
         end
 

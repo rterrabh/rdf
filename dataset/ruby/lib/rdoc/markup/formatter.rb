@@ -154,7 +154,7 @@ class RDoc::Markup::Formatter
       method_name = "handle_special_#{name}"
 
       if respond_to? method_name then
-        #nodyna <ID:send-41> <send VERY HIGH ex3>
+        #nodyna <ID:send-41> <SD COMPLEX (change-prone variables)>
         special.text = send method_name, special
         handled = true
       end

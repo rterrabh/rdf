@@ -31,12 +31,12 @@ class PostRevisionSerializer < ApplicationSerializer
     changes_name = "#{field}_changes".to_sym
 
     self.attributes changes_name
-    #nodyna <ID:define_method-29> <define_method MEDIUM ex2>
+    #nodyna <ID:define_method-29> <DM MODERATE (events)>
     define_method(changes_name) do
       { previous: previous[field], current: current[field] }
     end
 
-    #nodyna <ID:define_method-30> <define_method MEDIUM ex2>
+    #nodyna <ID:define_method-30> <DM MODERATE (events)>
     define_method("include_#{changes_name}?") do
       previous[field] != current[field]
     end
@@ -182,7 +182,7 @@ class PostRevisionSerializer < ApplicationSerializer
       # Retrieve any `tracked_topic_fields`
       PostRevisor.tracked_topic_fields.each_key do |field|
         if topic.respond_to?(field)
-          #nodyna <ID:send-140> <send MEDIUM ex2>
+          #nodyna <ID:send-140> <SD MODERATE (array)>
           latest_modifications[field.to_s] = [topic.send(field)]
         end
       end

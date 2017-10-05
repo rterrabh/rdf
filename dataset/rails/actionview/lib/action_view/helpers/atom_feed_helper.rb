@@ -100,7 +100,7 @@ module ActionView
           options[:schema_date] = "2005" # The Atom spec copyright date
         end
 
-        #nodyna <ID:eval-1> <eval VERY HIGH ex4>
+        #nodyna <ID:eval-1> <EV COMPLEX (scope)>
         xml = options.delete(:xml) || eval("xml", block.binding)
         xml.instruct!
         if options[:instruct]

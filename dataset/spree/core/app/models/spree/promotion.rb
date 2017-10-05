@@ -145,7 +145,7 @@ module Spree
         if rules.blank?
           true
         else
-          #nodyna <ID:send-94> <send VERY LOW ex1>
+          #nodyna <ID:send-94> <SD TRIVIAL (public methods)>
           rules.send(match_all? ? :all? : :any?) do |rule|
             rule.actionable? line_item
           end

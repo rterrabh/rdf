@@ -146,7 +146,7 @@ module Tk
 
       ComponentID_TBL = TkCore::INTERP.create_table
 
-      #nodyna <ID:instance_eval-136> <instance_eval MEDIUM ex2>
+      #nodyna <ID:instance_eval-136> <IEV MODERATE (method definition)>
       (Itk_Component_ID = ['itk:component'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end

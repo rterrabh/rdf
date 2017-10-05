@@ -14,10 +14,10 @@ class RateLimiter
 
       limit_key = "create_#{self.class.name.underscore}"
       max_setting = if user.new_user? and SiteSetting.has_setting?("rate_limit_new_user_#{limit_key}")
-        #nodyna <ID:send-26> <send VERY HIGH ex3>
+        #nodyna <ID:send-26> <SD COMPLEX (change-prone variables)>
         SiteSetting.send("rate_limit_new_user_#{limit_key}")
       else
-        #nodyna <ID:send-27> <send VERY HIGH ex3>
+        #nodyna <ID:send-27> <SD COMPLEX (change-prone variables)>
         SiteSetting.send("rate_limit_#{limit_key}")
       end
       @rate_limiter = RateLimiter.new(user, limit_key, 1, max_setting)
@@ -40,7 +40,7 @@ class RateLimiter
         self.after_create do |*args|
           next if @rate_limits_disabled
 
-          #nodyna <ID:send-28> <send MEDIUM ex3>
+          #nodyna <ID:send-28> <SD MODERATE (change-prone variables)>
           if rate_limiter = send(limiter_method)
             rate_limiter.performed!
             @performed ||= {}
@@ -50,7 +50,7 @@ class RateLimiter
 
         self.after_destroy do
           next if @rate_limits_disabled
-          #nodyna <ID:send-29> <send MEDIUM ex3>
+          #nodyna <ID:send-29> <SD MODERATE (change-prone variables)>
           if rate_limiter = send(limiter_method)
             rate_limiter.rollback!
           end
@@ -58,7 +58,7 @@ class RateLimiter
 
         self.after_rollback do
           next if @rate_limits_disabled
-          #nodyna <ID:send-30> <send MEDIUM ex3>
+          #nodyna <ID:send-30> <SD MODERATE (change-prone variables)>
           if rate_limiter = send(limiter_method)
             if @performed.present? && @performed[limiter_method]
               rate_limiter.rollback!

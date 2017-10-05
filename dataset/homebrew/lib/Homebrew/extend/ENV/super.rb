@@ -43,7 +43,7 @@ module Superenv
   # @private
   def setup_build_environment(formula = nil)
     super
-    #nodyna <ID:send-4> <send VERY HIGH ex3>
+    #nodyna <ID:send-4> <SD COMPLEX (change-prone variables)>
     send(compiler)
 
     self["MAKEFLAGS"] ||= "-j#{determine_make_jobs}"
@@ -314,7 +314,7 @@ module Superenv
   end
 
   %w[O3 O2 O1 O0 Os].each do |opt|
-    #nodyna <ID:define_method-7> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-7> <DM MODERATE (array)>
     define_method opt do
       self["HOMEBREW_OPTIMIZATION_LEVEL"] = opt
     end

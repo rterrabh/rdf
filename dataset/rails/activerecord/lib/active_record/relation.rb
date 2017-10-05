@@ -329,7 +329,7 @@ module ActiveRecord
 
       stmt = Arel::UpdateManager.new(arel.engine)
 
-      #nodyna <ID:send-155> <send LOW ex4>
+      #nodyna <ID:send-155> <SD EASY (private methods)>
       stmt.set Arel.sql(@klass.send(:sanitize_sql_for_assignment, updates))
       stmt.table(table)
       stmt.key = table[primary_key]
@@ -454,10 +454,10 @@ module ActiveRecord
     def delete_all(conditions = nil)
       invalid_methods = INVALID_METHODS_FOR_DELETE_ALL.select { |method|
         if MULTI_VALUE_METHODS.include?(method)
-          #nodyna <ID:send-156> <send MEDIUM ex3>
+          #nodyna <ID:send-156> <SD MODERATE (change-prone variables)>
           send("#{method}_values").any?
         else
-          #nodyna <ID:send-157> <send MEDIUM ex3>
+          #nodyna <ID:send-157> <SD MODERATE (change-prone variables)>
           send("#{method}_value")
         end
       }

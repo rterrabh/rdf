@@ -10,7 +10,7 @@ class Admin::SiteSettingsController < Admin::AdminController
     value = params[id]
     value.strip! if value.is_a?(String)
     begin
-      #nodyna <ID:send-92> <send VERY HIGH ex3>
+      #nodyna <ID:send-92> <SD COMPLEX (change-prone variables)>
       prev_value = SiteSetting.send(id)
       SiteSetting.set(id, value)
       StaffActionLogger.new(current_user).log_site_setting_change(id, prev_value, value) if SiteSetting.has_setting?(id)

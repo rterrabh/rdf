@@ -12,10 +12,10 @@ module ActiveAdmin
     #
     def scope_chain(scope, chain)
       if scope.scope_method
-        #nodyna <ID:send-55> <send VERY HIGH ex3>
+        #nodyna <ID:send-55> <SD COMPLEX (change-prone variables)>
         chain.public_send scope.scope_method
       elsif scope.scope_block
-        #nodyna <ID:instance_exec-17> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-17> <IEX COMPLEX (block with parameters)>
         instance_exec chain, &scope.scope_block
       else
         chain

@@ -105,7 +105,7 @@ module Rails
       end
 
       if defined?(console::ExtendCommandBundle)
-        #nodyna <ID:send-288> <send VERY LOW ex1>
+        #nodyna <ID:send-288> <SD TRIVIAL (public methods)>
         console::ExtendCommandBundle.send :include, Rails::ConsoleMethods
       end
       console.start

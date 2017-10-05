@@ -23,10 +23,10 @@ class Tk::BWidget::TitleFrame
     win = window(tk_send_without_enc('getframe'))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-15 ex2> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-15 ex2> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-116> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-116> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

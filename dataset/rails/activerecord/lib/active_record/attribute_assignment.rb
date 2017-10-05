@@ -51,7 +51,7 @@ module ActiveRecord
     private
 
     def _assign_attribute(k, v)
-      #nodyna <ID:send-162> <send VERY HIGH ex3>
+      #nodyna <ID:send-162> <SD COMPLEX (change-prone variables)>
       public_send("#{k}=", v)
     rescue NoMethodError, NameError
       if respond_to?("#{k}=")
@@ -82,7 +82,7 @@ module ActiveRecord
       errors = []
       callstack.each do |name, values_with_empty_parameters|
         begin
-          #nodyna <ID:send-163> <send VERY HIGH ex2>
+          #nodyna <ID:send-163> <SD COMPLEX (array)>
           send("#{name}=", MultiparameterAttribute.new(self, name, values_with_empty_parameters).read_value)
         rescue => ex
           errors << AttributeAssignmentError.new("error on assignment #{values_with_empty_parameters.values.inspect} to #{name} (#{ex.message})", ex, name)
@@ -109,7 +109,7 @@ module ActiveRecord
     end
 
     def type_cast_attribute_value(multiparameter_name, value)
-      #nodyna <ID:send-164> <send VERY HIGH ex3>
+      #nodyna <ID:send-164> <SD COMPLEX (change-prone variables)>
       multiparameter_name =~ /\([0-9]*([if])\)/ ? value.send("to_" + $1) : value
     end
 
@@ -144,11 +144,11 @@ module ActiveRecord
       private
 
       def instantiate_time_object(set_values)
-        #nodyna <ID:send-165> <send LOW ex4>
+        #nodyna <ID:send-165> <SD EASY (private methods)>
         if object.class.send(:create_time_zone_conversion_attribute?, name, cast_type)
           Time.zone.local(*set_values)
         else
-          #nodyna <ID:send-166> <send VERY HIGH ex3>
+          #nodyna <ID:send-166> <SD COMPLEX (change-prone variables)>
           Time.send(object.class.default_timezone, *set_values)
         end
       end

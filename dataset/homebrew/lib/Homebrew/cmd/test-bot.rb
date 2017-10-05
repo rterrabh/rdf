@@ -97,7 +97,7 @@ module Homebrew
     end
 
     def puts_result
-      #nodyna <ID:send-19> <send MEDIUM ex3>
+      #nodyna <ID:send-19> <SD MODERATE (change-prone variables)>
       puts " #{Tty.send status_colour}#{status_upcase}#{Tty.reset}"
     end
 
@@ -340,7 +340,7 @@ module Homebrew
     end
 
     def satisfied_requirements?(formula, spec, dependency = nil)
-      #nodyna <ID:send-20> <send MEDIUM ex3>
+      #nodyna <ID:send-20> <SD MODERATE (change-prone variables)>
       requirements = formula.send(spec).requirements
 
       unsatisfied_requirements = requirements.reject do |requirement|

@@ -263,10 +263,10 @@ class Tk::Text<TkTextWin
     obj = super(*args){}
     obj.init_instance_variable
     if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-      #nodyna <ID:instance_exec-2> <instance_exec VERY HIGH ex2>
+      #nodyna <ID:instance_exec-2> <IEX COMPLEX (block with parameters)>
       obj.instance_exec(obj, &block) if defined? yield
     else
-      #nodyna <ID:instance_eval-33> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-33> <IEV COMPLEX (block execution)>
       obj.instance_eval(&block) if defined? yield
     end
     obj

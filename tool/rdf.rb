@@ -1,14 +1,10 @@
 require_relative 'modules/RdfModules'
-
+require_relative '../util/Util'
 class Rdf
   include RdfModules
 
   def execute(files_to_research, arguments)
-    files = Array.new
-    files_to_research.each do |rbfiles|
-      files  += Dir.glob(rbfiles)
-    end
-    files.flatten!
+    files = Util.extractFiles(files_to_research)
     puts "#{"="*34} RDF OUTPUT #{"="*34}"
     if(arguments.nil? || arguments.size == 0)
       showHelp()
@@ -31,6 +27,7 @@ class Rdf
       puts "Total files: #{files.size}"
       oldClassification = arguments[1]
       newClassification = arguments[2]
+      changeClassification(files, oldClassification, newClassification)
     else
       showHelp()
     end
@@ -51,8 +48,7 @@ end
 
 files_to_research = []
 
-files_to_research << "target.rb"
-=begin
+
 #activeadmin
 files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
 
@@ -91,7 +87,7 @@ files_to_research << "../dataset/spree/**/lib/**/*.rb"
 files_to_research << "../dataset/spree/api/**/*.rb"
 files_to_research << "../dataset/spree/backend/**/*.rb"
 files_to_research << "../dataset/spree/core/**/*.rb"
-=end
+
 
 rdf = Rdf.new
 rdf.execute(files_to_research, ARGV)

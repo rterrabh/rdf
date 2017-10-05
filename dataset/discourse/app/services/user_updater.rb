@@ -57,7 +57,7 @@ class UserUpdater
 
     USER_ATTR.each do |attribute|
       if attributes[attribute].present?
-        #nodyna <ID:send-221> <send MEDIUM ex2>
+        #nodyna <ID:send-221> <SD MODERATE (array)>
         user.send("#{attribute}=", attributes[attribute] == 'true')
       end
     end

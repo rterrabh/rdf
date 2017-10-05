@@ -113,7 +113,7 @@ module Jobs
 
       def author_username
         begin
-          #nodyna <ID:send-151> <send VERY HIGH ex3>
+          #nodyna <ID:send-151> <SD COMPLEX (change-prone variables)>
           @article_rss_item.send(SiteSetting.embed_username_key_from_feed.to_sym)
         rescue
           nil

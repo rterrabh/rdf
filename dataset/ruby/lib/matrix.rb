@@ -313,14 +313,14 @@ class Matrix
   #
   def Matrix.vstack(x, *matrices)
     raise TypeError, "Expected a Matrix, got a #{x.class}" unless x.is_a?(Matrix)
-    #nodyna <ID:send-81> <send LOW ex4>
+    #nodyna <ID:send-81> <SD EASY (private methods)>
     result = x.send(:rows).map(&:dup)
     matrices.each do |m|
       raise TypeError, "Expected a Matrix, got a #{m.class}" unless m.is_a?(Matrix)
       if m.column_count != x.column_count
         raise ErrDimensionMismatch, "The given matrices must have #{x.column_count} columns, but one has #{m.column_count}"
       end
-      #nodyna <ID:send-82> <send LOW ex4>
+      #nodyna <ID:send-82> <SD EASY (private methods)>
       result.concat(m.send(:rows))
     end
     new result, x.column_count
@@ -336,7 +336,7 @@ class Matrix
   #
   def Matrix.hstack(x, *matrices)
     raise TypeError, "Expected a Matrix, got a #{x.class}" unless x.is_a?(Matrix)
-    #nodyna <ID:send-83> <send LOW ex4>
+    #nodyna <ID:send-83> <SD EASY (private methods)>
     result = x.send(:rows).map(&:dup)
     total_column_count = x.column_count
     matrices.each do |m|
@@ -345,7 +345,7 @@ class Matrix
         raise ErrDimensionMismatch, "The given matrices must have #{x.row_count} rows, but one has #{m.row_count}"
       end
       result.each_with_index do |row, i|
-        #nodyna <ID:send-84> <send LOW ex4>
+        #nodyna <ID:send-84> <SD EASY (private methods)>
         row.concat m.send(:rows)[i]
       end
       total_column_count += m.column_count
@@ -365,7 +365,7 @@ class Matrix
   end
 
   def new_matrix(rows, column_count = rows[0].size) # :nodoc:
-    #nodyna <ID:send-85> <send LOW ex4>
+    #nodyna <ID:send-85> <SD EASY (private methods)>
     self.class.send(:new, rows, column_count) # bypass privacy of Matrix.new
   end
   private :new_matrix
@@ -733,7 +733,7 @@ class Matrix
       raise ArgumentError, "invalid num (#{num.inspect} for 0..#{row_count - 1})"
     end
 
-    #nodyna <ID:send-86> <send LOW ex4>
+    #nodyna <ID:send-86> <SD EASY (private methods)>
     send(row ? :row : :column, num).map.with_index { |e, k|
       e * cofactor(*(row ? [num, k] : [k,num]))
     }.inject(:+)
@@ -1064,7 +1064,7 @@ class Matrix
   #
   def inverse
     Matrix.Raise ErrDimensionMismatch unless square?
-    #nodyna <ID:send-87> <send LOW ex4>
+    #nodyna <ID:send-87> <SD EASY (private methods)>
     self.class.I(row_count).send(:inverse_from, self)
   end
   alias inv inverse
@@ -1573,7 +1573,7 @@ class Matrix
     def apply_through_coercion(obj, oper)
       coercion = obj.coerce(self)
       raise TypeError unless coercion.is_a?(Array) && coercion.length == 2
-      #nodyna <ID:send-88> <send VERY HIGH ex3>
+      #nodyna <ID:send-88> <SD COMPLEX (change-prone variables)>
       coercion[0].public_send(oper, coercion[1])
     rescue
       raise TypeError, "#{obj.inspect} can't be coerced into #{self.class}"

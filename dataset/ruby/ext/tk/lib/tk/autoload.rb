@@ -372,13 +372,13 @@ class << Tk
 
   def topobj_defined?(sym) #=> alias_filename or object or false
     Object.autoload?(sym) ||
-      #nodyna <ID:const_get-14> <const_get VERY HIGH ex3>
+      #nodyna <ID:const_get-14> <CG COMPLEX (change-prone variable)>
       (Object.const_defined?(sym) && Object.const_get(sym))
   end
   def topalias_defined?(sym) #=> alias_filename or object or false
     Tk::TOPLEVEL_ALIASES.autoload?(sym) ||
       (Tk::TOPLEVEL_ALIASES.const_defined?(sym) &&
-         #nodyna <ID:const_get-15> <const_get VERY HIGH ex3>
+         #nodyna <ID:const_get-15> <CG COMPLEX (change-prone variable)>
          Tk::TOPLEVEL_ALIASES.const_get(sym))
   end
   def define_topobj(sym, obj)
@@ -389,7 +389,7 @@ class << Tk
         # file is autoloaded?
         if @AUTOLOAD_FILE_SYM_TABLE.has_key?(obj) &&
             (loaded_obj = @AUTOLOAD_FILE_SYM_TABLE[obj][sym])
-          #nodyna <ID:const_set-9> <const_set VERY HIGH ex3>
+          #nodyna <ID:const_set-9> <CS COMPLEX (change-prone variable)>
           Object.const_set(sym, loaded_obj)
         else
           fail ArgumentError, "cannot define autoload file (already loaded?)"
@@ -397,7 +397,7 @@ class << Tk
       end
     else
       # object
-      #nodyna <ID:const_set-10> <const_set VERY HIGH ex3>
+      #nodyna <ID:const_set-10> <CS COMPLEX (change-prone variable)>
       Object.const_set(sym, obj)
     end
   end
@@ -409,7 +409,7 @@ class << Tk
         # file is autoloaded?
         if @AUTOLOAD_FILE_SYM_TABLE.has_key?(obj) &&
             (loaded_obj = @AUTOLOAD_FILE_SYM_TABLE[obj][sym])
-          #nodyna <ID:const_set-11> <const_set VERY HIGH ex3>
+          #nodyna <ID:const_set-11> <CS COMPLEX (change-prone variable)>
           Tk::TOPLEVEL_ALIASES.const_set(sym, loaded_obj)
         else
           fail ArgumentError, "cannot define autoload file (already loaded?)"
@@ -417,7 +417,7 @@ class << Tk
       end
     else
       # object
-      #nodyna <ID:const_set-12> <const_set VERY HIGH ex3>
+      #nodyna <ID:const_set-12> <CS COMPLEX (change-prone variable)>
       Tk::TOPLEVEL_ALIASES.const_set(sym, obj)
     end
   end

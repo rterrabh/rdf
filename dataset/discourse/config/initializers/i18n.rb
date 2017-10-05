@@ -2,12 +2,12 @@
 
 # Include pluralization module
 require 'i18n/backend/pluralization'
-#nodyna <ID:send-225> <send VERY LOW ex1>
+#nodyna <ID:send-225> <SD TRIVIAL (public methods)>
 I18n::Backend::Simple.send(:include, I18n::Backend::Pluralization)
 
 # Include fallbacks module
 require 'i18n/backend/fallbacks'
-#nodyna <ID:send-226> <send VERY LOW ex1>
+#nodyna <ID:send-226> <SD TRIVIAL (public methods)>
 I18n.backend.class.send(:include, I18n::Backend::Fallbacks)
 
 # Configure custom fallback order

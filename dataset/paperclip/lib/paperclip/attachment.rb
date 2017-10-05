@@ -320,7 +320,7 @@ module Paperclip
       raise ArgumentError, "Unable to generate hash without :hash_secret" unless @options[:hash_secret]
       require 'openssl' unless defined?(OpenSSL)
       data = interpolate(@options[:hash_data], style_name)
-      #nodyna <ID:const_get-4> <const_get VERY HIGH ex3>
+      #nodyna <ID:const_get-4> <CG COMPLEX (change-prone variable)>
       OpenSSL::HMAC.hexdigest(OpenSSL::Digest.const_get(@options[:hash_digest]).new, @options[:hash_secret], data)
     end
 
@@ -370,7 +370,7 @@ module Paperclip
     def instance_write(attr, value)
       setter = :"#{name}_#{attr}="
       if instance.respond_to?(setter)
-        #nodyna <ID:send-11> <send VERY HIGH ex3>
+        #nodyna <ID:send-11> <SD COMPLEX (change-prone variables)>
         instance.send(setter, value)
       end
     end
@@ -380,7 +380,7 @@ module Paperclip
     def instance_read(attr)
       getter = :"#{name}_#{attr}"
       if instance.respond_to?(getter)
-        #nodyna <ID:send-12> <send VERY HIGH ex3>
+        #nodyna <ID:send-12> <SD COMPLEX (change-prone variables)>
         instance.send(getter)
       end
     end
@@ -420,7 +420,7 @@ module Paperclip
     def initialize_storage #:nodoc:
       storage_class_name = @options[:storage].to_s.downcase.camelize
       begin
-        #nodyna <ID:const_get-5> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-5> <CG COMPLEX (change-prone variable)>
         storage_module = Paperclip::Storage.const_get(storage_class_name)
       rescue NameError
         raise Errors::StorageMethodNotFound, "Cannot load storage module '#{storage_class_name}'"
@@ -475,7 +475,7 @@ module Paperclip
 
     def reset_updater
       if instance.respond_to?(updater)
-        #nodyna <ID:send-13> <send VERY HIGH ex3>
+        #nodyna <ID:send-13> <SD COMPLEX (change-prone variables)>
         instance.send(updater)
       end
     end

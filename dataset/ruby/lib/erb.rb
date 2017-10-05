@@ -857,11 +857,11 @@ class ERB
     if @safe_level
       proc {
         $SAFE = @safe_level
-        #nodyna <ID:eval-93> <eval VERY HIGH ex2>
+        #nodyna <ID:eval-93> <EV COMPLEX (change-prone variables)>
         eval(@src, b, (@filename || '(erb)'), @lineno)
       }.call
     else
-      #nodyna <ID:eval-94> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-94> <EV COMPLEX (change-prone variables)>
       eval(@src, b, (@filename || '(erb)'), @lineno)
     end
   end
@@ -886,7 +886,7 @@ class ERB
     src = self.src
     magic_comment = "#coding:#{@encoding}\n"
     mod.module_eval do
-      #nodyna <ID:eval-95> <eval VERY HIGH ex1>
+      #nodyna <ID:eval-95> <EV COMPLEX (method definition)>
       eval(magic_comment + "def #{methodname}\n" + src + "\nend\n", binding, fname, -2)
     end
   end

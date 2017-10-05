@@ -101,9 +101,9 @@ module ActiveAdmin
     end
 
     def sorted_children(assoc, column)
-      #nodyna <ID:send-24> <send VERY HIGH ex3>
+      #nodyna <ID:send-24> <SD COMPLEX (change-prone variables)>
       object.public_send(assoc).sort_by do |o|
-        #nodyna <ID:send-25> <send VERY HIGH ex3>
+        #nodyna <ID:send-25> <SD COMPLEX (change-prone variables)>
         attribute = o.public_send column
         [attribute.nil? ? Float::INFINITY : attribute, o.id || Float::INFINITY]
       end

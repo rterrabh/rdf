@@ -60,7 +60,7 @@ module Rails
           when Proc
             tag.call(request)
           when Symbol
-            #nodyna <ID:send-278> <send VERY HIGH ex3>
+            #nodyna <ID:send-278> <SD COMPLEX (change-prone variables)>
             request.send(tag)
           else
             tag

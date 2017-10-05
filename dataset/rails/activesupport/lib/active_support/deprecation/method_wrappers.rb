@@ -32,11 +32,11 @@ module ActiveSupport
 
         method_names.each do |method_name|
           target_module.alias_method_chain(method_name, :deprecation) do |target, punctuation|
-            #nodyna <ID:send-221> <send VERY HIGH ex4>
-            #nodyna <ID:define_method-48> <define_method VERY HIGH ex2>
+            #nodyna <ID:send-221> <SD COMPLEX (private methods)>
+            #nodyna <ID:define_method-48> <DM COMPLEX (events)>
             target_module.send(:define_method, "#{target}_with_deprecation#{punctuation}") do |*args, &block|
               deprecator.deprecation_warning(method_name, options[method_name])
-              #nodyna <ID:send-222> <send VERY HIGH ex3>
+              #nodyna <ID:send-222> <SD COMPLEX (change-prone variables)>
               send(:"#{target}_without_deprecation#{punctuation}", *args, &block)
             end
           end

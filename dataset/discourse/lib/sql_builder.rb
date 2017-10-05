@@ -8,7 +8,7 @@ class SqlBuilder
   end
 
   [:set, :where2,:where,:order_by,:limit,:left_join,:join,:offset, :select].each do |k|
-    #nodyna <ID:define_method-4> <define_method MEDIUM ex1>
+    #nodyna <ID:define_method-4> <DM MODERATE (array)>
     define_method k do |data, args = {}|
       @args.merge!(args)
       @sections[k] ||= []
@@ -60,7 +60,7 @@ class SqlBuilder
 
     sql = to_sql
     if @klass
-      #nodyna <ID:send-18> <send VERY HIGH ex4>
+      #nodyna <ID:send-18> <SD COMPLEX (private methods)>
       @klass.find_by_sql(ActiveRecord::Base.send(:sanitize_sql_array, [sql, @args]))
     else
       if @args == {}
@@ -114,7 +114,7 @@ class SqlBuilder
     values.map! do |row|
       mapped = klass.new
       setters.each_with_index do |name, index|
-        #nodyna <ID:send-19> <send VERY HIGH ex2>
+        #nodyna <ID:send-19> <SD COMPLEX (array)>
         mapped.send name, row[index]
       end
       mapped

@@ -49,7 +49,7 @@ require "mathn/rational"
 require "mathn/complex"
 
 unless defined?(Math.exp!)
-  #nodyna <ID:instance_eval-167> <instance_eval MEDIUM ex1>
+  #nodyna <ID:instance_eval-167> <IEV MODERATE (private access)>
   Object.instance_eval{remove_const :Math}
   Math = CMath # :nodoc:
 end

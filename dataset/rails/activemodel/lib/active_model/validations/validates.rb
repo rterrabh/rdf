@@ -115,7 +115,7 @@ module ActiveModel
           key = "#{key.to_s.camelize}Validator"
 
           begin
-            #nodyna <ID:const_get-1> <const_get VERY HIGH ex3>
+            #nodyna <ID:const_get-1> <CG COMPLEX (change-prone variable)>
             validator = key.include?('::') ? key.constantize : const_get(key)
           rescue NameError
             raise ArgumentError, "Unknown validator: '#{key}'"

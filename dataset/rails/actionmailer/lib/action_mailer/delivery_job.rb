@@ -7,8 +7,8 @@ module ActionMailer
     queue_as :mailers
 
     def perform(mailer, mail_method, delivery_method, *args) # :nodoc:
-      #nodyna <ID:send-2> <send VERY HIGH ex3>
-      #nodyna <ID:send-2> <send VERY HIGH ex3>
+      #nodyna <ID:send-2> <SD COMPLEX (change-prone variables)>
+      #nodyna <ID:send-2> <SD COMPLEX (change-prone variables)>
       mailer.constantize.public_send(mail_method, *args).send(delivery_method)
     end
   end

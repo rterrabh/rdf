@@ -41,7 +41,7 @@ class TopTopic < ActiveRecord::Base
 
   def self.update_counts_and_compute_scores_for(period)
     sort_orders.each do |sort|
-      #nodyna <ID:send-197> <send MEDIUM ex2>
+      #nodyna <ID:send-197> <SD MODERATE (array)>
       TopTopic.send("update_#{sort}_count_for", period)
     end
     compute_top_score_for(period)

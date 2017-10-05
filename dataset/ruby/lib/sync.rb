@@ -246,7 +246,7 @@ module Sync_m
   attr_accessor :sync_ex_count
 
   def sync_inspect
-    #nodyna <ID:instance_eval-145> <instance_eval VERY HIGH ex1>
+    #nodyna <ID:instance_eval-145> <IEV COMPLEX (private access)>
     sync_iv = instance_variables.select{|iv| /^@sync_/ =~ iv.id2name}.collect{|iv| iv.id2name + '=' + instance_eval(iv.id2name).inspect}.join(",")
     print "<#{self.class}.extend Sync_m: #{inspect}, <Sync_m: #{sync_iv}>"
   end

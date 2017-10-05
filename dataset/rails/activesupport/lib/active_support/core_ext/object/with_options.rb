@@ -64,7 +64,7 @@ class Object
   #
   def with_options(options, &block)
     option_merger = ActiveSupport::OptionMerger.new(self, options)
-    #nodyna <ID:instance_eval-9> <instance_eval VERY HIGH ex3>
+    #nodyna <ID:instance_eval-9> <IEV COMPLEX (block execution)>
     block.arity.zero? ? option_merger.instance_eval(&block) : block.call(option_merger)
   end
 end

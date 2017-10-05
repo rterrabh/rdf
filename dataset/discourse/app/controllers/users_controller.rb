@@ -587,7 +587,7 @@ class UsersController < ApplicationController
     result = {}
 
     %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions number_of_warnings}.each do |info|
-      #nodyna <ID:send-118> <send MEDIUM ex2>
+      #nodyna <ID:send-118> <SD MODERATE (array)>
       result[info] = @user.send(info)
     end
 

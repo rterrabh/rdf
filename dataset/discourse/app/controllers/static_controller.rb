@@ -19,7 +19,7 @@ class StaticController < ApplicationController
 
     if map.has_key?(@page)
       site_setting_key = map[@page][:redirect]
-      #nodyna <ID:send-84> <send VERY HIGH ex3>
+      #nodyna <ID:send-84> <SD COMPLEX (change-prone variables)>
       url = SiteSetting.send(site_setting_key)
       return redirect_to(url) unless url.blank?
     end
@@ -31,7 +31,7 @@ class StaticController < ApplicationController
     @page.gsub!(/[^a-z0-9\_\-]/, '')
 
     if map.has_key?(@page)
-      #nodyna <ID:send-85> <send VERY HIGH ex3>
+      #nodyna <ID:send-85> <SD COMPLEX (change-prone variables)>
       @topic = Topic.find_by_id(SiteSetting.send(map[@page][:topic_id]))
       raise Discourse::NotFound unless @topic
       @title = @topic.title

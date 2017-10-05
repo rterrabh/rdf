@@ -9,7 +9,7 @@ module Spree
       delegate :compute, to: :calculator
 
       def self.calculators
-        #nodyna <ID:send-79> <send VERY HIGH ex3>
+        #nodyna <ID:send-79> <SD COMPLEX (change-prone variables)>
         spree_calculators.send model_name_without_spree_namespace
       end
 

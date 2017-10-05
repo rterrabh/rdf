@@ -423,7 +423,7 @@ module RDoc::RubyToken
     if const_defined?(token_n)
       IRB.fail AlreadyDefinedToken, token_n
     end
-    #nodyna <ID:eval-71> <eval MEDIUM ex5>
+    #nodyna <ID:eval-71> <EV MODERATE (class definition)>
     token_c = eval("class #{token_n} < #{super_token}; end; #{token_n}")
 
     if reading

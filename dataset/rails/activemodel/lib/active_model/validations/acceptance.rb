@@ -17,9 +17,9 @@ module ActiveModel
       def setup!(klass)
         attr_readers = attributes.reject { |name| klass.attribute_method?(name) }
         attr_writers = attributes.reject { |name| klass.attribute_method?("#{name}=") }
-        #nodyna <ID:send-15> <send VERY HIGH ex4>
+        #nodyna <ID:send-15> <SD COMPLEX (private methods)>
         klass.send(:attr_reader, *attr_readers)
-        #nodyna <ID:send-16> <send VERY HIGH ex4>
+        #nodyna <ID:send-16> <SD COMPLEX (private methods)>
         klass.send(:attr_writer, *attr_writers)
       end
     end

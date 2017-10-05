@@ -884,7 +884,7 @@ module ActiveRecord
             fs_name = fs_name.to_s
             accessor_name = fs_name.tr('/', '_').to_sym
 
-            #nodyna <ID:define_method-24> <define_method VERY HIGH ex2>
+            #nodyna <ID:define_method-24> <DM COMPLEX (events)>
             define_method(accessor_name) do |*fixture_names|
               force_reload = fixture_names.pop if fixture_names.last == true || fixture_names.last == :reload
 

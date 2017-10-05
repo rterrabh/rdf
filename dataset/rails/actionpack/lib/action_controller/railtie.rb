@@ -54,7 +54,7 @@ module ActionController
         options.each do |k,v|
           k = "#{k}="
           if respond_to?(k)
-            #nodyna <ID:send-75> <send VERY HIGH ex2>
+            #nodyna <ID:send-75> <SD COMPLEX (array)>
             send(k, v)
           elsif !Base.respond_to?(k)
             raise "Invalid option key: #{k}"

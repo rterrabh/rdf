@@ -63,7 +63,7 @@ module ActiveAdmin
 
       def build_item(item)
         td for: item do
-          #nodyna <ID:instance_exec-32> <instance_exec VERY HIGH ex2>
+          #nodyna <ID:instance_exec-32> <IEX COMPLEX (block with parameters)>
           instance_exec(item, &@page_presenter.block)
         end
       end

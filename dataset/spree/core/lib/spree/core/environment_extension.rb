@@ -18,8 +18,8 @@ module Spree
       private
 
         def create_method(name, &block)
-          #nodyna <ID:send-6> <send MEDIUM ex4>
-          #nodyna <ID:define_method-2> <define_method VERY HIGH ex2>
+          #nodyna <ID:send-6> <SD MODERATE (private methods)>
+          #nodyna <ID:define_method-2> <DM COMPLEX (events)>
           self.class.send(:define_method, name, &block)
         end
     end

@@ -112,7 +112,7 @@ module XMLRPC # :nodoc:
     def initialize(prefix, &p)
       raise "No interface specified" if p.nil?
       super(prefix)
-      #nodyna <ID:instance_eval-144> <instance_eval VERY HIGH ex3>
+      #nodyna <ID:instance_eval-144> <IEV COMPLEX (block execution)>
       instance_eval(&p)
     end
 

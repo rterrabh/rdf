@@ -5,14 +5,14 @@ module Rails
     def self.deprecate(old, current)
       # double assignment is used to avoid "assigned but unused variable" warning
       constant = constant = new(old, current)
-      #nodyna <ID:eval-5> <eval VERY HIGH ex6>
+      #nodyna <ID:eval-5> <EV COMPLEX (variable definition)>
       eval "::#{old} = constant"
     end
 
     private
 
     def target
-      #nodyna <ID:eval-6> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-6> <EV COMPLEX (change-prone variables)>
       ::Kernel.eval @new_const.to_s
     end
   end

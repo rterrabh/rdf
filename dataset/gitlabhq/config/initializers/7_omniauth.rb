@@ -2,7 +2,7 @@ if Gitlab::LDAP::Config.enabled?
   module OmniAuth::Strategies
     server = Gitlab.config.ldap.servers.values.first
     klass = server['provider_class']
-    #nodyna <ID:const_set-1> <const_set VERY HIGH ex3>
+    #nodyna <ID:const_set-1> <CS COMPLEX (change-prone variable)>
     const_set(klass, Class.new(LDAP)) unless klass == 'LDAP'
   end
 

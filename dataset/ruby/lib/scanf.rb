@@ -459,7 +459,7 @@ module Scanf
       s.sub!(/\A\s+/,'') unless count_space?
       res = to_re.match(s)
       if res
-        #nodyna <ID:send-42> <send VERY HIGH ex3>
+        #nodyna <ID:send-42> <SD COMPLEX (change-prone variables)>
         @conversion = send(@handler, res[1])
         @matched_string = @conversion.to_s
         @matched = true

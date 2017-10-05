@@ -39,7 +39,7 @@ class SingleSignOn
       if BOOLS.include? k
         val = ["true", "false"].include?(val) ? val == "true" : nil
       end
-      #nodyna <ID:send-67> <send MEDIUM ex2>
+      #nodyna <ID:send-67> <SD MODERATE (array)>
       sso.send("#{k}=", val)
     end
 
@@ -87,7 +87,7 @@ class SingleSignOn
   def unsigned_payload
     payload = {}
     ACCESSORS.each do |k|
-     #nodyna <ID:send-68> <send MEDIUM ex2>
+     #nodyna <ID:send-68> <SD MODERATE (array)>
      next if (val = send k) == nil
 
      payload[k] = val

@@ -77,9 +77,9 @@ module ActiveSupport
       end
     end
 
-    #nodyna <ID:send-226> <send VERY LOW ex1>
+    #nodyna <ID:send-226> <SD TRIVIAL (public methods)>
     Nokogiri::XML::Document.send(:include, Conversions::Document)
-    #nodyna <ID:send-227> <send VERY LOW ex1>
+    #nodyna <ID:send-227> <SD TRIVIAL (public methods)>
     Nokogiri::XML::Node.send(:include, Conversions::Node)
   end
 end

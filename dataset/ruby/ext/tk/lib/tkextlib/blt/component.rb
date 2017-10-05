@@ -413,7 +413,7 @@ module Tk::BLT
     #################
 
     class Axis < TkObject
-      #nodyna <ID:instance_eval-77> <instance_eval MEDIUM ex2>
+      #nodyna <ID:instance_eval-77> <IEV MODERATE (method definition)>
       (OBJ_ID = ['blt_chart_axis'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -453,7 +453,7 @@ module Tk::BLT
           if axis && AxisID_TBL[chart_path][axis]
             obj = AxisID_TBL[chart_path][axis]
           else
-            #nodyna <ID:instance_eval-78> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-78> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               if axis
                 @axis = @id = axis.to_s
@@ -591,7 +591,7 @@ module Tk::BLT
         obj = nil
         CrosshairsID_TBL.mutex.synchronize{
           unless (obj = CrosshairsID_TBL[chart.path])
-            #nodyna <ID:instance_eval-79> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-79> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               @parent = @chart = chart
               @cpath = @chart.path
@@ -674,7 +674,7 @@ module Tk::BLT
         ElementID_TBL.mutex.synchronize{ ElementID_TBL.clear }
       }
 
-      #nodyna <ID:instance_eval-80> <instance_eval MEDIUM ex2>
+      #nodyna <ID:instance_eval-80> <IEV MODERATE (method definition)>
       (OBJ_ID = ['blt_chart_element'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -712,7 +712,7 @@ module Tk::BLT
           if element && ElementID_TBL[chart_path][element]
             obj = ElementID_TBL[chart_path][element]
           else
-            #nodyna <ID:instance_eval-81> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-81> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               if element
                 @element = @id = element.to_s
@@ -852,7 +852,7 @@ module Tk::BLT
         obj = nil
         GridLineID_TBL.mutex.synchronize{
           unless (obj = GridLineID_TBL[chart.path])
-            #nodyna <ID:instance_eval-82> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-82> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               @parent = @chart = chart
               @cpath = @chart.path
@@ -930,7 +930,7 @@ module Tk::BLT
         obj = nil
         LegenedID_TBL.mutex.synchronize{
           unless (obj = LegenedID_TBL[chart.path])
-            #nodyna <ID:instance_eval-83> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-83> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               @parent = @chart = chart
               @cpath = @chart.path
@@ -997,7 +997,7 @@ module Tk::BLT
     #################
 
     class Pen < TkObject
-      #nodyna <ID:instance_eval-84> <instance_eval MEDIUM ex2>
+      #nodyna <ID:instance_eval-84> <IEV MODERATE (method definition)>
       (OBJ_ID = ['blt_chart_pen'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -1037,7 +1037,7 @@ module Tk::BLT
           if pen && PenID_TBL[chart_path][pen]
             obj = PenID_TBL[chart_path][pen]
           else
-            #nodyna <ID:instance_eval-85> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-85> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               if pen
                 @pen = @id = pen.to_s
@@ -1138,7 +1138,7 @@ module Tk::BLT
         obj = nil
         PostscriptID_TBL.mutex.synchronize{
           unless (obj = PostscriptID_TBL[chart.path])
-            #nodyna <ID:instance_eval-86> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-86> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               @parent = @chart = chart
               @cpath = @chart.path
@@ -1302,7 +1302,7 @@ module Tk::BLT
         chart.marker_configure(idnum, methodkeys) unless methodkeys.empty?
         id = idnum.to_i  # 'item id' is an integer number
         obj = self.allocate
-        #nodyna <ID:instance_eval-87> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-87> <IEV MODERATE (private access)>
         obj.instance_eval{
           @parent = @chart = chart
           @cpath = chart.path

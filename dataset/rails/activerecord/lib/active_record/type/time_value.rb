@@ -22,7 +22,7 @@ module ActiveRecord
           time -= offset
           Base.default_timezone == :utc ? time : time.getlocal
         else
-          #nodyna <ID:send-206> <send VERY HIGH ex3>
+          #nodyna <ID:send-206> <SD COMPLEX (change-prone variables)>
           ::Time.public_send(Base.default_timezone, year, mon, mday, hour, min, sec, microsec) rescue nil
         end
       end

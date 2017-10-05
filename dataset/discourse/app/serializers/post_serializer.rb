@@ -12,7 +12,7 @@ class PostSerializer < BasicPostSerializer
   ]
 
   INSTANCE_VARS.each do |v|
-    #nodyna <ID:send-144> <send MEDIUM ex2>
+    #nodyna <ID:send-144> <SD MODERATE (array)>
     self.send(:attr_accessor, v)
   end
 
@@ -65,7 +65,7 @@ class PostSerializer < BasicPostSerializer
     super(object, opts)
     PostSerializer::INSTANCE_VARS.each do |name|
       if opts.include? name
-        #nodyna <ID:send-145> <send MEDIUM ex2>
+        #nodyna <ID:send-145> <SD MODERATE (array)>
         self.send("#{name}=", opts[name])
       end
     end
@@ -182,7 +182,7 @@ class PostSerializer < BasicPostSerializer
       next if [:bookmark].include?(sym)
       count_col = "#{sym}_count".to_sym
 
-      #nodyna <ID:send-146> <send MEDIUM ex2>
+      #nodyna <ID:send-146> <SD MODERATE (array)>
       count = object.send(count_col) if object.respond_to?(count_col)
       summary = { id: id, count: count }
       summary[:hidden] = true if sym == :vote

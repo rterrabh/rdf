@@ -45,7 +45,7 @@ module Diaspora
     # @return [String] Defaults to the ROXML attrs which are not signatures.
     def signable_string
       signable_accessors.collect{ |accessor|
-        #nodyna <ID:send-56> <send VERY HIGH ex2>
+        #nodyna <ID:send-56> <SD COMPLEX (array)>
         (self.send accessor.to_sym).to_s
       }.join(';')
     end

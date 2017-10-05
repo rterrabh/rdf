@@ -33,9 +33,9 @@ module Psych
     end
 
     constants.each do |const|
-      #nodyna <ID:const_get-5> <const_get MEDIUM ex2>
+      #nodyna <ID:const_get-5> <CG MODERATE (array)>
       konst = const_get const
-      #nodyna <ID:define_method-7> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-7> <DM MODERATE (array)>
       define_method(const.to_s.downcase) do
         load konst
       end
@@ -64,10 +64,10 @@ module Psych
     end
 
     CACHE = Hash[constants.map { |const|
-      #nodyna <ID:const_get-6> <const_get VERY HIGH ex2>
+      #nodyna <ID:const_get-6> <CG COMPLEX (array)>
       val = const_get const
       begin
-        #nodyna <ID:const_get-7> <const_get VERY HIGH ex2>
+        #nodyna <ID:const_get-7> <CG COMPLEX (array)>
         [val, ::Object.const_get(val)]
       rescue
         nil

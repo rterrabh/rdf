@@ -32,11 +32,11 @@ module RailsAdmin
             unless @model_config.list.scopes.empty?
               if params[:scope].blank?
                 unless @model_config.list.scopes.first.nil?
-                  #nodyna <ID:send-4> <send VERY HIGH ex3>
+                  #nodyna <ID:send-4> <SD COMPLEX (change-prone variables)>
                   @objects = @objects.send(@model_config.list.scopes.first)
                 end
               elsif @model_config.list.scopes.collect(&:to_s).include?(params[:scope])
-                #nodyna <ID:send-5> <send VERY HIGH ex3>
+                #nodyna <ID:send-5> <SD COMPLEX (change-prone variables)>
                 @objects = @objects.send(params[:scope].to_sym)
               end
             end
@@ -51,8 +51,8 @@ module RailsAdmin
                   if params[:compact]
                     primary_key_method = @association ? @association.associated_primary_key : @model_config.abstract_model.primary_key
                     label_method = @model_config.object_label_method
-                    #nodyna <ID:send-6> <send VERY HIGH ex2>
-                    #nodyna <ID:send-6> <send VERY HIGH ex2>
+                    #nodyna <ID:send-6> <SD COMPLEX (array)>
+                    #nodyna <ID:send-6> <SD COMPLEX (array)>
                     @objects.collect { |o| {id: o.send(primary_key_method).to_s, label: o.send(label_method).to_s} }
                   else
                     @objects.to_json(@schema)

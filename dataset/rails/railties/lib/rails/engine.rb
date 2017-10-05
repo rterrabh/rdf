@@ -383,13 +383,13 @@ module Rails
         unless mod.respond_to?(:railtie_namespace)
           name, railtie = engine_name, self
 
-          #nodyna <ID:instance_eval-16> <instance_eval VERY HIGH ex2>
+          #nodyna <ID:instance_eval-16> <IEV COMPLEX (method definition)>
           mod.singleton_class.instance_eval do
-            #nodyna <ID:define_method-69> <define_method MEDIUM ex2>
+            #nodyna <ID:define_method-69> <DM MODERATE (events)>
             define_method(:railtie_namespace) { railtie }
 
             unless mod.respond_to?(:table_name_prefix)
-              #nodyna <ID:define_method-70> <define_method VERY HIGH ex2>
+              #nodyna <ID:define_method-70> <DM COMPLEX (events)>
               define_method(:table_name_prefix) { "#{name}_" }
             end
 
@@ -398,12 +398,12 @@ module Rails
             end
 
             unless mod.respond_to?(:railtie_helpers_paths)
-              #nodyna <ID:define_method-71> <define_method MEDIUM ex2>
+              #nodyna <ID:define_method-71> <DM MODERATE (events)>
               define_method(:railtie_helpers_paths) { railtie.helpers_paths }
             end
 
             unless mod.respond_to?(:railtie_routes_url_helpers)
-              #nodyna <ID:define_method-72> <define_method MEDIUM ex2>
+              #nodyna <ID:define_method-72> <DM MODERATE (events)>
               define_method(:railtie_routes_url_helpers) {|include_path_helpers = true| railtie.routes.url_helpers(include_path_helpers) }
             end
           end
@@ -489,7 +489,7 @@ module Rails
         helpers = Module.new
         all = ActionController::Base.all_helpers_from_path(helpers_paths)
         ActionController::Base.modules_for_helpers(all).each do |mod|
-          #nodyna <ID:send-284> <send VERY LOW ex1>
+          #nodyna <ID:send-284> <SD TRIVIAL (public methods)>
           helpers.send(:include, mod)
         end
         helpers

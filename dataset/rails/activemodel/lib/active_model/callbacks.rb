@@ -115,7 +115,7 @@ module ActiveModel
         define_callbacks(callback, options)
 
         types.each do |type|
-          #nodyna <ID:send-14> <send MEDIUM ex2>
+          #nodyna <ID:send-14> <SD MODERATE (array)>
           send("_define_#{type}_model_callback", self, callback)
         end
       end

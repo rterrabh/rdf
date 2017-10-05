@@ -17,14 +17,14 @@ class Formulary
 
   def self.load_formula(name, path)
     mod = Module.new
-    #nodyna <ID:const_set-1> <const_set VERY HIGH ex3>
+    #nodyna <ID:const_set-1> <CS COMPLEX (change-prone variable)>
     const_set("FormulaNamespace#{Digest::MD5.hexdigest(path.to_s)}", mod)
     contents = path.open("r") { |f| set_encoding(f).read }
     mod.module_eval(contents, path)
     class_name = class_s(name)
 
     begin
-      #nodyna <ID:const_get-1> <const_get VERY HIGH ex3>
+      #nodyna <ID:const_get-1> <CG COMPLEX (change-prone variable)>
       klass = mod.const_get(class_name)
     rescue NameError => e
       raise FormulaUnavailableError, name, e.backtrace

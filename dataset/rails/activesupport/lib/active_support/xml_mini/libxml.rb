@@ -75,7 +75,7 @@ module LibXML #:nodoc:
   end
 end
 
-#nodyna <ID:send-223> <send VERY LOW ex1>
+#nodyna <ID:send-223> <SD TRIVIAL (public methods)>
 LibXML::XML::Document.send(:include, LibXML::Conversions::Document)
-#nodyna <ID:send-224> <send VERY LOW ex1>
+#nodyna <ID:send-224> <SD TRIVIAL (public methods)>
 LibXML::XML::Node.send(:include, LibXML::Conversions::Node)

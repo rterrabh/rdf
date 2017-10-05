@@ -42,7 +42,7 @@ module Paperclip
     def class_for(class_name)
       class_name.split('::').inject(Object) do |klass, partial_class_name|
         if klass.const_defined?(partial_class_name)
-          #nodyna <ID:const_get-1> <const_get VERY HIGH ex2>
+          #nodyna <ID:const_get-1> <CG COMPLEX (array)>
           klass.const_get(partial_class_name, false)
         else
           klass.const_missing(partial_class_name)

@@ -39,7 +39,7 @@ module Spree
     end
 
     def self.calculators
-      #nodyna <ID:send-85> <send VERY HIGH ex3>
+      #nodyna <ID:send-85> <SD COMPLEX (change-prone variables)>
       spree_calculators.send(model_name_without_spree_namespace)
         .select { |c| c.to_s.constantize < Spree::ShippingCalculator }
     end

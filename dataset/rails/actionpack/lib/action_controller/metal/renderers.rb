@@ -42,7 +42,7 @@ module ActionController
         if options.key?(name)
           _process_options(options)
           method_name = Renderers._render_with_renderer_method_name(name)
-          #nodyna <ID:send-74> <send VERY HIGH ex3>
+          #nodyna <ID:send-74> <SD COMPLEX (change-prone variables)>
           return send(method_name, options.delete(name), options)
         end
       end
@@ -89,7 +89,7 @@ module ActionController
     # To use renderers and their mime types in more concise ways, see
     # <tt>ActionController::MimeResponds::ClassMethods.respond_to</tt>
     def self.add(key, &block)
-      #nodyna <ID:define_method-11> <define_method VERY HIGH ex2>
+      #nodyna <ID:define_method-11> <DM COMPLEX (events)>
       define_method(_render_with_renderer_method_name(key), &block)
       RENDERERS << key.to_sym
     end

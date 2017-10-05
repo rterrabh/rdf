@@ -20,14 +20,14 @@ class DiscoursePlugin
       original_class = mixin.to_s.demodulize.sub("Mixin", "")
       dependency_file_name = original_class.underscore
       require_dependency(dependency_file_name)
-      #nodyna <ID:send-14> <send VERY LOW ex1>
+      #nodyna <ID:send-14> <SD TRIVIAL (public methods)>
       original_class.constantize.send(:include, mixin)
     end
   end
 
   # Find the modules defined in the plugin with "Mixin" in their name.
   def self.mixins
-    #nodyna <ID:const_get-1> <const_get VERY HIGH ex2>
+    #nodyna <ID:const_get-1> <CG COMPLEX (array)>
     constants.map { |const_name| const_get(const_name) }
              .select { |const| const.class == Module && const.name["Mixin"] }
   end

@@ -61,9 +61,9 @@ module Spree
 
       # Include any abilities registered by extensions, etc.
       Ability.abilities.each do |clazz|
-        #nodyna <ID:send-104> <send LOW ex2>
+        #nodyna <ID:send-104> <SD EASY (array)>
         ability = clazz.send(:new, user)
-        #nodyna <ID:send-105> <send LOW ex2>
+        #nodyna <ID:send-105> <SD EASY (array)>
         @rules = rules + ability.send(:rules)
       end
 

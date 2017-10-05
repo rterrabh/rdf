@@ -46,7 +46,7 @@ module Spree
     LOCALIZED_NUMBERS = %w(cost_price weight depth width height)
 
     LOCALIZED_NUMBERS.each do |m|
-      #nodyna <ID:define_method-10> <define_method MEDIUM ex1>
+      #nodyna <ID:define_method-10> <DM MODERATE (array)>
       define_method("#{m}=") do |argument|
         self[m] = Spree::LocalizedNumber.parse(argument) if argument.present?
       end
@@ -169,7 +169,7 @@ module Spree
       options.keys.map { |key|
         m = "#{key}_price_modifier_amount_in".to_sym
         if self.respond_to? m
-          #nodyna <ID:send-101> <send VERY HIGH ex2>
+          #nodyna <ID:send-101> <SD COMPLEX (array)>
           self.send(m, currency, options[key])
         else
           0
@@ -183,7 +183,7 @@ module Spree
       options.keys.map { |key|
         m = "#{key}_price_modifier_amount".to_sym
         if self.respond_to? m
-          #nodyna <ID:send-102> <send VERY HIGH ex2>
+          #nodyna <ID:send-102> <SD COMPLEX (array)>
           self.send(m, options[key])
         else
           0

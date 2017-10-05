@@ -174,7 +174,7 @@ module ActiveSupport #:nodoc:
 
       def self.exclude_from(base)
         base.class_eval do
-          #nodyna <ID:define_method-40> <define_method MEDIUM ex2>
+          #nodyna <ID:define_method-40> <DM MODERATE (events)>
           define_method :const_missing, @_const_missing
           @_const_missing = nil
         end
@@ -207,7 +207,7 @@ module ActiveSupport #:nodoc:
     module Loadable #:nodoc:
       def self.exclude_from(base)
         base.class_eval do
-          #nodyna <ID:define_method-41> <define_method MEDIUM ex2>
+          #nodyna <ID:define_method-41> <DM MODERATE (events)>
           define_method(:load, Kernel.instance_method(:load))
           private :load
         end
@@ -436,7 +436,7 @@ module ActiveSupport #:nodoc:
     def autoload_module!(into, const_name, qualified_name, path_suffix)
       return nil unless base_path = autoloadable_module?(path_suffix)
       mod = Module.new
-      #nodyna <ID:const_set-7> <const_set MEDIUM ex3>
+      #nodyna <ID:const_set-7> <CS MODERATE (change-prone variable)>
       into.const_set const_name, mod
       autoloaded_constants << qualified_name unless autoload_once_paths.include?(base_path)
       mod
@@ -496,7 +496,7 @@ module ActiveSupport #:nodoc:
         else
           require_or_load(expanded, qualified_name)
           raise LoadError, "Unable to autoload constant #{qualified_name}, expected #{file_path} to define it" unless from_mod.const_defined?(const_name, false)
-          #nodyna <ID:const_get-9> <const_get MEDIUM ex3>
+          #nodyna <ID:const_get-9> <CG MODERATE (change-prone variables)>
           return from_mod.const_get(const_name)
         end
       elsif mod = autoload_module!(from_mod, const_name, qualified_name, path_suffix)
@@ -727,7 +727,7 @@ module ActiveSupport #:nodoc:
       # example above with Object, accessing to that constant must err.
       unless parent.autoload?(to_remove)
         begin
-          #nodyna <ID:const_get-10> <const_get VERY HIGH ex3>
+          #nodyna <ID:const_get-10> <CG COMPLEX (change-prone variable)>
           constantized = parent.const_get(to_remove, false)
         rescue NameError
           log "the constant #{const} is not reachable anymore, skipping"
@@ -738,7 +738,7 @@ module ActiveSupport #:nodoc:
       end
 
       begin
-        #nodyna <ID:instance_eval-7> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-7> <IEV COMPLEX (private access)>
         parent.instance_eval { remove_const to_remove }
       rescue NameError
         log "the constant #{const} is not reachable anymore, skipping"

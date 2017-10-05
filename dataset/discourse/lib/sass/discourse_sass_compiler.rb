@@ -30,7 +30,7 @@ class DiscourseSassCompiler
     @target = target
 
     unless Sass::Script::Functions < Sprockets::SassFunctions
-      #nodyna <ID:send-41> <send VERY LOW ex1>
+      #nodyna <ID:send-41> <SD TRIVIAL (public methods)>
       Sass::Script::Functions.send :include, Sprockets::SassFunctions
     end
   end

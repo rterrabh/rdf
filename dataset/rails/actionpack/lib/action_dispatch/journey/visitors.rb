@@ -60,7 +60,7 @@ module ActionDispatch
         private
 
           def visit node
-            #nodyna <ID:send-97> <send VERY HIGH ex3>
+            #nodyna <ID:send-97> <SD COMPLEX (change-prone variables)>
             send(DISPATCH_CACHE[node.type], node)
           end
 

@@ -15,7 +15,7 @@ module ActiveRecord
           ensure_not_nested
 
           through_proxy  = owner.association(through_reflection.name)
-          #nodyna <ID:send-109> <send VERY LOW ex1>
+          #nodyna <ID:send-109> <SD TRIVIAL (public methods)>
           through_record = through_proxy.send(:load_target)
 
           if through_record && !record

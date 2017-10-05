@@ -24,7 +24,7 @@ class IncomingLinksReport
 
     # Load the report
     report = IncomingLinksReport.new(type)
-    #nodyna <ID:send-193> <send VERY HIGH ex3>
+    #nodyna <ID:send-193> <SD COMPLEX (change-prone variables)>
     send(report_method, report)
     report
   end

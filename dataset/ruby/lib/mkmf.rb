@@ -725,7 +725,7 @@ int main() {printf("%"PRI_CONFTEST_PREFIX"#{neg ? 'd' : 'u'}\\n", conftest_const
     if opt and !opt.empty?
       [[:to_str], [:join, " "], [:to_s]].each do |meth, *args|
         if opt.respond_to?(meth)
-          #nodyna <ID:send-134> <send MEDIUM ex2>
+          #nodyna <ID:send-134> <SD MODERATE (array)>
           break opt = opt.send(meth, *args)
         end
       end
@@ -923,7 +923,7 @@ SRC
       if noun
         [[:to_str], [:join, ","], [:to_s]].each do |meth, *args|
           if noun.respond_to?(meth)
-            #nodyna <ID:send-135> <send MEDIUM ex2>
+            #nodyna <ID:send-135> <SD MODERATE (array)>
             break noun = noun.send(meth, *args)
           end
         end

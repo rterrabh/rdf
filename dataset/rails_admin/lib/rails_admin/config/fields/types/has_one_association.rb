@@ -14,7 +14,7 @@ module RailsAdmin
 
           # Accessor for field's formatted value
           register_instance_option :formatted_value do
-            #nodyna <ID:send-17> <send VERY HIGH ex3>
+            #nodyna <ID:send-17> <SD COMPLEX (change-prone variables)>
             (o = value) && o.send(associated_model_config.object_label_method)
           end
 

@@ -56,7 +56,7 @@ module TkComm
     TkUtil.untrust("00000"), # [0]-cmdid
     TkUtil.untrust("00000")  # [1]-winid
   ]
-  #nodyna <ID:instance_eval-1> <instance_eval MEDIUM ex2>
+  #nodyna <ID:instance_eval-1> <IEV MODERATE (method definition)>
   Tk_IDs.instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -75,7 +75,7 @@ module TkComm
   end
   Tk_WINDOWS.freeze
 
-  #nodyna <ID:instance_eval-2> <instance_eval MEDIUM ex1>
+  #nodyna <ID:instance_eval-2> <IEV MODERATE (private access)>
   self.instance_eval{
     @cmdtbl = TkUtil.untrust([])
   }
@@ -121,7 +121,7 @@ module TkComm
       classname_def = ''
     else # ruby_class == nil
       if Tk.const_defined?(tk_class)
-        #nodyna <ID:const_get-10> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-10> <CG COMPLEX (change-prone variable)>
         Tk.const_get(tk_class)  # auto_load
         ruby_class = WidgetClassNames[tk_class]
       end
@@ -130,7 +130,7 @@ module TkComm
         mods = TkExtlibAutoloadModule.find_all{|m| m.const_defined?(tk_class)}
         mods.each{|mod|
           begin
-            #nodyna <ID:const_get-11> <const_get VERY HIGH ex2>
+            #nodyna <ID:const_get-11> <CG COMPLEX (array)>
             mod.const_get(tk_class)  # auto_load
             break if (ruby_class = WidgetClassNames[tk_class])
           rescue LoadError
@@ -142,7 +142,7 @@ module TkComm
       unless ruby_class
         std_class = 'Tk' << tk_class
         if Object.const_defined?(std_class)
-          #nodyna <ID:const_get-12> <const_get VERY HIGH ex3>
+          #nodyna <ID:const_get-12> <CG COMPLEX (change-prone variable)>
           Object.const_get(std_class)  # auto_load
           ruby_class = WidgetClassNames[tk_class]
         end
@@ -151,7 +151,7 @@ module TkComm
       unless ruby_class
         if Tk.const_defined?('TOPLEVEL_ALIASES') &&
             Tk::TOPLEVEL_ALIASES.const_defined?(std_class)
-          #nodyna <ID:const_get-13> <const_get VERY HIGH ex3>
+          #nodyna <ID:const_get-13> <CG COMPLEX (change-prone variable)>
           Tk::TOPLEVEL_ALIASES.const_get(std_class)  # auto_load
           ruby_class = WidgetClassNames[tk_class]
         end
@@ -1273,7 +1273,7 @@ module TkCore
 wm withdraw .
 rename wm __wm_orig__
 proc wm {subcmd win args} {
-  #nodyna <ID:eval-3> <eval VERY HIGH ex2>
+  #nodyna <ID:eval-3> <EV COMPLEX (change-prone variables)>
   set val [eval [list __wm_orig__ $subcmd $win] $args]
   if {[string equal $subcmd withdraw] && [string equal $win .]} {
     rename wm {}
@@ -1368,7 +1368,7 @@ EOS
       true
     end
 
-    #nodyna <ID:instance_eval-3> <instance_eval MEDIUM ex1>
+    #nodyna <ID:instance_eval-3> <IEV MODERATE (private access)>
     INTERP.instance_eval{
       # @tk_cmd_tbl = TkUtil.untrust({})
       @tk_cmd_tbl =
@@ -1521,10 +1521,10 @@ EOS
 
   INTERP.add_tk_procs('rb_out', 'ns args', <<-'EOL')
     if [regexp {^::} $ns] {
-      #nodyna <ID:eval-4> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-4> <EV COMPLEX (change-prone variables)>
       set cmd {namespace eval $ns {ruby_cmd TkCore callback} $args}
     } else {
-      #nodyna <ID:eval-5> <eval VERY HIGH ex2>
+      #nodyna <ID:eval-5> <EV COMPLEX (change-prone variables)>
       set cmd {eval {ruby_cmd TkCore callback} $ns $args}
     }
     if {[set st [catch $cmd ret]] != 0} {
@@ -1544,7 +1544,7 @@ EOS
   EOL
 =begin
   INTERP.add_tk_procs('rb_out', 'args', <<-'EOL')
-    #nodyna <ID:eval-6> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-6> <EV COMPLEX (change-prone variables)>
     if {[set st [catch {eval {ruby_cmd TkCore callback} $args} ret]] != 0} {
        #return -code $st $ret
        set idx [string first "\n\n" $ret]
@@ -5643,7 +5643,7 @@ class TkWindow<TkObject
     end
 
     children.each{|path, obj|
-      #nodyna <ID:instance_eval-4> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-4> <IEV COMPLEX (private access)>
       obj.instance_eval{
         if defined?(@cmdtbl)
           for id in @cmdtbl

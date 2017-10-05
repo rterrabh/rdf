@@ -8,7 +8,7 @@ module ActiveAdmin
 
         def title
           if Proc === config[:title]
-            #nodyna <ID:instance_exec-25> <instance_exec VERY HIGH ex1>
+            #nodyna <ID:instance_exec-25> <IEX COMPLEX (block without parameters)>
             controller.instance_exec &config[:title]
           else
             config[:title] || assigns[:page_title] || active_admin_config.plural_resource_label
@@ -107,7 +107,7 @@ module ActiveAdmin
         # page. To set this, use the :as option in the page_presenter block.
         def find_index_renderer_class(klass)
           klass.is_a?(Class) ? klass :
-            #nodyna <ID:const_get-2> <const_get VERY HIGH ex3>
+            #nodyna <ID:const_get-2> <CG COMPLEX (change-prone variable)>
             ::ActiveAdmin::Views.const_get("IndexAs" + klass.to_s.camelcase)
         end
 
@@ -149,7 +149,7 @@ module ActiveAdmin
           if config.options.has_key?(:blank_slate_link)
             blank_slate_link = config.options[:blank_slate_link]
             if blank_slate_link.is_a?(Proc)
-              #nodyna <ID:instance_exec-26> <instance_exec VERY HIGH ex1>
+              #nodyna <ID:instance_exec-26> <IEX COMPLEX (block without parameters)>
               instance_exec(&blank_slate_link)
             end
           else

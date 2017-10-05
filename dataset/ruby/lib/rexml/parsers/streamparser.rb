@@ -37,10 +37,10 @@ module REXML
             # FIXME: remove this condition for milestone:3.2
             @listener.doctype_end if @listener.respond_to? :doctype_end
           when :comment, :attlistdecl, :cdata, :xmldecl, :elementdecl
-            #nodyna <ID:send-103> <send MEDIUM ex3>
+            #nodyna <ID:send-103> <SD MODERATE (change-prone variables)>
             @listener.send( event[0].to_s, *event[1..-1] )
           when :entitydecl, :notationdecl
-            #nodyna <ID:send-104> <send MEDIUM ex3>
+            #nodyna <ID:send-104> <SD MODERATE (change-prone variables)>
             @listener.send( event[0].to_s, event[1..-1] )
           when :externalentity
             entity_reference = event[1]

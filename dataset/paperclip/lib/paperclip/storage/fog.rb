@@ -43,7 +43,7 @@ module Paperclip
           raise e
         end unless defined?(Fog)
 
-        #nodyna <ID:instance_eval-1> <instance_eval VERY HIGH ex1>
+        #nodyna <ID:instance_eval-1> <IEV COMPLEX (private access)>
         base.instance_eval do
           unless @options[:url].to_s.match(/\A:fog.*url\Z/)
             @options[:path]  = @options[:path].gsub(/:url/, @options[:url]).gsub(/\A:rails_root\/public\/system\//, '')
@@ -144,7 +144,7 @@ module Paperclip
         time = convert_time(time)
         http_url_method = "get_#{scheme}_url"
         if path(style_name) && directory.files.respond_to?(http_url_method)
-          #nodyna <ID:send-1> <send VERY HIGH ex3>
+          #nodyna <ID:send-1> <SD COMPLEX (change-prone variables)>
           expiring_url = directory.files.public_send(http_url_method, path(style_name), time)
 
           if @options[:fog_host]

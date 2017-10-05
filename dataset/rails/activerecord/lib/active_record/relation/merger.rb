@@ -33,7 +33,7 @@ module ActiveRecord
           elsif k == :select
             other._select!(v)
           else
-            #nodyna <ID:send-175> <send VERY HIGH ex2>
+            #nodyna <ID:send-175> <SD COMPLEX (array)>
             other.send("#{k}!", v)
           end
         }
@@ -70,7 +70,7 @@ module ActiveRecord
             if name == :select
               relation._select!(*value)
             else
-              #nodyna <ID:send-176> <send VERY HIGH ex3>
+              #nodyna <ID:send-176> <SD COMPLEX (change-prone variables)>
               relation.send("#{name}!", *value)
             end
           end

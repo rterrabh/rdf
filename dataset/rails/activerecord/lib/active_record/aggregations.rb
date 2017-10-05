@@ -229,13 +229,13 @@ module ActiveRecord
 
       private
         def reader_method(name, class_name, mapping, allow_nil, constructor)
-          #nodyna <ID:define_method-34> <define_method MEDIUM ex2>
+          #nodyna <ID:define_method-34> <DM MODERATE (events)>
           define_method(name) do
             if @aggregation_cache[name].nil? && (!allow_nil || mapping.any? {|key, _| !_read_attribute(key).nil? })
               attrs = mapping.collect {|key, _| _read_attribute(key)}
               object = constructor.respond_to?(:call) ?
                 constructor.call(*attrs) :
-                #nodyna <ID:send-200> <send VERY HIGH ex3>
+                #nodyna <ID:send-200> <SD COMPLEX (change-prone variables)>
                 class_name.constantize.send(constructor, *attrs)
               @aggregation_cache[name] = object
             end
@@ -244,7 +244,7 @@ module ActiveRecord
         end
 
         def writer_method(name, class_name, mapping, allow_nil, converter)
-          #nodyna <ID:define_method-35> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-35> <DM COMPLEX (events)>
           define_method("#{name}=") do |part|
             klass = class_name.constantize
             if part.is_a?(Hash)
@@ -252,7 +252,7 @@ module ActiveRecord
             end
 
             unless part.is_a?(klass) || converter.nil? || part.nil?
-              #nodyna <ID:send-201> <send VERY HIGH ex3>
+              #nodyna <ID:send-201> <SD COMPLEX (change-prone variables)>
               part = converter.respond_to?(:call) ? converter.call(part) : klass.send(converter, part)
             end
 
@@ -260,7 +260,7 @@ module ActiveRecord
               mapping.each { |key, _| self[key] = nil }
               @aggregation_cache[name] = nil
             else
-              #nodyna <ID:send-202> <send VERY HIGH ex2>
+              #nodyna <ID:send-202> <SD COMPLEX (array)>
               mapping.each { |key, value| self[key] = part.send(value) }
               @aggregation_cache[name] = part.freeze
             end

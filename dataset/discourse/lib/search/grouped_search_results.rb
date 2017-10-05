@@ -32,11 +32,11 @@ class Search
     def add(object)
       type = object.class.to_s.downcase.pluralize
 
-      #nodyna <ID:send-23> <send VERY HIGH ex3>
+      #nodyna <ID:send-23> <SD COMPLEX (change-prone variables)>
       if !@type_filter.present? && send(type).length == Search.per_facet
         instance_variable_set("@more_#{type}".to_sym, true)
       else
-        #nodyna <ID:send-24> <send VERY HIGH ex3>
+        #nodyna <ID:send-24> <SD COMPLEX (change-prone variables)>
         (send type) << object
       end
     end

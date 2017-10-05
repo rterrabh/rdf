@@ -29,7 +29,7 @@ module HomebrewArgvExtension
         f = Formulary.factory(name, spec)
         if spec(default=nil).nil? && f.any_version_installed?
           installed_spec = Tab.for_formula(f).spec
-          #nodyna <ID:send-6> <send VERY HIGH ex3>
+          #nodyna <ID:send-6> <SD COMPLEX (change-prone variables)>
           f.set_active_spec(installed_spec) if f.send(installed_spec)
         end
         f

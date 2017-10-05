@@ -119,11 +119,11 @@ class Numeric
   end
 
   [Float, Fixnum, Bignum, BigDecimal].each do |klass|
-    #nodyna <ID:send-255> <send MEDIUM ex4>
+    #nodyna <ID:send-255> <SD MODERATE (private methods)>
     klass.send(:alias_method, :to_default_s, :to_s)
 
-    #nodyna <ID:send-256> <send MEDIUM ex4>
-    #nodyna <ID:define_method-61> <define_method MEDIUM ex1>
+    #nodyna <ID:send-256> <SD MODERATE (private methods)>
+    #nodyna <ID:define_method-61> <DM MODERATE (array)>
     klass.send(:define_method, :to_s) do |*args|
       if args[0].is_a?(Symbol)
         format = args[0]

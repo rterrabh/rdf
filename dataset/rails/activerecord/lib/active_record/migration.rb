@@ -413,7 +413,7 @@ module ActiveRecord
       end
 
       def method_missing(name, *args, &block) # :nodoc:
-        #nodyna <ID:send-194> <send VERY HIGH ex3>
+        #nodyna <ID:send-194> <SD COMPLEX (change-prone variables)>
         (delegate || superclass.delegate).send(name, *args, &block)
       end
 
@@ -494,7 +494,7 @@ module ActiveRecord
           end
           @connection = recorder.delegate
           recorder.commands.each do |cmd, args, block|
-            #nodyna <ID:send-195> <send VERY HIGH ex2>
+            #nodyna <ID:send-195> <SD COMPLEX (array)>
             send(cmd, *args, &block)
           end
         end
@@ -607,7 +607,7 @@ module ActiveRecord
           change
         end
       else
-        #nodyna <ID:send-196> <send VERY HIGH ex3>
+        #nodyna <ID:send-196> <SD COMPLEX (change-prone variables)>
         send(direction)
       end
     ensure
@@ -662,7 +662,7 @@ module ActiveRecord
           end
         end
         return super unless connection.respond_to?(method)
-        #nodyna <ID:send-197> <send VERY HIGH ex3>
+        #nodyna <ID:send-197> <SD COMPLEX (change-prone variables)>
         connection.send(method, *arguments, &block)
       end
     end
@@ -908,7 +908,7 @@ module ActiveRecord
         if start_index
           finish = migrator.migrations[start_index + steps]
           version = finish ? finish.version : 0
-          #nodyna <ID:send-198> <send MEDIUM ex3>
+          #nodyna <ID:send-198> <SD MODERATE (change-prone variables)>
           send(direction, migrations_paths, version)
         end
       end

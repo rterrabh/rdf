@@ -131,7 +131,7 @@ module ActiveRecord
 
     module AssociationBuilderExtension #:nodoc:
       def self.build(model, reflection)
-        #nodyna <ID:send-214> <send LOW ex4>
+        #nodyna <ID:send-214> <SD EASY (private methods)>
         model.send(:add_autosave_association_callbacks, reflection)
       end
 
@@ -149,14 +149,14 @@ module ActiveRecord
 
         def define_non_cyclic_method(name, &block)
           return if method_defined?(name)
-          #nodyna <ID:define_method-38> <define_method VERY HIGH ex2>
+          #nodyna <ID:define_method-38> <DM COMPLEX (events)>
           define_method(name) do |*args|
             result = true; @_already_called ||= {}
             # Loop prevention for validation of associations
             unless @_already_called[name]
               begin
                 @_already_called[name]=true
-                #nodyna <ID:instance_eval-5> <instance_eval MEDIUM ex3>
+                #nodyna <ID:instance_eval-5> <IEV MODERATE (block execution)>
                 result = instance_eval(&block)
               ensure
                 @_already_called[name]=false
@@ -189,7 +189,7 @@ module ActiveRecord
             after_create save_method
             after_update save_method
           elsif reflection.has_one?
-            #nodyna <ID:define_method-39> <define_method VERY HIGH ex2>
+            #nodyna <ID:define_method-39> <DM COMPLEX (events)>
             define_method(save_method) { save_has_one_association(reflection) } unless method_defined?(save_method)
             # Configures two callbacks instead of a single after_save so that
             # the model may rely on their execution order relative to its
@@ -218,7 +218,7 @@ module ActiveRecord
               method = :validate_single_association
             end
 
-            #nodyna <ID:send-215> <send LOW ex3>
+            #nodyna <ID:send-215> <SD EASY (change-prone variables)>
             define_non_cyclic_method(validation_method) { send(method, reflection) }
             validate validation_method
           end
@@ -408,7 +408,7 @@ module ActiveRecord
           if autosave && record.marked_for_destruction?
             record.destroy
           elsif autosave != false
-            #nodyna <ID:send-216> <send VERY HIGH ex3>
+            #nodyna <ID:send-216> <SD COMPLEX (change-prone variables)>
             key = reflection.options[:primary_key] ? send(reflection.options[:primary_key]) : id
 
             if (autosave && record.changed_for_autosave?) || new_record? || record_changed?(reflection, record, key)
@@ -447,7 +447,7 @@ module ActiveRecord
             saved = record.save(:validate => !autosave) if record.new_record? || (autosave && record.changed_for_autosave?)
 
             if association.updated?
-              #nodyna <ID:send-217> <send VERY HIGH ex3>
+              #nodyna <ID:send-217> <SD COMPLEX (change-prone variables)>
               association_id = record.send(reflection.options[:primary_key] || :id)
               self[reflection.foreign_key] = association_id
               association.loaded!

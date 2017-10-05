@@ -1137,7 +1137,7 @@ module URI
     # return base and rel.
     # you can modify `base', but can not `rel'.
     def merge0(oth)
-      #nodyna <ID:send-117> <send LOW ex4>
+      #nodyna <ID:send-117> <SD EASY (private methods)>
       oth = parser.send(:convert_to_uri, oth)
 
       if self.relative? && oth.relative?
@@ -1201,7 +1201,7 @@ module URI
 
     # :stopdoc:
     def route_from0(oth)
-      #nodyna <ID:send-118> <send LOW ex4>
+      #nodyna <ID:send-118> <SD EASY (private methods)>
       oth = parser.send(:convert_to_uri, oth)
       if self.relative?
         raise BadURIError,
@@ -1310,7 +1310,7 @@ module URI
     #   #=> #<URI::Generic:0x2020c2f6 URL:/main.rbx?page=1>
     #
     def route_to(oth)
-      #nodyna <ID:send-119> <send LOW ex4>
+      #nodyna <ID:send-119> <SD EASY (private methods)>
       parser.send(:convert_to_uri, oth).route_from(self)
     end
 
@@ -1415,7 +1415,7 @@ module URI
     # returns an Array of the components defined from the COMPONENT Array
     def component_ary
       component.collect do |x|
-        #nodyna <ID:send-120> <send VERY HIGH ex3>
+        #nodyna <ID:send-120> <SD COMPLEX (change-prone variables)>
         self.send(x)
       end
     end
@@ -1441,7 +1441,7 @@ module URI
     def select(*components)
       components.collect do |c|
         if component.include?(c)
-          #nodyna <ID:send-121> <send VERY HIGH ex3>
+          #nodyna <ID:send-121> <SD COMPLEX (change-prone variables)>
           self.send(c)
         else
           raise ArgumentError,

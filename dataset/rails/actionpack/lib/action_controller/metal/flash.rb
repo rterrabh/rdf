@@ -32,7 +32,7 @@ module ActionController #:nodoc:
         types.each do |type|
           next if _flash_types.include?(type)
 
-          #nodyna <ID:define_method-10> <define_method MEDIUM ex2>
+          #nodyna <ID:define_method-10> <DM MODERATE (events)>
           define_method(type) do
             request.flash[type]
           end

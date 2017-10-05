@@ -105,7 +105,7 @@ module ActiveRecord
     initializer "active_record.set_configs" do |app|
       ActiveSupport.on_load(:active_record) do
         app.config.active_record.each do |k,v|
-          #nodyna <ID:send-204> <send VERY HIGH ex2>
+          #nodyna <ID:send-204> <SD COMPLEX (array)>
           send "#{k}=", v
         end
       end
@@ -146,7 +146,7 @@ end_warning
       hook = app.config.reload_classes_only_on_change ? :to_prepare : :to_cleanup
 
       ActiveSupport.on_load(:active_record) do
-        #nodyna <ID:send-205> <send MEDIUM ex3>
+        #nodyna <ID:send-205> <SD MODERATE (change-prone variables)>
         ActionDispatch::Reloader.send(hook) do
           if ActiveRecord::Base.connected?
             ActiveRecord::Base.clear_cache!

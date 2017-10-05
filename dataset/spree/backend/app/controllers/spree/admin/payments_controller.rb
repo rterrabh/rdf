@@ -54,7 +54,7 @@ module Spree
 
         # Because we have a transition method also called void, we do this to avoid conflicts.
         event = "void_transaction" if event == "void"
-        #nodyna <ID:send-24> <send VERY HIGH ex3>
+        #nodyna <ID:send-24> <SD COMPLEX (change-prone variables)>
         if @payment.send("#{event}!")
           flash[:success] = Spree.t(:payment_updated)
         else

@@ -474,7 +474,7 @@ module ActiveRecord
           method = :"#{command}_sql"
 
           if respond_to?(method, true)
-            #nodyna <ID:send-140> <send VERY HIGH ex3>
+            #nodyna <ID:send-140> <SD COMPLEX (change-prone variables)>
             send(method, table, *arguments)
           else
             raise "Unknown method called : #{method}(#{arguments.inspect})"

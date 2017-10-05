@@ -32,13 +32,13 @@ module Tk::Mac
   end
 
   def self.def_OpenDocument(cmd=Proc.new)
-    #nodyna <ID:eval-54> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-54> <EV COMPLEX (change-prone variables)>
     ip_eval("proc ::tk::mac::OpenDocument {args} { eval #{install_cmd(cmd)} $args }")
     nil
   end
 
   def self.def_PrintDocument(cmd=Proc.new)
-    #nodyna <ID:eval-55> <eval VERY HIGH ex2>
+    #nodyna <ID:eval-55> <EV COMPLEX (change-prone variables)>
     ip_eval("proc ::tk::mac::PrintDocument {args} { eval #{install_cmd(cmd)} $args }")
     nil
   end
@@ -120,7 +120,7 @@ class Tk::Mac::IconBitmap < TkImage
             keys = _symbolkey2str(keys)
             keys.delete('imagename')
             keys.delete('without_creating')
-            #nodyna <ID:instance_eval-54> <instance_eval MEDIUM ex1>
+            #nodyna <ID:instance_eval-54> <IEV MODERATE (private access)>
             obj.instance_eval{
               tk_call_without_enc('::tk::mac::iconBitmap',
                                   @path, width, height, *hash_kv(keys, true))
@@ -130,7 +130,7 @@ class Tk::Mac::IconBitmap < TkImage
         end
       end
     end
-    #nodyna <ID:instance_eval-55> <instance_eval MEDIUM ex1>
+    #nodyna <ID:instance_eval-55> <IEV MODERATE (private access)>
     (obj = self.allocate).instance_eval{
       Tk_IMGTBL.mutex.synchronize{
         initialize(width, height, keys)

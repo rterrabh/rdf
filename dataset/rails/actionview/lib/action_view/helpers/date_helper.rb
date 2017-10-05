@@ -820,9 +820,9 @@ module ActionView
 
       private
         %w( sec min hour day month year ).each do |method|
-          #nodyna <ID:define_method-5> <define_method MEDIUM ex1>
+          #nodyna <ID:define_method-5> <DM MODERATE (array)>
           define_method(method) do
-            #nodyna <ID:send-50> <send MEDIUM ex2>
+            #nodyna <ID:send-50> <SD MODERATE (array)>
             @datetime.kind_of?(Numeric) ? @datetime : @datetime.send(method) if @datetime
           end
         end
@@ -1039,7 +1039,7 @@ module ActionView
           first_visible = order.find { |type| !@options[:"discard_#{type}"] }
           order.reverse_each do |type|
             separator = separator(type) unless type == first_visible # don't add before first visible field
-            #nodyna <ID:send-51> <send MEDIUM ex2>
+            #nodyna <ID:send-51> <SD MODERATE (array)>
             select.insert(0, separator.to_s + send("select_#{type}").to_s)
           end
           select.html_safe

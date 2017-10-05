@@ -244,7 +244,7 @@ module RSS
         register_uri(uri, element_name)
         method_name = "start_#{element_name}"
         unless private_method_defined?(method_name)
-          #nodyna <ID:define_method-41> <define_method MEDIUM ex2>
+          #nodyna <ID:define_method-41> <DM MODERATE (events)>
           define_method(method_name) do |name, prefix, attrs, ns|
             uri = _ns(ns, prefix)
             if self.class.uri_registered?(uri, element_name)
@@ -389,7 +389,7 @@ module RSS
       class_name = self.class.class_name(_ns(ns, prefix), local)
       current_class = @last_element.class
       if known_class?(current_class, class_name)
-        #nodyna <ID:const_get-38> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-38> <CG COMPLEX (change-prone variable)>
         next_class = current_class.const_get(class_name)
         start_have_something_element(local, prefix, attrs, ns, next_class)
       else
@@ -561,7 +561,7 @@ module RSS
   AVAILABLE_PARSER_LIBRARIES.each do |lib, parser|
     begin
       require lib
-      #nodyna <ID:const_get-39> <const_get MEDIUM ex2>
+      #nodyna <ID:const_get-39> <CG MODERATE (array)>
       AVAILABLE_PARSERS.push(const_get(parser))
     rescue LoadError
     end

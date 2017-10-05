@@ -7,7 +7,7 @@ module ActiveSupport
 
     # Let ActiveSupport::ProxyObject at least raise exceptions.
     def raise(*args)
-      #nodyna <ID:send-237> <send VERY HIGH ex4>
+      #nodyna <ID:send-237> <SD COMPLEX (private methods)>
       ::Object.send(:raise, *args)
     end
   end

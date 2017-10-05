@@ -10,12 +10,12 @@ module Psych
 
   def self.quick_emit thing, opts = {}, &block # :nodoc:
     warn "#{caller[0]}: YAML.quick_emit is deprecated" if $VERBOSE && !caller[0].start_with?(File.dirname(__FILE__))
-    #nodyna <ID:eval-1> <eval VERY HIGH ex4>
+    #nodyna <ID:eval-1> <EV COMPLEX (scope)>
     target = eval 'self', block.binding
     target.extend DeprecatedMethods
     metaclass = class << target; self; end
-    #nodyna <ID:send-2> <send MEDIUM ex4>
-    #nodyna <ID:define_method-6> <define_method MEDIUM ex2>
+    #nodyna <ID:send-2> <SD MODERATE (private methods)>
+    #nodyna <ID:define_method-6> <DM MODERATE (events)>
     metaclass.send(:define_method, :encode_with) do |coder|
       target.taguri        = coder.tag
       target.to_yaml_style = coder.style
@@ -67,7 +67,7 @@ module Psych
     _, _, type, name = type.split ':', 4
 
     reference = name.split('::').inject(reference) do |k,n|
-      #nodyna <ID:const_get-4> <const_get VERY HIGH ex2>
+      #nodyna <ID:const_get-4> <CG COMPLEX (array)>
       k.const_get(n.to_sym)
     end if name
     [type, reference]

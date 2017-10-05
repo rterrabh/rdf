@@ -431,7 +431,7 @@ module Rake
           ['--execute', '-e CODE',
             "Execute some Ruby code and exit.",
             lambda { |value|
-              #nodyna <ID:eval-72> <eval VERY HIGH ex2>
+              #nodyna <ID:eval-72> <EV COMPLEX (change-prone variables)>
               eval(value)
               exit
             }
@@ -439,7 +439,7 @@ module Rake
           ['--execute-print', '-p CODE',
             "Execute some Ruby code, print the result, then exit.",
             lambda { |value|
-              #nodyna <ID:eval-73> <eval VERY HIGH ex2>
+              #nodyna <ID:eval-73> <EV COMPLEX (change-prone variables)>
               puts eval(value)
               exit
             }
@@ -447,7 +447,7 @@ module Rake
           ['--execute-continue',  '-E CODE',
             "Execute some Ruby code, " +
             "then continue with normal task processing.",
-            #nodyna <ID:eval-74> <eval VERY HIGH ex2>
+            #nodyna <ID:eval-74> <EV COMPLEX (change-prone variables)>
             lambda { |value| eval(value) }
           ],
           ['--jobs',  '-j [NUMBER]',

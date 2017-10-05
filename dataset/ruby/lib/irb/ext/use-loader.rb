@@ -53,13 +53,13 @@ module IRB
         if opt
           if !$".include?("irb/cmd/load")
           end
-          #nodyna <ID:instance_eval-171> <instance_eval VERY HIGH ex1>
+          #nodyna <ID:instance_eval-171> <IEV COMPLEX (private access)>
           (class<<@workspace.main;self;end).instance_eval {
             alias_method :load, :irb_load
             alias_method :require, :irb_require
           }
         else
-          #nodyna <ID:instance_eval-172> <instance_eval VERY HIGH ex1>
+          #nodyna <ID:instance_eval-172> <IEV COMPLEX (private access)>
           (class<<@workspace.main;self;end).instance_eval {
             alias_method :load, :__original__load__IRB_use_loader__
             alias_method :require, :__original__require__IRB_use_loader__

@@ -160,10 +160,10 @@ module Mime
       end
 
       def register(string, symbol, mime_type_synonyms = [], extension_synonyms = [], skip_lookup = false)
-        #nodyna <ID:const_set-1> <const_set VERY HIGH ex3>
+        #nodyna <ID:const_set-1> <CS COMPLEX (change-prone variable)>
         Mime.const_set(symbol.upcase, Type.new(string, symbol, mime_type_synonyms))
 
-        #nodyna <ID:const_get-5> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-5> <CG COMPLEX (change-prone variable)>
         new_mime = Mime.const_get(symbol.upcase)
         SET << new_mime
 
@@ -218,9 +218,9 @@ module Mime
       #   Mime::Type.unregister(:mobile)
       def unregister(symbol)
         symbol = symbol.upcase
-        #nodyna <ID:const_get-6> <const_get VERY HIGH ex3>
+        #nodyna <ID:const_get-6> <CG COMPLEX (change-prone variable)>
         mime = Mime.const_get(symbol)
-        #nodyna <ID:instance_eval-2> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-2> <IEV MODERATE (private access)>
         Mime.instance_eval { remove_const(symbol) }
 
         SET.delete_if { |v| v.eql?(mime) }

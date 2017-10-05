@@ -833,7 +833,7 @@ class CGI
           APPLET PRE XMP LISTING DL OL UL DIR MENU SELECT TABLE TITLE
           STYLE SCRIPT H1 H2 H3 H4 H5 H6 TEXTAREA FORM BLOCKQUOTE
           CAPTION ]
-        #nodyna <ID:define_method-24> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-24> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -842,7 +842,7 @@ class CGI
       # - O EMPTY
       for element in %w[ IMG BASE BASEFONT BR AREA LINK PARAM HR INPUT
           ISINDEX META ]
-        #nodyna <ID:define_method-25> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-25> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -851,7 +851,7 @@ class CGI
       # O O or - O
       for element in %w[ HTML HEAD BODY P PLAINTEXT DT DD LI OPTION TR
           TH TD ]
-        #nodyna <ID:define_method-26> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-26> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -876,7 +876,7 @@ class CGI
         H1 H2 H3 H4 H5 H6 PRE Q INS DEL DL OL UL LABEL SELECT OPTGROUP
         FIELDSET LEGEND BUTTON TABLE TITLE STYLE SCRIPT NOSCRIPT
         TEXTAREA FORM A BLOCKQUOTE CAPTION ]
-        #nodyna <ID:define_method-27> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-27> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -884,7 +884,7 @@ class CGI
     # - O EMPTY
     instance_method(:nOE_element_def).tap do |m|
       for element in %w[ IMG BASE BR AREA LINK PARAM HR INPUT COL META ]
-        #nodyna <ID:define_method-28> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-28> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -893,7 +893,7 @@ class CGI
     instance_method(:nO_element_def).tap do |m|
       for element in %w[ HTML BODY P DT DD LI OPTION THEAD TFOOT TBODY
           COLGROUP TR TH TD HEAD ]
-        #nodyna <ID:define_method-29> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-29> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -919,7 +919,7 @@ class CGI
           INS DEL DL OL UL DIR MENU LABEL SELECT OPTGROUP FIELDSET
           LEGEND BUTTON TABLE IFRAME NOFRAMES TITLE STYLE SCRIPT
           NOSCRIPT TEXTAREA FORM A BLOCKQUOTE CAPTION ]
-        #nodyna <ID:define_method-30> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-30> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -928,7 +928,7 @@ class CGI
     instance_method(:nOE_element_def).tap do |m|
       for element in %w[ IMG BASE BASEFONT BR AREA LINK PARAM HR INPUT
           COL ISINDEX META ]
-        #nodyna <ID:define_method-31> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-31> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -937,7 +937,7 @@ class CGI
     instance_method(:nO_element_def).tap do |m|
       for element in %w[ HTML BODY P DT DD LI OPTION THEAD TFOOT TBODY
           COLGROUP TR TH TD HEAD ]
-        #nodyna <ID:define_method-32> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-32> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -958,7 +958,7 @@ class CGI
     # - -
     instance_method(:nn_element_def).tap do |m|
       for element in %w[ FRAMESET ]
-        #nodyna <ID:define_method-33> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-33> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -966,7 +966,7 @@ class CGI
     # - O EMPTY
     instance_method(:nOE_element_def).tap do |m|
       for element in %w[ FRAME ]
-        #nodyna <ID:define_method-34> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-34> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -994,7 +994,7 @@ class CGI
         H1 H2 H3 H4 H5 H6 PRE Q INS DEL DL OL UL LABEL SELECT
         FIELDSET LEGEND BUTTON TABLE TITLE STYLE SCRIPT NOSCRIPT
         TEXTAREA FORM A BLOCKQUOTE CAPTION ]
-        #nodyna <ID:define_method-35> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-35> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -1003,7 +1003,7 @@ class CGI
     instance_method(:nOE_element_def).tap do |m|
       for element in %w[ IMG BASE BR AREA LINK PARAM HR INPUT COL META
         COMMAND EMBED KEYGEN SOURCE TRACK WBR ]
-        #nodyna <ID:define_method-36> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-36> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end
@@ -1012,7 +1012,7 @@ class CGI
     instance_method(:nO_element_def).tap do |m|
       for element in %w[ HTML HEAD BODY P DT DD LI OPTION THEAD TFOOT TBODY
           OPTGROUP COLGROUP RT RP TR TH TD ]
-        #nodyna <ID:define_method-37> <define_method MEDIUM ex1>
+        #nodyna <ID:define_method-37> <DM MODERATE (array)>
         define_method(element.downcase, m)
       end
     end

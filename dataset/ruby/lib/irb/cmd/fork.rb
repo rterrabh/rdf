@@ -15,7 +15,7 @@ module IRB
   module ExtendCommand
     class Fork<Nop
       def execute
-        #nodyna <ID:send-133> <send VERY LOW ex1>
+        #nodyna <ID:send-133> <SD TRIVIAL (public methods)>
         pid = send ExtendCommand.irb_original_method_name("fork")
         unless pid
           class << self

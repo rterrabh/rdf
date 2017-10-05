@@ -248,7 +248,7 @@ module RailsAdmin
         # @see RailsAdmin::Config::Fields::Base.register_instance_option :required?
         def optional(state = nil, &block)
           if !state.nil? || block # rubocop:disable NonNilCheck
-            #nodyna <ID:instance_eval-7> <instance_eval VERY HIGH ex3>
+            #nodyna <ID:instance_eval-7> <IEV COMPLEX (block execution)>
             required state.nil? ? proc { false == (instance_eval(&block)) } : false == state
           else
             optional?

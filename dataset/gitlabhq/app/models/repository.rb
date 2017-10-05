@@ -126,7 +126,7 @@ class Repository
   def build_cache
     cache_keys.each do |key|
       unless cache.exist?(key)
-        #nodyna <ID:send-73> <send MEDIUM ex2>
+        #nodyna <ID:send-73> <SD MODERATE (array)>
         send(key)
       end
     end
@@ -141,7 +141,7 @@ class Repository
   def rebuild_cache
     cache_keys.each do |key|
       cache.expire(key)
-      #nodyna <ID:send-74> <send MEDIUM ex2>
+      #nodyna <ID:send-74> <SD MODERATE (array)>
       send(key)
     end
   end
@@ -157,10 +157,10 @@ class Repository
   def method_missing(m, *args, &block)
     if m == :lookup && !block_given?
       lookup_cache[m] ||= {}
-      #nodyna <ID:send-75> <send VERY HIGH ex3>
+      #nodyna <ID:send-75> <SD COMPLEX (change-prone variables)>
       lookup_cache[m][args.join(":")] ||= raw_repository.send(m, *args, &block)
     else
-      #nodyna <ID:send-76> <send VERY HIGH ex3>
+      #nodyna <ID:send-76> <SD COMPLEX (change-prone variables)>
       raw_repository.send(m, *args, &block)
     end
   end

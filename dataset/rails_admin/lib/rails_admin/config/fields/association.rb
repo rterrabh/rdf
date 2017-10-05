@@ -19,7 +19,7 @@ module RailsAdmin
           [value].flatten.select(&:present?).collect do |associated|
             amc = polymorphic? ? RailsAdmin.config(associated) : associated_model_config # perf optimization for non-polymorphic associations
             am = amc.abstract_model
-            #nodyna <ID:send-30> <send VERY HIGH ex3>
+            #nodyna <ID:send-30> <SD COMPLEX (change-prone variables)>
             wording = associated.send(amc.object_label_method)
             can_see = !am.embedded? && (show_action = v.action(:show, am, associated))
             can_see ? v.link_to(wording, v.url_for(action: show_action.action_name, model_name: am.to_param, id: associated.id), class: 'pjax') : ERB::Util.html_escape(wording)
@@ -90,7 +90,7 @@ module RailsAdmin
 
         # Reader for the association's value unformatted
         def value
-          #nodyna <ID:send-31> <send VERY HIGH ex3>
+          #nodyna <ID:send-31> <SD COMPLEX (change-prone variables)>
           bindings[:object].send(association.name)
         end
 

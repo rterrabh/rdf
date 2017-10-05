@@ -8,7 +8,7 @@ module Tk
     def self.__def_validcmd(scope, klass, keys=nil)
       keys = klass._config_keys unless keys
       keys.each{|key|
-        #nodyna <ID:eval-61> <eval VERY HIGH ex1>
+        #nodyna <ID:eval-61> <EV COMPLEX (method definition)>
         eval("def #{key}(*args, &b)
                  __validcmd_call(#{klass.name}, '#{key}', *args, &b)
               end", scope)
@@ -112,7 +112,7 @@ module Tk
     def self.__def_validcmd(scope, klass, keys=nil)
       keys = klass._config_keys unless keys
       keys.each{|key|
-        #nodyna <ID:eval-62> <eval VERY HIGH ex1>
+        #nodyna <ID:eval-62> <EV COMPLEX (method definition)>
         eval("def item_#{key}(id, *args, &b)
                  __item_validcmd_call(#{klass.name}, '#{key}', id, *args, &b)
               end", scope)

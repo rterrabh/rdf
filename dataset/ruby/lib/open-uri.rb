@@ -408,7 +408,7 @@ module OpenURI
   module Meta
     def Meta.init(obj, src=nil) # :nodoc:
       obj.extend Meta
-      #nodyna <ID:instance_eval-160> <instance_eval VERY HIGH ex1>
+      #nodyna <ID:instance_eval-160> <IEV COMPLEX (private access)>
       obj.instance_eval {
         @base_uri = nil
         @meta = {} # name to string.  legacy.

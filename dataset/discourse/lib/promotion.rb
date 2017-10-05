@@ -19,7 +19,7 @@ class Promotion
 
 
     review_method = :"review_tl#{@user.trust_level}"
-    #nodyna <ID:send-8> <send VERY HIGH ex3>
+    #nodyna <ID:send-8> <SD COMPLEX (change-prone variables)>
     return send(review_method) if respond_to?(review_method)
 
     false
@@ -46,7 +46,7 @@ class Promotion
     if new_level < old_level && !@user.trust_level_locked
       next_up = new_level+1
       key = "tl#{next_up}_met?"
-      #nodyna <ID:send-9> <send VERY HIGH ex3>
+      #nodyna <ID:send-9> <SD COMPLEX (change-prone variables)>
       if self.class.respond_to?(key) && self.class.send(key, @user)
         raise Discourse::InvalidAccess.new, I18n.t('trust_levels.change_failed_explanation',
              user_name: @user.name,

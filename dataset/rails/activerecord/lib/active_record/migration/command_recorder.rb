@@ -63,7 +63,7 @@ module ActiveRecord
       def inverse_of(command, args, &block)
         method = :"invert_#{command}"
         raise IrreversibleMigration unless respond_to?(method, true)
-        #nodyna <ID:send-145> <send VERY HIGH ex3>
+        #nodyna <ID:send-145> <SD COMPLEX (change-prone variables)>
         send(method, args, &block)
       end
 
@@ -188,7 +188,7 @@ module ActiveRecord
       # Forwards any missing method call to the \target.
       def method_missing(method, *args, &block)
         if @delegate.respond_to?(method)
-          #nodyna <ID:send-146> <send VERY HIGH ex3>
+          #nodyna <ID:send-146> <SD COMPLEX (change-prone variables)>
           @delegate.send(method, *args, &block)
         else
           super

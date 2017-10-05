@@ -38,7 +38,7 @@ module ActionMailer
         register_preview_interceptors(options.delete(:preview_interceptors))
         register_observers(options.delete(:observers))
 
-        #nodyna <ID:send-7> <send VERY HIGH ex2>
+        #nodyna <ID:send-7> <SD COMPLEX (array)>
         options.each { |k,v| send("#{k}=", v) }
 
         if options.show_previews

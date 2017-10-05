@@ -55,7 +55,7 @@ module Rails
         source  = File.expand_path(find_in_source_paths(source.to_s))
 
         set_migration_assigns!(destination)
-        #nodyna <ID:instance_eval-14> <instance_eval MEDIUM ex1>
+        #nodyna <ID:instance_eval-14> <IEV MODERATE (private access)>
         context = instance_eval('binding')
 
         dir, base = File.split(destination)

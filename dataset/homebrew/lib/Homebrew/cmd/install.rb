@@ -141,7 +141,7 @@ module Homebrew
       check_xcode_license_approved
       check_for_osx_gcc_installer
     ].each do |check|
-      #nodyna <ID:send-21> <send MEDIUM ex2>
+      #nodyna <ID:send-21> <SD MODERATE (array)>
       out = checks.send(check)
       opoo out unless out.nil?
     end

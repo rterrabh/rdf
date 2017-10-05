@@ -192,7 +192,7 @@ SQL
   def result_hash(type)
     instance_hash = self.instance_variable_get("@#{type.to_s}_hash".to_sym)
     unless instance_hash
-      #nodyna <ID:send-79> <send MEDIUM ex3>
+      #nodyna <ID:send-79> <SD MODERATE (change-prone variables)>
       post_count_array = User.connection.select_all(self.send("#{type.to_s}_sql".to_sym))
 
       instance_hash = {}

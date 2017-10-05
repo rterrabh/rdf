@@ -26,7 +26,7 @@ module Spree
       template 'authentication_helpers.rb.tt', "lib/spree/authentication_helpers.rb"
 
       file_action = File.exist?('config/initializers/spree.rb') ? :append_file : :create_file
-      #nodyna <ID:send-1> <send VERY LOW ex1>
+      #nodyna <ID:send-1> <SD TRIVIAL (public methods)>
       send(file_action, 'config/initializers/spree.rb') do
         %Q{
           Rails.application.config.to_prepare do

@@ -16,7 +16,7 @@ module RailsAdmin
 
       # Writer to hide object.
       def hide(&block)
-        #nodyna <ID:instance_eval-10> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-10> <IEV COMPLEX (block execution)>
         visible block ? proc { false == (instance_eval(&block)) } : false
       end
 

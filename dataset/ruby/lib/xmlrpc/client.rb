@@ -534,7 +534,7 @@ module XMLRPC # :nodoc:
       meth = :call2
       meth = :call2_async if async
 
-      #nodyna <ID:send-43> <send LOW ex3>
+      #nodyna <ID:send-43> <SD EASY (change-prone variables)>
       ok, params = self.send(meth, "system.multicall",
         methods.collect {|m| {'methodName' => m[0], 'params' => m[1..-1]} }
       )
@@ -604,7 +604,7 @@ module XMLRPC # :nodoc:
       def method_missing(mid, *args)
         pre = @prefix + mid.to_s
         arg = @args + args
-        #nodyna <ID:send-44> <send VERY HIGH ex3>
+        #nodyna <ID:send-44> <SD COMPLEX (change-prone variables)>
         @server.send(@meth, pre, *arg)
       end
 

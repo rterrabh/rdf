@@ -31,7 +31,7 @@ class Badge < ActiveRecord::Base
   def self.trigger_hash
     Hash[*(
       Badge::Trigger.constants.map{|k|
-        #nodyna <ID:const_get-2> <const_get MEDIUM ex2>
+        #nodyna <ID:const_get-2> <CG MODERATE (array)>
         [k.to_s.underscore, Badge::Trigger.const_get(k)]
       }.flatten
     )]

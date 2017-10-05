@@ -33,7 +33,7 @@ module StreamHelper
     if stream.stream_posts.empty?
       (Time.now() + 1).to_i
     else
-      #nodyna <ID:send-227> <send VERY HIGH ex3>
+      #nodyna <ID:send-227> <SD COMPLEX (change-prone variables)>
       stream.stream_posts.last.send(stream.order.to_sym).to_i
     end
   end

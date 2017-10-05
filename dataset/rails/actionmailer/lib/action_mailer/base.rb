@@ -808,7 +808,7 @@ module ActionMailer
       # Call all the procs (if any)
       default_values = {}
       self.class.default.each do |k,v|
-        #nodyna <ID:instance_eval-1> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-1> <IEV COMPLEX (block execution)>
         default_values[k] = v.is_a?(Proc) ? instance_eval(&v) : v
       end
 

@@ -23,15 +23,15 @@ module ActiveAdmin
     #     end
     #
     def deprecate(klass, method, message)
-      #nodyna <ID:send-31> <send VERY HIGH ex4>
-      #nodyna <ID:define_method-6> <define_method VERY HIGH ex2>
+      #nodyna <ID:send-31> <SD COMPLEX (private methods)>
+      #nodyna <ID:define_method-6> <DM COMPLEX (events)>
       klass.send :define_method, "deprecated_#{method}", klass.instance_method(method)
 
-      #nodyna <ID:send-32> <send VERY HIGH ex4>
-      #nodyna <ID:define_method-7> <define_method VERY HIGH ex2>
+      #nodyna <ID:send-32> <SD COMPLEX (private methods)>
+      #nodyna <ID:define_method-7> <DM COMPLEX (events)>
       klass.send :define_method, method do |*args|
         ActiveAdmin::Deprecation.warn "#{message}", caller
-        #nodyna <ID:send-33> <send VERY HIGH ex3>
+        #nodyna <ID:send-33> <SD COMPLEX (change-prone variables)>
         send "deprecated_#{method}", *args
       end
     end

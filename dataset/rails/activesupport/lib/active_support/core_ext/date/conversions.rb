@@ -80,7 +80,7 @@ class Date
   #
   #   date.to_time(:utc)             # => Sat Nov 10 00:00:00 UTC 2007
   def to_time(form = :local)
-    #nodyna <ID:send-262> <send VERY HIGH ex3>
+    #nodyna <ID:send-262> <SD COMPLEX (change-prone variables)>
     ::Time.send(form, year, month, day)
   end
 

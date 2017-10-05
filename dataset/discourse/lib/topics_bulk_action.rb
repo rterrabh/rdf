@@ -13,13 +13,13 @@ class TopicsBulkAction
 
   def self.register_operation(name, &block)
     operations << name
-    #nodyna <ID:define_method-5> <define_method VERY HIGH ex2>
+    #nodyna <ID:define_method-5> <DM COMPLEX (events)>
     define_method(name, &block)
   end
 
   def perform!
     raise Discourse::InvalidParameters.new(:operation) unless TopicsBulkAction.operations.include?(@operation[:type])
-    #nodyna <ID:send-21> <send VERY HIGH ex3>
+    #nodyna <ID:send-21> <SD COMPLEX (change-prone variables)>
     send(@operation[:type])
     @changed_ids
   end

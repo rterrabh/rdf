@@ -12,7 +12,7 @@ module DifferentOFS
 
   def self.extended(klass)
     super(klass)
-    #nodyna <ID:const_set-65> <const_set VERY LOW ex1>
+    #nodyna <ID:const_set-65> <CS TRIVIAL (static values)>
     klass.const_set(:DifferentOFS, Class.new(klass).class_eval {include WithDifferentOFS}).name
   end
 end

@@ -42,10 +42,10 @@ class Tk::BWidget::ButtonBox
     win = window(tk_send('add', *hash_kv(keys)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-7> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-7> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-108> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-108> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -72,10 +72,10 @@ class Tk::BWidget::ButtonBox
     win = window(tk_send('insert', tagid(idx), *hash_kv(keys)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-8> <instance_exec VERY HIGH ex2>
+        #nodyna <ID:instance_exec-8> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-109> <instance_eval VERY HIGH ex3>
+        #nodyna <ID:instance_eval-109> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

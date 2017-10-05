@@ -3,9 +3,9 @@ ActiveAdmin.before_load do |app|
   require "active_admin/batch_actions/controller"
 
   # Add our Extensions
-  #nodyna <ID:send-13> <send VERY LOW ex1>
+  #nodyna <ID:send-13> <SD TRIVIAL (public methods)>
   ActiveAdmin::Resource.send :include, ActiveAdmin::BatchActions::ResourceExtension
-  #nodyna <ID:send-14> <send VERY LOW ex1>
+  #nodyna <ID:send-14> <SD TRIVIAL (public methods)>
   ActiveAdmin::ResourceController.send :include, ActiveAdmin::BatchActions::Controller
 
   # Require all the views
