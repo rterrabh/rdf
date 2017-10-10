@@ -1,56 +1,3 @@
-#
-#--
-#   e2mmap.rb - for Ruby 1.1
-#       $Release Version: 2.0$
-#       $Revision: 1.10 $
-#       by Keiju ISHITSUKA
-#
-#++
-#
-# Helper module for easily defining exceptions with predefined messages.
-#
-# == Usage
-#
-# 1.
-#   class Foo
-#     extend Exception2MessageMapper
-#     def_e2message ExistingExceptionClass, "message..."
-#     def_exception :NewExceptionClass, "message..."[, superclass]
-#     ...
-#   end
-#
-# 2.
-#   module Error
-#     extend Exception2MessageMapper
-#     def_e2message ExistingExceptionClass, "message..."
-#     def_exception :NewExceptionClass, "message..."[, superclass]
-#     ...
-#   end
-#   class Foo
-#     include Error
-#     ...
-#   end
-#
-#   foo = Foo.new
-#   foo.Fail ....
-#
-# 3.
-#   module Error
-#     extend Exception2MessageMapper
-#     def_e2message ExistingExceptionClass, "message..."
-#     def_exception :NewExceptionClass, "message..."[, superclass]
-#     ...
-#   end
-#   class Foo
-#     extend Exception2MessageMapper
-#     include Error
-#     ...
-#   end
-#
-#   Foo.Fail NewExceptionClass, arg...
-#   Foo.Fail ExistingExceptionClass, arg...
-#
-#
 module Exception2MessageMapper
 
   E2MM = Exception2MessageMapper # :nodoc:
@@ -61,6 +8,7 @@ module Exception2MessageMapper
   end
 
   def bind(cl)
+    #nodyna <module_eval-1999> <not yet classified>
     self.module_eval %[
       def Raise(err = nil, *rest)
         Exception2MessageMapper.Raise(self.class, err, *rest)
@@ -73,74 +21,37 @@ module Exception2MessageMapper
     ]
   end
 
-  # Fail(err, *rest)
-  #     err:    exception
-  #     rest:   message arguments
-  #
   def Raise(err = nil, *rest)
     E2MM.Raise(self, err, *rest)
   end
   alias Fail Raise
   alias fail Raise
 
-  # def_e2message(c, m)
-  #         c:  exception
-  #         m:  message_form
-  #     define exception c with message m.
-  #
   def def_e2message(c, m)
     E2MM.def_e2message(self, c, m)
   end
 
-  # def_exception(n, m, s)
-  #         n:  exception_name
-  #         m:  message_form
-  #         s:  superclass(default: StandardError)
-  #     define exception named ``c'' with message m.
-  #
   def def_exception(n, m, s = StandardError)
     E2MM.def_exception(self, n, m, s)
   end
 
-  #
-  # Private definitions.
-  #
-  # {[class, exp] => message, ...}
   @MessageMap = {}
 
-  # E2MM.def_e2message(k, e, m)
-  #         k:  class to define exception under.
-  #         e:  exception
-  #         m:  message_form
-  #     define exception c with message m.
-  #
   def E2MM.def_e2message(k, c, m)
-    #nodyna <ID:instance_eval-168> <IEV EASY (private access)>
+    #nodyna <instance_eval-2000> <IEV EASY (private access)>
     E2MM.instance_eval{@MessageMap[[k, c]] = m}
     c
   end
 
-  # E2MM.def_exception(k, n, m, s)
-  #         k:  class to define exception under.
-  #         n:  exception_name
-  #         m:  message_form
-  #         s:  superclass(default: StandardError)
-  #     define exception named ``c'' with message m.
-  #
   def E2MM.def_exception(k, n, m, s = StandardError)
     n = n.id2name if n.kind_of?(Fixnum)
     e = Class.new(s)
-    #nodyna <ID:instance_eval-169> <IEV EASY (private access)>
+    #nodyna <instance_eval-2001> <IEV EASY (private access)>
     E2MM.instance_eval{@MessageMap[[k, e]] = m}
-    #nodyna <ID:const_set-63> <CS MODERATE (change-prone variable)>
+    #nodyna <const_set-2002> <CS MODERATE (change-prone variable)>
     k.const_set(n, e)
   end
 
-  # Fail(klass, err, *rest)
-  #     klass:  class to define exception under.
-  #     err:    exception
-  #     rest:   message arguments
-  #
   def E2MM.Raise(klass = E2MM, err = nil, *rest)
     if form = e2mm_message(klass, err)
       b = $@.nil? ? caller(1) : $@
@@ -157,7 +68,7 @@ module Exception2MessageMapper
   def E2MM.e2mm_message(klass, exp)
     for c in klass.ancestors
       if mes = @MessageMap[[c,exp]]
-        #nodyna <ID:instance_eval-170> <IEV COMPLEX (private access)>
+        #nodyna <instance_eval-2003> <IEV COMPLEX (private access)>
         m = klass.instance_eval('"' + mes + '"')
         return m
       end

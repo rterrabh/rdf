@@ -4,8 +4,6 @@ class Udns < Formula
   url "http://www.corpit.ru/mjt/udns/udns-0.4.tar.gz"
   sha256 "115108dc791a2f9e99e150012bcb459d9095da2dd7d80699b584ac0ac3768710"
 
-  # Build target for dylib. See:
-  # http://www.corpit.ru/pipermail/udns/2011q3/000154.html
   patch :DATA
 
   def install

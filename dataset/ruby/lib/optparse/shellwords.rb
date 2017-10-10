@@ -1,4 +1,3 @@
-# -*- ruby -*-
 
 require 'shellwords'
 require 'optparse'

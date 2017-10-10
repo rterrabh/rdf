@@ -1,7 +1,5 @@
 module ActionDispatch
   module Journey # :nodoc:
-    # The Routing table. Contains all routes for a system. Routes can be
-    # added to the table by calling Routes#add_route.
     class Routes # :nodoc:
       include Enumerable
 
@@ -57,7 +55,6 @@ module ActionDispatch
         end
       end
 
-      # Add a route to the routing table.
       def add_route(app, path, conditions, defaults, name = nil)
         route = Route.new(name, app, path, conditions, defaults)
 

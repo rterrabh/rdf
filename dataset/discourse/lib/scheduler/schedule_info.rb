@@ -24,7 +24,6 @@ module Scheduler
         @current_owner = data["current_owner"]
       end
     rescue
-      # corrupt redis
       @next_run = @prev_run = @prev_result = @prev_duration = @current_owner = nil
     end
 
@@ -66,11 +65,9 @@ module Scheduler
       today_begin = Time.now.midnight.to_i
       today_offset = DateTime.now.seconds_since_midnight
 
-      # If it's later today
       if at > today_offset
         @next_run = today_begin + at
       else
-        # Otherwise do it tomorrow
         @next_run = today_begin + 1.day + at
       end
     end

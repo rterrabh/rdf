@@ -13,7 +13,6 @@ class Qpdf < Formula
   depends_on "pcre"
 
   def install
-    # find Homebrew's libpcre
     ENV.append "LDFLAGS", "-L#{Formula["pcre"].opt_lib}"
 
     system "./configure", "--prefix=#{prefix}"

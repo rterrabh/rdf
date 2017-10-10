@@ -2,23 +2,6 @@ require 'tempfile'
 require 'rubygems'
 require 'rubygems/remote_fetcher'
 
-##
-# A fake Gem::RemoteFetcher for use in tests or to avoid real live HTTP
-# requests when testing code that uses RubyGems.
-#
-# Example:
-#
-#   @fetcher = Gem::FakeFetcher.new
-#   @fetcher.data['http://gems.example.com/yaml'] = source_index.to_yaml
-#   Gem::RemoteFetcher.fetcher = @fetcher
-#
-#   # invoke RubyGems code
-#
-#   paths = @fetcher.paths
-#   assert_equal 'http://gems.example.com/yaml', paths.shift
-#   assert paths.empty?, paths.join(', ')
-#
-# See RubyGems' tests for more examples of FakeFetcher.
 
 class Gem::FakeFetcher
 
@@ -79,14 +62,15 @@ class Gem::FakeFetcher
     end
   end
 
-  # Thanks, FakeWeb!
   def open_uri_or_path(path)
     data = find_data(path)
     body, code, msg = data
 
-    #nodyna <ID:send-48> <SD EASY (private methods)>
+    #nodyna <send-2322> <SD EASY (private methods)>
     response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
+    #nodyna <instance_variable_set-2323> <not yet classified>
     response.instance_variable_set(:@body, body)
+    #nodyna <instance_variable_set-2324> <not yet classified>
     response.instance_variable_set(:@read, true)
     response
   end
@@ -98,9 +82,11 @@ class Gem::FakeFetcher
     @last_request = request_class.new uri.request_uri
     yield @last_request if block_given?
 
-    #nodyna <ID:send-49> <SD EASY (private methods)>
+    #nodyna <send-2325> <SD EASY (private methods)>
     response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
+    #nodyna <instance_variable_set-2326> <not yet classified>
     response.instance_variable_set(:@body, body)
+    #nodyna <instance_variable_set-2327> <not yet classified>
     response.instance_variable_set(:@read, true)
     response
   end
@@ -171,7 +157,6 @@ class Gem::FakeFetcher
 
 end
 
-# :stopdoc:
 class Gem::RemoteFetcher
 
   def self.fetcher=(fetcher)
@@ -179,29 +164,10 @@ class Gem::RemoteFetcher
   end
 
 end
-# :startdoc:
 
-##
-# The SpecFetcherSetup allows easy setup of a remote source in RubyGems tests:
-#
-#   spec_fetcher do |f|
-#     f.gem  'a', 1
-#     f.spec 'a', 2
-#     f.gem  'b', 1' 'a' => '~> 1.0'
-#     f.clear
-#   end
-#
-# The above declaration creates two gems, a-1 and b-1, with a dependency from
-# b to a.  The declaration creates an additional spec a-2, but no gem for it
-# (so it cannot be installed).
-#
-# After the gems are created they are removed from Gem.dir.
 
 class Gem::TestCase::SpecFetcherSetup
 
-  ##
-  # Executes a SpecFetcher setup block.  Yields an instance then creates the
-  # gems and specifications defined in the instance.
 
   def self.declare test, repository
     setup = new test, repository
@@ -220,17 +186,11 @@ class Gem::TestCase::SpecFetcherSetup
     @operations = []
   end
 
-  ##
-  # Removes any created gems or specifications from Gem.dir (the default
-  # install location).
 
   def clear
     @operations << [:clear]
   end
 
-  ##
-  # Returns a Hash of created Specification full names and the corresponding
-  # Specification.
 
   def created_specs
     created = {}
@@ -242,8 +202,6 @@ class Gem::TestCase::SpecFetcherSetup
     created
   end
 
-  ##
-  # Creates any defined gems or specifications
 
   def execute # :nodoc:
     execute_operations
@@ -277,23 +235,16 @@ class Gem::TestCase::SpecFetcherSetup
     end
   end
 
-  ##
-  # Creates a gem with +name+, +version+ and +deps+.  The created gem can be
-  # downloaded and installed.
-  #
-  # The specification will be yielded before gem creation for customization,
-  # but only the block or the dependencies may be set, not both.
 
   def gem name, version, dependencies = nil, &block
     @operations << [:gem, name, version, dependencies, block]
   end
 
-  ##
-  # Creates a legacy platform spec with the name 'pl' and version 1
 
   def legacy_platform
     spec 'pl', 1 do |s|
       s.platform = Gem::Platform.new 'i386-linux'
+      #nodyna <instance_variable_set-2328> <not yet classified>
       s.instance_variable_set :@original_platform, 'i386-linux'
     end
   end
@@ -320,8 +271,6 @@ class Gem::TestCase::SpecFetcherSetup
       @test.uri = URI gem_repo
     end
 
-    # This works around util_setup_spec_fetcher adding all created gems to the
-    # installed set.
     Gem::Specification.reset
     Gem::Specification.add_specs(*@installed)
 
@@ -335,12 +284,6 @@ class Gem::TestCase::SpecFetcherSetup
     end
   end
 
-  ##
-  # Creates a spec with +name+, +version+ and +deps+.  The created gem can be
-  # downloaded and installed.
-  #
-  # The specification will be yielded before creation for customization,
-  # but only the block or the dependencies may be set, not both.
 
   def spec name, version, dependencies = nil, &block
     @operations << [:spec, name, version, dependencies, block]
@@ -354,18 +297,9 @@ class Gem::TestCase::SpecFetcherSetup
 
 end
 
-##
-# A StringIO duck-typed class that uses Tempfile instead of String as the
-# backing store.
-#
-# This is available when rubygems/test_utilities is required.
-#--
-# This class was added to flush out problems in Rubinius' IO implementation.
 
 class TempIO < Tempfile
 
-  ##
-  # Creates a new TempIO that will be initialized to contain +string+.
 
   def initialize(string = '')
     super "TempIO"
@@ -374,8 +308,6 @@ class TempIO < Tempfile
     rewind
   end
 
-  ##
-  # The content of the TempIO as a String.
 
   def string
     flush

@@ -33,7 +33,6 @@ class GitAnnex < Formula
       cabal_install "--only-dependencies"
       cabal_install "--prefix=#{prefix}"
 
-      # this can be made the default behavior again once git-union-merge builds properly when bottling
       if build.with? "git-union-merge"
         system "make", "git-union-merge", "PREFIX=#{prefix}"
         bin.install "git-union-merge"
@@ -45,7 +44,6 @@ class GitAnnex < Formula
   end
 
   test do
-    # make sure git can find git-annex
     ENV.prepend_path "PATH", bin
     system "git", "annex", "test"
   end

@@ -1,8 +1,5 @@
 require 'rubygems/command'
 
-##
-# Installs RubyGems itself.  This command is ordinarily only available from a
-# RubyGems checkout or tarball.
 
 class Gem::Commands::SetupCommand < Gem::Command
   HISTORY_HEADER = /^===\s*[\d.]+\s*\/\s*\d{4}-\d{2}-\d{2}\s*$/
@@ -99,7 +96,6 @@ class Gem::Commands::SetupCommand < Gem::Command
 Installs RubyGems itself.
 
 RubyGems installs RDoc for itself in GEM_HOME.  By default this is:
-  #{Gem.dir}
 
 If you prefer a different directory, set the GEM_HOME environment variable.
 
@@ -108,7 +104,6 @@ prefix and suffix.  If ruby was installed as `ruby18`, gem will be
 installed as `gem18`.
 
 By default, this RubyGems will install gem as:
-  #{Gem.default_exec_format % 'gem'}
     EOF
   end
 
@@ -292,7 +287,6 @@ TEXT
     begin
       Gem.ensure_gem_subdirectories Gem.dir
     rescue SystemCallError
-      # ignore
     end
 
     if File.writable? gem_doc_dir and
@@ -346,13 +340,8 @@ TEXT
       lib_dir = RbConfig::CONFIG[site_or_vendor]
       bin_dir = RbConfig::CONFIG['bindir']
     else
-      # Apple installed RubyGems into libdir, and RubyGems <= 1.1.0 gets
-      # confused about installation location, so switch back to
-      # sitelibdir/vendorlibdir.
       if defined?(APPLE_GEM_HOME) and
-        # just in case Apple and RubyGems don't get this patched up proper.
         (prefix == RbConfig::CONFIG['libdir'] or
-         # this one is important
          prefix == File.join(RbConfig::CONFIG['libdir'], 'ruby')) then
          lib_dir = RbConfig::CONFIG[site_or_vendor]
          bin_dir = RbConfig::CONFIG['bindir']
@@ -400,7 +389,6 @@ TEXT
 
       File.open old_bin_path, 'w' do |fp|
         fp.write <<-EOF
-#!#{Gem.ruby}
 
 abort "#{deprecation_message}"
     EOF

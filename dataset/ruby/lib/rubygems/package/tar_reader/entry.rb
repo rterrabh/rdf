@@ -1,21 +1,10 @@
-# -*- coding: utf-8 -*-
-#++
-# Copyright (C) 2004 Mauricio Julio Fernández Pradier
-# See LICENSE.txt for additional licensing information.
-#--
 
-##
-# Class for reading entries out of a tar file
 
 class Gem::Package::TarReader::Entry
 
-  ##
-  # Header for this tar entry
 
   attr_reader :header
 
-  ##
-  # Creates a new tar entry for +header+ that will be read from +io+
 
   def initialize(header, io)
     @closed = false
@@ -29,29 +18,21 @@ class Gem::Package::TarReader::Entry
     raise IOError, "closed #{self.class}" if closed?
   end
 
-  ##
-  # Number of bytes read out of the tar entry
 
   def bytes_read
     @read
   end
 
-  ##
-  # Closes the tar entry
 
   def close
     @closed = true
   end
 
-  ##
-  # Is the tar entry closed?
 
   def closed?
     @closed
   end
 
-  ##
-  # Are we at the end of the tar entry?
 
   def eof?
     check_closed
@@ -59,8 +40,6 @@ class Gem::Package::TarReader::Entry
     @read >= @header.size
   end
 
-  ##
-  # Full name of the tar entry
 
   def full_name
     if @header.prefix != "" then
@@ -74,8 +53,6 @@ class Gem::Package::TarReader::Entry
           'tar is corrupt, name contains null byte'
   end
 
-  ##
-  # Read one byte from the tar entry
 
   def getc
     check_closed
@@ -88,22 +65,16 @@ class Gem::Package::TarReader::Entry
     ret
   end
 
-  ##
-  # Is this tar entry a directory?
 
   def directory?
     @header.typeflag == "5"
   end
 
-  ##
-  # Is this tar entry a file?
 
   def file?
     @header.typeflag == "0"
   end
 
-  ##
-  # The position in the tar entry
 
   def pos
     check_closed
@@ -111,9 +82,6 @@ class Gem::Package::TarReader::Entry
     bytes_read
   end
 
-  ##
-  # Reads +len+ bytes from the tar file entry, or the rest of the entry if
-  # nil
 
   def read(len = nil)
     check_closed
@@ -131,8 +99,6 @@ class Gem::Package::TarReader::Entry
 
   alias readpartial read # :nodoc:
 
-  ##
-  # Rewinds to the beginning of the tar file entry
 
   def rewind
     check_closed

@@ -19,7 +19,6 @@ module Homebrew
   end
 
   def install_tap(user, repo, clone_target = nil)
-    # ensure git is installed
     Utils.ensure_git_installed!
 
     tap = Tap.new user, repo
@@ -56,7 +55,6 @@ module Homebrew
     true
   end
 
-  # Migrate tapped formulae from symlink-based to directory-based structure.
   def migrate_taps(options = {})
     ignore = HOMEBREW_LIBRARY/"Formula/.gitignore"
     return unless ignore.exist? || options.fetch(:force, false)

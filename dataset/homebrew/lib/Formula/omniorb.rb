@@ -17,7 +17,6 @@ class Omniorb < Formula
     sha256 "c82b3bafacbb93cfaace41765219155f2b24eb3781369bba0581feb1dc50fe5e"
   end
 
-  # http://www.omniorb-support.com/pipermail/omniorb-list/2012-February/031202.html
   patch :DATA
 
   def install
@@ -42,7 +41,6 @@ index 3ff1f22..e3b8d3c 100644
 --- a/include/omniORB4/CORBA_sysdep.h
 +++ b/include/omniORB4/CORBA_sysdep.h
 @@ -231,6 +231,11 @@
- #endif
 
 
 +#if defined(__clang__)

@@ -24,15 +24,11 @@ class Sip < Formula
 
   def install
     if build.head?
-      # Link the Mercurial repository into the download directory so
-      # build.py can use it to figure out a version number.
       ln_s cached_download + ".hg", ".hg"
-      # build.py doesn't run with python3
       system "python", "build.py", "prepare"
     end
 
     Language::Python.each_python(build) do |python, version|
-      # Note the binary `sip` is the same for python 2.x and 3.x
       system python, "configure.py",
                      "--deployment-target=#{MacOS.version}",
                      "--destdir=#{lib}/python#{version}/site-packages",
@@ -55,7 +51,6 @@ class Sip < Formula
 
   test do
     (testpath/"test.h").write <<-EOS.undent
-      #pragma once
       class Test {
       public:
         Test();
@@ -63,8 +58,6 @@ class Sip < Formula
       };
     EOS
     (testpath/"test.cpp").write <<-EOS.undent
-      #include "test.h"
-      #include <iostream>
       Test::Test() {}
       void Test::test()
       {
@@ -75,7 +68,6 @@ class Sip < Formula
       %Module test
       class Test {
       %TypeHeaderCode
-      #include "test.h"
       %End
       public:
         Test();

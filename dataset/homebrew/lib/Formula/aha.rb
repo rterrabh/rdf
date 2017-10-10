@@ -14,7 +14,6 @@ class Aha < Formula
   end
 
   def install
-    # install manpages under share/man/
     inreplace "Makefile", "$(PREFIX)/man", "$(PREFIX)/share/man"
     system "make", "install", "PREFIX=#{prefix}"
   end

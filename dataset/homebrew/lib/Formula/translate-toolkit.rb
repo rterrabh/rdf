@@ -70,9 +70,6 @@ class TranslateToolkit < Formula
       end
     end
 
-    # install_data tries to install to /Library because translate-toolkit's
-    # heuristic for extracting a relative site-packages path fails with Apple's
-    # layout
     inreplace "setup.py", /^sitepackages =.+/, "sitepackages = 'lib/python2.7/site-packages'"
 
     ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python2.7/site-packages"

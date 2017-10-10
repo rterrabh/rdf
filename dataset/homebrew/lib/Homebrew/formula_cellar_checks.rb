@@ -1,6 +1,5 @@
 module FormulaCellarChecks
   def check_PATH(bin)
-    # warn the user if stuff was installed outside of their PATH
     return unless bin.directory?
     return unless bin.children.length > 0
 
@@ -11,13 +10,11 @@ module FormulaCellarChecks
     return if ORIGINAL_PATHS.include? prefix_bin
 
     <<-EOS.undent
-      #{prefix_bin} is not in your PATH
       You can amend this by altering your #{shell_profile} file
     EOS
   end
 
   def check_manpages
-    # Check for man pages that aren't in share/man
     return unless (formula.prefix+"man").directory?
 
     <<-EOS.undent
@@ -28,7 +25,6 @@ module FormulaCellarChecks
   end
 
   def check_infopages
-    # Check for info pages that aren't in share/info
     return unless (formula.prefix+"info").directory?
 
     <<-EOS.undent
@@ -50,7 +46,6 @@ module FormulaCellarChecks
       install to "libexec" and then symlink or wrap binaries into "bin".
       See "activemq", "jruby", etc. for examples.
       The offending files are:
-        #{jars * "\n        "}
     EOS
   end
 
@@ -69,7 +64,6 @@ module FormulaCellarChecks
       Non-libraries were installed to "#{formula.lib}"
       Installing non-libraries to "lib" is discouraged.
       The offending files are:
-        #{non_libraries * "\n        "}
     EOS
   end
 
@@ -82,7 +76,6 @@ module FormulaCellarChecks
     <<-EOS.undent
       Non-executables were installed to "#{bin}"
       The offending files are:
-        #{non_exes * "\n        "}
     EOS
   end
 
@@ -99,7 +92,6 @@ module FormulaCellarChecks
       symlinked as needed.
 
       The offending files are:
-        #{generics * "\n        "}
     EOS
   end
 
@@ -122,7 +114,6 @@ module FormulaCellarChecks
     <<-EOS.undent
       Header files that shadow system header files were installed to "#{formula.include}"
       The offending files are:
-        #{files * "\n        "}
     EOS
   end
 
@@ -135,7 +126,6 @@ module FormulaCellarChecks
       These .pth files are likely to cause link conflicts. Please invoke
       setup.py using Language::Python.setup_install_args.
       The offending files are
-        #{pth_found * "\n        "}
     EOS
   end
 
@@ -152,7 +142,6 @@ module FormulaCellarChecks
       object files were linked against system openssl
       These object files were linked against the deprecated system OpenSSL.
       Adding `depends_on "openssl"` to the formula may help.
-        #{system_openssl * "\n        "}
     EOS
   end
 
@@ -169,14 +158,12 @@ module FormulaCellarChecks
       These python extension modules were linked directly to a Python
       framework binary. They should be linked with -undefined dynamic_lookup
       instead of -lpython or -framework Python.
-        #{framework_links * "\n        "}
     EOS
   end
 
   def check_emacs_lisp(share, name)
     return unless (share/"emacs/site-lisp").directory?
 
-    # Emacs itself can do what it wants
     return if name == "emacs"
 
     elisps = (share/"emacs/site-lisp").children.select { |file| %w[.el .elc].include? file.extname }
@@ -186,10 +173,8 @@ module FormulaCellarChecks
       Emacs Lisp files were linked directly to #{HOMEBREW_PREFIX}/share/emacs/site-lisp
 
       This may cause conflicts with other packages; install to a subdirectory instead, such as
-      #{share}/emacs/site-lisp/#{name}
 
       The offending files are:
-        #{elisps * "\n        "}
     EOS
   end
 

@@ -36,7 +36,6 @@ class Moco < Formula
       system bin/"moco", "start", "-p", port, "-c", testpath/"config.json"
     end
 
-    # Wait for Moco to start.
     sleep 5
 
     response = Net::HTTP.get URI "http://localhost:#{port}"

@@ -1,7 +1,5 @@
-# Protects OmniAuth request phase against CSRF.
 
 module OmniAuth
-  # Based on ActionController::RequestForgeryProtection.
   class RequestForgeryProtection
     def initialize(env)
       @env = env
@@ -58,7 +56,6 @@ module OmniAuth
       forgery_protection_strategy.new(self).handle_unverified_request
     end
 
-    # Sets the token value for the current session.
     def form_authenticity_token
       session[:_csrf_token] ||= SecureRandom.base64(32)
     end

@@ -6,12 +6,7 @@ module ActiveJob
     extend ActiveSupport::Concern
     include ActiveSupport::Rescuable
 
-    # Includes methods for executing and performing jobs instantly.
     module ClassMethods
-      # Performs the job immediately.
-      #
-      #   MyJob.perform_now("mike")
-      #
       def perform_now(*args)
         job_or_instantiate(*args).perform_now
       end
@@ -22,10 +17,6 @@ module ActiveJob
       end
     end
 
-    # Performs the job immediately. The job is not sent to the queueing adapter
-    # but directly executed by blocking the execution of others until it's finished.
-    #
-    #   MyJob.new(*args).perform_now
     def perform_now
       deserialize_arguments_if_needed
       run_callbacks :perform do

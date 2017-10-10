@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/mainframe.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/frame'
@@ -31,8 +27,6 @@ class Tk::BWidget::MainFrame
   private :__tkvariable_optkeys
 
   def __val2ruby_optkeys  # { key=>proc, ... }
-    # The method is used to convert a opt-value to a ruby's object.
-    # When get the value of the option "key", "proc.call(value)" is called.
     {
       'menu'=>proc{|v| simplelist(v).collect!{|elem| simplelist(v)}}
     }
@@ -43,10 +37,10 @@ class Tk::BWidget::MainFrame
     win = window(tk_send('addindicator', *hash_kv(keys)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-20> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1590> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-123> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1591> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -57,10 +51,10 @@ class Tk::BWidget::MainFrame
     win = window(tk_send('addtoolbar'))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-21> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1592> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-124> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1593> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -71,10 +65,10 @@ class Tk::BWidget::MainFrame
     win = window(tk_send('getframe'))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-22> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1594> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-125> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1595> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -85,10 +79,10 @@ class Tk::BWidget::MainFrame
     win = window(tk_send('getindicator', idx))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-23> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1596> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-126> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1597> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -99,10 +93,10 @@ class Tk::BWidget::MainFrame
     win = window(tk_send('getmenu', menu_id))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-24> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1598> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-127> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1599> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -113,10 +107,10 @@ class Tk::BWidget::MainFrame
     win = window(tk_send('gettoolbar', idx))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-25> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1600> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-128> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1601> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

@@ -11,7 +11,6 @@ class Bonniexx < Formula
     sha1 "201190cf5f4783a63c743163040da9ed6978d53a" => :mountain_lion
   end
 
-  # Fix use of min/max with clang
   patch :DATA
 
   def install
@@ -22,15 +21,6 @@ class Bonniexx < Formula
   end
 end
 
-# Changes included in this patchset:
-# 1) Explicitly use clang/clang++ in Makefile
-# 2) __min() and __max() macros break bon_csv2html.cpp: "redefinition of 'min' as different kind of symbol"
-#    Remove the construct in favor of macro targets min()/max() provided by the library
-#    Files affected: port.h.in port.h duration.cpp bonnie++.cpp
-# 3) Remove the #ifdef _LARGEFILE64_SOURCE macros which not only prohibits the intended functionality of
-#    splitting into 2 GB files for such filesystems but also incorrectly tests for it in the first place.
-#    The ideal fix would be to replace the AC_TRY_RUN() in configure.in if the fail code actually worked.
-#    Files affected: bonnie++.cp
 
 __END__
 diff --git i/Makefile w/Makefile
@@ -38,7 +28,6 @@ index 4bb5103..8f7ed41 100644
 --- i/Makefile
 +++ w/Makefile
 @@ -10,8 +10,8 @@ eprefix=${prefix}
- #MORE_WARNINGS=-Weffc++
  WFLAGS=-Wall -W -Wshadow -Wpointer-arith -Wwrite-strings -pedantic -ffor-scope -Wcast-align -Wsign-compare -Wpointer-arith -Wwrite-strings -Wformat-security -Wswitch-enum -Winit-self $(MORE_WARNINGS)
  CFLAGS=-O2  -DNDEBUG $(WFLAGS) $(MORECFLAGS)
 -CXX=g++ $(CFLAGS)
@@ -135,7 +124,6 @@ index 8d53622..2e1f112 100644
 --- i/port.h
 +++ w/port.h
 @@ -49,8 +49,6 @@ typedef struct timeval TIMEVAL_TYPE;
- #endif
  
  typedef int FILE_TYPE;
 -#define __min min
@@ -148,7 +136,6 @@ index 69c8f24..8359d72 100644
 --- i/port.h.in
 +++ w/port.h.in
 @@ -49,8 +49,6 @@ typedef struct timeval TIMEVAL_TYPE;
- #endif
  
  typedef int FILE_TYPE;
 -#define __min min

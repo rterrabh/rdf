@@ -12,9 +12,6 @@ class Anttweakbar < Formula
     sha1 "370619e705719ed57ba0b31447c1f33a3b014c77" => :mountain_lion
   end
 
-  # See
-  # http://sourceforge.net/p/anttweakbar/code/ci/5a076d13f143175a6bda3c668e29a33406479339/tree/src/LoadOGLCore.h?diff=5528b167ed12395a60949d7c643262b6668f15d5&diformat=regular
-  # https://sourceforge.net/p/anttweakbar/tickets/14/
   patch :DATA
 
   def install

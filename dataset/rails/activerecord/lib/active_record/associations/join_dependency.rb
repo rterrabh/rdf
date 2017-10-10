@@ -23,7 +23,6 @@ module ActiveRecord
           @tables.flat_map { |t| t.column_aliases }
         end
 
-        # An array of [column_name, alias] pairs for the table
         def column_aliases(node)
           @name_and_alias_cache[node]
         end
@@ -71,27 +70,6 @@ module ActiveRecord
         end
       end
 
-      # base is the base class on which operation is taking place.
-      # associations is the list of associations which are joined using hash, symbol or array.
-      # joins is the list of all string join commands and arel nodes.
-      #
-      #  Example :
-      #
-      #  class Physician < ActiveRecord::Base
-      #    has_many :appointments
-      #    has_many :patients, through: :appointments
-      #  end
-      #
-      #  If I execute `@physician.patients.to_a` then
-      #    base # => Physician
-      #    associations # => []
-      #    joins # =>  [#<Arel::Nodes::InnerJoin: ...]
-      #
-      #  However if I execute `Physician.joins(:appointments).to_a` then
-      #    base # => Physician
-      #    associations # => [:appointments]
-      #    joins # =>  []
-      #
       def initialize(base, associations, joins)
         @alias_tracker = AliasTracker.create(base.connection, joins)
         @alias_tracker.aliased_table_for(base.table_name, base.table_name) # Updates the count for base.table_name to 1

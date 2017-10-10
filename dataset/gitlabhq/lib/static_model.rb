@@ -1,24 +1,18 @@
-# Provides an ActiveRecord-like interface to a model whose data is not persisted to a database.
 module StaticModel
   extend ActiveSupport::Concern
 
   module ClassMethods
-    # Used by ActiveRecord's polymorphic association to set object_id
     def primary_key
       'id'
     end
 
-    # Used by ActiveRecord's polymorphic association to set object_type
     def base_class
       self
     end
   end
 
-  # Used by AR for fetching attributes
-  #
-  # Pass it along if we respond to it.
   def [](key)
-    #nodyna <ID:send-16> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-490> <SD COMPLEX (change-prone variables)>
     send(key) if respond_to?(key)
   end
 

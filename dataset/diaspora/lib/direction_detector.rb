@@ -1,8 +1,3 @@
-# coding: utf-8
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
-# Deeply inspired by https://gitorious.org/statusnet/mainline/blobs/master/plugins/DirectionDetector/DirectionDetectorPlugin.php
 
 class String
   RTL_RANGES = [
@@ -34,7 +29,6 @@ class String
     return starts_with_rtl_char?(self) # otherwise let the first word decide
   end
 
-  # Diaspora specific
   def cleaned_is_rtl?
     string = String.new(self)
     RTL_CLEANER_REGEXES.each do |cleaner|

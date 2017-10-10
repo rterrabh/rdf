@@ -2,19 +2,6 @@ require 'html/pipeline/filter'
 
 module Gitlab
   module Markdown
-    # HTML filter that adds an anchor child element to all Headers in a
-    # document, so that they can be linked to.
-    #
-    # Generates the Table of Contents with links to each header. See Results.
-    #
-    # Based on HTML::Pipeline::TableOfContentsFilter.
-    #
-    # Context options:
-    #   :no_header_anchors - Skips all processing done by this filter.
-    #
-    # Results:
-    #   :toc - String containing Table of Contents data as a `ul` element with
-    #          `li` child elements.
     class TableOfContentsFilter < HTML::Pipeline::Filter
       PUNCTUATION_REGEXP = /[^\p{Word}\- ]/u
 

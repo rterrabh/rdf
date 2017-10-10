@@ -28,8 +28,6 @@ class Vit < Formula
     bin.install "vit"
     man1.install "vit.1"
     man5.install "vitrc.5"
-    # vit-commands needs to be installed in the keg because that's where vit
-    # will look for it.
     (prefix+"etc").install "commands" => "vit-commands"
     bin.env_script_all_files(libexec+"bin", :PERL5LIB => ENV["PERL5LIB"])
   end

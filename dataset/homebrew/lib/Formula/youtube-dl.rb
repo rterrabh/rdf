@@ -1,6 +1,3 @@
-# Please only update to versions that are published on PyPi as there are too
-# many releases for us to update to every single one:
-# https://pypi.python.org/pypi/youtube_dl
 class YoutubeDl < Formula
   desc "Download YouTube videos from the command-line"
   homepage "https://rg3.github.io/youtube-dl/"

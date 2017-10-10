@@ -19,7 +19,6 @@ class Delta < Formula
 
   test do
     (testpath/"test1.c").write <<-EOS.undent
-      #include <stdio.h>
 
       int main() {
         int i = -1;
@@ -29,7 +28,6 @@ class Delta < Formula
 
     EOS
     (testpath/"test1.sh").write <<-EOS.undent
-      #!/usr/bin/env bash
 
       clang -Weverything "$(dirname "${BASH_SOURCE[0]}")"/test1.c 2>&1 | \
       grep 'implicit conversion changes signedness'

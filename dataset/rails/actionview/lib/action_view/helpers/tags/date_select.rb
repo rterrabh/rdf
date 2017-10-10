@@ -11,7 +11,7 @@ module ActionView
         end
 
         def render
-          #nodyna <ID:send-52> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1233> <SD COMPLEX (change-prone variables)>
           error_wrapping(datetime_selector(@options, @html_options).send("select_#{select_type}").html_safe)
         end
 
@@ -51,14 +51,13 @@ module ActionView
           else
             default = options[:default].dup
 
-            # Rename :minute and :second to :min and :sec
             default[:min] ||= default[:minute]
             default[:sec] ||= default[:second]
 
             time = Time.current
 
             [:year, :month, :day, :hour, :min, :sec].each do |key|
-              #nodyna <ID:send-53> <SD MODERATE (array)>
+              #nodyna <send-1234> <SD MODERATE (array)>
               default[key] ||= time.send(key)
             end
 

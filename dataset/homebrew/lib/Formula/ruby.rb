@@ -53,7 +53,6 @@ class Ruby < Formula
     args << "--disable-dtrace" unless MacOS::CLT.installed?
     args << "--without-gmp" if build.without? "gmp"
 
-    # Reported upstream: https://bugs.ruby-lang.org/issues/10272
     args << "--with-setjmp-type=setjmp" if MacOS.version == :lion
 
     paths = [
@@ -69,12 +68,6 @@ class Ruby < Formula
 
     system "./configure", *args
 
-    # Ruby has been configured to look in the HOMEBREW_PREFIX for the
-    # sitedir and vendordir directories; however we don't actually want to create
-    # them during the install.
-    #
-    # These directories are empty on install; sitedir is used for non-rubygems
-    # third party libraries, and vendordir is used for packager-provided libraries.
     inreplace "tool/rbinstall.rb" do |s|
       s.gsub! 'prepare "extension scripts", sitelibdir', ""
       s.gsub! 'prepare "extension scripts", vendorlibdir', ""
@@ -87,13 +80,10 @@ class Ruby < Formula
   end
 
   def post_install
-    # Customize rubygems to look/install in the global gem directory
-    # instead of in the Cellar, making gems last across reinstalls
     config_file = lib/"ruby/#{abi_version}/rubygems/defaults/operating_system.rb"
     config_file.unlink if config_file.exist?
     config_file.write rubygems_config
 
-    # Create the sitedir and vendordir that were skipped during install
     mkdir_p `#{bin}/ruby -e 'require "rbconfig"; print RbConfig::CONFIG["sitearchdir"]'`
     mkdir_p `#{bin}/ruby -e 'require "rbconfig"; print RbConfig::CONFIG["vendorarchdir"]'`
   end

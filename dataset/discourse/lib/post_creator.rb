@@ -1,5 +1,3 @@
-# Responsible for creating posts and topics
-#
 require_dependency 'rate_limiter'
 require_dependency 'topic_creator'
 require_dependency 'post_jobs_enqueuer'
@@ -11,47 +9,7 @@ class PostCreator
 
   attr_reader :opts
 
-  # Acceptable options:
-  #
-  #   raw                     - raw text of post
-  #   image_sizes             - We can pass a list of the sizes of images in the post as a shortcut.
-  #   invalidate_oneboxes     - Whether to force invalidation of oneboxes in this post
-  #   acting_user             - The user performing the action might be different than the user
-  #                             who is the post "author." For example when copying posts to a new
-  #                             topic.
-  #   created_at              - Post creation time (optional)
-  #   auto_track              - Automatically track this topic if needed (default true)
-  #   custom_fields           - Custom fields to be added to the post, Hash (default nil)
-  #   post_type               - Whether this is a regular post or moderator post.
-  #   no_bump                 - Do not cause this post to bump the topic.
-  #   cooking_options         - Options for rendering the text
-  #   cook_method             - Method of cooking the post.
-  #                               :regular - Pass through Markdown parser and strip bad HTML
-  #                               :raw_html - Perform no processing
-  #                               :raw_email - Imported from an email
-  #   via_email               - Mark this post as arriving via email
-  #   raw_email               - Full text of arriving email (to store)
-  #   action_code             - Describes a small_action post (optional)
-  #
-  #   When replying to a topic:
-  #     topic_id              - topic we're replying to
-  #     reply_to_post_number  - post number we're replying to
-  #
-  #   When creating a topic:
-  #     title                 - New topic title
-  #     archetype             - Topic archetype
-  #     is_warning            - Is the topic a warning?
-  #     category              - Category to assign to topic
-  #     target_usernames      - comma delimited list of usernames for membership (private message)
-  #     target_group_names    - comma delimited list of groups for membership (private message)
-  #     meta_data             - Topic meta data hash
-  #     created_at            - Topic creation time (optional)
-  #     pinned_at             - Topic pinned time (optional)
-  #     pinned_globally       - Is the topic pinned globally (optional)
-  #
   def initialize(user, opts)
-    # TODO: we should reload user in case it is tainted, should take in a user_id as opposed to user
-    # If we don't do this we introduce a rather risky dependency
     @user = user
     @opts = opts || {}
     opts[:title] = pg_clean_up(opts[:title]) if opts[:title] && opts[:title].include?("\u0000")
@@ -63,7 +21,6 @@ class PostCreator
     str.gsub("\u0000", "")
   end
 
-  # True if the post was considered spam
   def spam?
     @spam
   end
@@ -214,16 +171,11 @@ class PostCreator
       if new_topic?
         blk.call
       else
-        # we need to ensure post_number is monotonically increasing with no gaps
-        # so we serialize creation to avoid needing rollbacks
         DistributedMutex.synchronize("topic_id_#{@opts[:topic_id]}", &blk)
       end
     end
   end
 
-  # You can supply an `embed_url` for a post to set up the embedded relationship.
-  # This is used by the wp-discourse plugin to associate a remote post with a
-  # discourse post.
   def create_embedded_topic
     return unless @opts[:embed_url].present?
     embed = TopicEmbed.new(topic_id: @post.topic_id, post_id: @post.id, embed_url: @opts[:embed_url])
@@ -297,9 +249,8 @@ class PostCreator
                     user: @user,
                     reply_to_post_number: @opts[:reply_to_post_number])
 
-    # Attributes we pass through to the post instance if present
     [:post_type, :no_bump, :cooking_options, :image_sizes, :acting_user, :invalidate_oneboxes, :cook_method, :via_email, :raw_email, :action_code].each do |a|
-      #nodyna <ID:send-25> <SD MODERATE (array)>
+      #nodyna <send-345> <SD MODERATE (array)>
       post.send("#{a}=", @opts[a]) if @opts[a].present?
     end
 
@@ -333,7 +284,6 @@ class PostCreator
     @user.user_stat.post_count += 1
     @user.user_stat.topic_count += 1 if @post.is_first_post?
 
-    # We don't count replies to your own topics
     if !@opts[:import_mode] && @user.id != @topic.user_id
       @user.user_stat.update_topic_reply_count
     end
@@ -365,7 +315,6 @@ class PostCreator
                      highest_seen_post_number: @post.post_number)
 
 
-    # assume it took us 5 seconds of reading time to make a post
     PostTiming.record_timing(topic_id: @post.topic_id,
                              user_id: @post.user_id,
                              post_number: @post.post_number,

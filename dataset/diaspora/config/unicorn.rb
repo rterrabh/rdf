@@ -15,7 +15,6 @@ preload_app true
 before_fork do |_server, _worker|
   ActiveRecord::Base.connection.disconnect! # preloading app in master, so reconnect to DB
 
-  # disconnect redis if in use
   unless AppConfig.environment.single_process_mode?
     Sidekiq.redis {|redis| redis.client.disconnect }
   end
@@ -30,6 +29,5 @@ after_fork do |_server, _worker|
 
   ActiveRecord::Base.establish_connection # preloading app in master, so reconnect to DB
 
-  # We don't generate uuids in the frontend, but let's be on the safe side
   UUID.generator.next_sequence
 end

@@ -107,12 +107,10 @@ class Llvm < Formula
 
   keg_only :provided_by_osx
 
-  # Apple's libstdc++ is too old to build LLVM
   fails_with :gcc
   fails_with :llvm
 
   def install
-    # Apple's libstdc++ is too old to build LLVM
     ENV.libcxx if ENV.compiler == :clang
 
     if build.with?("lldb") && build.without?("clang")
@@ -161,7 +159,6 @@ class Llvm < Formula
       man1.install_symlink share/"clang/tools/scan-build/scan-build.1"
     end
 
-    # install llvm python bindings
     (lib/"python2.7/site-packages").install buildpath/"bindings/python/llvm"
     (lib/"python2.7/site-packages").install buildpath/"tools/clang/bindings/python/clang" if build.with? "clang"
   end

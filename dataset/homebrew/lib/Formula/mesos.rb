@@ -27,7 +27,6 @@ class Mesos < Formula
     sha256 "8faca1fb462ee1be58d00f5efb4ca4f64bde92187fe61fde32615bbee7b3e745"
   end
 
-  # build dependencies for protobuf
   resource "six" do
     url "https://pypi.python.org/packages/source/s/six/six-1.9.0.tar.gz"
     sha256 "e24052411fc4fbd1f672635537c3fc2330d9481b18c0317695b46259512c91d5"
@@ -64,9 +63,6 @@ class Mesos < Formula
     (lib/"python2.7/site-packages").mkpath
     (lib/"python2.7/site-packages/homebrew-mesos-boto.pth").write "#{boto_path}\n"
 
-    # work around distutils abusing CC instead of using CXX
-    # https://issues.apache.org/jira/browse/MESOS-799
-    # https://github.com/Homebrew/homebrew/pull/37087
     native_patch = <<-EOS.undent
       import os
       os.environ["CC"] = os.environ["CXX"]
@@ -101,7 +97,6 @@ class Mesos < Formula
       end
     end
 
-    # stage protobuf build dependencies
     ENV.prepend_create_path "PYTHONPATH", buildpath/"protobuf/lib/python2.7/site-packages"
     %w[six python-dateutil pytz python-gflags google-apputils].each do |r|
       resource(r).stage do

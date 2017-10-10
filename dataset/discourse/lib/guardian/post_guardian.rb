@@ -1,8 +1,5 @@
-#mixin for all guardian methods dealing with post permissions
 module PostGuardian
 
-  # Can the user act on the post in a particular way.
-  #  taken_actions = the list of actions the user has already taken
   def post_can_act?(post, action_key, opts={})
     taken = opts[:taken_actions].try(:keys).to_a
     is_flag = PostActionType.is_flag?(action_key)
@@ -13,29 +10,20 @@ module PostGuardian
 
       return false if action_key == :notify_moderators && !SiteSetting.enable_private_messages
 
-      # we allow flagging for trust level 1 and higher
-      # always allowed for private messages
       (is_flag && not(already_did_flagging) && (@user.has_trust_level?(TrustLevel[1]) || post.topic.private_message?)) ||
 
-      # not a flagging action, and haven't done it already
       not(is_flag || already_taken_this_action) &&
 
-      # nothing except flagging on archived topics
       not(post.topic.try(:archived?)) &&
 
-      # nothing except flagging on deleted posts
       not(post.trashed?) &&
 
-      # don't like your own stuff
       not(action_key == :like && is_my_own?(post)) &&
 
-      # new users can't notify_user because they are not allowed to send private messages
       not(action_key == :notify_user && !@user.has_trust_level?(TrustLevel[1])) &&
 
-      # can't send private messages if they're disabled globally
       not(action_key == :notify_user && !SiteSetting.enable_private_messages) &&
 
-      # no voting more than once on single vote topics
       not(action_key == :vote && opts[:voted_in_topic] && post.topic.has_meta_data_boolean?(:single_vote))
     end
 
@@ -46,7 +34,6 @@ module PostGuardian
     is_staff? && post
   end
 
-  # Can we see who acted on a post in a particular way?
   def can_see_post_actors?(topic, post_action_type_id)
     return true if is_admin?
     return false unless topic
@@ -56,7 +43,6 @@ module PostGuardian
     return can_see_flags?(topic) if PostActionType.is_flag?(type_symbol)
 
     if type_symbol == :vote
-      # We can see votes if the topic allows for public voting
       return false if topic.has_meta_data_boolean?(:private_poll)
     end
 
@@ -71,7 +57,6 @@ module PostGuardian
     user.post_count <= SiteSetting.delete_all_posts_max.to_i
   end
 
-  # Creating Method
   def can_create_post?(parent)
     !SpamRule::AutoBlock.block?(@user) && (
       !parent ||
@@ -80,7 +65,6 @@ module PostGuardian
     )
   end
 
-  # Editing Method
   def can_edit_post?(post)
     if Discourse.static_doc_topic_ids.include?(post.topic_id) && !is_admin?
       return false
@@ -103,7 +87,6 @@ module PostGuardian
         return false if post.hidden_at.present? &&
                         post.hidden_at >= SiteSetting.cooldown_minutes_after_hiding_posts.minutes.ago
 
-        # If it's your own post and it's hidden, you can still edit it
         return true
       end
 
@@ -113,33 +96,25 @@ module PostGuardian
     false
   end
 
-  # Deleting Methods
   def can_delete_post?(post)
-    # Can't delete the first post
     return false if post.is_first_post?
 
-    # Can't delete after post_edit_time_limit minutes have passed
     return false if !is_staff? && post.edit_time_limit_expired?
 
-    # Can't delete posts in archived topics unless you are staff
     return false if !is_staff? && post.topic.archived?
 
-    # You can delete your own posts
     return !post.user_deleted? if is_my_own?(post)
 
     is_staff?
   end
 
-  # Recovery Method
   def can_recover_post?(post)
     is_staff? || (is_my_own?(post) && post.user_deleted && !post.deleted_at)
   end
 
   def can_delete_post_action?(post_action)
-    # You can only undo your own actions
     is_my_own?(post_action) && not(post_action.is_private_message?) &&
 
-    # Make sure they want to delete it within the window
     post_action.created_at > SiteSetting.post_undo_action_window_mins.minutes.ago
   end
 

@@ -3,34 +3,6 @@ require "rexml/parsers/baseparser"
 
 module REXML
   module Validation
-    # Implemented:
-    # * empty
-    # * element
-    # * attribute
-    # * text
-    # * optional
-    # * choice
-    # * oneOrMore
-    # * zeroOrMore
-    # * group
-    # * value
-    # * interleave
-    # * mixed
-    # * ref
-    # * grammar
-    # * start
-    # * define
-    #
-    # Not implemented:
-    # * data
-    # * param
-    # * include
-    # * externalRef
-    # * notAllowed
-    # * anyName
-    # * nsName
-    # * except
-    # * name
     class RelaxNG
       include Validator
 
@@ -41,7 +13,6 @@ module REXML
       attr_accessor :count
       attr_reader :references
 
-      # FIXME: Namespaces
       def initialize source
         parser = REXML::Parsers::BaseParser.new( source )
 
@@ -108,7 +79,6 @@ module REXML
             when "define"
               ref = states.pop
               @references[ ref.shift ] = ref
-            #when "empty"
             end
           when :end_document
             states[-1] << event
@@ -144,8 +114,6 @@ module REXML
       end
 
       def next( event )
-        #print "In next with #{event.inspect}.  "
-        #p @previous
         return @previous.pop.next( event ) if @events[@current].nil?
         expand_ref_in( @events, @current ) if @events[@current].class == Ref
         if ( @events[@current].kind_of? State )
@@ -170,10 +138,7 @@ module REXML
       end
 
       def to_s
-        # Abbreviated:
         self.class.name =~ /(?:::)(\w)\w+$/
-        # Full:
-        #self.class.name =~ /(?:::)(\w+)$/
         "#$1.#@count"
       end
 
@@ -371,7 +336,6 @@ module REXML
       end
 
       def next( event )
-        # Make the choice if we haven't
         if @events.size == 0
           c = 0 ; max = @choices.size
           while c < max
@@ -385,8 +349,6 @@ module REXML
             end
           end
           @events = @choices.find { |evt| evt[0].matches? event }
-          # Remove the references
-          # Find the events
         end
         unless @events
           @events = []
@@ -446,7 +408,6 @@ module REXML
       end
 
       def next_current( event )
-        # Expand references
         c = 0 ; max = @choices.size
         while c < max
           if @choices[c][0].class == Ref
@@ -461,7 +422,6 @@ module REXML
         @events = @choices[@choice..-1].find { |evt| evt[0].matches? event }
         @current = 0
         if @events
-          # reorder the choices
           old = @choices[@choice]
           idx = @choices.index( @events )
           @choices[@choice] = @events
@@ -474,7 +434,6 @@ module REXML
 
 
       def next( event )
-        # Find the next series
         next_current(event) unless @events[@current]
         return nil unless @events[@current]
 

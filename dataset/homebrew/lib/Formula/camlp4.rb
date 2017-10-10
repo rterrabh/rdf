@@ -17,7 +17,6 @@ class Camlp4 < Formula
   depends_on "ocaml"
 
   def install
-    # this build fails if jobs are parallelized
     ENV.deparallelize
     system "./configure", "--bindir=#{bin}",
                           "--libdir=#{HOMEBREW_PREFIX}/lib/ocaml",

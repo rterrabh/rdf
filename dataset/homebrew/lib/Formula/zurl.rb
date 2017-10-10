@@ -76,7 +76,7 @@ class Zurl < Formula
       sock = ctx.socket(zmq.REQ)
       sock.connect('ipc://#{ipcfile}')
       req = {'id': '1', 'method': 'GET', 'uri': 'http://localhost:%d/test' % port}
-      #nodyna <ID:send-52> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-549> <SD COMPLEX (change-prone variables)>
       sock.send('J' + json.dumps(req))
       poller = zmq.Poller()
       poller.register(sock, zmq.POLLIN)

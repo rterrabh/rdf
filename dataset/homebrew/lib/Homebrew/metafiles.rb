@@ -1,5 +1,4 @@
 class Metafiles
-  # https://github.com/github/markup#markups
   EXTENSIONS = %w[
     .adoc .asc .asciidoc .creole .html .markdown .md .mdown .mediawiki .mkdn
     .org .pod .rdoc .rst .rtf .textile .txt .wiki

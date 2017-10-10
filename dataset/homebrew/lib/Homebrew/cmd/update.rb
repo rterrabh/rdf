@@ -12,16 +12,13 @@ module Homebrew
       EOS
     end
 
-    # ensure git is installed
     Utils.ensure_git_installed!
 
-    # ensure GIT_CONFIG is unset as we need to operate on .git/config
     ENV.delete("GIT_CONFIG")
 
     cd HOMEBREW_REPOSITORY
     git_init_if_necessary
 
-    # migrate to new directories based tap structure
     migrate_taps
 
     report = Report.new
@@ -29,8 +26,6 @@ module Homebrew
     master_updater.pull!
     report.update(master_updater.report)
 
-    # rename Taps directories
-    # this procedure will be removed in the future if it seems unnecessasry
     rename_taps_dir_if_necessary
 
     Tap.each do |tap|
@@ -51,14 +46,12 @@ module Homebrew
       end
     end
 
-    # automatically tap any migrated formulae's new tap
     report.select_formula(:D).each do |f|
       next unless (dir = HOMEBREW_CELLAR/f).exist?
       migration = TAP_MIGRATIONS[f]
       next unless migration
       tap_user, tap_repo = migration.split "/"
       install_tap tap_user, tap_repo
-      # update tap for each Tab
       tabs = dir.subdirs.map { |d| Tab.for_keg(Keg.new(d)) }
       next if tabs.first.source["tap"] != "Homebrew/homebrew"
       tabs.each { |tab| tab.source["tap"] = "#{tap_user}/homebrew-#{tap_repo}" }
@@ -68,7 +61,6 @@ module Homebrew
     load_formula_renames
     report.update_renamed
 
-    # Migrate installed renamed formulae from core and taps.
     report.select_formula(:R).each do |oldname, newname|
       if oldname.include?("/")
         user, repo, oldname = oldname.split("/", 3)
@@ -129,7 +121,6 @@ module Homebrew
         if File.directory?(tapd + "/.git")
           tapd_basename = File.basename(tapd)
           if tapd_basename.include?("-")
-            # only replace the *last* dash: yes, tap filenames suck
             user, repo = tapd_basename.reverse.sub("-", "/").reverse.split("/")
 
             FileUtils.mkdir_p("#{HOMEBREW_LIBRARY}/Taps/#{user.downcase}")
@@ -192,14 +183,12 @@ class Updater
 
     @initial_revision = read_current_revision
 
-    # ensure we don't munge line endings on checkout
     safe_system "git", "config", "core.autocrlf", "false"
 
     args = ["pull"]
     args << "--rebase" if ARGV.include? "--rebase"
     args += quiet
     args << "origin"
-    # the refspec ensures that 'origin/master' gets updated
     args << "refs/heads/master:refs/remotes/origin/master"
 
     reset_on_interrupt { safe_system "git", *args }
@@ -326,7 +315,6 @@ class Report
   end
 
   def dump
-    # Key Legend: Added (A), Copied (C), Deleted (D), Modified (M), Renamed (R)
 
     dump_formula_report :A, "New Formulae"
     dump_formula_report :M, "Updated Formulae"

@@ -17,7 +17,6 @@ class Ejabberd < Formula
   depends_on "openssl"
   depends_on "erlang"
   depends_on "libyaml"
-  # for CAPTCHA challenges
   depends_on "imagemagick" => :optional
 
   def install

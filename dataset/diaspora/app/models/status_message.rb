@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class StatusMessage < Post
   include Diaspora::Taggable
@@ -12,7 +9,6 @@ class StatusMessage < Post
 
   validates_length_of :text, :maximum => 65535, :message => proc {|p, v| I18n.t('status_messages.too_long', :count => 65535, :current_length => v[:value].length)}
 
-  # don't allow creation of empty status messages
   validate :presence_of_content, on: :create, if: proc {|sm| sm.author && sm.author.local? }
 
   xml_name :status_message
@@ -27,8 +23,6 @@ class StatusMessage < Post
   has_one :poll, autosave: true
 
 
-  # a StatusMessage is federated before its photos are so presence_of_content() fails erroneously if no text is present
-  # therefore, we put the validation in a before_destory callback instead of a validation
   before_destroy :absence_of_content
 
   attr_accessor :oembed_url
@@ -39,7 +33,6 @@ class StatusMessage < Post
   after_commit :queue_gather_oembed_data, :on => :create, :if => :contains_oembed_url_in_text?
   after_commit :queue_gather_open_graph_data, :on => :create, :if => :contains_open_graph_url_in_text?
 
-  #scopes
   scope :where_person_is_mentioned, ->(person) {
     joins(:mentions).where(:mentions => {:person_id => person.id})
   }
@@ -88,12 +81,9 @@ class StatusMessage < Post
     end
   end
 
-  ## TODO ----
-  # don't put presentation logic in the model!
   def mentioned_people_names
     self.mentioned_people.map(&:name).join(', ')
   end
-  ## ---- ----
 
   def create_mentions
     ppl = Diaspora::Mentionable.people_from_string(self.raw_message)
@@ -190,7 +180,6 @@ class StatusMessage < Post
   end
 
   def after_parse
-    # Make sure already received photos don't invalidate the model
     self.photos = photos.select(&:valid?)
   end
 end

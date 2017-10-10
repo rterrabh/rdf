@@ -3,17 +3,14 @@ require 'rails/generators/model_helpers'
 
 module Rails
   module Generators
-    # Deal with controller names on scaffold and add some helpers to deal with
-    # ActiveModel.
     module ResourceHelpers # :nodoc:
 
       def self.included(base) #:nodoc:
-        #nodyna <ID:send-279> <SD TRIVIAL (public methods)>
+        #nodyna <send-1164> <SD TRIVIAL (public methods)>
         base.send :include, Rails::Generators::ModelHelpers
         base.class_option :model_name, type: :string, desc: "ModelName to be used"
       end
 
-      # Set controller variables on initialization.
       def initialize(*args) #:nodoc:
         super
         controller_name = name
@@ -56,12 +53,8 @@ module Rails
           @controller_i18n_scope ||= controller_file_path.tr('/', '.')
         end
 
-        # Loads the ORM::Generators::ActiveModel class. This class is responsible
-        # to tell scaffold entities how to generate an specific method for the
-        # ORM. Check Rails::Generators::ActiveModel for more information.
         def orm_class
           @orm_class ||= begin
-            # Raise an error if the class_option :orm was not defined.
             unless self.class.class_options[:orm]
               raise "You need to have :orm as class option to invoke orm_class and orm_instance"
             end
@@ -74,7 +67,6 @@ module Rails
           end
         end
 
-        # Initialize ORM::Generators::ActiveModel to access instance methods.
         def orm_instance(name=singular_table_name)
           @orm_instance ||= orm_class.new(name)
         end

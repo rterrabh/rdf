@@ -1,6 +1,3 @@
-#
-# tk/textmark.rb - methods for treating text marks
-#
 require 'tk'
 require 'tk/text'
 
@@ -9,7 +6,7 @@ class TkTextMark<TkObject
 
   TMarkID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-45> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1777> <IEV MODERATE (method definition)>
   (Tk_TextMark_ID = ['mark'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -32,13 +29,9 @@ class TkTextMark<TkObject
   end
 
   def initialize(parent, index)
-    #unless parent.kind_of?(Tk::Text)
-    #  fail ArgumentError, "expect Tk::Text for 1st argument"
-    #end
     @parent = @t = parent
     @tpath = parent.path
     Tk_TextMark_ID.mutex.synchronize{
-      # @path = @id = Tk_TextMark_ID.join('')
       @path = @id = Tk_TextMark_ID.join(TkCore::INTERP._ip_id_).freeze
       Tk_TextMark_ID[1].succ!
     }
@@ -57,7 +50,6 @@ class TkTextMark<TkObject
   end
 
   def exist?
-    #if ( tk_split_simplelist(_fromUTF8(tk_call_without_enc(@t.path, 'mark', 'names'))).find{|id| id == @id } )
     if ( tk_split_simplelist(tk_call_without_enc(@t.path, 'mark', 'names'), false, true).find{|id| id == @id } )
       true
     else
@@ -66,7 +58,6 @@ class TkTextMark<TkObject
   end
 
 =begin
-  # move to Tk::Text::IndexModMethods module
   def +(mod)
     return chars(mod) if mod.kind_of?(Numeric)
 
@@ -118,7 +109,6 @@ class TkTextMark<TkObject
 
   def gravity=(direction)
     tk_call_without_enc(@t.path, 'mark', 'gravity', @id, direction)
-    #self
     direction
   end
 
@@ -146,8 +136,7 @@ class TkTextNamedMark<TkTextMark
       if TMarkID_TBL[parent.path] && TMarkID_TBL[parent.path][name]
         obj = TMarkID_TBL[parent.path][name]
       else
-        # super(parent, name, *args)
-        #nodyna <ID:instance_eval-46> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1778> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @parent = @t = parent
           @tpath = parent.path
@@ -169,11 +158,7 @@ class TkTextNamedMark<TkTextMark
   end
 
   def initialize(parent, name, index=nil)
-    # dummy:: not called by 'new' method
 
-    #unless parent.kind_of?(Tk::Text)
-    #  fail ArgumentError, "expect Tk::Text for 1st argument"
-    #end
     @parent = @t = parent
     @tpath = parent.path
     @path = @id = name

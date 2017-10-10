@@ -23,7 +23,6 @@ class Vault < Formula
         :revision => "e2d1eb1649515318386cc637d8996ab37d6baa5e"
   end
 
-  # godep's dependencies
   go_resource "github.com/kr/fs" do
     url "https://github.com/kr/fs.git",
         :revision => "2788f0dbd16903de03cb8186e5c7d97b69ad387b"
@@ -39,7 +38,6 @@ class Vault < Formula
         :revision => "a5a468f84d74eb51ece602cb113edeb37167912f"
   end
 
-  # gox dependency
   go_resource "github.com/mitchellh/iochan" do
     url "https://github.com/mitchellh/iochan.git",
         :revision => "87b45ffd0e9581375c491fef3d32130bb15c5bd7"

@@ -27,7 +27,6 @@ module ActiveAdmin
     end
   end
 
-  # ActiveAdmin::Event is set to a dispatcher
   Event = EventDispatcher.new
 
 end

@@ -16,11 +16,13 @@ class Rbenv < Formula
       export RBENV_ROOT=#{var}/rbenv
 
     To enable shims and autocompletion add to your profile:
+      #nodyna <eval-578> <not yet classified>
       if which rbenv > /dev/null; then eval "$(rbenv init -)"; fi
     EOS
   end
 
   test do
+    #nodyna <eval-579> <not yet classified>
     shell_output("eval \"$(#{bin}/rbenv init -)\" && rbenv versions")
   end
 end

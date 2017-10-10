@@ -7,7 +7,6 @@ class Ncp < Formula
 
   depends_on "libowfat"
 
-  # fixes man and libowfat paths and "strip" command in Makefile
   patch do
     url "https://gist.githubusercontent.com/plumbojumbo/9331146/raw/560e46a688ac9493ffbc1464e59cc062c0940532/GNUmakefile.diff"
     sha256 "b269c3a024583918d2279324660f467060f0c2adb57db31c19c05f7bbd958b19"

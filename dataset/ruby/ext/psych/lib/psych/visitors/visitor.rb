@@ -12,7 +12,7 @@ module Psych
       end
 
       def visit target
-        #nodyna <ID:send-5> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1473> <SD COMPLEX (change-prone variables)>
         send DISPATCH[target.class], target
       end
     end

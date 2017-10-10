@@ -43,7 +43,6 @@ class Yasm < Formula
       args << "--enable-python-bindings"
     end
 
-    # https://github.com/Homebrew/homebrew/pull/19593
     ENV.deparallelize
 
     system "./autogen.sh" if build.head?

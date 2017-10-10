@@ -5,30 +5,20 @@ require 'rexml/syncenumerator'
 require 'rexml/parsers/xpathparser'
 
 class Object
-  # provides a unified +clone+ operation, for REXML::XPathParser
-  # to use across multiple Object types
   def dclone
     clone
   end
 end
 class Symbol
-  # provides a unified +clone+ operation, for REXML::XPathParser
-  # to use across multiple Object types
   def dclone ; self ; end
 end
 class Fixnum
-  # provides a unified +clone+ operation, for REXML::XPathParser
-  # to use across multiple Object types
   def dclone ; self ; end
 end
 class Float
-  # provides a unified +clone+ operation, for REXML::XPathParser
-  # to use across multiple Object types
   def dclone ; self ; end
 end
 class Array
-  # provides a unified +clone+ operation, for REXML::XPathParser
-  # to use across multiple Object+ types
   def dclone
     klone = self.clone
     klone.clear
@@ -38,10 +28,6 @@ class Array
 end
 
 module REXML
-  # You don't want to use this class.  Really.  Use XPath, which is a wrapper
-  # for this class.  Believe me.  You don't want to poke around in here.
-  # There is strange, dark magic at work in this code.  Beware.  Go back!  Go
-  # back while you still can!
   class XPathParser
     include XMLTokens
     LITERAL    = /^'([^']*)'|^"([^"]*)"/u
@@ -82,16 +68,11 @@ module REXML
     end
 
 
-    # Performs a depth-first (document order) XPath search, and returns the
-    # first match.  This is the fastest, lightest way to return a single result.
-    #
-    # FIXME: This method is incomplete!
     def first( path_stack, node )
       return nil if path.size == 0
 
       case path[0]
       when :document
-        # do nothing
         return first( path[1..-1], node )
       when :child
         for c in node.children
@@ -130,11 +111,6 @@ module REXML
     private
 
 
-    # Returns a String namespace for a node, given a prefix
-    # The rules are:
-    #
-    #  1. Use the supplied namespace mapping first.
-    #  2. If no mapping was supplied, use the context node to look up the namespace
     def get_namespace( node, prefix )
       if @namespaces
         return @namespaces[prefix] || ''
@@ -145,8 +121,6 @@ module REXML
     end
 
 
-    # Expr takes a stack of path elements and a set of nodes (either a Parent
-    # or an Array and returns an Array of matching nodes
     ALL = [ :attribute, :element, :text, :processing_instruction, :comment ]
     ELEMENTS = [ :element ]
     def expr( path_stack, nodeset, context=nil )
@@ -165,7 +139,6 @@ module REXML
           prefix = path_stack.shift
           name = path_stack.shift
           nodeset.delete_if do |node|
-            # FIXME: This DOUBLES the time XPath searches take
             ns = get_namespace( node, prefix )
             if node.node_type == :element
               if node.name == name
@@ -181,7 +154,6 @@ module REXML
           nodeset.delete_if { |node| !node_types.include?(node.node_type) }
 
         when :self
-          # This space left intentionally blank
 
         when :processing_instruction
           target = path_stack.shift
@@ -197,7 +169,6 @@ module REXML
           nodeset.delete_if { |node| node.node_type != :comment }
 
         when :node
-          # This space left intentionally blank
           node_types = ALL
 
         when :child
@@ -236,7 +207,6 @@ module REXML
 
         when :parent
           nodeset = nodeset.collect{|n| n.parent}.compact
-          #nodeset = expr(path_stack.dclone, nodeset.collect{|n| n.parent}.compact)
           node_types = ELEMENTS
 
         when :ancestor
@@ -375,10 +345,6 @@ module REXML
           var_name = path_stack.shift
           return @variables[ var_name ]
 
-        # :and, :or, :eq, :neq, :lt, :lteq, :gt, :gteq
-        # TODO: Special case for :or and :and -- not evaluate the right
-        # operand if the left alone determines result (i.e. is true for
-        # :or and false for :and).
         when :eq, :neq, :lt, :lteq, :gt, :gteq, :or
           left = expr( path_stack.shift, nodeset.dup, context )
           right = expr( path_stack.shift, nodeset.dup, context )
@@ -448,7 +414,7 @@ module REXML
               expr( arg, [n], cont )
             }
             Functions.context = cont
-            #nodyna <ID:send-101> <SD MODERATE (change-prone variables)>
+            #nodyna <send-1980> <SD MODERATE (change-prone variables)>
             res << Functions.send( func_name, *args )
           }
           return res
@@ -459,19 +425,11 @@ module REXML
     end
 
 
-    ##########################################################
-    # FIXME
-    # The next two methods are BAD MOJO!
-    # This is my achilles heel.  If anybody thinks of a better
-    # way of doing this, be my guest.  This really sucks, but
-    # it is a wonder it works at all.
-    # ########################################################
 
     def descendant_or_self( path_stack, nodeset )
       rs = []
       d_o_s( path_stack, nodeset, rs )
       document_order(rs.flatten.compact)
-      #rs.flatten.compact
     end
 
     def d_o_s( p, ns, r )
@@ -486,14 +444,6 @@ module REXML
     end
 
 
-    # Reorders an array of nodes so that they are in document order
-    # It tries to do this efficiently.
-    #
-    # FIXME: I need to get rid of this, but the issue is that most of the XPath
-    # interpreter functions as a filter, which means that we lose context going
-    # in and out of function calls.  If I knew what the index of the nodes was,
-    # I wouldn't have to do this.  Maybe add a document IDX for each node?
-    # Problems with mutable documents.  Or, rewrite everything.
     def document_order( array_of_nodes )
       new_arry = []
       array_of_nodes.each { |node|
@@ -518,10 +468,6 @@ module REXML
 
 
 
-    # Builds a nodeset of all of the preceding nodes of the supplied node,
-    # in reverse document order
-    # preceding:: includes every element in the document that precedes this node,
-    # except for ancestors
     def preceding( node )
       ancestors = []
       p = node.parent
@@ -550,7 +496,6 @@ module REXML
           return nil
         end
         return node.parent
-        #psn = preceding_node_of( node.parent )
       end
       while psn and psn.kind_of? Element and psn.children.size > 0
         psn = psn.children[-1]
@@ -619,12 +564,6 @@ module REXML
           return res
         end
       end
-      # If one is nodeset and other is number, compare number to each item
-      # in nodeset s.t. number op number(string(item))
-      # If one is nodeset and other is string, compare string to each item
-      # in nodeset s.t. string op string(item)
-      # If one is nodeset and other is boolean, compare boolean to each item
-      # in nodeset s.t. boolean op boolean(item)
       if set1.kind_of? Array or set2.kind_of? Array
         if set1.kind_of? Array
           a = set1
@@ -647,13 +586,6 @@ module REXML
           return a.collect { |v| compare( Functions::string(v), op, b ) }
         end
       else
-        # If neither is nodeset,
-        #   If op is = or !=
-        #     If either boolean, convert to boolean
-        #     If either number, convert to number
-        #     Else, convert to string
-        #   Else
-        #     Convert both to numbers and compare
         s1 = set1.to_s
         s2 = set2.to_s
         if s1 == 'true' or s1 == 'false' or s2 == 'true' or s2 == 'false'

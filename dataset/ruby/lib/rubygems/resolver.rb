@@ -5,66 +5,37 @@ require 'rubygems/util/list'
 require 'uri'
 require 'net/http'
 
-##
-# Given a set of Gem::Dependency objects as +needed+ and a way to query the
-# set of available specs via +set+, calculates a set of ActivationRequest
-# objects which indicate all the specs that should be activated to meet the
-# all the requirements.
 
 class Gem::Resolver
 
-  ##
-  # If the DEBUG_RESOLVER environment variable is set then debugging mode is
-  # enabled for the resolver.  This will display information about the state
-  # of the resolver while a set of dependencies is being resolved.
 
   DEBUG_RESOLVER = !ENV['DEBUG_RESOLVER'].nil?
 
   require 'pp' if DEBUG_RESOLVER
 
-  ##
-  # Contains all the conflicts encountered while doing resolution
 
   attr_reader :conflicts
 
-  ##
-  # Set to true if all development dependencies should be considered.
 
   attr_accessor :development
 
-  ##
-  # Set to true if immediate development dependencies should be considered.
 
   attr_accessor :development_shallow
 
-  ##
-  # When true, no dependencies are looked up for requested gems.
 
   attr_accessor :ignore_dependencies
 
-  ##
-  # List of dependencies that could not be found in the configured sources.
 
   attr_reader :missing
 
   attr_reader :stats
 
-  ##
-  # Hash of gems to skip resolution.  Keyed by gem name, with arrays of
-  # gem specifications as values.
 
   attr_accessor :skip_gems
 
-  ##
-  # When a missing dependency, don't stop. Just go on and record what was
-  # missing.
 
   attr_accessor :soft_missing
 
-  ##
-  # Combines +sets+ into a ComposedSet that allows specification lookup in a
-  # uniform manner.  If one of the +sets+ is itself a ComposedSet its sets are
-  # flattened into the result ComposedSet.
 
   def self.compose_sets *sets
     sets.compact!
@@ -90,21 +61,11 @@ class Gem::Resolver
     end
   end
 
-  ##
-  # Creates a Resolver that queries only against the already installed gems
-  # for the +needed+ dependencies.
 
   def self.for_current_gems needed
     new needed, Gem::Resolver::CurrentSet.new
   end
 
-  ##
-  # Create Resolver object which will resolve the tree starting
-  # with +needed+ Dependency objects.
-  #
-  # +set+ is an object that provides where to look for specifications to
-  # satisfy the Dependencies. This defaults to IndexSet, which will query
-  # rubygems.org.
 
   def initialize needed, set = nil
     @set = set || Gem::Resolver::IndexSet.new
@@ -135,11 +96,6 @@ class Gem::Resolver
     PP.pp data, $stderr unless data.empty?
   end
 
-  ##
-  # Creates an ActivationRequest for the given +dep+ and the last +possible+
-  # specification.
-  #
-  # Returns the Specification and the ActivationRequest
 
   def activation_request dep, possible # :nodoc:
     spec = possible.pop
@@ -176,8 +132,6 @@ class Gem::Resolver
     reqs
   end
 
-  ##
-  # Proceed with resolution! Returns an array of ActivationRequest objects.
 
   def resolve
     @conflicts = []
@@ -201,9 +155,6 @@ class Gem::Resolver
     res.to_a
   end
 
-  ##
-  # Extracts the specifications that may be able to fulfill +dependency+ and
-  # returns those that match the local platform and all those that match.
 
   def find_possible dependency # :nodoc:
     all = @set.find_all dependency
@@ -222,15 +173,7 @@ class Gem::Resolver
   end
 
   def handle_conflict(dep, existing) # :nodoc:
-    # There is a conflict! We return the conflict object which will be seen by
-    # the caller and be handled at the right level.
 
-    # If the existing activation indicates that there are other possibles for
-    # it, then issue the conflict on the dependency for the activation itself.
-    # Otherwise, if there was a requester, issue it on the requester's
-    # request itself.
-    # Finally, if the existing request has no requester (toplevel) unwind to
-    # it anyway.
 
     if existing.others_possible?
       conflict =
@@ -251,17 +194,6 @@ class Gem::Resolver
     return conflict
   end
 
-  # Contains the state for attempting activation of a set of possible specs.
-  # +needed+ is a Gem::List of DependencyRequest objects that, well, need
-  # to be satisfied.
-  # +specs+ is the List of ActivationRequest that are being tested.
-  # +dep+ is the DependencyRequest that was used to generate this state.
-  # +spec+ is the Specification for this state.
-  # +possible+ is List of DependencyRequest objects that can be tried to
-  # find a  complete set.
-  # +conflicts+ is a [DependencyRequest, Conflict] hit tried to
-  # activate the state.
-  #
   State = Struct.new(:needed, :specs, :dep, :spec, :possibles, :conflicts) do
     def summary # :nodoc:
       nd = needed.map { |s| s.to_s }.sort if nd
@@ -286,13 +218,8 @@ class Gem::Resolver
     end
   end
 
-  ##
-  # The meat of the algorithm. Given +needed+ DependencyRequest objects and
-  # +specs+ being a list to ActivationRequest, calculate a new list of
-  # ActivationRequest objects.
 
   def resolve_for needed, specs # :nodoc:
-    # The State objects that are used to attempt the activation tree.
     states = []
 
     while !needed.empty?
@@ -303,9 +230,7 @@ class Gem::Resolver
       explain_list(:next5) { needed.next5 }
       explain_list(:specs) { Array(specs).map { |x| x.full_name }.sort }
 
-      # If there is already a spec activated for the requested name...
       if specs && existing = specs.find { |s| dep.name == s.name }
-        # then we're done since this new dep matches the existing spec.
         next if dep.matches_spec? existing
 
         conflict = handle_conflict dep, existing
@@ -360,17 +285,11 @@ class Gem::Resolver
     specs
   end
 
-  ##
-  # Rewinds +needed+ and +specs+ to a previous state in +state+ for a conflict
-  # between +dep+ and +existing+.
 
   def resolve_for_conflict needed, specs, state # :nodoc:
-    # We exhausted the possibles so it's definitely not going to work out,
-    # bail out.
     raise Gem::ImpossibleDependenciesError.new state.dep, state.conflicts if
       state.possibles.empty?
 
-    # Retry resolution with this spec and add it's dependencies
     spec, act = activation_request state.dep, state.possibles
 
     needed = requests spec, act, state.needed.dup
@@ -379,22 +298,14 @@ class Gem::Resolver
     return needed, specs
   end
 
-  ##
-  # There are multiple +possible+ specifications for this +dep+.  Updates
-  # +needed+, +specs+ and +states+ for further resolution of the +possible+
-  # choices.
 
   def resolve_for_multiple needed, specs, states, dep, possible # :nodoc:
-    # Sort them so that we try the highest versions first.
     possible = possible.sort_by do |s|
       [s.source, s.version, s.platform == Gem::Platform::RUBY ? -1 : 1]
     end
 
     spec, act = activation_request dep, possible
 
-    # We may need to try all of +possible+, so we setup state to unwind back
-    # to current +needed+ and +specs+ so we can try another. This is code is
-    # what makes conflict resolution possible.
     states << State.new(needed.dup, specs, dep, spec, possible, [])
 
     @stats.record_depth states
@@ -407,27 +318,17 @@ class Gem::Resolver
     return needed, specs
   end
 
-  ##
-  # Add the spec from the +possible+ list to +specs+ and process the spec's
-  # dependencies by adding them to +needed+.
 
   def resolve_for_single needed, specs, dep, possible # :nodoc:
     spec, act = activation_request dep, possible
 
     specs = Gem::List.prepend specs, act
 
-    # Put the deps for at the beginning of needed
-    # rather than the end to match the depth first
-    # searching done by the multiple case code below.
-    #
-    # This keeps the error messages consistent.
     needed = requests spec, act, needed
 
     return needed, specs
   end
 
-  ##
-  # When there are no possible specifications for +dep+ our work is done.
 
   def resolve_for_zero dep, platform_mismatch # :nodoc:
     @missing << dep
@@ -440,8 +341,6 @@ class Gem::Resolver
     end
   end
 
-  ##
-  # Returns the gems in +specs+ that match the local platform.
 
   def select_local_platforms specs # :nodoc:
     specs.select do |spec|
@@ -451,8 +350,6 @@ class Gem::Resolver
 
 end
 
-##
-# TODO remove in RubyGems 3
 
 Gem::DependencyResolver = Gem::Resolver # :nodoc:
 

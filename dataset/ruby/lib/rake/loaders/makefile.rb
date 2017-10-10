@@ -1,12 +1,10 @@
 module Rake
 
-  # Makefile loader to be used with the import file loader.
   class MakefileLoader
     include Rake::DSL
 
     SPACE_MARK = "\0"
 
-    # Load the makefile dependencies in +fn+.
     def load(fn)
       lines = File.read fn
       lines.gsub!(/\\ /, SPACE_MARK)
@@ -19,7 +17,6 @@ module Rake
 
     private
 
-    # Process one logical line of makefile data.
     def process_line(line)
       file_tasks, args = line.split(':', 2)
       return if args.nil?
@@ -35,6 +32,5 @@ module Rake
     end
   end
 
-  # Install the handler
   Rake.application.add_loader('mf', MakefileLoader.new)
 end

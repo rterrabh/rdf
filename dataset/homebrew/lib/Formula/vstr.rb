@@ -24,11 +24,6 @@ class Vstr < Formula
   test do
     (testpath/"test.c").write <<-EOS.undent
       // based on http://www.and.org/vstr/examples/ex_hello_world.c
-      #define VSTR_COMPILE_INCLUDE 1
-      #include <vstr.h>
-      #include <errno.h>
-      #include <err.h>
-      #include <unistd.h>
 
       int main(void) {
         Vstr_base *s1 = NULL;

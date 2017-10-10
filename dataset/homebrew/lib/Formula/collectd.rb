@@ -28,7 +28,6 @@ class Collectd < Formula
     end
   end
 
-  # Will fail against Java 1.7
   option "with-java", "Enable Java 1.6 support"
   option "with-debug", "Enable debug support"
 
@@ -48,8 +47,6 @@ class Collectd < Formula
   end
 
   def install
-    # collectd breaks with makejobs
-    # see: https://github.com/collectd/collectd/issues/1146
     ENV.deparallelize
 
     args = %W[

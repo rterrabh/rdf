@@ -19,7 +19,6 @@ class PdfRedactTools < Formula
   end
 
   test do
-    # Modifies the file in the directory the file is placed in.
     cp test_fixtures("test.pdf"), "test.pdf"
     system bin/"pdf-redact-tools", "-e", "test.pdf"
     assert File.exist?("test_pages/page-0.png")

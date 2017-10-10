@@ -26,7 +26,6 @@ describe 'Payments', type: :feature, js: true do
       visit current_path
     end
 
-    # Regression tests for #1453
     context 'with a check payment' do
       let(:order) { create(:completed_order_with_totals, number: 'R100') }
       let!(:payment) do
@@ -90,7 +89,6 @@ describe 'Payments', type: :feature, js: true do
       expect(page).not_to have_selector('#new_payment_section')
     end
 
-    # Regression test for #1269
     it 'cannot create a payment for an order with no payment methods' do
       Spree::PaymentMethod.delete_all
       order.payments.delete_all
@@ -128,8 +126,6 @@ describe 'Payments', type: :feature, js: true do
           within_row(1) do
             click_icon(:edit)
 
-            # Can't use fill_in here, as under poltergeist that will unfocus (and
-            # thus submit) the field under poltergeist
             find('td.amount input').click
             page.execute_script("$('td.amount input').val('$1')")
 
@@ -168,7 +164,6 @@ describe 'Payments', type: :feature, js: true do
     let(:order) { create(:order_with_line_items, line_items_count: 1) }
     let!(:payment_method) { create(:credit_card_payment_method) }
 
-    # Regression tests for #4129
     context "with a credit card payment method" do
       before do
         visit spree.admin_order_payments_path(order)
@@ -179,7 +174,6 @@ describe 'Payments', type: :feature, js: true do
         fill_in "Name", with: "Test User"
         fill_in "Expiration", with: "09 / #{Time.now.year + 1}"
         fill_in "Card Code", with: "007"
-        # Regression test for #4277
         sleep(1)
         expect(find('.ccType', visible: false).value).to eq('visa')
         click_button "Continue"

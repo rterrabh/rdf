@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/ruler.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * ruler widget
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::ruler', '1.0')
 TkPackage.require('widget::ruler')
 
 module Tk::Tcllib

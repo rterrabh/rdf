@@ -7,8 +7,6 @@ class Id3v2 < Formula
   depends_on "id3lib"
 
   def install
-    # tarball includes a prebuilt Linux binary, which will get installed
-    # by `make install` if `make clean` isn't run first
     system "make", "clean"
     bin.mkpath
     man1.mkpath

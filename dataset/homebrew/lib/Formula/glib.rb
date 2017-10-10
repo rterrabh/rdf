@@ -32,17 +32,11 @@ class Glib < Formula
     sha256 "9f1e23a084bc879880e589893c17f01a2f561e20835d6a6f08fcc1dad62388f1"
   end
 
-  # https://bugzilla.gnome.org/show_bug.cgi?id=673135 Resolved as wontfix,
-  # but needed to fix an assumption about the location of the d-bus machine
-  # id file.
   patch do
     url "https://gist.githubusercontent.com/jacknagel/af332f42fae80c570a77/raw/7b5fd0d2e6554e9b770729fddacaa2d648327644/glib-hardcoded-paths.diff"
     sha256 "a4cb96b5861672ec0750cb30ecebe1d417d38052cac12fbb8a77dbf04a886fcb"
   end
 
-  # Fixes compilation with FSF GCC. Doesn't fix it on every platform, due
-  # to unrelated issues in GCC, but improves the situation.
-  # Patch submitted upstream: https://bugzilla.gnome.org/show_bug.cgi?id=672777
   patch do
     url "https://gist.githubusercontent.com/jacknagel/9835034/raw/282d36efc126272f3e73206c9865013f52d67cd8/gio.patch"
     sha256 "d285c70cfd3434394a1c77c92a8d2bad540c954aad21e8bb83777482c26aab9a"
@@ -59,7 +53,6 @@ class Glib < Formula
     inreplace %w[gio/gdbusprivate.c gio/xdgmime/xdgmime.c glib/gutils.c],
       "@@HOMEBREW_PREFIX@@", HOMEBREW_PREFIX
 
-    # Disable dtrace; see https://trac.macports.org/ticket/30413
     args = %W[
       --disable-maintainer-mode
       --disable-dependency-tracking
@@ -80,16 +73,12 @@ class Glib < Formula
       system "ed -s - config.h <config.h.ed"
     end
 
-    # disable creating directory for GIO_MOUDLE_DIR, we will do this manually in post_install
     inreplace "gio/Makefile", "$(mkinstalldirs) $(DESTDIR)$(GIO_MODULE_DIR)", ""
 
     system "make"
-    # the spawn-multithreaded tests require more open files
     system "ulimit -n 1024; make check" if build.with? "test"
     system "make", "install"
 
-    # `pkg-config --libs glib-2.0` includes -lintl, and gettext itself does not
-    # have a pkgconfig file, so we add gettext lib and include paths here.
     gettext = Formula["gettext"].opt_prefix
     inreplace lib+"pkgconfig/glib-2.0.pc" do |s|
       s.gsub! "Libs: -L${libdir} -lglib-2.0 -lintl",
@@ -107,8 +96,6 @@ class Glib < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <string.h>
-      #include <glib.h>
 
       int main(void)
       {

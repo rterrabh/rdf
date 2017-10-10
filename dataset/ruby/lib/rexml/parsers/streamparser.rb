@@ -13,7 +13,6 @@ module REXML
       end
 
       def parse
-        # entity string
         while true
           event = @parser.pull
           case event[0]
@@ -34,13 +33,12 @@ module REXML
           when :start_doctype
             @listener.doctype( *event[1..-1] )
           when :end_doctype
-            # FIXME: remove this condition for milestone:3.2
             @listener.doctype_end if @listener.respond_to? :doctype_end
           when :comment, :attlistdecl, :cdata, :xmldecl, :elementdecl
-            #nodyna <ID:send-103> <SD MODERATE (change-prone variables)>
+            #nodyna <send-1977> <SD MODERATE (change-prone variables)>
             @listener.send( event[0].to_s, *event[1..-1] )
           when :entitydecl, :notationdecl
-            #nodyna <ID:send-104> <SD MODERATE (change-prone variables)>
+            #nodyna <send-1978> <SD MODERATE (change-prone variables)>
             @listener.send( event[0].to_s, event[1..-1] )
           when :externalentity
             entity_reference = event[1]

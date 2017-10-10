@@ -3,84 +3,44 @@ require 'rubygems/installer'
 
 class Gem::Installer
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :bin_dir
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :build_args
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :gem_dir
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :force
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :format
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :gem_home
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :env_shebang
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :ignore_dependencies
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :format_executable
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :security_policy
 
-  ##
-  # Available through requiring rubygems/installer_test_case
 
   attr_writer :wrappers
 end
 
-##
-# A test case for Gem::Installer.
 
 class Gem::InstallerTestCase < Gem::TestCase
 
-  ##
-  # Creates the following instance variables:
-  #
-  # @spec::
-  #   a spec named 'a', intended for regular installs
-  # @user_spec::
-  #   a spec named 'b', intended for user installs
 
-  # @gem::
-  #   the path to a built gem from @spec
-  # @user_spec::
-  #   the path to a built gem from @user_spec
-  #
-  # @installer::
-  #   a Gem::Installer for the @spec that installs into @gemhome
-  # @user_installer::
-  #   a Gem::Installer for the @user_spec that installs into Gem.user_dir
 
   def setup
     super
@@ -106,27 +66,18 @@ class Gem::InstallerTestCase < Gem::TestCase
   end
 
   def util_gem_bindir spec = @spec # :nodoc:
-    # TODO: deprecate
     spec.bin_dir
   end
 
   def util_gem_dir spec = @spec # :nodoc:
-    # TODO: deprecate
     spec.gem_dir
   end
 
-  ##
-  # The path where installed executables live
 
   def util_inst_bindir
     File.join @gemhome, "bin"
   end
 
-  ##
-  # Adds an executable named "executable" to +spec+ with the given +shebang+.
-  #
-  # The executable is also written to the bin dir in @tmpdir and the installed
-  # gem directory for +spec+.
 
   def util_make_exec(spec = @spec, shebang = "#!/usr/bin/ruby")
     spec.executables = %w[executable]
@@ -143,13 +94,6 @@ class Gem::InstallerTestCase < Gem::TestCase
     end
   end
 
-  ##
-  # Builds the @spec gem and returns an installer for it.  The built gem
-  # includes:
-  #
-  #   bin/executable
-  #   lib/code.rb
-  #   ext/a/mkrf_conf.rb
 
   def util_setup_gem(ui = @ui) # HACK fix use_ui to make this automatic
     @spec.files << File.join('lib', 'code.rb')
@@ -179,9 +123,6 @@ class Gem::InstallerTestCase < Gem::TestCase
     @installer = Gem::Installer.new @gem
   end
 
-  ##
-  # Creates an installer for +spec+ that will install into +gem_home+.  If
-  # +user+ is true a user-install will be performed.
 
   def util_installer(spec, gem_home, user=false)
     Gem::Installer.new(spec.cache_file,

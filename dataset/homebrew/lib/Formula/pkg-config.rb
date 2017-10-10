@@ -15,11 +15,8 @@ class PkgConfig < Formula
 
   def install
     pc_path = %W[
-      #{HOMEBREW_PREFIX}/lib/pkgconfig
-      #{HOMEBREW_PREFIX}/share/pkgconfig
       /usr/local/lib/pkgconfig
       /usr/lib/pkgconfig
-      #{HOMEBREW_LIBRARY}/ENV/pkgconfig/#{MacOS.version}
     ].uniq.join(File::PATH_SEPARATOR)
 
     system "./configure", "--disable-debug",

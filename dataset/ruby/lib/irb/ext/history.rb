@@ -1,13 +1,3 @@
-#
-#   history.rb -
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 module IRB # :nodoc:
 
@@ -15,7 +5,6 @@ module IRB # :nodoc:
 
     NOPRINTING_IVARS.push "@eval_history_values"
 
-    # See #set_last_value
     alias _set_last_value set_last_value
 
     def set_last_value(value)
@@ -23,24 +12,14 @@ module IRB # :nodoc:
 
       if @eval_history
         @eval_history_values.push @line_no, @last_value
-        #nodyna <ID:instance_eval-173> <IEV EASY (private access)>
+        #nodyna <instance_eval-2194> <IEV EASY (private access)>
         @workspace.evaluate self, "__ = IRB.CurrentContext.instance_eval{@eval_history_values}"
       end
 
       @last_value
     end
 
-    # The command result history limit.
     attr_reader :eval_history
-    # Sets command result history limit.
-    #
-    # +no+ is an Integer or +nil+.
-    #
-    # Returns +no+ of history items if greater than 0.
-    #
-    # If +no+ is 0, the number of history items is unlimited.
-    #
-    # If +no+ is +nil+, execution result history isn't used (default).
     def eval_history=(no)
       if no
         if defined?(@eval_history) && @eval_history

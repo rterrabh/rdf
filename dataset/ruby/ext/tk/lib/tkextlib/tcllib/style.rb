@@ -1,10 +1,3 @@
-#
-#  tkextlib/tcllib/style.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * select and use some 'style' of option (resource) DB
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
@@ -38,8 +31,6 @@ module Tk::Tcllib
   end
 end
 
-# TkPackage.require('style', '0.1')
-# TkPackage.require('style', '0.3')
 TkPackage.require('style')
 
 module Tk::Tcllib

@@ -20,9 +20,6 @@ class Freetype < Formula
 
   depends_on "libpng"
 
-  # Don't define a TYPEOF macro in ftconfig.h
-  # https://savannah.nongnu.org/bugs/index.php?45376
-  # http://git.savannah.gnu.org/cgit/freetype/freetype2.git/commit/?id=5931268eecaeda3e05580bdc8885348fecc43fa8
   patch do
     url "https://gist.githubusercontent.com/anonymous/b47d77c41a6801879fd2/raw/fc21c3516b465095da7ed13f98bea491a7d18bbd/patch"
     sha256 "5b21575d0384c9e502b51b0ba4be0ff453a34bcf9deba52b6baa38c3ffcde063"

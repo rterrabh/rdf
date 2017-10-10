@@ -6,7 +6,6 @@ class Uade < Formula
     url "http://zakalwe.fi/uade/uade2/uade-2.13.tar.bz2"
     sha256 "3b194e5aebbfa99d3708d5a0b5e6bd7dc5d1caaecf4ae9b52f8ff87e222dd612"
 
-    # Upstream patch to fix compiler detection under superenv
     patch :DATA
   end
 

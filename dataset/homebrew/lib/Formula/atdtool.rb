@@ -7,9 +7,6 @@ class Atdtool < Formula
   depends_on "txt2tags" => :build
 
   def install
-    # Change the PREFIX to match the homebrew one, since there is no way to
-    # pass it as an option for now edit the Makefile
-    # https://github.com/lpenz/atdtool/pull/8
     inreplace "Makefile", "PREFIX=/usr/local", "PREFIX=#{prefix}"
     system "make", "install"
   end

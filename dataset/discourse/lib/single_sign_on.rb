@@ -39,14 +39,11 @@ class SingleSignOn
       if BOOLS.include? k
         val = ["true", "false"].include?(val) ? val == "true" : nil
       end
-      #nodyna <ID:send-67> <SD MODERATE (array)>
+      #nodyna <send-283> <SD MODERATE (array)>
       sso.send("#{k}=", val)
     end
 
     decoded_hash.each do |k,v|
-      # 1234567
-      # custom.
-      #
       if k[0..6] == "custom."
         field = k[7..-1]
         sso.custom_fields[field] = v
@@ -87,7 +84,7 @@ class SingleSignOn
   def unsigned_payload
     payload = {}
     ACCESSORS.each do |k|
-     #nodyna <ID:send-68> <SD MODERATE (array)>
+     #nodyna <send-284> <SD MODERATE (array)>
      next if (val = send k) == nil
 
      payload[k] = val

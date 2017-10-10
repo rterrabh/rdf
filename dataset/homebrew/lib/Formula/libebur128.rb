@@ -23,7 +23,6 @@ class Libebur128 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <ebur128.h>
       int main() {
         ebur128_init(5, 44100, EBUR128_MODE_I);
         return 0;

@@ -13,9 +13,6 @@ module Gitlab
 
       protected
 
-      # * Sets a 30s timeout for Git
-      # * Locks the satellite repo
-      # * Yields the prepared satellite repo
       def in_locked_and_timed_satellite
         Gitlab::ShellEnv.set_env(user)
 
@@ -32,10 +29,6 @@ module Gitlab
         Gitlab::ShellEnv.reset_env
       end
 
-      # * Recreates the satellite
-      # * Sets up Git variables for the user
-      #
-      # Note: use this within #in_locked_and_timed_satellite
       def prepare_satellite!(repo)
         project.satellite.clear_and_update!
 

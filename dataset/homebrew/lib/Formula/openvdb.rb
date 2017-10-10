@@ -40,7 +40,6 @@ class Openvdb < Formula
 
   def install
     ENV.cxx11
-    # Adjust hard coded paths in Makefile
     args = [
       "DESTDIR=#{prefix}",
       "BOOST_INCL_DIR=#{Formula["boost"].opt_lib}/include",

@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/widget.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * megawidget package that uses snit as the object system (snidgets)
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget', '3.0')
 TkPackage.require('widget')
 
 module Tk::Tcllib
@@ -27,7 +19,6 @@ module Tk::Tcllib
       end
     end
 
-    #--- followings may be private functions of tklib
     def self.isa(compare_as, *args)
       begin
         return Tk.tk_call('::widget::isa', compare_as, *args)

@@ -50,7 +50,6 @@ class Guile < Formula
                           "--with-libgmp-prefix=#{Formula["gmp"].opt_prefix}"
     system "make", "install"
 
-    # A really messed up workaround required on OS X --mkhl
     Pathname.glob("#{lib}/*.dylib") do |dylib|
       lib.install_symlink dylib.basename => "#{dylib.basename(".dylib")}.so"
     end

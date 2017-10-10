@@ -38,23 +38,17 @@ module Homebrew
         end
       end
 
-      # if the user's flags will prevent bottle only-installations when no
-      # developer tools are available, we need to stop them early on
       FormulaInstaller.prevent_build_flags unless MacOS.has_apple_developer_tools?
 
       ARGV.formulae.each do |f|
-        # head-only without --HEAD is an error
         if !ARGV.build_head? && f.stable.nil? && f.devel.nil?
           raise <<-EOS.undent
-          #{f.full_name} is a head-only formula
           Install with `brew install --HEAD #{f.full_name}`
           EOS
         end
 
-        # devel-only without --devel is an error
         if !ARGV.build_devel? && f.stable.nil? && f.head.nil?
           raise <<-EOS.undent
-          #{f.full_name} is a devel-only formula
           Install with `brew install --devel #{f.full_name}`
           EOS
         end
@@ -63,12 +57,10 @@ module Homebrew
           raise "#{f.full_name} has no stable download, please choose --devel or --HEAD"
         end
 
-        # --HEAD, fail with no head defined
         if ARGV.build_head? && f.head.nil?
           raise "No head is defined for #{f.full_name}"
         end
 
-        # --devel, fail with no devel defined
         if ARGV.build_devel? && f.devel.nil?
           raise "No devel block is defined for #{f.full_name}"
         end
@@ -79,8 +71,6 @@ module Homebrew
           opoo msg
         elsif f.oldname && (dir = HOMEBREW_CELLAR/f.oldname).exist? && !dir.subdirs.empty? \
             && f.tap == Tab.for_keg(dir.subdirs.first).tap && !ARGV.force?
-          # Check if the formula we try to install is the same as installed
-          # but not migrated one. If --force passed then install anyway.
           opoo "#{f.oldname} already installed, it's just not migrated"
           puts "You can migrate formula with `brew migrate #{f}`"
           puts "Or you can force install it with `brew install #{f} --force`"
@@ -103,8 +93,6 @@ module Homebrew
         ohai "Searching taps..."
         puts_columns(search_taps(query))
 
-        # If they haven't updated in 48 hours (172800 seconds), that
-        # might explain the error
         master = HOMEBREW_REPOSITORY/".git/refs/heads/master"
         if master.exist? && (Time.now.to_i - File.mtime(master).to_i) > 172800
           ohai "You haven't updated Homebrew in a while."
@@ -141,7 +129,7 @@ module Homebrew
       check_xcode_license_approved
       check_for_osx_gcc_installer
     ].each do |check|
-      #nodyna <ID:send-21> <SD MODERATE (array)>
+      #nodyna <send-599> <SD MODERATE (array)>
       out = checks.send(check)
       opoo out unless out.nil?
     end
@@ -190,8 +178,6 @@ module Homebrew
     fi.install
     fi.finish
   rescue FormulaInstallationAlreadyAttemptedError
-    # We already attempted to install f as part of the dependency tree of
-    # another formula. In that case, don't generate an error, just move on.
   rescue CannotInstallFormulaError => e
     ofail e.message
   rescue BuildError

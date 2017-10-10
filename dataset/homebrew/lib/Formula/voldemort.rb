@@ -9,23 +9,19 @@ class Voldemort < Formula
 
   def install
     args = []
-    # ant on ML and below is too old to support 1.8
     args << "-Dbuild.compiler=javac1.7" if MacOS.version < :mavericks
     system "ant", *args
     libexec.install %w[bin lib dist contrib]
     libexec.install "config" => "config-examples"
     (libexec/"config").mkpath
 
-    # Write shim scripts for all utilities
     bin.write_exec_script Dir["#{libexec}/bin/*.sh"]
   end
 
   def caveats; <<-EOS.undent
     You will need to set VOLDEMORT_HOME to:
-      #{libexec}
 
     Config files should be placed in:
-      #{libexec}/config
     or you can set VOL_CONF_DIR to a more reasonable path.
     EOS
   end

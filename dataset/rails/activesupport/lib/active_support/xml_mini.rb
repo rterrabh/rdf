@@ -6,16 +6,9 @@ require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/date_time/calculations'
 
 module ActiveSupport
-  # = XmlMini
-  #
-  # To use the much faster libxml parser:
-  #   gem 'libxml-ruby', '=0.9.7'
-  #   XmlMini.backend = 'LibXML'
   module XmlMini
     extend self
 
-    # This module decorates files deserialized using Hash.from_xml with
-    # the <tt>original_filename</tt> and <tt>content_type</tt> methods.
     module FileLike #:nodoc:
       attr_writer :original_filename, :content_type
 
@@ -55,7 +48,6 @@ module ActiveSupport
       "yaml"     => Proc.new { |yaml| yaml.to_yaml }
     } unless defined?(FORMATTING)
 
-    # TODO use regexp instead of Date.parse
     unless defined?(PARSING)
       PARSING = {
         "symbol"       => Proc.new { |symbol|  symbol.to_s.to_sym },
@@ -147,12 +139,10 @@ module ActiveSupport
     protected
 
     def _dasherize(key)
-      # $2 must be a non-greedy regex for this to work
       left, middle, right = /\A(_*)(.*?)(_*)\Z/.match(key.strip)[1,3]
       "#{left}#{middle.tr('_ ', '--')}#{right}"
     end
 
-    # TODO: Add support for other encodings
     def _parse_binary(bin, entity) #:nodoc:
       case entity['encoding']
       when 'base64'
@@ -185,7 +175,7 @@ module ActiveSupport
           name
         else
           require "active_support/xml_mini/#{name.downcase}"
-          #nodyna <ID:const_get-8> <CG COMPLEX (change-prone variable)>
+          #nodyna <const_get-982> <CG COMPLEX (change-prone variable)>
           ActiveSupport.const_get("XmlMini_#{name}")
         end
       end

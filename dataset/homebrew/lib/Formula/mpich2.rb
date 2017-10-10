@@ -1,5 +1,3 @@
-# This should really be named Mpich now, but homebrew cannot currently handle
-# formula renames, see homebrew issue #14374.
 class Mpich2 < Formula
   desc "Implementation of the MPI Message Passing Interface standard"
   homepage "https://www.mpich.org/"
@@ -36,8 +34,6 @@ class Mpich2 < Formula
 
   def install
     if build.head?
-      # ensure that the consistent set of autotools built by homebrew is used to
-      # build MPICH, otherwise very bizarre build errors can occur
       ENV["MPICH_AUTOTOOLS_DIR"] = HOMEBREW_PREFIX + "bin"
       system "./autogen.sh"
     end
@@ -59,8 +55,6 @@ class Mpich2 < Formula
 
   test do
     (testpath/"hello.c").write <<-EOS.undent
-      #include <mpi.h>
-      #include <stdio.h>
 
       int main()
       {

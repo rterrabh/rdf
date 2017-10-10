@@ -33,7 +33,7 @@ module Spree
         can_event = "can_#{@event}?"
 
         unless inventory_unit.respond_to?(can_event) &&
-               #nodyna <ID:send-8> <SD COMPLEX (change-prone variables)>
+               #nodyna <send-2408> <SD COMPLEX (change-prone variables)>
                inventory_unit.send(can_event)
           render :text => { :exception => "cannot transition to #{@event}" }.to_json,
                  :status => 200
@@ -42,7 +42,7 @@ module Spree
       end
 
       def fire
-        #nodyna <ID:send-9> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2409> <SD COMPLEX (change-prone variables)>
         inventory_unit.send("#{@event}!") if @event
       end
       

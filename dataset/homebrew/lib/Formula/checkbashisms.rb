@@ -21,7 +21,6 @@ class Checkbashisms < Formula
 
   test do
     (testpath/"test.sh").write <<-EOS.undent
-      #!/bin/sh
 
       if [[ "home == brew" ]]; then
         echo "dog"

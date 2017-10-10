@@ -17,10 +17,6 @@ module ActiveRecord
         Merger.new(relation, other).merge
       end
 
-      # Applying values to a relation has some side effects. E.g.
-      # interpolation might take place for where values. So we should
-      # build a relation to merge in rather than directly merging
-      # the values.
       def other
         other = Relation.create(relation.klass, relation.table)
         hash.each { |k, v|
@@ -33,7 +29,7 @@ module ActiveRecord
           elsif k == :select
             other._select!(v)
           else
-            #nodyna <ID:send-175> <SD COMPLEX (array)>
+            #nodyna <send-822> <SD COMPLEX (array)>
             other.send("#{k}!", v)
           end
         }
@@ -62,15 +58,11 @@ module ActiveRecord
       def merge
         normal_values.each do |name|
           value = values[name]
-          # The unless clause is here mostly for performance reasons (since the `send` call might be moderately
-          # expensive), most of the time the value is going to be `nil` or `.blank?`, the only catch is that
-          # `false.blank?` returns `true`, so there needs to be an extra check so that explicit `false` values
-          # don't fall through the cracks.
           unless value.nil? || (value.blank? && false != value)
             if name == :select
               relation._select!(*value)
             else
-              #nodyna <ID:send-176> <SD COMPLEX (change-prone variables)>
+              #nodyna <send-823> <SD COMPLEX (change-prone variables)>
               relation.send("#{name}!", *value)
             end
           end
@@ -147,10 +139,8 @@ module ActiveRecord
         relation.bind_values  = bind_values
 
         if other.reordering_value
-          # override any order specified in the original relation
           relation.reorder! other.order_values
         elsif other.order_values
-          # merge in order_values from relation
           relation.order! other.order_values
         end
 
@@ -173,9 +163,6 @@ module ActiveRecord
         lhs_binds.dup.delete_if { |col,_| set.include? col.name }
       end
 
-      # Remove equalities from the existing relation with a LHS which is
-      # present in the relation being merged in.
-      # returns [things_to_remove, things_to_keep]
       def partition_overwrites(lhs_wheres, rhs_wheres)
         if lhs_wheres.empty? || rhs_wheres.empty?
           return [[], lhs_wheres]

@@ -19,7 +19,6 @@ class QueuedPost < ActiveRecord::Base
     @states ||= Enum.new(:new, :approved, :rejected)
   end
 
-  # By default queues are hidden from moderators
   def self.visible_queues
     @visible_queues ||= Set.new(['default'])
   end
@@ -90,9 +89,6 @@ class QueuedPost < ActiveRecord::Base
                   "#{state}_by_id" => changed_by.id,
                   "#{state}_at" => Time.now }
 
-      # We use an update with `row_count` trick here to avoid stampeding requests to
-      # update the same row simultaneously. Only one state change should go through and
-      # we can use the DB to enforce this
       row_count = QueuedPost.where('id = ? AND state <> ?', id, state_val).update_all(updates)
       raise InvalidStateTransition.new if row_count == 0
 
@@ -100,8 +96,7 @@ class QueuedPost < ActiveRecord::Base
         UserAction.where(queued_post_id: id).destroy_all
       end
 
-      # Update the record in memory too, and clear the dirty flag
-      #nodyna <ID:send-190> <SD MODERATE (array)>
+      #nodyna <send-399> <SD MODERATE (array)>
       updates.each {|k, v| send("#{k}=", v) }
       changes_applied
 

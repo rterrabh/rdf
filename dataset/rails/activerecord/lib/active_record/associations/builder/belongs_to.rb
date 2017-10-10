@@ -28,6 +28,7 @@ module ActiveRecord::Associations::Builder
     def self.add_counter_cache_methods(mixin)
       return if mixin.method_defined? :belongs_to_counter_cache_after_update
 
+      #nodyna <class_eval-888> <not yet classified>
       mixin.class_eval do
         def belongs_to_counter_cache_after_update(reflection)
           foreign_key  = reflection.foreign_key
@@ -69,7 +70,7 @@ module ActiveRecord::Associations::Builder
         association = o.association(name)
         reflection = association.reflection
         if reflection.polymorphic?
-          #nodyna <ID:send-116> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-889> <SD COMPLEX (change-prone variables)>
           klass = o.public_send("#{reflection.foreign_type}_was").constantize
         else
           klass = association.klass
@@ -85,7 +86,7 @@ module ActiveRecord::Associations::Builder
         end
       end
 
-      #nodyna <ID:send-117> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-890> <SD COMPLEX (change-prone variables)>
       record = o.send name
       if record && record.persisted?
         if touch != true

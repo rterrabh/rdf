@@ -1,6 +1,3 @@
-#
-# tk/xim.rb : control imput_method
-#
 require 'tk'
 
 module TkXIM

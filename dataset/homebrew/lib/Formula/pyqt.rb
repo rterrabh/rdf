@@ -26,7 +26,6 @@ class Pyqt < Formula
   end
 
   def install
-    # On Mavericks we want to target libc++, this requires a non default qt makespec
     if ENV.compiler == :clang && MacOS.version >= :mavericks
       ENV.append "QMAKESPEC", "unsupported/macx-clang-libc++"
     end
@@ -39,17 +38,6 @@ class Pyqt < Formula
               "--destdir=#{lib}/python#{version}/site-packages",
               "--sipdir=#{share}/sip"]
 
-      # We need to run "configure.py" so that pyqtconfig.py is generated, which
-      # is needed by QGIS, PyQWT (and many other PyQt interoperable
-      # implementations such as the ROS GUI libs). This file is currently needed
-      # for generating build files appropriate for the qmake spec that was used
-      # to build Qt.  The alternatives provided by configure-ng.py is not
-      # sufficient to replace pyqtconfig.py yet (see
-      # https://github.com/qgis/QGIS/pull/1508). Using configure.py is
-      # deprecated and will be removed with SIP v5, so we do the actual compile
-      # using the newer configure-ng.py as recommended. In order not to
-      # interfere with the build using configure-ng.py, we run configure.py in a
-      # temporary directory and only retain the pyqtconfig.py from that.
 
       require "tmpdir"
       dir = Dir.mktmpdir
@@ -63,7 +51,6 @@ class Pyqt < Formula
         remove_entry_secure dir
       end
 
-      # On Mavericks we want to target libc++, this requires a non default qt makespec
       if ENV.compiler == :clang && MacOS.version >= :mavericks
         args << "--spec" << "unsupported/macx-clang-libc++"
       end

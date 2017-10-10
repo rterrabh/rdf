@@ -47,9 +47,6 @@ module ApplicationHelper
   end
 
   def discourse_csrf_tags
-    # anon can not have a CSRF token cause these are all pages
-    # that may be cached, causing a mismatch between session CSRF
-    # and CSRF on page and horrible impossible to debug login issues
     if current_user
       csrf_meta_tags
     end
@@ -112,30 +109,24 @@ module ApplicationHelper
 
   def user_locale
     locale = current_user.locale if current_user && SiteSetting.allow_user_locale
-    # changing back to default shoves a blank string there
     locale.present? ? locale : SiteSetting.default_locale
   end
 
-  # Creates open graph and twitter card meta data
   def crawlable_meta_data(opts=nil)
 
     opts ||= {}
     opts[:image] ||= "#{Discourse.base_url}#{SiteSetting.logo_small_url}"
     opts[:url] ||= "#{Discourse.base_url}#{request.fullpath}"
 
-    # Use the correct scheme for open graph
     if opts[:image].present? && opts[:image].start_with?("//")
       uri = URI(Discourse.base_url)
       opts[:image] = "#{uri.scheme}:#{opts[:image]}"
     end
 
-    # Add opengraph tags
     result =  tag(:meta, property: 'og:site_name', content: SiteSetting.title) << "\n"
 
     result << tag(:meta, name: 'twitter:card', content: "summary")
 
-    # I removed image related opengraph tags from here for now due to
-    # https://meta.discourse.org/t/x/22744/18
     [:url, :title, :description].each do |property|
       if opts[property].present?
         escape = (property != :image)
@@ -147,8 +138,6 @@ module ApplicationHelper
     result
   end
 
-  # Look up site content for a key. If the key is blank, you can supply a block and that
-  # will be rendered instead.
   def markdown_content(key, replacements=nil)
     result = PrettyText.cook(SiteText.text_for(key, replacements || {})).html_safe
     if result.blank? && block_given?
@@ -193,7 +182,6 @@ module ApplicationHelper
 
   def server_plugin_outlet(name)
 
-    # Don't evaluate plugins in test
     return "" if Rails.env.test?
 
     matcher = Regexp.new("/connectors/#{name}/.*\.html\.erb$")

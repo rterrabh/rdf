@@ -8,10 +8,6 @@ class Movgrab < Formula
     system "./configure", "--prefix=#{prefix}", "--disable-debug", "--disable-dependency-tracking"
     system "make"
 
-    # because case-insensitivity is sadly a thing and while the movgrab
-    # Makefile itself doesn't declare INSTALL as a phony target, we
-    # just remove the INSTALL instructions file so we can actually
-    # just make install
     system "rm INSTALL"
     system "make", "install"
   end

@@ -24,7 +24,7 @@ module ActiveAdmin
         end
 
         def input_html_options(input_name = gt_input_name)
-          #nodyna <ID:send-15> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-67> <SD COMPLEX (change-prone variables)>
           current_value = @object.public_send input_name
           { size: 12,
             class: "datepicker",

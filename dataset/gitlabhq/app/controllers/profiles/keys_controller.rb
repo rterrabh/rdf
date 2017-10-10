@@ -33,8 +33,6 @@ class Profiles::KeysController < Profiles::ApplicationController
     end
   end
 
-  # Get all keys of a user(params[:username]) in a text format
-  # Helpful for sysadmins to put in respective servers
   def get_keys
     if params[:username].present?
       begin

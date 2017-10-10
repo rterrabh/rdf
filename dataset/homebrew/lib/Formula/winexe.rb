@@ -7,14 +7,8 @@ class Winexe < Formula
   depends_on "pkg-config" => :build
   depends_on "autoconf" => :build
 
-  # This patch removes second definition of event context, which *should* break the build
-  # virtually everywhere, but for some reason it only breaks it on OS X.
-  # http://miskstuf.tumblr.com/post/6840077505/winexe-1-00-linux-macos-windows-7-finally-working
-  # Added by @vspy
   patch :DATA
 
-  # This Winexe uses "getopts.pl" that is no longer supplied with newer
-  # versions of Perl
   resource "Perl4::CoreLibs" do
     url "http://search.cpan.org/CPAN/authors/id/Z/ZE/ZEFRAM/Perl4-CoreLibs-0.003.tar.gz"
     mirror "http://search.mcpan.org/CPAN/authors/id/Z/ZE/ZEFRAM/Perl4-CoreLibs-0.003.tar.gz"

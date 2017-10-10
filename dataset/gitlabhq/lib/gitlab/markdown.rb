@@ -1,11 +1,7 @@
 require 'html/pipeline'
 
 module Gitlab
-  # Custom parser for GitLab-flavored Markdown
-  #
-  # See the files in `lib/gitlab/markdown/` for specific processing information.
   module Markdown
-    # Provide autoload paths for filters to prevent a circular dependency error
     autoload :AutolinkFilter,               'gitlab/markdown/autolink_filter'
     autoload :CommitRangeReferenceFilter,   'gitlab/markdown/commit_range_reference_filter'
     autoload :CommitReferenceFilter,        'gitlab/markdown/commit_reference_filter'
@@ -22,19 +18,9 @@ module Gitlab
     autoload :TaskListFilter,               'gitlab/markdown/task_list_filter'
     autoload :UserReferenceFilter,          'gitlab/markdown/user_reference_filter'
 
-    # Public: Parse the provided text with GitLab-Flavored Markdown
-    #
-    # text         - the source text
-    # options      - A Hash of options used to customize output (default: {}):
-    #                :xhtml               - output XHTML instead of HTML
-    #                :reference_only_path - Use relative path for reference links
-    # html_options - extra options for the reference links as given to link_to
     def gfm(text, options = {}, html_options = {})
       return text if text.nil?
 
-      # Duplicate the string so we don't alter the original, then call to_str
-      # to cast it back to a String instead of a SafeBuffer. This is required
-      # for gsub calls to work as we need them to.
       text = text.dup.to_str
 
       options.reverse_merge!(
@@ -47,23 +33,18 @@ module Gitlab
       @pipeline ||= HTML::Pipeline.new(filters)
 
       context = {
-        # SanitizationFilter
         pipeline: options[:pipeline],
 
-        # EmojiFilter
         asset_root: Gitlab.config.gitlab.url,
         asset_host: Gitlab::Application.config.asset_host,
 
-        # TableOfContentsFilter
         no_header_anchors: options[:no_header_anchors],
 
-        # ReferenceFilter
         current_user:    options[:current_user],
         only_path:       options[:reference_only_path],
         project:         options[:project],
         reference_class: html_options[:class],
 
-        # RelativeLinkFilter
         ref:            @ref,
         requested_path: @path,
         project_wiki:   @project_wiki
@@ -83,12 +64,6 @@ module Gitlab
 
     private
 
-    # Filters used in our pipeline
-    #
-    # SanitizationFilter should come first so that all generated reference HTML
-    # goes through untouched.
-    #
-    # See https://github.com/jch/html-pipeline#filters for more filters.
     def filters
       [
         Gitlab::Markdown::SanitizationFilter,

@@ -85,17 +85,14 @@ module Spree
         transition to: :rejected, from: :pending
       end
 
-      # bypasses eligibility checks
       event :accept do
         transition to: :accepted, from: [:accepted, :pending, :manual_intervention_required]
       end
 
-      # bypasses eligibility checks
       event :reject do
         transition to: :rejected, from: [:accepted, :pending, :manual_intervention_required]
       end
 
-      # bypasses eligibility checks
       event :require_manual_intervention do
         transition to: :manual_intervention_required, from: [:accepted, :pending, :manual_intervention_required]
       end
@@ -129,11 +126,6 @@ module Spree
     end
 
     def build_exchange_inventory_unit
-      # The inventory unit needs to have the new variant
-      # but it also needs to know the original line item
-      # for pricing information for if the inventory unit is
-      # ever returned. This means that the inventory unit's line_item
-      # will have a different variant than the inventory unit itself
       super(variant: exchange_variant, line_item: inventory_unit.line_item, order: inventory_unit.order) if exchange_required?
     end
 
@@ -170,12 +162,6 @@ module Spree
       Spree::StockMovement.create!(stock_item_id: stock_item.id, quantity: 1) if should_restock?
     end
 
-    # This logic is also present in the customer return. The reason for the
-    # duplication and not having a validates_associated on the customer_return
-    # is that it would lead to duplicate error messages for the customer return.
-    # Not specifying a stock location for example would add an error message about
-    # the mandatory field when validating the customer return and again when saving
-    # the associated return items.
     def belongs_to_same_customer_order
       return unless customer_return && inventory_unit
 

@@ -1,19 +1,14 @@
 require 'strscan'
 
 module Psych
-  ###
-  # Scan scalars for built in types
   class ScalarScanner
-    # Taken from http://yaml.org/type/timestamp.html
     TIME = /^-?\d{4}-\d{1,2}-\d{1,2}(?:[Tt]|\s+)\d{1,2}:\d\d:\d\d(?:\.\d*)?(?:\s*(?:Z|[-+]\d{1,2}:?(?:\d\d)?))?$/
 
-    # Taken from http://yaml.org/type/float.html
     FLOAT = /^(?:[-+]?([0-9][0-9_,]*)?\.[0-9]*([eE][-+][0-9]+)?(?# base 10)
               |[-+]?[0-9][0-9_,]*(:[0-5]?[0-9])+\.[0-9_]*(?# base 60)
               |[-+]?\.(inf|Inf|INF)(?# infinity)
               |\.(nan|NaN|NAN)(?# not a number))$/x
 
-    # Taken from http://yaml.org/type/int.html
     INTEGER = /^(?:[-+]?0b[0-1_]+          (?# base 2)
                   |[-+]?0[0-7_]+           (?# base 8)
                   |[-+]?(?:0|[1-9][0-9_]*) (?# base 10)
@@ -21,22 +16,18 @@ module Psych
 
     attr_reader :class_loader
 
-    # Create a new scanner
     def initialize class_loader
       @string_cache = {}
       @symbol_cache = {}
       @class_loader = class_loader
     end
 
-    # Tokenize +string+ returning the Ruby object
     def tokenize string
       return nil if string.empty?
       return string if @string_cache.key?(string)
       return @symbol_cache[string] if @symbol_cache.key?(string)
 
       case string
-      # Check for a String type, being careful not to get caught by hash keys, hex values, and
-      # special floats (e.g., -.inf).
       when /^[^\d\.:-]?[A-Za-z_\s!@#\$%\^&\*\(\)\{\}\<\>\|\/\\~;=]+/, /\n/
         if string.length > 5
           @string_cache[string] = true
@@ -110,15 +101,11 @@ module Psych
       end
     end
 
-    ###
-    # Parse and return an int from +string+
     def parse_int string
       return unless INTEGER === string
       Integer(string)
     end
 
-    ###
-    # Parse and return a Time from +string+
     def parse_time string
       klass = class_loader.load 'Time'
 

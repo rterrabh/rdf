@@ -73,7 +73,6 @@ module Spree
       :order, :special_instructions, :stock_location_id, :id,
       :tracking, :address, :inventory_units, :selected_shipping_rate_id]
 
-    # month / year may be provided by some sources, or others may elect to use one field
     @@source_attributes = [
       :number, :month, :year, :expiry, :verification_value,
       :first_name, :last_name, :cc_type, :gateway_customer_profile_id,
@@ -98,7 +97,6 @@ module Spree
       :name, :parent_id, :position, :icon, :description, :permalink, :taxonomy_id,
       :meta_description, :meta_keywords, :meta_title, :child_index]
 
-    # TODO Should probably use something like Spree.user_class.attributes
     @@user_attributes = [:email, :password, :password_confirmation]
 
     @@variant_attributes = [

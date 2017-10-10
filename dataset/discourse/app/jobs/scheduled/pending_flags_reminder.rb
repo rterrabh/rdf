@@ -12,6 +12,7 @@ module Jobs
          FlagQuery.flagged_post_actions('active').where('post_actions.created_at < ?', 48.hours.ago).pluck(:id).count > 0
 
           message = PendingFlagsMailer.notify
+          #nodyna <send-406> <not yet classified>
           Email::Sender.new(message, :pending_flags_reminder).send
       end
     end

@@ -1,17 +1,10 @@
-#
-#  tkextlib/trofs/trofs.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/trofs/setup.rb'
 
-# TkPackage.require('trofs', '0.4')
 TkPackage.require('trofs')
 
 module Tk
@@ -31,7 +24,6 @@ module Tk
       end
     end
 
-    ##############################################
 
     def self.create_archive(dir, archive)
       tk_call('::trofs::archive', dir, archive)
@@ -39,7 +31,6 @@ module Tk
     end
 
     def self.mount(archive, mountpoint=None)
-      # returns the normalized path to mountpoint
       tk_call('::trofs::mount', archive, mountpoint)
     end
 

@@ -2,9 +2,6 @@ class QuotedPost < ActiveRecord::Base
   belongs_to :post
   belongs_to :quoted_post, class_name: 'Post'
 
-  # NOTE we already have a path that does this for topic links,
-  #  however topic links exclude quotes and links within a topic
-  #  we are double parsing this fragment, this may be worth optimising later
   def self.extract_from(post)
 
     doc = Nokogiri::HTML.fragment(post.cooked)
@@ -21,7 +18,6 @@ class QuotedPost < ActiveRecord::Base
       uniq[[topic_id,post_number]] = true
 
 
-      # It would be so much nicer if we used post_id in quotes
       results = exec_sql "INSERT INTO quoted_posts(post_id, quoted_post_id, created_at, updated_at)
                SELECT :post_id, p.id, current_timestamp, current_timestamp
                FROM posts p
@@ -44,7 +40,6 @@ class QuotedPost < ActiveRecord::Base
           post_id: post.id, ids: ids
     end
 
-    # simplest place to add this code
     reply_quoted = false
 
     if post.reply_to_post_number
@@ -59,18 +54,3 @@ class QuotedPost < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: quoted_posts
-#
-#  id             :integer          not null, primary key
-#  post_id        :integer          not null
-#  quoted_post_id :integer          not null
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#
-# Indexes
-#
-#  index_quoted_posts_on_post_id_and_quoted_post_id  (post_id,quoted_post_id) UNIQUE
-#  index_quoted_posts_on_quoted_post_id_and_post_id  (quoted_post_id,post_id) UNIQUE
-#

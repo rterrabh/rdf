@@ -88,7 +88,6 @@ class Libuv < Formula
         end
       end
       ENV.prepend_path "PATH", buildpath/"sphinx/bin"
-      # This isn't yet handled by the make install process sadly.
       cd "docs" do
         system "make", "man"
         system "make", "singlehtml"
@@ -108,8 +107,6 @@ class Libuv < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <uv.h>
-      #include <stdlib.h>
 
       int main()
       {

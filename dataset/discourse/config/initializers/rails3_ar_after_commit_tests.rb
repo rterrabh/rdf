@@ -1,4 +1,3 @@
-# Allow after commits to work in test mode
 if Rails.env.test?
 
   class ActiveRecord::Base

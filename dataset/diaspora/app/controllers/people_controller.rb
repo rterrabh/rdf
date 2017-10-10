@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class PeopleController < ApplicationController
   before_action :authenticate_user!, except: [:show, :stream]
@@ -37,7 +34,6 @@ class PeopleController < ApplicationController
       end
 
       format.any(:html, :mobile) do
-        #only do it if it is an email address
         if diaspora_id?(search_query)
           @people =  Person.where(:diaspora_handle => search_query.downcase)
           if @people.empty?
@@ -71,7 +67,6 @@ class PeopleController < ApplicationController
     respond_with @people
   end
 
-  # renders the persons user profile page
   def show
     mark_corresponding_notifications_read if user_signed_in?
 
@@ -111,8 +106,6 @@ class PeopleController < ApplicationController
     end
   end
 
-  # hovercards fetch some the persons public profile data via json and display
-  # it next to the avatar image in a nice box
   def hovercard
     respond_to do |format|
       format.all do
@@ -162,12 +155,9 @@ class PeopleController < ApplicationController
     end
   end
 
-  # shows the dropdown list of aspects the current user has set for the given person.
-  # renders "thats you" in case the current user views himself
   def aspect_membership_dropdown
     @person = Person.find_by_guid(params[:person_id])
 
-    # you are not a contact of yourself...
     return render :text => I18n.t('people.person.thats_you') if @person == current_user.person
 
     @contact = current_user.contact_for(@person) || Contact.new
@@ -192,7 +182,6 @@ class PeopleController < ApplicationController
         })
       end
 
-    # view this profile on the home pod, if you don't want to sign in...
     authenticate_user! if remote_profile_with_no_user_session?
     raise ActiveRecord::RecordNotFound if @person.nil?
     raise Diaspora::AccountClosed if @person.closed_account?

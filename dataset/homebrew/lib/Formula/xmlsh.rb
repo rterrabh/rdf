@@ -9,7 +9,6 @@ class Xmlsh < Formula
     libexec.install Dir["*"]
     chmod 0755, "#{libexec}/unix/xmlsh"
     (bin/"xmlsh").write <<-EOS.undent
-      #!/bin/bash
       export XMLSH=#{libexec}
       exec #{libexec}/unix/xmlsh "$@"
     EOS

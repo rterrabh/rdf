@@ -1,5 +1,4 @@
 class Csfml < Formula
-  # Don't update CSFML until there's a corresponding SFML release
   desc "SMFL bindings for C"
   homepage "http://www.sfml-dev.org/"
   url "https://github.com/SFML/CSFML/archive/2.3.tar.gz"
@@ -24,7 +23,6 @@ class Csfml < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <SFML/Window.h>
 
       int main (void)
       {

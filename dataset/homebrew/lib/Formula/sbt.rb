@@ -23,7 +23,6 @@ class Sbt < Formula
     etc.install "conf/sbtopts"
 
     (bin/"sbt").write <<-EOS.undent
-      #!/bin/sh
       if [ -f "$HOME/.sbtconfig" ]; then
         echo "Use of ~/.sbtconfig is deprecated, please migrate global settings to #{etc}/sbtopts" >&2
         . "$HOME/.sbtconfig"

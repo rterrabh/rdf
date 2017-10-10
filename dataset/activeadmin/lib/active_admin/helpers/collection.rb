@@ -1,8 +1,6 @@
 module ActiveAdmin
   module Helpers
     module Collection
-      # 1. removes `select` and `order` to prevent invalid SQL
-      # 2. correctly handles the Hash returned when `group by` is used
       def collection_size(c = collection)
         c = c.except :select, :order
 

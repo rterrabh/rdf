@@ -1,17 +1,8 @@
-# encoding: utf-8
 module CommitsHelper
-  # Returns a link to the commit author. If the author has a matching user and
-  # is a member of the current @project it will link to the team member page.
-  # Otherwise it will link to the author email as specified in the commit.
-  #
-  # options:
-  #  avatar: true will prepend the avatar image
-  #  size:   size of the avatar image in px
   def commit_author_link(commit, options = {})
     commit_person_link(commit, options.merge(source: :author))
   end
 
-  # Just like #author_link but for the committer.
   def commit_committer_link(commit, options = {})
     commit_person_link(commit, options.merge(source: :committer))
   end
@@ -31,11 +22,9 @@ module CommitsHelper
     escape_javascript(render "projects/commits/#{template}", commit: commit, project: project) unless commit.nil?
   end
 
-  # Breadcrumb links for a Project and, if applicable, a tree path
   def commits_breadcrumbs
     return unless @project && @ref
 
-    # Add the root project link and the arrow icon
     crumbs = content_tag(:li) do
       link_to(
         @project.path,
@@ -48,7 +37,6 @@ module CommitsHelper
 
       parts.each_with_index do |part, i|
         crumbs << content_tag(:li) do
-          # The text is just the individual part, but the link needs all the parts before it
           link_to(
             part,
             namespace_project_commits_path(
@@ -64,13 +52,10 @@ module CommitsHelper
     crumbs.html_safe
   end
 
-  # Return Project default branch, if it present in array
-  # Else - first branch in array (mb last actual branch)
   def commit_default_branch(project, branches)
     branches.include?(project.default_branch) ? branches.delete(project.default_branch) : branches.pop
   end
 
-  # Returns the sorted alphabetically links to branches, separated by a comma
   def commit_branches_links(project, branches)
     branches.sort.map do |branch|
       link_to(
@@ -83,7 +68,6 @@ module CommitsHelper
     end.join(" ").html_safe
   end
 
-  # Returns the sorted links to tags, separated by a comma
   def commit_tags_links(project, tags)
     sorted = VersionSorter.rsort(tags)
     sorted.map do |tag|
@@ -125,21 +109,13 @@ module CommitsHelper
 
   protected
 
-  # Private: Returns a link to a person. If the person has a matching user and
-  # is a member of the current @project it will link to the team member page.
-  # Otherwise it will link to the person email as specified in the commit.
-  #
-  # options:
-  #  source: one of :author or :committer
-  #  avatar: true will prepend the avatar image
-  #  size:   size of the avatar image in px
   def commit_person_link(commit, options = {})
-    #nodyna <ID:send-125> <SD MODERATE (change-prone variables)>
+    #nodyna <send-526> <SD MODERATE (change-prone variables)>
     user = commit.send(options[:source])
     
-    #nodyna <ID:send-126> <SD MODERATE (change-prone variables)>
+    #nodyna <send-527> <SD MODERATE (change-prone variables)>
     source_name = clean(commit.send "#{options[:source]}_name".to_sym)
-    #nodyna <ID:send-127> <SD MODERATE (change-prone variables)>
+    #nodyna <send-528> <SD MODERATE (change-prone variables)>
     source_email = clean(commit.send "#{options[:source]}_email".to_sym)
 
     person_name = user.try(:name) || source_name

@@ -20,7 +20,6 @@ module Files
       end
 
       if project.empty_repo?
-        # everything is ok because repo does not have a commits yet
       else
         unless repository.branch_names.include?(ref)
           return error("You can only create files if you are on top of a branch")

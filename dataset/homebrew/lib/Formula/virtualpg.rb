@@ -8,10 +8,6 @@ class Virtualpg < Formula
   depends_on "postgis"
 
   def install
-    # New SQLite3 extension won't load via SELECT load_extension('mod_virtualpg');
-    # unless named mod_virtualpg.dylib (should actually be mod_virtualpg.bundle)
-    # See: https://groups.google.com/forum/#!topic/spatialite-users/EqJAB8FYRdI
-    # needs upstream fixes in both SQLite and libtool
     inreplace "configure",
     "shrext_cmds='`test .$module = .yes && echo .so || echo .dylib`'",
     "shrext_cmds='.dylib'"
@@ -24,7 +20,6 @@ class Virtualpg < Formula
   end
 
   test do
-    # Verify mod_virtualpg extension can be loaded using Homebrew's SQLite
     system "echo \"SELECT load_extension('#{opt_lib}/mod_virtualpg');\" | #{Formula["sqlite"].opt_bin}/sqlite3"
   end
 end

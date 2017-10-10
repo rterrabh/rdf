@@ -1,5 +1,4 @@
 module API
-  # Hooks API
   class SystemHooks < Grape::API
     before do
       authenticate!
@@ -7,21 +6,11 @@ module API
     end
 
     resource :hooks do
-      # Get the list of system hooks
-      #
-      # Example Request:
-      #   GET /hooks
       get do
         @hooks = SystemHook.all
         present @hooks, with: Entities::Hook
       end
 
-      # Create new system hook
-      #
-      # Parameters:
-      #   url (required) - url for system hook
-      # Example Request
-      #   POST /hooks
       post do
         attrs = attributes_for_keys [:url]
         required_attributes! [:url]
@@ -33,10 +22,6 @@ module API
         end
       end
 
-      # Test a hook
-      #
-      # Example Request
-      #   GET /hooks/:id
       get ":id" do
         @hook = SystemHook.find(params[:id])
         data = {
@@ -51,18 +36,11 @@ module API
         data
       end
 
-      # Delete a hook. This is an idempotent function.
-      #
-      # Parameters:
-      #   id (required) - ID of the hook
-      # Example Request:
-      #   DELETE /hooks/:id
       delete ":id" do
         begin
           @hook = SystemHook.find(params[:id])
           @hook.destroy
         rescue
-          # SystemHook raises an Error if no hook with id found
         end
       end
     end

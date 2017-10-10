@@ -33,8 +33,6 @@ class Libffi < Formula
 
   test do
     (testpath/"closure.c").write <<-TEST_SCRIPT.undent
-     #include <stdio.h>
-     #include <ffi.h>
 
      /* Acts like puts with the file given at time of enclosure. */
      void puts_binding(ffi_cif *cif, unsigned int *ret, void* args[],

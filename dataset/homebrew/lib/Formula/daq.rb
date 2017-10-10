@@ -20,8 +20,6 @@ class Daq < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <daq.h>
-      #include <stdio.h>
 
       int main()
       {

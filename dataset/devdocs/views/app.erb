@@ -1,0 +1,52 @@
+<div class="_app<%= " #{app_layout}" if app_layout %>">
+  <header class="_header">
+    <a class="_home-link"></a>
+    <a class="_menu-link"></a>
+    <form class="_search">
+      <input type="search" class="_search-input" placeholder="Search&hellip;" autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" maxlength="20">
+      <a class="_search-clear"></a>
+      <div class="_search-tag"></div>
+    </form>
+    <h1 class="_logo">
+      <a href="/" class="_nav-link" title="Offline API Documentation Browser">DevDocs</a><%= "/ #{@doc['name']}" if @doc %>
+    </h1>
+    <nav class="_nav">
+      <a href="/offline" class="_nav-link">Offline</a>
+      <a href="/about" class="_nav-link">About</a>
+      <a href="/news" class="_nav-link">News</a>
+      <a href="/help" class="_nav-link">Tips</a>
+    </nav>
+  </header>
+  <section class="_sidebar">
+    <div class="_list">
+      <% unless @doc %>
+      <% App.docs.each do |slug, doc| %>
+      <a href="/<%= slug %>/" class="_list-item _icon-<%= slug %> _list-dir"><span class="_list-arrow"></span><%= doc['name'] %></a>
+      <% end %>
+      <% end %>
+    </div>
+  </section>
+  <section class="_container">
+    <div class="_content _content-loading"></div>
+  </section>
+</div>
+<% if App.production? %><script>
+  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+  ga('create', 'UA-5544833-12', 'devdocs.io');
+  ga('send', 'pageview');
+</script><script>
+  var _gauges=_gauges||[];!function(){var a=document.createElement("script");
+  a.type="text/javascript",a.async=!0,a.id="gauges-tracker",
+  a.setAttribute("data-site-id","51c15f82613f5d7819000067"),
+  a.src="//secure.gaug.es/track.js";var b=document.getElementsByTagName("script")[0];
+  b.parentNode.insertBefore(a,b)}();
+</script><% end %>
+<style data-size="<%= app_size %>" data-resizer>
+  ._container { margin-left: <%= app_size %>; }
+  ._search, ._list, ._sidebar-footer { width: <%= app_size %>; }
+  ._list-hover.clone { min-width: <%= app_size %>; }
+  ._notice, ._path, ._resizer { left: <%= app_size %>; }
+</style>

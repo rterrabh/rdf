@@ -24,8 +24,6 @@ module Spree
     context "PUT 'update'" do
       let(:order) do
         order = create(:order_with_line_items)
-        # Order should be in a pristine state
-        # Without doing this, the order may transition from 'cart' straight to 'delivery'
         order.shipments.delete_all
         order
       end
@@ -72,7 +70,6 @@ module Spree
         order.save
         order.update_column(:state, "address")
         api_put :update, id: order.to_param, order_token: order.guest_token
-        # Order has not transitioned
         expect(response.status).to eq(422)
       end
 
@@ -107,7 +104,6 @@ module Spree
           expect(response.status).to eq(200)
         end
 
-        # Regression Spec for #5389 & #5880
         it "can update addresses but not transition to delivery w/o shipping setup" do
           Spree::ShippingMethod.destroy_all
           api_put :update,
@@ -120,7 +116,6 @@ module Spree
           expect(response.status).to eq(422)
         end
 
-        # Regression test for #4498
         it "does not contain duplicate variant data in delivery return" do
           api_put :update,
             id: order.to_param, order_token: order.guest_token,
@@ -128,8 +123,6 @@ module Spree
               bill_address_attributes: address,
               ship_address_attributes: address
             }
-          # Shipments manifests should not return the ENTIRE variant
-          # This information is already present within the order's line items
           expect(json_response['shipments'].first['manifest'].first['variant']).to be_nil
           expect(json_response['shipments'].first['manifest'].first['variant_id']).to_not be_nil
         end
@@ -143,13 +136,9 @@ module Spree
         api_put :update, id: order.to_param, order_token: order.guest_token,
           order: { shipments_attributes: { "0" => { selected_shipping_rate_id: shipping_rate.id, id: shipment.id } } }
         expect(response.status).to eq(200)
-        # Find the correct shipment...
         json_shipment = json_response['shipments'].detect { |s| s["id"] == shipment.id }
-        # Find the correct shipping rate for that shipment...
         json_shipping_rate = json_shipment['shipping_rates'].detect { |sr| sr["id"] == shipping_rate.id }
-        # ... And finally ensure that it's selected
         expect(json_shipping_rate['selected']).to be true
-        # Order should automatically transfer to payment because all criteria are met
         expect(json_response['state']).to eq('payment')
       end
 
@@ -225,7 +214,6 @@ module Spree
         expect(response.status).to eq(200)
       end
 
-      # Regression test for #3784
       it "can update the special instructions for an order" do
         instructions = "Don't drop it. (Please)"
         api_put :update, id: order.to_param, order_token: order.guest_token,
@@ -237,7 +225,6 @@ module Spree
         sign_in_as_admin!
         it "can assign a user to the order" do
           user = create(:user)
-          # Need to pass email as well so that validations succeed
           api_put :update, id: order.to_param, order_token: order.guest_token,
             order: { user_id: user.id, email: "guest@spreecommerce.com" }
           expect(response.status).to eq(200)

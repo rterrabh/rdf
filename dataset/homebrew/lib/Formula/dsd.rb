@@ -13,7 +13,6 @@ class Dsd < Formula
   end
 
   patch do
-    # Fixes build on MacOS X.
     url "https://github.com/szechyjs/dsd/commit/e40c32d8addf3ab94dae42d8c0fcf9ef27e453c2.diff"
     sha256 "58d88fd58c32c63920ab9dcfe2a1eb4de6f3e688062ab14dcb3f4e259d735923"
   end

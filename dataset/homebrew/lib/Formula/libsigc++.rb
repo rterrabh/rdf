@@ -21,7 +21,6 @@ class Libsigcxx < Formula
   end
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <sigc++/sigc++.h>
 
       void somefunction(int arg) {}
 

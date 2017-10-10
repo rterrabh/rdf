@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/tree.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -10,7 +6,6 @@ module Tk::BLT
   class Tree < TkObject
     TkCommandNames = ['::blt::tree'.freeze].freeze
 
-    ###################################
 
     class Node < TkObject
       TreeNodeID_TBL = TkCore::INTERP.create_table
@@ -27,10 +22,9 @@ module Tk::BLT
               TreeNodeID_TBL[tpath][id]
             else
               begin
-                # self.new(tree, nil, 'node'=>Integer(id))
                 id = Integer(id)
                 if bool(tk_call(@tpath, 'exists', id))
-                  #nodyna <ID:instance_eval-90> <IEV MODERATE (private access)>
+                  #nodyna <instance_eval-1553> <IEV MODERATE (private access)>
                   (obj = self.allocate).instance_eval{
                     @parent = @tree = tree
                     @tpath = tpath
@@ -64,7 +58,7 @@ module Tk::BLT
             return obj
           end
 
-          #nodyna <ID:instance_eval-91> <IEV MODERATE (private access)>
+          #nodyna <instance_eval-1554> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             initialize(tree, parent, keys)
             TreeNodeID_TBL[tpath][@id] = self
@@ -265,7 +259,6 @@ module Tk::BLT
       end
     end
 
-    ###################################
 
     class Tag < TkObject
       TreeTagID_TBL = TkCore::INTERP.create_table
@@ -274,7 +267,7 @@ module Tk::BLT
         TreeTagID_TBL.mutex.synchronize{ TreeTagID_TBL.clear }
       }
 
-      #nodyna <ID:instance_eval-92> <IEV MODERATE (method definition)>
+      #nodyna <instance_eval-1555> <IEV MODERATE (method definition)>
       (TreeTag_ID = ['blt_tree_tag'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -289,8 +282,7 @@ module Tk::BLT
               TreeTagID_TBL[tpath][id]
             else
               begin
-                # self.new(tree, id)
-                #nodyna <ID:instance_eval-93> <IEV MODERATE (private access)>
+                #nodyna <instance_eval-1556> <IEV MODERATE (private access)>
                 (obj = self.allocate).instance_eval{
                   @parent = @tree = tree
                   @tpath = @parent.path
@@ -366,7 +358,6 @@ module Tk::BLT
       end
     end
 
-    ###################################
 
     class Notify < TkObject
       NotifyID_TBL = TkCore::INTERP.create_table
@@ -382,7 +373,7 @@ module Tk::BLT
             if NotifyID_TBL[tpath][id]
               NotifyID_TBL[tpath][id]
             else
-              #nodyna <ID:instance_eval-94> <IEV MODERATE (private access)>
+              #nodyna <instance_eval-1557> <IEV MODERATE (private access)>
               (obj = self.allocate).instance_eval{
                 @parent = @tree = tree
                 @tpath = @parent.path
@@ -401,12 +392,11 @@ module Tk::BLT
       def self.new(tree, *args, &b)
         NotifyID_TBL.mutex.synchronize{
           if tree.kind_of?(Array)
-            # not create
             tpath = tree[0].path
             NotifyID_TBL[tpath] ||= {}
             unless (obj = NotifyID_TBL[tpath][tree[1]])
               (NotifyID_TBL[tpath][tree[1]] =
-                 #nodyna <ID:instance_eval-95> <IEV MODERATE (private access)>
+                 #nodyna <instance_eval-1558> <IEV MODERATE (private access)>
                  obj = self.allocate).instance_eval{
                 @parent = @tree = tree[0]
                 @tpath = @parent.path
@@ -416,7 +406,7 @@ module Tk::BLT
             return obj
           end
 
-          #nodyna <ID:instance_eval-96> <IEV MODERATE (private access)>
+          #nodyna <instance_eval-1559> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             initialize(tree, *args, &b)
             NotifyID_TBL[@tpath] ||= {}
@@ -430,10 +420,8 @@ module Tk::BLT
         @parent = @tree = tree
         @tpath = @parent.path
 
-        # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
         if TkComm._callback_entry?(args[0])
           cmd = args.shift
-        # elsif args[-1].kind_of?(Proc) || args[-1].kind_of?(Method)
         elsif TkComm._callback_entry?(args[-1])
           cmd = args.pop
         elsif b
@@ -473,7 +461,6 @@ module Tk::BLT
       end
     end
 
-    ###################################
 
     class Trace < TkObject
       TraceID_TBL = TkCore::INTERP.create_table
@@ -490,8 +477,7 @@ module Tk::BLT
               TraceID_TBL[tpath][id]
             else
               begin
-                # self.new([tree, id])
-                #nodyna <ID:instance_eval-97> <IEV MODERATE (private access)>
+                #nodyna <instance_eval-1560> <IEV MODERATE (private access)>
                 (obj = self.allocate).instance_eval{
                   @parent = @tree = tree
                   @tpath = @parent.path
@@ -513,12 +499,11 @@ module Tk::BLT
       def self.new(tree, *args, &b)
         TraceID_TBL.mutex.synchronize{
           if tree.kind_of?(Array)
-            # not create
             tpath = tree[0].path
             TraceID_TBL[tpath] ||= {}
             unless (obj = TraceID_TBL[tpath][tree[1]])
               (TraceID_TBL[tpath][tree[1]] =
-                 #nodyna <ID:instance_eval-98> <IEV MODERATE (private access)>
+                 #nodyna <instance_eval-1561> <IEV MODERATE (private access)>
                  obj = self.allocate).instance_eval{
                 @parent = @tree = tree
                 @tpath = @parent.path
@@ -528,8 +513,7 @@ module Tk::BLT
             return obj
           end
 
-          # super(true, tree, *args, &b)
-          #nodyna <ID:instance_eval-99> <IEV MODERATE (private access)>
+          #nodyna <instance_eval-1562> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             initialize(tree, *args, &b)
             TraceID_TBL[@tpath] ||= {}
@@ -584,11 +568,10 @@ module Tk::BLT
       end
     end
 
-    ###################################
 
     TreeID_TBL = TkCore::INTERP.create_table
 
-    #nodyna <ID:instance_eval-100> <IEV MODERATE (method definition)>
+    #nodyna <instance_eval-1563> <IEV MODERATE (method definition)>
     (Tree_ID = ['blt_tree'.freeze, TkUtil.untrust('00000')]).instance_eval{
       @mutex = Mutex.new
       def mutex; @mutex; end
@@ -597,19 +580,14 @@ module Tk::BLT
 
     def __keyonly_optkeys
       {
-        # apply / find  command
         'invert'=>nil, 'leafonly'=>nil, 'nocase'=>nil,
 
-        # apply / find / sort command
         'path'=>nil,
 
-        # copy / restore / restorefile command
         'overwrite'=>nil,
 
-        # copy command
         'recurse'=>nil, 'tags'=>nil,
 
-        # sort command
         'ascii'=>nil, 'decreasing'=>nil, 'disctionary'=>nil,
         'integer'=>nil, 'real'=>nil, 'recurse'=>nil, 'reorder'=>nil,
       }
@@ -637,7 +615,7 @@ module Tk::BLT
         if name && TreeID_TBL[name]
           TreeID_TBL[name]
         else
-          #nodyna <ID:instance_eval-101> <IEV MODERATE (private access)>
+          #nodyna <instance_eval-1564> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             initialize(name)
             TreeID_TBL[@id] = self

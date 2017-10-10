@@ -33,17 +33,14 @@ class Libsecret < Formula
 
     system "./configure", *args
 
-    # https://bugzilla.gnome.org/show_bug.cgi?id=734630
     inreplace "Makefile", "sed", "gsed"
 
-    # https://bugzilla.gnome.org/show_bug.cgi?id=734631
     inreplace "Makefile", "--nonet", ""
     system "make", "install"
   end
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <libsecret/secret.h>
 
       const SecretSchema * example_get_schema (void) G_GNUC_CONST;
 

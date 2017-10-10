@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 class AvatarUploader < CarrierWave::Uploader::Base
   storage :file
@@ -14,7 +13,6 @@ class AvatarUploader < CarrierWave::Uploader::Base
     if file.respond_to?(:extension)
       img_ext.include?(file.extension.downcase)
     else
-      # Not all CarrierWave storages respond to :extension
       ext = file.path.split('.').last.downcase
       img_ext.include?(ext)
     end

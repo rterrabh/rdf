@@ -12,7 +12,6 @@ class IcarusVerilog < Formula
   def install
     system "autoconf" if build.head?
     system "./configure", "--prefix=#{prefix}"
-    # Separate steps, as install does not depend on compile properly
     system "make"
     system "make", "installdirs"
     system "make", "install"

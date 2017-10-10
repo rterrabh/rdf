@@ -5,7 +5,7 @@ module ActiveAdmin
       DISPLAY_NAME_FALLBACK = ->{
         name, klass = "", self.class
         name << klass.model_name.human         if klass.respond_to? :model_name
-        #nodyna <ID:send-21> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-101> <SD COMPLEX (change-prone variables)>
         name << " ##{send(klass.primary_key)}" if klass.respond_to? :primary_key
         name.present? ? name : to_s
       }
@@ -13,15 +13,10 @@ module ActiveAdmin
         'DISPLAY_NAME_FALLBACK'
       end
 
-      # Attempts to call any known display name methods on the resource.
-      # See the setting in `application.rb` for the list of methods and their priority.
       def display_name(resource)
         render_in_context resource, display_name_method_for(resource) if resource
       end
 
-      # Looks up and caches the first available display name method.
-      # To prevent conflicts, we exclude any methods that happen to be associations.
-      # If no methods are available and we're about to use the Kernel's `to_s`, provide our own.
       def display_name_method_for(resource)
         @@display_name_methods_cache ||= {}
         @@display_name_methods_cache[resource.class] ||= begin
@@ -41,7 +36,6 @@ module ActiveAdmin
         resource.class.reflect_on_all_associations.map(&:name)
       end
 
-      # Attempts to create a human-readable string for any object
       def pretty_format(object)
         case object
         when String, Numeric, Arbre::Element

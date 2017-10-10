@@ -17,7 +17,6 @@ class Debianutils < Formula
                           "--prefix=#{prefix}"
     system "make"
 
-    # some commands are Debian Linux specific and we don't want them, so install specific tools
     bin.install "run-parts", "ischroot", "tempfile"
     man1.install "ischroot.1", "tempfile.1"
     man8.install "run-parts.8"

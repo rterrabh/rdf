@@ -6,8 +6,6 @@ class Avidemux < Formula
     url "https://downloads.sourceforge.net/avidemux/avidemux_2.6.8.tar.gz"
     sha256 "02998c235a89894d184d745c94cac37b78bc20e9eb44b318ee2bb83f2507e682"
 
-    # remove ffmpeg binary from targets (fixed upstream)
-    # http://avidemux.org/smuf/index.php/topic,16379.15.html
     patch do
       url "https://github.com/mean00/avidemux2/commit/bf0185.diff"
       sha256 "3ca5b4f1b5b3ec407a3daa5c811862ea6ed7ef6cdaaf187045e6e1c77c193800"
@@ -54,8 +52,6 @@ class Avidemux < Formula
   depends_on "sdl2" => :optional
 
   if build.with? "sdl2"
-    # fix compilation against SDL, change deprecated NSQuickDrawView to NSView
-    # (submitted patch to developer via email)
     patch do
       url "https://gist.githubusercontent.com/Noctem/2c03f24daf6705964347/raw/dd6d27374e5ed44678f25b84da159ea57a9d8857/avidemux-sdl.patch"
       sha256 "17cb0181fbe503e84ad9b2762eb182ad4ec3ef8df8a90741e4f3c0e4d0a8f1ff"
@@ -65,15 +61,12 @@ class Avidemux < Formula
   def install
     ENV["REV"] = version.to_s
 
-    # For 32-bit compilation under gcc 4.2, see:
-    # http://trac.macports.org/ticket/20938#comment:22
     if MacOS.version <= :leopard || (Hardware.is_32_bit? && Hardware::CPU.intel? && ENV.compiler == :clang)
       inreplace "cmake/admFFmpegBuild.cmake",
         "${CMAKE_INSTALL_PREFIX})",
         "${CMAKE_INSTALL_PREFIX} --extra-cflags=-mdynamic-no-pic)"
     end
 
-    # Build the core
     mkdir "buildCore" do
       args = std_cmake_args
       args << "-DAVIDEMUX_SOURCE_DIR=#{buildpath}"
@@ -92,15 +85,12 @@ class Avidemux < Formula
 
       args << "../avidemux_core"
       system "cmake", *args
-      # Parallel build sometimes fails with:
-      #   "ld: library not found for -lADM6avcodec"
       ENV.deparallelize do
         system "make"
         system "make", "install"
       end
     end
 
-    # UIs: Build Qt4 and cli
     interfaces = ["cli"]
     interfaces << "qt4" if build.with? "qt"
     interfaces.each do |interface|
@@ -116,7 +106,6 @@ class Avidemux < Formula
       end
     end
 
-    # Plugins
     plugins = ["COMMON", "CLI"]
     plugins << "QT4" if build.with? "qt"
     plugins.each do |plugin|
@@ -142,7 +131,6 @@ class Avidemux < Formula
       end
     end
 
-    # Steps from the bootStrapOsx.bash:
     app = prefix/"Avidemux2.6.app/Contents"
     mkdir_p app/"Resources"
     mkdir_p app/"MacOS"

@@ -23,9 +23,9 @@ module RSS
         end
 
         def inherited(subclass)
-          #nodyna <ID:const_set-59> <CS TRIVIAL (static values)>
+          #nodyna <const_set-2072> <CS TRIVIAL (static values)>
           subclass.const_set(:OTHER_ELEMENTS, [])
-          #nodyna <ID:const_set-60> <CS TRIVIAL (static values)>
+          #nodyna <const_set-2073> <CS TRIVIAL (static values)>
           subclass.const_set(:NEED_INITIALIZE_VARIABLES, [])
         end
 
@@ -51,21 +51,19 @@ module RSS
 
           add_need_initialize_variable(plural) {[]}
 
+          #nodyna <module_eval-2074> <not yet classified>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             def new_#{name}
-              #{name} = self.class::#{klass_name}.new(@maker)
               @#{plural} << #{name}
               if block_given?
                 yield #{name}
               else
-                #{name}
               end
             end
             alias new_child new_#{name}
 
             def to_feed(*args)
               @#{plural}.each do |#{name}|
-                #{name}.to_feed(*args)
               end
             end
 
@@ -79,9 +77,10 @@ module RSS
           class_name ||= Utils.to_class_name(name)
           add_other_element(name)
           add_need_initialize_variable(name) do |object|
-            #nodyna <ID:send-108> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-2075> <SD COMPLEX (change-prone variables)>
             object.send("make_#{name}")
           end
+          #nodyna <module_eval-2076> <not yet classified>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             private
             def setup_#{name}(feed, current)
@@ -97,6 +96,7 @@ module RSS
         def def_classed_element(name, class_name=nil, attribute_name=nil)
           def_classed_element_without_accessor(name, class_name)
           if attribute_name
+            #nodyna <module_eval-2077> <not yet classified>
             module_eval(<<-EOC, __FILE__, __LINE__ + 1)
               def #{name}
                 if block_given?
@@ -127,17 +127,12 @@ module RSS
             additional_setup_code = yield(local_variable_name,
                                           new_value_variable_name)
           end
+          #nodyna <module_eval-2078> <not yet classified>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             def #{name}
-              #{local_variable_name} = #{plural_name}.first
-              #{local_variable_name} ? #{local_variable_name}.#{attribute} : nil
             end
 
             def #{name}=(#{new_value_variable_name})
-              #{local_variable_name} =
-                #{plural_name}.first || #{plural_name}.new_#{new_name}
-              #{additional_setup_code}
-              #{local_variable_name}.#{attribute} = #{new_value_variable_name}
             end
           EOC
         end
@@ -150,6 +145,7 @@ module RSS
         def def_other_element_without_accessor(name)
           add_need_initialize_variable(name)
           add_other_element(name)
+          #nodyna <module_eval-2079> <not yet classified>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             def setup_#{name}(feed, current)
               if !@#{name}.nil? and current.respond_to?(:#{name}=)
@@ -166,6 +162,7 @@ module RSS
           if type == :integer
             converter = "{|v| Integer(v)}"
           end
+          #nodyna <module_eval-2080> <not yet classified>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             def #{name}=(value)
               @#{name} = Utils::CSV.parse(value)#{converter}
@@ -198,13 +195,13 @@ module RSS
             if init_value.respond_to?(:call)
               value = init_value.call(self)
             elsif init_value.is_a?(String)
-              # just for backward compatibility
-              #nodyna <ID:instance_eval-165> <IEV COMPLEX (block execution)>
+              #nodyna <instance_eval-2081> <IEV COMPLEX (block execution)>
               value = instance_eval(init_value, __FILE__, __LINE__)
             else
               value = init_value
             end
           end
+          #nodyna <instance_variable_set-2082> <not yet classified>
           instance_variable_set("@#{variable_name}", value)
         end
       end
@@ -258,7 +255,6 @@ module RSS
 
       def variables
         self.class.need_initialize_variables.find_all do |name, init|
-          # init == "nil" is just for backward compatibility
           init.nil? or init == "nil"
         end.collect do |name, init|
           name
@@ -283,6 +279,7 @@ module RSS
       def self.append_features(klass)
         super
 
+        #nodyna <class_eval-2083> <not yet classified>
         klass.class_eval(<<-EOC, __FILE__, __LINE__ + 1)
           %w(name uri email).each do |element|
             attr_accessor element
@@ -297,6 +294,7 @@ module RSS
         class << self
           def included(base)
             super
+            #nodyna <class_eval-2084> <not yet classified>
             base.class_eval do
               %w(type content xml_content).each do |element|
                 attr_reader element
@@ -349,6 +347,7 @@ module RSS
       def self.append_features(klass)
         super
 
+        #nodyna <class_eval-2085> <not yet classified>
         klass.class_eval do
           include EnsureXMLContent
         end
@@ -410,9 +409,10 @@ module RSS
       %w(xml_stylesheets channel image items textinput).each do |element|
         attr_reader element
         add_need_initialize_variable(element) do |object|
-          #nodyna <ID:send-109> <SD MODERATE (array)>
+          #nodyna <send-2086> <SD MODERATE (array)>
           object.send("make_#{element}")
         end
+        #nodyna <module_eval-2087> <not yet classified>
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           private
           def setup_#{element}(feed)

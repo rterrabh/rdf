@@ -1,10 +1,3 @@
-#
-# This is used for finding the gaps between a subset of elements in an array
-# and the original layout. We use this in Discourse to find gaps between posts.
-#
-# Note that we will only return a gap as 'before' or 'after', not both. We only
-# want to display the gap once.
-#
 class Gaps
 
   attr_reader :before, :after

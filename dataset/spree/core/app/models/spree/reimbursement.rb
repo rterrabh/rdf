@@ -19,40 +19,20 @@ module Spree
 
     scope :reimbursed, -> { where(reimbursement_status: 'reimbursed') }
 
-    # The reimbursement_tax_calculator property should be set to an object that responds to "call"
-    # and accepts a reimbursement object. Invoking "call" should update the tax fields on the
-    # associated ReturnItems.
-    # This allows a store to easily integrate with third party tax services.
     class_attribute :reimbursement_tax_calculator
     self.reimbursement_tax_calculator = ReimbursementTaxCalculator
-    # A separate attribute here allows you to use a more performant calculator for estimates
-    # and a different one (e.g. one that hits a 3rd party API) for the final caluclations.
     class_attribute :reimbursement_simulator_tax_calculator
     self.reimbursement_simulator_tax_calculator = ReimbursementTaxCalculator
 
-    # The reimbursement_models property should contain an array of all models that provide
-    # reimbursements.
-    # This allows a store to incorporate custom reimbursement methods that Spree doesn't know about.
-    # Each model must implement a "total_amount_reimbursed_for" method.
-    # Example:
-    #   Refund.total_amount_reimbursed_for(reimbursement)
-    # See the `reimbursement_generator` property regarding the generation of custom reimbursements.
     class_attribute :reimbursement_models
     self.reimbursement_models = [Refund]
 
-    # The reimbursement_performer property should be set to an object that responds to the following methods:
-    # - #perform
-    # - #simulate
-    # see ReimbursementPerformer for details.
-    # This allows a store to customize their reimbursement methods and logic.
     class_attribute :reimbursement_performer
     self.reimbursement_performer = ReimbursementPerformer
 
-    # These are called if the call to "reimburse!" succeeds.
     class_attribute :reimbursement_success_hooks
     self.reimbursement_success_hooks = []
 
-    # These are called if the call to "reimburse!" fails.
     class_attribute :reimbursement_failure_hooks
     self.reimbursement_failure_hooks = []
 
@@ -83,8 +63,6 @@ module Spree
     end
 
     def calculated_total
-      # rounding every return item individually to handle edge cases for consecutive partial
-      # returns where rounding might cause us to try to reimburse more than was originally billed
       return_items.map { |ri| ri.total.to_d.round(2) }.sum
     end
 
@@ -147,12 +125,6 @@ module Spree
       Spree::ReimbursementMailer.reimbursement_email(id).deliver_later
     end
 
-    # If there are multiple different reimbursement types for a single
-    # reimbursement we open ourselves to a one-cent rounding error for every
-    # type over the first one. This is due to how we round #unpaid_amount and
-    # how each reimbursement type will round as well. Since at this point the
-    # payments and credits have already been processed, we should allow the
-    # reimbursement to show as 'reimbursed' and not 'errored'.
     def unpaid_amount_within_tolerance?
       reimbursement_count = reimbursement_models.count do |model|
         model.total_amount_reimbursed_for(self) > 0

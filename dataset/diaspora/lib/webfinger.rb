@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Webfinger
   include Diaspora::Logging
@@ -24,7 +21,6 @@ class Webfinger
     Workers::FetchWebfinger.perform_async(account)
   end
 
-  #everything below should be private I guess
   def account=(str)
     @account = str.strip.gsub('acct:','').to_s.downcase
   end
@@ -65,7 +61,6 @@ class Webfinger
     person
   end
 
-  #this tries the xrl url with https first, then falls back to http
   def host_meta_xrd
     begin
       get(host_meta_url)

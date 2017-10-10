@@ -10,8 +10,6 @@ class Mldonkey < Formula
     sha256 "43647a2a802978b9e6dcab2a42f4883cd679e151ed8a9775a1ceb82fa993384f" => :mountain_lion
   end
 
-  # Fix a comment that causes an error in recent ocaml;
-  # fixed upstream, will be in the next release.
   patch do
     url "https://github.com/ygrek/mldonkey/commit/c91a78896526640a301f5a9eeab8b698923e285c.patch"
     sha256 "1fb503d37eed92390eb891878a9e6d69b778bd2f1d40b9845d18aa3002f3d739"
@@ -26,7 +24,6 @@ class Mldonkey < Formula
   def install
     ENV.j1
 
-    # Fix compiler selection
     ENV["OCAMLC"] = "#{HOMEBREW_PREFIX}/bin/ocamlc.opt -cc #{ENV.cc}"
 
     system "./configure", "--prefix=#{prefix}"

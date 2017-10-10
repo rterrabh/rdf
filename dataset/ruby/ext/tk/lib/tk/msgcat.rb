@@ -1,14 +1,8 @@
-#
-#   tk/msgcat.rb : methods for Tcl message catalog
-#                     by Hidetoshi Nagai <nagai@ai.kyutech.ac.jp>
-#
 require 'tk'
 
-#class TkMsgCatalog
 class TkMsgCatalog < TkObject
   include TkCore
   extend Tk
-  #extend TkMsgCatalog
 
   TkCommandNames = [
     '::msgcat::mc'.freeze,
@@ -39,9 +33,8 @@ class TkMsgCatalog < TkObject
   UNKNOWN_CBTBL = TkUtil.untrust(Hash.new{|hash,key| hash[key] = {}})
 
   TkCore::INTERP.add_tk_procs('::msgcat::mcunknown', 'args', <<-'EOL')
-    #nodyna <ID:eval-40> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1786> <EV COMPLEX (change-prone variables)>
     if {[set st [catch {eval {ruby_cmd TkMsgCatalog callback} [namespace current] $args} ret]] != 0} {
-       #return -code $st $ret
        set idx [string first "\n\n" $ret]
        if {$idx > 0} {
           return -code $st \
@@ -78,6 +71,7 @@ class TkMsgCatalog < TkObject
         if TkCore::WITH_ENCODING
           msg.force_encoding('utf-8')
         else
+          #nodyna <instance_variable_set-1787> <not yet classified>
           msg.instance_variable_set(:@encoding, 'utf-8')
         end
       rescue Exception
@@ -105,7 +99,6 @@ class TkMsgCatalog < TkObject
   attr_accessor :msgcat_ext
 
   def method_missing(id, *args)
-    # locale(src, trans) ==> set_translation(locale, src, trans)
     loc = id.id2name
     case args.length
     when 0 # set locale
@@ -113,23 +106,15 @@ class TkMsgCatalog < TkObject
 
     when 1 # src only, or trans_list
       if args[0].kind_of?(Array)
-        # trans_list
-        #list = args[0].collect{|src, trans|
-        #  [ Tk::UTF8_String.new(src), Tk::UTF8_String.new(trans) ]
-        #}
         self.set_translation_list(loc, args[0])
       else
-        # src
-        #self.set_translation(loc, Tk::UTF8_String.new(args[0]))
         self.set_translation(loc, args[0])
       end
 
     when 2 # src and trans, or, trans_list and enc
       if args[0].kind_of?(Array)
-        # trans_list
         self.set_translation_list(loc, *args)
       else
-        #self.set_translation(loc, args[0], Tk::UTF8_String.new(args[1]))
         self.set_translation(loc, *args)
       end
 
@@ -138,12 +123,10 @@ class TkMsgCatalog < TkObject
 
     else
       super(id, *args)
-#      fail NameError, "undefined method `#{name}' for #{self.to_s}", error_at
 
     end
   end
 
-  # *args ::= form, arg, arg, ...
   def self.translate(*args)
     dst = args.collect{|src|
       tk_call_without_enc('::msgcat::mc', _get_eval_string(src, true))
@@ -156,7 +139,7 @@ class TkMsgCatalog < TkObject
   end
   def translate(*args)
     dst = args.collect{|src|
-      #nodyna <ID:eval-41> <EV COMPLEX (change-prone variables)>
+      #nodyna <eval-1788> <EV COMPLEX (change-prone variables)>
       @namespace.eval{tk_call_without_enc('::msgcat::mc',
                                           _get_eval_string(src, true))}
     }
@@ -169,7 +152,7 @@ class TkMsgCatalog < TkObject
     tk_call('::msgcat::mcmax', *src_strings).to_i
   end
   def maxlen(*src_strings)
-    #nodyna <ID:eval-42> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1789> <EV COMPLEX (change-prone variables)>
     @namespace.eval{tk_call('::msgcat::mcmax', *src_strings).to_i}
   end
 
@@ -177,7 +160,7 @@ class TkMsgCatalog < TkObject
     tk_call('::msgcat::mclocale')
   end
   def locale
-    #nodyna <ID:eval-43> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1790> <EV COMPLEX (change-prone variables)>
     @namespace.eval{tk_call('::msgcat::mclocale')}
   end
 
@@ -185,7 +168,7 @@ class TkMsgCatalog < TkObject
     tk_call('::msgcat::mclocale', locale)
   end
   def locale=(locale)
-    #nodyna <ID:eval-44> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1791> <EV COMPLEX (change-prone variables)>
     @namespace.eval{tk_call('::msgcat::mclocale', locale)}
   end
 
@@ -193,7 +176,7 @@ class TkMsgCatalog < TkObject
     tk_split_simplelist(tk_call('::msgcat::mcpreferences'))
   end
   def preferences
-    #nodyna <ID:eval-45> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1792> <EV COMPLEX (change-prone variables)>
     tk_split_simplelist(@namespace.eval{tk_call('::msgcat::mcpreferences')})
   end
 
@@ -208,10 +191,10 @@ class TkMsgCatalog < TkObject
       if File.readable?(file)
         count += 1
         if TkCore::WITH_ENCODING
-          #nodyna <ID:eval-46> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-1793> <EV COMPLEX (change-prone variables)>
           eval(IO.read(file, :encoding=>"ASCII-8BIT"))
         else
-          #nodyna <ID:eval-47> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-1794> <EV COMPLEX (change-prone variables)>
           eval(IO.read(file))
         end
       end
@@ -220,7 +203,7 @@ class TkMsgCatalog < TkObject
   end
 
   def load_tk(dir)
-    #nodyna <ID:eval-48> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1795> <EV COMPLEX (change-prone variables)>
     number(@namespace.eval{tk_call('::msgcat::mcload', dir)})
   end
 
@@ -231,10 +214,10 @@ class TkMsgCatalog < TkObject
       if File.readable?(file)
         count += 1
         if TkCore::WITH_ENCODING
-          #nodyna <ID:eval-49> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-1796> <EV COMPLEX (change-prone variables)>
           @namespace.eval(IO.read(file, :encoding=>"ASCII-8BIT"))
         else
-          #nodyna <ID:eval-50> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-1797> <EV COMPLEX (change-prone variables)>
           @namespace.eval(IO.read(file))
         end
       end
@@ -258,12 +241,12 @@ class TkMsgCatalog < TkObject
   def set_translation(locale, src_str, trans_str=None, enc='utf-8')
     if trans_str && trans_str != None
       trans_str = Tk.UTF8_String(_toUTF8(trans_str, enc))
-      #nodyna <ID:eval-51> <EV COMPLEX (change-prone variables)>
+      #nodyna <eval-1798> <EV COMPLEX (change-prone variables)>
       Tk.UTF8_String(@namespace.eval{
                        ip_eval_without_enc("::msgcat::mcset {#{locale}} {#{_get_eval_string(src_str, true)}} {#{trans_str}}")
                      })
     else
-      #nodyna <ID:eval-52> <EV COMPLEX (change-prone variables)>
+      #nodyna <eval-1799> <EV COMPLEX (change-prone variables)>
       Tk.UTF8_String(@namespace.eval{
                        ip_eval_without_enc("::msgcat::mcset {#{locale}} {#{_get_eval_string(src_str, true)}}")
                      })
@@ -271,7 +254,6 @@ class TkMsgCatalog < TkObject
   end
 
   def self.set_translation_list(locale, trans_list, enc='utf-8')
-    # trans_list ::= [ [src, trans], [src, trans], ... ]
     list = []
     trans_list.each{|src, trans|
       if trans && trans != None
@@ -281,11 +263,9 @@ class TkMsgCatalog < TkObject
         list << _get_eval_string(src, true) << ''
       end
     }
-    #number(tk_call_without_enc('::msgcat::mcmset', locale, list))
     number(ip_eval_without_enc("::msgcat::mcmset {#{locale}} {#{_get_eval_string(list)}}"))
   end
   def set_translation_list(locale, trans_list, enc='utf-8')
-    # trans_list ::= [ [src, trans], [src, trans], ... ]
     list = []
     trans_list.each{|src, trans|
       if trans && trans != None
@@ -295,9 +275,8 @@ class TkMsgCatalog < TkObject
         list << _get_eval_string(src, true) << ''
       end
     }
-    #nodyna <ID:eval-53> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1800> <EV COMPLEX (change-prone variables)>
     number(@namespace.eval{
-             #tk_call_without_enc('::msgcat::mcmset', locale, list)
              ip_eval_without_enc("::msgcat::mcmset {#{locale}} {#{_get_eval_string(list)}}")
            })
   end

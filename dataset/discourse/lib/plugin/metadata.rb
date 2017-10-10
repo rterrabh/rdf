@@ -1,4 +1,3 @@
-# loaded really early
 module Plugin; end
 
 class Plugin::Metadata
@@ -24,7 +23,7 @@ class Plugin::Metadata
       attribute = attribute.strip.gsub(/ /, '_').to_sym
 
       if FIELDS.include?(attribute)
-        #nodyna <ID:send-48> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-314> <SD COMPLEX (change-prone variables)>
         self.send("#{attribute}=", description.strip)
       end
     end

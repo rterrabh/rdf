@@ -1,8 +1,3 @@
-##
-# The LockSpecification comes from a lockfile (Gem::RequestSet::Lockfile).
-#
-# A LockSpecification's dependency information is pre-filled from the
-# lockfile.
 
 class Gem::Resolver::LockSpecification < Gem::Resolver::Specification
 
@@ -19,9 +14,6 @@ class Gem::Resolver::LockSpecification < Gem::Resolver::Specification
     @spec         = nil
   end
 
-  ##
-  # This is a null install as a locked specification is considered installed.
-  # +options+ are ignored.
 
   def install options = {}
     destination = options[:install_dir] || Gem.dir
@@ -34,8 +26,6 @@ class Gem::Resolver::LockSpecification < Gem::Resolver::Specification
     super
   end
 
-  ##
-  # Adds +dependency+ from the lockfile to this specification
 
   def add_dependency dependency # :nodoc:
     @dependencies << dependency
@@ -63,8 +53,6 @@ class Gem::Resolver::LockSpecification < Gem::Resolver::Specification
     end
   end
 
-  ##
-  # A specification constructed from the lockfile is returned
 
   def spec
     @spec ||= Gem::Specification.find { |spec|

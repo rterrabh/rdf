@@ -1,67 +1,6 @@
 require 'active_support/core_ext/hash/indifferent_access'
 
 module ActiveRecord
-  # Store gives you a thin wrapper around serialize for the purpose of storing hashes in a single column.
-  # It's like a simple key/value store baked into your record when you don't care about being able to
-  # query that store outside the context of a single record.
-  #
-  # You can then declare accessors to this store that are then accessible just like any other attribute
-  # of the model. This is very helpful for easily exposing store keys to a form or elsewhere that's
-  # already built around just accessing attributes on the model.
-  #
-  # Make sure that you declare the database column used for the serialized store as a text, so there's
-  # plenty of room.
-  #
-  # You can set custom coder to encode/decode your serialized attributes to/from different formats.
-  # JSON, YAML, Marshal are supported out of the box. Generally it can be any wrapper that provides +load+ and +dump+.
-  #
-  # NOTE - If you are using PostgreSQL specific columns like +hstore+ or +json+ there is no need for
-  # the serialization provided by +store+. Simply use +store_accessor+ instead to generate
-  # the accessor methods. Be aware that these columns use a string keyed hash and do not allow access
-  # using a symbol.
-  #
-  # Examples:
-  #
-  #   class User < ActiveRecord::Base
-  #     store :settings, accessors: [ :color, :homepage ], coder: JSON
-  #   end
-  #
-  #   u = User.new(color: 'black', homepage: '37signals.com')
-  #   u.color                          # Accessor stored attribute
-  #   u.settings[:country] = 'Denmark' # Any attribute, even if not specified with an accessor
-  #
-  #   # There is no difference between strings and symbols for accessing custom attributes
-  #   u.settings[:country]  # => 'Denmark'
-  #   u.settings['country'] # => 'Denmark'
-  #
-  #   # Add additional accessors to an existing store through store_accessor
-  #   class SuperUser < User
-  #     store_accessor :settings, :privileges, :servants
-  #   end
-  #
-  # The stored attribute names can be retrieved using +stored_attributes+.
-  #
-  #   User.stored_attributes[:settings] # [:color, :homepage]
-  #
-  # == Overwriting default accessors
-  #
-  # All stored values are automatically available through accessors on the Active Record
-  # object, but sometimes you want to specialize this behavior. This can be done by overwriting
-  # the default accessors (using the same name as the attribute) and calling <tt>super</tt>
-  # to actually change things.
-  #
-  #   class Song < ActiveRecord::Base
-  #     # Uses a stored integer to hold the volume adjustment of the song
-  #     store :settings, accessors: [:volume_adjustment]
-  #
-  #     def volume_adjustment=(decibels)
-  #       super(decibels.to_i)
-  #     end
-  #
-  #     def volume_adjustment
-  #       super.to_i
-  #     end
-  #   end
   module Store
     extend ActiveSupport::Concern
 
@@ -80,22 +19,21 @@ module ActiveRecord
       def store_accessor(store_attribute, *keys)
         keys = keys.flatten
 
+        #nodyna <module_eval-924> <not yet classified>
         _store_accessors_module.module_eval do
           keys.each do |key|
-            #nodyna <ID:define_method-36> <DM COMPLEX (array)>
+            #nodyna <define_method-925> <DM COMPLEX (array)>
             define_method("#{key}=") do |value|
               write_store_attribute(store_attribute, key, value)
             end
 
-            #nodyna <ID:define_method-37> <DM COMPLEX (array)>
+            #nodyna <define_method-926> <DM COMPLEX (array)>
             define_method(key) do
               read_store_attribute(store_attribute, key)
             end
           end
         end
 
-        # assign new store attribute and create new hash to ensure that each class in the hierarchy
-        # has its own hash of stored attributes.
         self.local_stored_attributes ||= {}
         self.local_stored_attributes[store_attribute] ||= []
         self.local_stored_attributes[store_attribute] |= keys
@@ -137,23 +75,23 @@ module ActiveRecord
       class HashAccessor # :nodoc:
         def self.read(object, attribute, key)
           prepare(object, attribute)
-          #nodyna <ID:send-208> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-927> <SD COMPLEX (change-prone variables)>
           object.public_send(attribute)[key]
         end
 
         def self.write(object, attribute, key, value)
           prepare(object, attribute)
           if value != read(object, attribute, key)
-            #nodyna <ID:send-209> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-928> <SD COMPLEX (change-prone variables)>
             object.public_send :"#{attribute}_will_change!"
-            #nodyna <ID:send-210> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-929> <SD COMPLEX (change-prone variables)>
             object.public_send(attribute)[key] = value
           end
         end
 
         def self.prepare(object, attribute)
-          #nodyna <ID:send-211> <SD COMPLEX (change-prone variables)>
-          #nodyna <ID:send-211> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-930> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-931> <SD COMPLEX (change-prone variables)>
           object.public_send :"#{attribute}=", {} unless object.send(attribute)
         end
       end
@@ -170,11 +108,11 @@ module ActiveRecord
 
       class IndifferentHashAccessor < ActiveRecord::Store::HashAccessor # :nodoc:
         def self.prepare(object, store_attribute)
-          #nodyna <ID:send-212> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-932> <SD COMPLEX (change-prone variables)>
           attribute = object.send(store_attribute)
           unless attribute.is_a?(ActiveSupport::HashWithIndifferentAccess)
             attribute = IndifferentCoder.as_indifferent_hash(attribute)
-            #nodyna <ID:send-213> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-933> <SD COMPLEX (change-prone variables)>
             object.send :"#{store_attribute}=", attribute
           end
           attribute

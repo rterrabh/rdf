@@ -6,9 +6,6 @@ require 'rexml/attlistdecl'
 require 'rexml/xmltokens'
 
 module REXML
-  # Represents an XML DOCTYPE declaration; that is, the contents of <!DOCTYPE
-  # ... >.  DOCTYPES can be used to declare the DTD of a document, as well as
-  # being used to declare entities used in the document.
   class DocType < Parent
     include XMLTokens
     START = "<!DOCTYPE"
@@ -22,22 +19,8 @@ module REXML
       "apos"=>EntityConst::APOS
     }
 
-    # name is the name of the doctype
-    # external_id is the referenced DTD, if given
     attr_reader :name, :external_id, :entities, :namespaces
 
-    # Constructor
-    #
-    #   dt = DocType.new( 'foo', '-//I/Hate/External/IDs' )
-    #   # <!DOCTYPE foo '-//I/Hate/External/IDs'>
-    #   dt = DocType.new( doctype_to_clone )
-    #   # Incomplete.  Shallow clone of doctype
-    #
-    # +Note+ that the constructor:
-    #
-    #  Doctype.new( Source.new( "<!DOCTYPE foo 'bar'>" ) )
-    #
-    # is _deprecated_.  Do not use it.  It will probably disappear.
     def initialize( first, parent=nil )
       @entities = DEFAULT_ENTITIES
       @long_name = @uri = nil
@@ -95,16 +78,6 @@ module REXML
       DocType.new self
     end
 
-    # output::
-    #   Where to write the string
-    # indent::
-    #   An integer.  If -1, no indentation will be used; otherwise, the
-    #   indentation will be this number of spaces, and children will be
-    #   indented an additional amount.
-    # transitive::
-    #   Ignored
-    # ie_hack::
-    #   Ignored
     def write( output, indent=0, transitive=false, ie_hack=false )
       f = REXML::Formatters::Default.new
       indent( output, indent )
@@ -139,10 +112,6 @@ module REXML
       @entities[ child.name ] = child if child.kind_of? Entity
     end
 
-    # This method retrieves the public identifier identifying the document's
-    # DTD.
-    #
-    # Method contributed by Henrik Martensson
     def public
       case @external_id
       when "SYSTEM"
@@ -152,9 +121,6 @@ module REXML
       end
     end
 
-    # This method retrieves the system identifier identifying the document's DTD
-    #
-    # Method contributed by Henrik Martensson
     def system
       case @external_id
       when "SYSTEM"
@@ -164,19 +130,10 @@ module REXML
       end
     end
 
-    # This method returns a list of notations that have been declared in the
-    # _internal_ DTD subset. Notations in the external DTD subset are not
-    # listed.
-    #
-    # Method contributed by Henrik Martensson
     def notations
       children().select {|node| node.kind_of?(REXML::NotationDecl)}
     end
 
-    # Retrieves a named notation. Only notations declared in the internal
-    # DTD subset can be retrieved.
-    #
-    # Method contributed by Henrik Martensson
     def notation(name)
       notations.find { |notation_decl|
         notation_decl.name == name
@@ -185,7 +142,6 @@ module REXML
 
     private
 
-    # Method contributed by Henrik Martensson
     def strip_quotes(quoted_string)
       quoted_string =~ /^[\'\"].*[\'\"]$/ ?
         quoted_string[1, quoted_string.length-2] :
@@ -193,12 +149,7 @@ module REXML
     end
   end
 
-  # We don't really handle any of these since we're not a validating
-  # parser, so we can be pretty dumb about them.  All we need to be able
-  # to do is spew them back out on a write()
 
-  # This is an abstract class.  You never use this directly; it serves as a
-  # parent class for the specific declarations.
   class Declaration < Child
     def initialize src
       super()
@@ -209,9 +160,6 @@ module REXML
       @string+'>'
     end
 
-    # == DEPRECATED
-    # See REXML::Formatters
-    #
     def write( output, indent )
       output << to_s
     end
@@ -259,9 +207,6 @@ module REXML
       output << to_s
     end
 
-    # This method retrieves the name of the notation.
-    #
-    # Method contributed by Henrik Martensson
     def name
       @name
     end

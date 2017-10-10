@@ -1,5 +1,3 @@
-# This file requires the implementations of ruby core's custom objects for
-# serialisation/deserialisation.
 
 require 'json/add/date'
 require 'json/add/date_time'

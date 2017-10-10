@@ -36,7 +36,6 @@ class Ffmpeg < Formula
 
   depends_on "pkg-config" => :build
 
-  # manpages won't be built without texi2html
   depends_on "texi2html" => :build
   depends_on "yasm" => :build
 
@@ -124,24 +123,16 @@ class Ffmpeg < Formula
       args << "--extra-cflags=" + `pkg-config --cflags libopenjpeg`.chomp
     end
 
-    # These librares are GPL-incompatible, and require ffmpeg be built with
-    # the "--enable-nonfree" flag, which produces unredistributable libraries
     if %w[faac fdk-aac openssl].any? { |f| build.with? f }
       args << "--enable-nonfree"
     end
 
-    # A bug in a dispatch header on 10.10, included via CoreFoundation,
-    # prevents GCC from building VDA support. GCC has no problems on
-    # 10.9 and earlier.
-    # See: https://github.com/Homebrew/homebrew/issues/33741
     if MacOS.version < :yosemite || ENV.compiler == :clang
       args << "--enable-vda"
     else
       args << "--disable-vda"
     end
 
-    # For 32-bit compilation under gcc 4.2, see:
-    # https://trac.macports.org/ticket/20938#comment:22
     ENV.append_to_cflags "-mdynamic-no-pic" if Hardware.is_32_bit? && Hardware::CPU.intel? && ENV.compiler == :clang
 
     system "./configure", *args
@@ -181,7 +172,6 @@ class Ffmpeg < Formula
   end
 
   test do
-    # Create an example mp4 file
     system "#{bin}/ffmpeg", "-y", "-filter_complex",
         "testsrc=rate=1:duration=1", "#{testpath}/video.mp4"
     assert (testpath/"video.mp4").exist?

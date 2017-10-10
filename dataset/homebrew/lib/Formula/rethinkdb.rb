@@ -24,8 +24,6 @@ class Rethinkdb < Formula
   def install
     args = ["--prefix=#{prefix}"]
 
-    # rethinkdb requires that protobuf be linked against libc++
-    # but brew's protobuf is sometimes linked against libstdc++
     args += ["--fetch", "protobuf"]
 
     system "./configure", *args

@@ -6,9 +6,8 @@ module Spree
 
       before_action :find_order, except: [:create, :mine, :current, :index, :update]
 
-      # Dynamically defines our stores checkout steps to ensure we check authorization on each step.
       Spree::Order.checkout_steps.keys.each do |step|
-        #nodyna <ID:define_method-1> <DM COMPLEX (array)>
+        #nodyna <define_method-2406> <DM COMPLEX (array)>
         define_method step do
           find_order
           authorize! :update, @order, params[:token]

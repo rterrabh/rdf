@@ -7,7 +7,6 @@ class PostAnalyzer
     @topic_id = topic_id
   end
 
-  # What we use to cook posts
   def cook(*args)
     cooked = PrettyText.cook(*args)
 
@@ -20,7 +19,6 @@ class PostAnalyzer
     cooked
   end
 
-  # How many images are present in the post
   def image_count
     return 0 unless @raw.present?
 
@@ -32,7 +30,6 @@ class PostAnalyzer
     end.count
   end
 
-  # How many attachments are present in the post
   def attachment_count
     return 0 unless @raw.present?
 
@@ -45,7 +42,6 @@ class PostAnalyzer
     return [] if @raw.blank?
     return @raw_mentions if @raw_mentions.present?
 
-    # strip quotes, code blocks and oneboxes
     cooked_stripped = cooked_document
     cooked_stripped.css("aside.quote").remove
     cooked_stripped.css("pre").remove
@@ -56,13 +52,11 @@ class PostAnalyzer
     @raw_mentions = results.uniq.map { |un| un.first.downcase.gsub!(/^@/, '') }
   end
 
-  # from rack ... compat with ruby 2.2
   def self.parse_uri_rfc2396(uri)
     @parser ||= defined?(URI::RFC2396_Parser) ? URI::RFC2396_Parser.new : URI
     @parser.parse(uri)
   end
 
-  # Count how many hosts are linked in the post
   def linked_hosts
     return {} if raw_links.blank?
     return @linked_hosts if @linked_hosts.present?
@@ -75,7 +69,6 @@ class PostAnalyzer
         host = uri.host
         @linked_hosts[host] ||= 1 unless host.nil?
       rescue URI::InvalidURIError
-        # An invalid URI does not count as a raw link.
         next
       end
     end
@@ -83,7 +76,6 @@ class PostAnalyzer
     @linked_hosts
   end
 
-  # Returns an array of all links in a post excluding mentions
   def raw_links
     return [] unless @raw.present?
     return @raw_links if @raw_links.present?
@@ -91,7 +83,6 @@ class PostAnalyzer
     @raw_links = []
 
     cooked_document.search("a").each do |l|
-      # Don't include @mentions in the link count
       next if l.attributes['href'].nil? || link_is_a_mention?(l)
       url = l.attributes['href'].to_s
       @raw_links << url
@@ -100,7 +91,6 @@ class PostAnalyzer
     @raw_links
   end
 
-  # How many links are present in the post
   def link_count
     raw_links.size
   end

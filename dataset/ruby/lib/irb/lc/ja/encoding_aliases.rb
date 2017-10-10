@@ -1,4 +1,3 @@
-# :stopdoc:
 module IRB
   class Locale
     @@legacy_encoding_alias_map = {
@@ -7,4 +6,3 @@ module IRB
     }.freeze
   end
 end
-# :startdoc:

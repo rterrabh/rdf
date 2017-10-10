@@ -35,13 +35,11 @@ module Spree
           expect(order.reload.state).to eq('complete')
         end
 
-        # Regression for #4768
         it "doesnt process the same payment twice" do
           expect(Spree::LogEntry.where(source: order.payments.first).count).to eq(1)
         end
       end
 
-      # Regression test for #3233
       context "with a backend payment method" do
         before do
           @payment_method = create(:check_payment_method, :display_on => "back_end")

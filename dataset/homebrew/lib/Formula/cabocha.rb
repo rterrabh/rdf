@@ -13,8 +13,6 @@ class Cabocha < Formula
   depends_on "crf++"
   depends_on "mecab"
 
-  # To see which dictionaries are available, run:
-  #     ls `mecab-config --libs-only-L`/mecab/dic/
   depends_on "mecab-ipadic" => :recommended
   depends_on "mecab-jumandic" => :optional
   depends_on "mecab-unidic" => :optional

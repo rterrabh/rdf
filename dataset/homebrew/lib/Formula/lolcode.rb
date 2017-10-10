@@ -9,7 +9,6 @@ class Lolcode < Formula
     sha1 "28d703003ff61e29c2f6c9f9bee09e758aa1a00a" => :mountain_lion
   end
 
-  # note: 0.10.* releases are stable versions, 0.11.* are dev ones
   url "https://github.com/justinmeza/lci/archive/v0.11.2.tar.gz"
   sha256 "cb1065936d3a7463928dcddfc345a8d7d8602678394efc0e54981f9dd98c27d2"
 
@@ -20,7 +19,6 @@ class Lolcode < Formula
   def install
     system "cmake", "."
     system "make"
-    # Don't use `make install` for this one file
     bin.install "lci"
   end
 

@@ -14,7 +14,6 @@ class Fio < Formula
 
   def install
     system "./configure"
-    # fio's CFLAGS passes vital stuff around, and crushing it will break the build
     system "make", "prefix=#{prefix}",
                    "mandir=#{man}",
                    "sharedir=#{share}",

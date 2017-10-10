@@ -8,11 +8,9 @@ class Gbdfed < Formula
   depends_on "pkg-config" => :build
   depends_on "gtk+"
 
-  # Fixes compilation error with gtk+ per note on the project homepage.
   patch :DATA
 
   def install
-    # BDF_NO_X11 has to be defined to avoid X11 headers from being included
     ENV["CPPFLAGS"] = "-DBDF_NO_X11"
     system "./configure", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}", "--without-x"

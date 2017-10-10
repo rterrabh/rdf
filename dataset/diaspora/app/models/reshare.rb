@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Reshare < Post
 
@@ -80,7 +77,6 @@ class Reshare < Post
   def after_parse
     if root.blank?
       self.root = Diaspora::Fetcher::Single.find_or_fetch_from_remote root_guid, @root_diaspora_id do |fetched_post, author|
-        # why do we check this?
         if fetched_post.diaspora_handle != author.diaspora_handle
           raise Diaspora::PostNotFetchable, "Diaspora ID (#{fetched_post.diaspora_handle}) in the root does not match the Diaspora ID (#{author.diaspora_handle}) specified in the reshare!"
         end

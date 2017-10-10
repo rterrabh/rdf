@@ -1,16 +1,9 @@
-#
-#  TkImg - format 'Raw Data'
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/tkimg/setup.rb'
 
-# TkPackage.require('img::raw', '1.4')
 TkPackage.require('img::raw')
 
 module Tk

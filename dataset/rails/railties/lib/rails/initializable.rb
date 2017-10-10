@@ -27,7 +27,7 @@ module Rails
       end
 
       def run(*args)
-        #nodyna <ID:instance_exec-21> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1176> <IEX COMPLEX (block with parameters)>
         @context.instance_exec(*args, &block)
       end
 

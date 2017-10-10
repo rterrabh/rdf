@@ -1,9 +1,6 @@
 require "cgi"
 
 module Rails
-  # This module helps build the runtime properties used to display in the
-  # Rails::InfoController responses. Including the active Rails version, Ruby
-  # version, Rack version, and so on.
   module Info
     mattr_accessor :properties
     class << (@@properties = [])
@@ -53,17 +50,14 @@ module Rails
       end
     end
 
-    # The Rails version.
     property 'Rails version' do
       Rails.version.to_s
     end
 
-    # The Ruby version and platform, e.g. "2.0.0-p247 (x86_64-darwin12.4.0)".
     property 'Ruby version' do
       "#{RUBY_VERSION}-p#{RUBY_PATCHLEVEL} (#{RUBY_PLATFORM})"
     end
 
-    # The RubyGems version, if it's installed.
     property 'RubyGems version' do
       Gem::RubyGemsVersion
     end
@@ -80,17 +74,14 @@ module Rails
       Rails.configuration.middleware.map(&:inspect)
     end
 
-    # The application's location on the filesystem.
     property 'Application root' do
       File.expand_path(Rails.root)
     end
 
-    # The current Rails environment (development, test, or production).
     property 'Environment' do
       Rails.env
     end
 
-    # The name of the database adapter for the current environment.
     property 'Database adapter' do
       ActiveRecord::Base.configurations[Rails.env]['adapter']
     end

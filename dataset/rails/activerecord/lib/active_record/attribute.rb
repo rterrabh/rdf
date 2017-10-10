@@ -24,8 +24,6 @@ module ActiveRecord
 
     attr_reader :name, :value_before_type_cast, :type
 
-    # This method should not be called directly.
-    # Use #from_database or #from_user
     def initialize(name, value_before_type_cast, type)
       @name = name
       @value_before_type_cast = value_before_type_cast
@@ -33,7 +31,6 @@ module ActiveRecord
     end
 
     def value
-      # `defined?` is cheaper than `||=` when we get back falsy values
       @value = original_value unless defined?(@value)
       @value
     end

@@ -37,7 +37,6 @@ class Jmeter < Formula
   option "with-plugins", "add JMeterPlugins Standard, Extras, ExtrasLibs, WebDriver and Hadoop"
 
   def install
-    # Remove windows files
     rm_f Dir["bin/*.bat"]
     prefix.install_metafiles
     libexec.install Dir["*"]

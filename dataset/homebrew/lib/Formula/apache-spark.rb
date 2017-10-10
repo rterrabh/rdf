@@ -7,7 +7,6 @@ class ApacheSpark < Formula
   sha256 "9cde95349cccfeb99643d2dadb63f8e88ac355e0038aae7d5029142ce94ae370"
 
   def install
-    # Rename beeline to distinguish it from hive's beeline
     mv "bin/beeline", "bin/spark-beeline"
 
     rm_f Dir["bin/*.cmd"]

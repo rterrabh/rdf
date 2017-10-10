@@ -47,7 +47,6 @@ class Libxml2 < Formula
 
     if build.with? "python"
       cd "python" do
-        # We need to insert our include dir first
         inreplace "setup.py", "includes_dir = [", "includes_dir = ['#{include}', '#{MacOS.sdk_path}/usr/include',"
         system "python", "setup.py", "install", "--prefix=#{prefix}"
       end
@@ -56,7 +55,6 @@ class Libxml2 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <libxml/tree.h>
 
       int main()
       {

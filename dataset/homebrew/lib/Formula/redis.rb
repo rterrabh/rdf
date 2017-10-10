@@ -21,7 +21,6 @@ class Redis < Formula
   end
 
   def install
-    # Architecture isn't detected correctly on 32bit Snow Leopard without help
     ENV["OBJARCH"] = "-arch #{MacOS.preferred_arch}"
 
     args = %W[
@@ -33,7 +32,6 @@ class Redis < Formula
 
     %w[run db/redis log].each { |p| (var+p).mkpath }
 
-    # Fix up default conf file to match our paths
     inreplace "redis.conf" do |s|
       s.gsub! "/var/run/redis.pid", "#{var}/run/redis.pid"
       s.gsub! "dir ./", "dir #{var}/db/redis/"

@@ -1,16 +1,7 @@
-#
-#  tkextlib/tcllib/tooltip.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Provides tooltips, a small text message that is displayed when the
-#     mouse hovers over a widget.
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('tooltip', '1.1')
 TkPackage.require('tooltip')
 
 module Tk::Tcllib

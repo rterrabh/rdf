@@ -8,8 +8,6 @@ class Pius < Formula
 
   def install
     ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python2.7/site-packages"
-    # Replace hardcoded gpg path (WONTFIX):
-    # https://sourceforge.net/p/pgpius/bugs/12/
     inreplace "libpius/constants.py", "/usr/bin/gpg", "#{HOMEBREW_PREFIX}/bin/gpg"
     system "python", *Language::Python.setup_install_args(libexec)
     bin.install Dir["#{libexec}/bin/*"]

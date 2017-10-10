@@ -1,6 +1,3 @@
-#
-# tk/menu.rb : treat menu and menubutton
-#
 require 'tk'
 require 'tk/itemconfig'
 require 'tk/menuspec'
@@ -53,14 +50,6 @@ class Tk::Menu<TkWindow
   WidgetClassName = 'Menu'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  #def create_self(keys)
-  #  if keys and keys != None
-  #    tk_call_without_enc('menu', @path, *hash_kv(keys, true))
-  #  else
-  #    tk_call_without_enc('menu', @path)
-  #  end
-  #end
-  #private :create_self
 
   def __strval_optkeys
     super() << 'selectcolor' << 'title'
@@ -91,7 +80,6 @@ class Tk::Menu<TkWindow
   end
 
   def tagid(id)
-    #id.to_s
     _get_eval_string(id)
   end
 
@@ -218,13 +206,11 @@ class Tk::Menu<TkWindow
       _fromUTF8(tk_send_without_enc('entrycget',
                                     _get_eval_enc_str(index), "-#{key}"))
     when 'font', 'kanjifont'
-      #fnt = tk_tcl2ruby(tk_send('entrycget', index, "-#{key}"))
       fnt = tk_tcl2ruby(_fromUTF8(tk_send_without_enc('entrycget', _get_eval_enc_str(index), '-font')))
       unless fnt.kind_of?(TkFont)
         fnt = tagfontobj(index, fnt)
       end
       if key.to_s == 'kanjifont' && JAPANIZED_TK && TK_VERSION =~ /^4\.*/
-        # obsolete; just for compatibility
         fnt.kanji_font
       else
         fnt
@@ -386,15 +372,11 @@ class Tk::Menu<TkWindow
 =end
 end
 
-#TkMenu = Tk::Menu unless Object.const_defined? :TkMenu
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Menu, :TkMenu)
 Tk.__set_loaded_toplevel_aliases__('tk/menu.rb', :Tk, Tk::Menu, :TkMenu)
 
 
 module Tk::Menu::TkInternalFunction; end
 class << Tk::Menu::TkInternalFunction
-  # These methods calls internal functions of Tcl/Tk.
-  # So, They may not work on your Tcl/Tk.
   def next_menu(menu, dir='next')
     dir = dir.to_s
     case dir
@@ -408,8 +390,6 @@ class << Tk::Menu::TkInternalFunction
   end
 
   def next_entry(menu, delta)
-    # delta is increment value of entry index.
-    # For example, +1 denotes 'next entry' and -1 denotes 'previous entry'.
     Tk.tk_call('::tk::MenuNextEntry', menu, delta)
   end
 end
@@ -424,9 +404,6 @@ class Tk::MenuClone<Tk::Menu
       widgetname = keys.delete('widgetname')
       type = keys.delete('type'); type = None unless type
     end
-    #unless parent.kind_of?(TkMenu)
-    #  fail ArgumentError, "parent must be TkMenu"
-    #end
     @parent = parent
     install_win(@parent.path, widgetname)
     tk_call_without_enc(@parent.path, 'clone', @path, type)
@@ -469,9 +446,6 @@ class Tk::MenuClone<Tk::Menu
   end
 end
 Tk::CloneMenu = Tk::MenuClone
-#TkMenuClone = Tk::MenuClone unless Object.const_defined? :TkMenuClone
-#TkCloneMenu = Tk::CloneMenu unless Object.const_defined? :TkCloneMenu
-#Tk.__set_toplevel_aliases__(:Tk, Tk::MenuClone, :TkMenuClone, :TkCloneMenu)
 Tk.__set_loaded_toplevel_aliases__('tk/menu.rb', :Tk, Tk::MenuClone,
                                    :TkMenuClone, :TkCloneMenu)
 
@@ -481,12 +455,7 @@ module Tk::SystemMenu
       keys = _symbolkey2str(parent)
       parent = keys.delete('parent')
     end
-    #unless parent.kind_of? TkMenu
-    #  fail ArgumentError, "parent must be a TkMenu object"
-    #end
-    # @path = Kernel.format("%s.%s", parent.path, self.class::SYSMENU_NAME)
     @path = parent.path + '.' + self.class::SYSMENU_NAME
-    #TkComm::Tk_WINDOWS[@path] = self
     TkCore::INTERP.tk_windows[@path] = self
     if self.method(:create_self).arity == 0
       p 'create_self has no arg' if $DEBUG
@@ -502,34 +471,25 @@ TkSystemMenu = Tk::SystemMenu
 
 
 class Tk::SysMenu_Help<Tk::Menu
-  # for all platform
   include Tk::SystemMenu
   SYSMENU_NAME = 'help'
 end
-#TkSysMenu_Help = Tk::SysMenu_Help unless Object.const_defined? :TkSysMenu_Help
-#Tk.__set_toplevel_aliases__(:Tk, Tk::SysMenu_Help, :TkSysMenu_Help)
 Tk.__set_loaded_toplevel_aliases__('tk/menu.rb', :Tk, Tk::SysMenu_Help,
                                    :TkSysMenu_Help)
 
 
 class Tk::SysMenu_System<Tk::Menu
-  # for Windows
   include Tk::SystemMenu
   SYSMENU_NAME = 'system'
 end
-#TkSysMenu_System = Tk::SysMenu_System unless Object.const_defined? :TkSysMenu_System
-#Tk.__set_toplevel_aliases__(:Tk, Tk::SysMenu_System, :TkSysMenu_System)
 Tk.__set_loaded_toplevel_aliases__('tk/menu.rb', :Tk, Tk::SysMenu_System,
                                    :TkSysMenu_System)
 
 
 class Tk::SysMenu_Apple<Tk::Menu
-  # for Machintosh
   include Tk::SystemMenu
   SYSMENU_NAME = 'apple'
 end
-#TkSysMenu_Apple = Tk::SysMenu_Apple unless Object.const_defined? :TkSysMenu_Apple
-#Tk.__set_toplevel_aliases__(:Tk, Tk::SysMenu_Apple, :TkSysMenu_Apple)
 Tk.__set_loaded_toplevel_aliases__('tk/menu.rb', :Tk, Tk::SysMenu_Apple,
                                    :TkSysMenu_Apple)
 
@@ -541,7 +501,6 @@ class Tk::Menubutton<Tk::Label
   def create_self(keys)
     if keys and keys != None
       unless TkConfigMethod.__IGNORE_UNKNOWN_CONFIGURE_OPTION__
-        # tk_call_without_enc('menubutton', @path, *hash_kv(keys, true))
         tk_call_without_enc(self.class::TkCommandNames[0], @path,
                             *hash_kv(keys, true))
       else
@@ -559,7 +518,6 @@ class Tk::Menubutton<Tk::Label
         end
       end
     else
-      # tk_call_without_enc('menubutton', @path)
       tk_call_without_enc(self.class::TkCommandNames[0], @path)
     end
   end
@@ -572,9 +530,6 @@ class Tk::Menubutton<Tk::Label
 
 end
 Tk::MenuButton = Tk::Menubutton
-#TkMenubutton = Tk::Menubutton unless Object.const_defined? :TkMenubutton
-#TkMenuButton = Tk::MenuButton unless Object.const_defined? :TkMenuButton
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Menubutton, :TkMenubutton, :TkMenuButton)
 Tk.__set_loaded_toplevel_aliases__('tk/menu.rb', :Tk, Tk::Menubutton,
                                    :TkMenubutton, :TkMenuButton)
 
@@ -585,20 +540,11 @@ class Tk::OptionMenubutton<Tk::Menubutton
   class OptionMenu<TkMenu
     def initialize(path)  #==> return value of tk_optionMenu
       @path = path
-      #TkComm::Tk_WINDOWS[@path] = self
       TkCore::INTERP.tk_windows[@path] = self
     end
   end
 
   def initialize(*args)
-    # args :: [parent,] [var,] [value[, ...],] [keys]
-    #    parent --> TkWindow or nil
-    #    var    --> TkVariable or nil
-    #    keys   --> Hash
-    #       keys[:parent] or keys['parent']     --> parent
-    #       keys[:variable] or keys['variable'] --> var
-    #       keys[:values] or keys['values']     --> value, ...
-    #       other Hash keys are menubutton options
     keys = {}
     keys = args.pop if args[-1].kind_of?(Hash)
     keys = _symbolkey2str(keys)
@@ -710,9 +656,5 @@ class Tk::OptionMenubutton<Tk::Menubutton
 end
 
 Tk::OptionMenuButton = Tk::OptionMenubutton
-#TkOptionMenubutton = Tk::OptionMenubutton unless Object.const_defined? :TkOptionMenubutton
-#TkOptionMenuButton = Tk::OptionMenuButton unless Object.const_defined? :TkOptionMenuButton
-#Tk.__set_toplevel_aliases__(:Tk, Tk::OptionMenubutton,
-#                            :TkOptionMenubutton, :TkOptionMenuButton)
 Tk.__set_loaded_toplevel_aliases__('tk/menu.rb', :Tk, Tk::OptionMenubutton,
                                    :TkOptionMenubutton, :TkOptionMenuButton)

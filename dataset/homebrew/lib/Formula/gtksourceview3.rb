@@ -23,7 +23,6 @@ class Gtksourceview3 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gtksourceview/gtksourceview.h>
 
       int main(int argc, char *argv[]) {
         gchar *text = gtk_source_utils_unescape_search_text("hello world");

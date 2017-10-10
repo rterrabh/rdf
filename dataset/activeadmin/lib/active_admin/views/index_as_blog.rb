@@ -1,88 +1,19 @@
 module ActiveAdmin
   module Views
 
-    # # Index as Blog
-    #
-    # Render your index page as a set of posts. The post has two main options:
-    # title and body.
-    #
-    # ```ruby
-    # index as: :blog do
-    #   title :my_title # Calls #my_title on each resource
-    #   body  :my_body  # Calls #my_body on each resource
-    # end
-    # ```
-    #
-    # ## Post Title
-    #
-    # The title is the content that will be rendered within a link to the
-    # resource. There are two main ways to set the content for the title
-    #
-    # First, you can pass in a method to be called on your resource. For example:
-    #
-    # ```ruby
-    # index as: :blog do
-    #   title :a_method_to_call
-    # end
-    # ```
-    #
-    # Second, you can pass a block to the tile option which will then be
-    # used as the contents fo the title. The resource being rendered
-    # is passed in to the block. For Example:
-    #
-    # ```ruby
-    # index as: :blog do
-    #   title do |post|
-    #     span post.title,      class: 'title'
-    #     span post.created_at, class: 'created_at'
-    #   end
-    # end
-    # ```
-    #
-    # ## Post Body
-    #
-    # The body is rendered underneath the title of each post. The same two
-    # style of options work as the Post Title above.
-    #
-    # Call a method on the resource as the body:
-    #
-    # ```ruby
-    # index as: :blog do
-    #   title :my_title
-    #   body :my_body
-    # end
-    # ```
-    #
-    # Or, render a block as the body:
-    #
-    # ```ruby
-    # index as: :blog do
-    #   title :my_title
-    #   body do |post|
-    #     div truncate post.title
-    #     div class: 'meta' do
-    #       span "Post in #{post.categories.join(', ')}"
-    #     end
-    #   end
-    # end
-    # ```
-    #
     class IndexAsBlog < ActiveAdmin::Component
 
       def build(page_presenter, collection)
         @page_presenter = page_presenter
         @collection = collection
 
-        # Call the block passed in. This will set the
-        # title and body methods
-        #nodyna <ID:instance_exec-18> <IEX COMPLEX (block without parameters)>
+        #nodyna <instance_exec-61> <IEX COMPLEX (block without parameters)>
         instance_exec &page_presenter.block if page_presenter.block
 
         add_class "index"
         build_posts
       end
 
-      # Setter method for the configuration of the title
       def title(method = nil, &block)
         if block_given? || method
           @title = block_given? ? block : method
@@ -91,8 +22,6 @@ module ActiveAdmin
       end
 
 
-      # Setter method for the configuration of the body
-      #
       def body(method = nil, &block)
         if block_given? || method
           @body = block_given? ? block : method
@@ -146,10 +75,10 @@ module ActiveAdmin
       def render_method_on_post_or_call_proc(post, proc)
         case proc
         when String, Symbol
-          #nodyna <ID:send-58> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-62> <SD COMPLEX (change-prone variables)>
           post.public_send proc
         else
-          #nodyna <ID:instance_exec-19> <IEX COMPLEX (block with parameters)>
+          #nodyna <instance_exec-63> <IEX COMPLEX (block with parameters)>
           instance_exec post, &proc
         end
       end

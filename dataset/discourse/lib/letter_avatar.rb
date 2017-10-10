@@ -1,9 +1,7 @@
 class LetterAvatar
 
-  # BUMP UP if avatar algorithm changes
   VERSION = 5
 
-  # CHANGE these values to support more pixel ratios
   FULLSIZE  = 120 * 3
   POINTSIZE = 280
 
@@ -113,12 +111,6 @@ class LetterAvatar
     end
   end
 
-  # palette of optimally disctinct colors
-  # cf. http://tools.medialab.sciences-po.fr/iwanthue/index.php
-  # parameters used:
-  #   - H: 0 - 360
-  #   - C: 0 - 2
-  #   - L: 0.75 - 1.5
   COLORS = [[198,125,40],
       [61,155,243],
       [74,243,75],

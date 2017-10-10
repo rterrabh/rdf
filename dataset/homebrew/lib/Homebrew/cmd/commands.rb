@@ -5,11 +5,9 @@ module Homebrew
       cmds += HOMEBREW_INTERNAL_COMMAND_ALIASES.keys if ARGV.include? "--include-aliases"
       puts_columns cmds.sort
     else
-      # Find commands in Homebrew/cmd
       puts "Built-in commands"
       puts_columns internal_commands
 
-      # Find commands in the path
       unless (exts = external_commands).empty?
         puts
         puts "External commands"

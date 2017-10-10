@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 module RakeHelpers
 
   def process_emails(csv, num_to_process, offset, test=true)
@@ -29,6 +26,7 @@ module RakeHelpers
         puts "#{n}: sending email to: #{backer_name} #{backer_email}" unless Rails.env == 'test'
         unless test
           i = EmailInviter.new(backer_email)
+          #nodyna <send-220> <not yet classified>
           i.send!
         end
       else

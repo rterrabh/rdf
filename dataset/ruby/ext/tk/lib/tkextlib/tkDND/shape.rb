@@ -1,17 +1,10 @@
-#
-#  tkextlib/tkDND/shape.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/tkDND/setup.rb'
 
-# TkPackage.require('Shape', '0.3')
 TkPackage.require('Shape')
 
 module Tk
@@ -50,7 +43,6 @@ module Tk
         alias xshape_version version
       end
 
-      ############################
 
       def shape_bounds(kind=nil)
         if kind

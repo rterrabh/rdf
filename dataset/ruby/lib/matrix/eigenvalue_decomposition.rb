@@ -1,24 +1,9 @@
 class Matrix
-  # Adapted from JAMA: http://math.nist.gov/javanumerics/jama/
 
-  # Eigenvalues and eigenvectors of a real matrix.
-  #
-  # Computes the eigenvalues and eigenvectors of a matrix A.
-  #
-  # If A is diagonalizable, this provides matrices V and D
-  # such that A = V*D*V.inv, where D is the diagonal matrix with entries
-  # equal to the eigenvalues and V is formed by the eigenvectors.
-  #
-  # If A is symmetric, then V is orthogonal and thus A = V*D*V.t
 
   class EigenvalueDecomposition
 
-    # Constructs the eigenvalue decomposition for a square matrix +A+
-    #
     def initialize(a)
-      # @d, @e: Arrays for internal storage of eigenvalues.
-      # @v: Array for internal storage of eigenvectors.
-      # @h: Array for internal storage of nonsymmetric Hessenberg form.
       raise TypeError, "Expected Matrix but got #{a.class}" unless a.is_a?(Matrix)
       @size = a.row_count
       @d = Array.new(@size, 0)
@@ -37,48 +22,36 @@ class Matrix
       end
     end
 
-    # Returns the eigenvector matrix +V+
-    #
     def eigenvector_matrix
-      #nodyna <ID:send-114> <SD COMPLEX (private methods)>
+      #nodyna <send-2004> <SD COMPLEX (private methods)>
       Matrix.send(:new, build_eigenvectors.transpose)
     end
     alias v eigenvector_matrix
 
-    # Returns the inverse of the eigenvector matrix +V+
-    #
     def eigenvector_matrix_inv
-      #nodyna <ID:send-115> <SD COMPLEX (private methods)>
+      #nodyna <send-2005> <SD COMPLEX (private methods)>
       r = Matrix.send(:new, build_eigenvectors)
       r = r.transpose.inverse unless @symmetric
       r
     end
     alias v_inv eigenvector_matrix_inv
 
-    # Returns the eigenvalues in an array
-    #
     def eigenvalues
       values = @d.dup
       @e.each_with_index{|imag, i| values[i] = Complex(values[i], imag) unless imag == 0}
       values
     end
 
-    # Returns an array of the eigenvectors
-    #
     def eigenvectors
-      #nodyna <ID:send-116> <SD COMPLEX (private methods)>
+      #nodyna <send-2006> <SD COMPLEX (private methods)>
       build_eigenvectors.map{|ev| Vector.send(:new, ev)}
     end
 
-    # Returns the block diagonal eigenvalue matrix +D+
-    #
     def eigenvalue_matrix
       Matrix.diagonal(*eigenvalues)
     end
     alias d eigenvalue_matrix
 
-    # Returns [eigenvector_matrix, eigenvalue_matrix, eigenvector_matrix_inv]
-    #
     def to_ary
       [v, d, v_inv]
     end
@@ -86,8 +59,6 @@ class Matrix
 
   private
     def build_eigenvectors
-      # JAMA stores complex eigenvectors in a strange way
-      # See http://web.archive.org/web/20111016032731/http://cio.nist.gov/esd/emaildir/lists/jama/msg01021.html
       @e.each_with_index.map do |imag, i|
         if imag == 0
           Array.new(@size){|j| @v[j][i]}
@@ -98,7 +69,6 @@ class Matrix
         end
       end
     end
-    # Complex scalar division.
 
     def cdiv(xr, xi, yr, yi)
       if (yr.abs > yi.abs)
@@ -113,24 +83,17 @@ class Matrix
     end
 
 
-    # Symmetric Householder reduction to tridiagonal form.
 
     def tridiagonalize
 
-      #  This is derived from the Algol procedures tred2 by
-      #  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
-      #  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
-      #  Fortran subroutine in EISPACK.
 
         @size.times do |j|
           @d[j] = @v[@size-1][j]
         end
 
-        # Householder reduction to tridiagonal form.
 
         (@size-1).downto(0+1) do |i|
 
-          # Scale to avoid under/overflow.
 
           scale = 0.0
           h = 0.0
@@ -146,7 +109,6 @@ class Matrix
             end
           else
 
-            # Generate Householder vector.
 
             i.times do |k|
               @d[k] /= scale
@@ -164,7 +126,6 @@ class Matrix
               @e[j] = 0.0
             end
 
-            # Apply similarity transformation to remaining columns.
 
             i.times do |j|
               f = @d[j]
@@ -198,7 +159,6 @@ class Matrix
           @d[i] = h
         end
 
-        # Accumulate transformations.
 
         0.upto(@size-1-1) do |i|
           @v[@size-1][i] = @v[i][i]
@@ -231,13 +191,8 @@ class Matrix
       end
 
 
-    # Symmetric tridiagonal QL algorithm.
 
     def diagonalize
-      #  This is derived from the Algol procedures tql2, by
-      #  Bowdler, Martin, Reinsch, and Wilkinson, Handbook for
-      #  Auto. Comp., Vol.ii-Linear Algebra, and the corresponding
-      #  Fortran subroutine in EISPACK.
 
       1.upto(@size-1) do |i|
         @e[i-1] = @e[i]
@@ -249,7 +204,6 @@ class Matrix
       eps = Float::EPSILON
       @size.times do |l|
 
-        # Find small subdiagonal element
 
         tst1 = [tst1, @d[l].abs + @e[l].abs].max
         m = l
@@ -260,15 +214,12 @@ class Matrix
           m+=1
         end
 
-        # If m == l, @d[l] is an eigenvalue,
-        # otherwise, iterate.
 
         if (m > l)
           iter = 0
           begin
             iter = iter + 1  # (Could check iteration count here.)
 
-            # Compute implicit shift
 
             g = @d[l]
             p = (@d[l+1] - g) / (2.0 * @e[l])
@@ -285,7 +236,6 @@ class Matrix
             end
             f += h
 
-            # Implicit QL transformation.
 
             p = @d[m]
             c = 1.0
@@ -307,7 +257,6 @@ class Matrix
               p = c * @d[i] - s * g
               @d[i+1] = h + s * (c * g + s * @d[i])
 
-              # Accumulate transformation.
 
               @size.times do |k|
                 h = @v[k][i+1]
@@ -319,7 +268,6 @@ class Matrix
             @e[l] = s * p
             @d[l] = c * p
 
-            # Check for convergence.
 
           end while (@e[l].abs > eps*tst1)
         end
@@ -327,7 +275,6 @@ class Matrix
         @e[l] = 0.0
       end
 
-      # Sort eigenvalues and corresponding vectors.
 
       0.upto(@size-2) do |i|
         k = i
@@ -350,20 +297,14 @@ class Matrix
       end
     end
 
-    # Nonsymmetric reduction to Hessenberg form.
 
     def reduce_to_hessenberg
-      #  This is derived from the Algol procedures orthes and ortran,
-      #  by Martin and Wilkinson, Handbook for Auto. Comp.,
-      #  Vol.ii-Linear Algebra, and the corresponding
-      #  Fortran subroutines in EISPACK.
 
       low = 0
       high = @size-1
 
       (low+1).upto(high-1) do |m|
 
-        # Scale column.
 
         scale = 0.0
         m.upto(high) do |i|
@@ -371,7 +312,6 @@ class Matrix
         end
         if (scale != 0.0)
 
-          # Compute Householder transformation.
 
           h = 0.0
           high.downto(m) do |i|
@@ -385,8 +325,6 @@ class Matrix
           h -= @ort[m] * g
           @ort[m] = @ort[m] - g
 
-          # Apply Householder similarity transformation
-          # @h = (I-u*u'/h)*@h*(I-u*u')/h)
 
           m.upto(@size-1) do |j|
             f = 0.0
@@ -414,7 +352,6 @@ class Matrix
         end
       end
 
-      # Accumulate transformations (Algol's ortran).
 
       @size.times do |i|
         @size.times do |j|
@@ -432,7 +369,6 @@ class Matrix
             m.upto(high) do |i|
               g += @ort[i] * @v[i][j]
             end
-            # Double division avoids possible underflow
             g = (g / @ort[m]) / @h[m][m-1]
             m.upto(high) do |i|
               @v[i][j] += g * @ort[i]
@@ -444,16 +380,10 @@ class Matrix
 
 
 
-    # Nonsymmetric reduction from Hessenberg to real Schur form.
 
     def hessenberg_to_real_schur
 
-      #  This is derived from the Algol procedure hqr2,
-      #  by Martin and Wilkinson, Handbook for Auto. Comp.,
-      #  Vol.ii-Linear Algebra, and the corresponding
-      #  Fortran subroutine in EISPACK.
 
-      # Initialize
 
       nn = @size
       n = nn-1
@@ -463,7 +393,6 @@ class Matrix
       exshift = 0.0
       p=q=r=s=z=0
 
-      # Store roots isolated by balanc and compute matrix norm
 
       norm = 0.0
       nn.times do |i|
@@ -476,12 +405,10 @@ class Matrix
         end
       end
 
-      # Outer loop over eigenvalue index
 
       iter = 0
       while (n >= low) do
 
-        # Look for single small sub-diagonal element
 
         l = n
         while (l > low) do
@@ -495,8 +422,6 @@ class Matrix
           l-=1
         end
 
-        # Check for convergence
-        # One root found
 
         if (l == n)
           @h[n][n] = @h[n][n] + exshift
@@ -505,7 +430,6 @@ class Matrix
           n-=1
           iter = 0
 
-        # Two roots found
 
         elsif (l == n-1)
           w = @h[n][n-1] * @h[n-1][n]
@@ -516,7 +440,6 @@ class Matrix
           @h[n-1][n-1] = @h[n-1][n-1] + exshift
           x = @h[n][n]
 
-          # Real pair
 
           if (q >= 0)
             if (p >= 0)
@@ -539,7 +462,6 @@ class Matrix
             p /= r
             q /= r
 
-            # Row modification
 
             (n-1).upto(nn-1) do |j|
               z = @h[n-1][j]
@@ -547,7 +469,6 @@ class Matrix
               @h[n][j] = q * @h[n][j] - p * z
             end
 
-            # Column modification
 
             0.upto(n) do |i|
               z = @h[i][n-1]
@@ -555,7 +476,6 @@ class Matrix
               @h[i][n] = q * @h[i][n] - p * z
             end
 
-            # Accumulate transformations
 
             low.upto(high) do |i|
               z = @v[i][n-1]
@@ -563,7 +483,6 @@ class Matrix
               @v[i][n] = q * @v[i][n] - p * z
             end
 
-          # Complex pair
 
           else
             @d[n-1] = x + p
@@ -574,11 +493,9 @@ class Matrix
           n -= 2
           iter = 0
 
-        # No convergence yet
 
         else
 
-          # Form shift
 
           x = @h[n][n]
           y = 0.0
@@ -588,7 +505,6 @@ class Matrix
             w = @h[n][n-1] * @h[n-1][n]
           end
 
-          # Wilkinson's original ad hoc shift
 
           if (iter == 10)
             exshift += x
@@ -600,7 +516,6 @@ class Matrix
             w = -0.4375 * s * s
           end
 
-          # MATLAB's new ad hoc shift
 
           if (iter == 30)
              s = (y - x) / 2.0
@@ -621,7 +536,6 @@ class Matrix
 
           iter = iter + 1  # (Could check iteration count here.)
 
-          # Look for two consecutive small sub-diagonal elements
 
           m = n-2
           while (m >= l) do
@@ -653,7 +567,6 @@ class Matrix
             end
           end
 
-          # Double QR step involving rows l:n and columns m:n
 
           m.upto(n-1) do |k|
             notlast = (k != n-1)
@@ -684,7 +597,6 @@ class Matrix
               q /= p
               r /= p
 
-              # Row modification
 
               k.upto(nn-1) do |j|
                 p = @h[k][j] + q * @h[k+1][j]
@@ -696,7 +608,6 @@ class Matrix
                 @h[k+1][j] = @h[k+1][j] - p * y
               end
 
-              # Column modification
 
               0.upto([n, k+3].min) do |i|
                 p = x * @h[i][k] + y * @h[i][k+1]
@@ -708,7 +619,6 @@ class Matrix
                 @h[i][k+1] = @h[i][k+1] - p * q
               end
 
-              # Accumulate transformations
 
               low.upto(high) do |i|
                 p = x * @v[i][k] + y * @v[i][k+1]
@@ -724,7 +634,6 @@ class Matrix
         end  # check convergence
       end  # while (n >= low)
 
-      # Backsubstitute to find vectors of upper triangular form
 
       if (norm == 0.0)
         return
@@ -734,7 +643,6 @@ class Matrix
         p = @d[n]
         q = @e[n]
 
-        # Real vector
 
         if (q == 0)
           l = n
@@ -757,7 +665,6 @@ class Matrix
                   @h[i][n] = -r / (eps * norm)
                 end
 
-              # Solve real equations
 
               else
                 x = @h[i][i+1]
@@ -772,7 +679,6 @@ class Matrix
                 end
               end
 
-              # Overflow control
 
               t = @h[i][n].abs
               if ((eps * t) * t > 1)
@@ -783,12 +689,10 @@ class Matrix
             end
           end
 
-        # Complex vector
 
         elsif (q < 0)
           l = n-1
 
-          # Last vector component imaginary so matrix is triangular
 
           if (@h[n][n-1].abs > @h[n-1][n].abs)
             @h[n-1][n-1] = q / @h[n][n-1]
@@ -821,7 +725,6 @@ class Matrix
                 @h[i][n] = cdivi
               else
 
-                # Solve complex equations
 
                 x = @h[i][i+1]
                 y = @h[i+1][i]
@@ -844,7 +747,6 @@ class Matrix
                 end
               end
 
-              # Overflow control
 
               t = [@h[i][n-1].abs, @h[i][n].abs].max
               if ((eps * t) * t > 1)
@@ -858,7 +760,6 @@ class Matrix
         end
       end
 
-      # Vectors of isolated roots
 
       nn.times do |i|
         if (i < low || i > high)
@@ -868,7 +769,6 @@ class Matrix
         end
       end
 
-      # Back transformation to get eigenvectors of original matrix
 
       (nn-1).downto(low) do |j|
         low.upto(high) do |i|

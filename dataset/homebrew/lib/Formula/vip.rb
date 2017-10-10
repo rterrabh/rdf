@@ -10,7 +10,6 @@ class Vip < Formula
     sha256 "37b2753f7c7b39c81f97b10ea3f8e2dd5ea92ea8d130144fa99ed54306565f6f"
   end
 
-  # use awk and /var/tmp as temporary directory
   patch :DATA
 
   def install
@@ -46,4 +45,3 @@ index f150167..e517675 100644
 +	;;
    esac
  
- #

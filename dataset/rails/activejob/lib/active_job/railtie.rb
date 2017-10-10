@@ -2,7 +2,6 @@ require 'global_id/railtie'
 require 'active_job'
 
 module ActiveJob
-  # = Active Job Railtie
   class Railtie < Rails::Railtie # :nodoc:
     config.active_job = ActiveSupport::OrderedOptions.new
 
@@ -15,7 +14,7 @@ module ActiveJob
       options.queue_adapter ||= :inline
 
       ActiveSupport.on_load(:active_job) do
-        #nodyna <ID:send-66> <SD COMPLEX (array)>
+        #nodyna <send-1327> <SD COMPLEX (array)>
         options.each { |k,v| send("#{k}=", v) }
       end
     end

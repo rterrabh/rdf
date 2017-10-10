@@ -22,7 +22,6 @@ class Qscintilla2 < Formula
   end
 
   def install
-    # On Mavericks we want to target libc++, this requires a unsupported/macx-clang-libc++ flag
     if ENV.compiler == :clang && MacOS.version >= :mavericks
       spec = "unsupported/macx-clang-libc++"
     else
@@ -48,7 +47,6 @@ class Qscintilla2 < Formula
       system "make", "install"
     end
 
-    # Add qscintilla2 features search path, since it is not installed in Qt keg's mkspecs/features/
     ENV["QMAKEFEATURES"] = "#{prefix}/data/mkspecs/features"
 
     cd "Python" do
@@ -77,7 +75,6 @@ class Qscintilla2 < Formula
         system "make"
         system "make", "install"
       end
-      # symlink Qt Designer plugin (note: not removed on qscintilla2 formula uninstall)
       ln_sf prefix/"plugins/designer/libqscintillaplugin.dylib",
             Formula["qt"].opt_prefix/"plugins/designer/"
     end

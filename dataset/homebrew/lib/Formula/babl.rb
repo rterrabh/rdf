@@ -12,7 +12,6 @@ class Babl < Formula
   end
 
   head do
-    # Use Github instead of GNOME's git. The latter is unreliable.
     url "https://github.com/GNOME/babl.git"
 
     depends_on "automake" => :build
@@ -38,7 +37,6 @@ class Babl < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <babl/babl.h>
       int main() {
         babl_init();
         const Babl *srgb = babl_format ("R'G'B' u8");

@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/diagrams.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Draw diagrams
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('Diagrams', '0.3')
 TkPackage.require('Diagrams')
 
 module Tk::Tcllib

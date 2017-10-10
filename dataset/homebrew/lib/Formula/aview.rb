@@ -23,11 +23,8 @@ index 232b838..9780e61 100644
 --- a/image.c
 +++ b/image.c
 @@ -1,6 +1,6 @@
- #include <stdio.h>
- #include <unistd.h>
 -#include <malloc.h>
 +#include <stdlib.h>
- #include "config.h"
  
  int imgwidth, imgheight;
 diff --git a/ui.c b/ui.c
@@ -35,11 +32,6 @@ index d316f7a..134a4ca 100644
 --- a/ui.c
 +++ b/ui.c
 @@ -1,6 +1,6 @@
- #include <stdio.h>
- #include <ctype.h>
 -#include <malloc.h>
 +#include <stdlib.h>
- #include <string.h>
- #include <aalib.h>
- #include "shrink.h"
 

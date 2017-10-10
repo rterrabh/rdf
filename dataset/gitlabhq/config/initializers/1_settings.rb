@@ -9,7 +9,6 @@ class Settings < Settingslogic
       gitlab.port.to_i == (gitlab.https ? 443 : 80)
     end
 
-    # get host without www, thanks to http://stackoverflow.com/a/6674363/1233435
     def get_host_without_www(url)
       url = URI.encode(url)
       uri = URI.parse(url)
@@ -40,7 +39,6 @@ class Settings < Settingslogic
       (base_gitlab_url + [gitlab.relative_url_root]).join('')
     end
 
-    # check that values in `current` (string or integer) is a contant in `modul`.
     def verify_constant_array(modul, current, default)
       values = default || []
       if !current.nil?
@@ -53,14 +51,13 @@ class Settings < Settingslogic
       values
     end
 
-    # check that `current` (string or integer) is a contant in `modul`.
     def verify_constant(modul, current, default)
-      #nodyna <ID:const_get-1> <CG COMPLEX (array)>
+      #nodyna <const_get-539> <CG COMPLEX (array)>
       constant = modul.constants.find{ |name| modul.const_get(name) == current }
-      #nodyna <ID:const_get-2> <CG COMPLEX (change-prone variable)>
+      #nodyna <const_get-540> <CG COMPLEX (change-prone variable)>
       value = constant.nil? ? default : modul.const_get(constant)
       if current.is_a? String
-        #nodyna <ID:const_get-3> <CG COMPLEX (change-prone variable)>
+        #nodyna <const_get-541> <CG COMPLEX (change-prone variable)>
         value = modul.const_get(current.upcase) rescue default
       end
       value
@@ -80,15 +77,11 @@ class Settings < Settingslogic
 end
 
 
-# Default settings
 Settings['ldap'] ||= Settingslogic.new({})
 Settings.ldap['enabled'] = false if Settings.ldap['enabled'].nil?
 
-# backwards compatibility, we only have one host
 if Settings.ldap['enabled'] || Rails.env.test?
   if Settings.ldap['host'].present?
-    # We detected old LDAP configuration syntax. Update the config to make it
-    # look like it was entered with the new syntax.
     server = Settings.ldap.except('sync_time')
     Settings.ldap['servers'] = {
       'main' => server
@@ -117,9 +110,6 @@ Settings.omniauth['providers']  ||= []
 
 Settings['issues_tracker']  ||= {}
 
-#
-# GitLab
-#
 Settings['gitlab'] ||= Settingslogic.new({})
 Settings.gitlab['default_projects_limit'] ||= 10
 Settings.gitlab['default_branch_protection'] ||= 2
@@ -135,9 +125,9 @@ Settings.gitlab['email_enabled'] ||= true if Settings.gitlab['email_enabled'].ni
 Settings.gitlab['email_from'] ||= "gitlab@#{Settings.gitlab.host}"
 Settings.gitlab['email_display_name'] ||= "GitLab"
 Settings.gitlab['email_reply_to'] ||= "noreply@#{Settings.gitlab.host}"
-#nodyna <ID:send-137> <SD EASY (private methods)>
+#nodyna <send-542> <SD EASY (private methods)>
 Settings.gitlab['base_url']   ||= Settings.send(:build_base_gitlab_url)
-#nodyna <ID:send-138> <SD EASY (private methods)>
+#nodyna <send-543> <SD EASY (private methods)>
 Settings.gitlab['url']        ||= Settings.send(:build_gitlab_url)
 Settings.gitlab['user']       ||= 'git'
 Settings.gitlab['user_home']  ||= begin
@@ -149,7 +139,7 @@ Settings.gitlab['time_zone']  ||= nil
 Settings.gitlab['signup_enabled'] ||= true if Settings.gitlab['signup_enabled'].nil?
 Settings.gitlab['signin_enabled'] ||= true if Settings.gitlab['signin_enabled'].nil?
 Settings.gitlab['twitter_sharing_enabled'] ||= true if Settings.gitlab['twitter_sharing_enabled'].nil?
-#nodyna <ID:send-139> <SD EASY (private methods)>
+#nodyna <send-544> <SD EASY (private methods)>
 Settings.gitlab['restricted_visibility_levels'] = Settings.send(:verify_constant_array, Gitlab::VisibilityLevel, Settings.gitlab['restricted_visibility_levels'], [])
 Settings.gitlab['username_changing_enabled'] = true if Settings.gitlab['username_changing_enabled'].nil?
 Settings.gitlab['issue_closing_pattern'] = '((?:[Cc]los(?:e[sd]?|ing)|[Ff]ix(?:e[sd]|ing)?|[Rr]esolv(?:e[sd]?|ing)) +(?:(?:issues? +)?#\d+(?:(?:, *| +and +)?))+)' if Settings.gitlab['issue_closing_pattern'].nil?
@@ -161,23 +151,17 @@ Settings.gitlab.default_projects_features['issues']         = true if Settings.g
 Settings.gitlab.default_projects_features['merge_requests'] = true if Settings.gitlab.default_projects_features['merge_requests'].nil?
 Settings.gitlab.default_projects_features['wiki']           = true if Settings.gitlab.default_projects_features['wiki'].nil?
 Settings.gitlab.default_projects_features['snippets']       = false if Settings.gitlab.default_projects_features['snippets'].nil?
-#nodyna <ID:send-140> <SD EASY (private methods)>
+#nodyna <send-545> <SD EASY (private methods)>
 Settings.gitlab.default_projects_features['visibility_level']    = Settings.send(:verify_constant, Gitlab::VisibilityLevel, Settings.gitlab.default_projects_features['visibility_level'], Gitlab::VisibilityLevel::PRIVATE)
 Settings.gitlab['repository_downloads_path'] = File.absolute_path(Settings.gitlab['repository_downloads_path'] || 'tmp/repositories', Rails.root)
 Settings.gitlab['restricted_signup_domains'] ||= []
 
-#
-# Gravatar
-#
 Settings['gravatar'] ||= Settingslogic.new({})
 Settings.gravatar['enabled']      = true if Settings.gravatar['enabled'].nil?
 Settings.gravatar['plain_url']  ||= 'http://www.gravatar.com/avatar/%{hash}?s=%{size}&d=identicon'
 Settings.gravatar['ssl_url']    ||= 'https://secure.gravatar.com/avatar/%{hash}?s=%{size}&d=identicon'
 Settings.gravatar['host']         = Settings.get_host_without_www(Settings.gravatar['plain_url'])
 
-#
-# GitLab Shell
-#
 Settings['gitlab_shell'] ||= Settingslogic.new({})
 Settings.gitlab_shell['path']         ||= Settings.gitlab['user_home'] + '/gitlab-shell/'
 Settings.gitlab_shell['hooks_path']   ||= Settings.gitlab['user_home'] + '/gitlab-shell/hooks/'
@@ -189,26 +173,19 @@ Settings.gitlab_shell['ssh_host']     ||= Settings.gitlab.ssh_host
 Settings.gitlab_shell['ssh_port']     ||= 22
 Settings.gitlab_shell['ssh_user']     ||= Settings.gitlab.user
 Settings.gitlab_shell['owner_group']  ||= Settings.gitlab.user
-#nodyna <ID:send-141> <SD EASY (private methods)>
+#nodyna <send-546> <SD EASY (private methods)>
 Settings.gitlab_shell['ssh_path_prefix'] ||= Settings.send(:build_gitlab_shell_ssh_path_prefix)
 
-#
-# Backup
-#
 Settings['backup'] ||= Settingslogic.new({})
 Settings.backup['keep_time']  ||= 0
 Settings.backup['path']         = File.expand_path(Settings.backup['path'] || "tmp/backups/", Rails.root)
 Settings.backup['archive_permissions']          ||= 0600
 Settings.backup['upload'] ||= Settingslogic.new({ 'remote_directory' => nil, 'connection' => nil })
-# Convert upload connection settings to use symbol keys, to make Fog happy
 if Settings.backup['upload']['connection']
   Settings.backup['upload']['connection'] = Hash[Settings.backup['upload']['connection'].map { |k, v| [k.to_sym, v] }]
 end
 Settings.backup['upload']['multipart_chunk_size'] ||= 104857600
 
-#
-# Git
-#
 Settings['git'] ||= Settingslogic.new({})
 Settings.git['max_size']  ||= 20971520 # 20.megabytes
 Settings.git['bin_path']  ||= '/usr/bin/git'
@@ -218,14 +195,8 @@ Settings['satellites'] ||= Settingslogic.new({})
 Settings.satellites['path'] = File.expand_path(Settings.satellites['path'] || "tmp/repo_satellites/", Rails.root)
 Settings.satellites['timeout'] ||= 30
 
-#
-# Extra customization
-#
 Settings['extra'] ||= Settingslogic.new({})
 
-#
-# Rack::Attack settings
-#
 Settings['rack_attack'] ||= Settingslogic.new({})
 Settings.rack_attack['git_basic_auth'] ||= Settingslogic.new({})
 Settings.rack_attack.git_basic_auth['enabled'] = true if Settings.rack_attack.git_basic_auth['enabled'].nil?
@@ -234,9 +205,6 @@ Settings.rack_attack.git_basic_auth['maxretry'] ||= 10
 Settings.rack_attack.git_basic_auth['findtime'] ||= 1.minute
 Settings.rack_attack.git_basic_auth['bantime'] ||= 1.hour
 
-#
-# Testing settings
-#
 if Rails.env.test?
   Settings.gitlab['default_projects_limit']   = 42
   Settings.gitlab['default_can_create_group'] = true

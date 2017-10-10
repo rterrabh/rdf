@@ -4,7 +4,6 @@ class Aiccu < Formula
   url "http://www.sixxs.net/archive/sixxs/aiccu/unix/aiccu_20070115.tar.gz"
   sha256 "2260f426c13471169ccff8cb4a3908dc5f79fda18ddb6a55363e7824e6c4c760"
 
-  # Patches per MacPorts
   patch :DATA
 
   def install
@@ -49,7 +48,6 @@ class Aiccu < Formula
       You can install tuntap with homebrew using brew install tuntap
 
       Unless it exists already, a aiccu.conf file has been written to:
-        #{etc}/aiccu.conf
 
       Protect this file as it will contain your credentials.
 
@@ -67,7 +65,6 @@ index 0e96136..78609bd 100644
 @@ -36,10 +36,11 @@ export DESTDIR
  CFLAGS=${RPM_OPT_FLAGS}
 
- # Destination Paths (relative to DESTDIR)
 -dirsbin=/usr/sbin/
 -dirbin=/usr/bin/
 -diretc=/etc/
@@ -78,7 +75,6 @@ index 0e96136..78609bd 100644
 +diretc=${prefix}/etc/
 +dirdoc=${prefix}/share/doc/${PROJECT}/
 
- # Make sure the lower makefile also knows these
  export PROJECT
 @@ -79,21 +80,13 @@ install: aiccu
 	@echo "Configuration..."
@@ -120,12 +116,8 @@ index ef65000..5b2eb43 100755
 +#define AICCU_PID	"/usr/local/var/run/aiccu.pid"
 
  /* AICCU Configuration file */
- #ifdef _WIN32
  /* GetWindowsDirectory() is used to figure out the directory to store the config */
- #define AICCU_CONFIG	"aiccu.conf"
- #else
 -#define AICCU_CONFIG	"/etc/aiccu.conf"
 +#define AICCU_CONFIG	"/usr/local/etc/aiccu.conf"
- #endif
 
  /* Inbound listen queue */

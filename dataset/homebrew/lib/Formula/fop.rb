@@ -16,8 +16,6 @@ class Fop < Formula
     sha256 "0b4e074635605b47a7b82892d68e90b6ba90fd2af83142d05878d75762510128"
   end
 
-  # fixes broken default java path as in
-  # http://svn.apache.org/viewvc/ant/core/trunk/src/script/ant?r1=1238725&r2=1434680&pathrev=1434680&view=patch
   patch :DATA
 
   def install

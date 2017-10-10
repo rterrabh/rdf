@@ -16,10 +16,8 @@ class Privoxy < Formula
   depends_on "pcre"
 
   def install
-    # Find Homebrew's libpcre
     ENV.append "LDFLAGS", "-L#{HOMEBREW_PREFIX}/lib"
 
-    # No configure script is shipped with the source
     system "autoreconf", "-i"
 
     system "./configure", "--disable-debug",

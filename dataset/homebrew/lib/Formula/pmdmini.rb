@@ -11,7 +11,6 @@ class Pmdmini < Formula
 
   def install
     cd "jni/pmdmini" do
-      # Specify Homebrew's cc
       inreplace "mak/general.mak", "gcc", ENV.cc
       if build.include? "lib-only"
         system "make", "-f", "Makefile.lib"
@@ -19,7 +18,6 @@ class Pmdmini < Formula
         system "make"
       end
 
-      # Makefile doesn't build a dylib
       system "#{ENV.cc} -dynamiclib -install_name #{lib}/libpmdmini.dylib -o libpmdmini.dylib -undefined dynamic_lookup obj/*.o"
 
       bin.install "pmdplay" unless build.include? "lib-only"

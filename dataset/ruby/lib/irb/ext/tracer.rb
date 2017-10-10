@@ -1,18 +1,7 @@
-#
-#   irb/lib/tracer.rb -
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 require "tracer"
 
 module IRB
 
-  # initialize tracing function
   def IRB.initialize_tracer
     Tracer.verbose = false
     Tracer.add_filter {
@@ -23,16 +12,9 @@ module IRB
   end
 
   class Context
-    # Whether Tracer is used when evaluating statements in this context.
-    #
-    # See +lib/tracer.rb+ for more information.
     attr_reader :use_tracer
     alias use_tracer? use_tracer
 
-    # Sets whether or not to use the Tracer library when evaluating statements
-    # in this context.
-    #
-    # See +lib/tracer.rb+ for more information.
     def use_tracer=(opt)
       if opt
         Tracer.set_get_line_procs(@irb_path) {
@@ -48,10 +30,6 @@ module IRB
 
   class WorkSpace
     alias __evaluate__ evaluate
-    # Evaluate the context of this workspace and use the Tracer library to
-    # output the exact lines of code are being executed in chronological order.
-    #
-    # See +lib/tracer.rb+ for more information.
     def evaluate(context, statements, file = nil, line = nil)
       if context.use_tracer? && file != nil && line != nil
         Tracer.on

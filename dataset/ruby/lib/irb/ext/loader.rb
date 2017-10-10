@@ -1,28 +1,13 @@
-#
-#   loader.rb -
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 
 module IRB # :nodoc:
-  # Raised in the event of an exception in a file loaded from an Irb session
   class LoadAbort < Exception;end
 
-  # Provides a few commands for loading files within an irb session.
-  #
-  # See ExtendCommandBundle for more information.
   module IrbLoader
 
     alias ruby_load load
     alias ruby_require require
 
-    # Loads the given file similarly to Kernel#load
     def irb_load(fn, priv = nil)
       path = search_file_from_ruby_path(fn)
       raise LoadError, "No such file to load -- #{fn}" unless path
@@ -44,9 +29,6 @@ module IRB # :nodoc:
       return nil
     end
 
-    # Loads a given file in the current session and displays the source lines
-    #
-    # See Irb#suspend_input_method for more information.
     def source_file(path)
       irb.suspend_name(path, File.basename(path)) do
         irb.suspend_input_method(FileInputMethod.new(path)) do
@@ -66,9 +48,6 @@ module IRB # :nodoc:
       end
     end
 
-    # Loads the given file in the current session's context and evaluates it.
-    #
-    # See Irb#suspend_input_method for more information.
     def load_file(path, priv = nil)
       irb.suspend_name(path, File.basename(path)) do
 

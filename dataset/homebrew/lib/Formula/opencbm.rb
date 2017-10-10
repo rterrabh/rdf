@@ -5,13 +5,10 @@ class Opencbm < Formula
   sha256 "f67c47470181bec2faea45ad2ac82ae237f30ad54c406b0e7dd1a4ad97b16d87"
   head "git://git.code.sf.net/p/opencbm/code"
 
-  # cc65 is only used to build binary blobs included with the programs; it's
-  # not necessary in its own right.
   depends_on "cc65" => :build
   depends_on "libusb-compat"
 
   def install
-    # This one definitely breaks with parallel build.
     ENV.deparallelize
 
     args = %W[
@@ -21,7 +18,6 @@ class Opencbm < Formula
       MANDIR=#{man1}
     ]
 
-    # The build is buried one directory down.
     cd "opencbm" do
       system "make", *args
       system "make", "install-all", *args

@@ -1,6 +1,3 @@
-#
-# tk/kinput.rb : control kinput
-#
 require 'tk'
 
 module TkKinput

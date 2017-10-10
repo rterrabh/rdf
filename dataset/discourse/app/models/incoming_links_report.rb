@@ -22,14 +22,12 @@ class IncomingLinksReport
     report_method = :"report_#{type}"
     return nil unless respond_to?(report_method)
 
-    # Load the report
     report = IncomingLinksReport.new(type)
-    #nodyna <ID:send-193> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-403> <SD COMPLEX (change-prone variables)>
     send(report_method, report)
     report
   end
 
-  # Return top 10 users who brought traffic to the site within the last 30 days
   def self.report_top_referrers(report)
     report.y_titles[:num_clicks]  = I18n.t("reports.#{report.type}.num_clicks")
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
@@ -59,7 +57,6 @@ class IncomingLinksReport
   end
 
 
-  # Return top 10 domains that brought traffic to the site within the last 30 days
   def self.report_top_traffic_sources(report)
     report.y_titles[:num_clicks]  = I18n.t("reports.#{report.type}.num_clicks")
     report.y_titles[:num_topics] = I18n.t("reports.#{report.type}.num_topics")
@@ -90,7 +87,6 @@ class IncomingLinksReport
   end
 
   def self.topic_count_per_domain(domains)
-    # COUNT(DISTINCT) is slow
     per_domain(domains).joins(:post).count("DISTINCT posts.topic_id")
   end
 

@@ -1,12 +1,3 @@
-#
-# cgi_runner.rb -- CGI launcher.
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2000 TAKAHASHI Masayoshi, GOTOU YUUZOU
-# Copyright (c) 2002 Internet Programming with Ruby writers. All rights
-# reserved.
-#
-# $IPR: cgi_runner.rb,v 1.9 2002/09/25 11:33:15 gotoyuzo Exp $
 
 def sysread(io, size)
   buf = ""
@@ -41,6 +32,5 @@ if ARGV[0]
   argv = ARGV.dup
   argv << ENV["SCRIPT_FILENAME"]
   exec(*argv)
-  # NOTREACHED
 end
 exec ENV["SCRIPT_FILENAME"]

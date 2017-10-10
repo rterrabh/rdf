@@ -12,27 +12,19 @@ module Rake
 
   CommandLineOptionError = Class.new(StandardError)
 
-  ##
-  # Rake main application object.  When invoking +rake+ from the
-  # command line, a Rake::Application object is created and run.
 
   class Application
     include TaskManager
     include TraceOutput
 
-    # The name of the application (typically 'rake')
     attr_reader :name
 
-    # The original directory where rake was invoked.
     attr_reader :original_dir
 
-    # Name of the actual rakefile used.
     attr_reader :rakefile
 
-    # Number of columns on the terminal
     attr_accessor :terminal_columns
 
-    # List of the top level task names (task names from the command line).
     attr_reader :top_level_tasks
 
     DEFAULT_RAKEFILES = [
@@ -42,7 +34,6 @@ module Rake
       'Rakefile.rb'
     ].freeze
 
-    # Initialize a Rake::Application object.
     def initialize
       super
       @name = 'rake'
@@ -61,16 +52,6 @@ module Rake
       @terminal_columns = ENV['RAKE_COLUMNS'].to_i
     end
 
-    # Run the Rake application.  The run method performs the following
-    # three steps:
-    #
-    # * Initialize the command line options (+init+).
-    # * Define the tasks (+load_rakefile+).
-    # * Run the top level tasks (+top_level+).
-    #
-    # If you wish to build a custom rake command, you should call
-    # +init+ on your application.  Then define any tasks.  Finally,
-    # call +top_level+ to run your top level tasks.
     def run
       standard_exception_handling do
         init
@@ -79,7 +60,6 @@ module Rake
       end
     end
 
-    # Initialize the command line parameters and app name.
     def init(app_name='rake')
       standard_exception_handling do
         @name = app_name
@@ -88,14 +68,12 @@ module Rake
       end
     end
 
-    # Find the rakefile and then load it and any pending imports.
     def load_rakefile
       standard_exception_handling do
         raw_load_rakefile
       end
     end
 
-    # Run the top level tasks of a Rake application.
     def top_level
       run_with_threads do
         if options.show_tasks
@@ -108,7 +86,6 @@ module Rake
       end
     end
 
-    # Run the given block with the thread startup and shutdown.
     def run_with_threads
       thread_pool.gather_history if options.job_stats == :history
 
@@ -124,26 +101,20 @@ module Rake
         options.job_stats == :history
     end
 
-    # Add a loader to handle imported files ending in the extension
-    # +ext+.
     def add_loader(ext, loader)
       ext = ".#{ext}" unless ext =~ /^\./
       @loaders[ext] = loader
     end
 
-    # Application options from the command line
     def options
       @options ||= OpenStruct.new
     end
 
-    # Return the thread pool used for multithreaded processing.
     def thread_pool             # :nodoc:
       @thread_pool ||= ThreadPool.new(options.thread_pool_size || Rake.suggested_thread_count-1)
     end
 
-    # internal ----------------------------------------------------------------
 
-    # Invokes a task with arguments that are extracted from +task_string+
     def invoke_task(task_string) # :nodoc:
       name, args = parse_task_string(task_string)
       t = self[name]
@@ -171,28 +142,22 @@ module Rake
       return name, args
     end
 
-    # Provide standard exception handling for the given block.
     def standard_exception_handling # :nodoc:
       yield
     rescue SystemExit
-      # Exit silently with current status
       raise
     rescue OptionParser::InvalidOption => ex
       $stderr.puts ex.message
       exit(false)
     rescue Exception => ex
-      # Exit with error message
       display_error_message(ex)
       exit_because_of_exception(ex)
     end
 
-    # Exit the program because of an unhandle exception.
-    # (may be overridden by subclasses)
     def exit_because_of_exception(ex) # :nodoc:
       exit(false)
     end
 
-    # Display the error message that caused the exception.
     def display_error_message(ex) # :nodoc:
       trace "#{name} aborted!"
       display_exception_details(ex)
@@ -231,11 +196,6 @@ module Rake
       end
     end
 
-    # Warn about deprecated usage.
-    #
-    # Example:
-    #    Rake.application.deprecate("import", "Rake.import", caller.first)
-    #
     def deprecate(old_usage, new_usage, call_site) # :nodoc:
       unless options.ignore_deprecate
         $stderr.puts "WARNING: '#{old_usage}' is deprecated.  " +
@@ -244,14 +204,11 @@ module Rake
       end
     end
 
-    # Does the exception have a task invocation chain?
     def has_chain?(exception) # :nodoc:
       exception.respond_to?(:chain) && exception.chain
     end
     private :has_chain?
 
-    # True if one of the files in RAKEFILES is in the current directory.
-    # If a match is found, it is copied into @rakefile.
     def have_rakefile # :nodoc:
       @rakefiles.each do |fn|
         if File.exist?(fn)
@@ -264,23 +221,18 @@ module Rake
       return nil
     end
 
-    # True if we are outputting to TTY, false otherwise
     def tty_output? # :nodoc:
       @tty_output
     end
 
-    # Override the detected TTY output state (mostly for testing)
     def tty_output=(tty_output_state) # :nodoc:
       @tty_output = tty_output_state
     end
 
-    # We will truncate output if we are outputting to a TTY or if we've been
-    # given an explicit column width to honor
     def truncate_output? # :nodoc:
       tty_output? || @terminal_columns.nonzero?
     end
 
-    # Display the tasks and comments.
     def display_tasks_and_comments # :nodoc:
       displayable_tasks = tasks.select { |t|
         (options.show_all_tasks || t.comment) &&
@@ -331,7 +283,6 @@ module Rake
       80
     end
 
-    # Calculate the dynamic width of the
     def dynamic_width # :nodoc:
       @dynamic_width ||= (dynamic_width_stty.nonzero? || dynamic_width_tput)
     end
@@ -363,7 +314,6 @@ module Rake
       end
     end
 
-    # Display the tasks and prerequisites
     def display_prerequisites # :nodoc:
       tasks.each do |t|
         puts "#{name} #{t.name}"
@@ -383,8 +333,6 @@ module Rake
     end
     private :sort_options
 
-    # A list of all the standard options used in rake, suitable for
-    # passing to OptionParser.
     def standard_rake_options # :nodoc:
       sort_options(
         [
@@ -431,7 +379,7 @@ module Rake
           ['--execute', '-e CODE',
             "Execute some Ruby code and exit.",
             lambda { |value|
-              #nodyna <ID:eval-72> <EV COMPLEX (change-prone variables)>
+              #nodyna <eval-2043> <EV COMPLEX (change-prone variables)>
               eval(value)
               exit
             }
@@ -439,7 +387,7 @@ module Rake
           ['--execute-print', '-p CODE',
             "Execute some Ruby code, print the result, then exit.",
             lambda { |value|
-              #nodyna <ID:eval-73> <EV COMPLEX (change-prone variables)>
+              #nodyna <eval-2044> <EV COMPLEX (change-prone variables)>
               puts eval(value)
               exit
             }
@@ -447,7 +395,7 @@ module Rake
           ['--execute-continue',  '-E CODE',
             "Execute some Ruby code, " +
             "then continue with normal task processing.",
-            #nodyna <ID:eval-74> <EV COMPLEX (change-prone variables)>
+            #nodyna <eval-2045> <EV COMPLEX (change-prone variables)>
             lambda { |value| eval(value) }
           ],
           ['--jobs',  '-j [NUMBER]',
@@ -619,9 +567,6 @@ module Rake
     end
     private :select_trace_output
 
-    # Read and handle the command line options.  Returns the command line
-    # arguments that we didn't understand, which should (in theory) be just
-    # task names and env vars.
     def handle_options # :nodoc:
       options.rakelib = ['rakelib']
       options.trace_output = $stderr
@@ -641,8 +586,6 @@ module Rake
       end.parse(ARGV)
     end
 
-    # Similar to the regular Ruby +require+ command, but will check
-    # for *.rake files in addition to *.rb files.
     def rake_require(file_name, paths=$LOAD_PATH, loaded=$") # :nodoc:
       fn = file_name + ".rake"
       return false if loaded.include?(fn)
@@ -705,7 +648,6 @@ module Rake
     end
     private :glob
 
-    # The directory path containing the system wide rakefiles.
     def system_dir # :nodoc:
       @system_dir ||=
         begin
@@ -717,7 +659,6 @@ module Rake
         end
     end
 
-    # The standard directory containing system wide rake files.
     if Win32.windows?
       def standard_system_dir #:nodoc:
         Win32.win32_system_dir
@@ -729,14 +670,6 @@ module Rake
     end
     private :standard_system_dir
 
-    # Collect the list of tasks on the command line.  If no tasks are
-    # given, return a list containing only the default task.
-    # Environmental assignments are processed at this time as well.
-    #
-    # `args` is the list of arguments to peruse to get the list of tasks.
-    # It should be the command line that was given to rake, less any
-    # recognised command-line options, which OptionParser.parse will
-    # have taken care of already.
     def collect_command_line_tasks(args) # :nodoc:
       @top_level_tasks = []
       args.each do |arg|
@@ -749,18 +682,14 @@ module Rake
       @top_level_tasks.push(default_task_name) if @top_level_tasks.empty?
     end
 
-    # Default task name ("default").
-    # (May be overridden by subclasses)
     def default_task_name # :nodoc:
       "default"
     end
 
-    # Add a file to the list of files to be imported.
     def add_import(fn) # :nodoc:
       @pending_imports << fn
     end
 
-    # Load the pending list of imported files.
     def load_imports # :nodoc:
       while fn = @pending_imports.shift
         next if @imported.member?(fn)

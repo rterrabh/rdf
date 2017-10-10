@@ -5,10 +5,6 @@ module ActiveRecord
         class Array < Type::Value # :nodoc:
           include Type::Mutable
 
-          # Loads pg_array_parser if available. String parsing can be
-          # performed quicker by a native extension, which will not create
-          # a large amount of Ruby objects that will need to be garbage
-          # collected. pg_array_parser has a C and Java extension
           begin
             require 'pg_array_parser'
             include PgArrayParser
@@ -54,7 +50,7 @@ module ActiveRecord
             if value.is_a?(::Array)
               value.map { |item| type_cast_array(item, method) }
             else
-              #nodyna <ID:send-135> <SD MODERATE (change-prone variables)>
+              #nodyna <send-917> <SD MODERATE (change-prone variables)>
               @subtype.public_send(method, value)
             end
           end
@@ -85,8 +81,6 @@ module ActiveRecord
             end
           end
 
-          # See http://www.postgresql.org/docs/9.2/static/arrays.html#ARRAYS-IO
-          # for a list of all cases in which strings will be quoted.
           def string_requires_quoting?(string)
             string.empty? ||
               string == "NULL" ||

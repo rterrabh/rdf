@@ -26,9 +26,6 @@ class Cogl < Formula
   depends_on "gtk-doc"
   depends_on "pango"
 
-  # Lion's grep fails, which later results in compilation failures:
-  # libtool: link: /usr/bin/grep -E -e [really long regexp] ".libs/libcogl.exp" > ".libs/libcogl.expT"
-  # grep: Regular expression too big
   if MacOS.version == :lion
     resource "grep" do
       url "http://ftpmirror.gnu.org/grep/grep-2.20.tar.xz"
@@ -38,7 +35,6 @@ class Cogl < Formula
   end
 
   def install
-    # Don't dump files in $HOME.
     ENV["GI_SCANNER_DISABLE_CACHE"] = "yes"
 
     if MacOS.version == :lion
@@ -71,7 +67,6 @@ class Cogl < Formula
   end
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <cogl/cogl.h>
 
       int main()
       {

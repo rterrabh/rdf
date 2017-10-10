@@ -1,37 +1,19 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
 require 'rubygems'
 require 'rubygems/command_manager'
 require 'rubygems/config_file'
 
-##
-# Load additional plugins from $LOAD_PATH
 
 Gem.load_env_plugins rescue nil
 
-##
-# Run an instance of the gem program.
-#
-# Gem::GemRunner is only intended for internal use by RubyGems itself.  It
-# does not form any public API and may change at any time for any reason.
-#
-# If you would like to duplicate functionality of `gem` commands, use the
-# classes they call directly.
 
 class Gem::GemRunner
 
   def initialize(options={})
-    # TODO: nuke these options
     @command_manager_class = options[:command_manager] || Gem::CommandManager
     @config_file_class = options[:config_file] || Gem::ConfigFile
   end
 
-  ##
-  # Run the gem command with the following arguments.
 
   def run args
     build_args = extract_build_args args
@@ -54,9 +36,6 @@ class Gem::GemRunner
     cmd.run Gem.configuration.args, build_args
   end
 
-  ##
-  # Separates the build arguments (those following <code>--</code>) from the
-  # other arguments in the list.
 
   def extract_build_args args # :nodoc:
     return [] unless offset = args.index('--')

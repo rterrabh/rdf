@@ -6,7 +6,6 @@ class GoogleSqlTool < Formula
   version "r10"
 
   def install
-    # Patch script to find jar
     chmod 0755, "google_sql.sh"
     inreplace "google_sql.sh",
       'SQL_SH_DIR="$(cd $(dirname $0); pwd)"',

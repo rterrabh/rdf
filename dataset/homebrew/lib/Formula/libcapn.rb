@@ -1,4 +1,5 @@
 class Libcapn < Formula
+  #nodyna <send-556> <not yet classified>
   desc "C library to send push notifications to Apple devices"
   homepage "http://libcapn.org/"
   url "http://libcapn.org/download/libcapn-1.0.0-src.tar.gz"
@@ -25,7 +26,6 @@ class Libcapn < Formula
 
   test do
     (testpath/"test_install.c").write <<-TEST_SCRIPT.undent
-    #include <apn.h>
     int main() {
         apn_ctx_ref ctx = NULL;
         apn_error_ref error;

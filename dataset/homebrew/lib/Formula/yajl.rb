@@ -12,7 +12,6 @@ class Yajl < Formula
     sha256 "d35963d9d40c22e83a878a98a470f88405abf13efa61c7a3a999d7d79724b525" => :mountain_lion
   end
 
-  # Configure uses cmake internally
   depends_on "cmake" => :build
 
   def install

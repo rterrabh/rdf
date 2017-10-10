@@ -23,7 +23,6 @@ class Sbcl < Formula
   option "with-ldb", "Include low-level debugger in the build"
   option "with-internal-xref", "Include XREF information for SBCL internals (increases core size by 5-6MB)"
 
-  # Current binary versions are listed at http://sbcl.sourceforge.net/platform-table.html
 
   resource "bootstrap64" do
     url "https://downloads.sourceforge.net/project/sbcl/sbcl/1.1.8/sbcl-1.1.8-x86-64-darwin-binary.tar.bz2"
@@ -74,8 +73,6 @@ class Sbcl < Formula
   def install
     write_features
 
-    # Remove non-ASCII values from environment as they cause build failures
-    # More information: http://bugs.gentoo.org/show_bug.cgi?id=174702
     ENV.delete_if do |_, value|
       ascii_val = value.dup
       ascii_val.force_encoding("ASCII-8BIT") if ascii_val.respond_to? :force_encoding
@@ -84,7 +81,6 @@ class Sbcl < Formula
 
     bootstrap = (build.build_32_bit? || !MacOS.prefer_64_bit?) ? "bootstrap32" : "bootstrap64"
     resource(bootstrap).stage do
-      # We only need the binaries for bootstrapping, so don't install anything:
       command = "#{Dir.pwd}/src/runtime/sbcl"
       core = "#{Dir.pwd}/output/sbcl.core"
       xc_cmdline = "#{command} --core #{core} --disable-debugger --no-userinit --no-sysinit"

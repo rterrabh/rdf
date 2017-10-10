@@ -12,7 +12,6 @@ class Minidjvu < Formula
 
   def install
     ENV.j1
-    # force detection of BSD mkdir
     system "autoreconf", "-vfi"
     system "./configure", "--prefix=#{prefix}"
     system "make"

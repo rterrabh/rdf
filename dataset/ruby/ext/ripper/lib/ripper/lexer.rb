@@ -1,44 +1,12 @@
-#
-# $Id$
-#
-# Copyright (c) 2004,2005 Minero Aoki
-#
-# This program is free software.
-# You can distribute and/or modify this program under the Ruby License.
-# For details of Ruby License, see ruby/COPYING.
-#
 
 require 'ripper/core'
 
 class Ripper
 
-  # Tokenizes the Ruby program and returns an array of strings.
-  #
-  #   p Ripper.tokenize("def m(a) nil end")
-  #      # => ["def", " ", "m", "(", "a", ")", " ", "nil", " ", "end"]
-  #
   def Ripper.tokenize(src, filename = '-', lineno = 1)
     Lexer.new(src, filename, lineno).tokenize
   end
 
-  # Tokenizes the Ruby program and returns an array of an array,
-  # which is formatted like <code>[[lineno, column], type, token]</code>.
-  #
-  #   require 'ripper'
-  #   require 'pp'
-  #
-  #   pp Ripper.lex("def m(a) nil end")
-  #     #=> [[[1,  0], :on_kw,     "def"],
-  #          [[1,  3], :on_sp,     " "  ],
-  #          [[1,  4], :on_ident,  "m"  ],
-  #          [[1,  5], :on_lparen, "("  ],
-  #          [[1,  6], :on_ident,  "a"  ],
-  #          [[1,  7], :on_rparen, ")"  ],
-  #          [[1,  8], :on_sp,     " "  ],
-  #          [[1,  9], :on_kw,     "nil"],
-  #          [[1, 12], :on_sp,     " "  ],
-  #          [[1, 13], :on_kw,     "end"]]
-  #
   def Ripper.lex(src, filename = '-', lineno = 1)
     Lexer.new(src, filename, lineno).lex
   end
@@ -61,6 +29,8 @@ class Ripper
     private
 
     SCANNER_EVENTS.each do |event|
+      #nodyna <module_eval-1530> <not yet classified>
+      #nodyna <module_eval-1531> <not yet classified>
       module_eval(<<-End, __FILE__+'/module_eval', __LINE__ + 1)
         def on_#{event}(tok)
           @buf.push [[lineno(), column()], :on_#{event}, tok]
@@ -69,18 +39,6 @@ class Ripper
     end
   end
 
-  # [EXPERIMENTAL]
-  # Parses +src+ and return a string which was matched to +pattern+.
-  # +pattern+ should be described as Regexp.
-  #
-  #   require 'ripper'
-  #
-  #   p Ripper.slice('def m(a) nil end', 'ident')                   #=> "m"
-  #   p Ripper.slice('def m(a) nil end', '[ident lparen rparen]+')  #=> "m(a)"
-  #   p Ripper.slice("<<EOS\nstring\nEOS",
-  #                  'heredoc_beg nl $(tstring_content*) heredoc_end', 1)
-  #       #=> "string\n"
-  #
   def Ripper.slice(src, pattern, n = 0)
     if m = token_match(src, pattern)
     then m.string(n)

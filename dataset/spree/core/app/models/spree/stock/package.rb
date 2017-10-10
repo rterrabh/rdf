@@ -23,8 +23,6 @@ module Spree
         @contents -= [item] if item
       end
 
-      # Fix regression that removed package.order.
-      # Find it dynamically through an inventory_unit.
       def order
         contents.detect {|item| !!item.try(:inventory_unit).try(:order) }.try(:inventory_unit).try(:order)
       end
@@ -76,9 +74,6 @@ module Spree
       end
 
       def to_shipment
-        # At this point we should only have one content item per inventory unit
-        # across the entire set of inventory units to be shipped, which has been
-        # taken care of by the Prioritizer
         contents.each { |content_item| content_item.inventory_unit.state = content_item.state.to_s }
 
         Spree::Shipment.new(

@@ -15,7 +15,6 @@ class Beecrypt < Formula
   depends_on "icu4c"
   depends_on "libtool" => :build
 
-  # fix build with newer clang, gcc 4.7 (https://bugs.gentoo.org/show_bug.cgi?id=413951)
   patch :p0, :DATA
 
   def install
@@ -33,9 +32,6 @@ class Beecrypt < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include "beecrypt/base64.h"
-      #include "beecrypt/sha256.h"
-      #include <stdio.h>
 
       int main(void)
       {

@@ -79,8 +79,6 @@ class Services::Twitter < Service
     real_length = post_text.length
 
     URI.extract(post_text, ['http','https']) do |url|
-      # add or subtract from real length - urls for tweets are always
-      # shortened to SHORTENED_URL_LENGTH
       if url.length >= SHORTENED_URL_LENGTH
         real_length -= url.length - SHORTENED_URL_LENGTH
       else

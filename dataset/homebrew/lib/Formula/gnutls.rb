@@ -1,6 +1,3 @@
-# GnuTLS has previous, current, and next stable branches, we use current.
-# From 3.4.0 GnuTLS will be permanently disabling SSLv3. Every brew uses will need a revision with that.
-# http://nmav.gnutls.org/2014/10/what-about-poodle.html
 class Gnutls < Formula
   desc "GNU Transport Layer Security (TLS) Library"
   homepage "http://gnutls.org"
@@ -47,7 +44,6 @@ class Gnutls < Formula
     system "./configure", *args
     system "make", "install"
 
-    # certtool shadows the OS X certtool utility
     mv bin/"certtool", bin/"gnutls-certtool"
     mv man1/"certtool.1", man1/"gnutls-certtool.1"
   end

@@ -1,4 +1,3 @@
-# ActiveRecord-specific plugins should be required here
 
 ActiveAdmin::DatabaseHitDuringLoad.database_error_classes << ActiveRecord::StatementInvalid
 

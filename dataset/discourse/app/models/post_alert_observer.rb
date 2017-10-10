@@ -5,28 +5,24 @@ class PostAlertObserver < ActiveRecord::Observer
     @alerter ||= PostAlerter.new
   end
 
-  # Dispatch to an after_save_#{class_name} method
   def after_save(model)
     method_name = callback_for('after_save', model)
-    #nodyna <ID:send-178> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-401> <SD COMPLEX (change-prone variables)>
     send(method_name, model) if respond_to?(method_name)
   end
 
-  # Dispatch to an after_create_#{class_name} method
   def after_create(model)
     method_name = callback_for('after_create', model)
-    #nodyna <ID:send-179> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-402> <SD COMPLEX (change-prone variables)>
     send(method_name, model) if respond_to?(method_name)
   end
 
   def after_save_post_action(post_action)
-    # We only care about deleting post actions for now
     return if post_action.deleted_at.blank?
     Notification.where(post_action_id: post_action.id).each(&:destroy)
   end
 
   def after_create_post_action(post_action)
-    # We only notify on likes for now
     return unless post_action.is_like?
 
     post = post_action.post

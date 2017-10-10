@@ -1,22 +1,3 @@
-#####
-# Patch to allow open-uri to follow safe (http to https)
-# and unsafe redirections (https to http).
-#
-# Original gist URL:
-# https://gist.github.com/1271420
-#
-# Relevant issue:
-# http://redmine.ruby-lang.org/issues/3719
-#
-# Source here:
-# https://github.com/ruby/ruby/blob/trunk/lib/open-uri.rb
-#
-# Thread-safe implementation adapted from:
-# https://github.com/obfusk/open_uri_w_redirect_to_https
-#
-# Copy and pasted from:
-# https://github.com/open-uri-redirections/open_uri_redirections
-#
 
 require "open-uri"
 
@@ -45,19 +26,6 @@ module OpenURI
     end
   end
 
-  #####
-  # Patches the original open_uri method, so that it accepts the
-  # :allow_redirections argument with these options:
-  #
-  #   * :safe will allow HTTP => HTTPS redirections.
-  #   * :all  will allow HTTP => HTTPS and HTTPS => HTTP redirections.
-  #
-  # OpenURI::open can receive different kinds of arguments, like a string for
-  # the mode or an integer for the permissions, and then a hash with options
-  # like UserAgent, etc.
-  #
-  # To find the :allow_redirections option, we look for this options hash.
-  #
   def self.open_uri(name, *rest, &block)
     Thread.current[:__open_uri_redirections__] = allow_redirections(rest)
 

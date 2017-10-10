@@ -24,7 +24,6 @@ class Cfitsio < Formula
       bin.install "fpack", "funpack"
 
       resource("examples").stage do
-        # compressed_fits.c does not work (obsolete function call)
         (Dir["*.c"] - ["compress_fits.c"]).each do |f|
           system ENV.cc, f, "-I#{include}", "-L#{lib}", "-lcfitsio", "-lm", "-o", "#{bin}/#{f.sub(".c", "")}"
         end

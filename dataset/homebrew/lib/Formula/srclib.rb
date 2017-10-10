@@ -188,7 +188,6 @@ class Srclib < Formula
     end
   end
 
-  # For test
   resource "srclib-sample" do
     url "https://github.com/sourcegraph/srclib-sample/archive/0.1.tar.gz"
     sha256 "7699eea46992c41331daacbff9df05f7aeec841582783ce3ac7e8eef790f1f1d"

@@ -11,7 +11,6 @@ class ExportCsvController < ApplicationController
     render json: success_json
   end
 
-  # download
   def show
     params.require(:id)
     filename = params.fetch(:id)

@@ -5,7 +5,6 @@ class Minicom < Formula
   sha256 "9ac3a663b82f4f5df64114b4792b9926b536c85f59de0f2d2b321c7626a904f4"
 
   def install
-    # There is a silly bug in the Makefile where it forgets to link to iconv. Workaround below.
     ENV["LIBS"] = "-liconv"
 
     system "./configure", "--disable-dependency-tracking",

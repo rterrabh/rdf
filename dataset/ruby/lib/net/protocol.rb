@@ -1,22 +1,3 @@
-#
-# = net/protocol.rb
-#
-#--
-# Copyright (c) 1999-2004 Yukihiro Matsumoto
-# Copyright (c) 1999-2004 Minero Aoki
-#
-# written and maintained by Minero Aoki <aamine@loveruby.net>
-#
-# This program is free software. You can re-distribute and/or
-# modify this program under the same terms as Ruby itself,
-# Ruby Distribute License or GNU General Public License.
-#
-# $Id$
-#++
-#
-# WARNING: This file is going to remove.
-# Do not rely on the implementation written in this file.
-#
 
 require 'socket'
 require 'timeout'
@@ -26,9 +7,9 @@ module Net # :nodoc:
   class Protocol   #:nodoc: internal use only
     private
     def Protocol.protocol_param(name, val)
+      #nodyna <module_eval-2168> <not yet classified>
       module_eval(<<-End, __FILE__, __LINE__ + 1)
         def #{name}
-          #{val}
         end
       End
     end
@@ -45,15 +26,9 @@ module Net # :nodoc:
   class ProtoRetriableError    < ProtocolError; end
   ProtocRetryError = ProtoRetriableError
 
-  ##
-  # OpenTimeout, a subclass of Timeout::Error, is raised if a connection cannot
-  # be created within the open_timeout.
 
   class OpenTimeout            < Timeout::Error; end
 
-  ##
-  # ReadTimeout, a subclass of Timeout::Error, is raised if a chunk of the
-  # response cannot be read within the read_timeout.
 
   class ReadTimeout            < Timeout::Error; end
 
@@ -88,9 +63,6 @@ module Net # :nodoc:
       @io.close
     end
 
-    #
-    # Read
-    #
 
     public
 
@@ -158,8 +130,6 @@ module Net # :nodoc:
           raise Net::ReadTimeout
         end
       rescue IO::WaitWritable
-        # OpenSSL::Buffering#read_nonblock may fail with IO::WaitWritable.
-        # http://www.openssl.org/support/faq.html#PROG10
         if IO.select(nil, [@io], nil, @read_timeout)
           retry
         else
@@ -174,9 +144,6 @@ module Net # :nodoc:
       s
     end
 
-    #
-    # Write
-    #
 
     public
 
@@ -213,9 +180,6 @@ module Net # :nodoc:
       len
     end
 
-    #
-    # Logging
-    #
 
     private
 
@@ -241,9 +205,6 @@ module Net # :nodoc:
       @wbuf = nil
     end
 
-    #
-    # Read
-    #
 
     def each_message_chunk
       LOG 'reading message...'
@@ -257,7 +218,6 @@ module Net # :nodoc:
       LOG "read message (#{read_bytes} bytes)"
     end
 
-    # *library private* (cannot handle 'break')
     def each_list_item
       while (str = readuntil("\r\n")) != ".\r\n"
         yield str.chop
@@ -272,9 +232,6 @@ module Net # :nodoc:
       @written_bytes - prev
     end
 
-    #
-    # Write
-    #
 
     def write_message(src)
       LOG "writing message from #{src.class}"
@@ -297,7 +254,6 @@ module Net # :nodoc:
           begin
             block.call(WriteAdapter.new(self, :write_message_0))
           rescue LocalJumpError
-            # allow `break' from writer block
           end
         }
       }
@@ -355,9 +311,6 @@ module Net # :nodoc:
   end
 
 
-  #
-  # The writer adapter class
-  #
   class WriteAdapter
     def initialize(socket, method)
       @socket = socket
@@ -404,9 +357,6 @@ module Net # :nodoc:
 
     private
 
-    # This method is needed because @block must be called by yield,
-    # not Proc#call.  You can see difference when using `break' in
-    # the block.
     def call_block(str)
       yield str
     end

@@ -7,7 +7,6 @@ class Uberftp < Formula
   depends_on "globus-toolkit"
 
   def install
-    # get the flavor
     globus = Formula["globus-toolkit"].opt_prefix
 
     core = `"#{globus}/sbin/gpt-query" globus_core`

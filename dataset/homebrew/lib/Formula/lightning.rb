@@ -29,10 +29,7 @@ class Lightning < Formula
   end
 
   test do
-    # from http://www.gnu.org/software/lightning/manual/lightning.html#incr
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <lightning.h>
       static jit_state_t *_jit;
       typedef int (*pifi)(int);
       int main(int argc, char *argv[]) {

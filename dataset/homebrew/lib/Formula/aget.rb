@@ -13,8 +13,6 @@ class Aget < Formula
   end
 
   def install
-    # ENV replaces the MacPorts patch that ensured compile on OS X.
-    # https://github.com/EnderUNIX/Aget/issues/3
     ENV.append_to_cflags "-D_DARWIN_C_SOURCE"
     system "make", "CC=#{ENV.cc}",
                    "CFLAGS=#{ENV.cflags}",

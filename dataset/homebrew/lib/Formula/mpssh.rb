@@ -14,7 +14,6 @@ class Mpssh < Formula
 
   stable do
     patch do
-      # don't install binaries as root (upstream commit)
       url "https://github.com/ndenev/mpssh/commit/3cbb868b6fdf8dff9ab86868510c0455ad1ec1b3.diff"
       sha256 "f5df424a91df1f427f96cd482d0bc22cfd90ac25c9e6beb8ca029f3a1038c3de"
     end

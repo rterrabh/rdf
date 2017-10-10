@@ -12,7 +12,6 @@ class Libid3tag < Formula
     sha1 "b3ed68decc9453e3c72ab76898aa9237c7e5f350" => :mountain_lion
   end
 
-  # patch for utf-16 (memory leaks), see https://bugs.launchpad.net/mixxx/+bug/403586
   {
     "utf16.patchlibid3tag-0.15.1b-utf16" => "daf621e8123530fdab5193099031074666fc7330",
     "unknown-encoding"                   => "093def535edb3d2f5be6b173eedf0f93a1c0314c",
@@ -25,7 +24,6 @@ class Libid3tag < Formula
     end
   end
 
-  # typedef for 64-bit long + buffer overflow
   {
     "64bit-long"   => "f9778590811a050384b9bf8827345b61999f0da3",
     "fix_overflow" => "ed80bc74bd81caa225952f72a1a28d54300e43e3",
@@ -37,7 +35,6 @@ class Libid3tag < Formula
     end
   end
 
-  # corrects "a cappella" typo
   patch :p2 do
     url "http://mirror.ovh.net/gentoo-portage/media-libs/libid3tag/files/0.15.1b/libid3tag-0.15.1b-a_capella.patch"
     sha256 "5e86270ebb179d82acee686700d203e90f42e82beeed455b0163d8611657d395"

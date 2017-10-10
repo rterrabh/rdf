@@ -24,25 +24,6 @@ class Plod < Formula
     prefix.install "plod.el.v1", "plod.el.v2"
 
     (prefix/"plodrc").write <<-PLODRC.undent
-      # Uncomment lines and change their values to override defaults.
-      # man plod for further details.
-      #
-      # $PROMPT = 0;
-      # $CRYPTCMD = undef;
-      # $TMPFILE = "/tmp/plodtmp$$";
-      # $HOME = (getpwuid($<))[7];
-      # $EDITOR = "#{editor}";
-      # $VISUAL = "#{visual}";
-      # $PAGER =  "#{pager}";
-      # $LINES = 24;
-      # $LOGDIR = "$HOME/.logdir";
-      # $LOGFILE = sprintf("%04d%02d", $YY+1900, $MM);
-      # $BACKUP = ".plod$$.bak";
-      # $DEADLOG = "dead.log";
-      # $STAMP = sprintf("%02d/%02d/%04d, %02d:%02d --", $MM, $DD, $YY+1900, $hh, $mm);
-      # $PREFIX = '';
-      # $SUFFIX = '';
-      # $SEPARATOR = '-----';
     PLODRC
   end
 
@@ -50,8 +31,6 @@ class Plod < Formula
       Emacs users may want to peruse the two available plod modes. They've been
       installed at:
 
-        #{prefix}/plod.el.v1
-        #{prefix}/plod.el.v2
 
       Certain environment variables can be customized.
 

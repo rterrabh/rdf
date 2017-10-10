@@ -70,10 +70,6 @@ module ActionDispatch
       end
     end
 
-    ##
-    # This class is just used for displaying route information when someone
-    # executes `rake routes` or looks at the RoutingError page.
-    # People should not use this class.
     class RoutesInspector # :nodoc:
       def initialize(routes)
         @engines = {}
@@ -207,7 +203,6 @@ module ActionDispatch
         @buffer << @view.render(partial: "routes/route", collection: routes)
       end
 
-      # the header is part of the HTML page, so we don't construct it here.
       def header(routes)
       end
 

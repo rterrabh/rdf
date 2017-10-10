@@ -33,7 +33,6 @@ class Cairomm < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <cairomm/cairomm.h>
 
       int main(int argc, char *argv[])
       {

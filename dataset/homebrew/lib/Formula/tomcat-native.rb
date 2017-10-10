@@ -33,10 +33,7 @@ class TomcatNative < Formula
                             "--with-java-home=#{ENV["JAVA_HOME"]}",
                             "--with-ssl=#{Formula["openssl"].opt_prefix}"
 
-      # fixes occasional compiling issue: glibtool: compile: specify a tag with `--tag'
       args = ["LIBTOOL=glibtool --tag=CC"]
-      # fixes a broken link in mountain lion's apr-1-config (it should be /XcodeDefault.xctoolchain/):
-      # usr/local/opt/libtool/bin/glibtool: line 1125: /Applications/Xcode.app/Contents/Developer/Toolchains/OSX10.8.xctoolchain/usr/bin/cc: No such file or directory
       args << "CC=#{ENV.cc}" if MacOS.version >= :mountain_lion
       system "make", *args
       system "make", "install"

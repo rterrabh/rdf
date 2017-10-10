@@ -1,5 +1,4 @@
 module Jobs
-  # various consistency checks
   class EnsureDbConsistency < Jobs::Scheduled
     every 12.hours
 

@@ -10,13 +10,11 @@ class Ssreflect < Formula
   option "with-doc", "Install HTML documents"
   option "with-static", "Build with static linking"
 
-  # Fix an ill-formatted ocamldoc comment.
   patch :DATA
 
   def install
     ENV.j1
 
-    # Enable static linking.
     if build.with? "static"
       inreplace "Make" do |s|
         s.gsub! /#\-custom/, "-custom"

@@ -8,17 +8,14 @@ module ActionView
       @content = Hash.new { |h,k| h[k] = ActiveSupport::SafeBuffer.new }
     end
 
-    # Called by _layout_for to read stored values.
     def get(key)
       @content[key]
     end
 
-    # Called by each renderer object to set the layout contents.
     def set(key, value)
       @content[key] = value
     end
 
-    # Called by content_for
     def append(key, value)
       @content[key] << value
     end
@@ -36,10 +33,6 @@ module ActionView
       @root    = Fiber.current.object_id
     end
 
-    # Try to get stored content. If the content
-    # is not available and we are inside the layout
-    # fiber, we set that we are waiting for the given
-    # key and yield.
     def get(key)
       return super if @content.key?(key)
 
@@ -59,9 +52,6 @@ module ActionView
       super
     end
 
-    # Appends the contents for the given key. This is called
-    # by provides and resumes back to the fiber if it is
-    # the key it is waiting for.
     def append!(key, value)
       super
       @fiber.resume if @waiting_for == key

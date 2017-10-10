@@ -24,13 +24,8 @@ class Swftools < Formula
     sha256 "11390c74733abcb262aaca4db68710f13ffffd42bfe2a0861a5dfc912b2977e5"
   end
 
-  # Fixes a conftest for libfftwf.dylib that mistakenly calls fftw_malloc()
-  # rather than fftwf_malloc().  Reported upstream to their mailing list:
-  # http://lists.nongnu.org/archive/html/swftools-common/2012-04/msg00014.html
-  # Patch is merged upstream.  Remove at swftools-0.9.3.
   patch :DATA
 
-  # Fix compile error, via MacPorts: https://trac.macports.org/ticket/34553
   patch :p0 do
     url "https://trac.macports.org/export/96933/trunk/dports/graphics/swftools/files/patch-src_gif2swf.c.diff"
     sha256 "75daa35a292a25d05b45effc5b734e421b437bad22479837e0ee5cbd7a05e73e"

@@ -14,7 +14,6 @@ class Kettle < Formula
 
     (var+"log/kettle").mkpath
 
-    # We don't assume that carte, kitchen or pan are in anyway unique command names so we'll prepend "pdi"
     %w[carte kitchen pan].each do |command|
       (bin+"pdi#{command}").write_env_script libexec+"#{command}.sh", :BASEDIR => libexec
     end

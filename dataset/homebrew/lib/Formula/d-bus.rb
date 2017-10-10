@@ -1,5 +1,4 @@
 class DBus < Formula
-  # releases: even (1.10.x) = stable, odd (1.11.x) = development
   desc "Message bus system, providing inter-application communication"
   homepage "https://wiki.freedesktop.org/www/Software/dbus"
 
@@ -16,7 +15,6 @@ class DBus < Formula
   end
 
   def install
-    # Fix the TMPDIR to one D-Bus doesn't reject due to odd symbols
     ENV["TMPDIR"] = "/tmp"
 
     system "./configure", "--disable-dependency-tracking",
@@ -37,7 +35,6 @@ class DBus < Formula
   end
 
   def post_install
-    # Generate D-Bus's UUID for this machine
     system "#{bin}/dbus-uuidgen", "--ensure=#{var}/lib/dbus/machine-id"
   end
 

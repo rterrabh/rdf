@@ -69,9 +69,6 @@ module Rails
       def initialize(name)
         super
 
-        # Every time rake runs this task is instantiated as all the rest.
-        # Be lazy computing stuff to have as light impact as possible to
-        # the rest of tasks.
         before_running_rdoc do
           load_and_configure_sdoc
           configure_rdoc_files
@@ -79,9 +76,7 @@ module Rails
         end
       end
 
-      # Hack, ignore the desc calls performed by the original initializer.
       def desc(description)
-        # no-op
       end
 
       def load_and_configure_sdoc

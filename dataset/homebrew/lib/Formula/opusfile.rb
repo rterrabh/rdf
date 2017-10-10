@@ -37,8 +37,6 @@ class Opusfile < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <opus/opusfile.h>
-      #include <stdlib.h>
       int main(int argc, const char **argv) {
         int ret;
         OggOpusFile *of;

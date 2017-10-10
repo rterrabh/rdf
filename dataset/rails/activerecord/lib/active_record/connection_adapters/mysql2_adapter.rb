@@ -5,7 +5,6 @@ require 'mysql2'
 
 module ActiveRecord
   module ConnectionHandling # :nodoc:
-    # Establishes a connection to the database that's used by all Active Record objects.
     def mysql2_connection(config)
       config = config.symbolize_keys
 
@@ -50,7 +49,6 @@ module ActiveRecord
         true
       end
 
-      # HELPER METHODS ===========================================
 
       def each_hash(result) # :nodoc:
         if block_given?
@@ -66,9 +64,6 @@ module ActiveRecord
         exception.error_number if exception.respond_to?(:error_number)
       end
 
-      #--
-      # QUOTING ==================================================
-      #++
 
       def quote_string(string)
         @connection.escape(string)
@@ -82,9 +77,6 @@ module ActiveRecord
         end
       end
 
-      #--
-      # CONNECTION MANAGEMENT ====================================
-      #++
 
       def active?
         return false unless @connection
@@ -98,8 +90,6 @@ module ActiveRecord
       end
       alias :reset! :reconnect!
 
-      # Disconnects from the database if already connected.
-      # Otherwise, this method does nothing.
       def disconnect!
         super
         unless @connection.nil?
@@ -108,9 +98,6 @@ module ActiveRecord
         end
       end
 
-      #--
-      # DATABASE STATEMENTS ======================================
-      #++
 
       def explain(arel, binds = [])
         sql     = "EXPLAIN #{to_sql(arel, binds.dup)}"
@@ -122,18 +109,6 @@ module ActiveRecord
       end
 
       class ExplainPrettyPrinter # :nodoc:
-        # Pretty prints the result of a EXPLAIN in a way that resembles the output of the
-        # MySQL shell:
-        #
-        #   +----+-------------+-------+-------+---------------+---------+---------+-------+------+-------------+
-        #   | id | select_type | table | type  | possible_keys | key     | key_len | ref   | rows | Extra       |
-        #   +----+-------------+-------+-------+---------------+---------+---------+-------+------+-------------+
-        #   |  1 | SIMPLE      | users | const | PRIMARY       | PRIMARY | 4       | const |    1 |             |
-        #   |  1 | SIMPLE      | posts | ALL   | NULL          | NULL    | NULL    | NULL  |    1 | Using where |
-        #   +----+-------------+-------+-------+---------------+---------+---------+-------+------+-------------+
-        #   2 rows in set (0.00 sec)
-        #
-        # This is an exercise in Ruby hyperrealism :).
         def pp(result, elapsed)
           widths    = compute_column_widths(result)
           separator = build_separator(widths)
@@ -175,7 +150,7 @@ module ActiveRecord
           items.each_with_index do |item, i|
             item = 'NULL' if item.nil?
             justifier = item.is_a?(Numeric) ? 'rjust' : 'ljust'
-            #nodyna <ID:send-136> <SD TRIVIAL (public methods)>
+            #nodyna <send-920> <SD TRIVIAL (public methods)>
             cells << item.to_s.send(justifier, widths[i])
           end
           '| ' + cells.join(' | ') + ' |'
@@ -187,45 +162,13 @@ module ActiveRecord
         end
       end
 
-      # FIXME: re-enable the following once a "better" query_cache solution is in core
-      #
-      # The overrides below perform much better than the originals in AbstractAdapter
-      # because we're able to take advantage of mysql2's lazy-loading capabilities
-      #
-      # # Returns a record hash with the column names as keys and column values
-      # # as values.
-      # def select_one(sql, name = nil)
-      #   result = execute(sql, name)
-      #   result.each(as: :hash) do |r|
-      #     return r
-      #   end
-      # end
-      #
-      # # Returns a single value from a record
-      # def select_value(sql, name = nil)
-      #   result = execute(sql, name)
-      #   if first = result.first
-      #     first.first
-      #   end
-      # end
-      #
-      # # Returns an array of the values of the first column in a select:
-      # #   select_values("SELECT id FROM companies LIMIT 3") => [1,2,3]
-      # def select_values(sql, name = nil)
-      #   execute(sql, name).map { |row| row.first }
-      # end
 
-      # Returns an array of arrays containing the field values.
-      # Order is the same as that returned by +columns+.
       def select_rows(sql, name = nil, binds = [])
         execute(sql, name).to_a
       end
 
-      # Executes the SQL statement in the context of this connection.
       def execute(sql, name = nil)
         if @connection
-          # make sure we carry over any changes to ActiveRecord::Base.default_timezone that have been
-          # made since we established the connection
           @connection.query_options[:database_timezone] = ActiveRecord::Base.default_timezone
         end
 

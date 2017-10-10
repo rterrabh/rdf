@@ -23,6 +23,7 @@ module Spree
 
       def error_message_on(object, method, options = {})
         object = convert_to_model(object)
+        #nodyna <instance_variable_get-2424> <not yet classified>
         obj = object.respond_to?(:errors) ? object : instance_variable_get("@#{object}")
 
         if obj && obj.errors[method].present?
@@ -125,7 +126,6 @@ module Spree
         }.join("<br />").html_safe
       end
 
-      # renders hidden field and link to remove record using nested_attributes
       def link_to_icon_remove_fields(f)
         url = f.object.persisted? ? [:admin, f.object] : '#'
         link_to_with_icon('delete', '', url, class: "spree_remove_fields btn btn-sm btn-danger", data: {action: 'remove'}, title: Spree.t(:remove)) + f.hidden_field(:_destroy)

@@ -12,9 +12,6 @@ class Twemcache < Formula
   depends_on "libevent"
 
   def install
-    # After the deprecation of GitHub Downloads, we don't have distribution
-    # downloads anymore.  Everything is now a repository download from version
-    # tags.
     system "autoreconf", "-ivf"
 
     args = ["--prefix=#{prefix}"]

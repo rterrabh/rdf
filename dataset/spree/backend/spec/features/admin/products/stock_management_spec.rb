@@ -43,10 +43,6 @@ describe "Stock Management", type: :feature, js: true do
       end
     end
 
-    # Regression test for #2896
-    # The regression was that unchecking the last checkbox caused a redirect
-    # to happen. By ensuring that we're still on an /admin/products URL, we
-    # assert that the redirect is *not* happening.
     it "can toggle backorderable for the second variant stock item", js: true do
       new_location = create(:stock_location, name: "Another Location")
       visit current_url
@@ -104,7 +100,6 @@ describe "Stock Management", type: :feature, js: true do
       end
     end
 
-    # Regression test for #3304
     context "with no stock location" do
       before do
         @product = create(:product, name: 'apache baseball cap', price: 10)

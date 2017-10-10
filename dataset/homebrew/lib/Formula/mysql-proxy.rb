@@ -14,11 +14,8 @@ class MysqlProxy < Formula
   def install
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
-                          # Ugh, don't dump these directly into /usr/local/include.
-                          # Use a subfolder, please.
                           "--includedir=#{include}/mysqlproxy"
     system "make", "install"
-    # Copy over the example scripts
     (share+"mysqlproxy").install Dir["examples/*.lua"]
   end
 end

@@ -24,7 +24,6 @@ class P7zip < Formula
       mv "makefile.macosx_64bits", "makefile.machine"
     end
 
-    # install.sh chmods to 444, which is bad and breaks uninstalling
     inreplace "install.sh", /chmod (444|555).*/, ""
 
     system "make", "all3",

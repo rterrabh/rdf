@@ -36,9 +36,6 @@ class PerconaServer < Formula
     cause "https://github.com/Homebrew/homebrew/issues/issue/144"
   end
 
-  # Where the database files should be located. Existing installs have them
-  # under var/percona, but going forward they will be under var/msyql to be
-  # shared with the mysql and mariadb formulae.
   def datadir
     @datadir ||= (var/"percona").directory? ? var/"percona" : var/"mysql"
   end
@@ -48,14 +45,10 @@ class PerconaServer < Formula
   end
 
   def install
-    # Don't hard-code the libtool path. See:
-    # https://github.com/Homebrew/homebrew/issues/20185
     inreplace "cmake/libutils.cmake",
       "COMMAND /usr/bin/libtool -static -o ${TARGET_LOCATION}",
       "COMMAND libtool -static -o ${TARGET_LOCATION}"
 
-    # Build without compiler or CPU specific optimization flags to facilitate
-    # compilation of gems and other software that queries `mysql-config`.
     ENV.minimal_optimization
 
     args = %W[
@@ -77,63 +70,50 @@ class PerconaServer < Formula
       -DCMAKE_BUILD_TYPE=RelWithDebInfo
     ]
 
-    # PAM plugin is Linux-only at the moment
     args.concat %W[
       -DWITHOUT_AUTH_PAM=1
       -DWITHOUT_AUTH_PAM_COMPAT=1
       -DWITHOUT_DIALOG=1
     ]
 
-    # To enable unit testing at build, we need to download the unit testing suite
     if build.with? "tests"
       args << "-DENABLE_DOWNLOADS=ON"
     else
       args << "-DWITH_UNIT_TESTS=OFF"
     end
 
-    # Build the embedded server
     args << "-DWITH_EMBEDDED_SERVER=ON" if build.with? "embedded"
 
-    # Build with InnoDB Memcached plugin
     args << "-DWITH_INNODB_MEMCACHED=ON" if build.with? "memcached"
 
-    # Make universal for binding to universal applications
     if build.universal?
       ENV.universal_binary
       args << "-DCMAKE_OSX_ARCHITECTURES=#{Hardware::CPU.universal_archs.as_cmake_arch_flags}"
     end
 
-    # Build with local infile loading support
     args << "-DENABLED_LOCAL_INFILE=1" if build.with? "local-infile"
 
     system "cmake", *args
     system "make"
     system "make", "install"
 
-    # Don't create databases inside of the prefix!
-    # See: https://github.com/Homebrew/homebrew/issues/4975
     rm_rf prefix+"data"
 
-    # Link the setup script into bin
     bin.install_symlink prefix/"scripts/mysql_install_db"
 
-    # Fix up the control script and link into bin
     inreplace "#{prefix}/support-files/mysql.server" do |s|
       s.gsub!(/^(PATH=".*)(")/, "\\1:#{HOMEBREW_PREFIX}/bin\\2")
-      # pidof can be replaced with pgrep from proctools on Mountain Lion
       s.gsub!(/pidof/, "pgrep") if MacOS.version >= :mountain_lion
     end
 
     bin.install_symlink prefix/"support-files/mysql.server"
 
-    # Move mysqlaccess to libexec
     libexec.mkpath
     mv "#{bin}/mysqlaccess", libexec
     mv "#{bin}/mysqlaccess.conf", libexec
   end
 
   def post_install
-    # Make sure that data directory exists
     datadir.mkpath
     unless File.exist? "#{datadir}/mysql/user.frm"
       ENV["TMPDIR"] = nil

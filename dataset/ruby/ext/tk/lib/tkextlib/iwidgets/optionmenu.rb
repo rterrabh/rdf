@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/optionmenu.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -73,7 +69,6 @@ class Tk::Iwidgets::Optionmenu
   end
 
   def sort(*params, &b)
-    # see 'lsort' man page about params
     if b
       tk_call(@path, 'sort', '-command', proc(&b), *params)
     else

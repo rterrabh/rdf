@@ -27,9 +27,6 @@ class GambitScheme < Formula
       --docdir=#{doc}
     ]
 
-    # Recommended to improve the execution speed and compactness
-    # of the generated executables. Increases compilation times.
-    # Don't enable this when using clang, per configure warning.
     args << "--enable-single-host" unless ENV.compiler == :clang
 
     args << "--enable-shared" if build.include? "enable-shared"

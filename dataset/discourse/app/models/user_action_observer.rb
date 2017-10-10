@@ -25,7 +25,6 @@ class UserActionObserver < ActiveRecord::Observer
           UserAction::EDIT
       end
 
-    # skip any invalid items, eg failed to save post and so on
     return unless action && post && user && post.id
 
     row = {
@@ -44,7 +43,6 @@ class UserActionObserver < ActiveRecord::Observer
   end
 
   def log_post(model)
-    # first post gets nada
     return if model.is_first_post?
 
     row = {

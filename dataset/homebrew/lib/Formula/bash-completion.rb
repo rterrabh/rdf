@@ -1,5 +1,3 @@
-# NOTE: version 2.0 is out, but it requires Bash 4, and OS X ships
-# with 3.2.48. See homebrew-versions for a 2.0 formula.
 class BashCompletion < Formula
   desc "Programmable bash completion"
   homepage "https://bash-completion.alioth.debian.org/"
@@ -13,8 +11,6 @@ class BashCompletion < Formula
     sha256 "1b5bae29dc78c12ac39563380c5bfb84d76094b2661a6c12e19704510981f4e4" => :mountain_lion
   end
 
-  # Backports the following upstream patch from 2.x:
-  # https://anonscm.debian.org/gitweb/?p=bash-completion/bash-completion.git;a=commitdiff_plain;h=50ae57927365a16c830899cc1714be73237bdcb2
   patch :DATA
 
   def compdir
@@ -42,7 +38,6 @@ class BashCompletion < Formula
       fi
 
     Homebrew's own bash completion script has been installed to
-      #{compdir}
     EOS
   end
 end
@@ -54,7 +49,6 @@ index 6601937..5184767 100644
 +++ b/bash_completion
 @@ -1334,7 +1334,7 @@ _known_hosts_real()
  
-     # append any available aliases from config files
      if [[ ${#config[@]} -gt 0 && -n "$aliases" ]]; then
 -        local hosts=$( sed -ne 's/^[ \t]*[Hh][Oo][Ss][Tt]\([Nn][Aa][Mm][Ee]\)\{0,1\}['"$'\t '"']\{1,\}\([^#*?]*\)\(#.*\)\{0,1\}$/\2/p' "${config[@]}" )
 +        local hosts=$( sed -ne 's/^['"$'\t '"']*[Hh][Oo][Ss][Tt]\([Nn][Aa][Mm][Ee]\)\{0,1\}['"$'\t '"']\{1,\}\([^#*?]*\)\(#.*\)\{0,1\}$/\2/p' "${config[@]}" )

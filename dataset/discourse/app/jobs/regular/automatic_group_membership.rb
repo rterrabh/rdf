@@ -19,7 +19,6 @@ module Jobs
         begin
           group.add(user)
         rescue ActiveRecord::RecordNotUnique, PG::UniqueViolation
-          # we don't care about this
         end
       end
     end

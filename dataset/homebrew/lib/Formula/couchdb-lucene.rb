@@ -33,7 +33,6 @@ class CouchdbLucene < Formula
   end
 
   def shim_script(target); <<-EOS.undent
-    #!/bin/bash
     export CL_BASEDIR=#{libexec}/bin
     exec "$CL_BASEDIR/#{target}" "$@"
     EOS

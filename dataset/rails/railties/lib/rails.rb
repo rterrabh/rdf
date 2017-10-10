@@ -14,7 +14,6 @@ require 'rails/version'
 require 'active_support/railtie'
 require 'action_dispatch/railtie'
 
-# For Ruby 1.9, UTF-8 is the default internal and external encoding.
 silence_warnings do
   Encoding.default_external = Encoding::UTF_8
   Encoding.default_internal = Encoding::UTF_8
@@ -39,14 +38,12 @@ module Rails
 
     delegate :initialize!, :initialized?, to: :application
 
-    # The Configuration instance used to configure the Rails environment
     def configuration
       application.config
     end
 
     def backtrace_cleaner
       @backtrace_cleaner ||= begin
-        # Relies on Active Support, so we have to lazy load to postpone definition until AS has been loaded
         require 'rails/backtrace_cleaner'
         Rails::BacktraceCleaner.new
       end
@@ -64,17 +61,6 @@ module Rails
       @_env = ActiveSupport::StringInquirer.new(environment)
     end
 
-    # Returns all rails groups for loading based on:
-    #
-    # * The Rails environment;
-    # * The environment variable RAILS_GROUPS;
-    # * The optional envs given as argument and the hash with group dependencies;
-    #
-    #   groups assets: [:development, :test]
-    #
-    #   # Returns
-    #   # => [:default, :development, :assets] for Rails.env == "development"
-    #   # => [:default, :production]           for Rails.env == "production"
     def groups(*groups)
       hash = groups.extract_options!
       env = Rails.env

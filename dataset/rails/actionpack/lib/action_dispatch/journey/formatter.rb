@@ -3,8 +3,6 @@ require 'active_support/deprecation'
 
 module ActionDispatch
   module Journey
-    # The Formatter class is used for formatting URLs. For example, parameters
-    # passed to +url_for+ in Rails will eventually call Formatter#generate.
     class Formatter # :nodoc:
       attr_reader :routes
 
@@ -20,9 +18,6 @@ module ActionDispatch
         match_route(name, constraints) do |route|
           parameterized_parts = extract_parameterized_parts(route, options, path_parameters, parameterize)
 
-          # Skip this route unless a name has been provided or it is a
-          # standard Rails route since we can't determine whether an options
-          # hash passed to url_for matches a Rack application or a redirect.
           next unless name || route.dispatcher?
 
           missing_keys = missing_keys(route, parameterized_parts)
@@ -81,7 +76,6 @@ module ActionDispatch
           if named_routes.key?(name)
             yield named_routes[name]
           else
-            # Make sure we don't show the deprecation warning more than once
             warned = false
 
             routes = non_recursive(cache, options)
@@ -95,7 +89,6 @@ module ActionDispatch
                 if name && !warned
                   ActiveSupport::Deprecation.warn <<-MSG.squish
                     You are trying to generate the URL for a named route called
-                    #{name.inspect} but no such route was found. In the future,
                     this will result in an `ActionController::UrlGenerationError`
                     exception.
                   MSG
@@ -125,7 +118,6 @@ module ActionDispatch
           routes
         end
 
-        # Returns an array populated with missing keys if any are present.
         def missing_keys(route, parts)
           missing_keys = []
           tests = route.path.requirements

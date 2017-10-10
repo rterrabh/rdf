@@ -4,7 +4,6 @@ class Proxytunnel < Formula
   url "https://downloads.sourceforge.net/proxytunnel/proxytunnel-1.9.0.tgz"
   sha256 "2ef5bbf8d81ddf291d71f865c5dab89affcc07c4cb4b3c3f23e1e9462721a6b9"
 
-  # Remove conflicting strlcpy/strlcat declarations
   patch :DATA
 
   def install
@@ -20,7 +19,6 @@ index 9e9ac73..8244b55 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -56,8 +56,6 @@ PROGNAME = proxytunnel
- # Remove strlcpy/strlcat on (open)bsd/darwin systems
  OBJ = proxytunnel.o	\
  	base64.o	\
 -	strlcpy.o	\

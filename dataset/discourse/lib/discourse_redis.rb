@@ -1,6 +1,3 @@
-#
-#  A wrapper around redis that namespaces keys with the current site id
-#
 require_dependency 'cache'
 class DiscourseRedis
 
@@ -19,7 +16,6 @@ class DiscourseRedis
   end
 
   def without_namespace
-    # Only use this if you want to store and fetch data that's shared between sites
     @redis
   end
 
@@ -36,17 +32,15 @@ class DiscourseRedis
     end
   end
 
-  # prefix the key with the namespace
   def method_missing(meth, *args, &block)
     if @redis.respond_to?(meth)
-      #nodyna <ID:send-16> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-334> <SD COMPLEX (change-prone variables)>
       DiscourseRedis.ignore_readonly { @redis.send(meth, *args, &block) }
     else
       super
     end
   end
 
-  # Proxy key methods through, but prefix the keys with the namespace
   [:append, :blpop, :brpop, :brpoplpush, :decr, :decrby, :exists, :expire, :expireat, :get, :getbit, :getrange, :getset,
    :hdel, :hexists, :hget, :hgetall, :hincrby, :hincrbyfloat, :hkeys, :hlen, :hmget, :hmset, :hset, :hsetnx, :hvals, :incr,
    :incrby, :incrbyfloat, :lindex, :linsert, :llen, :lpop, :lpush, :lpushx, :lrange, :lrem, :lset, :ltrim,
@@ -55,10 +49,10 @@ class DiscourseRedis
    :sdiff, :set, :setbit, :setex, :setnx, :setrange, :sinter, :sismember, :smembers, :sort, :spop, :srandmember, :srem, :strlen,
    :sunion, :ttl, :type, :watch, :zadd, :zcard, :zcount, :zincrby, :zrange, :zrangebyscore, :zrank, :zrem, :zremrangebyrank,
    :zremrangebyscore, :zrevrange, :zrevrangebyscore, :zrevrank, :zrangebyscore].each do |m|
-    #nodyna <ID:define_method-3> <DM MODERATE (array)>
+    #nodyna <define_method-335> <DM MODERATE (array)>
     define_method m do |*args|
       args[0] = "#{namespace}:#{args[0]}"
-      #nodyna <ID:send-17> <SD MODERATE (change-prone variables)>
+      #nodyna <send-336> <SD MODERATE (change-prone variables)>
       DiscourseRedis.ignore_readonly { @redis.send(m, *args) }
     end
   end

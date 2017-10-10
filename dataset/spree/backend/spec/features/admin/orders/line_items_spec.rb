@@ -1,12 +1,9 @@
 require 'spec_helper'
 
-# Tests for #3958's features
 describe "Order Line Items", type: :feature, js: true do
   stub_authorization!
   
   before do
-    # Removing the delivery step causes the order page to render a different
-    # partial, called _line_items, which shows line items rather than shipments
     allow(Spree::Order).to receive_messages :checkout_step_names => [:address, :payment, :confirm, :complete]
   end
 

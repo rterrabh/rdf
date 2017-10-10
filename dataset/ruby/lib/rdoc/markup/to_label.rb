@@ -1,16 +1,10 @@
 require 'cgi'
 
-##
-# Creates HTML-safe labels suitable for use in id attributes.  Tidylinks are
-# converted to their link part and cross-reference links have the suppression
-# marks removed (\\SomeClass is converted to SomeClass).
 
 class RDoc::Markup::ToLabel < RDoc::Markup::Formatter
 
   attr_reader :res # :nodoc:
 
-  ##
-  # Creates a new formatter that will output HTML-safe labels
 
   def initialize markup = nil
     super nil, markup
@@ -25,8 +19,6 @@ class RDoc::Markup::ToLabel < RDoc::Markup::Formatter
     @res = []
   end
 
-  ##
-  # Converts +text+ to an HTML-safe label
 
   def convert text
     label = convert_flow @am.flow text
@@ -34,9 +26,6 @@ class RDoc::Markup::ToLabel < RDoc::Markup::Formatter
     CGI.escape(label).gsub('%', '-').sub(/^-/, '')
   end
 
-  ##
-  # Converts the CROSSREF +special+ to plain text, removing the suppression
-  # marker, if any
 
   def handle_special_CROSSREF special
     text = special.text
@@ -44,8 +33,6 @@ class RDoc::Markup::ToLabel < RDoc::Markup::Formatter
     text.sub(/^\\/, '')
   end
 
-  ##
-  # Converts the TIDYLINK +special+ to just the text part
 
   def handle_special_TIDYLINK special
     text = special.text

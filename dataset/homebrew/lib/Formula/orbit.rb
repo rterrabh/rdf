@@ -14,7 +14,6 @@ class Orbit < Formula
   depends_on "glib"
   depends_on "libidl"
 
-  # per MacPorts, re-enable use of deprecated glib functions
   patch :p0 do
     url "https://trac.macports.org/export/105275/trunk/dports/devel/orbit2/files/patch-linc2-src-Makefile.in.diff"
     sha256 "572771ea59f841d74ac361d51f487cc3bcb2d75dacc9c20a8bd6cbbaeae8f856"

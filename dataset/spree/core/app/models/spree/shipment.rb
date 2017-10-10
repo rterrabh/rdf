@@ -39,14 +39,11 @@ module Spree
     scope :shipped, -> { with_state('shipped') }
     scope :trackable, -> { where("tracking IS NOT NULL AND tracking != ''") }
     scope :with_state, ->(*s) { where(state: s) }
-    # sort by most recent shipped_at, falling back to created_at. add "id desc" to make specs that involve this scope more deterministic.
     scope :reverse_chronological, -> { order('coalesce(spree_shipments.shipped_at, spree_shipments.created_at) desc', id: :desc) }
 
-    # shipment state machine (see http://github.com/pluginaweek/state_machine/tree/master for details)
     state_machine initial: :pending, use_transactions: false do
       event :ready do
         transition from: :pending, to: :ready, if: lambda { |shipment|
-          # Fix for #2040
           shipment.determine_state(shipment.order) == 'ready'
         }
       end
@@ -111,11 +108,6 @@ module Spree
       order ? order.currency : Spree::Config[:currency]
     end
 
-    # Determines the appropriate +state+ according to the following logic:
-    #
-    # pending    unless order is complete and +order.payment_state+ is +paid+
-    # shipped    if already shipped (ie. does not change the state)
-    # ready      all other cases
     def determine_state(order)
       return 'canceled' if order.canceled?
       return 'pending' unless order.can_ship?
@@ -169,8 +161,6 @@ module Spree
     ManifestItem = Struct.new(:line_item, :variant, :quantity, :states)
 
     def manifest
-      # Grouping by the ID means that we don't have to call out to the association accessor
-      # This makes the grouping by faster because it results in less SQL cache hits.
       inventory_units.group_by(&:variant_id).map do |variant_id, units|
         units.group_by(&:line_item_id).map do |line_item_id, units|
 
@@ -218,7 +208,6 @@ module Spree
       return shipping_rates if shipped?
       return [] unless can_get_rates?
 
-      # StockEstimator.new assigment below will replace the current shipping_method
       original_shipping_method_id = shipping_method.try(:id)
 
       self.shipping_rates = Stock::Estimator.new(order).
@@ -270,9 +259,6 @@ module Spree
       selected_shipping_rate.try(:tax_rate).try(:tax_category)
     end
 
-    # Only one of either included_tax_total or additional_tax_total is set
-    # This method returns the total of the two. Saves having to check if
-    # tax is included or additional.
     def tax_total
       included_tax_total + additional_tax_total
     end
@@ -299,28 +285,19 @@ module Spree
       end
     end
 
-    # Update Shipment and make sure Order states follow the shipment changes
     def update_attributes_and_order(params = {})
       if self.update_attributes params
         if params.has_key? :selected_shipping_rate_id
-          # Changing the selected Shipping Rate won't update the cost (for now)
-          # so we persist the Shipment#cost before calculating order shipment
-          # total and updating payment state (given a change in shipment cost
-          # might change the Order#payment_state)
           self.update_amounts
 
           order.updater.update_shipment_total
           order.updater.update_payment_state
 
-          # Update shipment state only after order total is updated because it
-          # (via Order#paid?) affects the shipment state (YAY)
           self.update_columns(
             state: determine_state(order),
             updated_at: Time.now
           )
 
-          # And then it's time to update shipment states and finally persist
-          # order changes
           order.updater.update_shipment_state
           order.updater.persist_totals
         end
@@ -329,9 +306,6 @@ module Spree
       end
     end
 
-    # Updates various aspects of the Shipment while bypassing any callbacks.  Note that this method takes an explicit reference to the
-    # Order object.  This is necessary because the association actually has a stale (and unsaved) copy of the Order and so it will not
-    # yield the correct results.
     def update!(order)
       old_state = state
       new_state = determine_state(order)

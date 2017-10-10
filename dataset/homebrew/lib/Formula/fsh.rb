@@ -12,7 +12,6 @@ class Fsh < Formula
   end
 
   def install
-    # FCNTL was deprecated and needs to be changed to fcntl
     inreplace "fshcompat.py", "FCNTL", "fcntl"
 
     system "./configure", "--disable-debug",

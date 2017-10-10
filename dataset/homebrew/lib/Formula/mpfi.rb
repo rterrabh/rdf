@@ -19,7 +19,6 @@ class Mpfi < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <mpfi.h>
 
       int main()
       {

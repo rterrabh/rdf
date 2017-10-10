@@ -66,35 +66,6 @@ module Emails
     end
   end
 
-  # Over rides default behaviour to show source/target
-  # Formats arguments into a String suitable for use as an email subject
-  #
-  # extra - Extra Strings to be inserted into the subject
-  #
-  # Examples
-  #
-  #   >> subject('Lorem ipsum')
-  #   => "GitLab Merge Request | Lorem ipsum"
-  #
-  #   # Automatically inserts Project name:
-  #   Forked MR
-  #   => source project => <Project id: 1, name: "Ruby on Rails", path: "ruby_on_rails", ...>
-  #   => target project => <Project id: 2, name: "My Ror", path: "ruby_on_rails", ...>
-  #   => source branch => source
-  #   => target branch => target
-  #   >> subject('Lorem ipsum')
-  #   => "GitLab Merge Request | Ruby on Rails:source >> My Ror:target | Lorem ipsum "
-  #
-  #   Non Forked MR
-  #   => source project => <Project id: 1, name: "Ruby on Rails", path: "ruby_on_rails", ...>
-  #   => target project => <Project id: 1, name: "Ruby on Rails", path: "ruby_on_rails", ...>
-  #   => source branch => source
-  #   => target branch => target
-  #   >> subject('Lorem ipsum')
-  #   => "GitLab Merge Request | Ruby on Rails | source >> target | Lorem ipsum "
-  #   # Accepts multiple arguments
-  #   >> subject('Lorem ipsum', 'Dolor sit amet')
-  #   => "GitLab Merge Request | Lorem ipsum | Dolor sit amet"
   def subject(*extra)
     subject = "Merge Request | "
     if @merge_request.for_fork?

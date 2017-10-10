@@ -24,7 +24,6 @@ class SstpClient < Formula
 
     system "make", "install"
 
-    # Create a directory needed by sstpc for privilege separation
     mkdir_p var/"run/sstpc"
   end
 
@@ -37,8 +36,6 @@ class SstpClient < Formula
   end
 
   test do
-    # I know it's a bad test, but I have no idea how to test a VPN client
-    # more thoroughly without trying to connect to an actual VPN server
     system "#{sbin}/sstpc", "--version"
   end
 end

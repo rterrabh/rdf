@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/scrollwin.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Scrolled widget
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::scrolledwindow', '1.0')
 TkPackage.require('widget::scrolledwindow')
 
 module Tk::Tcllib

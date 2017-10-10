@@ -17,7 +17,6 @@ class Pound < Formula
   def install
     system "./configure", "--prefix=#{prefix}", "--disable-tcmalloc"
     system "make"
-    # Manual install to get around group issues
     sbin.install "pound", "poundctl"
     man8.install "pound.8", "poundctl.8"
   end

@@ -1,18 +1,9 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
 require 'rubygems'
 
-##
-# Mixin methods for --version and --platform Gem::Command options.
 
 module Gem::VersionOption
 
-  ##
-  # Add the --platform option to the option parser.
 
   def add_platform_option(task = command, *wrap)
     OptionParser.accept Gem::Platform do |value|
@@ -35,8 +26,6 @@ module Gem::VersionOption
     end
   end
 
-  ##
-  # Add the --prerelease option to the option parser.
 
   def add_prerelease_option(*wrap)
     add_option("--[no-]prerelease",
@@ -46,8 +35,6 @@ module Gem::VersionOption
     end
   end
 
-  ##
-  # Add the --version option to the option parser.
 
   def add_version_option(task = command, *wrap)
     OptionParser.accept Gem::Requirement do |value|

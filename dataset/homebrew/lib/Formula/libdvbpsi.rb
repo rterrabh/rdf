@@ -13,7 +13,6 @@ class Libdvbpsi < Formula
   end
 
   def install
-    # Clang doesn't recognize O6.  Just remove it.  Fixes a build error.
     inreplace "configure", "CFLAGS=\"${CFLAGS} -O6\"", "CFLAGS=\"${CFLAGS}\""
     system "./configure", "--prefix=#{prefix}", "--disable-debug", "--disable-dependency-tracking", "--enable-release"
     system "make", "install"

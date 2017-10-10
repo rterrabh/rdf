@@ -1,68 +1,7 @@
-#
-#  tkextlib/tcllib/plotchart.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Simple plotting and charting package
-#
-# (The following is the original description of the library.)
-#
-# Plotchart is a Tcl-only package that focuses on the easy creation of
-# xy-plots, barcharts and other common types of graphical presentations.
-# The emphasis is on ease of use, rather than flexibility. The procedures
-# that create a plot use the entire canvas window, making the layout of the
-# plot completely automatic.
-#
-# This results in the creation of an xy-plot in, say, ten lines of code:
-# --------------------------------------------------------------------
-#    package require Plotchart
-#
-#    canvas .c -background white -width 400 -height 200
-#    pack   .c -fill both
-#
-#    #
-#    # Create the plot with its x- and y-axes
-#    #
-#    set s [::Plotchart::createXYPlot .c {0.0 100.0 10.0} {0.0 100.0 20.0}]
-#
-#    foreach {x y} {0.0 32.0 10.0 50.0 25.0 60.0 78.0 11.0 } {
-#        $s plot series1 $x $y
-#    }
-#
-#    $s title "Data series"
-# --------------------------------------------------------------------
-#
-# A drawback of the package might be that it does not do any data management.
-# So if the canvas that holds the plot is to be resized, the whole plot must
-# be redrawn. The advantage, though, is that it offers a number of plot and
-# chart types:
-#
-#    * XY-plots like the one shown above with any number of data series.
-#    * Stripcharts, a kind of XY-plots where the horizontal axis is adjusted
-#      automatically. The result is a kind of sliding window on the data
-#      series.
-#    * Polar plots, where the coordinates are polar instead of cartesian.
-#    * Isometric plots, where the scale of the coordinates in the two
-#      directions is always the same, i.e. a circle in world coordinates
-#      appears as a circle on the screen.
-#      You can zoom in and out, as well as pan with these plots (Note: this
-#      works best if no axes are drawn, the zooming and panning routines do
-#      not distinguish the axes), using the mouse buttons with the control
-#      key and the arrow keys with the control key.
-#    * Piecharts, with automatic scaling to indicate the proportions.
-#    * Barcharts, with either vertical or horizontal bars, stacked bars or
-#      bars side by side.
-#    * Timecharts, where bars indicate a time period and milestones or other
-#      important moments in time are represented by triangles.
-#    * 3D plots (both for displaying surfaces and 3D bars)
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('Plotchart', '0.9')
-# TkPackage.require('Plotchart', '1.1')
-# TkPackage.require('Plotchart', '1.6.3')
 TkPackage.require('Plotchart')
 
 module Tk
@@ -86,7 +25,6 @@ end
 
 module Tk::Tcllib::Plotchart
   extend TkCore
-  ############################
   def self.view_port(w, *args) # args := pxmin, pymin, pxmax, pymax
     tk_call_without_enc('::Plotchart::viewPort', w.path, *(args.flatten))
   end
@@ -97,7 +35,6 @@ module Tk::Tcllib::Plotchart
   end
 
   def self.world_3D_coordinates(w, *args)
-    # args := xmin, ymin, zmin, xmax, ymax, zmax
     tk_call_without_enc('::Plotchart::world3DCoordinates',
                         w.path, *(args.flatten))
   end
@@ -113,16 +50,10 @@ module Tk::Tcllib::Plotchart
   def self.plotconfig(*args)
     case args.length
     when 0, 1, 2
-      # 0: (no args) --> list of chat types
-      # 1: charttype --> list of components
-      # 2: charttype, component --> list of properties
       simplelist(tk_call('::Plotchart::plotconfig', *args))
     when 3
-      # 3: charttype, component, property --> current value
       tk_call('::Plotchart::plotconfig', *args)
     else
-      # 4: charttype, component, property, value : set new value
-      # 5+: Error on Tcl/Tk
       tk_call('::Plotchart::plotconfig', *args)
       nil
     end
@@ -153,7 +84,6 @@ module Tk::Tcllib::Plotchart
     tk_call_without_enc('::Plotchart::setZoomPan', w.path)
   end
 
-  ############################
   module ChartMethod
     include TkCore
 
@@ -228,10 +158,8 @@ module Tk::Tcllib::Plotchart
 
     def balloon(*args) # args => (x, y, text, dir) or ([x, y], text, dir)
       if args[0].kind_of?(Array)
-        # args => ([x, y], text, dir)
         x, y = args.shift
       else
-        # args => (x, y, text, dir)
         x = args.shift
         y = args.shift
       end
@@ -253,10 +181,8 @@ module Tk::Tcllib::Plotchart
 
     def plaintext(*args) # args => (x, y, text, dir) or ([x, y], text, dir)
       if args[0].kind_of?(Array)
-        # args => ([x, y], text, dir)
         x, y = args.shift
       else
-        # args => (x, y, text, dir)
         x = args.shift
         y = args.shift
       end
@@ -268,7 +194,6 @@ module Tk::Tcllib::Plotchart
       self
     end
 
-    ############################
 
     def view_port(*args) # args := pxmin, pymin, pxmax, pymax
       tk_call_without_enc('::Plotchart::viewPort', @path, *(args.flatten))
@@ -282,7 +207,6 @@ module Tk::Tcllib::Plotchart
     end
 
     def world_3D_coordinates(*args)
-      # args := xmin, ymin, zmin, xmax, ymax, zmax
       tk_call_without_enc('::Plotchart::world3DCoordinates',
                           @path, *(args.flatten))
       self
@@ -325,7 +249,6 @@ module Tk::Tcllib::Plotchart
     end
   end
 
-  ############################
   class XYPlot < Tk::Canvas
     include ChartMethod
 
@@ -335,8 +258,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args) # args := ([parent,] xaxis, yaxis [, keys])
-                          # xaxis := Array of [minimum, maximum, stepsize]
-                          # yaxis := Array of [minimum, maximum, stepsize]
       if args[0].kind_of?(Array)
         @xaxis = args.shift
         @yaxis = args.shift
@@ -491,7 +412,6 @@ module Tk::Tcllib::Plotchart
     end
   end
 
-  ############################
   class Stripchart < XYPlot
     TkCommandNames = [
       'canvas'.freeze,
@@ -499,7 +419,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
   end
 
-  ############################
   class TXPlot < XYPlot
     TkCommandNames = [
       'canvas'.freeze,
@@ -507,7 +426,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
   end
 
-  ############################
   class XLogYPlot < XYPlot
     TkCommandNames = [
       'canvas'.freeze,
@@ -515,7 +433,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
   end
 
-  ############################
   class Histogram < XYPlot
     TkCommandNames = [
       'canvas'.freeze,
@@ -523,7 +440,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
   end
 
-  ############################
   class PolarPlot < Tk::Canvas
     include ChartMethod
 
@@ -533,7 +449,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args) # args := ([parent,] radius_data [, keys])
-                          # radius_data := Array of [maximum_radius, stepsize]
       if args[0].kind_of?(Array)
         @radius_data = args.shift
 
@@ -583,7 +498,6 @@ module Tk::Tcllib::Plotchart
   end
   Polarplot = PolarPlot
 
-  ############################
   class IsometricPlot < Tk::Canvas
     include ChartMethod
 
@@ -593,9 +507,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args) # args := ([parent,] xaxis, yaxis, [, step] [, keys])
-                          # xaxis := Array of [minimum, maximum]
-                          # yaxis := Array of [minimum, maximum]
-                          # step := Float of stepsize | "noaxes" | :noaxes
       if args[0].kind_of?(Array)
         @xaxis = args.shift
         @yaxis = args.shift
@@ -663,7 +574,6 @@ module Tk::Tcllib::Plotchart
   end
   Isometricplot = IsometricPlot
 
-  ############################
   class Plot3D < Tk::Canvas
     include ChartMethod
 
@@ -673,9 +583,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args) # args := ([parent,] xaxis, yaxis, zaxis [, keys])
-                          # xaxis := Array of [minimum, maximum, stepsize]
-                          # yaxis := Array of [minimum, maximum, stepsize]
-                          # zaxis := Array of [minimum, maximum, stepsize]
       if args[0].kind_of?(Array)
         @xaxis = args.shift
         @yaxis = args.shift
@@ -727,19 +634,11 @@ module Tk::Tcllib::Plotchart
     end
 
     def plot_line(dat, color)
-      # dat has to be provided as a 2 level array.
-      # 1st level contains rows, drawn in y-direction,
-      # and each row is an array whose elements are drawn in x-direction,
-      # for the columns.
       tk_call_without_enc(@chart, 'plotline', dat, color)
       self
     end
 
     def plot_data(dat)
-      # dat has to be provided as a 2 level array.
-      # 1st level contains rows, drawn in y-direction,
-      # and each row is an array whose elements are drawn in x-direction,
-      # for the columns.
       tk_call_without_enc(@chart, 'plotdata', dat)
       self
     end
@@ -754,7 +653,6 @@ module Tk::Tcllib::Plotchart
     end
 
     def colour(fill, border)
-      # configure the colours to use for polygon borders and inner area
       tk_call_without_enc(@chart, 'colour', fill, border)
       self
     end
@@ -763,7 +661,6 @@ module Tk::Tcllib::Plotchart
     alias color   colour
   end
 
-  ############################
   class Barchart3D < Tk::Canvas
     include ChartMethod
 
@@ -773,8 +670,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args) # args := ([parent,] yaxis, nobars [, keys])
-                          # yaxis  := Array of [minimum, maximum, stepsize]
-                          # nobars := number of bars
       if args[0].kind_of?(Array)
         @yaxis = args.shift
         @nobars = args.shift
@@ -819,7 +714,6 @@ module Tk::Tcllib::Plotchart
     end
   end
 
-  ############################
   class RibbonChart3D < Tk::Canvas
     include ChartMethod
 
@@ -829,9 +723,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args) # args := ([parent,] names, yaxis, zaxis [, keys])
-                          # names := Array of the series
-                          # yaxis := Array of [minimum, maximum, stepsize]
-                          # zaxis := Array of [minimum, maximum, stepsize]
       if args[0].kind_of?(Array)
         @names = args.shift
         @yaxis = args.shift
@@ -889,7 +780,6 @@ module Tk::Tcllib::Plotchart
   end
 
 
-  ############################
   class Piechart < Tk::Canvas
     include ChartMethod
 
@@ -927,7 +817,6 @@ module Tk::Tcllib::Plotchart
   end
 
 
-  ############################
   class Radialchart < Tk::Canvas
     include ChartMethod
 
@@ -937,7 +826,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args) # args := ([parent,] names, scale, style [, keys])
-                          # radius_data := Array of [maximum_radius, stepsize]
       if args[0].kind_of?(Array)
         @names = args.shift
         @scale = args.shift
@@ -987,7 +875,6 @@ module Tk::Tcllib::Plotchart
     alias colors  colours
   end
 
-  ############################
   class Barchart < Tk::Canvas
     include ChartMethod
 
@@ -997,12 +884,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args)
-      # args := ([parent,] xlabels, ylabels [, series] [, keys])
-      # xlabels, ylabels := labels | axis ( depend on normal or horizontal )
-      # labels := Array of [label, label, ...]
-      #   (It determines the number of bars that will be plotted per series.)
-      # axis := Array of [minimum, maximum, stepsize]
-      # series := Integer number of data series | 'stacked' | :stacked
       if args[0].kind_of?(Array)
         @xlabels = args.shift
         @ylabels  = args.shift
@@ -1056,7 +937,6 @@ module Tk::Tcllib::Plotchart
     end
 
     def colours(*cols)
-      # set the colours to be used
       tk_call(@chart, 'colours', *cols)
       self
     end
@@ -1065,7 +945,6 @@ module Tk::Tcllib::Plotchart
     alias color  colours
   end
 
-  ############################
   class HorizontalBarchart < Barchart
     TkCommandNames = [
       'canvas'.freeze,
@@ -1073,7 +952,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
   end
 
-  ############################
   class Boxplot < Tk::Canvas
     include ChartMethod
 
@@ -1083,8 +961,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args) # args := ([parent,] xaxis, ylabels [, keys])
-                          # xaxis := Array of [minimum, maximum, stepsize]
-                          # yaxis := List of labels for the y-axis
       if args[0].kind_of?(Array)
         @xaxis   = args.shift
         @ylabels = args.shift
@@ -1125,7 +1001,6 @@ module Tk::Tcllib::Plotchart
     end
   end
 
-  ############################
   class RightAxis < Tk::Canvas
     include ChartMethod
 
@@ -1135,7 +1010,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args) # args := ([parent,] yaxis [, keys])
-                          # yaxis := Array of [minimum, maximum, stepsize]
       if args[0].kind_of?(Array)
         @yaxis   = args.shift
 
@@ -1169,7 +1043,6 @@ module Tk::Tcllib::Plotchart
     end
   end
 
-  ############################
   class Timechart < Tk::Canvas
     include ChartMethod
 
@@ -1179,11 +1052,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args)
-      # args := ([parent,] time_begin, time_end, items [, keys])
-      # time_begin := String of time format (e.g. "1 january 2004")
-      # time_end   := String of time format (e.g. "1 january 2004")
-      # items := Expected/maximum number of items
-      #          ( This determines the vertical spacing. )
       if args[0].kind_of?(String)
         @time_begin = args.shift
         @time_end   = args.shift
@@ -1248,7 +1116,6 @@ module Tk::Tcllib::Plotchart
     end
   end
 
-  ############################
   class Ganttchart < Tk::Canvas
     include ChartMethod
 
@@ -1258,13 +1125,6 @@ module Tk::Tcllib::Plotchart
     ].freeze
 
     def initialize(*args)
-      # args := ([parent,] time_begin, time_end, items [, text_width] [, keys])
-      # time_begin := String of time format (e.g. "1 january 2004")
-      # time_end   := String of time format (e.g. "1 january 2004")
-      # args := Expected/maximum number of items
-      #          ( This determines the vertical spacing. ),
-      #         Expected/maximum width of items,
-      #         Option Hash ( { key=>value, ... } )
       if args[0].kind_of?(String)
         @time_begin = args.shift
         @time_end   = args.shift
@@ -1355,11 +1215,10 @@ module Tk::Tcllib::Plotchart
     end
   end
 
-  ############################
   class PlotSeries < TkObject
     SeriesID_TBL = TkCore::INTERP.create_table
 
-    #nodyna <ID:instance_eval-141> <IEV MODERATE (method definition)>
+    #nodyna <instance_eval-1546> <IEV MODERATE (method definition)>
     (Series_ID = ['series'.freeze, TkUtil.untrust('00000')]).instance_eval{
       @mutex = Mutex.new
       def mutex; @mutex; end

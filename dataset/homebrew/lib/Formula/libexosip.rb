@@ -17,9 +17,6 @@ class Libexosip < Formula
   depends_on "openssl"
 
   def install
-    # Extra linker flags are needed to build this on Mac OS X. See:
-    # http://growingshoot.blogspot.com/2013/02/manually-install-osip-and-exosip-as.html
-    # Upstream bug ticket: https://savannah.nongnu.org/bugs/index.php?45079
     ENV.append "LDFLAGS", "-framework CoreFoundation -framework CoreServices "\
                           "-framework Security"
     system "./configure", "--disable-debug", "--disable-dependency-tracking",

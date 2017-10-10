@@ -14,7 +14,6 @@ class TopicEmbed < ActiveRecord::Base
     "\n<hr>\n<small>#{I18n.t('embed.imported_from', link: "<a href='#{url}'>#{url}</a>")}</small>\n"
   end
 
-  # Import an article from a source (RSS/Atom/Other)
   def self.import(user, url, title, contents)
     return unless url =~ /^https?\:\/\//
 
@@ -30,7 +29,6 @@ class TopicEmbed < ActiveRecord::Base
     content_sha1 = Digest::SHA1.hexdigest(contents)
     post = nil
 
-    # If there is no embed, create a topic, post and the embed.
     if embed.blank?
       Topic.transaction do
         eh = EmbeddableHost.record_for_host(url)
@@ -52,7 +50,6 @@ class TopicEmbed < ActiveRecord::Base
     else
       absolutize_urls(url, contents)
       post = embed.post
-      # Update the topic if it changed
       if post && post.topic && content_sha1 != embed.content_sha1
         post.revise(user, { raw: absolutize_urls(url, contents) }, skip_validations: true, bypass_rate_limiter: true)
         embed.update_column(:content_sha1, content_sha1)
@@ -93,7 +90,6 @@ class TopicEmbed < ActiveRecord::Base
             node[url_param] = uri.to_s
           end
         rescue URI::InvalidURIError
-          # If there is a mistyped URL, just do nothing
         end
       end
     end
@@ -107,7 +103,6 @@ class TopicEmbed < ActiveRecord::Base
     TopicEmbed.import(user, url, opts[:title] || title, body)
   end
 
-  # Convert any relative URLs to absolute. RSS is annoying for this.
   def self.absolutize_urls(url, contents)
     url = normalize_url(url)
     uri = URI(url)
@@ -147,7 +142,6 @@ class TopicEmbed < ActiveRecord::Base
     end
     return result unless result.blank?
 
-    # If there is no first paragaph, return the first div (onebox)
     doc.css('div').first
   end
 
@@ -162,19 +156,3 @@ class TopicEmbed < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: topic_embeds
-#
-#  id           :integer          not null, primary key
-#  topic_id     :integer          not null
-#  post_id      :integer          not null
-#  embed_url    :string(255)      not null
-#  content_sha1 :string(40)
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#
-# Indexes
-#
-#  index_topic_embeds_on_embed_url  (embed_url) UNIQUE
-#

@@ -30,13 +30,10 @@ class Validators::PostValidator < ActiveModel::Validator
 
   def stripped_length(post)
     range = if post.topic.try(:private_message?)
-      # private message
       SiteSetting.private_message_post_length
     elsif ( post.is_first_post? || (post.topic.present? && post.topic.posts_count == 0) )
-      # creating/editing first post
       SiteSetting.first_post_length
     else
-      # regular post
       SiteSetting.post_length
     end
 
@@ -48,7 +45,6 @@ class Validators::PostValidator < ActiveModel::Validator
     post.errors.add(:raw, I18n.t(:is_invalid)) unless sentinel.valid?
   end
 
-  # Ensure maximum amount of mentions in a post
   def max_mention_validator(post)
     if acting_user_is_trusted?(post)
       add_error_if_count_exceeded(post, :too_many_mentions, post.raw_mentions.size, SiteSetting.max_mentions_per_post)
@@ -63,28 +59,23 @@ class Validators::PostValidator < ActiveModel::Validator
     end
   end
 
-  # Ensure new users can not put too many images in a post
   def max_images_validator(post)
     add_error_if_count_exceeded(post, :too_many_images, post.image_count, SiteSetting.newuser_max_images) unless acting_user_is_trusted?(post)
   end
 
-  # Ensure new users can not put too many attachments in a post
   def max_attachments_validator(post)
     add_error_if_count_exceeded(post, :too_many_attachments, post.attachment_count, SiteSetting.newuser_max_attachments) unless acting_user_is_trusted?(post)
   end
 
-  # Ensure new users can not put too many links in a post
   def max_links_validator(post)
     add_error_if_count_exceeded(post, :too_many_links, post.link_count, SiteSetting.newuser_max_links) unless acting_user_is_trusted?(post)
   end
 
-  # Stop us from posting the same thing too quickly
   def unique_post_validator(post)
     return if SiteSetting.unique_posts_mins == 0
     return if post.skip_unique_check
     return if post.acting_user.staff?
 
-    # If the post is empty, default to the validates_presence_of
     return if post.raw.blank?
 
     if post.matches_recent_post?

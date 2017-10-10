@@ -1,7 +1,3 @@
-#
-#  tframe widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -29,6 +25,5 @@ class Tk::Tile::TFrame < Tk::Frame
   end
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Frame, :TkFrame)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tframe.rb',
                                    :Ttk, Tk::Tile::Frame, :TkFrame)

@@ -1,16 +1,6 @@
 require 'socket.so'
 
 class Addrinfo
-  # creates an Addrinfo object from the arguments.
-  #
-  # The arguments are interpreted as similar to self.
-  #
-  #   Addrinfo.tcp("0.0.0.0", 4649).family_addrinfo("www.ruby-lang.org", 80)
-  #   #=> #<Addrinfo: 221.186.184.68:80 TCP (www.ruby-lang.org:80)>
-  #
-  #   Addrinfo.unix("/tmp/sock").family_addrinfo("/tmp/sock2")
-  #   #=> #<Addrinfo: /tmp/sock2 SOCK_STREAM>
-  #
   def family_addrinfo(*args)
     if args.empty?
       raise ArgumentError, "no address specified"
@@ -35,15 +25,6 @@ class Addrinfo
     end
   end
 
-  # creates a new Socket connected to the address of +local_addrinfo+.
-  #
-  # If _local_addrinfo_ is nil, the address of the socket is not bound.
-  #
-  # The _timeout_ specify the seconds for timeout.
-  # Errno::ETIMEDOUT is raised when timeout occur.
-  #
-  # If a block is given the created socket is yielded for each address.
-  #
   def connect_internal(local_addrinfo, timeout=nil) # :yields: socket
     sock = Socket.new(self.pfamily, self.socktype, self.protocol)
     begin
@@ -80,103 +61,24 @@ class Addrinfo
   end
   private :connect_internal
 
-  # :call-seq:
-  #   addrinfo.connect_from([local_addr_args], [opts]) {|socket| ... }
-  #   addrinfo.connect_from([local_addr_args], [opts])
-  #
-  # creates a socket connected to the address of self.
-  #
-  # If one or more arguments given as _local_addr_args_,
-  # it is used as the local address of the socket.
-  # _local_addr_args_ is given for family_addrinfo to obtain actual address.
-  #
-  # If _local_addr_args_ is not given, the local address of the socket is not bound.
-  #
-  # The optional last argument _opts_ is options represented by a hash.
-  # _opts_ may have following options:
-  #
-  # [:timeout] specify the timeout in seconds.
-  #
-  # If a block is given, it is called with the socket and the value of the block is returned.
-  # The socket is returned otherwise.
-  #
-  #   Addrinfo.tcp("www.ruby-lang.org", 80).connect_from("0.0.0.0", 4649) {|s|
-  #     s.print "GET / HTTP/1.0\r\nHost: www.ruby-lang.org\r\n\r\n"
-  #     puts s.read
-  #   }
-  #
-  #   # Addrinfo object can be taken for the argument.
-  #   Addrinfo.tcp("www.ruby-lang.org", 80).connect_from(Addrinfo.tcp("0.0.0.0", 4649)) {|s|
-  #     s.print "GET / HTTP/1.0\r\nHost: www.ruby-lang.org\r\n\r\n"
-  #     puts s.read
-  #   }
-  #
   def connect_from(*args, &block)
     opts = Hash === args.last ? args.pop : {}
     local_addr_args = args
     connect_internal(family_addrinfo(*local_addr_args), opts[:timeout], &block)
   end
 
-  # :call-seq:
-  #   addrinfo.connect([opts]) {|socket| ... }
-  #   addrinfo.connect([opts])
-  #
-  # creates a socket connected to the address of self.
-  #
-  # The optional argument _opts_ is options represented by a hash.
-  # _opts_ may have following options:
-  #
-  # [:timeout] specify the timeout in seconds.
-  #
-  # If a block is given, it is called with the socket and the value of the block is returned.
-  # The socket is returned otherwise.
-  #
-  #   Addrinfo.tcp("www.ruby-lang.org", 80).connect {|s|
-  #     s.print "GET / HTTP/1.0\r\nHost: www.ruby-lang.org\r\n\r\n"
-  #     puts s.read
-  #   }
-  #
   def connect(opts={}, &block)
     connect_internal(nil, opts[:timeout], &block)
   end
 
-  # :call-seq:
-  #   addrinfo.connect_to([remote_addr_args], [opts]) {|socket| ... }
-  #   addrinfo.connect_to([remote_addr_args], [opts])
-  #
-  # creates a socket connected to _remote_addr_args_ and bound to self.
-  #
-  # The optional last argument _opts_ is options represented by a hash.
-  # _opts_ may have following options:
-  #
-  # [:timeout] specify the timeout in seconds.
-  #
-  # If a block is given, it is called with the socket and the value of the block is returned.
-  # The socket is returned otherwise.
-  #
-  #   Addrinfo.tcp("0.0.0.0", 4649).connect_to("www.ruby-lang.org", 80) {|s|
-  #     s.print "GET / HTTP/1.0\r\nHost: www.ruby-lang.org\r\n\r\n"
-  #     puts s.read
-  #   }
-  #
   def connect_to(*args, &block)
     opts = Hash === args.last ? args.pop : {}
     remote_addr_args = args
     remote_addrinfo = family_addrinfo(*remote_addr_args)
-    #nodyna <ID:send-8> <SD EASY (private methods)>
+    #nodyna <send-1893> <SD EASY (private methods)>
     remote_addrinfo.send(:connect_internal, self, opts[:timeout], &block)
   end
 
-  # creates a socket bound to self.
-  #
-  # If a block is given, it is called with the socket and the value of the block is returned.
-  # The socket is returned otherwise.
-  #
-  #   Addrinfo.udp("0.0.0.0", 9981).bind {|s|
-  #     s.local_address.connect {|s| s.send "hello", 0 }
-  #     p s.recv(10) #=> "hello"
-  #   }
-  #
   def bind
     sock = Socket.new(self.pfamily, self.socktype, self.protocol)
     begin
@@ -198,7 +100,6 @@ class Addrinfo
     end
   end
 
-  # creates a listening socket bound to self.
   def listen(backlog=Socket::SOMAXCONN)
     sock = Socket.new(self.pfamily, self.socktype, self.protocol)
     begin
@@ -221,39 +122,12 @@ class Addrinfo
     end
   end
 
-  # iterates over the list of Addrinfo objects obtained by Addrinfo.getaddrinfo.
-  #
-  #   Addrinfo.foreach(nil, 80) {|x| p x }
-  #   #=> #<Addrinfo: 127.0.0.1:80 TCP (:80)>
-  #   #   #<Addrinfo: 127.0.0.1:80 UDP (:80)>
-  #   #   #<Addrinfo: [::1]:80 TCP (:80)>
-  #   #   #<Addrinfo: [::1]:80 UDP (:80)>
-  #
   def self.foreach(nodename, service, family=nil, socktype=nil, protocol=nil, flags=nil, &block)
     Addrinfo.getaddrinfo(nodename, service, family, socktype, protocol, flags).each(&block)
   end
 end
 
 class BasicSocket < IO
-  # Returns an address of the socket suitable for connect in the local machine.
-  #
-  # This method returns _self_.local_address, except following condition.
-  #
-  # - IPv4 unspecified address (0.0.0.0) is replaced by IPv4 loopback address (127.0.0.1).
-  # - IPv6 unspecified address (::) is replaced by IPv6 loopback address (::1).
-  #
-  # If the local address is not suitable for connect, SocketError is raised.
-  # IPv4 and IPv6 address which port is 0 is not suitable for connect.
-  # Unix domain socket which has no path is not suitable for connect.
-  #
-  #   Addrinfo.tcp("0.0.0.0", 0).listen {|serv|
-  #     p serv.connect_address #=> #<Addrinfo: 127.0.0.1:53660 TCP>
-  #     serv.connect_address.connect {|c|
-  #       s, _ = serv.accept
-  #       p [c, s] #=> [#<Socket:fd 4>, #<Socket:fd 6>]
-  #     }
-  #   }
-  #
   def connect_address
     addr = local_address
     afamily = addr.afamily
@@ -279,39 +153,12 @@ class BasicSocket < IO
 end
 
 class Socket < BasicSocket
-  # enable the socket option IPV6_V6ONLY if IPV6_V6ONLY is available.
   def ipv6only!
     if defined? Socket::IPV6_V6ONLY
       self.setsockopt(:IPV6, :V6ONLY, 1)
     end
   end
 
-  # :call-seq:
-  #   Socket.tcp(host, port, local_host=nil, local_port=nil, [opts]) {|socket| ... }
-  #   Socket.tcp(host, port, local_host=nil, local_port=nil, [opts])
-  #
-  # creates a new socket object connected to host:port using TCP/IP.
-  #
-  # If local_host:local_port is given,
-  # the socket is bound to it.
-  #
-  # The optional last argument _opts_ is options represented by a hash.
-  # _opts_ may have following options:
-  #
-  # [:connect_timeout] specify the timeout in seconds.
-  #
-  # If a block is given, the block is called with the socket.
-  # The value of the block is returned.
-  # The socket is closed when this method returns.
-  #
-  # If no block is given, the socket is returned.
-  #
-  #   Socket.tcp("www.ruby-lang.org", 80) {|sock|
-  #     sock.print "GET / HTTP/1.0\r\nHost: www.ruby-lang.org\r\n\r\n"
-  #     sock.close_write
-  #     puts sock.read
-  #   }
-  #
   def self.tcp(host, port, *rest) # :yield: socket
     opts = Hash === rest.last ? rest.pop : {}
     raise ArgumentError, "wrong number of arguments (#{rest.length} for 2)" if 2 < rest.length
@@ -362,7 +209,6 @@ class Socket < BasicSocket
     end
   end
 
-  # :stopdoc:
   def self.ip_sockets_port0(ai_list, reuseaddr)
     sockets = []
     begin
@@ -415,41 +261,7 @@ class Socket < BasicSocket
   class << self
     private :tcp_server_sockets_port0
   end
-  # :startdoc:
 
-  # creates TCP/IP server sockets for _host_ and _port_.
-  # _host_ is optional.
-  #
-  # If no block given,
-  # it returns an array of listening sockets.
-  #
-  # If a block is given, the block is called with the sockets.
-  # The value of the block is returned.
-  # The socket is closed when this method returns.
-  #
-  # If _port_ is 0, actual port number is chosen dynamically.
-  # However all sockets in the result has same port number.
-  #
-  #   # tcp_server_sockets returns two sockets.
-  #   sockets = Socket.tcp_server_sockets(1296)
-  #   p sockets #=> [#<Socket:fd 3>, #<Socket:fd 4>]
-  #
-  #   # The sockets contains IPv6 and IPv4 sockets.
-  #   sockets.each {|s| p s.local_address }
-  #   #=> #<Addrinfo: [::]:1296 TCP>
-  #   #   #<Addrinfo: 0.0.0.0:1296 TCP>
-  #
-  #   # IPv6 and IPv4 socket has same port number, 53114, even if it is chosen dynamically.
-  #   sockets = Socket.tcp_server_sockets(0)
-  #   sockets.each {|s| p s.local_address }
-  #   #=> #<Addrinfo: [::]:53114 TCP>
-  #   #   #<Addrinfo: 0.0.0.0:53114 TCP>
-  #
-  #   # The block is called with the sockets.
-  #   Socket.tcp_server_sockets(0) {|sockets|
-  #     p sockets #=> [#<Socket:fd 3>, #<Socket:fd 4>]
-  #   }
-  #
   def self.tcp_server_sockets(host=nil, port)
     if port == 0
       sockets = tcp_server_sockets_port0(host)
@@ -485,15 +297,6 @@ class Socket < BasicSocket
     end
   end
 
-  # yield socket and client address for each a connection accepted via given sockets.
-  #
-  # The arguments are a list of sockets.
-  # The individual argument should be a socket or an array of sockets.
-  #
-  # This method yields the block sequentially.
-  # It means that the next connection is not accepted until the block returns.
-  # So concurrent mechanism, thread for example, should be used to service multiple clients at a time.
-  #
   def self.accept_loop(*sockets) # :yield: socket, client_addrinfo
     sockets.flatten!(1)
     if sockets.empty?
@@ -512,75 +315,12 @@ class Socket < BasicSocket
     }
   end
 
-  # creates a TCP/IP server on _port_ and calls the block for each connection accepted.
-  # The block is called with a socket and a client_address as an Addrinfo object.
-  #
-  # If _host_ is specified, it is used with _port_ to determine the server addresses.
-  #
-  # The socket is *not* closed when the block returns.
-  # So application should close it explicitly.
-  #
-  # This method calls the block sequentially.
-  # It means that the next connection is not accepted until the block returns.
-  # So concurrent mechanism, thread for example, should be used to service multiple clients at a time.
-  #
-  # Note that Addrinfo.getaddrinfo is used to determine the server socket addresses.
-  # When Addrinfo.getaddrinfo returns two or more addresses,
-  # IPv4 and IPv6 address for example,
-  # all of them are used.
-  # Socket.tcp_server_loop succeeds if one socket can be used at least.
-  #
-  #   # Sequential echo server.
-  #   # It services only one client at a time.
-  #   Socket.tcp_server_loop(16807) {|sock, client_addrinfo|
-  #     begin
-  #       IO.copy_stream(sock, sock)
-  #     ensure
-  #       sock.close
-  #     end
-  #   }
-  #
-  #   # Threaded echo server
-  #   # It services multiple clients at a time.
-  #   # Note that it may accept connections too much.
-  #   Socket.tcp_server_loop(16807) {|sock, client_addrinfo|
-  #     Thread.new {
-  #       begin
-  #         IO.copy_stream(sock, sock)
-  #       ensure
-  #         sock.close
-  #       end
-  #     }
-  #   }
-  #
   def self.tcp_server_loop(host=nil, port, &b) # :yield: socket, client_addrinfo
     tcp_server_sockets(host, port) {|sockets|
       accept_loop(sockets, &b)
     }
   end
 
-  # :call-seq:
-  #   Socket.udp_server_sockets([host, ] port)
-  #
-  # Creates UDP/IP sockets for a UDP server.
-  #
-  # If no block given, it returns an array of sockets.
-  #
-  # If a block is given, the block is called with the sockets.
-  # The value of the block is returned.
-  # The sockets are closed when this method returns.
-  #
-  # If _port_ is zero, some port is chosen.
-  # But the chosen port is used for the all sockets.
-  #
-  #   # UDP/IP echo server
-  #   Socket.udp_server_sockets(0) {|sockets|
-  #     p sockets.first.local_address.ip_port     #=> 32963
-  #     Socket.udp_server_loop_on(sockets) {|msg, msg_src|
-  #       msg_src.reply msg
-  #     }
-  #   }
-  #
   def self.udp_server_sockets(host=nil, port)
     last_error = nil
     sockets = []
@@ -649,25 +389,6 @@ class Socket < BasicSocket
     end
   end
 
-  # :call-seq:
-  #   Socket.udp_server_recv(sockets) {|msg, msg_src| ... }
-  #
-  # Receive UDP/IP packets from the given _sockets_.
-  # For each packet received, the block is called.
-  #
-  # The block receives _msg_ and _msg_src_.
-  # _msg_ is a string which is the payload of the received packet.
-  # _msg_src_ is a Socket::UDPSource object which is used for reply.
-  #
-  # Socket.udp_server_loop can be implemented using this method as follows.
-  #
-  #   udp_server_sockets(host, port) {|sockets|
-  #     loop {
-  #       readable, _, _ = IO.select(sockets)
-  #       udp_server_recv(readable) {|msg, msg_src| ... }
-  #     }
-  #   }
-  #
   def self.udp_server_recv(sockets)
     sockets.each {|r|
       begin
@@ -683,22 +404,13 @@ class Socket < BasicSocket
         }
       else
         yield msg, UDPSource.new(sender_addrinfo, ai) {|reply_msg|
-          #nodyna <ID:send-9> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1894> <SD COMPLEX (change-prone variables)>
           r.send reply_msg, 0, sender_addrinfo
         }
       end
     }
   end
 
-  # :call-seq:
-  #   Socket.udp_server_loop_on(sockets) {|msg, msg_src| ... }
-  #
-  # Run UDP/IP server loop on the given sockets.
-  #
-  # The return value of Socket.udp_server_sockets is appropriate for the argument.
-  #
-  # It calls the block for each message received.
-  #
   def self.udp_server_loop_on(sockets, &b) # :yield: msg, msg_src
     loop {
       readable, _, _ = IO.select(sockets)
@@ -706,76 +418,32 @@ class Socket < BasicSocket
     }
   end
 
-  # :call-seq:
-  #   Socket.udp_server_loop(port) {|msg, msg_src| ... }
-  #   Socket.udp_server_loop(host, port) {|msg, msg_src| ... }
-  #
-  # creates a UDP/IP server on _port_ and calls the block for each message arrived.
-  # The block is called with the message and its source information.
-  #
-  # This method allocates sockets internally using _port_.
-  # If _host_ is specified, it is used conjunction with _port_ to determine the server addresses.
-  #
-  # The _msg_ is a string.
-  #
-  # The _msg_src_ is a Socket::UDPSource object.
-  # It is used for reply.
-  #
-  #   # UDP/IP echo server.
-  #   Socket.udp_server_loop(9261) {|msg, msg_src|
-  #     msg_src.reply msg
-  #   }
-  #
   def self.udp_server_loop(host=nil, port, &b) # :yield: message, message_source
     udp_server_sockets(host, port) {|sockets|
       udp_server_loop_on(sockets, &b)
     }
   end
 
-  # UDP/IP address information used by Socket.udp_server_loop.
   class UDPSource
-    # +remote_address+ is an Addrinfo object.
-    #
-    # +local_address+ is an Addrinfo object.
-    #
-    # +reply_proc+ is a Proc used to send reply back to the source.
     def initialize(remote_address, local_address, &reply_proc)
       @remote_address = remote_address
       @local_address = local_address
       @reply_proc = reply_proc
     end
 
-    # Address of the source
     attr_reader :remote_address
 
-    # Local address
     attr_reader :local_address
 
     def inspect # :nodoc:
       "\#<#{self.class}: #{@remote_address.inspect_sockaddr} to #{@local_address.inspect_sockaddr}>"
     end
 
-    # Sends the String +msg+ to the source
     def reply(msg)
       @reply_proc.call msg
     end
   end
 
-  # creates a new socket connected to path using UNIX socket socket.
-  #
-  # If a block is given, the block is called with the socket.
-  # The value of the block is returned.
-  # The socket is closed when this method returns.
-  #
-  # If no block is given, the socket is returned.
-  #
-  #   # talk to /tmp/sock socket.
-  #   Socket.unix("/tmp/sock") {|sock|
-  #     t = Thread.new { IO.copy_stream(sock, STDOUT) }
-  #     IO.copy_stream(STDIN, sock)
-  #     t.join
-  #   }
-  #
   def self.unix(path) # :yield: socket
     addr = Addrinfo.unix(path)
     sock = addr.connect
@@ -790,22 +458,6 @@ class Socket < BasicSocket
     end
   end
 
-  # creates a UNIX server socket on _path_
-  #
-  # If no block given, it returns a listening socket.
-  #
-  # If a block is given, it is called with the socket and the block value is returned.
-  # When the block exits, the socket is closed and the socket file is removed.
-  #
-  #   socket = Socket.unix_server_socket("/tmp/s")
-  #   p socket                  #=> #<Socket:fd 3>
-  #   p socket.local_address    #=> #<Addrinfo: /tmp/s SOCK_STREAM>
-  #
-  #   Socket.unix_server_socket("/tmp/sock") {|s|
-  #     p s                     #=> #<Socket:fd 3>
-  #     p s.local_address       #=> # #<Addrinfo: /tmp/sock SOCK_STREAM>
-  #   }
-  #
   def self.unix_server_socket(path)
     if !unix_socket_abstract_name?(path)
       begin
@@ -839,30 +491,6 @@ class Socket < BasicSocket
     end
   end
 
-  # creates a UNIX socket server on _path_.
-  # It calls the block for each socket accepted.
-  #
-  # If _host_ is specified, it is used with _port_ to determine the server ports.
-  #
-  # The socket is *not* closed when the block returns.
-  # So application should close it.
-  #
-  # This method deletes the socket file pointed by _path_ at first if
-  # the file is a socket file and it is owned by the user of the application.
-  # This is safe only if the directory of _path_ is not changed by a malicious user.
-  # So don't use /tmp/malicious-users-directory/socket.
-  # Note that /tmp/socket and /tmp/your-private-directory/socket is safe assuming that /tmp has sticky bit.
-  #
-  #   # Sequential echo server.
-  #   # It services only one client at a time.
-  #   Socket.unix_server_loop("/tmp/sock") {|sock, client_addrinfo|
-  #     begin
-  #       IO.copy_stream(sock, sock)
-  #     ensure
-  #       sock.close
-  #     end
-  #   }
-  #
   def self.unix_server_loop(path, &b) # :yield: socket, client_addrinfo
     unix_server_socket(path) {|serv|
       accept_loop(serv, &b)

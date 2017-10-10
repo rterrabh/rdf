@@ -20,7 +20,6 @@ module SearchHelper
 
   private
 
-  # Autocomplete results for various settings pages
   def default_autocomplete
     [
       { label: "Profile settings", url: profile_path },
@@ -30,7 +29,6 @@ module SearchHelper
     ]
   end
 
-  # Autocomplete results for internal help pages
   def help_autocomplete
     [
       { label: "help: API Help",           url: help_page_path("api", "README") },
@@ -45,7 +43,6 @@ module SearchHelper
     ]
   end
 
-  # Autocomplete results for the current project, if it's defined
   def project_autocomplete
     if @project && @project.repository.exists? && @project.repository.root_ref
       prefix = search_result_sanitize(@project.name_with_namespace)
@@ -68,7 +65,6 @@ module SearchHelper
     end
   end
 
-  # Autocomplete results for the current user's groups
   def groups_autocomplete(term, limit = 5)
     current_user.authorized_groups.search(term).limit(limit).map do |group|
       {
@@ -78,7 +74,6 @@ module SearchHelper
     end
   end
 
-  # Autocomplete results for the current user's projects
   def projects_autocomplete(term, limit = 5)
     ProjectsFinder.new.execute(current_user).search_by_title(term).
       sorted_by_stars.non_archived.limit(limit).map do |p|
@@ -105,7 +100,6 @@ module SearchHelper
     search_path(options)
   end
 
-  # Sanitize html generated after parsing markdown from issue description or comment
   def search_md_sanitize(html)
     sanitize(html, tags: %w(a p ol ul li pre code))
   end

@@ -1,25 +1,7 @@
-# This is the primary location for defining spree preferences
-#
-# The expectation is that this is created once and stored in
-# the spree environment
-#
-# setters:
-# a.color = :blue
-# a[:color] = :blue
-# a.set :color = :blue
-# a.preferred_color = :blue
-#
-# getters:
-# a.color
-# a[:color]
-# a.get :color
-# a.preferred_color
-#
 require "spree/core/search/base"
 
 module Spree
   class AppConfiguration < Preferences::Configuration
-    # Alphabetized to more easily lookup particular preferences
     preference :address_requires_state, :boolean, default: true # should state/state_name be required
     preference :admin_interface_logo, :string, default: 'logo/spree_50.png'
     preference :admin_products_per_page, :integer, default: 10
@@ -59,10 +41,8 @@ module Spree
     preference :tax_using_ship_address, :boolean, default: true
     preference :track_inventory_levels, :boolean, default: true # Determines whether to track on_hand values for variants / products.
 
-    # Default mail headers settings
     preference :send_core_emails, :boolean, default: true
 
-    # searcher_class allows spree extension writers to provide their own Search class
     def searcher_class
       @searcher_class ||= Spree::Core::Search::Base
     end

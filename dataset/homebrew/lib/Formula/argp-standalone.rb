@@ -12,7 +12,6 @@ class ArgpStandalone < Formula
     sha1 "232276ab4611f2d1fa315de24fc062a53cfbd7c4" => :mountain_lion
   end
 
-  # This patch fixes compilation with Clang.
   patch :p0 do
     url "https://trac.macports.org/export/86556/trunk/dports/devel/argp-standalone/files/patch-argp-fmtstream.h"
     sha256 "5656273f622fdb7ca7cf1f98c0c9529bed461d23718bc2a6a85986e4f8ed1cb8"
@@ -27,8 +26,6 @@ class ArgpStandalone < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <argp.h>
 
       int main(int argc, char ** argv)
       {

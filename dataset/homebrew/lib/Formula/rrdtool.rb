@@ -24,7 +24,6 @@ class Rrdtool < Formula
 
   env :userpaths # For perl, ruby
 
-  # Ha-ha, but sleeping is annoying when running configure a lot
   patch :DATA
 
   def install
@@ -42,7 +41,6 @@ class Rrdtool < Formula
     system "./bootstrap" if build.head?
     system "./configure", *args
 
-    # Needed to build proper Ruby bundle
     ENV["ARCHFLAGS"] = "-arch #{MacOS.preferred_arch}"
 
     system "make", "CC=#{ENV.cc}", "CXX=#{ENV.cxx}", "install"

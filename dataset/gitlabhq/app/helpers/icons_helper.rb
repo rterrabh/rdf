@@ -1,11 +1,6 @@
 module IconsHelper
   include FontAwesome::Rails::IconHelper
 
-  # Creates an icon tag given icon name(s) and possible icon modifiers.
-  #
-  # Right now this method simply delegates directly to `fa_icon` from the
-  # font-awesome-rails gem, but should we ever use a different icon pack in the
-  # future we won't have to change hundreds of method calls.
   def icon(names, options = {})
     fa_icon(names, options)
   end
@@ -45,8 +40,6 @@ module IconsHelper
     elsif mode == '120000'
       icon_class = 'share'
     else
-      # Guess which icon to choose based on file extension.
-      # If you think a file extension is missing, feel free to add it on PR
 
       case File.extname(name).downcase
       when '.pdf'

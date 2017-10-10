@@ -1,17 +1,5 @@
 module ActiveAdmin
 
-  # Shareable module to give a #display_on?(action) method
-  # which returns true or false depending on an options hash.
-  #
-  # The options hash accepts:
-  #
-  # only: :index
-  # only: [:index, :show]
-  # except: :index
-  # except: [:index, :show]
-  #
-  # call #normalize_display_options! after @options has been set
-  # to ensure that the display options are setup correctly
 
   module OptionalDisplay
     def display_on?(action, render_context = self)
@@ -20,10 +8,10 @@ module ActiveAdmin
 
       case condition = @options[:if]
       when Symbol, String
-        #nodyna <ID:send-52> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-91> <SD COMPLEX (change-prone variables)>
         render_context.public_send condition
       when Proc
-        #nodyna <ID:instance_exec-16> <IEX COMPLEX (block without parameters)>
+        #nodyna <instance_exec-92> <IEX COMPLEX (block without parameters)>
         render_context.instance_exec &condition
       else
         true

@@ -3,8 +3,6 @@ require 'rexml/source'
 require 'rexml/xmltokens'
 
 module REXML
-  # God, I hate DTDs.  I really do.  Why this idiot standard still
-  # plagues us is beyond me.
   class Entity < Child
     include XMLTokens
     PUBIDCHAR = "\x20\x0D\x0Aa-zA-Z0-9\\-()+,./:=?;!*@$_%#"
@@ -22,16 +20,6 @@ module REXML
 
     attr_reader :name, :external, :ref, :ndata, :pubid
 
-    # Create a new entity.  Simple entities can be constructed by passing a
-    # name, value to the constructor; this creates a generic, plain entity
-    # reference. For anything more complicated, you have to pass a Source to
-    # the constructor with the entity definition, or use the accessor methods.
-    # +WARNING+: There is no validation of entity state except when the entity
-    # is read from a stream.  If you start poking around with the accessors,
-    # you can easily create a non-conformant Entity.  The best thing to do is
-    # dump the stupid DTDs and use XMLSchema instead.
-    #
-    #  e = Entity.new( 'amp', '&' )
     def initialize stream, value=nil, parent=nil, reference=false
       super(parent)
       @ndata = @pubid = @value = @external = nil
@@ -63,15 +51,10 @@ module REXML
       end
     end
 
-    # Evaluates whether the given string matches an entity definition,
-    # returning true if so, and false otherwise.
     def Entity::matches? string
       (ENTITYDECL =~ string) == 0
     end
 
-    # Evaluates to the unnormalized value of this entity; that is, replacing
-    # all entities -- both %ent; and &ent; entities.  This differs from
-    # +value()+ in that +value+ only replaces %ent; entities.
     def unnormalized
       document.record_entity_expansion unless document.nil?
       v = value()
@@ -80,22 +63,11 @@ module REXML
       @unnormalized
     end
 
-    #once :unnormalized
 
-    # Returns the value of this entity unprocessed -- raw.  This is the
-    # normalized value; that is, with all %ent; and &ent; entities intact
     def normalized
       @value
     end
 
-    # Write out a fully formed, correct entity definition (assuming the Entity
-    # object itself is valid.)
-    #
-    # out::
-    #   An object implementing <TT>&lt;&lt;<TT> to which the entity will be
-    #   output
-    # indent::
-    #   *DEPRECATED* and ignored
     def write out, indent=-1
       out << '<!ENTITY '
       out << '% ' if @reference
@@ -117,7 +89,6 @@ module REXML
       out << '>'
     end
 
-    # Returns this entity as a string.  See write().
     def to_s
       rv = ''
       write rv
@@ -125,14 +96,6 @@ module REXML
     end
 
     PEREFERENCE_RE = /#{PEREFERENCE}/um
-    # Returns the value of this entity.  At the moment, only internal entities
-    # are processed.  If the value contains internal references (IE,
-    # %blah;), those are replaced with their values.  IE, if the doctype
-    # contains:
-    #  <!ENTITY % foo "bar">
-    #  <!ENTITY yada "nanoo %foo; nanoo>
-    # then:
-    #  doctype.entity('yada').value   #-> "nanoo bar nanoo"
     def value
       if @value
         matches = @value.scan(PEREFERENCE_RE)
@@ -155,19 +118,11 @@ module REXML
     end
   end
 
-  # This is a set of entity constants -- the ones defined in the XML
-  # specification.  These are +gt+, +lt+, +amp+, +quot+ and +apos+.
-  # CAUTION: these entities does not have parent and document
   module EntityConst
-    # +>+
     GT = Entity.new( 'gt', '>' )
-    # +<+
     LT = Entity.new( 'lt', '<' )
-    # +&+
     AMP = Entity.new( 'amp', '&' )
-    # +"+
     QUOT = Entity.new( 'quot', '"' )
-    # +'+
     APOS = Entity.new( 'apos', "'" )
   end
 end

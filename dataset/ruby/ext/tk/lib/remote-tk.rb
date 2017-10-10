@@ -1,6 +1,3 @@
-#
-#               remote-tk.rb - supports to control remote Tk interpreters
-#                       by Hidetoshi NAGAI <nagai@ai.kyutech.ac.jp>
 
 if defined? MultiTkIp
   fail RuntimeError, "'remote-tk' library must be required before requiring 'multi-tk'"
@@ -17,7 +14,6 @@ class MultiTkIp
 
   @flag = true
   def self._DEFAULT_MASTER
-    # work only once
     if @flag
       @flag = nil
       @@DEFAULT_MASTER
@@ -46,7 +42,6 @@ class RemoteTkIp
 end
 
 
-###############################
 
 class << RemoteTkIp
   undef new_master, new_slave, new_safe_slave
@@ -130,6 +125,7 @@ class RemoteTkIp
     @ip_id = _create_connection
 
     class << self
+      #nodyna <instance_eval-1650> <not yet classified>
       undef :instance_eval
     end
 
@@ -158,7 +154,9 @@ class RemoteTkIp
 
     return nil if timeout < 1
     @ret_val.value = ''
+    #nodyna <send-1651> <not yet classified>
     @interp._invoke('send', '-async', @remote,
+                    #nodyna <send-1652> <not yet classified>
                     'send', '-async', Tk.appname,
                     "set #{@ret_val.id} ready")
     Tk.update
@@ -176,6 +174,7 @@ class RemoteTkIp
   def _create_connection
     raise SecurityError, "no permission to manipulate" unless self.manipulable?
 
+    #nodyna <send-1653> <not yet classified>
     ip_id = '_' + @interp._invoke('send', @remote, <<-'EOS') + '_'
       if {[catch {set _rubytk_control_ip_id_} ret] != 0} {
         set _rubytk_control_ip_id_ 0
@@ -185,8 +184,10 @@ class RemoteTkIp
       return $_rubytk_control_ip_id_
     EOS
 
+    #nodyna <send-1654> <not yet classified>
     @interp._invoke('send', @remote, <<-EOS)
       proc rb_out#{ip_id} args {
+        #nodyna <send-1655> <not yet classified>
         send #{@appname} rb_out \$args
       }
     EOS
@@ -200,24 +201,30 @@ class RemoteTkIp
 
     p ['_appsend', [@remote, @displayof], enc_mode, async, cmds] if $DEBUG
     if $SAFE >= 4
+      #nodyna <send-1656> <not yet classified>
       fail SecurityError, "cannot send commands at level 4"
     elsif $SAFE >= 1 && cmds.find{|obj| obj.tainted?}
+      #nodyna <send-1657> <not yet classified>
       fail SecurityError, "cannot send tainted commands at level #{$SAFE}"
     end
 
     cmds = @interp._merge_tklist(*TkUtil::_conv_args([], enc_mode, *cmds))
     if @displayof
       if async
+        #nodyna <send-1658> <not yet classified>
         @interp.__invoke('send', '-async', '-displayof', @displayof,
                          '--', @remote, *cmds)
       else
+        #nodyna <send-1659> <not yet classified>
         @interp.__invoke('send', '-displayof', @displayof,
                          '--', @remote, *cmds)
       end
     else
       if async
+        #nodyna <send-1660> <not yet classified>
         @interp.__invoke('send', '-async', '--', @remote, *cmds)
       else
+        #nodyna <send-1661> <not yet classified>
         @interp.__invoke('send', '--', @remote, *cmds)
       end
     end
@@ -307,7 +314,6 @@ class RemoteTkIp
     else
       lst = @interp._invoke_without_enc('winfo', 'interps')
     end
-    # unless @interp._split_tklist(lst).index(@remote)
     unless @interp._split_tklist(lst).index(_toUTF8(@remote))
       true
     else
@@ -392,29 +398,23 @@ class RemoteTkIp
   end
 
   def _get_variable(var_name, flag)
-    # ignore flag
     _appsend(false, 'set', TkComm::_get_eval_string(var_name))
   end
   def _get_variable2(var_name, index_name, flag)
-    # ignore flag
     _appsend(false, 'set', "#{TkComm::_get_eval_string(var_name)}(#{TkComm::_get_eval_string(index_name)})")
   end
 
   def _set_variable(var_name, value, flag)
-    # ignore flag
     _appsend(false, 'set', TkComm::_get_eval_string(var_name), TkComm::_get_eval_string(value))
   end
   def _set_variable2(var_name, index_name, value, flag)
-    # ignore flag
     _appsend(false, 'set', "#{TkComm::_get_eval_string(var_name)}(#{TkComm::_get_eval_string(index_name)})", TkComm::_get_eval_string(value))
   end
 
   def _unset_variable(var_name, flag)
-    # ignore flag
     _appsend(false, 'unset', TkComm::_get_eval_string(var_name))
   end
   def _unset_variable2(var_name, index_name, flag)
-    # ignore flag
     _appsend(false, 'unset', "#{var_name}(#{index_name})")
   end
 

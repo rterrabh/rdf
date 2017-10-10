@@ -22,8 +22,6 @@ class Gnupg < Formula
     system "make"
     system "make", "check"
 
-    # we need to create these directories because the install target has the
-    # dependency order wrong
     [bin, libexec/"gnupg"].each(&:mkpath)
     system "make", "install"
   end

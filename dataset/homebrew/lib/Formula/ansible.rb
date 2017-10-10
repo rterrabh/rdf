@@ -17,9 +17,6 @@ class Ansible < Formula
   depends_on "libyaml"
   depends_on "openssl"
 
-  #
-  # ansible (core dependencies)
-  #
   resource "Jinja2" do
     url "https://pypi.python.org/packages/source/J/Jinja2/Jinja2-2.8.tar.gz"
     sha256 "bc1ff2ff88dbfacefde4ddde471d1417d3b304e8df103a7a9437d47269201bf4"
@@ -45,27 +42,16 @@ class Ansible < Formula
     sha256 "c36c938a872e5ff494938b33b14aaa156cb439ec67548fcab3535bb78b0846e8"
   end
 
-  #
-  # Required by the 'paramiko' core module
-  # https://github.com/paramiko/paramiko)
-  #
   resource "ecdsa" do
     url "https://pypi.python.org/packages/source/e/ecdsa/ecdsa-0.13.tar.gz"
     sha256 "64cf1ee26d1cde3c73c6d7d107f835fed7c6a2904aef9eac223d57ad800c43fa"
   end
 
-  #
-  # Required by the 'uri' core module
-  # See http://docs.ansible.com/uri_module.html#requirements)
-  #
   resource "httplib2" do
     url "https://pypi.python.org/packages/source/h/httplib2/httplib2-0.9.1.tar.gz"
     sha256 "bc6339919a5235b9d1aaee011ca5464184098f0c47c9098001f91c97176583f5"
   end
 
-  #
-  # Resources required by docker-py and pyrax (see below)
-  #
   resource "requests" do
     url "https://pypi.python.org/packages/source/r/requests/requests-2.7.0.tar.gz"
     sha256 "398a3db6d61899d25fd4a06c6ca12051b0ce171d705decd7ed5511517b4bb93d"
@@ -76,9 +62,6 @@ class Ansible < Formula
     sha256 "e24052411fc4fbd1f672635537c3fc2330d9481b18c0317695b46259512c91d5"
   end
 
-  #
-  # docker-py (for Docker support)
-  #
   resource "backports.ssl_match_hostname" do
     url "https://pypi.python.org/packages/source/b/backports.ssl_match_hostname/backports.ssl_match_hostname-3.4.0.2.tar.gz"
     sha256 "07410e7fb09aab7bdaf5e618de66c3dac84e2e3d628352814dc4c37de321d6ae"
@@ -94,9 +77,6 @@ class Ansible < Formula
     sha256 "cb3ab95617ed2098d24723e3ad04ed06c4fde661400b96daa1859af965bfe040"
   end
 
-  #
-  # pywinrm (for Windows support)
-  #
   resource "isodate" do
     url "https://pypi.python.org/packages/source/i/isodate/isodate-0.5.1.tar.gz"
     sha256 "b12aed31c0e834543497e24d609a41531a800d8304c39e6665c45ca023b012fb"
@@ -112,25 +92,16 @@ class Ansible < Formula
     sha256 "275d1e68c95cd7e3ee703ddc3ea7278e8281f761680d6bdd637bcd00a5c59901"
   end
 
-  #
-  # kerberos (for Windows support)
-  #
   resource "kerberos" do
     url "https://pypi.python.org/packages/source/k/kerberos/kerberos-1.2.2.tar.gz"
     sha256 "070ff6d9baf3752323283b1c8ed75e2edd0ec55337359185abf5bb0b617d2f5d"
   end
 
-  #
-  # boto (for AWS support)
-  #
   resource "boto" do
     url "https://pypi.python.org/packages/source/b/boto/boto-2.38.0.tar.gz"
     sha256 "d9083f91e21df850c813b38358dc83df16d7f253180a1344ecfedce24213ecf2"
   end
 
-  #
-  # pyrax (for Rackspace support)
-  #
   resource "Babel" do
     url "https://pypi.python.org/packages/source/B/Babel/Babel-2.0.tar.gz"
     sha256 "44988df191123065af9857eca68e9151526a931c12659ca29904e4f11de7ec1b"
@@ -157,7 +128,6 @@ class Ansible < Formula
   end
 
   resource "mock" do
-    # NOTE: mock versions above 1.0.1 fail to install due to a broken setuptools version check.
     url "https://pypi.python.org/packages/source/m/mock/mock-1.0.1.tar.gz"
     sha256 "b839dd2d9c117c701430c149956918a423a9863b48b09c90e30a6013e7d2f44f"
   end
@@ -282,9 +252,6 @@ class Ansible < Formula
     sha256 "99cbb4e3a3ea964df0cb1437261fc1198616ec872e7b501622f3f7f92fcd0833"
   end
 
-  #
-  # python-keyczar (for Accelerated Mode support)
-  #
   resource "pyasn1" do
     url "https://pypi.python.org/packages/source/p/pyasn1/pyasn1-0.1.8.tar.gz"
     sha256 "5d33be7ca0ec5997d76d29ea4c33b65c00c0231407fff975199d7f40530b8347"
@@ -300,9 +267,6 @@ class Ansible < Formula
     sha256 "d41bd7a2d22f9bd7e19ff4eed0eea2316eb737f3ec6a7c361dde6b2785b08cdc"
   end
 
-  #
-  # shade (for OpenStack support)
-  #
   resource "anyjson" do
     url "https://pypi.python.org/packages/source/a/anyjson/anyjson-0.3.3.tar.gz"
     sha256 "37812d863c9ad3e35c0734c42e0bf0320ce8c3bed82cd20ad54cb34d158157ba"

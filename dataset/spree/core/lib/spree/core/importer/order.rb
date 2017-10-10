@@ -32,7 +32,6 @@ module Spree
 
             order.create_proposed_shipments unless shipments_attrs.present?
 
-            # Really ensure that the order totals & states are correct
             order.updater.update
             if shipments_attrs.present?
               order.shipments.each_with_index do |shipment, index|
@@ -73,7 +72,6 @@ module Spree
 
                   inventory_unit.save!
 
-                  # Don't assign shipments to this inventory unit more than once
                   inventory_units.delete(inventory_unit)
                 end
               end
@@ -134,8 +132,6 @@ module Spree
                 line_item = ensure_variant_id_from_params(line_items[k])
                 variant = Spree::Variant.find(line_item[:variant_id])
                 line_item = order.contents.add(variant, line_item[:quantity])
-                # Raise any errors with saving to prevent import succeeding with line items
-                # failing silently.
                 if extra_params.present?
                   line_item.update_attributes!(extra_params)
                 else
@@ -152,8 +148,6 @@ module Spree
                 line_item = ensure_variant_id_from_params(line_item)
                 variant = Spree::Variant.find(line_item[:variant_id])
                 line_item = order.contents.add(variant, line_item[:quantity])
-                # Raise any errors with saving to prevent import succeeding with line items
-                # failing silently.
                 if extra_params.present?
                   line_item.update_attributes!(extra_params)
                 else
@@ -189,8 +183,6 @@ module Spree
             begin
               payment = order.payments.build order: order
               payment.amount = p[:amount].to_f
-              # Order API should be using state as that's the normal payment field.
-              # spree_wombat serializes payment state as status so imported orders should fall back to status field.
               payment.state = p[:state] || p[:status] || 'completed'
               payment.created_at = p[:created_at] if p[:created_at]
               payment.payment_method = Spree::PaymentMethod.find_by_name!(p[:payment_method])

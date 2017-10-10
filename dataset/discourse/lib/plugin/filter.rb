@@ -1,5 +1,4 @@
 require_dependency 'plugin/filter_manager'
-# this concept is borrowed straight out of wordpress
 module Plugin
   class Filter
     def self.manager

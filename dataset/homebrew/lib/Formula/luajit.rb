@@ -24,9 +24,6 @@ class Luajit < Formula
   option "with-52compat", "Build with additional Lua 5.2 compatibility"
 
   def install
-    # 1 - Override the hardcoded gcc.
-    # 2 - Remove the "-march=i686" so we can set the march in cflags.
-    # Both changes should persist and were discussed upstream.
     inreplace "src/Makefile" do |f|
       f.change_make_var! "CC", ENV.cc
       f.change_make_var! "CCOPT_x86", ""
@@ -36,17 +33,14 @@ class Luajit < Formula
 
     args = %W[PREFIX=#{prefix}]
 
-    # This doesn't yet work under superenv because it removes "-g"
     args << "CCDEBUG=-g" if build.with? "debug"
 
-    # The development branch of LuaJIT normally does not install "luajit".
     args << "INSTALL_TNAME=luajit" if build.devel?
 
     args << "XCFLAGS=-DLUAJIT_ENABLE_LUA52COMPAT" if build.with? "52compat"
 
     system "make", "amalg", *args
     system "make", "install", *args
-    # Having an empty Lua dir in Lib can screw with the new Lua setup.
     rm_rf prefix/"lib/lua"
     rm_rf prefix/"share/lua"
   end

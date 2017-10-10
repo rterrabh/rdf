@@ -16,7 +16,6 @@ class Pipemeter < Formula
                           "--prefix=#{prefix}",
                           "--mandir=#{man}"
 
-    # Fix the man1 directory location
     inreplace "Makefile", "$(PREFIX)/man/man1", man1
 
     bin.mkpath

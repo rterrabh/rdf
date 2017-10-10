@@ -18,11 +18,9 @@ class Scsh < Formula
     if build.head?
       system "autoreconf"
     else
-      # will not build 64-bit
       ENV.m32
     end
 
-    # build system is not parallel-safe
     ENV.deparallelize
     system "./configure", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",

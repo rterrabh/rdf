@@ -53,10 +53,7 @@ class Dmd < Formula
     prefix.install "samples"
     man.install Dir["docs/man/*"]
 
-    # A proper dmd.conf is required for later build steps:
     conf = buildpath/"dmd.conf"
-    # Can't use opt_include or opt_lib here because dmd won't have been
-    # linked into opt by the time this build runs:
     conf.write <<-EOS.undent
         [Environment]
         DFLAGS=-I#{include}/d2 -L-L#{lib}
@@ -82,17 +79,10 @@ class Dmd < Formula
     end
   end
 
-  # Previous versions of this formula may have left in place an incorrect
-  # dmd.conf.  If it differs from the newly generated one, move it out of place
-  # and warn the user.
-  # This must be idempotent because it may run from both install() and
-  # post_install() if the user is running `brew install --build-from-source`.
   def install_new_dmd_conf
     conf = etc/"dmd.conf"
 
-    # If the new file differs from conf, etc.install drops it here:
     new_conf = etc/"dmd.conf.default"
-    # Else, we're already using the latest version:
     return unless new_conf.exist?
 
     backup = etc/"dmd.conf.old"

@@ -42,7 +42,6 @@ class AdminUserIndexQuery
   def suspect_users
     where_conds = []
 
-    # One signal: no reading yet the user has bio text
     where_conds << "user_stats.posts_read_count <= 1 AND user_stats.topics_entered <= 1"
 
     @query.activated
@@ -87,7 +86,6 @@ class AdminUserIndexQuery
     end
   end
 
-  # this might not be needed in rails 4 ?
   def append(active_relation)
     @query = active_relation if active_relation
   end

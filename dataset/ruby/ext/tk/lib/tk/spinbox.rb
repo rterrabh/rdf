@@ -1,7 +1,3 @@
-#
-#               tk/spinbox.rb - Tk spinbox classes
-#                       by Yukihiro Matsumoto <matz@caelum.co.jp>
-#
 require 'tk'
 require 'tk/entry'
 
@@ -24,7 +20,6 @@ class Tk::Spinbox<Tk::Entry
         [ ?w, TkComm.method(:window) ],
 
         [ ?e, proc{|val|
-            #enc = Tk.encoding
             enc = ((Tk.encoding)? Tk.encoding : Tk.encoding_system)
             if enc
               Tk.fromUTF8(TkComm::string(val), enc)
@@ -38,7 +33,6 @@ class Tk::Spinbox<Tk::Entry
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -73,13 +67,6 @@ class Tk::Spinbox<Tk::Entry
 
   Tk::ValidateConfigure.__def_validcmd(binding, SpinCommand)
 
-  #def create_self(keys)
-  #  tk_call_without_enc('spinbox', @path)
-  #  if keys and keys != None
-  #    configure(keys)
-  #  end
-  #end
-  #private :create_self
 
   def __boolval_optkeys
     super() << 'wrap'
@@ -109,7 +96,6 @@ class Tk::Spinbox<Tk::Entry
     begin
       tk_send_without_enc('invoke', 'buttonup')
     rescue RuntimeError => e
-      # old version of element?
       begin
         tk_send_without_enc('invoke', 'spinup')
       rescue
@@ -123,7 +109,6 @@ class Tk::Spinbox<Tk::Entry
     begin
       tk_send_without_enc('invoke', 'buttondown')
     rescue RuntimeError => e
-      # old version of element?
       begin
         tk_send_without_enc('invoke', 'spinup')
       rescue
@@ -138,7 +123,5 @@ class Tk::Spinbox<Tk::Entry
   end
 end
 
-#TkSpinbox = Tk::Spinbox unless Object.const_defined? :TkSpinbox
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Spinbox, :TkSpinbox)
 Tk.__set_loaded_toplevel_aliases__('tk/spinbox.rb', :Tk, Tk::Spinbox,
                                    :TkSpinbox)

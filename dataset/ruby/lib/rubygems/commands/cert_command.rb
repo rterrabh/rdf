@@ -200,7 +200,6 @@ For further reading on signing gems see `ri Gem::Security`.
 
   def list_certificates_matching filter # :nodoc:
     certificates_matching filter do |certificate, _|
-      # this could probably be formatted more gracefully
       say certificate.subject.to_s
     end
   end

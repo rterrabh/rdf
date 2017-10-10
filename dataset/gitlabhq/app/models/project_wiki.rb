@@ -9,8 +9,6 @@ class ProjectWiki
 
   class CouldNotCreateWikiError < StandardError; end
 
-  # Returns a string describing what went wrong after
-  # an operation fails.
   attr_reader :error_message
 
   def initialize(project, user = nil)
@@ -38,7 +36,6 @@ class ProjectWiki
     [Gitlab.config.gitlab.url, "/", path_with_namespace, ".git"].join('')
   end
 
-  # Returns the Gollum::Wiki object.
   def wiki
     @wiki ||= begin
       Gollum::Wiki.new(path_to_repo)
@@ -51,19 +48,10 @@ class ProjectWiki
     pages.empty?
   end
 
-  # Returns an Array of Gitlab WikiPage instances or an
-  # empty Array if this Wiki has no pages.
   def pages
     wiki.pages.map { |page| WikiPage.new(self, page, true) }
   end
 
-  # Finds a page within the repository based on a tile
-  # or slug.
-  #
-  # title - The human readable or parameterized title of
-  #         the page.
-  #
-  # Returns an initialized WikiPage instance or nil
   def find_page(title, version = nil)
     page_title, page_dir = page_title_and_dir(title)
     if page = wiki.page(page_title, version, page_dir)

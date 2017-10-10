@@ -8,8 +8,6 @@ class Mailutils < Formula
   depends_on "gsasl"
 
   def install
-    # Python breaks the build (2014-05-01)
-    # Don't want bin/mu-mh/ directory
     system "./configure", "--without-python",
                           "--disable-mh",
                           "--prefix=#{prefix}"

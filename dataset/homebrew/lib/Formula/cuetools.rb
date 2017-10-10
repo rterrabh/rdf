@@ -17,7 +17,6 @@ class Cuetools < Formula
   depends_on "automake" => :build
   depends_on "libtool" => :build
 
-  # see https://github.com/svend/cuetools/pull/18
   patch :DATA
 
   def install

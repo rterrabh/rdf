@@ -4,7 +4,6 @@ class OEmbedCache < ActiveRecord::Base
 
   has_many :posts
 
-  # NOTE API V1 to be extracted
   acts_as_api
   api_accessible :backbone do |t|
     t.add :data
@@ -21,7 +20,6 @@ class OEmbedCache < ActiveRecord::Base
     begin
       response = OEmbed::Providers.get(self.url, {:maxwidth => 420, :maxheight => 420, :frame => 1, :iframe => 1})
     rescue => e
-      # noop
     else
       self.data = response.fields
       self.data['trusted_endpoint_url'] = response.provider.endpoint

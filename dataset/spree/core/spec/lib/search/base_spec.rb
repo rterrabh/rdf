@@ -49,7 +49,7 @@ describe Spree::Core::Search::Base do
     params = { :per_page => "",
                :search => { "price_range_any" => ["Under $10.00"] }}
     searcher = Spree::Core::Search::Base.new(params)
-    #nodyna <ID:send-29> <SD EASY (private methods)>
+    #nodyna <send-2494> <SD EASY (private methods)>
     expect(searcher.send(:get_base_scope).to_sql).to match /<= 10/
     expect(searcher.retrieve_products.count).to eq(1)
   end
@@ -58,9 +58,9 @@ describe Spree::Core::Search::Base do
     params = { :per_page => "",
                :search => { "price_range_any" => ["Under $10.00", "$10.00 - $15.00"] }}
     searcher = Spree::Core::Search::Base.new(params)
-    #nodyna <ID:send-30> <SD EASY (private methods)>
+    #nodyna <send-2495> <SD EASY (private methods)>
     expect(searcher.send(:get_base_scope).to_sql).to match /<= 10/
-    #nodyna <ID:send-31> <SD EASY (private methods)>
+    #nodyna <send-2496> <SD EASY (private methods)>
     expect(searcher.send(:get_base_scope).to_sql).to match /between 10 and 15/i
     expect(searcher.retrieve_products.count).to eq(2)
   end

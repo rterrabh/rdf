@@ -23,8 +23,6 @@ class GstPluginsBase < Formula
   depends_on "gettext"
   depends_on "gstreamer"
 
-  # The set of optional dependencies is based on the intersection of
-  # gst-plugins-base-0.10.35/REQUIREMENTS and Homebrew formulae
   depends_on "gobject-introspection"
   depends_on "orc" => :optional
   depends_on "gtk+" => :optional
@@ -34,7 +32,6 @@ class GstPluginsBase < Formula
   depends_on "libvorbis" => :optional
 
   def install
-    # gnome-vfs turned off due to lack of formula for it.
     args = %W[
       --prefix=#{prefix}
       --enable-experimental

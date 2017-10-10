@@ -9,7 +9,6 @@ module CurrentUser
   end
 
 
-  # can be used to pretend current user does no exist, for CSRF attacks
   def clear_current_user
     @current_user_provider = Discourse.current_user_provider.new({})
   end

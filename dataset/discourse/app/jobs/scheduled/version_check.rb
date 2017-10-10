@@ -24,6 +24,7 @@ module Jobs
               prev_missing_versions_count < json['missingVersionsCount'].to_i
 
             message = VersionMailer.send_notice
+            #nodyna <send-407> <not yet classified>
             Email::Sender.new(message, :new_version).send
 
           end

@@ -1,4 +1,3 @@
-# mixin for all Guardian methods dealing with post_revisions permissions
 module PostRevisionGuardian
 
   def can_see_post_revision?(post_revision)

@@ -1,8 +1,6 @@
 require 'rubygems/test_case'
 require 'rubygems/package'
 
-##
-# A test case for Gem::Package::Tar* classes
 
 class Gem::Package::TarTestCase < Gem::TestCase
 

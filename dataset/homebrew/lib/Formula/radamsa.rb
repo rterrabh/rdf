@@ -13,7 +13,6 @@ class Radamsa < Formula
   def caveats; <<-EOS.undent
     The Radamsa binary has been installed.
     The Lisp source code has been copied to:
-      #{prefix}/rad
 
     To be able to recompile the source to C, you will need run:
       $ make get-owl

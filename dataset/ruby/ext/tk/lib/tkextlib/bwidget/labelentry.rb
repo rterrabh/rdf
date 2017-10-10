@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/labelentry.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/entry'
@@ -38,12 +34,7 @@ class Tk::BWidget::LabelEntry
   end
   private :__font_optkeys
 
-  #def entrybind(*args)
-  #  _bind([path, 'bind'], *args)
-  #  self
-  #end
   def entrybind(context, *args)
-    # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -53,12 +44,7 @@ class Tk::BWidget::LabelEntry
     self
   end
 
-  #def entrybind_append(*args)
-  #  _bind_append([path, 'bind'], *args)
-  #  self
-  #end
   def entrybind_append(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else

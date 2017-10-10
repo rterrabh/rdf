@@ -3,7 +3,6 @@ require 'flag_query'
 class Admin::FlagsController < Admin::AdminController
 
   def index
-    # we may get out of sync, fix it here
     PostAction.update_flagged_posts_count
     posts, topics, users = FlagQuery.flagged_posts_report(current_user, params[:filter], params[:offset].to_i, 10)
 

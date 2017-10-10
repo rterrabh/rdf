@@ -19,7 +19,6 @@ module API
 
       identifier = sudo_identifier()
 
-      # If the sudo is the current user do nothing
       if identifier && !(@current_user.id == identifier || @current_user.username == identifier)
         render_api_error!('403 Forbidden: Must be admin to use sudo', 403) unless @current_user.is_admin?
         @current_user = User.by_username_or_id(identifier)
@@ -32,7 +31,6 @@ module API
     def sudo_identifier()
       identifier ||= params[SUDO_PARAM] ||= env[SUDO_HEADER]
 
-      # Regex for integers
       if !!(identifier =~ /^[0-9]+$/)
         identifier.to_i
       else
@@ -111,11 +109,6 @@ module API
       abilities.allowed?(object, action, subject)
     end
 
-    # Checks the occurrences of required attributes, each attribute must be present in the params hash
-    # or a Bad Request error is invoked.
-    #
-    # Parameters:
-    #   keys (required) - A hash consisting of keys that must be present
     def required_attributes!(keys)
       keys.each do |key|
         bad_request!(key) unless params[key].present?
@@ -134,7 +127,6 @@ module API
       ActionController::Parameters.new(attrs).permit!
     end
 
-    # Helper method for validating all labels against its names
     def validate_label_params(params)
       errors = {}
 
@@ -177,7 +169,6 @@ module API
       items.where(iid: iid)
     end
 
-    # error helpers
 
     def forbidden!(reason = nil)
       message = ['403 Forbidden']

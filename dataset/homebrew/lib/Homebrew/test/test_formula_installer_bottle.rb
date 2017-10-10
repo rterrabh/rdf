@@ -27,7 +27,6 @@ class InstallBottleTests < Homebrew::TestCase
       keg.uninstall
       formula.clear_cache
       Dir["#{HOMEBREW_CACHE}/testball_bottle*"].each { |f| File.delete(f) }
-      # there will be log files when sandbox is enable.
       formula.logs.rmtree if formula.logs.directory?
     end
 
@@ -39,17 +38,13 @@ class InstallBottleTests < Homebrew::TestCase
     MacOS.stubs(:has_apple_developer_tools?).returns(false)
 
     temporary_bottle_install(TestballBottle.new) do |f|
-      # Copied directly from test_formula_installer.rb as we expect
-      # the same behavior
 
-      # Test that things made it into the Keg
       assert_predicate f.bin, :directory?
 
       assert_predicate f.libexec, :directory?
 
       refute_predicate f.prefix+"main.c", :exist?
 
-      # Test that things make it into the Cellar
       keg = Keg.new f.prefix
       keg.link
 
@@ -61,7 +56,6 @@ class InstallBottleTests < Homebrew::TestCase
   def test_build_tools_error
     MacOS.stubs(:has_apple_developer_tools?).returns(false)
 
-    # Testball doesn't have a bottle block, so use it to test this behavior
     formula = Testball.new
 
     refute_predicate formula, :installed?

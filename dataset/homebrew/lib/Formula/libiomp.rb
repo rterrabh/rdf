@@ -41,8 +41,6 @@ class Libiomp < Formula
 
   test do
     testfile = <<-EOS.undent
-      #include <omp.h>
-      #include <stdlib.h>
 
       int main(void) {
           omp_set_num_threads(2);

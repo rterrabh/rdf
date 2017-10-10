@@ -22,10 +22,6 @@ class Szip < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <assert.h>
-      #include <stdlib.h>
-      #include <stdio.h>
-      #include "szlib.h"
 
       int main()
       {

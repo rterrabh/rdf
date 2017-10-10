@@ -16,7 +16,6 @@ class Bibtex2html < Formula
   depends_on :tex => :optional
 
   def install
-    # See: https://trac.macports.org/ticket/26724
     inreplace "Makefile.in" do |s|
       s.remove_make_var! "STRLIB"
     end

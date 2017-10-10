@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class ApplicationController < ActionController::Base
   before_action :force_tablet_html
@@ -37,7 +34,6 @@ class ApplicationController < ActionController::Base
     request.env['HTTP_REFERER'] ||= '/'
   end
 
-  # Overwriting the sign_out redirect path method
   def after_sign_out_path_for(resource_or_scope)
     if is_mobile_device?
       root_path
@@ -118,8 +114,6 @@ class ApplicationController < ActionController::Base
     @grammatical_gender || nil
   end
 
-  # use :mobile view for mobile and :html for everything else
-  # (except if explicitly specified, e.g. :json, :xml)
   def mobile_switch
     if session[:mobile_view] == true && request.format.html?
       request.format = :mobile

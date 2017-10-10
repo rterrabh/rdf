@@ -86,22 +86,16 @@ describe Spree::Api::BaseController, :type => :controller do
 
   describe '#error_during_processing' do
     controller(FakesController) do
-      # GET /foo
-      # Simulates a failed API call.
       def foo
         raise StandardError
       end
     end
 
-    # What would be placed in config/initializers/spree.rb
     Spree::Api::BaseController.error_notifier = Proc.new do |e, controller|
       MockHoneybadger.notify_or_ignore(e, rack_env: controller.request.env)
     end
 
-    ##
-    # Fake HB alert class
     class MockHoneybadger
-      # https://github.com/honeybadger-io/honeybadger-ruby/blob/master/lib/honeybadger.rb#L136
       def self.notify_or_ignore(exception, opts = {})
       end
     end

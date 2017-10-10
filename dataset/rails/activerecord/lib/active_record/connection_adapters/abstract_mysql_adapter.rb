@@ -106,13 +106,6 @@ module ActiveRecord
 
         private
 
-        # MySQL misreports NOT NULL column default when none is given.
-        # We can't detect this for columns which may have a legitimate ''
-        # default (string) but we can for others (integer, datetime, boolean,
-        # and the rest).
-        #
-        # Test whether the column has default '', is not null, and is not
-        # a type allowing default ''.
         def missing_default_forged_as_empty_string?(default)
           type != :string && !null && default == ''
         end
@@ -128,14 +121,6 @@ module ActiveRecord
         end
       end
 
-      ##
-      # :singleton-method:
-      # By default, the MysqlAdapter will consider all columns of type <tt>tinyint(1)</tt>
-      # as boolean. If you wish to disable this emulation (which was the default
-      # behavior in versions 0.13.1 and earlier) you can add the following line
-      # to your application.rb file:
-      #
-      #   ActiveRecord::ConnectionAdapters::Mysql[2]Adapter.emulate_booleans = false
       class_attribute :emulate_booleans
       self.emulate_booleans = true
 
@@ -164,7 +149,6 @@ module ActiveRecord
       INDEX_TYPES  = [:fulltext, :spatial]
       INDEX_USINGS = [:btree, :hash]
 
-      # FIXME: Make the first parameter more similar for the two adapters
       def initialize(connection, logger, connection_options, config)
         super(connection, logger)
         @connection_options, @config = connection_options, config
@@ -179,7 +163,6 @@ module ActiveRecord
         end
       end
 
-      # Returns true, since this connection adapter supports migrations.
       def supports_migrations?
         true
       end
@@ -192,16 +175,10 @@ module ActiveRecord
         true
       end
 
-      # Technically MySQL allows to create indexes with the sort order syntax
-      # but at the moment (5.5) it doesn't yet implement them
       def supports_index_sort_order?
         true
       end
 
-      # MySQL 4 technically support transaction isolation, but it is affected by a bug
-      # where the transaction level gets persisted for the whole session:
-      #
-      # http://bugs.mysql.com/bug.php?id=39170
       def supports_transaction_isolation?
         version[0] >= 5
       end
@@ -226,10 +203,7 @@ module ActiveRecord
         { default: 'ALGORITHM = DEFAULT', copy: 'ALGORITHM = COPY', inplace: 'ALGORITHM = INPLACE' }
       end
 
-      # HELPER METHODS ===========================================
 
-      # The two drivers have slightly different ways of yielding hashes of results, so
-      # this method must be implemented to provide a uniform interface.
       def each_hash(result) # :nodoc:
         raise NotImplementedError
       end
@@ -238,13 +212,10 @@ module ActiveRecord
         Column.new(field, default, cast_type, sql_type, null, collation, strict_mode?, extra)
       end
 
-      # Must return the MySQL error number from the exception, if the exception has an
-      # error number.
       def error_number(exception) # :nodoc:
         raise NotImplementedError
       end
 
-      # QUOTING ==================================================
 
       def _quote(value) # :nodoc:
         if value.is_a?(Type::Binary::Data)
@@ -278,7 +249,6 @@ module ActiveRecord
         0
       end
 
-      # REFERENTIAL INTEGRITY ====================================
 
       def disable_referential_integrity #:nodoc:
         old = select_value("SELECT @@FOREIGN_KEY_CHECKS")
@@ -291,23 +261,16 @@ module ActiveRecord
         end
       end
 
-      #--
-      # DATABASE STATEMENTS ======================================
-      #++
 
       def clear_cache!
         super
         reload_type_map
       end
 
-      # Executes the SQL statement in the context of this connection.
       def execute(sql, name = nil)
         log(sql, name) { @connection.query(sql) }
       end
 
-      # MysqlAdapter has to free a result after using it, so we use this method to write
-      # stuff in an abstract way without concerning ourselves about whether it needs to be
-      # explicitly freed or not.
       def execute_and_free(sql, name = nil) #:nodoc:
         yield execute(sql, name)
       end
@@ -334,9 +297,6 @@ module ActiveRecord
         execute "ROLLBACK"
       end
 
-      # In the simple case, MySQL allows us to place JOINs directly into the UPDATE
-      # query. However, this does not allow for LIMIT, OFFSET and ORDER. To support
-      # these, we must use a subquery.
       def join_to_update(update, select) #:nodoc:
         if select.limit || select.offset || select.orders.any?
           super
@@ -350,10 +310,7 @@ module ActiveRecord
         "VALUES ()"
       end
 
-      # SCHEMA STATEMENTS ========================================
 
-      # Drops the database specified on the +name+ attribute
-      # and creates it again using the provided +options+.
       def recreate_database(name, options = {})
         drop_database(name)
         sql = create_database(name, options)
@@ -361,13 +318,6 @@ module ActiveRecord
         sql
       end
 
-      # Create a new MySQL database with optional <tt>:charset</tt> and <tt>:collation</tt>.
-      # Charset defaults to utf8.
-      #
-      # Example:
-      #   create_database 'charset_test', charset: 'latin1', collation: 'latin1_bin'
-      #   create_database 'matt_development'
-      #   create_database 'matt_development', charset: :big5
       def create_database(name, options = {})
         if options[:collation]
           execute "CREATE DATABASE `#{name}` DEFAULT CHARACTER SET `#{options[:charset] || 'utf8'}` COLLATE `#{options[:collation]}`"
@@ -376,10 +326,6 @@ module ActiveRecord
         end
       end
 
-      # Drops a MySQL database.
-      #
-      # Example:
-      #   drop_database('sebastian_development')
       def drop_database(name) #:nodoc:
         execute "DROP DATABASE IF EXISTS `#{name}`"
       end
@@ -388,12 +334,10 @@ module ActiveRecord
         select_value 'SELECT DATABASE() as db'
       end
 
-      # Returns the database character set.
       def charset
         show_variable 'character_set_database'
       end
 
-      # Returns the database collation strategy.
       def collation
         show_variable 'collation_database'
       end
@@ -427,7 +371,6 @@ module ActiveRecord
         tables(nil, schema, table).any?
       end
 
-      # Returns an array of indexes for the given table.
       def indexes(table_name, name = nil) #:nodoc:
         indexes = []
         current_index = nil
@@ -451,7 +394,6 @@ module ActiveRecord
         indexes
       end
 
-      # Returns an array of +Column+ objects for the table specified by +table_name+.
       def columns(table_name)#:nodoc:
         sql = "SHOW FULL FIELDS FROM #{quote_table_name(table_name)}"
         execute_and_free(sql, 'SCHEMA') do |result|
@@ -474,7 +416,7 @@ module ActiveRecord
           method = :"#{command}_sql"
 
           if respond_to?(method, true)
-            #nodyna <ID:send-140> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-909> <SD COMPLEX (change-prone variables)>
             send(method, table, *arguments)
           else
             raise "Unknown method called : #{method}(#{arguments.inspect})"
@@ -484,10 +426,6 @@ module ActiveRecord
         execute("ALTER TABLE #{quote_table_name(table_name)} #{sqls}")
       end
 
-      # Renames a table.
-      #
-      # Example:
-      #   rename_table('octopuses', 'octopi')
       def rename_table(table_name, new_name)
         execute "RENAME TABLE #{quote_table_name(table_name)} TO #{quote_table_name(new_name)}"
         rename_table_indexes(table_name, new_name)
@@ -564,7 +502,6 @@ module ActiveRecord
         end
       end
 
-      # Maps logical Rails types to MySQL-specific data types.
       def type_to_sql(type, limit = nil, precision = nil, scale = nil)
         case type.to_s
         when 'binary'
@@ -603,13 +540,11 @@ module ActiveRecord
         end
       end
 
-      # SHOW VARIABLES LIKE 'name'
       def show_variable(name)
         variables = select_all("SHOW VARIABLES LIKE '#{name}'", 'SCHEMA')
         variables.first['Value'] unless variables.empty?
       end
 
-      # Returns a table's primary key and belonging sequence.
       def pk_and_sequence_for(table)
         execute_and_free("SHOW CREATE TABLE #{quote_table_name(table)}", 'SCHEMA') do |result|
           create_table = each_hash(result).first[:"Create Table"]
@@ -622,7 +557,6 @@ module ActiveRecord
         end
       end
 
-      # Returns just a table's primary key
       def primary_key(table)
         pk_and_sequence = pk_and_sequence_for(table)
         pk_and_sequence && pk_and_sequence.first
@@ -708,8 +642,6 @@ module ActiveRecord
         end
       end
 
-      # MySQL is too stupid to create a temporary table for use subquery, so we have
-      # to give it some prompting in the form of a subsubquery. Ugh!
       def subquery_for(key, select)
         subsubselect = select.clone
         subsubselect.projections = [key]
@@ -735,10 +667,8 @@ module ActiveRecord
       def quoted_columns_for_index(column_names, options = {})
         option_strings = Hash[column_names.map {|name| [name, '']}]
 
-        # add index length
         option_strings = add_index_length(option_strings, column_names, options)
 
-        # add index sort order
         option_strings = add_index_sort_order(option_strings, column_names, options)
 
         column_names.map {|name| quote_column_name(name) + option_strings[name]}
@@ -832,42 +762,30 @@ module ActiveRecord
       def configure_connection
         variables = @config.fetch(:variables, {}).stringify_keys
 
-        # By default, MySQL 'where id is null' selects the last inserted id.
-        # Turn this off. http://dev.rubyonrails.org/ticket/6778
         variables['sql_auto_is_null'] = 0
 
-        # Increase timeout so the server doesn't disconnect us.
         wait_timeout = @config[:wait_timeout]
         wait_timeout = 2147483 unless wait_timeout.is_a?(Fixnum)
         variables['wait_timeout'] = self.class.type_cast_config_to_integer(wait_timeout)
 
-        # Make MySQL reject illegal values rather than truncating or blanking them, see
-        # http://dev.mysql.com/doc/refman/5.0/en/server-sql-mode.html#sqlmode_strict_all_tables
-        # If the user has provided another value for sql_mode, don't replace it.
         unless variables.has_key?('sql_mode')
           variables['sql_mode'] = strict_mode? ? 'STRICT_ALL_TABLES' : ''
         end
 
-        # NAMES does not have an equals sign, see
-        # http://dev.mysql.com/doc/refman/5.0/en/set-statement.html#id944430
-        # (trailing comma because variable_assignments will always have content)
         if @config[:encoding]
           encoding = "NAMES #{@config[:encoding]}"
           encoding << " COLLATE #{@config[:collation]}" if @config[:collation]
           encoding << ", "
         end
 
-        # Gather up all of the SET variables...
         variable_assignments = variables.map do |k, v|
           if v == ':default' || v == :default
             "@@SESSION.#{k} = DEFAULT" # Sets the value to the global or compile default
           elsif !v.nil?
             "@@SESSION.#{k} = #{quote(v)}"
           end
-          # or else nil; compact to clear nils out
         end.compact.join(', ')
 
-        # ...and send them all in one query
         @connection.query  "SET #{encoding} #{variable_assignments}"
       end
 

@@ -27,13 +27,10 @@ class Py2cairo < Formula
   def install
     ENV.refurbish_args
 
-    # disable waf's python extension mode because it explicitly links libpython
-    # https://code.google.com/p/waf/issues/detail?id=1531
     inreplace "src/wscript", "pyext", ""
     ENV["LINKFLAGS"] = "-undefined dynamic_lookup"
     ENV.append_to_cflags `python-config --includes`
 
-    # Python extensions default to universal but cairo may not be universal
     ENV["ARCHFLAGS"] = "-arch #{MacOS.preferred_arch}" unless build.universal?
 
     system "./waf", "configure", "--prefix=#{prefix}", "--nopyc", "--nopyo"

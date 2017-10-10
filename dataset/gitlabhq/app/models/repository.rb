@@ -16,7 +16,6 @@ class Repository
     nil
   end
 
-  # Return absolute path to repository
   def path_to_repo
     @path_to_repo ||= File.expand_path(
       File.join(Gitlab.config.gitlab_shell.repos_path, path_with_namespace + ".git")
@@ -112,8 +111,6 @@ class Repository
     end
   end
 
-  # Return repo size in megabytes
-  # Cached in redis
   def size
     cache.fetch(:size) { raw_repository.size }
   end
@@ -126,7 +123,7 @@ class Repository
   def build_cache
     cache_keys.each do |key|
       unless cache.exist?(key)
-        #nodyna <ID:send-73> <SD MODERATE (array)>
+        #nodyna <send-513> <SD MODERATE (array)>
         send(key)
       end
     end
@@ -141,7 +138,7 @@ class Repository
   def rebuild_cache
     cache_keys.each do |key|
       cache.expire(key)
-      #nodyna <ID:send-74> <SD MODERATE (array)>
+      #nodyna <send-514> <SD MODERATE (array)>
       send(key)
     end
   end
@@ -157,10 +154,10 @@ class Repository
   def method_missing(m, *args, &block)
     if m == :lookup && !block_given?
       lookup_cache[m] ||= {}
-      #nodyna <ID:send-75> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-515> <SD COMPLEX (change-prone variables)>
       lookup_cache[m][args.join(":")] ||= raw_repository.send(m, *args, &block)
     else
-      #nodyna <ID:send-76> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-516> <SD COMPLEX (change-prone variables)>
       raw_repository.send(m, *args, &block)
     end
   end
@@ -245,12 +242,6 @@ class Repository
     end
   end
 
-  # Returns url for submodule
-  #
-  # Ex.
-  #   @repository.submodule_url_for('master', 'rack')
-  #   # => git@localhost:rack.git
-  #
   def submodule_url_for(ref, path)
     if submodules(ref).any?
       submodule = submodules(ref)[path]
@@ -267,7 +258,6 @@ class Repository
     commit(sha)
   end
 
-  # Remove archives older than 2 hours
   def clean_old_archives
     repository_downloads_path = Gitlab.config.gitlab.repository_downloads_path
 

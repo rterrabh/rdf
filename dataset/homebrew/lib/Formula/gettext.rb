@@ -30,7 +30,6 @@ class Gettext < Formula
                           "--with-emacs",
                           "--disable-java",
                           "--disable-csharp",
-                          # Don't use VCS systems to create these archives
                           "--without-git",
                           "--without-cvs",
                           "--without-xz"

@@ -1,21 +1,3 @@
-# == Schema Information
-#
-# Table name: members
-#
-#  id                 :integer          not null, primary key
-#  access_level       :integer          not null
-#  source_id          :integer          not null
-#  source_type        :string(255)      not null
-#  user_id            :integer
-#  notification_level :integer          not null
-#  type               :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#  created_by_id      :integer
-#  invite_email       :string(255)
-#  invite_token       :string(255)
-#  invite_accepted_at :datetime
-#
 
 class Member < ActiveRecord::Base
   include Sortable
@@ -60,8 +42,6 @@ class Member < ActiveRecord::Base
       find_by(invite_token: invite_token)
     end
 
-    # This method is used to find users that have been entered into the "Add members" field.
-    # These can be the User objects directly, their IDs, their emails, or new emails to be invited.
     def user_for_id(user_id)
       return user_id if user_id.is_a?(User)
 
@@ -74,7 +54,6 @@ class Member < ActiveRecord::Base
     def add_user(members, user_id, access_level, current_user = nil)
       user = user_for_id(user_id)
       
-      # `user` can be either a User object or an email to be invited
       if user.is_a?(User)
         member = members.find_or_initialize_by(user_id: user.id)
       else
@@ -139,7 +118,6 @@ class Member < ActiveRecord::Base
   private
 
   def send_invite
-    # override in subclass
   end
 
   def post_create_hook
@@ -147,7 +125,6 @@ class Member < ActiveRecord::Base
   end
 
   def post_update_hook
-    # override in subclass
   end
 
   def post_destroy_hook
@@ -159,7 +136,6 @@ class Member < ActiveRecord::Base
   end
 
   def after_decline_invite
-    # override in subclass
   end
 
   def system_hook_service

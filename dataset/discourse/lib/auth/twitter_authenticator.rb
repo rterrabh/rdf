@@ -4,8 +4,6 @@ class Auth::TwitterAuthenticator < Auth::Authenticator
     "twitter"
   end
 
-  # TODO twitter provides all sorts of extra info, like website/bio etc.
-  #  it may be worth considering pulling some of it in.
   def after_authenticate(auth_token)
 
     result = Auth::Result.new

@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class HydraWrapper
   include Diaspora::Logging
@@ -33,7 +30,6 @@ class HydraWrapper
     end
   end
 
-  # Inserts jobs for all @people
   def enqueue_batch
     grouped_people.each do |receive_url, people_for_receive_url|
       if xml = xml_factory.xml_for(people_for_receive_url.first)
@@ -42,10 +38,6 @@ class HydraWrapper
     end
   end
 
-  # This method can be used to tell the hydra whether or not to
-  # retry a request that it made which failed.
-  # @yieldparam response [Typhoeus::Response] The response object for the failed request.
-  # @yieldreturn [Boolean] Whether the request whose response was passed to the block should be retried.
   def keep_for_retry_if &block
     @keep_for_retry_proc = block
   end
@@ -56,34 +48,24 @@ class HydraWrapper
     @hydra ||= Typhoeus::Hydra.new(max_concurrency: AppConfig.settings.typhoeus_concurrency.to_i)
   end
 
-  # @return [Salmon]
   def xml_factory
     @xml_factory ||= @dispatcher_class.salmon @user, Base64.decode64(@encoded_object_xml)
   end
 
-  # Group people on their receiving_urls
-  # @return [Hash] People grouped by receive_url ([String] => [Array<Person>])
   def grouped_people
     @people.group_by { |person|
       @dispatcher_class.receive_url_for person
     }
   end
 
-  # Prepares and inserts job into the hydra queue
-  # @param url [String]
-  # @param xml [String]
-  # @params people [Array<Person>]
   def insert_job url, xml, people
     request = Typhoeus::Request.new url, OPTS.merge(body: {xml: CGI.escape(xml)})
     prepare_request request, people
     hydra.queue request
   end
 
-  # @param request [Typhoeus::Request]
-  # @param person [Person]
   def prepare_request request, people_for_receive_url
     request.on_complete do |response|
-      # Save the reference to the pod to the database if not already present
       Pod.find_or_create_by(url: response.effective_url)
 
       if redirecting_to_https? response
@@ -102,7 +84,6 @@ class HydraWrapper
     end
   end
 
-  # @return [Boolean]
   def redirecting_to_https? response
     response.code >= 300 && response.code < 400 &&
     response.headers_hash['Location'] == response.request.url.sub('http://', 'https://')

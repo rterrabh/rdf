@@ -1,7 +1,6 @@
 require "active_support/core_ext/enumerable"
 
 module ActionView
-  # = Action View Errors
   class ActionViewError < StandardError #:nodoc:
   end
 
@@ -53,9 +52,6 @@ module ActionView
   end
 
   class Template
-    # The Template::Error exception is raised when the compilation or rendering of the template
-    # fails. This exception then gathers a bunch of intimate details and uses it to report a
-    # precise exception message.
     class Error < ActionViewError #:nodoc:
       SOURCE_CODE_RADIUS = 3
 

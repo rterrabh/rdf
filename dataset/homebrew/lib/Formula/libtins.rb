@@ -28,7 +28,6 @@ class Libtins < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <tins/tins.h>
       int main() {
         Tins::Sniffer sniffer("en0");
       }

@@ -12,7 +12,6 @@ class Gegl < Formula
   end
 
   head do
-    # Use the Github mirror because official git unreliable.
     url "https://github.com/GNOME/gegl.git"
 
     depends_on "automake" => :build
@@ -37,7 +36,6 @@ class Gegl < Formula
   depends_on "sdl" => :optional
 
   def install
-    # ./configure breaks when optimization is enabled with llvm
     ENV.no_optimization if ENV.compiler == :llvm
 
     argv = %W[
@@ -49,7 +47,6 @@ class Gegl < Formula
 
     if build.universal?
       ENV.universal_binary
-      # ffmpeg's formula is currently not universal-enabled
       argv << "--without-libavformat"
 
       opoo "Compilation may fail at gegl-cpuaccel.c using gcc for a universal build" if ENV.compiler == :gcc
@@ -62,7 +59,6 @@ class Gegl < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gegl.h>
       gint main(gint argc, gchar **argv) {
         gegl_init(&argc, &argv);
         GeglNode *gegl = gegl_node_new ();

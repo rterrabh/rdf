@@ -18,10 +18,6 @@ class Neon < Formula
   depends_on "pkg-config" => :build
   depends_on "openssl"
 
-  # Configure switch unconditionally adds the -no-cpp-precomp switch
-  # to CPPFLAGS, which is an obsolete Apple-only switch that breaks
-  # builds under non-Apple compilers and which may or may not do anything
-  # anymore.
   patch :DATA
 
   def install
@@ -49,5 +45,4 @@ index d7702d2..5c3b5a3 100755
  if test "$ne_cv_os_uname" = "Darwin"; then
 -  CPPFLAGS="$CPPFLAGS -no-cpp-precomp"
    LDFLAGS="$LDFLAGS -flat_namespace"
-   # poll has various issues in various Darwin releases
    if test x${ac_cv_func_poll+set} != xset; then

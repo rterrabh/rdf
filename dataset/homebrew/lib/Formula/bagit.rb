@@ -5,7 +5,6 @@ class Bagit < Formula
   sha256 "31b435e965aa6fa0b95943b199194fac42ff8bfd7050319cd4f06c5b183a86e8"
 
   def install
-    # put logs in var, not in the Cellar
     (var/"log/bagit").mkpath
     inreplace "conf/log4j.properties", "${app.home}/logs", "#{var}/log/bagit"
 

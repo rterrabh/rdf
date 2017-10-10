@@ -1,6 +1,5 @@
 module IRB
   class << (MagicFile = Object.new)
-    # see parser_magic_comment in parse.y
     ENCODING_SPEC_RE = %r"coding\s*[=:]\s*([[:alnum:]\-_]+)"
 
     def open(path)

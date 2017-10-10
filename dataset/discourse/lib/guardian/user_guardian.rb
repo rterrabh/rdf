@@ -1,4 +1,3 @@
-# mixin for all Guardian methods dealing with user permissions
 module UserGuardian
 
   def can_edit_user?(user)

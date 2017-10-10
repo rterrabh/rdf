@@ -15,7 +15,6 @@ class SessionsController < Devise::SessionsController
 
   def create
     super do |resource|
-      # User has successfully signed in, so clear any unused reset token
       if resource.reset_password_token.present?
         resource.update_attributes(reset_password_token: nil,
                                    reset_password_sent_at: nil)
@@ -52,8 +51,6 @@ class SessionsController < Devise::SessionsController
         request.fullpath
       end
 
-    # Prevent a 'you are already signed in' message directly after signing:
-    # we should never redirect to '/users/sign_in' after signing in successfully.
     unless redirect_path == new_user_session_path
       store_location_for(:redirect, redirect_path)
     end
@@ -66,7 +63,6 @@ class SessionsController < Devise::SessionsController
 
     if user_params[:otp_attempt].present? && session[:otp_user_id]
       if valid_otp_attempt?(user)
-        # Remove any lingering user data from login
         session.delete(:otp_user_id)
 
         sign_in(user) and return
@@ -85,12 +81,8 @@ class SessionsController < Devise::SessionsController
     provider = Gitlab.config.omniauth.auto_sign_in_with_provider
     return unless provider.present?
 
-    # Auto sign in with an Omniauth provider only if the standard "you need to sign-in" alert is 
-    # registered or no alert at all. In case of another alert (such as a blocked user), it is safer  
-    # to do nothing to prevent redirection loops with certain Omniauth providers.
     return unless flash[:alert].blank? || flash[:alert] == I18n.t('devise.failure.unauthenticated')
     
-    # Prevent alert from popping up on the first page shown after authentication.
     flash[:alert] = nil 
     
     redirect_to user_omniauth_authorize_path(provider.to_sym)

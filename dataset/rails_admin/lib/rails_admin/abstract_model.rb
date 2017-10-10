@@ -35,7 +35,6 @@ module RailsAdmin
         @@polymorphic_parents[adapter.to_sym][[model_name.to_s.underscore, name].join('_').to_sym]
       end
 
-      # For testing
       def reset_polymorphic_parents
         @@polymorphic_parents = {}
       end
@@ -51,7 +50,6 @@ module RailsAdmin
       end
     end
 
-    # do not store a reference to the model, does not play well with ActiveReload/Rails3.2
     def model
       @model_name.constantize
     end
@@ -84,12 +82,12 @@ module RailsAdmin
       associations.each do |association|
         case association.type
         when :has_one
-          #nodyna <ID:send-43> <SD COMPLEX (array)>
+          #nodyna <send-1347> <SD COMPLEX (array)>
           if child = object.send(association.name)
             yield(association, child)
           end
         when :has_many
-          #nodyna <ID:send-44> <SD COMPLEX (array)>
+          #nodyna <send-1348> <SD COMPLEX (array)>
           object.send(association.name).each do |child| # rubocop:disable ShadowingOuterLocalVariable
             yield(association, child)
           end

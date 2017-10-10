@@ -18,9 +18,6 @@ class Tinycdb < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <fcntl.h>
-      #include <cdb.h>
 
       int main() {
         struct cdb_make cdbm;

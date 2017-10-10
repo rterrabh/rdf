@@ -25,12 +25,8 @@ class Mu < Formula
   depends_on :emacs => ["23", :optional]
 
   def install
-    # Explicitly tell the build not to include emacs support as the version
-    # shipped by default with Mac OS X is too old.
     ENV["EMACS"] = "no" if build.without? "emacs"
 
-    # https://github.com/djcb/mu/issues/380
-    # https://github.com/djcb/mu/issues/332
     ENV.O0 if MacOS.version >= :mavericks && ENV.compiler == :clang
 
     system "autoreconf", "-ivf"

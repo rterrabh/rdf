@@ -12,7 +12,6 @@ class Cconv < Formula
   end
 
   def install
-    # fix link with iconv: https://code.google.com/p/cconv/issues/detail?id=18
     inreplace "Makefile.in", "@ICONV_LIBS@", "@ICONV_LIBS@ -liconv"
 
     system "./configure", "--disable-debug", "--disable-dependency-tracking",

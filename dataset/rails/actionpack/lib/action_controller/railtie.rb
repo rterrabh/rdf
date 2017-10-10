@@ -42,7 +42,6 @@ module ActionController
       options.javascripts_dir ||= paths["public/javascripts"].first
       options.stylesheets_dir ||= paths["public/stylesheets"].first
 
-      # Ensure readers methods get compiled
       options.asset_host        ||= app.config.asset_host
       options.relative_url_root ||= app.config.relative_url_root
 
@@ -54,7 +53,7 @@ module ActionController
         options.each do |k,v|
           k = "#{k}="
           if respond_to?(k)
-            #nodyna <ID:send-75> <SD COMPLEX (array)>
+            #nodyna <send-1295> <SD COMPLEX (array)>
             send(k, v)
           elsif !Base.respond_to?(k)
             raise "Invalid option key: #{k}"

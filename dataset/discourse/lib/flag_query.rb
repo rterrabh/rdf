@@ -53,7 +53,6 @@ module FlagQuery
     post_actions.each do |pa|
       post = post_lookup[pa.post_id]
       post.post_actions ||= []
-      # TODO: add serializer so we can skip this
       action = {
         id: pa.id,
         post_id: pa.post_id,
@@ -97,9 +96,7 @@ module FlagQuery
       user_ids << pa.disposed_by_id if pa.disposed_by_id
     end
 
-    # maintain order
     posts = post_ids.map { |id| post_lookup[id] }
-    # TODO: add serializer so we can skip this
     posts.map!(&:marshal_dump)
 
     [
@@ -131,7 +128,6 @@ module FlagQuery
 
     def self.excerpt(cooked)
       excerpt = Post.excerpt(cooked, 200)
-      # remove the first link if it's the first node
       fragment = Nokogiri::HTML.fragment(excerpt)
       if fragment.children.first == fragment.css("a:first").first && fragment.children.first
         fragment.children.first.remove

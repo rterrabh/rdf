@@ -5,7 +5,6 @@ module Spree
 
       include Spree::Core::ControllerHelpers::Auth
       include Spree::Core::ControllerHelpers::Order
-      # This before_filter comes from Spree::Core::ControllerHelpers::Order
       skip_before_action :set_current_order
 
       def next
@@ -55,8 +54,6 @@ module Spree
           map_nested_attributes_keys Spree::Order, params[:order] || {}
         end
 
-        # Should be overriden if you have areas of your checkout that don't match
-        # up to a step within checkout_steps, such as a registration step
         def skip_state_validation?
           false
         end
@@ -74,7 +71,7 @@ module Spree
 
         def state_callback(before_or_after = :before)
           method_name = :"#{before_or_after}_#{@order.state}"
-          #nodyna <ID:send-10> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-2407> <SD COMPLEX (change-prone variables)>
           send(method_name) if respond_to?(method_name, true)
         end
 

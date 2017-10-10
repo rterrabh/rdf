@@ -5,14 +5,13 @@ module RailsAdmin
   module Config
     module Fields
       module Types
-        # Field type that supports Paperclip file uploads
         class Dragonfly < RailsAdmin::Config::Fields::Types::FileUpload
           RailsAdmin::Config::Fields::Types.register(self)
 
           register_instance_option :image? do
             false unless value
             if abstract_model.model.new.respond_to?("#{name}_name")
-              #nodyna <ID:send-28> <SD COMPLEX (change-prone variables)>
+              #nodyna <send-1360> <SD COMPLEX (change-prone variables)>
               bindings[:object].send("#{name}_name").to_s.split('.').last =~ /jpg|jpeg|png|gif/i
             else
               true # Dragonfly really is image oriented

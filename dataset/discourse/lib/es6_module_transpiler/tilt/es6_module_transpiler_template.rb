@@ -24,15 +24,13 @@ module Tilt
     @ctx_init = Mutex.new
 
     def prepare
-      # intentionally left empty
-      # Tilt requires this method to be defined
     end
 
     def self.create_new_context
       ctx = V8::Context.new(timeout: 5000)
-      #nodyna <ID:eval-19> <EV COMPLEX (scope)>
+      #nodyna <eval-330> <EV COMPLEX (scope)>
       ctx.eval("var self = this; #{File.read(Babel::Transpiler.script_path)}")
-      #nodyna <ID:eval-20> <EV COMPLEX (variable definition)>
+      #nodyna <eval-331> <EV COMPLEX (variable definition)>
       ctx.eval("module = {}; exports = {};");
       ctx.load("#{Rails.root}/lib/es6_module_transpiler/support/es6-module-transpiler.js")
       ctx
@@ -41,7 +39,6 @@ module Tilt
     def self.v8
       return @ctx if @ctx
 
-      # ensure we only init one of these
       @ctx_init.synchronize do
         return @ctx if @ctx
         @ctx = create_new_context
@@ -65,10 +62,6 @@ module Tilt
       @mutex.synchronize do
         begin
           rval = yield
-          # This may seem a bit odd, but we don't want to leak out
-          # objects that require locks on the v8 vm, to get a backtrace
-          # you need a lock, if this happens in the wrong spot you can
-          # deadlock a process
         rescue V8::Error => e
           raise JavaScriptError.new(e.message, e.backtrace)
         end
@@ -82,13 +75,10 @@ module Tilt
       klass = self.class
       klass.protect do
         klass.v8['console'] = Console.new("BABEL: #{scope.logical_path}: ")
-        #nodyna <ID:eval-22> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-332> <EV COMPLEX (change-prone variables)>
         @output = klass.v8.eval(generate_source(scope))
       end
 
-      # For backwards compatibility with plugins, for now export the Global format too.
-      # We should eventually have an upgrade system for plugins to use ES6 or some other
-      # resolve based API.
       if ENV['DISCOURSE_NO_CONSTANTS'].nil? &&
         scope.logical_path =~ /(discourse|admin)\/(controllers|components|views|routes|mixins|models)\/(.*)/
 
@@ -96,7 +86,6 @@ module Tilt
         file_name = Regexp.last_match[3].gsub(/[\-\/]/, '_')
         class_name = file_name.classify
 
-        # Rails removes pluralization when calling classify
         if file_name.end_with?('s') && (!class_name.end_with?('s'))
           class_name << "s"
         end
@@ -105,7 +94,6 @@ module Tilt
         if require_name !~ /\-test$/ && require_name !~ /^discourse\/plugins\//
           result = "#{class_name}#{type.classify}"
 
-          # HAX
           result = "Controller" if result == "ControllerController"
           result = "Route" if result == "DiscourseRoute"
           result = "View" if result == "ViewView"
@@ -134,7 +122,6 @@ module Tilt
       path = nil
 
       root_base = File.basename(Rails.root)
-      # If the resource is a plugin, use the plugin name as a prefix
       if root_path =~ /(.*\/#{root_base}\/plugins\/[^\/]+)\//
         plugin_path = "#{Regexp.last_match[1]}/plugin.rb"
 

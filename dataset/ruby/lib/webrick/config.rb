@@ -1,12 +1,3 @@
-#
-# config.rb -- Default configurations.
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2000, 2001 TAKAHASHI Masayoshi, GOTOU Yuuzou
-# Copyright (c) 2003 Internet Programming with Ruby writers. All rights
-# reserved.
-#
-# $IPR: config.rb,v 1.52 2003/07/22 19:20:42 gotoyuzo Exp $
 
 require 'webrick/version'
 require 'webrick/httpversion'
@@ -18,7 +9,6 @@ module WEBrick
   module Config
     LIBDIR = File::dirname(__FILE__) # :nodoc:
 
-    # for GenericServer
     General = {
       :ServerName     => Utils::getservername,
       :BindAddress    => nil,   # "0.0.0.0" or "::" or nil
@@ -37,7 +27,6 @@ module WEBrick
       :ShutdownSocketWithoutClose => false,
     }
 
-    # for HTTPServer, HTTPRequest, HTTPResponse ...
     HTTP = General.dup.update(
       :Port           => 80,
       :RequestTimeout => 30,
@@ -52,7 +41,6 @@ module WEBrick
       :InputBufferSize  => 65536, # input buffer size in reading request body
       :OutputBufferSize => 65536, # output buffer size in sending File or IO
 
-      # for HTTPProxyServer
       :ProxyAuthProc  => nil,
       :ProxyContentHandler => nil,
       :ProxyVia       => true,
@@ -62,34 +50,9 @@ module WEBrick
       :CGIInterpreter => nil,
       :CGIPathEnv     => nil,
 
-      # workaround: if Request-URIs contain 8bit chars,
-      # they should be escaped before calling of URI::parse().
       :Escape8bitURI  => false
     )
 
-    ##
-    # Default configuration for WEBrick::HTTPServlet::FileHandler
-    #
-    # :AcceptableLanguages::
-    #   Array of languages allowed for accept-language.  There is no default
-    # :DirectoryCallback::
-    #   Allows preprocessing of directory requests.  There is no default
-    #   callback.
-    # :FancyIndexing::
-    #   If true, show an index for directories.  The default is true.
-    # :FileCallback::
-    #   Allows preprocessing of file requests.  There is no default callback.
-    # :HandlerCallback::
-    #   Allows preprocessing of requests.  There is no default callback.
-    # :HandlerTable::
-    #   Maps file suffixes to file handlers.  DefaultFileHandler is used by
-    #   default but any servlet can be used.
-    # :NondisclosureName::
-    #   Do not show files matching this array of globs.  .ht* and *~ are
-    #   excluded by default.
-    # :UserDir::
-    #   Directory inside ~user to serve content from for /~user requests.
-    #   Only works if mounted on /.  Disabled by default.
 
     FileHandler = {
       :NondisclosureName => [".ht*", "*~"],
@@ -102,36 +65,11 @@ module WEBrick
       :AcceptableLanguages => []  # ["en", "ja", ... ]
     }
 
-    ##
-    # Default configuration for WEBrick::HTTPAuth::BasicAuth
-    #
-    # :AutoReloadUserDB:: Reload the user database provided by :UserDB
-    #                     automatically?
 
     BasicAuth = {
       :AutoReloadUserDB     => true,
     }
 
-    ##
-    # Default configuration for WEBrick::HTTPAuth::DigestAuth.
-    #
-    # :Algorithm:: MD5, MD5-sess (default), SHA1, SHA1-sess
-    # :Domain:: An Array of URIs that define the protected space
-    # :Qop:: 'auth' for authentication, 'auth-int' for integrity protection or
-    #        both
-    # :UseOpaque:: Should the server send opaque values to the client?  This
-    #              helps prevent replay attacks.
-    # :CheckNc:: Should the server check the nonce count?  This helps the
-    #            server detect replay attacks.
-    # :UseAuthenticationInfoHeader:: Should the server send an
-    #                                AuthenticationInfo header?
-    # :AutoReloadUserDB:: Reload the user database provided by :UserDB
-    #                     automatically?
-    # :NonceExpirePeriod:: How long should we store used nonces?  Default is
-    #                      30 minutes.
-    # :NonceExpireDelta:: How long is a nonce valid?  Default is 1 minute
-    # :InternetExplorerHack:: Hack which allows Internet Explorer to work.
-    # :OperaHack:: Hack which allows Opera to work.
 
     DigestAuth = {
       :Algorithm            => 'MD5-sess', # or 'MD5'

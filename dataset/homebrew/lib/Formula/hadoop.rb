@@ -12,7 +12,6 @@ class Hadoop < Formula
     libexec.install %w[bin sbin libexec share etc]
     bin.write_exec_script Dir["#{libexec}/bin/*"]
     sbin.write_exec_script Dir["#{libexec}/sbin/*"]
-    # But don't make rcc visible, it conflicts with Qt
     (bin/"rcc").unlink
 
     inreplace "#{libexec}/etc/hadoop/hadoop-env.sh",
@@ -28,9 +27,6 @@ class Hadoop < Formula
 
   def caveats; <<-EOS.undent
     In Hadoop's config file:
-      #{libexec}/etc/hadoop/hadoop-env.sh,
-      #{libexec}/etc/hadoop/mapred-env.sh and
-      #{libexec}/etc/hadoop/yarn-env.sh
     $JAVA_HOME has been set to be the output of:
       /usr/libexec/java_home
     EOS

@@ -2,7 +2,6 @@ module ActiveRecord
   module Translation
     include ActiveModel::Translation
 
-    # Set the lookup ancestors for ActiveModel.
     def lookup_ancestors #:nodoc:
       klass = self
       classes = [klass]
@@ -14,7 +13,6 @@ module ActiveRecord
       classes
     end
 
-    # Set the i18n scope to overwrite ActiveModel.
     def i18n_scope #:nodoc:
       :activerecord
     end

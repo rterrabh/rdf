@@ -5,12 +5,8 @@ class IscDhcp < Formula
   sha256 "a7b6517d5cf32c5e49d2323a63de00efe5391df7cb0045dfa0ec8f6ee46ebe8a"
 
   def install
-    # use one dir under var for all runtime state.
     dhcpd_dir = var+"dhcpd"
 
-    # Change the locations of various files to match Homebrew
-    # we pass these in through CFLAGS since some cannot be changed
-    # via configure args.
     path_opts = {
       "_PATH_DHCPD_CONF"    => etc+"dhcpd.conf",
       "_PATH_DHCLIENT_CONF" => etc+"dhclient.conf",
@@ -30,7 +26,6 @@ class IscDhcp < Formula
       ENV.append "CFLAGS", "-D#{symbol}='\"#{path}\"'"
     end
 
-    # See discussion at: https://gist.github.com/1157223
     if MacOS.version >= :lion
       ENV.append "CFLAGS", "-D__APPLE_USE_RFC_3542"
     end
@@ -41,13 +36,10 @@ class IscDhcp < Formula
 
     ENV.deparallelize { system "make", "-C", "bind" }
 
-    # build everything else
     inreplace "Makefile", "SUBDIRS = bind", "SUBDIRS = "
     system "make"
     system "make", "install"
 
-    # rename all the installed sample etc/* files so they don't clobber
-    # any existing config files at symlink time.
     Dir.open("#{prefix}/etc") do |dir|
       dir.each do |f|
         file = "#{dir.path}/#{f}"
@@ -55,14 +47,12 @@ class IscDhcp < Formula
       end
     end
 
-    # create the state dir and lease files else dhcpd will not start up.
     dhcpd_dir.mkpath
     %w[dhcpd dhcpd6 dhclient dhclient6].each do |f|
       file = "#{dhcpd_dir}/#{f}.leases"
       File.new(file, File::CREAT|File::RDONLY).close
     end
 
-    # dhcpv6 plists
     (prefix+"homebrew.mxcl.dhcpd6.plist").write plist_dhcpd6
     (prefix+"homebrew.mxcl.dhcpd6.plist").chmod 0644
   end

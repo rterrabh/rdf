@@ -18,7 +18,6 @@ class Tinyproxy < Formula
 
   deprecated_option "reverse" => "with-reverse"
 
-  # Fix linking error, via MacPorts: https://trac.macports.org/ticket/27762
   patch :p0 do
     url "https://trac.macports.org/export/83413/trunk/dports/net/tinyproxy/files/patch-configure.diff"
     sha256 "414b8ae7d0944fb8d90bef708864c4634ce1576c5f89dd79539bce1f630c9c8d"
@@ -40,8 +39,6 @@ class Tinyproxy < Formula
 
     system "./configure", *args
 
-    # Fix broken XML lint
-    # See: https://bugs.freebsd.org/bugzilla/show_bug.cgi?id=154624
     inreplace ["docs/man5/Makefile", "docs/man8/Makefile"] do |s|
       s.gsub! "-f manpage", "-f manpage \\\n  -L"
     end

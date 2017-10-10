@@ -26,7 +26,7 @@ module RailsAdmin
 
               @object.set_attributes(params[@abstract_model.param_key])
               @authorization_adapter && @authorization_adapter.attributes_for(:update, @abstract_model).each do |name, value|
-                #nodyna <ID:send-3> <SD COMPLEX (change-prone variables)>
+                #nodyna <send-1417> <SD COMPLEX (change-prone variables)>
                 @object.send("#{name}=", value)
               end
               changes = @object.changes

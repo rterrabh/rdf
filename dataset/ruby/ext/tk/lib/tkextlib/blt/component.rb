@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/component.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -55,7 +51,6 @@ module Tk::BLT
 
     def __item_cget_cmd(id)
       if id.kind_of?(Array)
-        # id := [ type, name ]
         [self.path, id[0], 'cget', id[1]]
       else
         [self.path, id, 'cget']
@@ -65,7 +60,6 @@ module Tk::BLT
 
     def __item_config_cmd(id)
       if id.kind_of?(Array)
-        # id := [ type, name, ... ]
         type, *names = id
         [self.path, type, 'configure'].concat(names)
       else
@@ -359,10 +353,8 @@ module Tk::BLT
         rescue => e
           begin
             if current_itemconfiginfo(tagOrId).has_key?(option.to_s)
-              # error on known option
               fail e
             else
-              # unknown option
               nil
             end
           rescue
@@ -410,10 +402,9 @@ module Tk::BLT
     private :itemcget_tkstring, :itemcget, :itemcget_strict
     private :itemconfigure, :itemconfiginfo, :current_itemconfiginfo
 
-    #################
 
     class Axis < TkObject
-      #nodyna <ID:instance_eval-77> <IEV MODERATE (method definition)>
+      #nodyna <instance_eval-1572> <IEV MODERATE (method definition)>
       (OBJ_ID = ['blt_chart_axis'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -453,7 +444,7 @@ module Tk::BLT
           if axis && AxisID_TBL[chart_path][axis]
             obj = AxisID_TBL[chart_path][axis]
           else
-            #nodyna <ID:instance_eval-78> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1573> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               if axis
                 @axis = @id = axis.to_s
@@ -480,7 +471,6 @@ module Tk::BLT
       end
 
       def initialize(chart, axis=nil, keys={})
-        # dummy:: not called by 'new' method
 
         if axis.kind_of?(Hash)
           keys = axis
@@ -497,10 +487,8 @@ module Tk::BLT
         @path = @id
         @parent = @chart = chart
         @cpath = @chart.path
-        # Axis::AxisID_TBL[@cpath][@axis] = self
         keys = _symbolkey2str(keys)
         unless keys.delete('without_creating')
-          # @chart.axis_create(@axis, keys)
           tk_call(@chart, 'axis', 'create', @axis, keys)
         end
       end
@@ -578,7 +566,6 @@ module Tk::BLT
       end
     end
 
-    #################
 
     class Crosshairs < TkObject
       CrosshairsID_TBL = TkCore::INTERP.create_table
@@ -591,7 +578,7 @@ module Tk::BLT
         obj = nil
         CrosshairsID_TBL.mutex.synchronize{
           unless (obj = CrosshairsID_TBL[chart.path])
-            #nodyna <ID:instance_eval-79> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1574> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               @parent = @chart = chart
               @cpath = @chart.path
@@ -605,11 +592,9 @@ module Tk::BLT
       end
 
       def initialize(chart, keys={})
-        # dummy:: not called by 'new' method
 
         @parent = @chart = chart
         @cpath = @chart.path
-        # Crosshairs::CrosshairsID_TBL[@cpath] = self
         @chart.crosshair_configure(keys) unless keys.empty?
         @path = @id = 'crosshairs'
       end
@@ -656,7 +641,6 @@ module Tk::BLT
       end
     end
 
-    #################
 
     class Element < TkObject
       extend Tk
@@ -674,7 +658,7 @@ module Tk::BLT
         ElementID_TBL.mutex.synchronize{ ElementID_TBL.clear }
       }
 
-      #nodyna <ID:instance_eval-80> <IEV MODERATE (method definition)>
+      #nodyna <instance_eval-1575> <IEV MODERATE (method definition)>
       (OBJ_ID = ['blt_chart_element'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -712,7 +696,7 @@ module Tk::BLT
           if element && ElementID_TBL[chart_path][element]
             obj = ElementID_TBL[chart_path][element]
           else
-            #nodyna <ID:instance_eval-81> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1576> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               if element
                 @element = @id = element.to_s
@@ -740,7 +724,6 @@ module Tk::BLT
       end
 
       def initialize(chart, element=nil, keys={})
-        # dummy:: not called by 'new' method
 
         if element.kind_of?(Hash)
           keys = element
@@ -758,10 +741,8 @@ module Tk::BLT
         @parent = @chart = chart
         @cpath = @chart.path
         @typename = self.class::ElementTypeName
-        # Element::ElementID_TBL[@cpath][@element] = self
         keys = _symbolkey2str(keys)
         unless keys.delete('without_creating')
-          # @chart.element_create(@element, keys)
           tk_call(@chart, @typename, 'create', @element, keys)
         end
       end
@@ -775,27 +756,22 @@ module Tk::BLT
       end
 
       def cget_tkstring(option)
-        # @chart.element_cget(@id, option)
         @chart.__send__(@typename + '_cget_tkstring', @id, option)
       end
       def cget(option)
-        # @chart.element_cget(@id, option)
         @chart.__send__(@typename + '_cget', @id, option)
       end
       def cget_strict(option)
         @chart.__send__(@typename + '_cget_strict', @id, option)
       end
       def configure(key, value=None)
-        # @chart.element_configure(@id, key, value)
         @chart.__send__(@typename + '_configure', @id, key, value)
         self
       end
       def configinfo(key=nil)
-        # @chart.element_configinfo(@id, key)
         @chart.__send__(@typename + '_configinfo', @id, key)
       end
       def current_configinfo(key=nil)
-        # @chart.current_element_configinfo(@id, key)
         @chart.__send__('current_' << @typename << '_configinfo', @id, key)
       end
 
@@ -804,7 +780,6 @@ module Tk::BLT
       end
 
       def closest(x, y, var, keys={})
-        # @chart.element_closest(x, y, var, @id, keys)
         @chart.__send__(@typename + '_closest', x, y, var, @id, keys)
       end
 
@@ -840,7 +815,6 @@ module Tk::BLT
       ElementTypeToClass[ElementTypeName] = self
     end
 
-    #################
 
     class GridLine < TkObject
       GridLineID_TBL = TkCore::INTERP.create_table
@@ -852,7 +826,7 @@ module Tk::BLT
         obj = nil
         GridLineID_TBL.mutex.synchronize{
           unless (obj = GridLineID_TBL[chart.path])
-            #nodyna <ID:instance_eval-82> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1577> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               @parent = @chart = chart
               @cpath = @chart.path
@@ -866,11 +840,9 @@ module Tk::BLT
       end
 
       def initialize(chart, keys={})
-        # dummy:: not called by 'new' method
 
         @parent = @chart = chart
         @cpath = @chart.path
-        # GridLine::GridLineID_TBL[@cpath] = self
         @chart.gridline_configure(keys) unless keys.empty?
         @path = @id = 'grid'
       end
@@ -917,7 +889,6 @@ module Tk::BLT
       end
     end
 
-    #################
 
     class Legend < TkObject
       LegendID_TBL = TkCore::INTERP.create_table
@@ -930,7 +901,7 @@ module Tk::BLT
         obj = nil
         LegenedID_TBL.mutex.synchronize{
           unless (obj = LegenedID_TBL[chart.path])
-            #nodyna <ID:instance_eval-83> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1578> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               @parent = @chart = chart
               @cpath = @chart.path
@@ -944,11 +915,9 @@ module Tk::BLT
       end
 
       def initialize(chart, keys={})
-        # dummy:: not called by 'new' method
 
         @parent = @chart = chart
         @cpath = @chart.path
-        # Legend::LegendID_TBL[@cpath] = self
         @chart.legend_configure(keys) unless keys.empty?
         @path = @id = 'legend'
       end
@@ -994,10 +963,9 @@ module Tk::BLT
       end
     end
 
-    #################
 
     class Pen < TkObject
-      #nodyna <ID:instance_eval-84> <IEV MODERATE (method definition)>
+      #nodyna <instance_eval-1579> <IEV MODERATE (method definition)>
       (OBJ_ID = ['blt_chart_pen'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -1037,7 +1005,7 @@ module Tk::BLT
           if pen && PenID_TBL[chart_path][pen]
             obj = PenID_TBL[chart_path][pen]
           else
-            #nodyna <ID:instance_eval-85> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1580> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               if pen
                 @pen = @id = pen.to_s
@@ -1082,7 +1050,6 @@ module Tk::BLT
         Pen::PenID_TBL[@cpath][@pen] = self
         keys = _symbolkey2str(keys)
         unless keys.delete('without_creating')
-          # @chart.pen_create(@pen, keys)
           tk_call(@chart, 'pen', 'create', @pen, keys)
         end
       end
@@ -1125,7 +1092,6 @@ module Tk::BLT
       end
     end
 
-    #################
 
     class Postscript < TkObject
       PostscriptID_TBL = TkCore::INTERP.create_table
@@ -1138,7 +1104,7 @@ module Tk::BLT
         obj = nil
         PostscriptID_TBL.mutex.synchronize{
           unless (obj = PostscriptID_TBL[chart.path])
-            #nodyna <ID:instance_eval-86> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1581> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               @parent = @chart = chart
               @cpath = @chart.path
@@ -1152,11 +1118,9 @@ module Tk::BLT
       end
 
       def initialize(chart, keys={})
-        # dummy:: not called by 'new' method
 
         @parent = @chart = chart
         @cpath = @chart.path
-        # Postscript::PostscriptID_TBL[@cpath] = self
         @chart.postscript_configure(keys) unless keys.empty?
         @path = @id = 'postscript'
       end
@@ -1205,7 +1169,6 @@ module Tk::BLT
       end
     end
 
-    #################
     class Marker < TkObject
       extend Tk
       extend TkItemFontOptkeys
@@ -1302,7 +1265,7 @@ module Tk::BLT
         chart.marker_configure(idnum, methodkeys) unless methodkeys.empty?
         id = idnum.to_i  # 'item id' is an integer number
         obj = self.allocate
-        #nodyna <ID:instance_eval-87> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1582> <IEV MODERATE (private access)>
         obj.instance_eval{
           @parent = @chart = chart
           @cpath = chart.path
@@ -1404,7 +1367,6 @@ module Tk::BLT
       MarkerTypeToClass[MarkerTypeName] = self
     end
 
-    #################
 
     def __destroy_hook__
       Axis::AxisID_TBL.delete(@path)
@@ -1418,7 +1380,6 @@ module Tk::BLT
       super()
     end
 
-    #################
 
     def tagid(tag)
       if tag.kind_of?(Axis) ||
@@ -1541,10 +1502,8 @@ module Tk::BLT
       _component_bindinfo('marker', tag, context)
     end
 
-    ###################
 
     def axis_create(id=nil, keys={})
-      # tk_send('axis', 'create', tagid(id), keys)
       Tk::BLT::PlotComponent::Axis.new(self, tagid(id), keys)
     end
     def axis_delete(*ids)
@@ -1581,7 +1540,6 @@ module Tk::BLT
       end
     end
 
-    ###################
 
     def crosshairs_off
       tk_send_without_enc('crosshairs', 'off')
@@ -1596,10 +1554,8 @@ module Tk::BLT
       self
     end
 
-    ###################
 
     def element_create(id=nil, keys={})
-      # tk_send('element', 'create', tagid(id), keys)
       Tk::BLT::PlotComponent::Element.new(self, tagid(id), keys)
     end
     def element_activate(*args)
@@ -1608,7 +1564,6 @@ module Tk::BLT
           Tk::BLT::PlotComponent::Element.id2obj(self, elem)
         }
       else
-        # id, *indices
         id = args.shift
         tk_send('element', 'activate', tagid(id), *args)
       end
@@ -1652,10 +1607,8 @@ module Tk::BLT
       tk_send('element', 'type', tagid(id))
     end
 
-    ###################
 
     def bar_create(id=nil, keys={})
-      # tk_send('bar', 'create', tagid(id), keys)
       Tk::BLT::PlotComponent::Bar.new(self, tagid(id), keys)
     end
     alias bar bar_create
@@ -1665,7 +1618,6 @@ module Tk::BLT
           Tk::BLT::PlotComponent::Element.id2obj(self, elem)
         }
       else
-        # id, *indices
         id = args.shift
         tk_send('bar', 'activate', tagid(id), *args)
       end
@@ -1709,10 +1661,8 @@ module Tk::BLT
       tk_send('bar', 'type', tagid(id))
     end
 
-    ###################
 
     def line_create(id=nil, keys={})
-      # tk_send('line', 'create', tagid(id), keys)
       Tk::BLT::PlotComponent::Line.new(self, tagid(id), keys)
     end
     alias bar line_create
@@ -1722,7 +1672,6 @@ module Tk::BLT
           Tk::BLT::PlotComponent::Element.id2obj(self, elem)
         }
       else
-        # id, *indices
         id = args.shift
         tk_send('line', 'activate', tagid(id), *args)
       end
@@ -1766,7 +1715,6 @@ module Tk::BLT
       tk_send('line', 'type', tagid(id))
     end
 
-    ###################
 
     def gridline_off
       tk_send_without_enc('grid', 'off')
@@ -1781,7 +1729,6 @@ module Tk::BLT
       self
     end
 
-    ###################
 
     def legend_window_create(parent=nil, keys=nil)
       if parent.kind_of?(Hash)
@@ -1834,10 +1781,8 @@ module Tk::BLT
       end
     end
 
-    ###################
 
     def pen_create(id=nil, keys={})
-      # tk_send('pen', 'create', tagid(id), keys)
       Tk::BLT::PlotComponent::Pen.new(self, tagid(id), keys)
     end
     def pen_delete(*ids)
@@ -1851,7 +1796,6 @@ module Tk::BLT
       }
     end
 
-    ###################
 
     def postscript_output(file=nil, keys={})
       if file.kind_of?(Hash)
@@ -1867,7 +1811,6 @@ module Tk::BLT
       end
     end
 
-    ###################
 
     def marker_create(type, keys={})
       case type
@@ -1924,7 +1867,6 @@ module Tk::BLT
       tk_send('marker', 'type', tagid(id))
     end
 
-    ###################
 
     def xaxis_cget_tkstring(option)
       itemcget_tkstring('xaxis', option)

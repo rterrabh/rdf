@@ -1,21 +1,5 @@
-#
-#   shell/filter.rb -
-#       $Release Version: 0.7 $
-#       $Revision$
-#       by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 class Shell #:nodoc:
-  # Any result of command execution is a Filter.
-  #
-  # This class includes Enumerable, therefore a Filter object can use all
-  # Enumerable
-  # facilities.
-  #
   class Filter
     include Enumerable
 
@@ -30,10 +14,6 @@ class Shell #:nodoc:
       @input = filter
     end
 
-    # call-seq:
-    #   each(record_separator=nil) { block }
-    #
-    # Iterates a block for each line.
     def each(rs = nil)
       rs = @shell.record_separator unless rs
       if @input
@@ -41,11 +21,6 @@ class Shell #:nodoc:
       end
     end
 
-    # call-seq:
-    #   < source
-    #
-    # Inputs from +source+, which is either a string of a file name or an IO
-    # object.
     def < (src)
       case src
       when String
@@ -59,11 +34,6 @@ class Shell #:nodoc:
       end
     end
 
-    # call-seq:
-    #   > source
-    #
-    # Outputs from +source+, which is either a string of a file name or an IO
-    # object.
     def > (to)
       case to
       when String
@@ -81,11 +51,6 @@ class Shell #:nodoc:
       self
     end
 
-    # call-seq:
-    #   >> source
-    #
-    # Appends the output to +source+, which is either a string of a file name
-    # or an IO object.
     def >> (to)
       begin
         Shell.cd(@shell.pwd).append(to, self)
@@ -94,10 +59,6 @@ class Shell #:nodoc:
       end
     end
 
-    # call-seq:
-    #   | filter
-    #
-    # Processes a pipeline.
     def | (filter)
       filter.input = self
       if active?
@@ -106,10 +67,6 @@ class Shell #:nodoc:
       filter
     end
 
-    # call-seq:
-    #   filter1 + filter2
-    #
-    # Outputs +filter1+, and then +filter2+ using Join.new
     def + (filter)
       Join.new(@shell, self, filter)
     end

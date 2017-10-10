@@ -42,8 +42,6 @@ class Allegro < Formula
 
   test do
     (testpath/"allegro_test.cpp").write <<-EOS
-    #include <assert.h>
-    #include <allegro5/allegro5.h>
 
     int main(int n, char** c) {
       if (!al_init()) {

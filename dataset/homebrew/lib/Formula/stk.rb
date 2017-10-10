@@ -44,8 +44,6 @@ class Stk < Formula
   def caveats; <<-EOS.undent
     The header files have been put in a standard search path, it is possible to use an include statement in programs as follows:
 
-      #include \"stk/FileLoop.h\"
-      #include \"stk/FileWvOut.h\"
 
     src/ projects/ and rawwaves/ have all been copied to /usr/local/share/stk
     EOS

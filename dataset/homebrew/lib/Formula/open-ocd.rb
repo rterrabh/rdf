@@ -25,14 +25,11 @@ class OpenOcd < Formula
 
   depends_on "pkg-config" => :build
   depends_on "libusb" => :recommended
-  # some drivers are still not converted to libusb-1.0
   depends_on "libusb-compat" if build.with? "libusb"
   depends_on "libftdi" => :recommended
   depends_on "hidapi" => :recommended
 
   def install
-    # all the libusb and hidapi-based drivers are auto-enabled when
-    # the corresponding libraries are present in the system
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}

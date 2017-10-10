@@ -1,6 +1,3 @@
-##
-# The local source finds gems in the current directory for fulfilling
-# dependencies.
 
 class Gem::Source::Local < Gem::Source
 
@@ -10,8 +7,6 @@ class Gem::Source::Local < Gem::Source
     @uri     = nil
   end
 
-  ##
-  # Local sorts before Gem::Source and after Gem::Source::Installed
 
   def <=> other
     case other
@@ -41,7 +36,6 @@ class Gem::Source::Local < Gem::Source
       begin
         pkg = Gem::Package.new(file)
       rescue SystemCallError, Gem::Package::FormatError
-        # ignore
       else
         tup = pkg.spec.name_tuple
         @specs[tup] = [File.expand_path(file), pkg]

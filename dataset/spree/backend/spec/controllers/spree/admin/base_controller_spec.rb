@@ -1,6 +1,3 @@
-# Spree's rpsec controller tests get the Spree::ControllerHacks
-# we don't need those for the anonymous controller here, so
-# we call process directly instead of get
 require 'spec_helper'
 
 describe Spree::Admin::BaseController, :type => :controller do
@@ -46,19 +43,19 @@ describe Spree::Admin::BaseController, :type => :controller do
       end
 
       it "only checks alerts if production and preference is true" do
-        #nodyna <ID:send-12> <SD EASY (private methods)>
+        #nodyna <send-2419> <SD EASY (private methods)>
         expect(controller.send(:should_check_alerts?)).to be true
       end
 
       it "only checks for production" do
         allow(Rails.env).to receive_messages(:production? => false)
-        #nodyna <ID:send-13> <SD EASY (private methods)>
+        #nodyna <send-2420> <SD EASY (private methods)>
         expect(controller.send(:should_check_alerts?)).to be false
       end
 
       it "only checks if preference is true" do
         Spree::Config[:check_for_spree_alerts] = false
-        #nodyna <ID:send-14> <SD EASY (private methods)>
+        #nodyna <send-2421> <SD EASY (private methods)>
         expect(controller.send(:should_check_alerts?)).to be false
       end
     end

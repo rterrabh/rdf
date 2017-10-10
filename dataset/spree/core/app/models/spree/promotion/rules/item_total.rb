@@ -1,5 +1,3 @@
-# A rule to apply to an order greater than (or greater than or equal to)
-# a specific amount
 module Spree
   class Promotion
     module Rules
@@ -20,9 +18,9 @@ module Spree
         def eligible?(order, options = {})
           item_total = order.item_total
 
-          #nodyna <ID:send-115> <SD TRIVIAL (public methods)>
+          #nodyna <send-2497> <SD TRIVIAL (public methods)>
           lower_limit_condition = item_total.send(preferred_operator_min == 'gte' ? :>= : :>, BigDecimal.new(preferred_amount_min.to_s))
-          #nodyna <ID:send-116> <SD TRIVIAL (public methods)>
+          #nodyna <send-2498> <SD TRIVIAL (public methods)>
           upper_limit_condition = item_total.send(preferred_operator_max == 'lte' ? :<= : :<, BigDecimal.new(preferred_amount_max.to_s))
 
           eligibility_errors.add(:base, ineligible_message_max) unless upper_limit_condition

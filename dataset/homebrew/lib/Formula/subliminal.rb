@@ -109,7 +109,6 @@ class Subliminal < Formula
     sha256 "e372b66f4997f8e1de970ea755d0a528d7222d2aa9bd55aac078c7ef39b8f6c3"
   end
 
-  # not required by install_requires but provides additional UI when available
   resource "colorlog" do
     url "https://pypi.python.org/packages/source/c/colorlog/colorlog-2.6.0.tar.gz"
     sha256 "0f03ae0128a1ac2e22ec6a6617efbd36ab00d4b2e1c49c497e11854cf24f1fe9"
@@ -123,8 +122,6 @@ class Subliminal < Formula
       end
     end
 
-    # dogpile is a namespace package and .pth files aren't read from our
-    # vendor site-packages
     touch libexec/"vendor/lib/python2.7/site-packages/dogpile/__init__.py"
 
     ENV.prepend_create_path "PYTHONPATH", libexec/"lib/python2.7/site-packages"

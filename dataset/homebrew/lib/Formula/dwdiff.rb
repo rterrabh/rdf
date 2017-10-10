@@ -22,7 +22,6 @@ class Dwdiff < Formula
     system "./configure", "--prefix=#{prefix}"
     system "make", "install"
 
-    # Remove non-English man pages
     (man/"nl").rmtree
     (man/"nl.UTF-8").rmtree
     (share/"locale/nl").rmtree

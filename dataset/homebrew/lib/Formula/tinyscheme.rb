@@ -10,7 +10,6 @@ class Tinyscheme < Formula
     sha1 "f2f6def9dc2ef11876dd1e307634ac454302ed11" => :lion
   end
 
-  # Modify compile flags for Mac OS X per instructions
   patch :DATA
 
   def install
@@ -39,11 +38,7 @@ __END__
  SYS_LIBS= -ldl
 -PLATFORM_FEATURES= -DSUN_DL=1
 
- # Cygwin
- #PLATFORM_FEATURES = -DUSE_STRLWR=0
 @@ -50,8 +49,7 @@
- #LIBPREFIX = lib
- #OUT = -o $@
 
 -FEATURES = $(PLATFORM_FEATURES) -DUSE_DL=1 -DUSE_MATH=0 -DUSE_ASCII_NAMES=0
 -

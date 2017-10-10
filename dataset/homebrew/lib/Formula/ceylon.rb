@@ -13,7 +13,6 @@ class Ceylon < Formula
     doc.install Dir["doc/*"]
     libexec.install Dir["*"]
 
-    # Symlink shell scripts but not args.sh
     bin.install_symlink Dir["#{libexec}/bin/ceylon*"]
   end
 

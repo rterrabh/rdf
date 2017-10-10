@@ -3,9 +3,7 @@ require 'spec_helper'
 describe Spree::Order, type: :model do
   let(:order) { Spree::Order.new }
   before do
-    # Ensure state machine has been re-defined correctly
     Spree::Order.define_state_machine!
-    # We don't care about this validation here
     allow(order).to receive(:require_email)
   end
 
@@ -58,14 +56,12 @@ describe Spree::Order, type: :model do
       end
 
       it "adjusts tax rates when transitioning to delivery" do
-        # Once for the line items
         expect(Spree::TaxRate).to receive(:adjust).once
         allow(order).to receive :set_shipments_cost
         order.next!
       end
 
       it "adjusts tax rates twice if there are any shipments" do
-        # Once for the line items, once for the shipments
         order.shipments.build stock_location: create(:stock_location)
         expect(Spree::TaxRate).to receive(:adjust).twice
         allow(order).to receive :set_shipments_cost
@@ -123,8 +119,8 @@ describe Spree::Order, type: :model do
       allow_any_instance_of(Spree::OrderUpdater).to receive(:update_adjustment_total) { 10 }
     end
 
+    #nodyna <send-2472> <not yet classified>
     it "should send a cancel email" do
-      # Stub methods that cause side-effects in this test
       allow(shipment).to receive(:cancel!)
       allow(order).to receive :has_available_shipment
       allow(order).to receive :restock_items!
@@ -154,8 +150,6 @@ describe Spree::Order, type: :model do
       let(:payment) { create(:payment, amount: order.total) }
 
       before do
-        # TODO: This is ugly :(
-        # Stubs methods that cause unwanted side effects in this test
         allow(Spree::OrderMailer).to receive(:cancel_email).and_return(mail_message = double)
         allow(mail_message).to receive :deliver_later
         allow(order).to receive :has_available_shipment
@@ -202,14 +196,12 @@ describe Spree::Order, type: :model do
     end
   end
 
-  # Another regression test for #729
   context "#resume" do
     before do
       allow(order).to receive_messages email: "user@spreecommerce.com"
       allow(order).to receive_messages state: "canceled"
       allow(order).to receive_messages allow_resume?: true
 
-      # Stubs method that cause unwanted side effects in this test
       allow(order).to receive :has_available_shipment
     end
   end

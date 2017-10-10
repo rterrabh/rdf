@@ -59,6 +59,7 @@ class Thefuck < Formula
   def caveats; <<-EOS.undent
     Add the following to your .bash_profile, .bashrc or .zshrc:
 
+      #nodyna <eval-594> <not yet classified>
       eval "$(thefuck --alias)"
 
     For other shells, check https://github.com/nvbn/thefuck/wiki/Shell-aliases

@@ -1,8 +1,3 @@
-#
-#  tk/font.rb - the class to treat fonts on Ruby/Tk
-#
-#                               by  Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 
 class TkFont
@@ -11,7 +6,7 @@ class TkFont
 
   TkCommandNames = ['font'.freeze].freeze
 
-  #nodyna <ID:instance_eval-47> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1872> <IEV MODERATE (method definition)>
   (Tk_FontID = ["@font".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -26,18 +21,15 @@ class TkFont
     Tk_FontUseTBL.mutex.synchronize{ Tk_FontUseTBL.clear }
   }
 
-  # option_type : default => string
   OptionType = Hash.new(?s)
   OptionType['size'] = ?n
   OptionType['pointadjust'] = ?n
   OptionType['underline'] = ?b
   OptionType['overstrike'] = ?b
 
-  # metric_type : default => num_or_str
   MetricType = Hash.new(?n)
   MetricType['fixed'] = ?b
 
-  # system font names
   SYSTEM_FONT_NAMES = []
   def SYSTEM_FONT_NAMES.add(font_names)
     (@mutex ||= Mutex.new).synchronize{
@@ -50,7 +42,6 @@ class TkFont
     }
   end
 
-  # set default font
   case Tk::TK_VERSION
   when /^4\..*/
     DEFAULT_LATIN_FONT_NAME = 'a14'.freeze
@@ -62,24 +53,18 @@ class TkFont
         fontnames = tk_call('font', 'names')
         case fontnames
         when /defaultgui/
-          # Tcl/Tk-JP for Windows
           ltn = 'defaultgui'
           knj = 'defaultgui'
         when /Mincho:Helvetica-Bold-12/
-          # Tcl/Tk-JP for UNIX/X
           ltn, knj = tk_split_simplelist(tk_call('font', 'configure',
                                                  'Mincho:Helvetica-Bold-12',
                                                  '-compound'))
         else
-          # unknown Tcl/Tk-JP
-          #platform = tk_call('set', 'tcl_platform(platform)')
           platform = Tk::PLATFORM['platform']
           case platform
           when 'unix'
             ltn = {'family'=>'Helvetica'.freeze,
                    'size'=>-12, 'weight'=>'bold'.freeze}
-            #knj = 'k14'
-            #knj = '-misc-fixed-medium-r-normal--14-*-*-*-c-*-jisx0208.1983-0'
             knj = '-*-fixed-bold-r-normal--12-*-*-*-c-*-jisx0208.1983-0'
           when 'windows'
             ltn = {'family'=>'MS Sans Serif'.freeze, 'size'=>8}
@@ -99,7 +84,6 @@ class TkFont
 
     else # not JAPANIZED_TK
       begin
-        #platform = tk_call('set', 'tcl_platform(platform)')
         platform = Tk::PLATFORM['platform']
         case platform
         when 'unix'
@@ -143,7 +127,6 @@ class TkFont
   end
 
 
-  ###################################
   class DescendantFont
     def initialize(compound, type)
       unless compound.kind_of?(TkFont)
@@ -192,13 +175,7 @@ class TkFont
   end
 
 
-  ###################################
-  # class methods
-  ###################################
   def TkFont.is_system_font?(fnt)
-    # true  --> system font which is available on the current system
-    # false --> not system font (or unknown system font)
-    # nil   --> system font name, but not available on the current system
     fnt = fnt.to_s
     SYSTEM_FONT_NAMES.include?(fnt) && self.names.index(fnt) && true
   end
@@ -289,7 +266,6 @@ class TkFont
       when ?b
         val = TkComm::bool(val)
       else
-        # do nothing
       end
       return val
     end
@@ -302,7 +278,6 @@ class TkFont
       when ?b
         h[k] = TkComm::bool(h[k])
       else
-        # do nothing
       end
     }
     h
@@ -326,7 +301,6 @@ class TkFont
       when ?b
         val = TkComm::bool(val)
       else
-        # do nothing
       end
       return val
     end
@@ -339,7 +313,6 @@ class TkFont
       when ?b
         h[k] = TkComm::bool(h[k])
       else
-        # do nothing
       end
     }
     h
@@ -367,7 +340,6 @@ class TkFont
       Tk_FontNameTBL.mutex.synchronize{
         Tk_FontNameTBL.each_value{|obj| r.push(obj)}
       }
-      #r | []
       r.uniq
 
     when /^8\..*/
@@ -452,10 +424,8 @@ class TkFont
       fnt = nil if fnt == [] || fnt == ""
 
       unless fnt
-        # create dummy
-        # TkFont.new(nil, nil).call_font_configure([path, key], *args)
         dummy_fnt = TkFont.allocate
-        #nodyna <ID:instance_eval-48> <IEV EASY (private access)>
+        #nodyna <instance_eval-1873> <IEV EASY (private access)>
         dummy_fnt.instance_eval{ init_dummy_fontobj() }
         dummy_fnt
       else
@@ -500,10 +470,8 @@ class TkFont
       fnt = nil if fnt == [] || fnt == ""
 
       unless fnt
-        # create dummy
-        # TkFont.new(nil, nil).call_font_configure([path, key], *args)
         dummy_fnt = TkFont.allocate
-        #nodyna <ID:instance_eval-49> <IEV EASY (private access)>
+        #nodyna <instance_eval-1874> <IEV EASY (private access)>
         dummy_fnt.instance_eval{ init_dummy_fontobj() }
         dummy_fnt
       else
@@ -521,7 +489,6 @@ class TkFont
       if path
         Tk_FontUseTBL[path]
       else
-        # Tk_FontUseTBL.values | []
         Tk_FontUseTBL.values.uniq
       end
     }
@@ -536,11 +503,7 @@ class TkFont
     end
   end
 
-  ###################################
-  # instance methods
-  ###################################
   private
-  ###################################
   def init_dummy_fontobj
     Tk_FontID.mutex.synchronize{
       @id = Tk_FontID.join(TkCore::INTERP._ip_id_)
@@ -550,8 +513,6 @@ class TkFont
       Tk_FontNameTBL[@id] = self
     }
 
-    # @latin_desscendant = nil
-    # @kanji_desscendant = nil
     @descendant = [nil, nil] # [latin, kanji]
 
     case (Tk::TK_VERSION)
@@ -592,7 +553,6 @@ class TkFont
     knj = '{}' if knj == ''
 
     Tk_FontID.mutex.synchronize{
-      # @id = Tk_FontID.join('')
       @id = Tk_FontID.join(TkCore::INTERP._ip_id_)
       Tk_FontID[1].succ!
     }
@@ -600,21 +560,14 @@ class TkFont
       Tk_FontNameTBL[@id] = self
     }
 
-    # @latin_desscendant = nil
-    # @kanji_desscendant = nil
     @descendant = [nil, nil] # [latin, kanji]
 
-    # @latinfont = @id + 'l'
-    # @kanjifont = @id + 'k'
-    # @compoundfont = @id + 'c'
-    # @fontslot = {}
 
     if knj.kind_of?(Hash) && !keys
       keys = knj
       knj = nil
     end
 
-    # compound font check
     if Tk::TK_VERSION == '8.0' && JAPANIZED_TK
       begin
         compound = tk_split_simplelist(tk_call('font', 'configure',
@@ -790,14 +743,9 @@ class TkFont
     if JAPANIZED_TK
       @compoundfont = [[@latinfont], [@kanjifont]]
       @fontslot = {'font'=>@latinfont, 'kanjifont'=>@kanjifont}
-      # @fontslot.clear
-      # @fontslot['font'] = @latinfont
-      # @fontslot['kanjifont'] = @kanjifont
     else
       @compoundfont = @latinfont
       @fontslot = {'font'=>@latinfont}
-      # @fontslot.clear
-      # @fontslot['font'] = @latinfont
     end
   end
 
@@ -868,7 +816,6 @@ class TkFont
       else
         tk_call('font', 'create', @kanjifont, '-charset', 'jisx0208.1983')
       end
-      # end of JAPANIZED_TK
 
     else
       if font.kind_of? Hash
@@ -923,7 +870,6 @@ class TkFont
       end
 
       @fontslot = {'font'=>@compoundfont}
-      # @fontslot['font'] = @compoundfont
       begin
         tk_call('font', 'create', @compoundfont,
                 '-compound', [@latinfont, @kanjifont], *hash_kv(keys))
@@ -1004,14 +950,11 @@ class TkFont
       end
 
       @fontslot = {'font'=>@compoundfont}
-      # @fontslot['font'] = @compoundfont
       tk_call('font', 'configure', @compoundfont, *hash_kv(keys))
     end
   end
 
-  ###################################
   public
-  ###################################
   def inspect
     sprintf("#<%s:%0x:%s>", self.class.inspect, self.__id__, @compoundfont)
   end
@@ -1032,17 +975,14 @@ class TkFont
         configinfo name
       rescue
         super(id, *args)
-#        fail NameError, "undefined local variable or method `#{name}' for #{self.to_s}", error_at
       end
     else
       super(id, *args)
-#      fail NameError, "undefined method `#{name}' for #{self.to_s}", error_at
     end
   end
 
   def call_font_configure(path, *args)
     if path.kind_of?(Array)
-      # [path, optkey]
       win, tag = path[0].split(';')
       optkey = path[1].to_s
     else
@@ -1083,14 +1023,12 @@ class TkFont
       if key.include?(';')
         win, tag, optkey = key.split(';')
         winobj = tk_tcl2ruby(win)
-        #if winobj.kind_of? TkText
         if winobj.kind_of?(TkText) || winobj.kind_of?(Tk::Text)
           if optkey
             ret.push([winobj, winobj.tagid2obj(tag), optkey])
           else
             ret.push([winobj, winobj.tagid2obj(tag)])
           end
-        #elsif winobj.kind_of? TkCanvas
         elsif winobj.kind_of?(TkCanvas) || winobj.kind_of?(Tk::Canvas)
           if (tagobj = TkcTag.id2obj(winobj, tag)).kind_of? TkcTag
             if optkey
@@ -1111,7 +1049,6 @@ class TkFont
               ret.push([winobj, tag])
             end
           end
-        #elsif winobj.kind_of? TkMenu
         elsif winobj.kind_of?(TkMenu) || winobj.kind_of?(Tk::Menu)
           if optkey
             ret.push([winobj, tag, optkey])
@@ -1152,7 +1089,6 @@ class TkFont
   end
 
   def latin_font
-    # @latinfont
     if @descendant[0] # [0] -> latin
       @descendant[0]
     else
@@ -1173,7 +1109,6 @@ class TkFont
   end
 
   def kanji_font
-    # @kanjifont
     if @descendant[1] # [1] -> kanji
       @descendant[1]
     else
@@ -1228,7 +1163,6 @@ class TkFont
   end
 
   def kanji_actual(option=nil)
-    #if JAPANIZED_TK
     if @kanjifont == nil
       actual_core(@compoundfont, nil, option) # use @compoundfont
     elsif @kanjifont != ""
@@ -1242,7 +1176,6 @@ class TkFont
   end
 
   def kanji_actual_displayof(win, option=nil)
-    #if JAPANIZED_TK
     if @kanjifont == nil
       actual_core(@compoundfont, nil, option) # use @compoundfont
     elsif @kanjifont != ""
@@ -1303,27 +1236,23 @@ class TkFont
   end
 
   def kanji_configure(slot, value=None)
-    #if JAPANIZED_TK
     if @kanjifont == nil
       configure_core(@compoundfont, slot, value) # use @compoundfont
     elsif @kanjifont != ""
       configure_core(@kanjifont, slot, value)
       configure('size'=>configinfo('size')) # to reflect new configuration
     else
-      #""
       configure(slot, value)
     end
     self
   end
 
   def kanji_configinfo(slot=nil)
-    #if JAPANIZED_TK
     if @kanjifont == nil
       configure_core(@compoundfont, slot) # use @compoundfont
     elsif @kanjifont != ""
       configinfo_core(@kanjifont, slot)
     else
-      #[]
       configinfo(slot)
     end
   end
@@ -1343,7 +1272,6 @@ class TkFont
       latin_replace_core(ltn)
       reset_pointadjust
     else
-      # not compound font -> copy properties of ltn
       latinkeys = {}
       begin
         actual_core(ltn).each{|key,val| latinkeys[key] = val}
@@ -1353,7 +1281,6 @@ class TkFont
       begin
         tk_call('font', 'configure', @compoundfont, *hash_kv(latinkeys))
       rescue
-        # not exist? (deleted?) -> create font
         tk_call('font', 'create', @compoundfont, *hash_kv(latinkeys))
       end
     end
@@ -1389,7 +1316,6 @@ class TkFont
       when ?b
         val = TkComm::bool(val)
       else
-        # do nothing
       end
       return val
     end
@@ -1402,7 +1328,6 @@ class TkFont
       when ?b
         h[k] = TkComm::bool(h[k])
       else
-        # do nothing
       end
     }
     h
@@ -1421,7 +1346,6 @@ class TkFont
       when ?b
         val = TkComm::bool(val)
       else
-        # do nothing
       end
       return val
     end
@@ -1434,7 +1358,6 @@ class TkFont
       when ?b
         h[k] = TkComm::bool(h[k])
       else
-        # do nothing
       end
     }
     h
@@ -1456,7 +1379,6 @@ class TkFont
       when ?b
         val = TkComm::bool(val)
       else
-        # do nothing
       end
       return val
     end
@@ -1469,7 +1391,6 @@ class TkFont
       when ?b
         h[k] = TkComm::bool(h[k])
       else
-        # do nothing
       end
     }
     h
@@ -1492,7 +1413,6 @@ class TkFont
       when ?b
         val = TkComm::bool(val)
       else
-        # do nothing
       end
       return val
     end
@@ -1505,7 +1425,6 @@ class TkFont
       when ?b
         h[k] = TkComm::bool(h[k])
       else
-        # do nothing
       end
     }
     h
@@ -1529,7 +1448,6 @@ class TkFont
       when ?b
         val = TkComm::bool(val)
       else
-        # do nothing
       end
       return val
     end
@@ -1542,7 +1460,6 @@ class TkFont
       when ?b
         h[k] = TkComm::bool(h[k])
       else
-        # do nothing
       end
     }
     h
@@ -1567,7 +1484,6 @@ class TkFont
       when ?b
         val = TkComm::bool(val)
       else
-        # do nothing
       end
       return val
     end
@@ -1580,7 +1496,6 @@ class TkFont
       when ?b
         h[k] = TkComm::bool(h[k])
       else
-        # do nothing
       end
     }
     h
@@ -1597,9 +1512,6 @@ class TkFont
     self
   end
 
-  ###################################
-  # private alias
-  ###################################
   case (Tk::TK_VERSION)
   when /^4\..*/
     alias create_latinfont        create_latinfont_tk4x
@@ -1618,9 +1530,6 @@ class TkFont
 
   end
 
-  ###################################
-  # public alias
-  ###################################
   alias ascii_font             latin_font
   alias asciifont              latinfont
   alias create_asciifont       create_latinfont
@@ -1631,7 +1540,6 @@ class TkFont
   alias ascii_replace          latin_replace
   alias ascii_metrics          latin_metrics
 
-  ###################################
 =begin
   def dup
     TkFont.new(self)
@@ -1649,7 +1557,6 @@ module TkFont::CoreMethods
   private
 
   def actual_core_tk4x(font, win=nil, option=nil)
-    # dummy
     if option == 'pointadjust' || option == :pointadjust
         1.0
     elsif option
@@ -1717,12 +1624,10 @@ module TkFont::CoreMethods
   end
 
   def configure_core_tk4x(font, slot, value=None)
-    #""
     self
   end
 
   def configinfo_core_tk4x(font, option=nil)
-    # dummy
     if TkComm::GET_CONFIGINFOwoRES_AS_ARRAY
       if option == 'pointadjust' || option == :pointadjust
         1.0
@@ -1789,7 +1694,6 @@ module TkFont::CoreMethods
       tk_call('font', 'configure', font,
               "-#{slot}", value, '-pointadjust', padjust)
     elsif JAPANIZED_TK && (slot == 'family' || slot == :family)
-      # coumpund font?
       begin
         compound = tk_split_simplelist(tk_call('font', 'configure',
                                                font, '-compound'))
@@ -1950,21 +1854,16 @@ module TkFont::CoreMethods
             win, tag, optkey = w.split(';')
             optkey = 'font' if optkey == nil || optkey == ''
             winobj = tk_tcl2ruby(win)
-#           winobj.tagfont_configure(tag, {'font'=>@latinfont})
-            #if winobj.kind_of? TkText
             if winobj.kind_of?(TkText) || winobj.kind_of?(Tk::Text)
               tk_call(win, 'tag', 'configure', tag, "-#{optkey}", @latinfont)
-            #elsif winobj.kind_of? TkCanvas
             elsif winobj.kind_of?(TkCanvas) || winobj.kind_of?(Tk::Canvas)
               tk_call(win, 'itemconfigure', tag, "-#{optkey}", @latinfont)
-            #elsif winobj.kind_of? TkMenu
             elsif winobj.kind_of?(TkMenu) || winobj.kind_of?(Tk::Menu)
               tk_call(win, 'entryconfigure', tag, "-#{optkey}", @latinfont)
             else
               raise RuntimeError, "unknown widget type"
             end
           else
-#           tk_tcl2ruby(w).font_configure('font'=>@latinfont)
             tk_call(w, 'configure', '-font', @latinfont)
           end
         rescue
@@ -1994,21 +1893,16 @@ module TkFont::CoreMethods
             win, tag, optkey = w.split(';')
             optkey = 'kanjifont' unless optkey
             winobj = tk_tcl2ruby(win)
-#           winobj.tagfont_configure(tag, {'kanjifont'=>@kanjifont})
-            #if winobj.kind_of? TkText
             if winobj.kind_of?(TkText) || winobj.kind_of?(Tk::Text)
               tk_call(win, 'tag', 'configure', tag, "-#{optkey}", @kanjifont)
-            #elsif winobj.kind_of? TkCanvas
             elsif winobj.kind_of?(TkCanvas) || winobj.kind_of?(Tk::Canvas)
               tk_call(win, 'itemconfigure', tag, "-#{optkey}", @kanjifont)
-            #elsif winobj.kind_of? TkMenu
             elsif winobj.kind_of?(TkMenu) || winobj.kind_of?(Tk::Menu)
               tk_call(win, 'entryconfigure', tag, "-#{optkey}", @latinfont)
             else
               raise RuntimeError, "unknown widget type"
             end
           else
-#           tk_tcl2ruby(w).font_configure('kanjifont'=>@kanjifont)
             tk_call(w, 'configure', '-kanjifont', @kanjifont)
           end
         rescue
@@ -2032,7 +1926,6 @@ module TkFont::CoreMethods
       begin
         fnt_bup = tk_call('font', 'create', '@font_tmp', '-copy', @latinfont)
       rescue
-        #fnt_bup = ''
         fnt_bup = TkFont::DEFAULT_LATIN_FONT_NAME
       end
     end
@@ -2082,7 +1975,6 @@ module TkFont::CoreMethods
       begin
         tk_call('font', 'configure', @compoundfont, *hash_kv(latinkeys))
       rescue
-        # not exist? (deleted?) -> create font
         tk_call('font', 'create', @compoundfont, *hash_kv(latinkeys))
       end
     end
@@ -2100,7 +1992,6 @@ module TkFont::CoreMethods
       begin
         fnt_bup = tk_call('font', 'create', '@font_tmp', '-copy', @kanjifont)
       rescue
-        #fnt_bup = ''
         fnt_bup = TkFont::DEFAULT_KANJI_FONT_NAME
       end
     end
@@ -2148,7 +2039,6 @@ module TkFont::CoreMethods
   end
 
   def metrics_core_tk4x(font, win, option=nil)
-    # dummy
     if option
       ""
     else
@@ -2187,9 +2077,6 @@ module TkFont::CoreMethods
     end
   end
 
-  ###################################
-  # private alias
-  ###################################
   case (Tk::TK_VERSION)
   when /^4\..*/
     alias actual_core             actual_core_tk4x
@@ -2233,7 +2120,6 @@ class TkFont
 end
 
 class TkNamedFont < TkFont
-  # for built-in named fonts
   def TkNamedFont.find(name)
     name = name.to_s
     unless (obj = Tk_FontNameTBL[name])
@@ -2247,7 +2133,7 @@ class TkNamedFont < TkFont
     obj = nil
     Tk_FontNameTBL.mutex.synchronize{
       unless (obj = Tk_FontNameTBL[name])
-        #nodyna <ID:instance_eval-50> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1875> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @id = @compoundfont = name.to_s
           @latinfont = nil
@@ -2257,18 +2143,15 @@ class TkNamedFont < TkFont
         }
       end
     }
-    #nodyna <ID:instance_eval-51> <IEV MODERATE (private access)>
+    #nodyna <instance_eval-1876> <IEV MODERATE (private access)>
     obj.instance_eval{ initialize(name, keys) }
     obj
   end
 
-  ###########################
   private
-  ###########################
   def initialize(name, keys=nil)
     @id = @compoundfont = name.to_s
 
-    # if not exist named font, create it.
     begin
       if keys
         tk_call('font', 'configure', @compoundfont, keys)
@@ -2276,7 +2159,6 @@ class TkNamedFont < TkFont
         tk_call('font', 'configure', @compoundfont)
       end
     rescue
-      # the named font doesn't exist -> create
       if keys
         tk_call('font', 'create', @compoundfont, keys)
       else
@@ -2286,18 +2168,13 @@ class TkNamedFont < TkFont
   end
 
   def create_latinfont(fnt)
-    # ignore
   end
   def create_kanjifont(fnt)
-    # ignore
   end
   def create_compoundfont(ltn, knj, keys)
-    # ignore
   end
 
-  ###########################
   public
-  ###########################
   def latin_font_id
     @compoundfont
   end
@@ -2306,12 +2183,8 @@ class TkNamedFont < TkFont
   end
 end
 
-#######################################
-# define system font names
-#######################################
 if Tk::TCL_MAJOR_VERSION > 8 ||
     (Tk::TCL_MAJOR_VERSION == 8 && Tk::TCL_MINOR_VERSION >= 5)
-  # add standard fonts of Tcl/Tk 8.5+
   TkFont::SYSTEM_FONT_NAMES.add [
     'TkDefaultFont', 'TkTextFont', 'TkFixedFont', 'TkMenuFont',
     'TkHeadingFont', 'TkCaptionFont', 'TkSmallCaptionFont',
@@ -2319,13 +2192,10 @@ if Tk::TCL_MAJOR_VERSION > 8 ||
   ]
 end
 
-# platform-specific fonts
-#  -- windows
 TkFont::SYSTEM_FONT_NAMES.add [
   'ansifixed', 'ansi', 'device', 'oemfixed', 'systemfixed', 'system'
 ]
 
-#  --  macintosh, macosx
 TkFont::SYSTEM_FONT_NAMES.add ['system', 'application']
 
 if Tk::TCL_MAJOR_VERSION > 8 ||
@@ -2333,7 +2203,6 @@ if Tk::TCL_MAJOR_VERSION > 8 ||
   TkFont::SYSTEM_FONT_NAMES.add ['menu']
 end
 
-#  --  macosx (Aqua theme)
 if Tk::TCL_MAJOR_VERSION > 8 ||
     (Tk::TCL_MAJOR_VERSION == 8 && Tk::TCL_MINOR_VERSION >= 5)
   TkFont::SYSTEM_FONT_NAMES.add [
@@ -2348,9 +2217,6 @@ if Tk::TCL_MAJOR_VERSION > 8 ||
   ]
 end
 
-#######################################
-# autoload
-#######################################
 class TkFont
   autoload :Chooser, 'tk/fontchooser'
 end

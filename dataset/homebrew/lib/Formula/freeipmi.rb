@@ -16,8 +16,6 @@ class Freeipmi < Formula
 
   def install
     system "./configure", "--prefix=#{prefix}"
-    # This is a big hammer to disable building the man pages
-    # It breaks under homebrew's build system and I'm not sure why
     inreplace "man/Makefile", "install: install-am", "install:"
     system "make", "install"
   end

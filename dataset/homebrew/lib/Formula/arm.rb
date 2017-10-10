@@ -14,7 +14,6 @@ class Arm < Formula
     See here for details: http://www.torproject.org/tor-manual.html.en
 
     To configure Arm, copy the sample configuration from
-    #{share}/arm/armrc.sample
     to ~/.arm/armrc, adjusting as needed.
     EOS
   end

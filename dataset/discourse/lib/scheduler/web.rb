@@ -1,4 +1,3 @@
-# Based off sidetiq https://github.com/tobiassvn/sidetiq/blob/master/lib/sidetiq/web.rb
 module Scheduler
   module Web
     VIEWS = File.expand_path('views', File.dirname(__FILE__)) unless defined? VIEWS

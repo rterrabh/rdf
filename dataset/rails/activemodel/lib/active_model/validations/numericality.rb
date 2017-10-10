@@ -20,7 +20,7 @@ module ActiveModel
       def validate_each(record, attr_name, value)
         before_type_cast = :"#{attr_name}_before_type_cast"
 
-        #nodyna <ID:send-17> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-950> <SD COMPLEX (change-prone variables)>
         raw_value = record.send(before_type_cast) if record.respond_to?(before_type_cast)
         raw_value ||= value
 
@@ -45,7 +45,7 @@ module ActiveModel
         options.slice(*CHECKS.keys).each do |option, option_value|
           case option
           when :odd, :even
-            #nodyna <ID:send-18> <SD MODERATE (change-prone variables)>
+            #nodyna <send-951> <SD MODERATE (change-prone variables)>
             unless value.to_i.send(CHECKS[option])
               record.errors.add(attr_name, option, filtered_options(value))
             end
@@ -54,11 +54,11 @@ module ActiveModel
             when Proc
               option_value = option_value.call(record)
             when Symbol
-              #nodyna <ID:send-19> <SD MODERATE (change-prone variables)>
+              #nodyna <send-952> <SD MODERATE (change-prone variables)>
               option_value = record.send(option_value)
             end
 
-            #nodyna <ID:send-20> <SD MODERATE (change-prone variables)>
+            #nodyna <send-953> <SD MODERATE (change-prone variables)>
             unless value.send(CHECKS[option], option_value)
               record.errors.add(attr_name, option, filtered_options(value).merge!(count: option_value))
             end
@@ -87,7 +87,7 @@ module ActiveModel
       def allow_only_integer?(record)
         case options[:only_integer]
         when Symbol
-          #nodyna <ID:send-21> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-954> <SD COMPLEX (change-prone variables)>
           record.send(options[:only_integer])
         when Proc
           options[:only_integer].call(record)
@@ -105,57 +105,6 @@ module ActiveModel
     end
 
     module HelperMethods
-      # Validates whether the value of the specified attribute is numeric by
-      # trying to convert it to a float with Kernel.Float (if <tt>only_integer</tt>
-      # is +false+) or applying it to the regular expression <tt>/\A[\+\-]?\d+\Z/</tt>
-      # (if <tt>only_integer</tt> is set to +true+).
-      #
-      #   class Person < ActiveRecord::Base
-      #     validates_numericality_of :value, on: :create
-      #   end
-      #
-      # Configuration options:
-      # * <tt>:message</tt> - A custom error message (default is: "is not a number").
-      # * <tt>:only_integer</tt> - Specifies whether the value has to be an
-      #   integer, e.g. an integral value (default is +false+).
-      # * <tt>:allow_nil</tt> - Skip validation if attribute is +nil+ (default is
-      #   +false+). Notice that for fixnum and float columns empty strings are
-      #   converted to +nil+.
-      # * <tt>:greater_than</tt> - Specifies the value must be greater than the
-      #   supplied value.
-      # * <tt>:greater_than_or_equal_to</tt> - Specifies the value must be
-      #   greater than or equal the supplied value.
-      # * <tt>:equal_to</tt> - Specifies the value must be equal to the supplied
-      #   value.
-      # * <tt>:less_than</tt> - Specifies the value must be less than the
-      #   supplied value.
-      # * <tt>:less_than_or_equal_to</tt> - Specifies the value must be less
-      #   than or equal the supplied value.
-      # * <tt>:other_than</tt> - Specifies the value must be other than the
-      #   supplied value.
-      # * <tt>:odd</tt> - Specifies the value must be an odd number.
-      # * <tt>:even</tt> - Specifies the value must be an even number.
-      #
-      # There is also a list of default options supported by every validator:
-      # +:if+, +:unless+, +:on+, +:allow_nil+, +:allow_blank+, and +:strict+ .
-      # See <tt>ActiveModel::Validation#validates</tt> for more information
-      #
-      # The following checks can also be supplied with a proc or a symbol which
-      # corresponds to a method:
-      #
-      # * <tt>:greater_than</tt>
-      # * <tt>:greater_than_or_equal_to</tt>
-      # * <tt>:equal_to</tt>
-      # * <tt>:less_than</tt>
-      # * <tt>:less_than_or_equal_to</tt>
-      # * <tt>:only_integer</tt>
-      #
-      # For example:
-      #
-      #   class Person < ActiveRecord::Base
-      #     validates_numericality_of :width, less_than: ->(person) { person.height }
-      #     validates_numericality_of :width, greater_than: :minimum_weight
-      #   end
       def validates_numericality_of(*attr_names)
         validates_with NumericalityValidator, _merge_attributes(attr_names)
       end

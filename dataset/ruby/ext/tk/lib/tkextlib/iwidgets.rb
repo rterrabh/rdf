@@ -1,20 +1,10 @@
-#
-#  [incr Widgets] support
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/itcl'
 require 'tkextlib/itk'
 
-# call setup script for general 'tkextlib' libraries
-#require 'tkextlib/setup.rb'
 
-# call setup script
-#require 'tkextlib/iwidgets/setup.rb'
 
-# load all image format handlers
-#TkPackage.require('Iwidgets', '4.0')
 TkPackage.require('Iwidgets')
 
 module Tk
@@ -36,7 +26,6 @@ module Tk
       end
     end
 
-    ####################################################
 
     autoload :Buttonbox,             'tkextlib/iwidgets/buttonbox'
     autoload :Calendar,              'tkextlib/iwidgets/calendar'

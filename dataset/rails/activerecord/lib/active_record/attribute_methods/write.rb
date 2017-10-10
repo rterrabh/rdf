@@ -28,8 +28,9 @@ module ActiveRecord
         if Module.methods_transplantable?
           def define_method_attribute=(name)
             method = WriterMethodCache[name]
+            #nodyna <module_eval-762> <not yet classified>
             generated_attribute_methods.module_eval {
-              #nodyna <ID:define_method-33> <DM COMPLEX (events)>
+              #nodyna <define_method-763> <DM COMPLEX (events)>
               define_method "#{name}=", method
             }
           end
@@ -38,6 +39,7 @@ module ActiveRecord
             safe_name = name.unpack('h*').first
             ActiveRecord::AttributeMethods::AttrNames.set_name_cache safe_name, name
 
+            #nodyna <module_eval-764> <not yet classified>
             generated_attribute_methods.module_eval <<-STR, __FILE__, __LINE__ + 1
               def __temp__#{safe_name}=(value)
                 name = ::ActiveRecord::AttributeMethods::AttrNames::ATTR_#{safe_name}
@@ -50,9 +52,6 @@ module ActiveRecord
         end
       end
 
-      # Updates the attribute identified by <tt>attr_name</tt> with the
-      # specified +value+. Empty strings for fixnum and float columns are
-      # turned into +nil+.
       def write_attribute(attr_name, value)
         write_attribute_with_type_cast(attr_name, value, true)
       end
@@ -62,7 +61,6 @@ module ActiveRecord
       end
 
       private
-      # Handle *= for method_missing.
       def attribute=(attribute_name, value)
         write_attribute(attribute_name, value)
       end

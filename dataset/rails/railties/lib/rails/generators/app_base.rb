@@ -123,14 +123,14 @@ module Rails
       def builder
         @builder ||= begin
           builder_class = get_builder_class
-          #nodyna <ID:send-282> <SD TRIVIAL (public methods)>
+          #nodyna <send-1155> <SD TRIVIAL (public methods)>
           builder_class.send(:include, ActionMethods)
           builder_class.new(self)
         end
       end
 
       def build(meth, *args)
-        #nodyna <ID:send-283> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1156> <SD COMPLEX (change-prone variables)>
         builder.send(meth, *args) if builder.respond_to?(meth)
       end
 
@@ -212,7 +212,6 @@ module Rails
       end
 
       def gem_for_database
-        # %w( mysql oracle postgresql sqlite3 frontbase ibm_db sqlserver jdbcmysql jdbcsqlite3 jdbcpostgresql )
         case options[:database]
         when "oracle"         then "ruby-oci8"
         when "postgresql"     then "pg"
@@ -304,18 +303,6 @@ module Rails
       def bundle_command(command)
         say_status :run, "bundle #{command}"
 
-        # We are going to shell out rather than invoking Bundler::CLI.new(command)
-        # because `rails new` loads the Thor gem and on the other hand bundler uses
-        # its own vendored Thor, which could be a different version. Running both
-        # things in the same process is a recipe for a night with paracetamol.
-        #
-        # We use backticks and #print here instead of vanilla #system because it
-        # is easier to silence stdout in the existing test suite this way. The
-        # end-user gets the bundler commands called anyway, so no big deal.
-        #
-        # We unset temporary bundler variables to load proper bundler and Gemfile.
-        #
-        # Thanks to James Tucker for the Gem tricks involved in this call.
         _bundle_command = Gem.bin_path('bundler', 'bundle')
 
         require 'bundler'

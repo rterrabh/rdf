@@ -166,7 +166,6 @@ class Mitmproxy < Formula
     sha256 "2c99e9eaea2dacbe4038b3be772ec650f5b4f4c8cc479c3704b81673d96849d7"
   end
 
-  # Required by tornado
   resource "certifi" do
     url "https://pypi.python.org/packages/source/c/certifi/certifi-2015.04.28.tar.gz"
     sha256 "99785e6cf715cdcde59dee05a676e99f04835a71e7ced201ca317401c322ba96"

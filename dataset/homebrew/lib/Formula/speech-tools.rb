@@ -15,7 +15,6 @@ class SpeechTools < Formula
     ENV.deparallelize
     system "./configure"
     system "make"
-    # install all executable files in "main" directory
     bin.install Dir["main/*"].select { |f| File.file?(f) && File.executable?(f) }
   end
 
@@ -33,7 +32,6 @@ class SpeechTools < Formula
       f.puts Array.new(duration_secs * rate_hz) { |i| (scale * Math.sin(frequency_hz * 2 * Math::PI * i / rate_hz)).to_i }
     end
 
-    # convert to wav format using ch_wave
     system "ch_wave", txtfile,
       "-itype", "raw",
       "-istype", "ascii",
@@ -41,16 +39,13 @@ class SpeechTools < Formula
       "-o", wavfile,
       "-otype", "riff"
 
-    # pitch tracking to est format using pda
     system "pda", wavfile,
       "-shift", (1 / frequency_hz.to_f).to_s,
       "-o", ptcfile,
       "-otype", "est"
 
-    # extract one frame from the middle using ch_track, capturing stdout
     pitch = `ch_track #{ptcfile} -from #{frequency_hz * duration_secs / 2} -to #{frequency_hz * duration_secs / 2}`.strip
 
-    # should be 100 (Hz)
     assert_equal frequency_hz, pitch.to_i
   end
 end

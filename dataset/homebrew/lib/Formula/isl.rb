@@ -1,12 +1,6 @@
 class Isl < Formula
   desc "Integer Set Library for the polyhedral model"
   homepage "http://freecode.com/projects/isl"
-  # Note: Always use tarball instead of git tag for stable version.
-  #
-  # Currently isl detects its version using source code directory name
-  # and update isl_version() function accordingly.  All other names will
-  # result in isl_version() function returning "UNKNOWN" and hence break
-  # package detection.
   url "http://isl.gforge.inria.fr/isl-0.14.1.tar.xz"
   sha256 "8882c9e36549fc757efa267706a9af733bb8d7fe3905cbfde43e17a89eea4675"
 
@@ -42,7 +36,6 @@ class Isl < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <isl/ctx.h>
 
       int main()
       {

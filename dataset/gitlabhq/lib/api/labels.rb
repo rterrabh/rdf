@@ -1,28 +1,12 @@
 module API
-  # Labels API
   class Labels < Grape::API
     before { authenticate! }
 
     resource :projects do
-      # Get all labels of the project
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      # Example Request:
-      #   GET /projects/:id/labels
       get ':id/labels' do
         present user_project.labels, with: Entities::Label
       end
 
-      # Creates a new label
-      #
-      # Parameters:
-      #   id    (required) - The ID of a project
-      #   name  (required) - The name of the label to be deleted
-      #   color (required) - Color of the label given in 6-digit hex
-      #                      notation with leading '#' sign (e.g. #FFAABB)
-      # Example Request:
-      #   POST /projects/:id/labels
       post ':id/labels' do
         authorize! :admin_label, user_project
         required_attributes! [:name, :color]
@@ -41,14 +25,6 @@ module API
         end
       end
 
-      # Deletes an existing label
-      #
-      # Parameters:
-      #   id    (required) - The ID of a project
-      #   name  (required) - The name of the label to be deleted
-      #
-      # Example Request:
-      #   DELETE /projects/:id/labels
       delete ':id/labels' do
         authorize! :admin_label, user_project
         required_attributes! [:name]
@@ -59,16 +35,6 @@ module API
         label.destroy
       end
 
-      # Updates an existing label. At least one optional parameter is required.
-      #
-      # Parameters:
-      #   id        (required) - The ID of a project
-      #   name      (required) - The name of the label to be deleted
-      #   new_name  (optional) - The new name of the label
-      #   color     (optional) - Color of the label given in 6-digit hex
-      #                          notation with leading '#' sign (e.g. #FFAABB)
-      # Example Request:
-      #   PUT /projects/:id/labels
       put ':id/labels' do
         authorize! :admin_label, user_project
         required_attributes! [:name]
@@ -84,7 +50,6 @@ module API
                             400)
         end
 
-        # Rename new name to the actual label attribute name
         attrs[:name] = attrs.delete(:new_name) if attrs.key?(:new_name)
 
         if label.update(attrs)

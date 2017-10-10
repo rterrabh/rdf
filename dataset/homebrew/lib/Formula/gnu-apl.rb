@@ -11,7 +11,6 @@ class GnuApl < Formula
     sha256 "350db093b3749d355147717f3e3209378c32aae2e508e2b54534f002be5fdedd" => :mavericks
   end
 
-  # GNU Readline is required; libedit won't work.
   depends_on "readline"
   depends_on :macos => :mavericks
 

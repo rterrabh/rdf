@@ -33,7 +33,7 @@ module RailsAdmin
         scope = query_scope(scope, options[:query]) if options[:query]
         scope = filter_scope(scope, options[:filters]) if options[:filters]
         if options[:page] && options[:per]
-          #nodyna <ID:send-50> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1339> <SD COMPLEX (change-prone variables)>
           scope = scope.send(Kaminari.config.page_method_name, options[:page]).per(options[:per])
         end
         scope = scope.reorder("#{options[:sort]} #{options[:sort_reverse] ? 'asc' : 'desc'}") if options[:sort]
@@ -116,18 +116,14 @@ module RailsAdmin
         fields.each do |field|
           wb.add(field, query, field.search_operator)
         end
-        # OR all query statements
         wb.build
       end
 
-      # filters example => {"string_field"=>{"0055"=>{"o"=>"like", "v"=>"test_value"}}, ...}
-      # "0055" is the filter index, no use here. o is the operator, v the value
       def filter_scope(scope, filters, fields = config.list.fields.select(&:filterable?))
         filters.each_pair do |field_name, filters_dump|
           filters_dump.each do |_, filter_dump|
             wb = WhereBuilder.new(scope)
             wb.add(fields.detect { |f| f.name.to_s == field_name }, filter_dump[:v], (filter_dump[:o] || 'default'))
-            # AND current filter statements to other filter statements
             scope = wb.build
           end
         end

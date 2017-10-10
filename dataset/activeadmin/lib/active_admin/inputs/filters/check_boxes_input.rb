@@ -9,7 +9,7 @@ module ActiveAdmin
         end
 
         def selected_values
-          #nodyna <ID:send-16> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-64> <SD COMPLEX (change-prone variables)>
           @object.public_send("#{searchable_method_name}_in") || []
         end
 
@@ -21,27 +21,22 @@ module ActiveAdmin
           end
         end
 
-        # Add whitespace before label
         def choice_label(choice)
           ' ' + super
         end
 
-        # Don't wrap in UL tag
         def choices_group_wrapping(&block)
           template.capture(&block)
         end
 
-        # Don't wrap in LI tag
         def choice_wrapping(html_options, &block)
           template.capture(&block)
         end
 
-        # Don't render hidden fields
         def hidden_field_for_all
           ""
         end
 
-        # Don't render hidden fields
         def hidden_fields?
           false
         end

@@ -31,7 +31,6 @@ module Rails
           middleware.use ::Rack::MethodOverride
           middleware.use ::ActionDispatch::RequestId
 
-          # Must come after Rack::MethodOverride to properly log overridden methods
           middleware.use ::Rails::Rack::Logger, config.log_tags
           middleware.use ::ActionDispatch::ShowExceptions, show_exceptions_app
           middleware.use ::ActionDispatch::DebugExceptions, app

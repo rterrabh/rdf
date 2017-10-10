@@ -1,11 +1,4 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
-# These helper methods can be called in your template to set variables to be used in the layout
-# This module should be included in all views globally,
-# to do so you may need to add this line to your ApplicationController
-#   helper :layout
 module LayoutHelper
   include ApplicationHelper
 
@@ -24,7 +17,6 @@ module LayoutHelper
       <<-JS.html_safe
         Diaspora.I18n.load(#{get_javascript_strings_for(I18n.locale, section).to_json},
                            "#{I18n.locale}",
-                           #{get_javascript_strings_for(DEFAULT_LANGUAGE, section).to_json});
         Diaspora.Page = "#{params[:controller].camelcase}#{params[:action].camelcase}";
       JS
     end

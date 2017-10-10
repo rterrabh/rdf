@@ -2,16 +2,6 @@ require 'backburner'
 
 module ActiveJob
   module QueueAdapters
-    # == Backburner adapter for Active Job
-    #
-    # Backburner is a beanstalkd-powered job queue that can handle a very
-    # high volume of jobs. You create background jobs and place them on
-    # multiple work queues to be processed later. Read more about
-    # Backburner {here}[https://github.com/nesquena/backburner].
-    #
-    # To use Backburner set the queue_adapter config to +:backburner+.
-    #
-    #   Rails.application.config.active_job.queue_adapter = :backburner
     class BackburnerAdapter
       class << self
         def enqueue(job) #:nodoc:

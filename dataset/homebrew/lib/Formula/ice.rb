@@ -23,7 +23,6 @@ class Ice < Formula
 
   def install
     resource("berkeley-db").stage do
-      # BerkeleyDB dislikes parallel builds
       ENV.deparallelize
       args = %W[
         --disable-debug
@@ -34,7 +33,6 @@ class Ice < Formula
 
       args << "--enable-java" if build.with? "java"
 
-      # BerkeleyDB requires you to build everything from the build_unix subdirectory
       cd "build_unix" do
         system "../dist/configure", *args
         system "make", "install"
@@ -47,7 +45,6 @@ class Ice < Formula
       inreplace "java/src/IceGridGUI/build.gradle", "${DESTDIR}${binDir}/${appName}.app",  "${prefix}/${appName}.app"
     end
 
-    # Unset ICE_HOME as it interferes with the build
     ENV.delete("ICE_HOME")
     ENV.delete("USE_BIN_DIST")
     ENV.delete("CPPFLAGS")
@@ -91,8 +88,6 @@ class Ice < Formula
       };
     EOS
     (testpath/"Test.cpp").write <<-EOS.undent
-      #include <Ice/Ice.h>
-      #include <Hello.h>
 
       class HelloI : public Test::Hello {
       public:

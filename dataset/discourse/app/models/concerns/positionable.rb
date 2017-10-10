@@ -24,7 +24,6 @@ module Positionable
       WHERE position >= :new_position and position < :current_position",
       {current_position: self.position, new_position: position}
     else
-      # Not moving to a new position
       return
     end
 

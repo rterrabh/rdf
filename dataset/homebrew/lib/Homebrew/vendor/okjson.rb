@@ -1,46 +1,13 @@
-# encoding: UTF-8
-#
-# Copyright 2011, 2012 Keith Rarick
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
 
-# See https://github.com/kr/okjson for updates.
 
 require 'stringio'
 
-# Some parts adapted from
-# http://golang.org/src/pkg/json/decode.go and
-# http://golang.org/src/pkg/utf8/utf8.go
 module Vendor
   module OkJson
     Upstream = '43'
     extend self
 
 
-    # Decodes a json document in string s and
-    # returns the corresponding ruby value.
-    # String s must be valid UTF-8. If you have
-    # a string in some other encoding, convert
-    # it first.
-    #
-    # String values in the resulting structure
-    # will be UTF-8.
     def decode(s)
       ts = lex(s)
       v, ts = textparse(ts)
@@ -51,15 +18,6 @@ module Vendor
     end
 
 
-    # Encodes x into a json text. It may contain only
-    # Array, Hash, String, Numeric, true, false, nil.
-    # (Note, this list excludes Symbol.)
-    # X itself must be an Array or a Hash.
-    # No other value can be encoded, and an error will
-    # be raised if x contains any other value, such as
-    # Nan, Infinity, Symbol, and Proc, or if a Hash key
-    # is not a String.
-    # Strings contained in x must be valid UTF-8.
     def encode(x)
       case x
       when Hash    then objenc(x)
@@ -88,10 +46,6 @@ module Vendor
   private
 
 
-    # Parses a "json text" in the sense of RFC 4627.
-    # Returns the parsed value and any trailing tokens.
-    # Note: this is almost the same as valparse,
-    # except that it does not accept atomic values.
     def textparse(ts)
       if ts.length <= 0
         raise Error, 'empty'
@@ -107,8 +61,6 @@ module Vendor
     end
 
 
-    # Parses a "value" in the sense of RFC 4627.
-    # Returns the parsed value and any trailing tokens.
     def valparse(ts)
       if ts.length <= 0
         raise Error, 'empty'
@@ -125,8 +77,6 @@ module Vendor
     end
 
 
-    # Parses an "object" in the sense of RFC 4627.
-    # Returns the parsed value and any trailing tokens.
     def objparse(ts)
       ts = eat('{', ts)
       obj = {}
@@ -155,8 +105,6 @@ module Vendor
     end
 
 
-    # Parses a "member" in the sense of RFC 4627.
-    # Returns the parsed values and any trailing tokens.
     def pairparse(ts)
       (typ, _, k), ts = ts[0], ts[1..-1]
       if typ != :str
@@ -168,8 +116,6 @@ module Vendor
     end
 
 
-    # Parses an "array" in the sense of RFC 4627.
-    # Returns the parsed value and any trailing tokens.
     def arrparse(ts)
       ts = eat('[', ts)
       arr = []
@@ -206,8 +152,6 @@ module Vendor
     end
 
 
-    # Scans s and returns a list of json tokens,
-    # excluding white space (as defined in RFC 4627).
     def lex(s)
       ts = []
       while s.length > 0
@@ -224,19 +168,6 @@ module Vendor
     end
 
 
-    # Scans the first token in s and
-    # returns a 3-element list, or nil
-    # if s does not begin with a valid token.
-    #
-    # The first list element is one of
-    # '{', '}', ':', ',', '[', ']',
-    # :val, :str, and :space.
-    #
-    # The second element is the lexeme.
-    #
-    # The third element is the value of the
-    # token for :val and :str, otherwise
-    # it is the lexeme.
     def tok(s)
       case s[0]
       when ?{ then ['{', s[0,1], s[0,1]]
@@ -295,13 +226,9 @@ module Vendor
     end
 
 
-    # Converts a quoted json string literal q into a UTF-8-encoded string.
-    # The rules are different than for Ruby, so we cannot use eval.
-    # Unquote will raise an error if q contains control characters.
     def unquote(q)
       q = q[1...-1]
       a = q.dup # allocate a big enough string
-      # In ruby >= 1.9, a[w] is a codepoint, not a byte.
       if rubydoesenc?
         a.force_encoding('UTF-8')
       end
@@ -336,7 +263,6 @@ module Vendor
                 uchar1 = hexdec4(q[r+2,4])
                 uchar = subst(uchar, uchar1)
                 if uchar != Ucharerr
-                  # A valid pair; consume.
                   r += 6
                 end
               end
@@ -353,11 +279,6 @@ module Vendor
         elsif c == ?" || c < Spc
           raise Error, "invalid character in string literal \"#{q}\""
         else
-          # Copy anything else byte-for-byte.
-          # Valid UTF-8 will remain valid UTF-8.
-          # Invalid UTF-8 will remain invalid UTF-8.
-          # In ruby >= 1.9, c is a codepoint, not a byte,
-          # in which case this is still what we want.
           a[w] = c
           r += 1
           w += 1
@@ -367,9 +288,6 @@ module Vendor
     end
 
 
-    # Encodes unicode character u as UTF-8
-    # bytes in string a at position i.
-    # Returns the number of bytes written.
     def ucharenc(a, i, u)
       if u <= Uchar1max
         a[i] = (u & 0xff).chr
@@ -459,10 +377,8 @@ module Vendor
         when ?\t then t.print('\\t')
         else
           c = s[r]
-          # In ruby >= 1.9, s[r] is a codepoint, not a byte.
           if rubydoesenc?
             begin
-              # c.ord will raise an error if c is invalid UTF-8
               if c.ord < Spc.ord
                 c = "\\u%04x" % [c.ord]
               end
@@ -494,18 +410,12 @@ module Vendor
     end
 
 
-    # Copies the valid UTF-8 bytes of a single character
-    # from string s at position i to I/O object t, and
-    # returns the number of bytes copied.
-    # If no valid UTF-8 char exists at position i,
-    # ucharcopy writes Ustrerr and returns 1.
     def ucharcopy(t, s, i)
       n = s.length - i
       raise Utf8Error if n < 1
 
       c0 = s[i].ord
 
-      # 1-byte, 7-bit sequence?
       if c0 < Utagx
         t.putc(c0)
         return 1
@@ -517,7 +427,6 @@ module Vendor
       c1 = s[i+1].ord
       raise Utf8Error if c1 < Utagx || Utag2 <= c1
 
-      # 2-byte, 11-bit sequence?
       if c0 < Utag3
         raise Utf8Error if ((c0&Umask2)<<6 | (c1&Umaskx)) <= Uchar1max
         t.putc(c0)
@@ -525,13 +434,11 @@ module Vendor
         return 2
       end
 
-      # need second continuation byte
       raise Utf8Error if n < 3
 
       c2 = s[i+2].ord
       raise Utf8Error if c2 < Utagx || Utag2 <= c2
 
-      # 3-byte, 16-bit sequence?
       if c0 < Utag4
         u = (c0&Umask3)<<12 | (c1&Umaskx)<<6 | (c2&Umaskx)
         raise Utf8Error if u <= Uchar2max
@@ -541,12 +448,10 @@ module Vendor
         return 3
       end
 
-      # need third continuation byte
       raise Utf8Error if n < 4
       c3 = s[i+3].ord
       raise Utf8Error if c3 < Utagx || Utag2 <= c3
 
-      # 4-byte, 21-bit sequence?
       if c0 < Utag5
         u = (c0&Umask4)<<18 | (c1&Umaskx)<<12 | (c2&Umaskx)<<6 | (c3&Umaskx)
         raise Utf8Error if u <= Uchar3max

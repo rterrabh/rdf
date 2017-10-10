@@ -12,7 +12,6 @@ require 'rails_admin/config/actions'
 
 module RailsAdmin
   module Config
-    # Model specific configuration object.
     class Model
       include RailsAdmin::Config::Proxyable
       include RailsAdmin::Config::Configurable
@@ -44,16 +43,12 @@ module RailsAdmin
       end
 
       def object_label
-        #nodyna <ID:send-14> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1408> <SD COMPLEX (change-prone variables)>
         bindings[:object].send(object_label_method).presence ||
-          #nodyna <ID:send-15> <SD TRIVIAL (public methods)>
+          #nodyna <send-1409> <SD TRIVIAL (public methods)>
           bindings[:object].send(:rails_admin_default_object_label_method)
       end
 
-      # The display for a model instance (i.e. a single database record).
-      # Unless configured in a model config block, it'll try to use :name followed by :title methods, then
-      # any methods that may have been added to the label_methods array via Configuration.
-      # Failing all of these, it'll return the class name followed by the model's id.
       register_instance_option :object_label_method do
         @object_label_method ||= Config.label_methods.detect { |method| (@dummy_object ||= abstract_model.model.new).respond_to? method } || :rails_admin_default_object_label_method
       end
@@ -74,7 +69,6 @@ module RailsAdmin
         0
       end
 
-      # parent node in navigation/breadcrumb
       register_instance_option :parent do
         @parent_model ||= begin
           klass = abstract_model.model.superclass
@@ -95,17 +89,16 @@ module RailsAdmin
         nil
       end
 
-      # Act as a proxy for the base section configuration that actually
-      # store the configurations.
       def method_missing(m, *args, &block)
-        #nodyna <ID:send-16> <SD EASY (private methods)>
-        #nodyna <ID:send-16> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1410> <SD EASY (private methods)>
+        #nodyna <send-1411> <SD COMPLEX (change-prone variables)>
         send(:base).send(m, *args, &block)
       end
 
       def inspect
         "#<#{self.class.name}[#{abstract_model.model.name}] #{
           instance_variables.collect do |v|
+            #nodyna <instance_variable_get-1412> <not yet classified>
             value = instance_variable_get(v)
             if [:@parent, :@root].include? v
               if value.respond_to? :name

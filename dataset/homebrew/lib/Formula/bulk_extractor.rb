@@ -22,13 +22,10 @@ class BulkExtractor < Formula
     system "make"
     system "make", "install"
 
-    # Install documentation
     (share/"bulk_extractor/doc").install Dir["doc/*.{html,txt,pdf}"]
 
     (lib/"python2.7/site-packages").install Dir["python/*.py"]
 
-    # Install the GUI the Homebrew way
-    # .jar gets installed into bin by default
     libexec.install bin/"BEViewer.jar"
     (bin/"BEViewer").unlink
     bin.write_jar_script libexec/"BEViewer.jar", "BEViewer", "-Xmx1g"

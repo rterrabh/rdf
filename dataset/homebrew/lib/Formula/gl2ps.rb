@@ -22,8 +22,6 @@ class Gl2ps < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <GLUT/glut.h>
-      #include <gl2ps.h>
 
       int main(int argc, char *argv[])
       {

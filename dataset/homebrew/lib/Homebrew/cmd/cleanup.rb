@@ -40,8 +40,6 @@ module Homebrew
         eligible_kegs.each { |keg| opoo "Skipping (old) keg-only: #{keg}" }
       end
     elsif f.rack.subdirs.length > 1
-      # If the cellar only has one version installed, don't complain
-      # that we can't tell which one to keep.
       opoo "Skipping #{f.full_name}: most recent version #{f.pkg_version} not installed"
     end
   end
@@ -155,15 +153,9 @@ module Homebrew
   end
 
   def eligible_for_cleanup?(formula)
-    # It used to be the case that keg-only kegs could not be cleaned up, because
-    # older brews were built against the full path to the keg-only keg. Then we
-    # introduced the opt symlink, and built against that instead. So provided
-    # no brew exists that was built against an old-style keg-only keg, we can
-    # remove it.
     if !formula.keg_only? || ARGV.force?
       true
     elsif formula.opt_prefix.directory?
-      # SHA records were added to INSTALL_RECEIPTS the same day as opt symlinks
       Formula.installed.select do |f|
         f.deps.any? do |d|
           d.to_formula.full_name == formula.full_name rescue d.name == formula.name

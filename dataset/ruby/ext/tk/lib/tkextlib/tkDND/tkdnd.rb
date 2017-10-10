@@ -1,14 +1,8 @@
-#
-#  tkextlib/tkDND/tkdnd.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/tkDND/setup.rb'
 
 TkPackage.require('tkdnd')
@@ -58,7 +52,6 @@ module Tk
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -75,7 +68,6 @@ module Tk
       }
 =end
 
-      # setup tables
       _setup_subst_table(KEY_TBL, PROC_TBL);
     end
 
@@ -98,20 +90,7 @@ module Tk
         end
       end
 
-      #def dnd_bindtarget(type, event, cmd=Proc.new, prior=50, *args)
-      #  event = tk_event_sequence(event)
-      #  if prior.kind_of?(Numeric)
-      #    tk_call('dnd', 'bindtarget', @path, type, event,
-      #            install_bind_for_event_class(DND_Subst, cmd, *args),
-      #            prior)
-      #  else
-      #    tk_call('dnd', 'bindtarget', @path, type, event,
-      #            install_bind_for_event_class(DND_Subst, cmd, prior, *args))
-      #  end
-      #  self
-      #end
       def dnd_bindtarget(type, event, *args)
-        # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
         if TkComm._callback_entry?(args[0]) || !block_given?
           cmd = args.shift
         else
@@ -146,12 +125,7 @@ module Tk
         end
       end
 
-      #def dnd_bindsource(type, cmd=Proc.new, prior=None)
-      #  tk_call('dnd', 'bindsource', @path, type, cmd, prior)
-      #  self
-      #end
       def dnd_bindsource(type, *args)
-        # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
         if TkComm._callback_entry?(args[0]) || !block_given?
           cmd = args.shift
         else

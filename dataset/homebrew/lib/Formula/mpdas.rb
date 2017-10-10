@@ -16,7 +16,6 @@ class Mpdas < Formula
 
     ENV.j1
     system "make"
-    # Just install ourselves
     bin.install "mpdas"
     man1.install "mpdas.1"
   end

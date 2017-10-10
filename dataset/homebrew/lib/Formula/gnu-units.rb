@@ -16,15 +16,6 @@ class GnuUnits < Formula
 
   option "with-default-names", "Do not prepend 'g' to the binary"
 
-  # Temporary fix for "invalid/nonprinting UTF-8" warnings on startup,
-  # see https://github.com/Homebrew/homebrew/issues/20297.
-  #
-  # The current maintainer of GNU units, Adrian Mariano, is aware of
-  # the issue (reported by mail on 2015-04-08) and has fixed it in the
-  # currently unreleased development version which will be released
-  # later this year.
-  #
-  # See https://github.com/Homebrew/homebrew/issues/38454 for details.
   patch :DATA
 
   def install
@@ -47,7 +38,6 @@ index a0c61f2..06269ce 100644
 +++ b/definitions.units
 @@ -5248,9 +5248,6 @@ röntgen                 roentgen
  ㍴                      bar
- # ㍵                          oV???
  ㍶                      pc
 -#㍷                      dm      invalid on Mac
 -#㍸                      dm^2    invalid on Mac

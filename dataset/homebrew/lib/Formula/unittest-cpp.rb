@@ -6,7 +6,6 @@ class UnittestCpp < Formula
     url "https://github.com/unittest-cpp/unittest-cpp/archive/v1.4.tar.gz"
     sha256 "e075760b7082380058e7bbe3a69f8739524c73dc82d8362b418aaa0f873c6c20"
 
-    # Clang failure fixed in the HEAD already
     fails_with :clang do
       build 600
       cause "Failure in test: Expected 2 but was 0"
@@ -38,14 +37,11 @@ class UnittestCpp < Formula
     if build.stable?
       system "make"
 
-      # Install the headers
       include.install Dir["src/*.h"]
       include.install "src/Posix"
 
-      # Install the compiled library
       lib.install "libUnitTest++.a"
 
-      # Install the documentation
       doc.install "docs/UnitTest++.html"
     end
   end

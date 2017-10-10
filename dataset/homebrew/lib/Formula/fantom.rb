@@ -12,7 +12,6 @@ class Fantom < Formula
     rm_rf "examples" if build.without? "examples"
     rm_rf "src" if build.without? "src"
 
-    # Select the OS X JDK path in the config file
     inreplace "etc/build/config.props", "//jdkHome=/System", "jdkHome=/System"
 
     libexec.install Dir["*"]

@@ -10,10 +10,6 @@ class Gnuradio < Formula
     sha256 "09e37da8c6acd59adb657be9f1b638ae005d522f47524b26c2653682d60bfae7" => :mountain_lion
   end
 
-  # These python extension modules were linked directly to a Python
-  # framework binary.
-  # Replace -lpython with -undefined dynamic_lookup in linker flags.
-  # https://github.com/gnuradio/gnuradio/pull/604
   patch do
     url "https://github.com/gnuradio/gnuradio/pull/604.patch"
     sha256 "9e1c612f0f4063d387d85517cc420f050f49c7903d36fab45b72e8d828549e3c"
@@ -53,7 +49,6 @@ class Gnuradio < Formula
     sha256 "855695405092686264dc8ce7b3f5c939a6cf1a5639833e841a5bb6fb799cd6a8"
   end
 
-  # cheetah starts here
   resource "Markdown" do
     url "https://pypi.python.org/packages/source/M/Markdown/Markdown-2.4.tar.gz"
     sha256 "b8370fce4fbcd6b68b6b36c0fb0f4ec24d6ba37ea22988740f4701536611f1ae"
@@ -63,14 +58,12 @@ class Gnuradio < Formula
     url "https://pypi.python.org/packages/source/C/Cheetah/Cheetah-2.4.4.tar.gz"
     sha256 "be308229f0c1e5e5af4f27d7ee06d90bb19e6af3059794e5fd536a6f29a9b550"
   end
-  # cheetah ends here
 
   resource "lxml" do
     url "https://pypi.python.org/packages/source/l/lxml/lxml-2.0.tar.gz"
     sha256 "062e6dbebcbe738eaa6e6298fe38b1ddf355dbe67a9f76c67a79fcef67468c5b"
   end
 
-  # sphinx starts here
   resource "docutils" do
     url "https://pypi.python.org/packages/source/d/docutils/docutils-0.12.tar.gz"
     sha256 "c7db717810ab6965f66c8cf0398a98c9d8df982da39b4cd7f162911eb89596fa"
@@ -125,7 +118,6 @@ class Gnuradio < Formula
     url "https://pypi.python.org/packages/source/S/Sphinx/Sphinx-1.3.1.tar.gz"
     sha256 "1a6e5130c2b42d2de301693c299f78cc4bd3501e78b610c08e45efc70e2b5114"
   end
-  # sphinx ends here
 
   resource "cppzmq" do
     url "https://github.com/zeromq/cppzmq/raw/34c8e4395c94d34a89bbeaaf2b8f9c94a8293c84/zmq.hpp"
@@ -176,7 +168,6 @@ class Gnuradio < Formula
       system "make", "install"
     end
 
-    # Remove useless data files installed in #{bin}
     delete_files = %w[ctrlport-monitorc ctrlport-monitoro perf-monitorxc perf-monitorxo]
     delete_files.each { |f| rm "#{bin}/gr-#{f}" }
 

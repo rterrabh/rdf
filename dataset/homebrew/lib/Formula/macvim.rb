@@ -11,7 +11,6 @@ class FrameworkPythonRequirement < Requirement
   end
 end
 
-# Reference: https://github.com/macvim-dev/macvim/wiki/building
 class Macvim < Formula
   desc "GUI for vim, made for OS X"
   homepage "https://code.google.com/p/macvim/"
@@ -35,19 +34,13 @@ class Macvim < Formula
   depends_on :python3 => :optional
   depends_on FrameworkPythonRequirement if build.with? "python"
 
-  # Help us! We'd like to use superenv in these environments too
   env :std if MacOS.version <= :snow_leopard
 
   def install
-    # MacVim doesn't have and required any Python package, unset PYTHONPATH.
     ENV.delete("PYTHONPATH")
 
-    # Set ARCHFLAGS so the Python app (with C extension) that is
-    # used to create the custom icons will not try to compile in
-    # PPC support (which isn't needed in Homebrew-supported systems.)
     ENV["ARCHFLAGS"] = "-arch #{MacOS.preferred_arch}"
 
-    # If building for 10.7 or up, make sure that CC is set to "clang".
     ENV.clang if MacOS.version >= :lion
 
     args = %W[
@@ -75,8 +68,6 @@ class Macvim < Formula
       args << "--with-luajit"
     end
 
-    # only allow either python or python3; if the optional
-    # python3 is chosen, default to it, otherwise use python2
     if build.with? "python3"
       args << "--enable-python3interp"
     elsif build.with? "python"
@@ -94,9 +85,6 @@ class Macvim < Formula
       args << "--enable-pythoninterp"
     end
 
-    # configure appends "SDKS/..." to the value of `xcode-select -print-path`,
-    # but this isn't correct on recent Xcode, so we need to set it manually.
-    # This is a bug, and it should be fixed upstream.
     unless MacOS::CLT.installed?
       args << "--with-developer-dir=#{MacOS::Xcode.prefix}/Platforms/MacOSX.platform/Developer"
       args << "--with-macsdk=#{MacOS.version}"
@@ -105,10 +93,8 @@ class Macvim < Formula
     system "./configure", *args
 
     if build.with? "custom-icons"
-      # Get the custom font used by the icons
       system "make", "-C", "src/MacVim/icons", "getenvy"
     else
-      # Building custom icons fails for many users, so off by default.
       inreplace "src/MacVim/icons/Makefile", "$(MAKE) -C makeicns", ""
       inreplace "src/MacVim/icons/make_icons.py", "dont_create = False", "dont_create = True"
     end
@@ -120,7 +106,6 @@ class Macvim < Formula
                                  "VIM_APP_DIR=#{prefix}"
     bin.install "src/MacVim/mvim"
 
-    # Create MacVim vimdiff, view, ex equivalents
     executables = %w[mvimdiff mview mvimex gvim gvimdiff gview gvimex]
     executables += %w[vi vim vimdiff view vimex] if build.with? "override-system-vim"
     executables.each { |e| bin.install_symlink "mvim" => e }
@@ -136,14 +121,11 @@ class Macvim < Formula
   end
 
   test do
-    # Simple test to check if MacVim was linked to Python version in $PATH
     if build.with? "python"
       vim_path = prefix/"MacVim.app/Contents/MacOS/Vim"
 
-      # Get linked framework using otool
       otool_output = `otool -L #{vim_path} | grep -m 1 Python`.gsub(/\(.*\)/, "").strip.chomp
 
-      # Expand the link and get the python exec path
       vim_framework_path = Pathname.new(otool_output).realpath.dirname.to_s.chomp
       system_framework_path = `python-config --exec-prefix`.chomp
 

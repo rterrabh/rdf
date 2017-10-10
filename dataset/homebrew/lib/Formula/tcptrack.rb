@@ -6,9 +6,6 @@ class Tcptrack < Formula
 
   def install
     ENV.libstdcxx
-    # Fix IPv6 on MacOS. The patch was sent by email to the maintainer
-    # (tcptrack2@s.rhythm.cx) on 2010-11-24 for inclusion.
-    # Still not fixed in 1.4.2 - @adamv
     inreplace "src/IPv6Address.cc", "s6_addr16", "__u6_addr.__u6_addr16"
 
     system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"

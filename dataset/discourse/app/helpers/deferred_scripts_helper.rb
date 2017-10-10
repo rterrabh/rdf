@@ -1,6 +1,5 @@
 module DeferredScriptsHelper
 
-  # Provides a javascript map of the files in the 'defer' directory
   def deferred_scripts
     files = {}
 

@@ -67,13 +67,11 @@ module CapybaraExt
   end
 
   def targetted_select2(value, options)
-    # find select2 element and click it
     find(options[:from]).find('a').click
     select_select2_result(value)
   end
 
   def select_select2_result(value)
-    # results are in a div appended to the end of the document
     within(:xpath, '//body') do
       page.find("div.select2-result-label", text: %r{#{Regexp.escape(value)}}i).click
     end
@@ -83,7 +81,6 @@ module CapybaraExt
     label = find_label(text)
     counter = 0
 
-    # Because JavaScript testing is prone to errors...
     while label.nil? && counter < 10
       sleep(1)
       counter += 1
@@ -118,7 +115,6 @@ module CapybaraExt
   def dismiss_alert
     page.evaluate_script('window.confirm = function() { return false; }')
     yield
-    # Restore existing default
     page.evaluate_script('window.confirm = function() { return true; }')
   end
 end

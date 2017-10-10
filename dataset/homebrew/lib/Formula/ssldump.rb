@@ -13,15 +13,11 @@ class Ssldump < Formula
 
   depends_on "openssl"
 
-  # reorder include files
-  # http://sourceforge.net/tracker/index.php?func=detail&aid=1622854&group_id=68993&atid=523055
-  # increase pcap sample size from an arbitrary 5000 the max TLS packet size 18432
   patch :DATA
 
   def install
     ENV["LIBS"] = "-lssl -lcrypto"
 
-    # .dylib, not .a
     inreplace "configure", "if test -f $dir/libpcap.a; then",
                            "if test -f $dir/libpcap.dylib; then"
 
@@ -31,7 +27,6 @@ class Ssldump < Formula
                           "--mandir=#{man}",
                           "osx"
     system "make"
-    # force install as make got confused by install target and INSTALL file.
     system "make", "install", "-B"
   end
 
@@ -49,12 +44,7 @@ __END__
  
 -
 +#include <net/bpf.h>
- #include <pcap.h>
- #include <unistd.h>
 -#include <net/bpf.h>
- #ifndef _WIN32
- #include <sys/param.h>
- #endif
 --- a/base/pcap-snoop.c	2012-04-06 10:35:06.000000000 -0700
 +++ b/base/pcap-snoop.c	2012-04-06 10:45:31.000000000 -0700
 @@ -286,7 +286,7 @@

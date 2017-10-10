@@ -1,4 +1,3 @@
-# this class is used to track changes to an arbitrary buffer
 
 class ContentBuffer
 
@@ -16,7 +15,6 @@ class ContentBuffer
 
     if transform[:operation] == :delete
 
-      # fix first line
 
       l = @lines[start_row]
       l = l[0...start_col]
@@ -29,12 +27,10 @@ class ContentBuffer
 
       @lines[start_row] = l
 
-      # remove middle lines
       (finish_row - start_row).times do
         l = @lines.delete_at start_row + 1
       end
 
-      # fix last line
       @lines[start_row] << @lines[finish_row][finish_col-1..-1]
     end
 

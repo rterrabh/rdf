@@ -11,10 +11,6 @@ class Minizip < Formula
   depends_on "automake" => :build
   depends_on "libtool" => :build
 
-  # configure script fails to detect the right compiler when "cc" is
-  # clang, not gcc.
-  # see: https://github.com/Homebrew/homebrew-dupes/pull/228
-  #      https://github.com/madler/zlib/pull/54
   patch :DATA
 
   def install
@@ -23,7 +19,6 @@ class Minizip < Formula
     system "make"
 
     cd "contrib/minizip" do
-      # edits to statically link to libz.a
       inreplace "Makefile.am" do |s|
         s.sub! "-L$(zlib_top_builddir)", "$(zlib_top_builddir)/libz.a"
         s.sub! "-version-info 1:0:0 -lz", "-version-info 1:0:0"

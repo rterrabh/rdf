@@ -11,8 +11,6 @@ class LibxmpLite < Formula
 
   test do
     (testpath/"test.c").write <<-'EOS'.undent
-      #include <stdio.h>
-      #include <libxmp-lite/xmp.h>
 
       int main(int argc, char* argv[]){
         printf("libxmp-lite %s/%c%u\n", XMP_VERSION, *xmp_version, xmp_vercode);

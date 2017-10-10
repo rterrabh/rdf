@@ -33,8 +33,6 @@ class OpenSceneGraph < Formula
   depends_on "qt5" => :optional
   depends_on "qt" => :optional
 
-  # patch necessary to ensure support for gtkglext-quartz
-  # filed as an issue to the developers https://github.com/openscenegraph/osg/issues/34
   patch :DATA
 
   if build.with? "docs"
@@ -45,7 +43,6 @@ class OpenSceneGraph < Formula
   def install
     ENV.cxx11 if build.cxx11?
 
-    # Turning off FFMPEG takes this change or a dozen "-DFFMPEG_" variables
     if build.without? "ffmpeg"
       inreplace "CMakeLists.txt", "FIND_PACKAGE(FFmpeg)", "#FIND_PACKAGE(FFmpeg)"
     end
@@ -82,8 +79,6 @@ class OpenSceneGraph < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
-      #include <osg/Version>
       using namespace std;
       int main()
         {

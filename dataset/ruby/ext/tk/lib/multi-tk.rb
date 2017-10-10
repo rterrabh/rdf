@@ -1,6 +1,3 @@
-#
-#               multi-tk.rb - supports multi Tk interpreters
-#                       by Hidetoshi NAGAI <nagai@ai.kyutech.ac.jp>
 
 require 'tcltklib'
 require 'tkutil'
@@ -10,16 +7,10 @@ if defined? Tk
   fail RuntimeError,"'multi-tk' library must be required before requiring 'tk'"
 end
 
-################################################
-# ignore exception on the mainloop?
 
 TclTkLib.mainloop_abort_on_exception = true
-# TclTkLib.mainloop_abort_on_exception = false
-# TclTkLib.mainloop_abort_on_exception = nil
 
 
-################################################
-# add ThreadGroup check to TclTkIp.new
 class << TclTkIp
   alias __new__ new
   private :__new__
@@ -29,7 +20,7 @@ class << TclTkIp
       raise SecurityError, 'only ThreadGroup::Default can call TclTkIp.new'
     end
     obj = __new__(*args)
-    #nodyna <ID:instance_eval-6> <IEV COMPLEX (private access)>
+    #nodyna <instance_eval-1713> <IEV COMPLEX (private access)>
     obj.instance_eval{
       @force_default_encoding ||= TkUtil.untrust([false])
       @encoding ||= TkUtil.untrust([nil])
@@ -40,9 +31,8 @@ class << TclTkIp
 end
 
 
-################################################
-# exceptiopn to treat the return value from IP
 class MultiTkIp_OK < Exception
+  #nodyna <send-1714> <not yet classified>
   def self.send(thread, ret=nil)
     thread.raise self.new(ret)
   end
@@ -58,8 +48,6 @@ end
 MultiTkIp_OK.freeze
 
 
-################################################
-# methods for construction
 class MultiTkIp
   class Command_Queue < Queue
     def initialize(interp)
@@ -86,9 +74,8 @@ class MultiTkIp
 
   WITH_RUBY_VM  = Object.const_defined?(:RubyVM) && ::RubyVM.class == Class
   WITH_ENCODING = defined?(::Encoding.default_external)
-  #WITH_ENCODING = Object.const_defined?(:Encoding) && ::Encoding.class == Class
 
-  #nodyna <ID:instance_eval-7> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1715> <IEV MODERATE (method definition)>
   (@@SLAVE_IP_ID = ['slave'.freeze, TkUtil.untrust('0')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -105,10 +92,10 @@ class MultiTkIp
   unless defined?(@@TK_CMD_TBL)
     @@TK_CMD_TBL = TkUtil.untrust(Object.new)
 
-    # @@TK_CMD_TBL.instance_variable_set('@tbl', {}.taint)
     tbl_obj = TkUtil.untrust(Hash.new{|hash,key|
                                fail IndexError, "unknown command ID '#{key}'"
                              })
+    #nodyna <instance_variable_set-1716> <not yet classified>
     @@TK_CMD_TBL.instance_variable_set('@tbl', tbl_obj)
 
     class << @@TK_CMD_TBL
@@ -150,7 +137,6 @@ class MultiTkIp
       end
 
       def delete(idx, &blk)
-        # if gets an entry, is permitted to delete
         if self[idx]
           @tbl.delete(idx)
         elsif blk
@@ -183,13 +169,11 @@ class MultiTkIp
     @@TK_CMD_TBL.freeze
   end
 
-  ######################################
 
   @@CB_ENTRY_CLASS = Class.new(TkCallbackEntry){
     def initialize(ip, cmd)
       @ip = ip
       @safe = safe = $SAFE
-      # @cmd = cmd
       cmd = MultiTkIp._proc_on_safelevel(&cmd)
       @cmd = proc{|*args| cmd.call(safe, *args)}
       self.freeze
@@ -210,7 +194,6 @@ class MultiTkIp
         rescue TkCallbackBreak, TkCallbackContinue => e
           fail e
 	rescue SecurityError => e
-          # in 'exit', 'exit!', and 'abort' : security error --> delete IP
           if e.backtrace[0] =~ /^(.+?):(\d+):in `(exit|exit!|abort)'/
 	    @ip.delete
           elsif @ip.safe?
@@ -241,12 +224,10 @@ class MultiTkIp
     end
   }.freeze
 
-  ######################################
 
   def _keys2opts(src_keys)
     return nil if src_keys == nil
     keys = {}; src_keys.each{|k, v| keys[k.to_s] = v}
-    #keys.collect{|k,v| "-#{k} #{v}"}.join(' ')
     keys.collect{|k,v| "-#{k} #{TclTkLib._conv_listelement(TkComm::_get_eval_string(v))}"}.join(' ')
   end
   private :_keys2opts
@@ -276,7 +257,6 @@ class MultiTkIp
     end
 
     if wait == 0
-      # no wait
       Thread.pass
       if thread.stop?
         thread.raise exception
@@ -284,24 +264,19 @@ class MultiTkIp
       return thread
     end
 
-    # wait to stop the caller thread
     wait.times{
       if thread.stop?
-        # ready to send exception
         thread.raise exception
         return thread
       end
 
-      # wait
       Thread.pass
     }
 
-    # unexpected error
     thread.raise RuntimeError, "the thread may not wait for the return value"
     return thread
   end
 
-  ######################################
 
   def set_cb_error(cmd = Proc.new)
     @cb_error_proc[0] = cmd
@@ -313,7 +288,6 @@ class MultiTkIp
     end
   end
 
-  ######################################
 
   def set_safe_level(safe)
     if safe > @safe_level[0]
@@ -351,24 +325,21 @@ class MultiTkIp
 
   def _destroy_slaves_of_slaveIP(ip)
     unless ip.deleted?
-      # ip._split_tklist(ip._invoke('interp', 'slaves')).each{|name|
       ip._split_tklist(ip._invoke_without_enc('interp', 'slaves')).each{|name|
         name = _fromUTF8(name)
         begin
-          # ip._eval_without_enc("#{name} eval {foreach i [after info] {after cancel $i}}")
-          #nodyna <ID:eval-8> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-1717> <EV COMPLEX (change-prone variables)>
           after_ids = ip._eval_without_enc("#{name} eval {after info}")
-          #nodyna <ID:eval-9> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-1718> <EV COMPLEX (change-prone variables)>
           ip._eval_without_enc("#{name} eval {foreach i {#{after_ids}} {after cancel $i}}")
         rescue Exception
         end
         begin
-          # ip._invoke('interp', 'eval', name, 'destroy', '.')
+          #nodyna <eval-1719> <not yet classified>
           ip._invoke(name, 'eval', 'destroy', '.')
         rescue Exception
         end
 
-        # safe_base?
         if ip._eval_without_enc("catch {::safe::interpConfigure #{name}}") == '0'
           begin
             ip._eval_without_enc("::safe::interpDelete #{name}")
@@ -378,6 +349,7 @@ class MultiTkIp
 =begin
         if ip._invoke('interp', 'exists', name) == '1'
           begin
+            #nodyna <eval-1720> <not yet classified>
             ip._invoke(name, 'eval', 'exit')
           rescue Exception
           end
@@ -397,8 +369,6 @@ class MultiTkIp
 
   def _receiver_eval_proc_core(safe_level, thread, cmd, *args)
     begin
-      #ret = proc{$SAFE = safe_level; cmd.call(*args)}.call
-      #ret = cmd.call(safe_level, *args)
       normal_ret = false
       ret = catch(:IRB_EXIT) do  # IRB hack
         retval = cmd.call(safe_level, *args)
@@ -406,17 +376,14 @@ class MultiTkIp
         retval
       end
       unless normal_ret
-        # catch IRB_EXIT
         exit(ret)
       end
       ret
     rescue SystemExit => e
-      # delete IP
       unless @interp.deleted?
         @slave_ip_tbl.each{|name, subip|
           _destroy_slaves_of_slaveIP(subip)
           begin
-            # subip._eval_without_enc("foreach i [after info] {after cancel $i}")
             after_ids = subip._eval_without_enc("after info")
             subip._eval_without_enc("foreach i {#{after_ids}} {after cancel $i}")
           rescue Exception
@@ -427,7 +394,6 @@ class MultiTkIp
           rescue Exception
           end
 =end
-          # safe_base?
           if @interp._eval_without_enc("catch {::safe::interpConfigure #{name}}") == '0'
             begin
               @interp._eval_without_enc("::safe::interpDelete #{name}")
@@ -438,7 +404,6 @@ class MultiTkIp
           end
           if subip.respond_to?(:safe_base?) && subip.safe_base? &&
               !subip.deleted?
-            # do 'exit' to call the delete_hook procedure
             begin
               subip._eval_without_enc('exit')
             rescue Exception
@@ -452,7 +417,6 @@ class MultiTkIp
         }
 
         begin
-          # @interp._eval_without_enc("foreach i [after info] {after cancel $i}")
           after_ids = @interp._eval_without_enc("after info")
           @interp._eval_without_enc("foreach i {#{after_ids}} {after cancel $i}")
         rescue Exception
@@ -462,7 +426,6 @@ class MultiTkIp
         rescue Exception
         end
         if @safe_base && !@interp.deleted?
-          # do 'exit' to call the delete_hook procedure
           @interp._eval_without_enc('exit')
         else
           @interp.delete unless @interp.deleted?
@@ -475,27 +438,22 @@ class MultiTkIp
         _check_and_return(thread, MultiTkIp_OK.new(nil))
       end
 
-      # if master? && !safe? && allow_ruby_exit?
       if !@interp.deleted? && master? && !safe? && allow_ruby_exit?
 =begin
         ObjectSpace.each_object(TclTkIp){|obj|
           obj.delete unless obj.deleted?
         }
 =end
-        #exit(e.status)
         fail e
       end
-      # break
 
     rescue SecurityError => e
-      # in 'exit', 'exit!', and 'abort' : security error --> delete IP
       if e.backtrace[0] =~ /^(.+?):(\d+):in `(exit|exit!|abort)'/
         ret = ($3 == 'exit')
         unless @interp.deleted?
           @slave_ip_tbl.each{|name, subip|
             _destroy_slaves_of_slaveIP(subip)
             begin
-              # subip._eval_without_enc("foreach i [after info] {after cancel $i}")
               after_ids = subip._eval_without_enc("after info")
               subip._eval_without_enc("foreach i {#{after_ids}} {after cancel $i}")
             rescue Exception
@@ -506,7 +464,6 @@ class MultiTkIp
             rescue Exception
             end
 =end
-            # safe_base?
             if @interp._eval_without_enc("catch {::safe::interpConfigure #{name}}") == '0'
               begin
                 @interp._eval_without_enc("::safe::interpDelete #{name}")
@@ -517,7 +474,6 @@ class MultiTkIp
             end
             if subip.respond_to?(:safe_base?) && subip.safe_base? &&
                 !subip.deleted?
-              # do 'exit' to call the delete_hook procedure
               begin
                 subip._eval_without_enc('exit')
               rescue Exception
@@ -531,7 +487,6 @@ class MultiTkIp
           }
 
           begin
-            # @interp._eval_without_enc("foreach i [after info] {after cancel $i}")
             after_ids = @interp._eval_without_enc("after info")
             @interp._eval_without_enc("foreach i {#{after_ids}} {after cancel $i}")
           rescue Exception
@@ -543,27 +498,24 @@ class MultiTkIp
           end
 =end
           if @safe_base && !@interp.deleted?
-            # do 'exit' to call the delete_hook procedure
             @interp._eval_without_enc('exit')
           else
             @interp.delete unless @interp.deleted?
           end
         end
         _check_and_return(thread, MultiTkIp_OK.new(ret))
-        # break
 
       else
-        # raise security error
         _check_and_return(thread, e)
       end
 
     rescue Exception => e
-      # raise exception
       begin
         bt = _toUTF8(e.backtrace.join("\n"))
         if MultiTkIp::WITH_ENCODING
           bt.force_encoding('utf-8')
         else
+          #nodyna <instance_variable_set-1721> <not yet classified>
           bt.instance_variable_set(:@encoding, 'utf-8')
         end
       rescue Exception
@@ -576,7 +528,6 @@ class MultiTkIp
       _check_and_return(thread, e)
 
     else
-      # no exception
       _check_and_return(thread, MultiTkIp_OK.new(ret))
     end
   end
@@ -607,10 +558,6 @@ class MultiTkIp
     else
       @evloop_thread[0] = Thread.new{
 	while !@interp.deleted?
-	  #if check_root
-	  #  inf = @interp._invoke_without_enc('info', 'command', '.')
-	  #  break if !inf.kind_of?(String) || inf != '.'
-	  #end
           break if check_root && !@interp.has_mainwindow?
 	  sleep 0.5
 	end
@@ -622,7 +569,6 @@ class MultiTkIp
   def _create_receiver_and_watchdog(lvl = $SAFE)
     lvl = $SAFE if lvl < $SAFE
 
-    # command-procedures receiver
     receiver = Thread.new(lvl){|safe_level|
       last_thread = {}
 
@@ -630,7 +576,6 @@ class MultiTkIp
         break if @interp.deleted?
         thread, cmd, *args = @cmd_queue.deq
         if thread == @system
-          # control command
           case cmd
           when 'set_safe_level'
             begin
@@ -642,11 +587,9 @@ class MultiTkIp
             _check_and_return(thread,
                               MultiTkIp_OK.new(_receiver_mainloop(*args)))
           else
-            # ignore
           end
 
         else
-          # procedure
           last_thread[thread] = _receiver_eval_proc(last_thread[thread],
 						    safe_level, thread,
 						    cmd, *args)
@@ -654,7 +597,6 @@ class MultiTkIp
       end
     }
 
-    # watchdog of receiver
     watchdog = Thread.new{
       begin
         loop do
@@ -666,17 +608,14 @@ class MultiTkIp
           break unless receiver.alive?
         end
       rescue Exception
-        # ignore all kind of Exception
       end
 
-      # receiver is dead
       retry_count = 3
       loop do
         Thread.pass
         begin
           thread, cmd, *args = @cmd_queue.deq(true) # non-block
         rescue ThreadError
-          # queue is empty
           retry_count -= 1
           break if retry_count <= 0
           sleep 0.5
@@ -694,15 +633,12 @@ class MultiTkIp
       end
     }
 
-    # return threads
     [receiver, watchdog]
   end
   private :_check_and_return, :_create_receiver_and_watchdog
 
-  ######################################
 
   unless self.const_defined? :RUN_EVENTLOOP_ON_MAIN_THREAD
-    ### Ruby 1.9 !!!!!!!!!!!!!!!!!!!!!!!!!!
     RUN_EVENTLOOP_ON_MAIN_THREAD = false
   end
 
@@ -719,7 +655,7 @@ class MultiTkIp
   end
 
   @@DEFAULT_MASTER = self.allocate
-  #nodyna <ID:instance_eval-8> <IEV MODERATE (private access)>
+  #nodyna <instance_eval-1722> <IEV MODERATE (private access)>
   @@DEFAULT_MASTER.instance_eval{
     @tk_windows = TkUtil.untrust({})
 
@@ -746,7 +682,6 @@ class MultiTkIp
           current[:interp] = e
           raise e
         end
-        #sleep
         current[:mutex] = mutex = Mutex.new
         current[:root_check] = cond_var = ConditionVariable.new
 
@@ -761,8 +696,6 @@ class MultiTkIp
 
         begin
           begin
-            #TclTkLib.mainloop_abort_on_exception = false
-            #Thread.current[:status].value = TclTkLib.mainloop(true)
             interp.mainloop_abort_on_exception = true
             current[:status].value = interp.mainloop(true)
           rescue SystemExit=>e
@@ -774,24 +707,18 @@ class MultiTkIp
             mutex.synchronize{ cond_var.broadcast }
           end
 
-          #Thread.current[:status].value = TclTkLib.mainloop(false)
           current[:status].value = interp.mainloop(false)
 
         ensure
-          # interp must be deleted before the thread for interp is dead.
-          # If not, raise Tcl_Panic on Tcl_AsyncDelete because async handler
-          # deleted by the wrong thread.
           interp.delete
         end
       }
       until @interp_thread[:interp]
         Thread.pass
       end
-      # INTERP_THREAD.run
       raise @interp_thread[:interp] if @interp_thread[:interp].kind_of? Exception
       @interp = @interp_thread[:interp]
 
-      # delete the interpreter and kill the eventloop thread at exit
       interp = @interp
       interp_thread = @interp_thread
       END{
@@ -811,7 +738,7 @@ class MultiTkIp
       end
     end
 
-    #nodyna <ID:instance_eval-9> <IEV COMPLEX (private access)>
+    #nodyna <instance_eval-1723> <IEV COMPLEX (private access)>
     @interp.instance_eval{
       @force_default_encoding ||= TkUtil.untrust([false])
       @encoding ||= TkUtil.untrust([nil])
@@ -839,12 +766,10 @@ class MultiTkIp
     @threadgroup.add @cmd_receiver
     @threadgroup.add @receiver_watchdog
 
-    # NOT enclose @threadgroup for @@DEFAULT_MASTER
 
     @@IP_TABLE[ThreadGroup::Default] = self
     @@IP_TABLE[@threadgroup] = self
 
-    #################################
 
     @pseudo_toplevel = [false, nil]
 
@@ -860,7 +785,6 @@ class MultiTkIp
         fail SecurityError, "no permission to manipulate"
       end
 
-      # if m.kind_of?(Module) && m.respond_to?(:pseudo_toplevel_evaluable?)
       if m.respond_to?(:pseudo_toplevel_evaluable?)
         @pseudo_toplevel[0] = true
         @pseudo_toplevel[1] = m
@@ -887,7 +811,6 @@ class MultiTkIp
       @pseudo_toplevel[0] = (mode)? true: false
     end
 
-    #################################
 
     @assign_request = Class.new(Exception){
       def self.new(target, ret)
@@ -905,7 +828,7 @@ class MultiTkIp
           Thread.stop
         rescue @assign_request=>req
           begin
-            #nodyna <ID:instance_eval-10> <IEV COMPLEX (private access)>
+            #nodyna <instance_eval-1724> <IEV COMPLEX (private access)>
             req.ret[0] = req.target.instance_eval{
               @cmd_receiver, @receiver_watchdog =
                 _create_receiver_and_watchdog(@safe_level[0])
@@ -918,11 +841,9 @@ class MultiTkIp
             begin
               req.ret[0] = e
             rescue Exception
-              # ignore
             end
           end
         rescue Exception
-          # ignore
         end
       end
     }
@@ -942,7 +863,6 @@ class MultiTkIp
       end
     end
 
-    #################################
 
     @init_ip_env_queue = Queue.new
     Thread.new{
@@ -975,19 +895,17 @@ class MultiTkIp
       end
     end
 
-    #################################
 
     class << self
+      #nodyna <instance_eval-1725> <not yet classified>
       undef :instance_eval
     end
   }
 
   @@DEFAULT_MASTER.freeze # defend against modification
 
-  ######################################
 
   def self.inherited(subclass)
-    # trust if on ThreadGroup::Default or @@DEFAULT_MASTER's ThreadGroup
     if @@IP_TABLE[Thread.current.group] == @@DEFAULT_MASTER
       begin
         class << subclass
@@ -998,7 +916,6 @@ class MultiTkIp
                 undef_method(m)
               end
             rescue Exception
-              # ignore all exceptions
             end
           }
         end
@@ -1010,7 +927,6 @@ class MultiTkIp
     end
   end
 
-  ######################################
 
   @@SAFE_OPT_LIST = [
     'accessPath'.freeze,
@@ -1055,17 +971,13 @@ class MultiTkIp
   end
   private :_create_slave_ip_name
 
-  ######################################
 
   def __check_safetk_optkeys(optkeys)
-    # based on 'safetk.tcl'
     new_keys = {}
     optkeys.each{|k,v| new_keys[k.to_s] = v}
 
-    # check 'display'
     if !new_keys.key?('display')
       begin
-        #new_keys['display'] = @interp._invoke('winfo screen .')
         new_keys['display'] = @interp._invoke('winfo', 'screen', '.')
       rescue
         if ENV[DISPLAY]
@@ -1077,13 +989,10 @@ class MultiTkIp
       end
     end
 
-    # check 'use'
     if new_keys.key?('use')
-      # given 'use'
       case new_keys['use']
       when TkWindow
         new_keys['use'] = TkWinfo.id(new_keys['use'])
-        #assoc_display = @interp._eval('winfo screen .')
         assoc_display = @interp._invoke('winfo', 'screen', '.')
       when /^\..*/
         new_keys['use'] = @interp._invoke('winfo', 'id', new_keys['use'])
@@ -1097,7 +1006,6 @@ class MultiTkIp
         end
       end
 
-      # match display?
       if assoc_display != new_keys['display']
         if optkeys.key?(:display) || optkeys.key?('display')
           fail RuntimeError,
@@ -1109,18 +1017,15 @@ class MultiTkIp
       end
     end
 
-    # return
     new_keys
   end
   private :__check_safetk_optkeys
 
   def __create_safetk_frame(slave_ip, slave_name, app_name, keys)
-    # display option is used by ::safe::loadTk
     loadTk_keys = {}
     loadTk_keys['display'] = keys['display']
     dup_keys = keys.dup
 
-    # keys for toplevel : allow followings
     toplevel_keys = {}
     ['height', 'width', 'background', 'menu'].each{|k|
       toplevel_keys[k] = dup_keys.delete(k) if dup_keys.key?(k)
@@ -1128,9 +1033,7 @@ class MultiTkIp
     toplevel_keys['classname'] = 'SafeTk'
     toplevel_keys['screen'] = dup_keys.delete('display')
 
-    # other keys used by pack option of container frame
 
-    # create toplevel widget
     begin
       top = TkToplevel.new(toplevel_keys)
     rescue NameError => e
@@ -1144,26 +1047,19 @@ class MultiTkIp
       top.title msg
     end
 
-    # procedure to delete slave interpreter
     slave_delete_proc = proc{
       unless slave_ip.deleted?
-        #if slave_ip._invoke('info', 'command', '.') != ""
-        #  slave_ip._invoke('destroy', '.')
-        #end
-        #slave_ip.delete
         slave_ip._eval_without_enc('exit')
       end
       begin
         top.destroy if top.winfo_exist?
       rescue
-        # ignore
       end
     }
     tag = TkBindTag.new.bind('Destroy', slave_delete_proc)
 
     top.bindtags = top.bindtags.unshift(tag)
 
-    # create control frame
     TkFrame.new(top, :bg=>'red', :borderwidth=>3, :relief=>'ridge') {|fc|
       fc.bindtags = fc.bindtags.unshift(tag)
 
@@ -1181,13 +1077,11 @@ class MultiTkIp
       fc.pack(:side=>:bottom, :fill=>:x)
     }
 
-    # container frame for slave interpreter
     dup_keys['fill'] = :both  unless dup_keys.key?('fill')
     dup_keys['expand'] = true unless dup_keys.key?('expand')
     c = TkFrame.new(top, :container=>true).pack(dup_keys)
     c.bind('Destroy', proc{top.destroy})
 
-    # return keys
     loadTk_keys['use'] = TkWinfo.id(c)
     [loadTk_keys, top.path]
   end
@@ -1196,10 +1090,9 @@ class MultiTkIp
   def __create_safe_slave_obj(safe_opts, app_name, tk_opts)
     raise SecurityError, "no permission to manipulate" unless self.manipulable?
 
-    # safe interpreter
     ip_name = _create_slave_ip_name
     slave_ip = @interp.create_slave(ip_name, true)
-    #nodyna <ID:instance_eval-12> <IEV COMPLEX (private access)>
+    #nodyna <instance_eval-1726> <IEV COMPLEX (private access)>
     slave_ip.instance_eval{
       @force_default_encoding ||= TkUtil.untrust([false])
       @encoding ||= TkUtil.untrust([nil])
@@ -1248,7 +1141,7 @@ class MultiTkIp
 
     ip_name = _create_slave_ip_name
     slave_ip = @interp.create_slave(ip_name, false)
-    #nodyna <ID:instance_eval-13> <IEV COMPLEX (private access)>
+    #nodyna <instance_eval-1727> <IEV COMPLEX (private access)>
     slave_ip.instance_eval{
       @force_default_encoding ||= TkUtil.untrust([false])
       @encoding ||= TkUtil.untrust([nil])
@@ -1262,7 +1155,6 @@ class MultiTkIp
     [slave_ip, ip_name]
   end
 
-  ######################################
 
   def _create_slave_object(keys={})
     raise SecurityError, "no permission to manipulate" unless self.manipulable?
@@ -1271,7 +1163,6 @@ class MultiTkIp
     @slave_ip_tbl[ip.name] = ip
   end
 
-  ######################################
 
   def initialize(master, safeip=true, keys={})
     if $SAFE >= 4
@@ -1321,10 +1212,9 @@ class MultiTkIp
     @safe_base = false
 
     if safeip == nil
-      # create master-ip
       unless WITH_RUBY_VM
         @interp = TclTkIp.new(name, _keys2opts(tk_opts))
-        #nodyna <ID:instance_eval-14> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1728> <IEV MODERATE (private access)>
         @interp.instance_eval{
           @force_default_encoding ||= TkUtil.untrust([false])
           @encoding ||= TkUtil.untrust([nil])
@@ -1335,19 +1225,18 @@ class MultiTkIp
 =begin
         @interp_thread = Thread.new{
           Thread.current[:interp] = interp = TclTkIp.new(name, _keys2opts(tk_opts))
+          #nodyna <instance_eval-1729> <not yet classified>
           interp.instance_eval{
             @force_default_encoding ||= TkUtil.untrust([false])
             @encoding ||= TkUtil.untrust([nil])
             def @encoding.to_s; self.join(nil); end
           }
 
-          #sleep
           TclTkLib.mainloop(true)
         }
         until @interp_thread[:interp]
           Thread.pass
         end
-        # INTERP_THREAD.run
         @interp = @interp_thread[:interp]
 =end
         @interp_thread = Thread.new{
@@ -1358,8 +1247,6 @@ class MultiTkIp
             current[:interp] = e
             raise e
           end
-          #sleep
-          #TclTkLib.mainloop(true)
           current[:mutex] = mutex = Mutex.new
           current[:root_check] = cond_ver = ConditionVariable.new
 
@@ -1391,7 +1278,6 @@ class MultiTkIp
         until @interp_thread[:interp]
           Thread.pass
         end
-        # INTERP_THREAD.run
         @interp = @interp_thread[:interp]
 
         @evloop_thread[0] = @interp_thread
@@ -1406,7 +1292,7 @@ class MultiTkIp
         end
       end
 
-      #nodyna <ID:instance_eval-16> <IEV COMPLEX (private access)>
+      #nodyna <instance_eval-1730> <IEV COMPLEX (private access)>
       @interp.instance_eval{
         @force_default_encoding ||= TkUtil.untrust([false])
         @encoding ||= TkUtil.untrust([nil])
@@ -1423,12 +1309,10 @@ class MultiTkIp
       end
 
     else
-      # create slave-ip
       if safeip || master.safe?
         @safe_base = true
         @interp, @ip_name = master.__create_safe_slave_obj(safe_opts,
                                                            name, tk_opts)
-        # @interp_thread = nil if RUBY_VERSION < '1.9.0' ### !!!!!!!!!!!
         @interp_thread = nil unless WITH_RUBY_VM  ### Ruby 1.9 !!!!!!!!!!!
         if safe
           safe = master.safe_level if safe < master.safe_level
@@ -1438,7 +1322,6 @@ class MultiTkIp
         end
       else
         @interp, @ip_name = master.__create_trusted_slave_obj(name, tk_opts)
-        # @interp_thread = nil if RUBY_VERSION < '1.9.0' ### !!!!!!!!!!!
         @interp_thread = nil unless WITH_RUBY_VM  ### Ruby 1.9 !!!!!!!!!!!
         if safe
           safe = master.safe_level if safe < master.safe_level
@@ -1455,7 +1338,6 @@ class MultiTkIp
     @system = Object.new
 
     @wait_on_mainloop = TkUtil.untrust([true, 0])
-    # @wait_on_mainloop = TkUtil.untrust([false, 0])
 
     @threadgroup  = ThreadGroup.new
 
@@ -1480,23 +1362,21 @@ class MultiTkIp
     _init_ip_internal(@@INIT_IP_ENV, @@ADD_TK_PROCS)
 
     class << self
+      #nodyna <instance_eval-1731> <not yet classified>
       undef :instance_eval
     end
 
-    # dummy call for initialization
     self.eval_proc{ Tk.tk_call('set', 'tcl_patchLevel') }
 
     self.freeze  # defend against modification
   end
 
-  ######################################
 
   def _default_delete_hook(slave)
     raise SecurityError, "no permission to manipulate" unless self.manipulable?
     @slave_ip_tbl.delete(slave)
     top = @slave_ip_top.delete(slave)
     if top.kind_of?(String)
-      # call default hook of safetk.tcl (ignore exceptions)
       if top == ''
         begin
           @interp._eval("::safe::disallowTk #{slave}")
@@ -1521,7 +1401,6 @@ class MultiTkIp
 end
 
 
-# get target IP
 class MultiTkIp
   @@CALLBACK_SUBTHREAD = Class.new(Thread){
     def self.new(interp, &blk)
@@ -1538,7 +1417,6 @@ class MultiTkIp
     __getip._ip_id_
   end
   def _ip_id_
-    # for RemoteTkIp
     ''
   end
 
@@ -1564,14 +1442,12 @@ class MultiTkIp
 end
 
 
-# aliases of constructor
 class << MultiTkIp
   alias __new new
   private :__new
 
   def new_master(safe=nil, keys={}, &blk)
     if MultiTkIp::WITH_RUBY_VM
-      #### TODO !!!!!!
       fail RuntimeError,
            'sorry, still not support multiple master-interpreters on RubyVM'
     end
@@ -1584,16 +1460,12 @@ class << MultiTkIp
         keys[:safe] = safe
       end
     elsif safe == nil
-      # do nothing
     else
       raise ArgumentError, "unexpected argument(s)"
     end
 
     ip = __new(__getip, nil, keys)
-    #ip.eval_proc(proc{$SAFE=ip.safe_level; Proc.new}.call) if block_given?
     if block_given?
-      #Thread.new{ip.eval_proc(proc{$SAFE=ip.safe_level; Proc.new}.call)}
-      #Thread.new{ip.eval_proc(proc{$SAFE=ip.safe_level; yield}.call)}
       ip._proc_on_safelevel(&blk).call(ip.safe_level)
     end
     ip
@@ -1610,16 +1482,12 @@ class << MultiTkIp
         keys[:safe] = safe
       end
     elsif safe == nil
-      # do nothing
     else
       raise ArgumentError, "unexpected argument(s)"
     end
 
     ip = __new(__getip, false, keys)
-    # ip.eval_proc(proc{$SAFE=ip.safe_level; Proc.new}.call) if block_given?
     if block_given?
-      #Thread.new{ip.eval_proc(proc{$SAFE=ip.safe_level; Proc.new}.call)}
-      #Thread.new{ip.eval_proc(proc{$SAFE=ip.safe_level; yield}.call)}
       ip._proc_on_safelevel(&blk).call(ip.safe_level)
     end
     ip
@@ -1639,10 +1507,7 @@ class << MultiTkIp
     end
 
     ip = __new(__getip, true, keys)
-    # ip.eval_proc(proc{$SAFE=ip.safe_level; Proc.new}.call) if block_given?
     if block_given?
-      #Thread.new{ip.eval_proc(proc{$SAFE=ip.safe_level; Proc.new}.call)}
-      #Thread.new{ip.eval_proc(proc{$SAFE=ip.safe_level; yield}.call)}
       ip._proc_on_safelevel(&blk).call(ip.safe_level)
     end
     ip
@@ -1651,7 +1516,6 @@ class << MultiTkIp
 end
 
 
-# get info
 class MultiTkIp
   def inspect
     s = self.to_s.chop!
@@ -1759,7 +1623,6 @@ class MultiTkIp
 end
 
 
-# instance methods to treat tables
 class MultiTkIp
   def _tk_cmd_tbl
     tbl = {}
@@ -1810,7 +1673,6 @@ class MultiTkIp
   end
 
   def _init_ip_internal(init_ip_env, add_tk_procs)
-    #init_ip_env.each{|script| self.eval_proc{script.call(self)}}
     init_ip_env.each{|script| self._init_ip_env(script)}
     add_tk_procs.each{|name, args, body|
       if master?
@@ -1823,7 +1685,6 @@ class MultiTkIp
 end
 
 
-# class methods to treat tables
 class MultiTkIp
   def self.tk_cmd_tbl
     @@TK_CMD_TBL
@@ -1839,11 +1700,8 @@ class MultiTkIp
       begin
         raise SecurityError, "slave-IP has no permission creating a new table"
       rescue SecurityError => e
-        #p e.backtrace
-        # Is called on a Ruby/Tk library?
         caller_info = e.backtrace[1]
         if caller_info =~ %r{^#{MultiTkIp::BASE_DIR}/(tk|tkextlib)/[^:]+\.rb:}
-          # Probably, caller is a Ruby/Tk library  -->  allow creating
         else
           raise e
         end
@@ -1853,9 +1711,11 @@ class MultiTkIp
     id = @@TK_TABLE_LIST.size
     obj = Object.new
     @@TK_TABLE_LIST << obj
+    #nodyna <instance_variable_set-1732> <not yet classified>
     obj.instance_variable_set(:@id, id)
+    #nodyna <instance_variable_set-1733> <not yet classified>
     obj.instance_variable_set(:@mutex, Mutex.new)
-    #nodyna <ID:instance_eval-18> <IEV MODERATE (method definition)>
+    #nodyna <instance_eval-1734> <IEV MODERATE (method definition)>
     obj.instance_eval{
       def self.mutex
         @mutex
@@ -1875,20 +1735,14 @@ class MultiTkIp
       begin
         raise SecurityError, "slave-IP has no permission initializing IP env"
       rescue SecurityError => e
-        #p e.backtrace
-        # Is called on a Ruby/Tk library?
         caller_info = e.backtrace[1]
         if caller_info =~ %r{^#{MultiTkIp::BASE_DIR}/(tk|tkextlib)/[^:]+\.rb:}
-          # Probably, caller is a Ruby/Tk library  -->  allow creating
         else
           raise e
         end
       end
     end
 
-    # @@IP_TABLE.each{|tg, ip|
-    #   ip._init_ip_env(script)
-    # }
     @@DEFAULT_MASTER.__init_ip_env__(@@IP_TABLE, script)
   end
 
@@ -1921,7 +1775,6 @@ class MultiTkIp
   end
 end
 
-# for callback operation
 class MultiTkIp
   def self.cb_entry_class
     @@CB_ENTRY_CLASS
@@ -1932,8 +1785,6 @@ class MultiTkIp
 
 =begin
   def cb_eval(cmd, *args)
-    #self.eval_callback{ TkComm._get_eval_string(TkUtil.eval_cmd(cmd, *args)) }
-    #ret = self.eval_callback{ TkComm._get_eval_string(TkUtil.eval_cmd(cmd, *args)) }
     ret = self.eval_callback(*args){|safe, *params|
       $SAFE=safe if $SAFE < safe
       TkComm._get_eval_string(TkUtil.eval_cmd(cmd, *params))
@@ -1954,7 +1805,6 @@ class MultiTkIp
   def cb_eval(cmd, *args)
     self.eval_callback(*args){|safe, *params|
       $SAFE=safe if $SAFE < safe
-      # TkUtil.eval_cmd(cmd, *params)
       TkComm._get_eval_string(TkUtil.eval_cmd(cmd, *params))
     }
   end
@@ -1966,7 +1816,6 @@ class MultiTkIp
     st, val = @callback_status
     th = Thread.new{
       self.eval_callback(*args){|safe, *params|
-        #p [status, val, safe, *params]
         $SAFE=safe if $SAFE < safe
         begin
           TkComm._get_eval_string(TkUtil.eval_cmd(cmd, *params))
@@ -2008,9 +1857,7 @@ class MultiTkIp
 
 end
 
-# pseudo-toplevel operation support
 class MultiTkIp
-  # instance method
   def __pseudo_toplevel
     ip = MultiTkIp.__getip
     (ip == @@DEFAULT_MASTER || ip == self) &&
@@ -2023,7 +1870,6 @@ class MultiTkIp
       fail SecurityError, "no permission to manipulate"
     end
 
-    # if m.kind_of?(Module) && m.respond_to?(:pseudo_toplevel_evaluable?)
     if m.respond_to?(:pseudo_toplevel_evaluable?)
       @pseudo_toplevel[0] = true
       @pseudo_toplevel[1] = m
@@ -2052,19 +1898,9 @@ class MultiTkIp
 end
 
 
-################################################
-# use pseudo-toplevel feature of MultiTkIp ?
 if (!defined?(Use_PseudoToplevel_Feature_of_MultiTkIp) ||
       Use_PseudoToplevel_Feature_of_MultiTkIp)
   module MultiTkIp_PseudoToplevel_Evaluable
-    #def pseudo_toplevel_eval(body = Proc.new)
-    #  Thread.current[:TOPLEVEL] = self
-    #  begin
-    #    body.call
-    #  ensure
-    #    Thread.current[:TOPLEVEL] = nil
-    #  end
-    #end
 
     def pseudo_toplevel_evaluable?
       @pseudo_toplevel_evaluable
@@ -2076,6 +1912,7 @@ if (!defined?(Use_PseudoToplevel_Feature_of_MultiTkIp) ||
 
     def self.extended(mod)
       mod.__send__(:extend_object, mod)
+      #nodyna <instance_variable_set-1735> <not yet classified>
       mod.instance_variable_set('@pseudo_toplevel_evaluable', true)
     end
   end
@@ -2102,7 +1939,6 @@ if (!defined?(Use_PseudoToplevel_Feature_of_MultiTkIp) ||
     end
   end
 else
-  # dummy
   module MultiTkIp_PseudoToplevel_Evaluable
     def pseudo_toplevel_evaluable?
       false
@@ -2111,10 +1947,8 @@ else
 end
 
 
-################################################
-# evaluate a procedure on the proper interpreter
 class MultiTkIp
-  # instance & class method
+  #nodyna <eval-1736> <not yet classified>
   def _proc_on_safelevel(cmd=nil) # require a block for eval
     if cmd
       if cmd.kind_of?(Method)
@@ -2123,9 +1957,7 @@ class MultiTkIp
         _proc_on_safelevel(&cmd)
       end
     else
-      #Proc.new{|safe, *args| $SAFE=safe if $SAFE < safe; yield(*args)}
       Proc.new{|safe, *args|
-        # avoid security error on Exception objects
         untrust_proc = proc{|err|
           begin
             err.untrust if err.respond_to?(:untrust)
@@ -2146,6 +1978,7 @@ class MultiTkIp
     MultiTkIp.__getip._proc_on_safelevel(cmd, &blk)
   end
 
+  #nodyna <eval-1737> <not yet classified>
   def _proc_on_current_safelevel(cmd=nil, &blk) # require a block for eval
     safe = $SAFE
     cmd = _proc_on_safelevel(cmd, &blk)
@@ -2155,22 +1988,17 @@ class MultiTkIp
     MultiTkIp.__getip._proc_on_current_safelevel(cmd, &blk)
   end
 
-  ######################################
-  # instance method
   def eval_proc_core(req_val, cmd, *args)
-    # check
     raise SecurityError, "no permission to manipulate" unless self.manipulable?
     unless cmd.kind_of?(Proc) || cmd.kind_of?(Method)
       raise RuntimeError, "A Proc/Method object is expected for the 'cmd' argument"
     end
 
-    # on IP thread
     if @cmd_receiver == Thread.current ||
         (!req_val && TclTkLib.mainloop_thread? != false) # callback
       begin
         ret = cmd.call(safe_level, *args)
       rescue SystemExit => e
-        # exit IP
         warn("Warning: "+ e.inspect + " on " + self.inspect) if $DEBUG
         begin
           self._eval_without_enc('exit')
@@ -2187,6 +2015,7 @@ class MultiTkIp
 =begin
         begin
           bt = _toUTF8(e.backtrace.join("\n"))
+          #nodyna <instance_variable_set-1738> <not yet classified>
           bt.instance_variable_set(:@encoding, 'utf-8')
         rescue Exception
           bt = e.backtrace.join("\n")
@@ -2201,12 +2030,10 @@ class MultiTkIp
       return ret
     end
 
-    # send cmd to the proc-queue
     unless req_val
       begin
         @cmd_queue.enq([nil, cmd, *args])
       rescue Exception => e
-        # ignore
         if $DEBUG
           warn("Warning: " + e.class.inspect +
                ((e.message.length > 0)? ' "' + e.message + '"': '') +
@@ -2217,15 +2044,12 @@ class MultiTkIp
       return nil
     end
 
-    # send and get return value by exception
     begin
       @cmd_queue.enq([Thread.current, cmd, *args])
       Thread.stop
     rescue MultiTkIp_OK => ret
-      # return value
       return ret.value
     rescue SystemExit => e
-      # exit IP
       warn("Warning: " + e.inspect + " on " + self.inspect) if $DEBUG
       begin
         self._eval_without_enc('exit')
@@ -2250,7 +2074,6 @@ class MultiTkIp
   private :eval_proc_core
 
 if false && WITH_RUBY_VM  ### Ruby 1.9
-  # Not stable, so disable this feature
   def eval_callback(*args)
     if block_given?
       cmd = Proc.new
@@ -2302,7 +2125,6 @@ end
       cmd = _proc_on_safelevel(&cmd)
     end
     if TclTkLib.mainloop_thread? == true
-      # call from eventloop
       current = Thread.current
       backup_ip = current[:callback_ip]
       current[:callback_ip] = self
@@ -2321,9 +2143,6 @@ end
   end
 =begin
   def eval_proc(*args)
-    # The scope of the eval-block of 'eval_proc' method is different from
-    # the external. If you want to pass local values to the eval-block,
-    # use arguments of eval_proc method. They are passed to block-arguments.
     if block_given?
       cmd = Proc.new
     else
@@ -2332,7 +2151,6 @@ end
       end
     end
     if TclTkLib.mainloop_thread? == true
-      # call from eventloop
       current = Thread.current
       backup_ip = current[:callback_ip]
       current[:callback_ip] = self
@@ -2383,14 +2201,13 @@ end
   alias background_call bg_eval_proc
 
   def eval_string(cmd, *eval_args)
-    # cmd string ==> proc
     unless cmd.kind_of?(String)
       raise RuntimeError, "A String object is expected for the 'cmd' argument"
     end
 
     eval_proc_core(true,
                    proc{|safe|
-                     #nodyna <ID:eval-14> <EV COMPLEX (change-prone variables)>
+                     #nodyna <eval-1739> <EV COMPLEX (change-prone variables)>
                      Kernel.eval("$SAFE=#{safe} if $SAFE < #{safe};" << cmd,
                                  *eval_args)
                    })
@@ -2398,14 +2215,13 @@ end
   alias eval_str eval_string
 
   def bg_eval_string(cmd, *eval_args)
-    # cmd string ==> proc
     unless cmd.kind_of?(String)
       raise RuntimeError, "A String object is expected for the 'cmd' argument"
     end
     Thread.new{
       eval_proc_core(true,
                      proc{|safe|
-                       #nodyna <ID:eval-15> <EV COMPLEX (change-prone variables)>
+                       #nodyna <eval-1740> <EV COMPLEX (change-prone variables)>
                        Kernel.eval("$SAFE=#{safe} if $SAFE < #{safe};" << cmd,
                                    *eval_args)
                      })
@@ -2415,6 +2231,7 @@ end
   alias bg_eval_str bg_eval_string
   alias background_eval_str bg_eval_string
 
+  #nodyna <eval-1741> <not yet classified>
   def eval(*args, &blk)
     if block_given?
       eval_proc(*args, &blk)
@@ -2425,6 +2242,7 @@ end
         eval_string(*args)
       end
     else
+      #nodyna <eval-1742> <not yet classified>
       fail ArgumentError, "no argument to eval"
     end
   end
@@ -2439,6 +2257,7 @@ end
         bg_eval_string(*args)
       end
     else
+      #nodyna <eval-1743> <not yet classified>
       fail ArgumentError, "no argument to eval"
     end
   end
@@ -2446,15 +2265,12 @@ end
 end
 
 class << MultiTkIp
-  # class method
   def eval_proc(*args, &blk)
-    # class ==> interp object
     __getip.eval_proc(*args, &blk)
   end
   alias call eval_proc
 
   def bg_eval_proc(*args, &blk)
-    # class ==> interp object
     __getip.bg_eval_proc(*args, &blk)
   end
   alias background_eval_proc bg_eval_proc
@@ -2463,34 +2279,29 @@ class << MultiTkIp
   alias background_call bg_eval_proc
 
   def eval_string(cmd, *eval_args)
-    # class ==> interp object
     __getip.eval_string(cmd, *eval_args)
   end
   alias eval_str eval_string
 
   def bg_eval_string(cmd, *eval_args)
-    # class ==> interp object
     __getip.bg_eval_string(cmd, *eval_args)
   end
   alias background_eval_string bg_eval_string
   alias bg_eval_str bg_eval_string
   alias background_eval_str bg_eval_string
 
+  #nodyna <eval-1744> <not yet classified>
   def eval(*args, &blk)
-    # class ==> interp object
-    #nodyna <ID:eval-20> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1745> <EV COMPLEX (change-prone variables)>
     __getip.eval(*args, &blk)
   end
   def bg_eval(*args, &blk)
-    # class ==> interp object
     __getip.bg_eval(*args, &blk)
   end
   alias background_eval bg_eval
 end
 
 
-# event loop
-# all master/slave IPs are controled by only one event-loop
 class MultiTkIp
   def self.default_master?
     __getip == @@DEFAULT_MASTER
@@ -2507,11 +2318,9 @@ class << MultiTkIp
     __getip.do_one_event(flag)
   end
   def mainloop_abort_on_exception
-    # __getip.mainloop_abort_on_exception
     TclTkLib.mainloop_abort_on_exception
   end
   def mainloop_abort_on_exception=(mode)
-    # __getip.mainloop_abort_on_exception=(mode)
     TclTkLib.mainloop_abort_on_exception=(mode)
   end
   def set_eventloop_tick(tick)
@@ -2534,7 +2343,6 @@ class << MultiTkIp
   end
 end
 
-# class methods to delegate to TclTkIp
 class << MultiTkIp
   def method_missing(id, *args)
     __getip.__send__(id, *args)
@@ -2705,7 +2513,6 @@ class << MultiTkIp
 end
 
 
-# wrap methods on TclTkLib : not permit calling TclTkLib module methods
 class << TclTkLib
   def mainloop(check_root = true)
     MultiTkIp.mainloop(check_root)
@@ -2716,12 +2523,6 @@ class << TclTkLib
   def do_one_event(flag = TclTkLib::EventFlag::ALL)
     MultiTkIp.do_one_event(flag)
   end
-  #def mainloop_abort_on_exception
-  #  MultiTkIp.mainloop_abort_on_exception
-  #end
-  #def mainloop_abort_on_exception=(mode)
-  #  MultiTkIp.mainloop_abort_on_exception=(mode)
-  #end
   def set_eventloop_tick(tick)
     MultiTkIp.set_eventloop_tick(tick)
   end
@@ -2753,9 +2554,7 @@ class << TclTkLib
 end
 
 
-# depend on TclTkIp
 class MultiTkIp
-#  def mainloop(check_root = true, restart_on_dead = true)
   def mainloop(check_root = true, restart_on_dead = false)
     raise SecurityError, "no permission to manipulate" unless self.manipulable?
 
@@ -2763,8 +2562,6 @@ class MultiTkIp
       return @interp_thread.value if @interp_thread
     end
 
-    #return self if self.slave?
-    #return self if self != @@DEFAULT_MASTER
     if self != @@DEFAULT_MASTER
       if @wait_on_mainloop[0]
         begin
@@ -2777,14 +2574,12 @@ class MultiTkIp
             Thread.stop
           end
         rescue MultiTkIp_OK => ret
-          # return value
           if ret.value.kind_of?(Thread)
             return ret.value.value
           else
             return ret.value
           end
         rescue SystemExit => e
-          # exit IP
           warn("Warning: " + e.inspect + " on " + self.inspect) if $DEBUG
           begin
             self._eval_without_enc('exit')
@@ -2841,19 +2636,14 @@ class MultiTkIp
           @interp.mainloop(check_root)
         rescue StandardError => e
           if TclTkLib.mainloop_abort_on_exception != nil
-            #STDERR.print("Warning: Tk mainloop receives ", $!.class.inspect,
-            #             " exception (ignore) : ", $!.message, "\n");
             if $DEBUG
               warn("Warning: Tk mainloop receives " << e.class.inspect <<
                    " exception (ignore) : " << e.message);
             end
           end
-          #raise e
         rescue Exception => e
 =begin
           if TclTkLib.mainloop_abort_on_exception != nil
-            #STDERR.print("Warning: Tk mainloop receives ", $!.class.inspect,
-            #             " exception (ignore) : ", $!.message, "\n");
             if $DEBUG
               warn("Warning: Tk mainloop receives " << e.class.inspect <<
                    " exception (ignore) : " << e.message);
@@ -2906,7 +2696,6 @@ class MultiTkIp
       end
 =end
       begin
-        # subip._eval_without_enc("foreach i [after info] {after cancel $i}")
 	unless subip.deleted?
 	  after_ids = subip._eval_without_enc("after info")
 	  subip._eval_without_enc("foreach i {#{after_ids}} {after cancel $i}")
@@ -2914,7 +2703,6 @@ class MultiTkIp
       rescue Exception
       end
 
-      # safe_base?
       if @interp._eval_without_enc("catch {::safe::interpConfigure #{name}}") == '0'
         begin
           @interp._eval_without_enc("::safe::interpDelete #{name}")
@@ -2925,7 +2713,6 @@ class MultiTkIp
       end
       if subip.respond_to?(:safe_base?) && subip.safe_base? &&
           !subip.deleted?
-        # do 'exit' to call the delete_hook procedure
         begin
           subip._eval_without_enc('exit')
         rescue Exception
@@ -2939,7 +2726,6 @@ class MultiTkIp
     }
 
     begin
-      # @interp._eval_without_enc("foreach i [after info] {after cancel $i}")
       after_ids = @interp._eval_without_enc("after info")
       @interp._eval_without_enc("foreach i {#{after_ids}} {after cancel $i}")
     rescue Exception
@@ -2951,7 +2737,6 @@ class MultiTkIp
     end
 
     if @safe_base && !@interp.deleted?
-      # do 'exit' to call the delete_hook procedure
       @interp._eval_without_enc('exit')
     end
     @interp.delete
@@ -2982,7 +2767,6 @@ class MultiTkIp
         Kernel.abort
       end
     else
-      # ignore msg
       delete
       1
     end
@@ -3156,7 +2940,6 @@ class MultiTkIp
 end
 
 
-# interp command support
 class MultiTkIp
   def _lst2ary(str)
     return [] if str == ""
@@ -3184,7 +2967,6 @@ class MultiTkIp
     else
       list.push str[0..i-1]
     end
-    #list += _lst2ary(str[i+1..-1])
     list.concat(_lst2ary(str[i+1..-1]))
     list
   end
@@ -3261,6 +3043,7 @@ class MultiTkIp
   def delete_cmd(slave, cmd)
     raise SecurityError, "no permission to manipulate" unless self.manipulable?
     slave_invoke = @interp._invoke('list', 'rename', cmd, '')
+    #nodyna <eval-1746> <not yet classified>
     @interp._invoke('interp', 'eval', _slavearg(slave), slave_invoke)
     self
   end
@@ -3347,7 +3130,6 @@ class MultiTkIp
   end
 
   def invoke_hidden_on_namespace(slave, ns, cmd, *args)
-    # for Tcl8.5 or later
     raise SecurityError, "no permission to manipulate" unless self.manipulable?
     if args[-1].kind_of?(Hash)
       keys = _symbolkey2str(args.pop)
@@ -3535,11 +3317,8 @@ class MultiTkIp
 end
 
 
-# Safe Base :: manipulating safe interpreter
 class MultiTkIp
   def safeip_configure(slot, value=None)
-    # use for '-noStatics' option ==> {statics=>false}
-    #     for '-nestedLoadOk' option ==> {nested=>true}
     if slot.kind_of?(Hash)
       ip = MultiTkIp.__getip
       ip._eval('::safe::interpConfigure ' + @ip_name + ' ' + _keys2opts(slot))
@@ -3612,7 +3391,6 @@ class MultiTkIp
 end
 
 
-# encoding convert
 class << MultiTkIp
   def encoding_table
     __getip.encoding_table
@@ -3702,15 +3480,16 @@ class MultiTkIp
 end
 
 
-# remove methods for security
 =begin
 class MultiTkIp
+  #nodyna <instance_variable_get-1747> <not yet classified>
   INTERP_THREAD = @@DEFAULT_MASTER.instance_variable_get('@interp_thread')
   INTERP_MUTEX  = INTERP_THREAD[:mutex]
   INTERP_ROOT_CHECK = INTERP_THREAD[:root_check]
 
-  # undef_method :instance_eval
+  #nodyna <instance_variable_get-1748> <not yet classified>
   undef_method :instance_variable_get
+  #nodyna <instance_variable_set-1749> <not yet classified>
   undef_method :instance_variable_set
 end
 
@@ -3731,6 +3510,7 @@ end
 if MultiTkIp::WITH_RUBY_VM &&
     ! MultiTkIp::RUN_EVENTLOOP_ON_MAIN_THREAD ### check Ruby 1.9 !!!!!!!
   class MultiTkIp
+    #nodyna <instance_variable_get-1750> <not yet classified>
     INTERP_THREAD = @@DEFAULT_MASTER.instance_variable_get('@interp_thread')
     INTERP_THREAD_STATUS = INTERP_THREAD[:status]
     INTERP_MUTEX  = INTERP_THREAD[:mutex]
@@ -3751,18 +3531,13 @@ if MultiTkIp::WITH_RUBY_VM &&
 end
 
 class MultiTkIp
-  # undef_method :instance_eval
+  #nodyna <instance_variable_get-1751> <not yet classified>
   undef_method :instance_variable_get
+  #nodyna <instance_variable_set-1752> <not yet classified>
   undef_method :instance_variable_set
 end
-# end of MultiTkIp definition
 
-# defend against modification
-#MultiTkIp.freeze
-#TclTkLib.freeze
 
-########################################
-#  start Tk which depends on MultiTkIp
 module TkCore
   INTERP = MultiTkIp
 end

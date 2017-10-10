@@ -25,7 +25,6 @@ class Admin::DiagnosticsController < Admin::AdminController
 
   def dump_heap
     begin
-      # ruby 2.1
       GC.start(full_mark: true)
       require 'objspace'
 

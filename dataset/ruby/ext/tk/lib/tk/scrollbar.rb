@@ -1,6 +1,3 @@
-#
-# tk/scrollbar.rb : treat scrollbar widget
-#
 require 'tk'
 
 class Tk::Scrollbar<TkWindow
@@ -20,7 +17,6 @@ class Tk::Scrollbar<TkWindow
 
     if keys and keys != None
       unless TkConfigMethod.__IGNORE_UNKNOWN_CONFIGURE_OPTION__
-        #tk_call_without_enc('scrollbar', @path, *hash_kv(keys, true))
         tk_call_without_enc(self.class::TkCommandNames[0], @path,
                             *hash_kv(keys, true))
       else
@@ -34,10 +30,8 @@ class Tk::Scrollbar<TkWindow
             begin
               tk_call_without_enc('destroy', @path)
             rescue
-              # cannot destroy
               configure(keys)
             else
-              # re-create widget
               tk_call_without_enc(self.class::TkCommandNames[0], @path,
                                   *hash_kv(keys, true))
             end
@@ -45,7 +39,6 @@ class Tk::Scrollbar<TkWindow
         end
       end
     else
-      #tk_call_without_enc('scrollbar', @path)
       tk_call_without_enc(self.class::TkCommandNames[0], @path)
     end
   end
@@ -89,16 +82,13 @@ class Tk::Scrollbar<TkWindow
 
   def configure(*args)
     ret = super(*args)
-    # Tk.update  # avoid scrollbar trouble
     ret
   end
 
-  #def delta(deltax=None, deltay=None)
   def delta(deltax, deltay)
     number(tk_send_without_enc('delta', deltax, deltay))
   end
 
-  #def fraction(x=None, y=None)
   def fraction(x, y)
     number(tk_send_without_enc('fraction', x, y))
   end
@@ -108,12 +98,6 @@ class Tk::Scrollbar<TkWindow
   end
 
   def get
-    #ary1 = tk_send('get').split
-    #ary2 = []
-    #for i in ary1
-    #  ary2.push number(i)
-    #end
-    #ary2
     list(tk_send_without_enc('get'))
   end
 
@@ -147,8 +131,6 @@ class Tk::Scrollbar<TkWindow
   end
 end
 
-#TkScrollbar = Tk::Scrollbar unless Object.const_defined? :TkScrollbar
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Scrollbar, :TkScrollbar)
 Tk.__set_loaded_toplevel_aliases__('tk/scrollbar.rb', :Tk, Tk::Scrollbar,
                                    :TkScrollbar)
 
@@ -162,8 +144,6 @@ class Tk::XScrollbar<Tk::Scrollbar
   private :create_self
 end
 
-#TkXScrollbar = Tk::XScrollbar unless Object.const_defined? :TkXScrollbar
-#Tk.__set_toplevel_aliases__(:Tk, Tk::XScrollbar, :TkXScrollbar)
 Tk.__set_loaded_toplevel_aliases__('tk/scrollbar.rb', :Tk, Tk::XScrollbar,
                                    :TkXScrollbar)
 
@@ -177,7 +157,5 @@ class Tk::YScrollbar<Tk::Scrollbar
   private :create_self
 end
 
-#TkYScrollbar = Tk::YScrollbar unless Object.const_defined? :TkYScrollbar
-#Tk.__set_toplevel_aliases__(:Tk, Tk::YScrollbar, :TkYScrollbar)
 Tk.__set_loaded_toplevel_aliases__('tk/scrollbar.rb', :Tk, Tk::YScrollbar,
                                    :TkYScrollbar)

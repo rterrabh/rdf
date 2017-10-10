@@ -9,7 +9,6 @@ class Pcrexx < Formula
   depends_on "libtool" => :build
   depends_on "pcre"
 
-  # Fix building with libc++. Patch sent to maintainer.
   patch :DATA
 
   def install
@@ -23,9 +22,6 @@ class Pcrexx < Formula
                           "--with-pcre-include=#{pcre.opt_include}"
     system "make", "install"
 
-    # Pcre++ ships Pcre.3, which causes a conflict with pcre.3 from pcre
-    # in case-insensitive file system. Rename it to pcre++.3 to avoid
-    # this problem.
     mv man3/"Pcre.3", man3/"pcre++.3"
   end
 
@@ -43,14 +39,10 @@ index d80b387..21869fc 100644
 --- a/libpcre++/pcre++.h
 +++ b/libpcre++/pcre++.h
 @@ -47,11 +47,11 @@
- #include <map>
- #include <stdexcept>
- #include <iostream>
 +#include <clocale>
  
  
  extern "C" {
-   #include <pcre.h>
 -  #include <locale.h>
  }
  

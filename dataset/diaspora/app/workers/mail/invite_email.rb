@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 module Workers
   module Mail
@@ -8,6 +5,7 @@ module Workers
       sidekiq_options queue: :mail
 
       def perform(emails, inviter_id, options={})
+        #nodyna <send-227> <not yet classified>
         EmailInviter.new(emails, User.find(inviter_id), options).send!
       end
     end

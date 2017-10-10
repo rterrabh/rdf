@@ -30,14 +30,11 @@ class PostgresXc < Formula
     cause "Miscompilation resulting in segfault on queries"
   end
 
-  # Fix PL/Python build: https://github.com/Homebrew/homebrew/issues/11162
-  # Fix uuid-ossp build issues: http://archives.postgresql.org/pgsql-general/2012-07/msg00654.php
   patch :DATA
 
   def install
     ENV.libxml2 if MacOS.version >= :snow_leopard
 
-    # See http://sourceforge.net/mailarchive/forum.php?thread_name=82E44F89-543A-44F2-8AF8-F6909B5DC561%40uniud.it&forum_name=postgres-xc-bugs
     ENV.append "CFLAGS", "-D_FORTIFY_SOURCE=0 -O2" if MacOS.version >= :mavericks
 
     args = ["--disable-debug",
@@ -82,15 +79,11 @@ class PostgresXc < Formula
   end
 
   def check_python_arch
-    # On 64-bit systems, we need to look for a 32-bit Framework Python.
-    # The configure script prefers this Python version, and if it doesn't
-    # have 64-bit support then linking will fail.
     framework_python = Pathname.new "/Library/Frameworks/Python.framework/Versions/Current/Python"
     return unless framework_python.exist?
     unless (archs_for_command framework_python).include? :x86_64
       opoo "Detected a framework Python that does not have 64-bit support in:"
       puts <<-EOS.undent
-        #{framework_python}
 
         The configure script seems to prefer this version of Python over any others,
         so you may experience linker problems as described in:
@@ -121,8 +114,6 @@ class PostgresXc < Formula
 
     Then edit:
 
-      #{var}/postgres-xc/datanode1/postgresql.conf
-      #{var}/postgres-xc/datanode2/postgresql.conf
 
     and change the port to 15432 and 15433, respectively.
 
@@ -152,12 +143,10 @@ class PostgresXc < Formula
     EOS
   end
 
-  # Override Formula#plist_name
   def plist_name(extra = nil)
     (extra) ? super()+"-"+extra : super()+"-gtm"
   end
 
-  # Override Formula#plist_path
   def plist_path(extra = nil)
     (extra) ? super().dirname+(plist_name(extra)+".plist") : super()
   end
@@ -290,14 +279,12 @@ __END__
 --- a/src/pl/plpython/Makefile	2011-09-23 08:03:52.000000000 +1000
 +++ b/src/pl/plpython/Makefile	2011-10-26 21:43:40.000000000 +1100
 @@ -24,8 +24,6 @@
- # Darwin (OS X) has its own ideas about how to do this.
  ifeq ($(PORTNAME), darwin)
  shared_libpython = yes
 -override python_libspec = -framework Python
 -override python_additional_libs =
  endif
 
- # If we don't have a shared library and the platform doesn't allow it
 --- a/contrib/uuid-ossp/uuid-ossp.c	2012-07-30 18:34:53.000000000 -0700
 +++ b/contrib/uuid-ossp/uuid-ossp.c	2012-07-30 18:35:03.000000000 -0700
 @@ -9,6 +9,8 @@
@@ -306,6 +293,3 @@ __END__
 
 +#define _XOPEN_SOURCE
 +
- #include "postgres.h"
- #include "fmgr.h"
- #include "utils/builtins.h"

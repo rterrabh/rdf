@@ -9,8 +9,6 @@ class Autojump < Formula
   def install
     system "./install.py", "-d", prefix, "-z", zsh_completion
 
-    # Backwards compatibility for users that have the old path in .bash_profile
-    # or .zshrc
     (prefix/"etc").install_symlink prefix/"etc/profile.d/autojump.sh"
 
     libexec.install bin

@@ -41,13 +41,10 @@ __END__
  cp pts-core/static/phoronix-test-suite.desktop $DESTDIR$INSTALL_PREFIX/share/applications/
  cp pts-core/static/phoronix-test-suite-launcher.desktop $DESTDIR$INSTALL_PREFIX/share/applications/
 @@ -90,7 +90,7 @@
- # sed 's:\$url = PTS_PATH . \"documentation\/index.html\";:\$url = \"'"$INSTALL_PREFIX"'\/share\/doc\/packages\/phoronix-test-suite\/index.html\";:g' pts-core/commands/gui_gtk.php > $DESTDIR$INSTALL_PREFIX/share/phoronix-test-suite/pts-core/commands/gui_gtk.php
  
- # XDG MIME OpenBenchmarking support
 -if [ "X$DESTDIR" = "X" ]
 +if [ "X$INSTALL_PREFIX" = "X" ]
  then
- 	#No chroot
  	xdg-mime install pts-core/openbenchmarking.org/openbenchmarking-mime.xml
 @@ -104,7 +104,7 @@
  

@@ -1,4 +1,3 @@
-# TODO let friendly id take care of sanitizing the url
 require 'stringex'
 
 module Spree
@@ -33,19 +32,14 @@ module Spree
     validates_attachment :icon,
       content_type: { content_type: ["image/jpg", "image/jpeg", "image/png", "image/gif"] }
 
-    # indicate which filters should be used for a taxon
-    # this method should be customized to your own site
     def applicable_filters
       fs = []
-      # fs << ProductFilters.taxons_below(self)
-      ## unless it's a root taxon? left open for demo purposes
 
       fs << Spree::Core::ProductFilters.price_filter if Spree::Core::ProductFilters.respond_to?(:price_filter)
       fs << Spree::Core::ProductFilters.brand_filter if Spree::Core::ProductFilters.respond_to?(:brand_filter)
       fs
     end
 
-    # Return meta_title if set otherwise generates from root name and/or taxon name
     def seo_title
       unless meta_title.blank?
         meta_title
@@ -54,7 +48,6 @@ module Spree
       end
     end
 
-    # Creates permalink base for friendly_id
     def set_permalink
       if parent.present?
         self.permalink = [parent.permalink, (permalink.blank? ? name.to_url : permalink.split('/').last)].join('/')
@@ -74,12 +67,6 @@ module Spree
       ancestor_chain + "#{name}"
     end
 
-    # awesome_nested_set sorts by :lft and :rgt. This call re-inserts the child
-    # node so that its resulting position matches the observable 0-indexed position.
-    # ** Note ** no :position column needed - a_n_s doesn't handle the reordering if
-    #  you bring your own :order_column.
-    #
-    #  See #3390 for background.
     def child_index=(idx)
       move_to_child_with_index(parent, idx.to_i) unless self.new_record?
     end
@@ -87,9 +74,7 @@ module Spree
     private
 
     def touch_ancestors_and_taxonomy
-      # Touches all ancestors at once to avoid recursive taxonomy touch, and reduce queries.
       self.class.where(id: ancestors.pluck(:id)).update_all(updated_at: Time.now)
-      # Have taxonomy touch happen in #touch_ancestors_and_taxonomy rather than association option in order for imports to override.
       taxonomy.try!(:touch)
     end
   end

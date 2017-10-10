@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 require 'i18n_interpolation_fallbacks'
 require "i18n/backend/fallbacks"
@@ -22,14 +19,12 @@ end
 DEFAULT_LANGUAGE = "en"
 
 
-# The default locale is :en and all translations from config/locales/*.rb,yml are auto loaded.
-# Use the railtie configuration option to ensure overiding devise.
 Diaspora::Application.config.i18n.load_path += Dir[Rails.root.join('config', 'locales', '**', '*.{rb,yml}')]
 I18n.default_locale = DEFAULT_LANGUAGE
 
-#nodyna <ID:send-261> <SD TRIVIAL (public methods)>
+#nodyna <send-245> <SD TRIVIAL (public methods)>
 I18n::Backend::Simple.send(:include, I18n::Backend::InterpolationFallbacks)
-#nodyna <ID:send-262> <SD TRIVIAL (public methods)>
+#nodyna <send-246> <SD TRIVIAL (public methods)>
 I18n::Backend::Simple.send(:include, I18n::Backend::Fallbacks)
 
 AVAILABLE_LANGUAGE_CODES.each do |c|

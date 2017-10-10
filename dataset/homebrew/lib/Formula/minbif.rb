@@ -19,8 +19,6 @@ class Minbif < Formula
   depends_on "imlib2" => :optional
   depends_on "libcaca" => :optional
 
-  # Problem:  Apple doesn't have <security/pam_misc.h> so don't ask for it.
-  # Reported: https://symlink.me/issues/917
   patch :DATA if build.include? "pam"
 
   def install
@@ -64,11 +62,8 @@ __END__
 +++ b/src/im/auth_pam.h	2012-10-12 10:16:47.000000000 -0700
 @@ -21,7 +21,10 @@
 
- #include "auth.h"
- #include <security/pam_appl.h>
 +
 +#ifndef __APPLE__
- #include <security/pam_misc.h>
 +#endif
 
  struct _pam_conv_func_data {

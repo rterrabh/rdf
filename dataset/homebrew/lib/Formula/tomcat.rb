@@ -22,10 +22,8 @@ class Tomcat < Formula
   end
 
   def install
-    # Remove Windows scripts
     rm_rf Dir["bin/*.bat"]
 
-    # Install files
     prefix.install %w[ NOTICE LICENSE RELEASE-NOTES RUNNING.txt ]
     libexec.install Dir["*"]
     bin.install_symlink "#{libexec}/bin/catalina.sh" => "catalina"

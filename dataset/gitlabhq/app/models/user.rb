@@ -1,64 +1,3 @@
-# == Schema Information
-#
-# Table name: users
-#
-#  id                            :integer          not null, primary key
-#  email                         :string(255)      default(""), not null
-#  encrypted_password            :string(255)      default(""), not null
-#  reset_password_token          :string(255)
-#  reset_password_sent_at        :datetime
-#  remember_created_at           :datetime
-#  sign_in_count                 :integer          default(0)
-#  current_sign_in_at            :datetime
-#  last_sign_in_at               :datetime
-#  current_sign_in_ip            :string(255)
-#  last_sign_in_ip               :string(255)
-#  created_at                    :datetime
-#  updated_at                    :datetime
-#  name                          :string(255)
-#  admin                         :boolean          default(FALSE), not null
-#  projects_limit                :integer          default(10)
-#  skype                         :string(255)      default(""), not null
-#  linkedin                      :string(255)      default(""), not null
-#  twitter                       :string(255)      default(""), not null
-#  authentication_token          :string(255)
-#  theme_id                      :integer          default(1), not null
-#  bio                           :string(255)
-#  failed_attempts               :integer          default(0)
-#  locked_at                     :datetime
-#  username                      :string(255)
-#  can_create_group              :boolean          default(TRUE), not null
-#  can_create_team               :boolean          default(TRUE), not null
-#  state                         :string(255)
-#  color_scheme_id               :integer          default(1), not null
-#  notification_level            :integer          default(1), not null
-#  password_expires_at           :datetime
-#  created_by_id                 :integer
-#  last_credential_check_at      :datetime
-#  avatar                        :string(255)
-#  confirmation_token            :string(255)
-#  confirmed_at                  :datetime
-#  confirmation_sent_at          :datetime
-#  unconfirmed_email             :string(255)
-#  hide_no_ssh_key               :boolean          default(FALSE)
-#  website_url                   :string(255)      default(""), not null
-#  github_access_token           :string(255)
-#  gitlab_access_token           :string(255)
-#  notification_email            :string(255)
-#  hide_no_password              :boolean          default(FALSE)
-#  password_automatically_set    :boolean          default(FALSE)
-#  bitbucket_access_token        :string(255)
-#  bitbucket_access_token_secret :string(255)
-#  location                      :string(255)
-#  encrypted_otp_secret          :string(255)
-#  encrypted_otp_secret_iv       :string(255)
-#  encrypted_otp_secret_salt     :string(255)
-#  otp_required_for_login        :boolean          default(FALSE), not null
-#  otp_backup_codes              :text
-#  public_email                  :string(255)      default(""), not null
-#  dashboard                     :integer          default(0)
-#  project_view                  :integer          default(0)
-#
 
 require 'carrierwave/orm/activerecord'
 require 'file_size_validator'
@@ -91,22 +30,15 @@ class User < ActiveRecord::Base
 
   attr_accessor :force_random_password
 
-  # Virtual attribute for authenticating by either username or email
   attr_accessor :login
 
-  #
-  # Relations
-  #
 
-  # Namespace for personal projects
   has_one :namespace, -> { where type: nil }, dependent: :destroy, foreign_key: :owner_id, class_name: "Namespace"
 
-  # Profile
   has_many :keys, dependent: :destroy
   has_many :emails, dependent: :destroy
   has_many :identities, dependent: :destroy
 
-  # Groups
   has_many :members, dependent: :destroy
   has_many :project_members, source: 'ProjectMember'
   has_many :group_members, source: 'GroupMember'
@@ -114,7 +46,6 @@ class User < ActiveRecord::Base
   has_many :owned_groups, -> { where members: { access_level: Gitlab::Access::OWNER } }, through: :group_members, source: :group
   has_many :masters_groups, -> { where members: { access_level: Gitlab::Access::MASTER } }, through: :group_members, source: :group
 
-  # Projects
   has_many :groups_projects,          through: :groups, source: :projects
   has_many :personal_projects,        through: :namespace, source: :projects
   has_many :projects,                 through: :project_members
@@ -135,12 +66,7 @@ class User < ActiveRecord::Base
   has_many :oauth_applications, class_name: 'Doorkeeper::Application', as: :owner, dependent: :destroy
 
 
-  #
-  # Validations
-  #
   validates :name, presence: true
-  # Note that a 'uniqueness' and presence check is provided by devise :validatable for email. We do not need to
-  # duplicate that here as the validation framework will have duplicate errors in the event of a failure.
   validates :email, presence: true, email: { strict_mode: true }
   validates :notification_email, presence: true, email: { strict_mode: true }
   validates :public_email, presence: true, email: { strict_mode: true }, allow_blank: true, uniqueness: true
@@ -174,12 +100,8 @@ class User < ActiveRecord::Base
   after_create :post_create_hook
   after_destroy :post_destroy_hook
 
-  # User's Dashboard preference
-  # Note: When adding an option, it MUST go on the end of the array.
   enum dashboard: [:projects, :stars]
 
-  # User's Project preference
-  # Note: When adding an option, it MUST go on the end of the array.
   enum project_view: [:readme, :activity]
 
   alias_attribute :private_token, :authentication_token
@@ -198,7 +120,6 @@ class User < ActiveRecord::Base
 
   mount_uploader :avatar, AvatarUploader
 
-  # Scopes
   scope :admins, -> { where(admin: true) }
   scope :blocked, -> { with_state(:blocked) }
   scope :active, -> { with_state(:active) }
@@ -207,11 +128,7 @@ class User < ActiveRecord::Base
   scope :with_two_factor,    -> { where(two_factor_enabled: true) }
   scope :without_two_factor, -> { where(two_factor_enabled: false) }
 
-  #
-  # Class methods
-  #
   class << self
-    # Devise method overridden to allow sign in with email or username
     def find_for_database_authentication(warden_conditions)
       conditions = warden_conditions.dup
       if login = conditions.delete(:login)
@@ -230,20 +147,14 @@ class User < ActiveRecord::Base
       end
     end
 
-    # Find a User by their primary email or any associated secondary email
     def find_by_any_email(email)
       user_table = arel_table
       email_table = Email.arel_table
 
-      # Use ARel to build a query:
       query = user_table.
-        # SELECT "users".* FROM "users"
         project(user_table[Arel.star]).
-        # LEFT OUTER JOIN "emails"
         join(email_table, Arel::Nodes::OuterJoin).
-        # ON "users"."id" = "emails"."user_id"
         on(user_table[:id].eq(email_table[:user_id])).
-        # WHERE ("user"."email" = '<email>' OR "emails"."email" = '<email>')
         where(user_table[:email].eq(email).or(email_table[:email].eq(email)))
 
       find_by_sql(query.to_sql).first
@@ -291,18 +202,13 @@ class User < ActiveRecord::Base
       '@'
     end
 
-    # Pattern used to extract `@user` user references from text
     def reference_pattern
       %r{
-        #{Regexp.escape(reference_prefix)}
         (?<user>#{Gitlab::Regex::NAMESPACE_REGEX_STR})
       }x
     end
   end
 
-  #
-  # Instance methods
-  #
 
   def to_param
     username
@@ -381,7 +287,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Groups user has access to
   def authorized_groups
     @authorized_groups ||= begin
                              group_ids = (groups.pluck(:id) + authorized_projects.pluck(:namespace_id))
@@ -390,7 +295,6 @@ class User < ActiveRecord::Base
   end
 
 
-  # Projects user has access to
   def authorized_projects
     @authorized_projects ||= begin
                                project_ids = personal_projects.pluck(:id)
@@ -408,7 +312,6 @@ class User < ActiveRecord::Base
       end
   end
 
-  # Team membership in authorized projects
   def tm_in_authorized_projects
     ProjectMember.where(source_id: authorized_projects.map(&:id), user_id: self.id)
   end
@@ -467,11 +370,9 @@ class User < ActiveRecord::Base
   end
 
   def recent_push(project_id = nil)
-    # Get push events not earlier than 2 hours ago
     events = recent_events.code_push.where("created_at > ?", Time.now - 2.hours)
     events = events.where(project_id: project_id) if project_id
 
-    # Take only latest one
     events = events.recent.limit(1).first
   end
 
@@ -535,9 +436,9 @@ class User < ActiveRecord::Base
 
   def sanitize_attrs
     %w(name username skype linkedin twitter).each do |attr|
-      #nodyna <ID:send-85> <SD MODERATE (array)>
+      #nodyna <send-503> <SD MODERATE (array)>
       value = self.send(attr)
-      #nodyna <ID:send-86> <SD MODERATE (array)>
+      #nodyna <send-504> <SD MODERATE (array)>
       self.send("#{attr}=", Sanitize.clean(value)) if value.present?
     end
   end
@@ -585,7 +486,7 @@ class User < ActiveRecord::Base
 
   def with_defaults
     User.defaults.each do |k, v|
-      #nodyna <ID:send-87> <SD COMPLEX (array)>
+      #nodyna <send-505> <SD COMPLEX (array)>
       self.send("#{k}=", v)
     end
 
@@ -597,14 +498,6 @@ class User < ActiveRecord::Base
       project.project_member(self)
   end
 
-  # Reset project events cache related to this user
-  #
-  # Since we do cache @event we need to reset cache in special cases:
-  # * when the user changes their avatar
-  # Events cache stored like  events/23-20130109142513.
-  # The cache key includes updated_at timestamp.
-  # Thus it will automatically generate a new fragment
-  # when the event is updated because the key changes.
   def reset_events_cache
     Event.where(author_id: self.id).
       order('id DESC').limit(1000).
@@ -654,7 +547,6 @@ class User < ActiveRecord::Base
   end
 
   def ensure_namespace_correct
-    # Ensure user has namespace
     self.create_namespace!(path: self.username, name: self.username) unless self.namespace
 
     if self.username_changed?

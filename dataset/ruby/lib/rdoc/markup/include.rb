@@ -1,23 +1,12 @@
-##
-# A file included at generation time.  Objects of this class are created by
-# RDoc::RD for an extension-less include.
-#
-# This implementation in incomplete.
 
 class RDoc::Markup::Include
 
-  ##
-  # The filename to be included, without extension
 
   attr_reader :file
 
-  ##
-  # Directories to search for #file
 
   attr_reader :include_path
 
-  ##
-  # Creates a new include that will import +file+ from +include_path+
 
   def initialize file, include_path
     @file = file

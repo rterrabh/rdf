@@ -1,11 +1,6 @@
 module Rake
   module TraceOutput # :nodoc: all
 
-    # Write trace output to output stream +out+.
-    #
-    # The write is done as a single IO call (to print) to lessen the
-    # chance that the trace output is interrupted by other tasks also
-    # producing output.
     def trace_on(out, *strings)
       sep = $\ || "\n"
       if strings.empty?

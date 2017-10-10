@@ -4,9 +4,7 @@ require "digest"
 require "erb"
 
 module Homebrew
-  # Create a formula from a tarball URL
   def create
-    # Allow searching MacPorts or Fink.
     if ARGV.include? "--macports"
       exec_browser "https://www.macports.org/ports.php?by=name&substr=#{ARGV.next}"
     elsif ARGV.include? "--fink"
@@ -15,7 +13,6 @@ module Homebrew
 
     raise UsageError if ARGV.named.empty?
 
-    # Ensure that the cache exists so we can fetch the tarball
     HOMEBREW_CACHE.mkpath
 
     url = ARGV.named.first # Pull the first (and only) url from ARGV
@@ -41,8 +38,6 @@ module Homebrew
       fc.path = Formulary.path(fc.name)
     end
 
-    # Don't allow blacklisted formula, or names that shadow aliases,
-    # unless --force is specified.
     unless ARGV.force?
       if msg = blacklisted?(fc.name)
         raise "#{fc.name} is blacklisted for creation.\n#{msg}\nIf you really want to create this formula use --force."
@@ -117,9 +112,6 @@ class FormulaCreator
   end
 
   def template; <<-EOS.undent
-    # Documentation: https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Formula-Cookbook.md
-    #                http://www.rubydoc.info/github/Homebrew/homebrew/master/frames
-    # PLEASE REMOVE ALL GENERATED COMMENTS BEFORE SUBMITTING YOUR PULL REQUEST!
 
     class #{Formulary.class_s(name)} < Formula
       desc ""
@@ -133,42 +125,28 @@ class FormulaCreator
     <% if mode == :cmake %>
       depends_on "cmake" => :build
     <% elsif mode.nil? %>
-      # depends_on "cmake" => :build
     <% end %>
       depends_on :x11 # if your formula requires any X11/XQuartz components
 
       def install
-        # ENV.deparallelize  # if your formula fails when building in parallel
 
     <% if mode == :cmake %>
         system "cmake", ".", *std_cmake_args
     <% elsif mode == :autotools %>
-        # Remove unrecognized options if warned by configure
         system "./configure", "--disable-debug",
                               "--disable-dependency-tracking",
                               "--disable-silent-rules",
                               "--prefix=\#{prefix}"
     <% else %>
-        # Remove unrecognized options if warned by configure
         system "./configure", "--disable-debug",
                               "--disable-dependency-tracking",
                               "--disable-silent-rules",
                               "--prefix=\#{prefix}"
-        # system "cmake", ".", *std_cmake_args
     <% end %>
         system "make", "install" # if this fails, try separate make/make install steps
       end
 
       test do
-        # `test do` will create, run in and delete a temporary directory.
-        #
-        # This test will fail and we won't accept that! It's enough to just replace
-        # "false" with the main program this formula installs, but it'd be nice if you
-        # were more thorough. Run the test with `brew test #{name}`. Options passed
-        # to `brew install` such as `--HEAD` also need to be provided to `brew test`.
-        #
-        # The installed folder is not in the path, so use the entire path to any
-        # executables being tested: `system "\#{bin}/program", "do", "something"`.
         system "false"
       end
     end

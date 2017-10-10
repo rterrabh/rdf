@@ -18,7 +18,6 @@ class Plotutils < Formula
   depends_on :x11 => :optional
 
   def install
-    # Fix usage of libpng to be 1.5 compatible
     inreplace "libplot/z_write.c", "png_ptr->jmpbuf", "png_jmpbuf (png_ptr)"
 
     args = %W[

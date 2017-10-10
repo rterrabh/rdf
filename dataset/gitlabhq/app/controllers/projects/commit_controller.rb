@@ -1,8 +1,4 @@
-# Controller for a specific Commit
-#
-# Not to be confused with CommitsController, plural.
 class Projects::CommitController < Projects::ApplicationController
-  # Authorize
   before_action :require_non_empty_project
   before_action :authorize_download_code!
   before_action :commit

@@ -7,7 +7,6 @@ class Makeself < Formula
 
   def install
     libexec.install "makeself-header.sh"
-    # install makeself-header.sh to libexec so change its location in makeself.sh
     inreplace "makeself.sh", '`dirname "$0"`', libexec
     bin.install "makeself.sh" => "makeself"
     man1.install "makeself.1"

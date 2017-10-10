@@ -13,8 +13,6 @@ class Bsdmake < Formula
 
   keg_only :provided_until_xcode43
 
-  # MacPorts patches to make bsdmake play nice with our prefix system
-  # Also a MacPorts patch to circumvent setrlimit error
   patch :p0 do
     url "https://trac.macports.org/export/90868/trunk/dports/devel/bsdmake/files/patch-Makefile.diff"
     sha256 "1e247cb7d8769d50e675e3f66b6f19a1bc7663a7c0800fc29a2489f3f6397242"
@@ -36,9 +34,6 @@ class Bsdmake < Formula
   end
 
   def install
-    # Replace @PREFIX@ inserted by MacPorts patches
-    # Use "prefix" since this is sometimes a keg-only brew
-    # But first replace the X11 path if X11 is installed
     inreplace "mk/sys.mk", "@PREFIX@", MacOS::X11.prefix || prefix
     inreplace %W[mk/bsd.README
                  mk/bsd.cpu.mk
@@ -55,7 +50,6 @@ class Bsdmake < Formula
       s.gsub! "@INSTALL_GROUP@", `id -gn`.chomp
     end
 
-    # See GNUMakefile
     ENV.append "CFLAGS", "-D__FBSDID=__RCSID"
     ENV.append "CFLAGS", "-mdynamic-no-pic"
 

@@ -1,11 +1,3 @@
-#
-# httpauth/htpasswd -- Apache compatible htpasswd file
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2003 Internet Programming with Ruby writers. All rights
-# reserved.
-#
-# $IPR: htpasswd.rb,v 1.4 2003/07/22 19:20:45 gotoyuzo Exp $
 
 require 'webrick/httpauth/userdb'
 require 'webrick/httpauth/basicauth'
@@ -14,25 +6,10 @@ require 'tempfile'
 module WEBrick
   module HTTPAuth
 
-    ##
-    # Htpasswd accesses apache-compatible password files.  Passwords are
-    # matched to a realm where they are valid.  For security, the path for a
-    # password database should be stored outside of the paths available to the
-    # HTTP server.
-    #
-    # Htpasswd is intended for use with WEBrick::HTTPAuth::BasicAuth.
-    #
-    # To create an Htpasswd database with a single user:
-    #
-    #   htpasswd = WEBrick::HTTPAuth::Htpasswd.new 'my_password_file'
-    #   htpasswd.set_passwd 'my realm', 'username', 'password'
-    #   htpasswd.flush
 
     class Htpasswd
       include UserDB
 
-      ##
-      # Open a password database at +path+
 
       def initialize(path)
         @path = path
@@ -43,8 +20,6 @@ module WEBrick
         reload
       end
 
-      ##
-      # Reload passwords from the database
 
       def reload
         mtime = File::mtime(@path)
@@ -69,9 +44,6 @@ module WEBrick
         end
       end
 
-      ##
-      # Flush the password database.  If +output+ is given the database will
-      # be written there instead of to the original path.
 
       def flush(output=nil)
         output ||= @path
@@ -88,31 +60,22 @@ module WEBrick
         end
       end
 
-      ##
-      # Retrieves a password from the database for +user+ in +realm+.  If
-      # +reload_db+ is true the database will be reloaded first.
 
       def get_passwd(realm, user, reload_db)
         reload() if reload_db
         @passwd[user]
       end
 
-      ##
-      # Sets a password in the database for +user+ in +realm+ to +pass+.
 
       def set_passwd(realm, user, pass)
         @passwd[user] = make_passwd(realm, user, pass)
       end
 
-      ##
-      # Removes a password from the database for +user+ in +realm+.
 
       def delete_passwd(realm, user)
         @passwd.delete(user)
       end
 
-      ##
-      # Iterate passwords in the database.
 
       def each # :yields: [user, password]
         @passwd.keys.sort.each{|user|

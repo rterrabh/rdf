@@ -17,7 +17,6 @@ module Scheduler
       @paused = false
     end
 
-    # for test
     def async=(val)
       @async = val
     end
@@ -36,7 +35,6 @@ module Scheduler
       @thread = nil
     end
 
-    # test only
     def stopped?
       !(@thread && @thread.alive?)
     end
@@ -60,7 +58,6 @@ module Scheduler
       end
     end
 
-    # using non_block to match Ruby #deq
     def do_work(non_block=false)
       db, job, desc = @queue.deq(non_block)
       begin

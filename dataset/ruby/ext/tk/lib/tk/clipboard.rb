@@ -1,6 +1,3 @@
-#
-# tk/clipboard.rb : methods to treat clipboard
-#
 require 'tk'
 
 module TkClipboard

@@ -243,7 +243,6 @@ describe Spree::Promotion, :type => :model do
       expect(promotion.credits_count).to eq(1)
     end
 
-    # Regression test for #4112
     it "does not count ineligible adjustments" do
       adjustment.update_column(:eligible, false)
       expect(promotion.credits_count).to eq(0)
@@ -505,8 +504,6 @@ describe Spree::Promotion, :type => :model do
       end
   end
 
-  # regression for #4059
-  # admin form posts the code and path as empty string
   describe "normalize blank values for code & path" do
     it "will save blank value as nil value instead" do
       promotion = Spree::Promotion.create(:name => "A promotion", :code => "", :path => "")
@@ -515,7 +512,6 @@ describe Spree::Promotion, :type => :model do
     end
   end
 
-  # Regression test for #4081
   describe "#with_coupon_code" do
     context "and code stored in uppercase" do
       let!(:promotion) { create(:promotion, :code => "MY-COUPON-123") }

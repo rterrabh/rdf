@@ -4,8 +4,6 @@ class Aamath < Formula
   url "http://fuse.superglue.se/aamath/aamath-0.3.tar.gz"
   sha256 "9843f4588695e2cd55ce5d8f58921d4f255e0e65ed9569e1dcddf3f68f77b631"
 
-  # Fix build on clang; patch by Homebrew team
-  # https://github.com/Homebrew/homebrew/issues/23872
   patch :DATA
 
   def install

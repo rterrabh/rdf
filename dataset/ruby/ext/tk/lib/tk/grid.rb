@@ -1,6 +1,3 @@
-#
-# tk/grid.rb : control grid geometry manager
-#
 require 'tk'
 
 module TkGrid
@@ -10,13 +7,11 @@ module TkGrid
   TkCommandNames = ['grid'.freeze].freeze
 
   def anchor(master, anchor=None)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     tk_call_without_enc('grid', 'anchor', master, anchor)
   end
 
   def bbox(master, *args)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     args.unshift(master)
     list(tk_call_without_enc('grid', 'bbox', *args))
@@ -99,20 +94,17 @@ module TkGrid
   alias grid configure
 
   def columnconfigure(master, index, args)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     tk_call_without_enc("grid", 'columnconfigure',
                         master, index, *hash_kv(args))
   end
 
   def rowconfigure(master, index, args)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     tk_call_without_enc("grid", 'rowconfigure', master, index, *hash_kv(args))
   end
 
   def columnconfiginfo(master, index, slot=nil)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     if slot
       case slot
@@ -124,7 +116,6 @@ module TkGrid
                                        master, index, "-#{slot}"))
       end
     else
-      #ilist = list(tk_call_without_enc('grid','columnconfigure',master,index))
       ilist = simplelist(tk_call_without_enc('grid', 'columnconfigure',
                                              master, index))
       info = {}
@@ -141,7 +132,6 @@ module TkGrid
   end
 
   def rowconfiginfo(master, index, slot=nil)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     if slot
       case slot
@@ -153,7 +143,6 @@ module TkGrid
                                        master, index, "-#{slot}"))
       end
     else
-      #ilist = list(tk_call_without_enc('grid', 'rowconfigure', master, index))
       ilist = simplelist(tk_call_without_enc('grid', 'rowconfigure',
                                              master, index))
       info = {}
@@ -192,33 +181,27 @@ module TkGrid
   def forget(*args)
     return '' if args.size == 0
     wins = args.collect{|win|
-      # (win.kind_of?(TkObject))? win.epath: win
       _epath(win)
     }
     tk_call_without_enc('grid', 'forget', *wins)
   end
 
   def info(slave)
-    # slave = slave.epath if slave.kind_of?(TkObject)
     slave = _epath(slave)
-    #ilist = list(tk_call_without_enc('grid', 'info', slave))
     ilist = simplelist(tk_call_without_enc('grid', 'info', slave))
     info = {}
     while key = ilist.shift
-      #info[key[1..-1]] = ilist.shift
       info[key[1..-1]] = tk_tcl2ruby(ilist.shift)
     end
     return info
   end
 
   def location(master, x, y)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     list(tk_call_without_enc('grid', 'location', master, x, y))
   end
 
   def propagate(master, mode=None)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     if mode == None
       bool(tk_call_without_enc('grid', 'propagate', master))
@@ -230,20 +213,17 @@ module TkGrid
   def remove(*args)
     return '' if args.size == 0
     wins = args.collect{|win|
-      # (win.kind_of?(TkObject))? win.epath: win
       _epath(win)
     }
     tk_call_without_enc('grid', 'remove', *wins)
   end
 
   def size(master)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     list(tk_call_without_enc('grid', 'size', master))
   end
 
   def slaves(master, keys=nil)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     list(tk_call_without_enc('grid', 'slaves', master, *hash_kv(args)))
   end

@@ -1,30 +1,13 @@
-##
-#
-# Gem::PathSupport facilitates the GEM_HOME and GEM_PATH environment settings
-# to the rest of RubyGems.
-#
 class Gem::PathSupport
-  ##
-  # The default system path for managing Gems.
   attr_reader :home
 
-  ##
-  # Array of paths to search for Gems.
   attr_reader :path
 
-  ##
-  # Directory with spec cache
   attr_reader :spec_cache_dir # :nodoc:
 
-  ##
-  #
-  # Constructor. Takes a single argument which is to be treated like a
-  # hashtable, or defaults to ENV, the system environment.
-  #
   def initialize(env=ENV)
     @env = env
 
-    # note 'env' vs 'ENV'...
     @home     = env["GEM_HOME"] || ENV["GEM_HOME"] || Gem.default_dir
 
     if File::ALT_SEPARATOR then
@@ -42,22 +25,16 @@ class Gem::PathSupport
 
   private
 
-  ##
-  # Set the Gem home directory (as reported by Gem.dir).
 
   def home=(home)
     @home = home.to_s
   end
 
-  ##
-  # Set the Gem search path (as reported by Gem.path).
 
   def path=(gpaths)
-    # FIX: it should be [home, *path], not [*path, home]
 
     gem_path = []
 
-    # FIX: I can't tell wtf this is doing.
     gpaths ||= (ENV['GEM_PATH'] || "").empty? ? nil : ENV["GEM_PATH"]
 
     if gpaths

@@ -48,7 +48,6 @@ describe Spree::Calculator::DefaultTax, :type => :model do
           end
 
           specify do
-            # Amount is 0.51665, which will be rounded to...
             expect(calculator.compute(order)).to eq(0.52)
           end
 
@@ -65,10 +64,6 @@ describe Spree::Calculator::DefaultTax, :type => :model do
         let(:included_in_price) { true }
 
         it "will return the deducted amount from the totals" do
-          # total price including 5% tax = $60
-          # ex pre-tax = $57.14
-          # 57.14 + %5 = 59.997 (or "close enough" to $60)
-          # 60 - 57.14 = $2.86
           expect(calculator.compute(order).to_f).to eql 2.86
         end
       end
@@ -119,7 +114,6 @@ describe Spree::Calculator::DefaultTax, :type => :model do
 
       it "takes discounts into consideration" do
         shipment.promo_total = -1
-        # 5% of 14
         expect(calculator.compute(shipment)).to eq(0.7)
       end
     end

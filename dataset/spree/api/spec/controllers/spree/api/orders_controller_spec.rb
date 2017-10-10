@@ -166,7 +166,6 @@ module Spree
         it 'contains adjustments on shipment' do
           subject
 
-          # Test to insure shipment has adjustments
           shipment = json_response['shipments'][0]
           expect(shipment).to_not be_nil
           expect(shipment['adjustments'][0]).not_to be_empty
@@ -182,7 +181,6 @@ module Spree
       expect(json_response["checkout_steps"]).to eq(["address", "delivery", "complete"])
     end
 
-    # Regression test for #1992
     it "can view an order not in a standard state" do
       allow_any_instance_of(Order).to receive_messages :user => current_api_user
       order.update_column(:state, 'shipped')
@@ -251,7 +249,6 @@ module Spree
       expect(json_response['email']).to eq "guest@spreecommerce.com"
     end
 
-    # Regression test for #3404
     it "can specify additional parameters for a line item" do
       expect(Order).to receive(:create!).and_return(order = Spree::Order.new)
       allow(order).to receive(:associate_user!)
@@ -287,7 +284,6 @@ module Spree
       end
     end
 
-    # Regression test for #3404
     it "does not update line item needlessly" do
       expect(Order).to receive(:create!).and_return(order = Spree::Order.new)
       allow(order).to receive(:associate_user!)
@@ -534,8 +530,6 @@ module Spree
             expect(response.status).to eq(200)
             expect(json_response["shipments"]).not_to be_empty
             shipment = json_response["shipments"][0]
-            # Test for correct shipping method attributes
-            # Regression test for #3206
             expect(shipment["shipping_methods"]).not_to be_nil
             json_shipping_method = shipment["shipping_methods"][0]
             expect(json_shipping_method["id"]).to eq(shipping_method.id)
@@ -544,8 +538,6 @@ module Spree
             expect(json_shipping_method["zones"]).not_to be_empty
             expect(json_shipping_method["shipping_categories"]).not_to be_empty
 
-            # Test for correct shipping rates attributes
-            # Regression test for #3206
             expect(shipment["shipping_rates"]).not_to be_nil
             shipping_rate = shipment["shipping_rates"][0]
             expect(shipping_rate["name"]).to eq(json_shipping_method["name"])
@@ -629,7 +621,6 @@ module Spree
           expect(json_response["pages"]).to eq(1)
         end
 
-        # Test for #1763
         it "can control the page size through a parameter" do
           api_get :index, :per_page => 1
           expect(json_response["orders"].count).to eq(1)

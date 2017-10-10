@@ -79,8 +79,6 @@ module SharedEnvTests
     assert_equal "1", @env["foo"]
   end
 
-  # NOTE: this may be a wrong behavior; we should probably reject objects that
-  # do not respond to #to_str. For now this documents existing behavior.
   def test_append_coerces_value_to_string
     @env.append "foo", 42
     assert_equal "42", @env["foo"]
@@ -107,7 +105,7 @@ module SharedEnvTests
 
   def test_switching_compilers_updates_compiler
     [:clang, :llvm, :gcc, :gcc_4_0].each do |compiler|
-      #nodyna <ID:send-28> <SD MODERATE (array)>
+      #nodyna <send-641> <SD MODERATE (array)>
       @env.send(compiler)
       assert_equal compiler, @env.compiler
     end

@@ -1,10 +1,3 @@
-#
-#  tkextlib/blt/win_printer.rb
-#
-#      *** Windows only ***
-#
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -27,7 +20,6 @@ module Tk::BLT
       self.new(printer)
     end
 
-    #################################
 
     def initialize(printer)
       @printer_id = tk_call('::blt::printer', 'open', printer)

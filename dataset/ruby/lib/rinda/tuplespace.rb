@@ -7,9 +7,6 @@ require 'forwardable'
 
 module Rinda
 
-  ##
-  # A TupleEntry is a Tuple (i.e. a possible entry in some Tuplespace)
-  # together with expiry and cancellation data.
 
   class TupleEntry
 
@@ -17,12 +14,6 @@ module Rinda
 
     attr_accessor :expires
 
-    ##
-    # Creates a TupleEntry based on +ary+ with an optional renewer or expiry
-    # time +sec+.
-    #
-    # A renewer must implement the +renew+ method which returns a Numeric,
-    # nil, or true to indicate when the tuple has expired.
 
     def initialize(ary, sec=nil)
       @cancel = false
@@ -32,36 +23,22 @@ module Rinda
       renew(sec)
     end
 
-    ##
-    # Marks this TupleEntry as canceled.
 
     def cancel
       @cancel = true
     end
 
-    ##
-    # A TupleEntry is dead when it is canceled or expired.
 
     def alive?
       !canceled? && !expired?
     end
 
-    ##
-    # Return the object which makes up the tuple itself: the Array
-    # or Hash.
 
     def value; @tuple.value; end
 
-    ##
-    # Returns the canceled status.
 
     def canceled?; @cancel; end
 
-    ##
-    # Has this tuple expired? (true/false).
-    #
-    # A tuple has expired when its expiry timer based on the +sec+ argument to
-    # #initialize runs out.
 
     def expired?
       return true unless @expires
@@ -72,27 +49,12 @@ module Rinda
       return @expires < Time.now
     end
 
-    ##
-    # Reset the expiry time according to +sec_or_renewer+.
-    #
-    # +nil+::    it is set to expire in the far future.
-    # +true+::   it has expired.
-    # Numeric::  it will expire in that many seconds.
-    #
-    # Otherwise the argument refers to some kind of renewer object
-    # which will reset its expiry time.
 
     def renew(sec_or_renewer)
       sec, @renewer = get_renewer(sec_or_renewer)
       @expires = make_expires(sec)
     end
 
-    ##
-    # Returns an expiry Time based on +sec+ which can be one of:
-    # Numeric:: +sec+ seconds into the future
-    # +true+::  the expiry time is the start of 1970 (i.e. expired)
-    # +nil+::   it is  Tue Jan 19 03:14:07 GMT Standard Time 2038 (i.e. when
-    #           UNIX clocks will die)
 
     def make_expires(sec=nil)
       case sec
@@ -105,29 +67,21 @@ module Rinda
       end
     end
 
-    ##
-    # Retrieves +key+ from the tuple.
 
     def [](key)
       @tuple[key]
     end
 
-    ##
-    # Fetches +key+ from the tuple.
 
     def fetch(key)
       @tuple.fetch(key)
     end
 
-    ##
-    # The size of the tuple.
 
     def size
       @tuple.size
     end
 
-    ##
-    # Creates a Rinda::Tuple for +ary+.
 
     def make_tuple(ary)
       Rinda::Tuple.new(ary)
@@ -135,12 +89,6 @@ module Rinda
 
     private
 
-    ##
-    # Returns a valid argument to make_expires and the renewer or nil.
-    #
-    # Given +true+, +nil+, or Numeric, returns that value and +nil+ (no actual
-    # renewer).  Otherwise it returns an expiry value from calling +it.renew+
-    # and the renewer.
 
     def get_renewer(it)
       case it
@@ -157,13 +105,8 @@ module Rinda
 
   end
 
-  ##
-  # A TemplateEntry is a Template together with expiry and cancellation data.
 
   class TemplateEntry < TupleEntry
-    ##
-    # Matches this TemplateEntry against +tuple+.  See Template#match for
-    # details on how a Template matches a Tuple.
 
     def match(tuple)
       @tuple.match(tuple)
@@ -177,8 +120,6 @@ module Rinda
 
   end
 
-  ##
-  # <i>Documentation?</i>
 
   class WaitTemplateEntry < TemplateEntry
 
@@ -213,35 +154,9 @@ module Rinda
 
   end
 
-  ##
-  # A NotifyTemplateEntry is returned by TupleSpace#notify and is notified of
-  # TupleSpace changes.  You may receive either your subscribed event or the
-  # 'close' event when iterating over notifications.
-  #
-  # See TupleSpace#notify_event for valid notification types.
-  #
-  # == Example
-  #
-  #   ts = Rinda::TupleSpace.new
-  #   observer = ts.notify 'write', [nil]
-  #
-  #   Thread.start do
-  #     observer.each { |t| p t }
-  #   end
-  #
-  #   3.times { |i| ts.write [i] }
-  #
-  # Outputs:
-  #
-  #   ['write', [0]]
-  #   ['write', [1]]
-  #   ['write', [2]]
 
   class NotifyTemplateEntry < TemplateEntry
 
-    ##
-    # Creates a new NotifyTemplateEntry that watches +place+ for +event+s that
-    # match +tuple+.
 
     def initialize(place, event, tuple, expires=nil)
       ary = [event, Rinda::Template.new(tuple)]
@@ -250,16 +165,11 @@ module Rinda
       @done = false
     end
 
-    ##
-    # Called by TupleSpace to notify this NotifyTemplateEntry of a new event.
 
     def notify(ev)
       @queue.push(ev)
     end
 
-    ##
-    # Retrieves a notification.  Raises RequestExpiredError when this
-    # NotifyTemplateEntry expires.
 
     def pop
       raise RequestExpiredError if @done
@@ -268,8 +178,6 @@ module Rinda
       return it
     end
 
-    ##
-    # Yields event/tuple pairs until this NotifyTemplateEntry expires.
 
     def each # :yields: event, tuple
       while !@done
@@ -283,9 +191,6 @@ module Rinda
 
   end
 
-  ##
-  # TupleBag is an unordered collection of tuples. It is the basis
-  # of Tuplespace.
 
   class TupleBag
     class TupleBin
@@ -318,8 +223,6 @@ module Rinda
       @enum = enum_for(:each_entry)
     end
 
-    ##
-    # +true+ if the TupleBag to see if it has any expired entries.
 
     def has_expires?
       @enum.find do |tuple|
@@ -327,8 +230,6 @@ module Rinda
       end
     end
 
-    ##
-    # Add +tuple+ to the TupleBag.
 
     def push(tuple)
       key = bin_key(tuple)
@@ -336,8 +237,6 @@ module Rinda
       @hash[key].add(tuple)
     end
 
-    ##
-    # Removes +tuple+ from the TupleBag.
 
     def delete(tuple)
       key = bin_key(tuple)
@@ -348,16 +247,12 @@ module Rinda
       tuple
     end
 
-    ##
-    # Finds all live tuples that match +template+.
     def find_all(template)
       bin_for_find(template).find_all do |tuple|
         tuple.alive? && template.match(tuple)
       end
     end
 
-    ##
-    # Finds a live tuple that matches +template+.
 
     def find(template)
       bin_for_find(template).find do |tuple|
@@ -365,9 +260,6 @@ module Rinda
       end
     end
 
-    ##
-    # Finds all tuples in the TupleBag which when treated as templates, match
-    # +tuple+ and are alive.
 
     def find_all_template(tuple)
       @enum.find_all do |template|
@@ -375,9 +267,6 @@ module Rinda
       end
     end
 
-    ##
-    # Delete tuples which dead tuples from the TupleBag, returning the deleted
-    # tuples.
 
     def delete_unless_alive
       deleted = []
@@ -416,24 +305,12 @@ module Rinda
     end
   end
 
-  ##
-  # The Tuplespace manages access to the tuples it contains,
-  # ensuring mutual exclusion requirements are met.
-  #
-  # The +sec+ option for the write, take, move, read and notify methods may
-  # either be a number of seconds or a Renewer object.
 
   class TupleSpace
 
     include DRbUndumped
     include MonitorMixin
 
-    ##
-    # Creates a new TupleSpace.  +period+ is used to control how often to look
-    # for dead tuples after modifications to the TupleSpace.
-    #
-    # If no dead tuples are found +period+ seconds after the last
-    # modification, the TupleSpace will stop looking for dead tuples.
 
     def initialize(period=60)
       super()
@@ -445,8 +322,6 @@ module Rinda
       @keeper = nil
     end
 
-    ##
-    # Adds +tuple+
 
     def write(tuple, sec=nil)
       entry = create_entry(tuple, sec)
@@ -472,15 +347,11 @@ module Rinda
       entry
     end
 
-    ##
-    # Removes +tuple+
 
     def take(tuple, sec=nil, &block)
       move(nil, tuple, sec, &block)
     end
 
-    ##
-    # Moves +tuple+ to +port+.
 
     def move(port, tuple, sec=nil)
       template = WaitTemplateEntry.new(self, tuple, sec)
@@ -516,8 +387,6 @@ module Rinda
       end
     end
 
-    ##
-    # Reads +tuple+, but does not remove it.
 
     def read(tuple, sec=nil)
       template = WaitTemplateEntry.new(self, tuple, sec)
@@ -540,8 +409,6 @@ module Rinda
       end
     end
 
-    ##
-    # Returns all tuples matching +tuple+.  Does not remove the found tuples.
 
     def read_all(tuple)
       template = WaitTemplateEntry.new(self, tuple, nil)
@@ -553,17 +420,6 @@ module Rinda
       end
     end
 
-    ##
-    # Registers for notifications of +event+.  Returns a NotifyTemplateEntry.
-    # See NotifyTemplateEntry for examples of how to listen for notifications.
-    #
-    # +event+ can be:
-    # 'write'::  A tuple was added
-    # 'take'::   A tuple was taken or moved
-    # 'delete':: A tuple was lost after being overwritten or expiring
-    #
-    # The TupleSpace will also notify you of the 'close' event when the
-    # NotifyTemplateEntry has expired.
 
     def notify(event, tuple, sec=nil)
       template = NotifyTemplateEntry.new(self, event, tuple, sec)
@@ -579,8 +435,6 @@ module Rinda
       TupleEntry.new(tuple, sec)
     end
 
-    ##
-    # Removes dead tuples.
 
     def keep_clean
       synchronize do
@@ -599,9 +453,6 @@ module Rinda
       end
     end
 
-    ##
-    # Notifies all registered listeners for +event+ of a status change of
-    # +tuple+.
 
     def notify_event(event, tuple)
       ev = [event, tuple]
@@ -610,8 +461,6 @@ module Rinda
       end
     end
 
-    ##
-    # Creates a thread that scans the tuplespace for expired tuples.
 
     def start_keeper
       return if @keeper && @keeper.alive?
@@ -626,8 +475,6 @@ module Rinda
       end
     end
 
-    ##
-    # Checks the tuplespace to see if it needs cleaning.
 
     def need_keeper?
       return true if @bag.has_expires?

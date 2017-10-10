@@ -28,7 +28,6 @@ module BackupRestore
 
       write_metadata
 
-      ### READ-ONLY / START ###
       enable_readonly_mode
 
       pause_sidekiq
@@ -37,7 +36,6 @@ module BackupRestore
       dump_public_schema
 
       disable_readonly_mode
-      ### READ-ONLY / END ###
 
       log "Finalizing backup..."
 
@@ -161,7 +159,6 @@ module BackupRestore
             logs << line
           end
         rescue EOFError
-          # finished reading...
         ensure
           pg_dump_running = false
           logs << ""
@@ -200,13 +197,7 @@ module BackupRestore
     end
 
     def sed_command
-      # in order to limit the downtime when restoring as much as possible
-      # we force the restoration to happen in the "restore" schema
 
-      # during the restoration, this make sure we
-      #  - drop the "restore" schema if it exists
-      #  - create the "restore" schema
-      #  - prepend the "restore" schema into the search_path
 
       regexp = "SET search_path = public, pg_catalog;"
 
@@ -215,11 +206,8 @@ module BackupRestore
                       "SET search_path = restore, public, pg_catalog;",
                     ].join(" ")
 
-      # we only want to replace the VERY first occurence of the search_path command
       expression = "1,/^#{regexp}$/s/#{regexp}/#{replacement}/"
 
-      # I tried to use the --in-place argument but it was SLOOOWWWWwwwwww
-      # so I output the result into another file and rename it back afterwards
       [ "sed -e '#{expression}' < #{@dump_filename} > #{@dump_filename}.tmp",
         "&&",
         "mv #{@dump_filename}.tmp #{@dump_filename}",

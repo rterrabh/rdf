@@ -42,8 +42,6 @@ class Gem::AvailableSet
     self
   end
 
-  ##
-  # Yields each Tuple in this AvailableSet
 
   def each
     return enum_for __method__ unless block_given?
@@ -53,8 +51,6 @@ class Gem::AvailableSet
     end
   end
 
-  ##
-  # Yields the Gem::Specification for each Tuple in this AvailableSet
 
   def each_spec
     return enum_for __method__ unless block_given?
@@ -94,13 +90,6 @@ class Gem::AvailableSet
     f.source
   end
 
-  ##
-  # Converts this AvailableSet into a RequestSet that can be used to install
-  # gems.
-  #
-  # If +development+ is :none then no development dependencies are installed.
-  # Other options are :shallow for only direct development dependencies of the
-  # gems in this set or :all for all development dependencies.
 
   def to_request_set development = :none
     request_set = Gem::RequestSet.new
@@ -117,10 +106,6 @@ class Gem::AvailableSet
     request_set
   end
 
-  ##
-  #
-  # Used by the Resolver, the protocol to use a AvailableSet as a
-  # search Set.
 
   def find_all(req)
     dep = req.dependency
@@ -147,7 +132,6 @@ class Gem::AvailableSet
 
   def remove_installed!(dep)
     @set.reject! do |t|
-      # already locally installed
       Gem::Specification.any? do |installed_spec|
         dep.name == installed_spec.name and
           dep.requirement.satisfied_by? installed_spec.version

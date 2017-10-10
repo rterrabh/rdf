@@ -11,8 +11,6 @@ class Gibbslda < Formula
     sha1 "7ecc74e2069e864ac26614209a7236215ab4faa0" => :mountain_lion
   end
 
-  # Build fails without including stdlib - https://trac.macports.org/ticket/41915
-  # https://sourceforge.net/p/gibbslda/bugs/4/
   patch :DATA
 
   def install
@@ -32,8 +30,4 @@ index e2f538b..1df5fb3 100644
 @@ -22,6 +22,7 @@
   */
 
- #include <stdio.h>
 +#include <stdlib.h>
- #include <string>
- #include <map>
- #include "strtokenizer.h"

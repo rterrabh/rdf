@@ -81,7 +81,6 @@ def oh1(title)
   puts "#{Tty.green}==>#{Tty.white} #{title}#{Tty.reset}"
 end
 
-# Print a warning (do this rarely)
 def opoo(warning)
   $stderr.puts "#{Tty.yellow}Warning#{Tty.reset}: #{warning}"
 end
@@ -185,7 +184,6 @@ module Homebrew
     unless which executable
       odie <<-EOS.undent
         The '#{gem}' gem is installed but couldn't find '#{executable}' in the PATH:
-        #{ENV["PATH"]}
       EOS
     end
   end
@@ -206,16 +204,12 @@ ensure
   ENV["HOMEBREW_DEVELOPER"] = old
 end
 
-# Kernel.system but with exceptions
 def safe_system(cmd, *args)
   Homebrew.system(cmd, *args) || raise(ErrorDuringExecution.new(cmd, args))
 end
 
-# prints no output
 def quiet_system(cmd, *args)
   Homebrew.system(cmd, *args) do
-    # Redirect output streams to `/dev/null` instead of closing as some programs
-    # will fail to execute if they can't write to an open stream.
     $stdout.reopen("/dev/null")
     $stderr.reopen("/dev/null")
   end
@@ -248,7 +242,6 @@ def puts_columns(items, star_items = [])
   end
 
   if $stdout.tty?
-    # determine the best width to display for different console sizes
     console_width = `/bin/stty size`.chomp.split(" ").last.to_i
     console_width = 80 if console_width <= 0
     longest = items.sort_by(&:length).last
@@ -266,8 +259,6 @@ def which(cmd, path = ENV["PATH"])
     begin
       pcmd = File.expand_path(cmd, p)
     rescue ArgumentError
-      # File.expand_path will raise an ArgumentError if the path is malformed.
-      # See https://github.com/Homebrew/homebrew/issues/32789
       next
     end
     return Pathname.new(pcmd) if File.file?(pcmd) && File.executable?(pcmd)
@@ -279,13 +270,9 @@ def which_editor
   editor = ENV.values_at("HOMEBREW_EDITOR", "VISUAL", "EDITOR").compact.first
   return editor unless editor.nil?
 
-  # Find Textmate
   editor = "mate" if which "mate"
-  # Find BBEdit / TextWrangler
   editor ||= "edit" if which "edit"
-  # Find vim
   editor ||= "vim" if which "vim"
-  # Default to standard vim
   editor ||= "/usr/bin/vim"
 
   opoo <<-EOS.undent
@@ -307,12 +294,9 @@ def exec_browser(*args)
 end
 
 def safe_exec(cmd, *args)
-  # This buys us proper argument quoting and evaluation
-  # of environment variables in the cmd parameter.
   exec "/bin/sh", "-c", "#{cmd} \"$@\"", "--", *args
 end
 
-# GZips the given paths, and returns the gzipped paths
 def gzip(*paths)
   paths.collect do |path|
     with_system_path { safe_system "gzip", path }
@@ -320,7 +304,6 @@ def gzip(*paths)
   end
 end
 
-# Returns array of architectures that the given command or library is built for.
 def archs_for_command(cmd)
   cmd = which(cmd) unless Pathname.new(cmd).absolute?
   Pathname.new(cmd).archs
@@ -360,7 +343,6 @@ def paths
   end.uniq.compact
 end
 
-# return the shell profile file based on users' preference shell
 def shell_profile
   case ENV["SHELL"]
   when %r{/(ba)?sh} then "~/.bash_profile"
@@ -407,7 +389,6 @@ module GitHub
   end
 
   def open(url, &_block)
-    # This is a no-op if the user is opting out of using the GitHub API.
     return if ENV["HOMEBREW_NO_GITHUB_API"]
 
     require "net/https"

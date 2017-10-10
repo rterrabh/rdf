@@ -1,7 +1,3 @@
-#
-#   tk/mngfocus.rb : methods for Tcl/Tk standard library 'focus.tcl'
-#                           by Hidetoshi Nagai <nagai@ai.kyutech.ac.jp>
-#
 require 'tk'
 
 module TkManageFocus

@@ -16,28 +16,21 @@ class Luabind < Formula
   depends_on "boost"
   depends_on "boost-build" => :build
 
-  # boost 1.57 compatibility
-  # https://github.com/Homebrew/homebrew/pull/33890#issuecomment-67723688
-  # https://github.com/luabind/luabind/issues/27
   patch do
     url "https://gist.githubusercontent.com/tdsmith/e6d9d3559ec1d9284c0b/raw/4ac01936561ef9d7541cf8e78a230bebef1a8e10/luabind.diff"
     sha256 "f22a283752994e821922316a5ef3cbb16f7bbe15fc64d97c02325ed4aaa53985"
   end
 
-  # patch Jamroot to perform lookup for shared objects with .dylib suffix
   patch do
     url "https://gist.githubusercontent.com/DennisOSRM/3728987/raw/052251fcdc23602770f6c543be9b3e12f0cac50a/Jamroot.diff"
     sha256 "bc06d76069d08af4dc55a102f963931a0247173a36ad0ae43e11d82b23f8d2b3"
   end
 
-  # apply upstream commit to enable building with clang
   patch do
     url "https://github.com/luabind/luabind/commit/3044a9053ac50977684a75c4af42b2bddb853fad.diff"
     sha256 "00476ab7d918cc118e83ced427bac48de81ae8c2d3445d6f77e556b5d8bded5f"
   end
 
-  # include C header that is not pulled in automatically on OS X 10.9 anymore
-  # submitted https://github.com/luabind/luabind/pull/20
   patch do
     url "https://gist.githubusercontent.com/DennisOSRM/a246514bf7d01631dda8/raw/0e83503dbf862ebfb6ac063338a6d7bca793f94d/object_rep.diff"
     sha256 "2fef524ac5e319d7092fbb28f6d4e3d3eccd6a570e7789a9b5b0c9a25e714523"
@@ -63,10 +56,7 @@ class Luabind < Formula
   test do
     (testpath/"hello.cpp").write <<-EOS.undent
       extern "C" {
-      #include <lua.h>
       }
-      #include <iostream>
-      #include <luabind/luabind.hpp>
       void greet() { std::cout << "hello world!\\n"; }
       extern "C" int init(lua_State* L)
       {

@@ -1,18 +1,15 @@
 require 'observer'
 
 module DRb
-  # The Observable module extended to DRb.  See Observable for details.
   module DRbObservable
     include Observable
 
-    # Notifies observers of a change in state.  See also
-    # Observable#notify_observers
     def notify_observers(*arg)
       if defined? @observer_state and @observer_state
         if defined? @observer_peers
           @observer_peers.each do |observer, method|
             begin
-              #nodyna <ID:send-111> <SD COMPLEX (change-prone variables)>
+              #nodyna <send-2046> <SD COMPLEX (change-prone variables)>
               observer.send(method, *arg)
             rescue
               delete_observer(observer)

@@ -2,11 +2,6 @@ require 'rake/testtask'
 
 module Rails
   class TestTask < Rake::TestTask # :nodoc: all
-    # A utility class which is used primarily in "rails/test_unit/testing.rake"
-    # to help define rake tasks corresponding to <tt>rake test</tt>.
-    #
-    # This class takes a TestInfo class and defines the appropriate rake task
-    # based on the information, then invokes it.
     class TestCreator # :nodoc:
       def initialize(info)
         @info = info
@@ -36,11 +31,6 @@ module Rails
         end
     end
 
-    # This is a utility class used by the <tt>TestTask::TestCreator</tt> class.
-    # This class takes a set of test tasks and checks to see if they correspond
-    # to test files (or can be transformed into test files). Calling <tt>files</tt>
-    # provides the set of test files and is used when initializing tests after
-    # a call to <tt>rake test</tt>.
     class TestInfo # :nodoc:
       def initialize(tasks)
         @tasks = tasks
@@ -117,10 +107,8 @@ module Rails
     end
   end
 
-  # Silence the default description to cut down on `rake -T` noise.
   class SubTestTask < Rake::TestTask # :nodoc:
     def desc(string)
-      # Ignore the description.
     end
   end
 end

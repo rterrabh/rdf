@@ -13,12 +13,9 @@ class Logrotate < Formula
 
   depends_on "popt"
 
-  # Per MacPorts, let these variables be overridden by ENV vars.
-  # Also, use HOMEBREW suggested locations for run and log files.
   patch :DATA
 
   def install
-    # Otherwise defaults to /bin/gz
     ENV["COMPRESS_COMMAND"] = "/usr/bin/gzip"
     ENV["COMPRESS_EXT"] = ".gz"
     ENV["UNCOMPRESS_COMMAND"] = "/usr/bin/gunzip"
@@ -98,8 +95,6 @@ index 56e9103..c61a33a 100644
 --- i/examples/logrotate-default
 +++ w/examples/logrotate-default
 @@ -14,22 +14,7 @@ dateext
- # uncomment this if you want your log files compressed
- #compress
  
 -# RPM packages drop log rotation information into this directory
 +# Homebrew packages drop log rotation information into this directory
@@ -120,4 +115,3 @@ index 56e9103..c61a33a 100644
 -    rotate 1
 -}
 -
- # system-specific logs may be also be configured here.

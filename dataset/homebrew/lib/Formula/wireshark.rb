@@ -7,8 +7,6 @@ class Wireshark < Formula
     mirror "https://1.eu.dl.wireshark.org/src/wireshark-1.12.7.tar.bz2"
     sha256 "c74a1c14e72ce0f198a93d832e71742c7f312cbbe719e5def9ecef176860f92c"
 
-    # Removes SDK checks that prevent the build from working on CLT-only systems
-    # Reported upstream: https://bugs.wireshark.org/bugzilla/show_bug.cgi?id=9290
     patch :DATA
 
     depends_on "homebrew/dupes/libpcap" => :optional
@@ -144,7 +142,6 @@ index cd41b63..c473fe7 100755
  		;;
  	esac
 
- 	#
 -	# Add a -mmacosx-version-min flag to force tests that
 -	# use the compiler, as well as the build itself, not to,
 -	# for example, use compiler or linker features not supported
@@ -169,7 +166,4 @@ index cd41b63..c473fe7 100755
 -	OSX_DEPLOY_TARGET="MACOSX_DEPLOYMENT_TARGET=$deploy_target"
 -
 -	#
- 	# In the installer package XML file, give the deployment target
- 	# as the minimum version.
- 	#
 

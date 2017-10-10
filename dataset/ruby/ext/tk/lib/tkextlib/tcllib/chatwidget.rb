@@ -1,16 +1,7 @@
-#
-#  tkextlib/tcllib/chatwidget.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * chatwidget - Provides a multi-paned view suitable for display of
-#                  chat room or irc channel information
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('chatwidget', '1.1.0')
 TkPackage.require('chatwidget')
 
 module Tk::Tcllib
@@ -91,7 +82,6 @@ class Tk::Tcllib::ChatWidget
   private :_parse_hook_list
 
   def hook_add(type, *args, &blk) # args -> [prior, cmd], [prior], [cmd]
-    #type -> 'message', 'post', 'names_group', 'names_nick', 'chatstate', 'url'
 
     if prior = args.shift
       if !prior.kind_of?(Numeric)
@@ -113,17 +103,14 @@ class Tk::Tcllib::ChatWidget
   end
 
   def hook_remove(type, cmd)
-    #type -> 'message', 'post', 'names_group', 'names_nick', 'chatstate', 'url'
     _parse_hook_list(tk_send('hook', 'remove', type, cmd))
   end
 
   def hook_run(type, *cmd_args)
-    #type -> 'message', 'post', 'names_group', 'names_nick', 'chatstate', 'url'
     tk_send('hook', 'run', type, *cmd_args)
   end
 
   def hook_list(type)
-    #type -> 'message', 'post', 'names_group', 'names_nick', 'chatstate', 'url'
     _parse_hook_list(tk_send('hook', 'list', type))
   end
 

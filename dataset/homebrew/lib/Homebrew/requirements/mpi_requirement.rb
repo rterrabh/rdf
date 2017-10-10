@@ -1,8 +1,5 @@
 require "requirement"
 
-# There are multiple implementations of MPI-2 available.
-# http://www.mpi-forum.org/
-# This requirement is used to find an appropriate one.
 class MPIRequirement < Requirement
   attr_reader :lang_list
 
@@ -12,8 +9,6 @@ class MPIRequirement < Requirement
 
   env :userpaths
 
-  # This method must accept varargs rather than an array for
-  # backwards compatibility with formulae that call it directly.
   def initialize(*tags)
     @non_functional = []
     @unknown_langs = []
@@ -26,10 +21,6 @@ class MPIRequirement < Requirement
     compiler = which compiler
     return false if compiler.nil? || !compiler.executable?
 
-    # Some wrappers are non-functional and will return a non-zero exit code
-    # when invoked for version info.
-    #
-    # NOTE: A better test may be to do a small test compilation a la autotools.
     quiet_system compiler, "--version"
   end
 
@@ -51,14 +42,10 @@ class MPIRequirement < Requirement
   end
 
   env do
-    # Set environment variables to help configure scripts find MPI compilers.
-    # Variable names taken from:
-    # https://www.gnu.org/software/autoconf-archive/ax_mpi.html
     @lang_list.each do |lang|
       compiler = "mpi" + lang.to_s
       mpi_path = which compiler
 
-      # Fortran 90 environment var has a different name
       compiler = "MPIFC" if lang == :f90
       ENV[compiler.upcase] = mpi_path
     end

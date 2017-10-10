@@ -1,8 +1,3 @@
-# HTTPGenericRequest is the parent of the HTTPRequest class.
-# Do not use this directly; use a subclass of HTTPRequest.
-#
-# Mixes in the HTTPHeader module to provide easier access to HTTP headers.
-#
 class Net::HTTPGenericRequest
 
   include Net::HTTPHeader
@@ -53,18 +48,12 @@ class Net::HTTPGenericRequest
   attr_reader :path
   attr_reader :uri
 
-  # Automatically set to false if the user sets the Accept-Encoding header.
-  # This indicates they wish to handle Content-encoding in responses
-  # themselves.
   attr_reader :decode_content
 
   def inspect
     "\#<#{self.class} #{@method}>"
   end
 
-  ##
-  # Don't automatically decode response content-encoding if the user indicates
-  # they want to handle it.
 
   def []=(key, val) # :nodoc:
     @decode_content = false if key.downcase == 'accept-encoding'
@@ -111,9 +100,6 @@ class Net::HTTPGenericRequest
     end
   end
 
-  #
-  # write
-  #
 
   def exec(sock, ver, path)   #:nodoc: internal use only
     if @body
@@ -128,7 +114,6 @@ class Net::HTTPGenericRequest
   end
 
   def update_uri(addr, port, ssl) # :nodoc: internal use only
-    # reflect the connection and @path to @uri
     return unless @uri
 
     if ssl
@@ -145,7 +130,6 @@ class Net::HTTPGenericRequest
     else
      host = addr
     end
-    # convert the class of the URI
     if @uri.is_a?(klass)
       @uri.host = host
       @uri.port = port
@@ -166,7 +150,6 @@ class Net::HTTPGenericRequest
     end
 
     def write(buf)
-      # avoid memcpy() of buf, buf can huge and eat memory bandwidth
       @sock.write("#{buf.bytesize.to_s(16)}\r\n")
       rv = @sock.write(buf)
       @sock.write("\r\n")
@@ -200,8 +183,6 @@ class Net::HTTPGenericRequest
       IO.copy_stream(f, chunker)
       chunker.finish
     else
-      # copy_stream can sendfile() to sock.io unless we use SSL.
-      # If sock.io is an SSLSocket, copy_stream will hit SSL_write()
       IO.copy_stream(f, sock.io)
     end
   end
@@ -255,24 +236,17 @@ class Net::HTTPGenericRequest
           "name=\"#{key}\"; filename=\"#{filename}\"\r\n" \
           "Content-Type: #{type}\r\n\r\n"
         if !out.respond_to?(:write) || !value.respond_to?(:read)
-          # if +out+ is not an IO or +value+ is not an IO
           buf << (value.respond_to?(:read) ? value.read : value)
         elsif value.respond_to?(:size) && chunked_p
-          # if +out+ is an IO and +value+ is a File, use IO.copy_stream
           flush_buffer(out, buf, chunked_p)
           out << "%x\r\n" % value.size if chunked_p
           IO.copy_stream(value, out)
           out << "\r\n" if chunked_p
         else
-          # +out+ is an IO, and +value+ is not a File but an IO
           flush_buffer(out, buf, chunked_p)
           1 while flush_buffer(out, value.read(4096), chunked_p)
         end
       else
-        # non-file field:
-        #   HTML5 says, "The parts of the generated multipart/form-data
-        #   resource that correspond to non-file fields must not have a
-        #   Content-Type header specified."
         buf << "Content-Disposition: form-data; name=\"#{key}\"\r\n\r\n"
         buf << (value.respond_to?(:read) ? value.read : value)
       end
@@ -302,9 +276,6 @@ class Net::HTTPGenericRequest
     set_content_type 'application/x-www-form-urlencoded'
   end
 
-  ##
-  # Waits up to the continue timeout for a response from the server provided
-  # we're speaking HTTP 1.1 and are expecting a 100-continue response.
 
   def wait_for_continue(sock, ver)
     if ver >= '1.1' and @header['expect'] and

@@ -6,9 +6,6 @@ class Postgis < Formula
   revision 1
 
   def pour_bottle?
-    # Postgres extensions must live in the Postgres prefix, which precludes
-    # bottling: https://github.com/Homebrew/homebrew/issues/10247
-    # Overcoming this will likely require changes in Postgres itself.
     false
   end
 
@@ -33,11 +30,9 @@ class Postgis < Formula
 
   depends_on "gtk+" if build.with? "gui"
 
-  # For GeoJSON and raster handling
   depends_on "json-c"
   depends_on "gdal" => :recommended
 
-  # For advanced 2D/3D functions
   depends_on "sfcgal" => :recommended
 
   if build.with? "html-docs"
@@ -51,25 +46,14 @@ class Postgis < Formula
   end
 
   def install
-    # Follow the PostgreSQL linked keg back to the active Postgres installation
-    # as it is common for people to avoid upgrading Postgres.
     postgres_realpath = Formula["postgresql"].opt_prefix.realpath
 
     ENV.deparallelize
 
     args = [
-      # Can't use --prefix, PostGIS disrespects it and flat-out refuses to
-      # accept it with 2.0.
       "--with-projdir=#{HOMEBREW_PREFIX}",
       "--with-jsondir=#{Formula["json-c"].opt_prefix}",
-      # This is against Homebrew guidelines, but we have to do it as the
-      # PostGIS plugin libraries can only be properly inserted into Homebrew's
-      # Postgresql keg.
       "--with-pgconfig=#{postgres_realpath}/bin/pg_config",
-      # Unfortunately, NLS support causes all kinds of headaches because
-      # PostGIS gets all of its compiler flags from the PGXS makefiles. This
-      # makes it nigh impossible to tell the buildsystem where our keg-only
-      # gettext installations are.
       "--disable-nls"
     ]
 
@@ -97,31 +81,19 @@ class Postgis < Formula
       end
     end
 
-    # PostGIS includes the PGXS makefiles and so will install __everything__
-    # into the Postgres keg instead of the PostGIS keg. Unfortunately, some
-    # things have to be inside the Postgres keg in order to be function. So, we
-    # install everything to a staging directory and manually move the pieces
-    # into the appropriate prefixes.
     mkdir "stage"
     system "make", "install", "DESTDIR=#{buildpath}/stage"
 
-    # Install PostGIS plugin libraries into the Postgres keg so that they can
-    # be loaded and so PostGIS databases will continue to function even if
-    # PostGIS is removed.
     (postgres_realpath/"lib").install Dir["stage/**/*.so"]
 
-    # Install extension scripts to the Postgres keg.
-    # `CREATE EXTENSION postgis;` won't work if these are located elsewhere.
     (postgres_realpath/"share/postgresql/extension").install Dir["stage/**/extension/*"]
 
     bin.install Dir["stage/**/bin/*"]
     lib.install Dir["stage/**/lib/*"]
     include.install Dir["stage/**/include/*"]
 
-    # Stand-alone SQL files will be installed the share folder
     (share/"postgis").install Dir["stage/**/contrib/postgis-2.1/*"]
 
-    # Extension scripts
     bin.install %w[
       utils/create_undef.pl
       utils/postgis_proc_upgrade.pl
@@ -147,11 +119,8 @@ class Postgis < Formula
         http://postgis.net/docs/manual-2.1/postgis_installation.html#upgrading
 
       PostGIS SQL scripts installed to:
-        #{HOMEBREW_PREFIX}/share/postgis
       PostGIS plugin libraries installed to:
-        #{pg}/lib
       PostGIS extension modules installed to:
-        #{pg}/share/postgresql/extension
       EOS
   end
 

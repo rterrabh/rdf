@@ -1,7 +1,3 @@
-##
-#
-# Represents a gem of name +name+ at +version+ of +platform+. These
-# wrap the data returned from the indexes.
 
 require 'rubygems/platform'
 
@@ -19,33 +15,21 @@ class Gem::NameTuple
 
   attr_reader :name, :version, :platform
 
-  ##
-  # Turn an array of [name, version, platform] into an array of
-  # NameTuple objects.
 
   def self.from_list list
     list.map { |t| new(*t) }
   end
 
-  ##
-  # Turn an array of NameTuple objects back into an array of
-  # [name, version, platform] tuples.
 
   def self.to_basic list
     list.map { |t| t.to_a }
   end
 
-  ##
-  # A null NameTuple, ie name=nil, version=0
 
   def self.null
     new nil, Gem::Version.new(0), nil
   end
 
-  ##
-  # Returns the full name (name-version) of this Gem.  Platform information is
-  # included if it is not the default Ruby platform.  This mimics the behavior
-  # of Gem::Specification#full_name.
 
   def full_name
     case @platform
@@ -56,28 +40,20 @@ class Gem::NameTuple
     end.untaint
   end
 
-  ##
-  # Indicate if this NameTuple matches the current platform.
 
   def match_platform?
     Gem::Platform.match @platform
   end
 
-  ##
-  # Indicate if this NameTuple is for a prerelease version.
   def prerelease?
     @version.prerelease?
   end
 
-  ##
-  # Return the name that the gemspec file would be
 
   def spec_name
     "#{full_name}.gemspec"
   end
 
-  ##
-  # Convert back to the [name, version, platform] tuple
 
   def to_a
     [@name, @version, @platform]
@@ -97,9 +73,6 @@ class Gem::NameTuple
 
   include Comparable
 
-  ##
-  # Compare with +other+. Supports another NameTuple or an Array
-  # in the [name, version, platform] format.
 
   def == other
     case other

@@ -19,7 +19,6 @@ class Lsyncd < Formula
   depends_on "pkg-config" => :build
   depends_on "lua"
 
-  # This is an artificial requirement, the resource below is incomplete
   depends_on :macos => :lion
 
   xnu_headers = {
@@ -41,7 +40,6 @@ class Lsyncd < Formula
     "10.10.2"  => ["xnu-2782.1.97.tar.gz", "c99cf8ec04c29d40b771652241dd325e4977d92b"]
   }
 
-  # TODO: wrap MACOS_FULL_VERSION in a MacOS module method
   if xnu_headers.key? MACOS_FULL_VERSION
     tarball, checksum = xnu_headers.fetch(MACOS_FULL_VERSION)
     resource "xnu" do
@@ -50,16 +48,12 @@ class Lsyncd < Formula
     end
   end
 
-  # patch for CVE-2014-8990
-  # https://github.com/axkibe/lsyncd/commit/e9ffda07f0145f50f2756f8ee3fb0775b455122b
-  # https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2014-8990
   patch do
     url "https://gist.githubusercontent.com/tdsmith/d807811d3c6965b0221e/raw/965545662eec39b60d50645487e6ade9d7d43834/cve-2014-8990.diff"
     sha256 "c6476855acaefd4619bd6900751247c2af12983ed2aff9bdfbf971ffcb662fc2"
   end
 
   def install
-    # XNU Headers
     resource("xnu").stage buildpath/"xnu"
     ENV.append "CPPFLAGS", "-Ixnu"
 

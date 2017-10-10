@@ -1,57 +1,24 @@
 require 'fileutils'
 
-##
-# A set of rdoc data for a single project (gem, path, etc.).
-#
-# The store manages reading and writing ri data for a project and maintains a
-# cache of methods, classes and ancestors in the store.
-#
-# The store maintains a #cache of its contents for faster lookup.  After
-# adding items to the store it must be flushed using #save_cache.  The cache
-# contains the following structures:
-#
-#    @cache = {
-#      :ancestors        => {}, # class name => ancestor names
-#      :attributes       => {}, # class name => attributes
-#      :class_methods    => {}, # class name => class methods
-#      :instance_methods => {}, # class name => instance methods
-#      :modules          => [], # classes and modules in this store
-#      :pages            => [], # page names
-#    }
-#--
-# TODO need to prune classes
 
 class RDoc::Store
 
-  ##
-  # Errors raised from loading or saving the store
 
   class Error < RDoc::Error
   end
 
-  ##
-  # Raised when a stored file for a class, module, page or method is missing.
 
   class MissingFileError < Error
 
-    ##
-    # The store the file should exist in
 
     attr_reader :store
 
-    ##
-    # The file the #name should be saved as
 
     attr_reader :file
 
-    ##
-    # The name of the object the #file would be loaded from
 
     attr_reader :name
 
-    ##
-    # Creates a new MissingFileError for the missing +file+ for the given
-    # +name+ that should have been in the +store+.
 
     def initialize store, file, name
       @store = store
@@ -65,58 +32,35 @@ class RDoc::Store
 
   end
 
-  ##
-  # Stores the name of the C variable a class belongs to.  This helps wire up
-  # classes defined from C across files.
 
   attr_reader :c_enclosure_classes # :nodoc:
 
   attr_reader :c_enclosure_names # :nodoc:
 
-  ##
-  # Maps C variables to class or module names for each parsed C file.
 
   attr_reader :c_class_variables
 
-  ##
-  # Maps C variables to singleton class names for each parsed C file.
 
   attr_reader :c_singleton_class_variables
 
-  ##
-  # If true this Store will not write any files
 
   attr_accessor :dry_run
 
-  ##
-  # Path this store reads or writes
 
   attr_accessor :path
 
-  ##
-  # The RDoc::RDoc driver for this parse tree.  This allows classes consulting
-  # the documentation tree to access user-set options, for example.
 
   attr_accessor :rdoc
 
-  ##
-  # Type of ri datastore this was loaded from.  See RDoc::RI::Driver,
-  # RDoc::RI::Paths.
 
   attr_accessor :type
 
-  ##
-  # The contents of the Store
 
   attr_reader :cache
 
-  ##
-  # The encoding of the contents in the Store
 
   attr_accessor :encoding
 
-  ##
-  # Creates a new Store of +type+ that will load or save to +path+
 
   def initialize path = nil, type = nil
     @dry_run  = false
@@ -153,16 +97,11 @@ class RDoc::Store
     @unique_modules = nil
   end
 
-  ##
-  # Adds +module+ as an enclosure (namespace) for the given +variable+ for C
-  # files.
 
   def add_c_enclosure variable, namespace
     @c_enclosure_classes[variable] = namespace
   end
 
-  ##
-  # Adds C variables from an RDoc::Parser::C
 
   def add_c_variables c_parser
     filename = c_parser.top_level.relative_name
@@ -172,9 +111,6 @@ class RDoc::Store
     @c_singleton_class_variables[filename] = c_parser.singleton_classes
   end
 
-  ##
-  # Adds the file with +name+ as an RDoc::TopLevel to the store.  Returns the
-  # created RDoc::TopLevel.
 
   def add_file absolute_name, relative_name = absolute_name
     unless top_level = @files_hash[relative_name] then
@@ -186,123 +122,78 @@ class RDoc::Store
     top_level
   end
 
-  ##
-  # Returns all classes discovered by RDoc
 
   def all_classes
     @classes_hash.values
   end
 
-  ##
-  # Returns all classes and modules discovered by RDoc
 
   def all_classes_and_modules
     @classes_hash.values + @modules_hash.values
   end
 
-  ##
-  # All TopLevels known to RDoc
 
   def all_files
     @files_hash.values
   end
 
-  ##
-  # Returns all modules discovered by RDoc
 
   def all_modules
     modules_hash.values
   end
 
-  ##
-  # Ancestors cache accessor.  Maps a klass name to an Array of its ancestors
-  # in this store.  If Foo in this store inherits from Object, Kernel won't be
-  # listed (it will be included from ruby's ri store).
 
   def ancestors
     @cache[:ancestors]
   end
 
-  ##
-  # Attributes cache accessor.  Maps a class to an Array of its attributes.
 
   def attributes
     @cache[:attributes]
   end
 
-  ##
-  # Path to the cache file
 
   def cache_path
     File.join @path, 'cache.ri'
   end
 
-  ##
-  # Path to the ri data for +klass_name+
 
   def class_file klass_name
     name = klass_name.split('::').last
     File.join class_path(klass_name), "cdesc-#{name}.ri"
   end
 
-  ##
-  # Class methods cache accessor.  Maps a class to an Array of its class
-  # methods (not full name).
 
   def class_methods
     @cache[:class_methods]
   end
 
-  ##
-  # Path where data for +klass_name+ will be stored (methods or class data)
 
   def class_path klass_name
     File.join @path, *klass_name.split('::')
   end
 
-  ##
-  # Hash of all classes known to RDoc
 
   def classes_hash
     @classes_hash
   end
 
-  ##
-  # Removes empty items and ensures item in each collection are unique and
-  # sorted
 
   def clean_cache_collection collection # :nodoc:
     collection.each do |name, item|
       if item.empty? then
         collection.delete name
       else
-        # HACK mongrel-1.1.5 documents its files twice
         item.uniq!
         item.sort!
       end
     end
   end
 
-  ##
-  # Prepares the RDoc code object tree for use by a generator.
-  #
-  # It finds unique classes/modules defined, and replaces classes/modules that
-  # are aliases for another one by a copy with RDoc::ClassModule#is_alias_for
-  # set.
-  #
-  # It updates the RDoc::ClassModule#constant_aliases attribute of "real"
-  # classes or modules.
-  #
-  # It also completely removes the classes and modules that should be removed
-  # from the documentation and the methods that have a visibility below
-  # +min_visibility+, which is the <tt>--visibility</tt> option.
-  #
-  # See also RDoc::Context#remove_from_documentation?
 
   def complete min_visibility
     fix_basic_object_inheritance
 
-    # cache included modules before they are removed from the documentation
     all_classes_and_modules.each { |cm| cm.ancestors }
 
     unless min_visibility == :nodoc then
@@ -336,15 +227,11 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Hash of all files known to RDoc
 
   def files_hash
     @files_hash
   end
 
-  ##
-  # Finds the enclosure (namespace) for the given C +variable+.
 
   def find_c_enclosure variable
     @c_enclosure_classes.fetch variable do
@@ -368,15 +255,11 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Finds the class with +name+ in all discovered classes
 
   def find_class_named name
     @classes_hash[name]
   end
 
-  ##
-  # Finds the class with +name+ starting in namespace +from+
 
   def find_class_named_from name, from
     from = find_class_named from unless RDoc::Context === from
@@ -393,31 +276,22 @@ class RDoc::Store
     find_class_named name
   end
 
-  ##
-  # Finds the class or module with +name+
 
   def find_class_or_module name
     name = $' if name =~ /^::/
     @classes_hash[name] || @modules_hash[name]
   end
 
-  ##
-  # Finds the file with +name+ in all discovered files
 
   def find_file_named name
     @files_hash[name]
   end
 
-  ##
-  # Finds the module with +name+ in all discovered modules
 
   def find_module_named name
     @modules_hash[name]
   end
 
-  ##
-  # Returns the RDoc::TopLevel that is a text file and has the given
-  # +file_name+
 
   def find_text_page file_name
     @files_hash.each_value.find do |file|
@@ -425,12 +299,6 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Finds unique classes/modules defined in +all_hash+,
-  # and returns them as an array. Performs the alias
-  # updates in +all_hash+: see ::complete.
-  #--
-  # TODO  aliases should be registered by Context#add_module_alias
 
   def find_unique all_hash
     unique = []
@@ -442,16 +310,6 @@ class RDoc::Store
     unique
   end
 
-  ##
-  # Fixes the erroneous <tt>BasicObject < Object</tt> in 1.9.
-  #
-  # Because we assumed all classes without a stated superclass
-  # inherit from Object, we have the above wrong inheritance.
-  #
-  # We fix BasicObject right away if we are running in a Ruby
-  # version >= 1.9. If not, we may be documenting 1.9 source
-  # while running under 1.8: we search the files of BasicObject
-  # for "object.c", and fix the inheritance if we find it.
 
   def fix_basic_object_inheritance
     basic = classes_hash['BasicObject']
@@ -463,8 +321,6 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Friendly rendition of #path
 
   def friendly_path
     case type
@@ -482,17 +338,11 @@ class RDoc::Store
     "#<%s:0x%x %s %p>" % [self.class, object_id, @path, module_names.sort]
   end
 
-  ##
-  # Instance methods cache accessor.  Maps a class to an Array of its
-  # instance methods (not full name).
 
   def instance_methods
     @cache[:instance_methods]
   end
 
-  ##
-  # Loads all items from this store into memory.  This recreates a
-  # documentation tree for use by a generator
 
   def load_all
     load_cache
@@ -500,8 +350,6 @@ class RDoc::Store
     module_names.each do |module_name|
       mod = find_class_or_module(module_name) || load_class(module_name)
 
-      # load method documentation since the loaded class/module does not have
-      # it
       loaded_methods = mod.method_list.map do |method|
         load_method module_name, method.full_name
       end
@@ -538,11 +386,8 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Loads cache file for this store
 
   def load_cache
-    #orig_enc = @encoding
 
     open cache_path, 'rb' do |io|
       @cache = Marshal.load io.read
@@ -550,17 +395,6 @@ class RDoc::Store
 
     load_enc = @cache[:encoding]
 
-    # TODO this feature will be time-consuming to add:
-    # a) Encodings may be incompatible but transcodeable
-    # b) Need to warn in the appropriate spots, wherever they may be
-    # c) Need to handle cross-cache differences in encodings
-    # d) Need to warn when generating into a cache with different encodings
-    #
-    #if orig_enc and load_enc != orig_enc then
-    #  warn "Cached encoding #{load_enc} is incompatible with #{orig_enc}\n" \
-    #       "from #{path}/cache.ri" unless
-    #    Encoding.compatible? orig_enc, load_enc
-    #end
 
     @encoding = load_enc unless @encoding
 
@@ -579,8 +413,6 @@ class RDoc::Store
   rescue Errno::ENOENT
   end
 
-  ##
-  # Loads ri data for +klass_name+ and hooks it up to this store.
 
   def load_class klass_name
     obj = load_class_data klass_name
@@ -595,8 +427,6 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Loads ri data for +klass_name+
 
   def load_class_data klass_name
     file = class_file klass_name
@@ -610,8 +440,6 @@ class RDoc::Store
     raise error
   end
 
-  ##
-  # Loads ri data for +method_name+ in +klass_name+
 
   def load_method klass_name, method_name
     file = method_file klass_name, method_name
@@ -630,8 +458,6 @@ class RDoc::Store
     raise error
   end
 
-  ##
-  # Loads ri data for +page_name+
 
   def load_page page_name
     file = page_file page_name
@@ -647,24 +473,16 @@ class RDoc::Store
     raise error
   end
 
-  ##
-  # Gets the main page for this RDoc store.  This page is used as the root of
-  # the RDoc server.
 
   def main
     @cache[:main]
   end
 
-  ##
-  # Sets the main page for this RDoc store.
 
   def main= page
     @cache[:main] = page
   end
 
-  ##
-  # Converts the variable => ClassModule map +variables+ from a C parser into
-  # a variable => class name map.
 
   def make_variable_map variables
     map = {}
@@ -676,8 +494,6 @@ class RDoc::Store
     map
   end
 
-  ##
-  # Path to the ri data for +method_name+ in +klass_name+
 
   def method_file klass_name, method_name
     method_name = method_name.split('::').last
@@ -694,23 +510,16 @@ class RDoc::Store
     File.join class_path(klass_name), "#{method_name}-#{method_type}.ri"
   end
 
-  ##
-  # Modules cache accessor.  An Array of all the module (and class) names in
-  # the store.
 
   def module_names
     @cache[:modules]
   end
 
-  ##
-  # Hash of all modules known to RDoc
 
   def modules_hash
     @modules_hash
   end
 
-  ##
-  # Returns the RDoc::TopLevel that is a text file and has the given +name+
 
   def page name
     @files_hash.each_value.find do |file|
@@ -718,8 +527,6 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Path to the ri data for +page_name+
 
   def page_file page_name
     file_name = File.basename(page_name).gsub('.', '_')
@@ -727,10 +534,6 @@ class RDoc::Store
     File.join @path, File.dirname(page_name), "page-#{file_name}.ri"
   end
 
-  ##
-  # Removes from +all_hash+ the contexts that are nodoc or have no content.
-  #
-  # See RDoc::Context#remove_from_documentation?
 
   def remove_nodoc all_hash
     all_hash.keys.each do |name|
@@ -739,8 +542,6 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Saves all entries in the store
 
   def save
     load_cache
@@ -764,8 +565,6 @@ class RDoc::Store
     save_cache
   end
 
-  ##
-  # Writes the cache file for this store
 
   def save_cache
     clean_cache_collection @cache[:ancestors]
@@ -793,8 +592,6 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Writes the ri data for +klass+ (or module)
 
   def save_class klass
     full_name = klass.full_name
@@ -812,9 +609,7 @@ class RDoc::Store
     rescue MissingFileError
     end
 
-    # BasicObject has no ancestors
     ancestors = klass.direct_ancestors.compact.map do |ancestor|
-      # HACK for classes we don't know about (class X < RuntimeError)
       String === ancestor ? ancestor : ancestor.full_name
     end
 
@@ -869,8 +664,6 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Writes the ri data for +method+ on +klass+
 
   def save_method klass, method
     full_name = klass.full_name
@@ -894,8 +687,6 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Writes the ri data for +page+
 
   def save_page page
     return unless page.text?
@@ -916,14 +707,6 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Source of the contents of this store.
-  #
-  # For a store from a gem the source is the gem name.  For a store from the
-  # home directory the source is "home".  For system ri store (the standard
-  # library documentation) the source is"ruby".  For a store from the site
-  # ri directory the store is "site".  For other stores the source is the
-  # #path.
 
   def source
     case type
@@ -935,41 +718,26 @@ class RDoc::Store
     end
   end
 
-  ##
-  # Gets the title for this RDoc store.  This is used as the title in each
-  # page on the RDoc server
 
   def title
     @cache[:title]
   end
 
-  ##
-  # Sets the title page for this RDoc store.
 
   def title= title
     @cache[:title] = title
   end
 
-  ##
-  # Returns the unique classes discovered by RDoc.
-  #
-  # ::complete must have been called prior to using this method.
 
   def unique_classes
     @unique_classes
   end
 
-  ##
-  # Returns the unique classes and modules discovered by RDoc.
-  # ::complete must have been called prior to using this method.
 
   def unique_classes_and_modules
     @unique_classes + @unique_modules
   end
 
-  ##
-  # Returns the unique modules discovered by RDoc.
-  # ::complete must have been called prior to using this method.
 
   def unique_modules
     @unique_modules

@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 module Rack
   class ChromeFrame
@@ -43,7 +40,6 @@ module Rack
       response_body = ""
       response.each { |part| response_body += part }
 
-      # see: http://johnbintz.github.com/blog/2012/03/05/closing-given-body-in-rack-middleware/
       response.close if response.respond_to?(:close)
 
       response_body

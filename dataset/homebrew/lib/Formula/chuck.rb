@@ -12,7 +12,6 @@ class Chuck < Formula
     sha256 "87d6cc4e3a3b868ee1a98f2e148060ed4a69d2cd593944ebed83fe887c7cd080" => :mountain_lion
   end
 
-  # Fixes OS X version detection to include 10.11 through (thinking ahead) 10.13
   patch :DATA
 
   def install
@@ -32,8 +31,6 @@ index a2c06ba..ac95278 100644
 --- a/src/makefile.osx
 +++ b/src/makefile.osx
 @@ -1,7 +1,7 @@
- # uncomment the following to force 32-bit compilation
- # FORCE_M32=-m32
 
 -ifneq ($(shell sw_vers -productVersion | egrep '10\.(6|7|8|9|10)(\.[0-9]+)?'),)
 +ifneq ($(shell sw_vers -productVersion | egrep '10\.(6|7|8|9|10|11|12|13)(\.[0-9]+)?'),)

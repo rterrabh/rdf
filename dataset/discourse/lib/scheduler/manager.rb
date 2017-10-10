@@ -1,8 +1,3 @@
-# Initially we used sidetiq, this was a problem:
-#
-# 1. No mechnism to add "randomisation" into job execution
-# 2. No stats about previous runs or failures
-# 3. Dependency on ice_cube gem causes runaway CPU
 
 require_dependency 'distributed_mutex'
 
@@ -53,7 +48,6 @@ module Scheduler
 
       def process_queue
         klass = @queue.deq
-        # hack alert, I need to both deq and set @running atomically.
         @running = true
         failed = false
         start = Time.now.to_f
@@ -63,7 +57,6 @@ module Scheduler
           @mutex.synchronize { info.write! }
           klass.new.perform
         rescue Jobs::HandledExceptionWrapper
-          # Discourse.handle_exception was already called, and we don't have any extra info to give
           failed = true
         rescue => e
           Discourse.handle_job_exception(e, {message: "Running a scheduled job", job: klass})
@@ -98,7 +91,6 @@ module Scheduler
         while !@queue.empty? && !(@queue.num_waiting > 0)
           sleep 0.001
         end
-        # this is a hack, but is only used for test anyway
         sleep 0.001
         while @running
           sleep 0.001
@@ -208,7 +200,6 @@ module Scheduler
       if due.to_i <= Time.now.to_i
         klass = get_klass(key)
         unless klass
-          # corrupt key, nuke it (renamed job or something)
           redis.zrem Manager.queue_key(hostname), key
           return
         end
@@ -249,9 +240,6 @@ module Scheduler
 
 
     def self.discover_schedules
-      # hack for developemnt reloader is crazytown
-      # multiple classes with same name can be in
-      # object space
       unique = Set.new
       schedules = []
       ObjectSpace.each_object(Scheduler::Schedule) do |schedule|

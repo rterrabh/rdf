@@ -1,8 +1,4 @@
 module Diaspora
-  # Takes a raw message text and converts it to
-  # various desired target formats, respecting
-  # all possible formatting options supported
-  # by Diaspora
   class MessageRenderer
     class Processor
       class << self
@@ -11,7 +7,7 @@ module Diaspora
         def process message, options, &block
           return '' if message.blank? # Optimize for empty message
           processor = new message, options
-          #nodyna <ID:instance_exec-1> <IEX MODERATE (block without parameters)>
+          #nodyna <instance_exec-212> <IEX MODERATE (block without parameters)>
           processor.instance_exec(&block)
           processor.message
         end
@@ -45,10 +41,6 @@ module Diaspora
         if options[:escape]
           @message = ERB::Util.html_escape_once message
 
-          # Special case Hex entities since escape_once
-          # doesn't catch them.
-          # TODO: Watch for https://github.com/rails/rails/pull/9102
-          # on whether this can be removed
           @message = message.gsub(/&amp;(#[xX][\dA-Fa-f]{1,4});/, '&\1;')
         end
       end
@@ -65,8 +57,6 @@ module Diaspora
         @message = markdown.render message
       end
 
-      # In very clear cases, let newlines become <br /> tags
-      # Grabbed from Github flavored Markdown
       def process_newlines
         message.gsub(/^[\w\<][^\n]*\n+/) do |x|
           x =~ /\n{2}/ ? x : (x.strip!; x << " \n")
@@ -127,39 +117,11 @@ module Diaspora
 
     delegate :empty?, :blank?, :present?, to: :raw
 
-    # @param [String] raw_message Raw input text
-    # @param [Hash] opts Global options affecting output
-    # @option opts [Array<Person>] :mentioned_people ([]) List of people
-    #   allowed to mention
-    # @option opts [Boolean] :link_all_mentions (false) Whether to link
-    #   all mentions. This makes plain links to profiles for people not in
-    #   :mentioned_people
-    # @option opts [Boolean] :disable_hovercards (true) Render all mentions
-    #   as profile links. This implies :link_all_mentions and ignores
-    #   :mentioned_people
-    # @option opts [#to_i, Boolean] :truncate (false) Truncate message to
-    #   the specified length
-    # @option opts [String] :append (nil) Append text to the end of
-    #   the (truncated) message, counts into truncation length
-    # @option opts [String] :append_after_truncate (nil) Append text to the end
-    #   of the (truncated) message, doesn't count into the truncation length
-    # @option opts [Boolean] :squish (false) Squish the message, that is
-    #   remove all surrounding and consecutive whitespace
-    # @option opts [Boolean] :escape (true) Escape HTML relevant characters
-    #   in the message. Note that his option is ignored in the plaintext
-    #   renderers.
-    # @option opts [Boolean] :escape_tags (false) Escape HTML relevant
-    #   characters in tags when rendering them
-    # @option opts [Hash] :markdown_options Override default options passed
-    #   to Redcarpet
-    # @option opts [Hash] :markdown_render_options Override default options
-    #   passed to the Redcarpet renderer
     def initialize raw_message, opts={}
       @raw_message = raw_message
       @options = DEFAULTS.deep_merge opts
     end
 
-    # @param [Hash] opts Override global output options, see {#initialize}
     def plain_text opts={}
       process(opts) {
         make_mentions_plain_text
@@ -168,7 +130,6 @@ module Diaspora
       }
     end
 
-    # @param [Hash] opts Override global output options, see {#initialize}
     def plain_text_without_markdown opts={}
       process(opts) {
         make_mentions_plain_text
@@ -178,7 +139,6 @@ module Diaspora
       }
     end
 
-    # @param [Hash] opts Override global output options, see {#initialize}
     def plain_text_for_json opts={}
       process(opts) {
         normalize
@@ -186,7 +146,6 @@ module Diaspora
       }
     end
 
-    # @param [Hash] opts Override global output options, see {#initialize}
     def html opts={}
       process(opts) {
         escape
@@ -198,7 +157,6 @@ module Diaspora
       }.html_safe
     end
 
-    # @param [Hash] opts Override global output options, see {#initialize}
     def markdownified opts={}
       process(opts) {
         process_newlines
@@ -212,15 +170,9 @@ module Diaspora
       }.html_safe
     end
 
-    # Get a short summary of the message
-    # @param [Hash] opts Additional options
-    # @option opts [Integer] :length (70) Truncate the title to
-    #   this length. If not given defaults to 70.
     def title opts={}
-      # Setext-style header
       heading = if /\A(?<setext_content>.{1,200})\n(?:={1,200}|-{1,200})(?:\r?\n|$)/ =~ @raw_message.lstrip
         setext_content
-      # Atx-style header
       elsif /\A\#{1,6}\s+(?<atx_content>.{1,200}?)(?:\s+#+)?(?:\r?\n|$)/ =~ @raw_message.lstrip
         atx_content
       end
@@ -234,8 +186,6 @@ module Diaspora
       end
     end
 
-    # Extracts all the urls from the raw message and return them in the form of a string
-    # Different URLs are seperated with a space
     def urls
       @urls ||= Twitter::Extractor.extract_urls(plain_text_without_markdown).map {|url|
         Addressable::URI.parse(url).normalize.to_s

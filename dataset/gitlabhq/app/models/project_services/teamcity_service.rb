@@ -1,22 +1,3 @@
-# == Schema Information
-#
-# Table name: services
-#
-#  id                    :integer          not null, primary key
-#  type                  :string(255)
-#  title                 :string(255)
-#  project_id            :integer
-#  created_at            :datetime
-#  updated_at            :datetime
-#  active                :boolean          default(FALSE), not null
-#  properties            :text
-#  template              :boolean          default(FALSE)
-#  push_events           :boolean          default(TRUE)
-#  issues_events         :boolean          default(TRUE)
-#  merge_requests_events :boolean          default(TRUE)
-#  tag_push_events       :boolean          default(TRUE)
-#  note_events           :boolean          default(TRUE), not null
-#
 
 class TeamcityService < CiService
   include HTTParty
@@ -92,11 +73,8 @@ class TeamcityService < CiService
     build_info(sha) if @response.nil? || !@response.code
 
     if @response.code != 200
-      # If actual build link can't be determined,
-      # send user to build summary page.
       "#{teamcity_url}/viewLog.html?buildTypeId=#{build_type}"
     else
-      # If actual build link is available, go to build result page.
       built_id = @response['build']['id']
       "#{teamcity_url}/viewLog.html?buildId=#{built_id}"\
       "&buildTypeId=#{build_type}"

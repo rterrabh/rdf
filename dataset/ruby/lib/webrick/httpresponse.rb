@@ -1,12 +1,3 @@
-#
-# httpresponse.rb -- HTTPResponse Class
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2000, 2001 TAKAHASHI Masayoshi, GOTOU Yuuzou
-# Copyright (c) 2002 Internet Programming with Ruby writers. All rights
-# reserved.
-#
-# $IPR: httpresponse.rb,v 1.45 2003/07/11 11:02:25 gotoyuzo Exp $
 
 require 'time'
 require 'webrick/httpversion'
@@ -15,82 +6,48 @@ require 'webrick/httputils'
 require 'webrick/httpstatus'
 
 module WEBrick
-  ##
-  # An HTTP response.  This is filled in by the service or do_* methods of a
-  # WEBrick HTTP Servlet.
 
   class HTTPResponse
 
-    ##
-    # HTTP Response version
 
     attr_reader :http_version
 
-    ##
-    # Response status code (200)
 
     attr_reader :status
 
-    ##
-    # Response header
 
     attr_reader :header
 
-    ##
-    # Response cookies
 
     attr_reader :cookies
 
-    ##
-    # Response reason phrase ("OK")
 
     attr_accessor :reason_phrase
 
-    ##
-    # Body may be a String or IO-like object that responds to #read and
-    # #readpartial.
 
     attr_accessor :body
 
-    ##
-    # Request method for this response
 
     attr_accessor :request_method
 
-    ##
-    # Request URI for this response
 
     attr_accessor :request_uri
 
-    ##
-    # Request HTTP version for this response
 
     attr_accessor :request_http_version
 
-    ##
-    # Filename of the static file in this response.  Only used by the
-    # FileHandler servlet.
 
     attr_accessor :filename
 
-    ##
-    # Is this a keep-alive response?
 
     attr_accessor :keep_alive
 
-    ##
-    # Configuration for this response
 
     attr_reader :config
 
-    ##
-    # Bytes sent in this response
 
     attr_reader :sent_size
 
-    ##
-    # Creates a new HTTP response object.  WEBrick::Config::HTTP is the
-    # default configuration.
 
     def initialize(config)
       @config = config
@@ -111,37 +68,27 @@ module WEBrick
       @sent_size = 0
     end
 
-    ##
-    # The response's HTTP status line
 
     def status_line
       "HTTP/#@http_version #@status #@reason_phrase #{CRLF}"
     end
 
-    ##
-    # Sets the response's status to the +status+ code
 
     def status=(status)
       @status = status
       @reason_phrase = HTTPStatus::reason_phrase(status)
     end
 
-    ##
-    # Retrieves the response header +field+
 
     def [](field)
       @header[field.downcase]
     end
 
-    ##
-    # Sets the response header +field+ to +value+
 
     def []=(field, value)
       @header[field.downcase] = value.to_s
     end
 
-    ##
-    # The content-length header
 
     def content_length
       if len = self['content-length']
@@ -149,57 +96,41 @@ module WEBrick
       end
     end
 
-    ##
-    # Sets the content-length header to +len+
 
     def content_length=(len)
       self['content-length'] = len.to_s
     end
 
-    ##
-    # The content-type header
 
     def content_type
       self['content-type']
     end
 
-    ##
-    # Sets the content-type header to +type+
 
     def content_type=(type)
       self['content-type'] = type
     end
 
-    ##
-    # Iterates over each header in the response
 
     def each
       @header.each{|field, value|  yield(field, value) }
     end
 
-    ##
-    # Will this response body be returned using chunked transfer-encoding?
 
     def chunked?
       @chunked
     end
 
-    ##
-    # Enables chunked transfer encoding.
 
     def chunked=(val)
       @chunked = val ? true : false
     end
 
-    ##
-    # Will this response's connection be kept alive?
 
     def keep_alive?
       @keep_alive
     end
 
-    ##
-    # Sends the response on +socket+
 
     def send_response(socket) # :nodoc:
       begin
@@ -215,21 +146,17 @@ module WEBrick
       end
     end
 
-    ##
-    # Sets up the headers for sending
 
     def setup_header() # :nodoc:
       @reason_phrase    ||= HTTPStatus::reason_phrase(@status)
       @header['server'] ||= @config[:ServerSoftware]
       @header['date']   ||= Time.now.httpdate
 
-      # HTTP/0.9 features
       if @request_http_version < "1.0"
         @http_version = HTTPVersion.new("0.9")
         @keep_alive = false
       end
 
-      # HTTP/1.0 features
       if @request_http_version < "1.1"
         if chunked?
           @chunked = false
@@ -239,7 +166,6 @@ module WEBrick
         end
       end
 
-      # Determine the message length (RFC2616 -- 4.4 Message Length)
       if @status == 304 || @status == 204 || HTTPStatus::info?(@status)
         @header.delete('content-length')
         @body = ""
@@ -254,7 +180,6 @@ module WEBrick
         end
       end
 
-      # Keep-Alive connection.
       if @header['connection'] == "close"
          @keep_alive = false
       elsif keep_alive?
@@ -270,7 +195,6 @@ module WEBrick
         @header['connection'] = "close"
       end
 
-      # Location is a single absoluteURI.
       if location = @header['location']
         if @request_uri
           @header['location'] = @request_uri.merge(location)
@@ -278,8 +202,6 @@ module WEBrick
       end
     end
 
-    ##
-    # Sends the headers on +socket+
 
     def send_header(socket) # :nodoc:
       if @http_version.major > 0
@@ -296,8 +218,6 @@ module WEBrick
       end
     end
 
-    ##
-    # Sends the body on +socket+
 
     def send_body(socket) # :nodoc:
       if @body.respond_to? :readpartial then
@@ -313,12 +233,6 @@ module WEBrick
       ret
     end
 
-    ##
-    # Redirects to +url+ with a WEBrick::HTTPStatus::Redirect +status+.
-    #
-    # Example:
-    #
-    #   res.set_redirect WEBrick::HTTPStatus::TemporaryRedirect
 
     def set_redirect(status, url)
       @body = "<HTML><A HREF=\"#{url}\">#{url}</A>.</HTML>\n"
@@ -326,8 +240,6 @@ module WEBrick
       raise status
     end
 
-    ##
-    # Creates an error page for exception +ex+ with an optional +backtrace+
 
     def set_error(ex, backtrace=false)
       case ex
@@ -358,7 +270,6 @@ module WEBrick
   <HEAD><TITLE>#{HTMLUtils::escape(@reason_phrase)}</TITLE></HEAD>
   <BODY>
     <H1>#{HTMLUtils::escape(@reason_phrase)}</H1>
-    #{HTMLUtils::escape(ex.message)}
     <HR>
       _end_of_html_
 
@@ -372,8 +283,6 @@ module WEBrick
 
       @body << <<-_end_of_html_
     <ADDRESS>
-     #{HTMLUtils::escape(@config[:ServerSoftware])} at
-     #{host}:#{port}
     </ADDRESS>
   </BODY>
 </HTML>
@@ -382,12 +291,10 @@ module WEBrick
 
     private
 
-    # :stopdoc:
 
     def send_body_io(socket)
       begin
         if @request_method == "HEAD"
-          # do nothing
         elsif chunked?
           begin
             buf  = ''
@@ -415,7 +322,6 @@ module WEBrick
 
     def send_body_string(socket)
       if @request_method == "HEAD"
-        # do nothing
       elsif chunked?
         body ? @body.bytesize : 0
         while buf = @body[@sent_size, @buffer_size]
@@ -460,7 +366,6 @@ module WEBrick
       socket << data
     end
 
-    # :startdoc:
   end
 
 end

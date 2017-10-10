@@ -86,12 +86,10 @@ Disallow: /password
       application <<-APP
 
     config.to_prepare do
-      # Load application's model / class decorators
       Dir.glob(File.join(File.dirname(__FILE__), "../app/**/*_decorator*.rb")) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
 
-      # Load application's view overrides
       Dir.glob(File.join(File.dirname(__FILE__), "../app/overrides/*.rb")) do |c|
         Rails.configuration.cache_classes ? require(c) : load(c)
       end
@@ -100,7 +98,6 @@ Disallow: /password
 
       if !options[:enforce_available_locales].nil?
         application <<-APP
-    # Prevent this deprecation message: https://github.com/svenfuchs/i18n/commit/3b6e56e
     I18n.enforce_available_locales = #{options[:enforce_available_locales]}
         APP
       end
@@ -170,11 +167,6 @@ Spree::Auth::Engine.load_seed if defined?(Spree::Auth)
     def notify_about_routes
       insert_into_file File.join('config', 'routes.rb'), :after => "Rails.application.routes.draw do\n" do
         %Q{
-  # This line mounts Spree's routes at the root of your application.
-  # This means, any requests to URLs such as /products, will go to Spree::ProductsController.
-  # If you would like to change where this engine is mounted, simply change the :at option to something different.
-  #
-  # We ask that you don't use the :as option here, as Spree relies on it being the default of "spree"
   mount Spree::Core::Engine, :at => '/'
         }
       end

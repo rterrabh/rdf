@@ -2,7 +2,6 @@ require 'active_admin/views/components/action_list_popover'
 
 module ActiveAdmin
   module BatchActions
-    # Build an BatchActionPopover
     class BatchActionPopover < ActiveAdmin::Views::ActionListPopover
       builder_method :batch_action_popover
 

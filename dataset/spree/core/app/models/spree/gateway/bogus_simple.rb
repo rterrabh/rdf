@@ -1,4 +1,3 @@
-# Bogus Gateway that doesn't support payment profiles
 module Spree
   class Gateway::BogusSimple < Gateway::Bogus
 

@@ -18,13 +18,6 @@ module ActiveRecord
           def cast_value(value)
             return value unless ::String === value
 
-            # Because money output is formatted according to the locale, there are two
-            # cases to consider (note the decimal separators):
-            #  (1) $12,345,678.12
-            #  (2) $12.345.678,12
-            # Negative values are represented as follows:
-            #  (3) -$2.55
-            #  (4) ($2.55)
 
             value.sub!(/^\((.+)\)$/, '-\1') # (4)
             case value

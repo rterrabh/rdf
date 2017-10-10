@@ -6,7 +6,6 @@ require 'rack/body_proxy'
 
 module Rails
   module Rack
-    # Sets log tags, logs the request, calls the app, and flushes the logs.
     class Logger < ActiveSupport::LogSubscriber
       def initialize(app, taggers = nil)
         @app          = app
@@ -26,7 +25,6 @@ module Rails
     protected
 
       def call_app(request, env)
-        # Put some space between requests in development logs.
         if development?
           logger.debug ''
           logger.debug ''
@@ -45,7 +43,6 @@ module Rails
         ActiveSupport::LogSubscriber.flush_all!
       end
 
-      # Started GET "/session/new" for 127.0.0.1 at 2012-09-26 14:51:42 -0700
       def started_request_message(request)
         'Started %s "%s" for %s at %s' % [
           request.request_method,
@@ -60,7 +57,7 @@ module Rails
           when Proc
             tag.call(request)
           when Symbol
-            #nodyna <ID:send-278> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1177> <SD COMPLEX (change-prone variables)>
             request.send(tag)
           else
             tag

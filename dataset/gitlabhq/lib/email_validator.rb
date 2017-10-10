@@ -1,10 +1,3 @@
-# Based on https://github.com/balexand/email_validator
-#
-# Extended to use only strict mode with following allowed characters:
-# ' - apostrophe
-#
-# See http://www.remote.org/jochen/mail/info/chars.html
-#
 class EmailValidator < ActiveModel::EachValidator
   @@default_options = {}
 

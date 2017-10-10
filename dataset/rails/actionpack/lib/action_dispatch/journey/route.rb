@@ -8,9 +8,6 @@ module ActionDispatch
 
       attr_accessor :precedence
 
-      ##
-      # +path+ is a path constraint.
-      # +constraints+ is a hash of constraints to be applied to this route.
       def initialize(name, app, path, constraints, defaults = {})
         @name        = name
         @app         = app
@@ -35,7 +32,6 @@ module ActionDispatch
       end
 
       def requirements # :nodoc:
-        # needed for rails `rake routes`
         @defaults.merge(path.requirements).delete_if { |_,v|
           /.+?/ == v
         }
@@ -100,19 +96,19 @@ module ActionDispatch
 
           case value
           when Regexp, String
-            #nodyna <ID:send-98> <SD COMPLEX (array)>
+            #nodyna <send-1249> <SD COMPLEX (array)>
             value === request.send(method).to_s
           when Array
-            #nodyna <ID:send-99> <SD COMPLEX (array)>
+            #nodyna <send-1250> <SD COMPLEX (array)>
             value.include?(request.send(method))
           when TrueClass
-            #nodyna <ID:send-100> <SD COMPLEX (array)>
+            #nodyna <send-1251> <SD COMPLEX (array)>
             request.send(method).present?
           when FalseClass
-            #nodyna <ID:send-101> <SD COMPLEX (array)>
+            #nodyna <send-1252> <SD COMPLEX (array)>
             request.send(method).blank?
           else
-            #nodyna <ID:send-102> <SD COMPLEX (array)>
+            #nodyna <send-1253> <SD COMPLEX (array)>
             value === request.send(method)
           end
         end

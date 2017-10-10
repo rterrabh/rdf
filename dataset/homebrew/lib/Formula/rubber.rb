@@ -17,11 +17,9 @@ class Rubber < Formula
     system "./configure", "--prefix=#{prefix}",
                           "--mandir=#{man}",
                           "--infodir=#{info}"
-    # `install` requires but does not make the docs
     system "make"
     system "make", "install"
 
-    # Don't need to peg to a specific Python version
     inreplace Dir["#{bin}/*"], %r{^#!.*\/python.*$}, "#!/usr/bin/env python"
   end
 

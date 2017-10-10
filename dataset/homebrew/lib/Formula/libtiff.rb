@@ -32,7 +32,6 @@ class Libtiff < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <tiffio.h>
 
       int main(int argc, char* argv[])
       {

@@ -9,9 +9,6 @@ class Mysqltuner < Formula
     bin.install "mysqltuner.pl" => "mysqltuner"
   end
 
-  # mysqltuner analyzes your database configuration by connecting to a
-  # mysql server. It is not really feasible to spawn a mysql server
-  # just for a test case so we'll stick with a rudimentary test.
   test do
     system "#{bin}/mysqltuner", "--help"
   end

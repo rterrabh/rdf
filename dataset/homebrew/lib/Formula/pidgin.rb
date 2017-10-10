@@ -34,8 +34,6 @@ class Pidgin < Formula
     depends_on "libotr"
   end
 
-  # Finch has an equal port called purple-otr but it is a NIGHTMARE to compile
-  # If you want to fix this and create a PR on Homebrew please do so.
   resource "pidgin-otr" do
     url "https://otr.cypherpunks.ca/pidgin-otr-4.0.1.tar.gz"
     sha256 "1b781f48c27bcc9de3136c0674810df23f7d6b44c727dbf4dfb24067909bf30a"

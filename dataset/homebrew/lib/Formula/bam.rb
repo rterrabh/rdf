@@ -20,7 +20,6 @@ class Bam < Formula
 
   test do
     (testpath/"hello.c").write <<-EOS.undent
-      #include <stdio.h>
       int main(void) { printf("hello\\n"); return 0; }
     EOS
 

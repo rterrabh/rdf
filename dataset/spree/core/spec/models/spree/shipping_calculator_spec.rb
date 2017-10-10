@@ -39,7 +39,7 @@ module Spree
     end
 
     it 'calculates totals for content_items' do
-      #nodyna <ID:send-50> <SD EASY (private methods)>
+      #nodyna <send-2469> <SD EASY (private methods)>
       expect(subject.send(:total, package.contents)).to eq 40.00
     end
   end

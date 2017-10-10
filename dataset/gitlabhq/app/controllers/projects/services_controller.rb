@@ -9,7 +9,6 @@ class Projects::ServicesController < Projects::ApplicationController
                     :note_events, :send_from_committer_email, :disable_diffs, :external_wiki_url,
                     :notify, :color,
                     :server_host, :server_port, :default_irc_uri]
-  # Authorize
   before_action :authorize_admin_project!
   before_action :service, only: [:edit, :update, :test]
 
@@ -43,6 +42,7 @@ class Projects::ServicesController < Projects::ApplicationController
     if outcome[:success]
       message = { notice: 'We sent a request to the provided URL' }
     else
+      #nodyna <send-532> <not yet classified>
       error_message = "We tried to send a request to the provided URL but an error occurred"
       error_message << ": #{outcome[:result]}" if outcome[:result].present?
       message = { alert: error_message }

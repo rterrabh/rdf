@@ -3,15 +3,11 @@ require "mach"
 require "resource"
 require "metafiles"
 
-# Homebrew extends Ruby's `Pathname` to make our code more readable.
-# @see http://ruby-doc.org/stdlib-1.8.7/libdoc/pathname/rdoc/Pathname.html  Ruby's Pathname API
 class Pathname
   include MachO
 
-  # @private
   BOTTLE_EXTNAME_RX = /(\.[a-z0-9_]+\.bottle\.(\d+\.)?tar\.gz)$/
 
-  # Moves a file from the original location to the {Pathname}'s.
   def install(*sources)
     sources.each do |src|
       case src
@@ -46,10 +42,6 @@ class Pathname
 
     mkpath
 
-    # Use FileUtils.mv over File.rename to handle filesystem boundaries. If src
-    # is a symlink, and its target is moved first, FileUtils.mv will fail:
-    #   https://bugs.ruby-lang.org/issues/7707
-    # In that case, use the system "mv" command.
     if src.symlink?
       raise unless Kernel.system "mv", src, dst
     else
@@ -58,7 +50,6 @@ class Pathname
   end
   private :install_p
 
-  # Creates symlinks to sources in this folder.
   def install_symlink(*sources)
     sources.each do |src|
       case src
@@ -81,11 +72,9 @@ class Pathname
   private :install_symlink_p
 
   if method_defined?(:write)
-    # @private
     alias_method :old_write, :write
   end
 
-  # we assume this pathname object is a file obviously
   def write(content, *open_args)
     raise "Will not overwrite #{self}" if exist?
     dirname.mkpath
@@ -100,7 +89,6 @@ class Pathname
     open("rb", *open_args) { |f| f.read }
   end unless method_defined?(:binread)
 
-  # NOTE always overwrites
   def atomic_write(content)
     require "tempfile"
     tf = Tempfile.new(basename.to_s, dirname)
@@ -138,7 +126,6 @@ class Pathname
   end
   private :default_stat
 
-  # @private
   def cp(dst)
     opoo "Pathname#cp is deprecated, use FileUtils.cp"
     if file?
@@ -149,7 +136,6 @@ class Pathname
     dst
   end
 
-  # @private
   def cp_path_sub(pattern, replacement)
     raise "#{self} does not exist" unless self.exist?
 
@@ -166,10 +152,8 @@ class Pathname
     end
   end
 
-  # @private
   alias_method :extname_old, :extname
 
-  # extended to support common double extensions
   def extname(path = to_s)
     BOTTLE_EXTNAME_RX.match(path)
     return $1 if $1
@@ -178,15 +162,10 @@ class Pathname
     File.extname(path)
   end
 
-  # for filetypes we support, basename without extension
   def stem
     File.basename((path = to_s), extname(path))
   end
 
-  # I don't trust the children.length == 0 check particularly, not to mention
-  # it is slow to enumerate the whole directory just to see if it is empty,
-  # instead rely on good ol' libc and the filesystem
-  # @private
   def rmdir_if_possible
     rmdir
     true
@@ -201,28 +180,22 @@ class Pathname
     false
   end
 
-  # @private
   def chmod_R(perms)
     opoo "Pathname#chmod_R is deprecated, use FileUtils.chmod_R"
     require "fileutils"
     FileUtils.chmod_R perms, to_s
   end
 
-  # @private
   def version
     require "version"
     Version.parse(self)
   end
 
-  # @private
   def compression_type
     case extname
     when ".jar", ".war"
-      # Don't treat jars or wars as compressed
       return
     when ".gz"
-      # If the filename ends with .gz not preceded by .tar
-      # then we want to gunzip but not tar
       return :gzip_only
     when ".bz2"
       return :bzip2_only
@@ -230,9 +203,6 @@ class Pathname
       return :lha
     end
 
-    # Get enough of the file to detect common file types
-    # POSIX tar magic has a 257 byte offset
-    # magic numbers stolen from /usr/share/file/magic/
     case open("rb") { |f| f.read(262) }
     when /^PK\003\004/n         then :zip
     when /^\037\213/n           then :gzip
@@ -246,8 +216,6 @@ class Pathname
     when /^xar!/n               then :xar
     when /^\xed\xab\xee\xdb/n   then :rpm
     else
-      # This code so that bad-tarballs and zips produce good error messages
-      # when they don't unarchive properly.
       case extname
       when ".tar.gz", ".tgz", ".tar.bz2", ".tbz" then :tar
       when ".zip" then :zip
@@ -255,12 +223,10 @@ class Pathname
     end
   end
 
-  # @private
   def text_executable?
     /^#!\s*\S+/ === open("r") { |f| f.read(1024) }
   end
 
-  # @private
   def incremental_hash(klass)
     digest = klass.new
     if digest.respond_to?(:file)
@@ -272,7 +238,6 @@ class Pathname
     digest.hexdigest
   end
 
-  # @private
   def sha1
     require "digest/sha1"
     incremental_hash(Digest::SHA1)
@@ -285,12 +250,11 @@ class Pathname
 
   def verify_checksum(expected)
     raise ChecksumMissingError if expected.nil? || expected.empty?
-    #nodyna <ID:send-5> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-677> <SD COMPLEX (change-prone variables)>
     actual = Checksum.new(expected.hash_type, send(expected.hash_type).downcase)
     raise ChecksumMismatchError.new(self, expected, actual) unless expected == actual
   end
 
-  # FIXME: eliminate the places where we rely on this method
   alias_method :to_str, :to_s unless method_defined?(:to_str)
 
   def cd
@@ -301,22 +265,18 @@ class Pathname
     children.select(&:directory?)
   end
 
-  # @private
   def resolved_path
     self.symlink? ? dirname+readlink : self
   end
 
-  # @private
   def resolved_path_exists?
     link = readlink
   rescue ArgumentError
-    # The link target contains NUL bytes
     false
   else
     (dirname+link).exist?
   end
 
-  # @private
   def make_relative_symlink(src)
     dirname.mkpath
     File.symlink(src.relative_path_from(dirname), self)
@@ -330,7 +290,6 @@ class Pathname
     self + other.to_s
   end unless method_defined?(:/)
 
-  # @private
   def ensure_writable
     saved_perms = nil
     unless writable_real?
@@ -342,17 +301,14 @@ class Pathname
     chmod saved_perms if saved_perms
   end
 
-  # @private
   def install_info
     quiet_system "/usr/bin/install-info", "--quiet", to_s, "#{dirname}/dir"
   end
 
-  # @private
   def uninstall_info
     quiet_system "/usr/bin/install-info", "--delete", "--quiet", to_s, "#{dirname}/dir"
   end
 
-  # Writes an exec script in this folder for each target pathname
   def write_exec_script(*targets)
     targets.flatten!
     if targets.empty?
@@ -363,24 +319,19 @@ class Pathname
     targets.each do |target|
       target = Pathname.new(target) # allow pathnames or strings
       (self+target.basename).write <<-EOS.undent
-        #!/bin/bash
         exec "#{target}" "$@"
       EOS
     end
   end
 
-  # Writes an exec script that sets environment variables
   def write_env_script(target, env)
     env_export = ""
     env.each { |key, value| env_export += "#{key}=\"#{value}\" " }
     dirname.mkpath
     write <<-EOS.undent
-    #!/bin/bash
-    #{env_export}exec "#{target}" "$@"
     EOS
   end
 
-  # Writes a wrapper env script and moves all files to the dst
   def env_script_all_files(dst, env)
     dst.mkpath
     Pathname.glob("#{self}/*") do |file|
@@ -391,11 +342,9 @@ class Pathname
     end
   end
 
-  # Writes an exec script that invokes a java jar
   def write_jar_script(target_jar, script_name, java_opts = "")
     mkpath
     (self+script_name).write <<-EOS.undent
-      #!/bin/bash
       exec java #{java_opts} -jar #{target_jar} "$@"
     EOS
   end
@@ -404,17 +353,13 @@ class Pathname
     Pathname(from).children.each do |p|
       next if p.directory?
       next unless Metafiles.copy?(p.basename.to_s)
-      # Some software symlinks these files (see help2man.rb)
       filename = p.resolved_path
-      # Some software links metafiles together, so by the time we iterate to one of them
-      # we may have already moved it. libxml2's COPYING and Copyright are affected by this.
       next unless filename.exist?
       filename.chmod 0644
       install(filename)
     end
   end
 
-  # @private
   def abv
     out = ""
     n = Utils.popen_read("find", expand_path.to_s, "-type", "f", "!", "-name", ".DS_Store").split("\n").size
@@ -425,11 +370,7 @@ class Pathname
     out
   end
 
-  # We redefine these private methods in order to add the /o modifier to
-  # the Regexp literals, which forces string interpolation to happen only
-  # once instead of each time the method is called. This is fixed in 1.9+.
   if RUBY_VERSION <= "1.8.7"
-    # @private
     alias_method :old_chop_basename, :chop_basename
 
     def chop_basename(path)
@@ -442,7 +383,6 @@ class Pathname
     end
     private :chop_basename
 
-    # @private
     alias_method :old_prepend_prefix, :prepend_prefix
 
     def prepend_prefix(prefix, relpath)
@@ -458,7 +398,6 @@ class Pathname
     end
     private :prepend_prefix
   elsif RUBY_VERSION == "2.0.0"
-    # https://bugs.ruby-lang.org/issues/9915
     prepend Module.new {
       def inspect
         super.force_encoding(@path.encoding)
@@ -467,7 +406,6 @@ class Pathname
   end
 end
 
-# @private
 module ObserverPathnameExtension
   class << self
     attr_accessor :n, :d

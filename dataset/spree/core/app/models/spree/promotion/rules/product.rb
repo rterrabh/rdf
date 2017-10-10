@@ -1,6 +1,3 @@
-# A rule to limit a promotion based on products in the order.
-# Can require all or any of the products to be present.
-# Valid products either come from assigned product group or are assingned directly to the rule.
 module Spree
   class Promotion
     module Rules
@@ -10,7 +7,6 @@ module Spree
         MATCH_POLICIES = %w(any all none)
         preference :match_policy, :string, default: MATCH_POLICIES.first
 
-        # scope/association that is used to test eligibility
         def eligible_products
           products
         end

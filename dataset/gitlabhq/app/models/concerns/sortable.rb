@@ -1,13 +1,7 @@
-# == Sortable concern
-#
-# Set default scope for ordering objects
-#
 module Sortable
   extend ActiveSupport::Concern
 
   included do
-    # By default all models should be ordered
-    # by created_at field starting from newest
     default_scope { order(created_at: :desc, id: :desc) }
 
     scope :order_created_desc, -> { reorder(created_at: :desc, id: :desc) }

@@ -23,8 +23,6 @@ class Ginac < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-    #include <iostream>
-    #include <ginac/ginac.h>
     using namespace std;
     using namespace GiNaC;
 

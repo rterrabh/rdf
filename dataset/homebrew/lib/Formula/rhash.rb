@@ -14,12 +14,9 @@ class Rhash < Formula
     sha256 "4d88312b2da6202c1929e5b586ed63780009d1467bdfef2cc6ec3c615e73ab42" => :mountain_lion
   end
 
-  # Upstream issue: https://github.com/rhash/RHash/pull/7
-  # This patch will need to be in place permanently.
   patch :DATA
 
   def install
-    # install target isn't parallel-safe
     ENV.j1
 
     system "make", "lib-static", "lib-shared", "all", "CC=#{ENV.cc}"
@@ -47,13 +44,10 @@ __END__
 +SOLINK  = librhash.dylib
  TEST_TARGET = test_hashes
  TEST_SHARED = test_shared
- # Set variables according to GNU coding standard
 @@ -176,8 +176,7 @@
 
- # shared and static libraries
  $(SONAME): $(SOURCES)
 -	sed -n '1s/.*/{ global:/p; s/^RHASH_API.* \([a-z0-9_]\+\)(.*/  \1;/p; $$s/.*/local: *; };/p' $(SO_HEADERS) > exports.sym
 -	$(CC) -fpic $(ALLCFLAGS) -shared $(SOURCES) -Wl,--version-script,exports.sym,-soname,$(SONAME) $(LIBLDFLAGS) -o $@
 +	$(CC) -fpic $(ALLCFLAGS) -dynamiclib $(SOURCES) $(LIBLDFLAGS) -Wl,-install_name,$(PREFIX)/lib/$@ -o $@
  	ln -s $(SONAME) $(SOLINK)
- # use 'nm -Cg --defined-only $@' to view exported symbols

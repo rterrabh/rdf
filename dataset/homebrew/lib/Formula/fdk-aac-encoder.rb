@@ -28,7 +28,6 @@ class FdkAacEncoder < Formula
   end
 
   test do
-    # generate test tone pcm file
     sample_rate = 44100
     two_pi = 2 * Math::PI
 

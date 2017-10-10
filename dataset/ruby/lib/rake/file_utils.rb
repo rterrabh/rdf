@@ -1,11 +1,7 @@
 require 'rbconfig'
 require 'fileutils'
 
-#--
-# This a FileUtils extension that defines several additional commands to be
-# added to the FileUtils utility functions.
 module FileUtils
-  # Path to the currently running Ruby program
   RUBY = ENV['RUBY'] || File.join(
     RbConfig::CONFIG['bindir'],
     RbConfig::CONFIG['ruby_install_name'] + RbConfig::CONFIG['EXEEXT']).
@@ -14,34 +10,6 @@ module FileUtils
   OPT_TABLE['sh']  = %w(noop verbose)
   OPT_TABLE['ruby'] = %w(noop verbose)
 
-  # Run the system command +cmd+.  If multiple arguments are given the command
-  # is run directly (without the shell, same semantics as Kernel::exec and
-  # Kernel::system).
-  #
-  # It is recommended you use the multiple argument form over interpolating
-  # user input for both usability and security reasons.  With the multiple
-  # argument form you can easily process files with spaces or other shell
-  # reserved characters in them.  With the multiple argument form your rake
-  # tasks are not vulnerable to users providing an argument like
-  # <code>; rm # -rf /</code>.
-  #
-  # If a block is given, upon command completion the block is called with an
-  # OK flag (true on a zero exit status) and a Process::Status object.
-  # Without a block a RuntimeError is raised when the command exits non-zero.
-  #
-  # Examples:
-  #
-  #   sh 'ls -ltr'
-  #
-  #   sh 'ls', 'file with spaces'
-  #
-  #   # check exit status after command runs
-  #   sh %{grep pattern file} do |ok, res|
-  #     if ! ok
-  #       puts "pattern not found (status = #{res.exitstatus})"
-  #     end
-  #   end
-  #
   def sh(*cmd, &block)
     options = (Hash === cmd.last) ? cmd.pop : {}
     shell_runner = block_given? ? block : create_shell_runner(cmd)
@@ -83,11 +51,6 @@ module FileUtils
   end
   private :rake_system
 
-  # Run a Ruby interpreter with the given arguments.
-  #
-  # Example:
-  #   ruby %{-pe '$_.upcase!' <README}
-  #
   def ruby(*args, &block)
     options = (Hash === args.last) ? args.pop : {}
     if args.length > 1
@@ -99,8 +62,6 @@ module FileUtils
 
   LN_SUPPORTED = [true]
 
-  #  Attempt to do a normal file link, but fall back to a copy if the link
-  #  fails.
   def safe_ln(*args)
     if ! LN_SUPPORTED[0]
       cp(*args)
@@ -114,11 +75,6 @@ module FileUtils
     end
   end
 
-  # Split a file path into individual directory names.
-  #
-  # Example:
-  #   split_all("a/b/c") =>  ['a', 'b', 'c']
-  #
   def split_all(path)
     head, tail = File.split(path)
     return [tail] if head == '.' || tail == '/'

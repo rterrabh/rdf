@@ -25,7 +25,6 @@ class Libwpd < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libwpd/libwpd.h>
       int main() {
         return libwpd::WPD_OK;
       }

@@ -20,7 +20,6 @@ class GdkPixbuf < Formula
   depends_on "libpng"
   depends_on "gobject-introspection"
 
-  # 'loaders.cache' must be writable by other packages
   skip_clean "lib/gdk-pixbuf-2.0"
 
   def install
@@ -36,20 +35,16 @@ class GdkPixbuf < Formula
     system "make"
     system "make", "install"
 
-    # Other packages should use the top-level modules directory
-    # rather than dumping their files into the gdk-pixbuf keg.
     inreplace lib/"pkgconfig/gdk-pixbuf-2.0.pc" do |s|
       libv = s.get_make_var "gdk_pixbuf_binary_version"
       s.change_make_var! "gdk_pixbuf_binarydir",
         HOMEBREW_PREFIX/"lib/gdk-pixbuf-2.0"/libv
     end
 
-    # Remove the cache. We will regenerate it in post_install
     (lib/"gdk-pixbuf-2.0/2.10.0/loaders.cache").unlink
   end
 
   def post_install
-    # Change the version directory below with any future update
     ENV["GDK_PIXBUF_MODULEDIR"]="#{HOMEBREW_PREFIX}/lib/gdk-pixbuf-2.0/2.10.0/loaders"
     system "#{bin}/gdk-pixbuf-query-loaders", "--update-cache"
   end
@@ -58,7 +53,6 @@ class GdkPixbuf < Formula
     Programs that require this module need to set the environment variable
       export GDK_PIXBUF_MODULEDIR="#{HOMEBREW_PREFIX}/lib/gdk-pixbuf-2.0/2.10.0/loaders"
     If you need to manually update the query loader cache, set GDK_PIXBUF_MODULEDIR then run
-      #{bin}/gdk-pixbuf-query-loaders --update-cache
     EOS
   end
 

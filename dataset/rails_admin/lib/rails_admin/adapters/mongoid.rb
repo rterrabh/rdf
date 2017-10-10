@@ -41,7 +41,7 @@ module RailsAdmin
         scope = scope.where(query_conditions(options[:query])) if options[:query]
         scope = scope.where(filter_conditions(options[:filters])) if options[:filters]
         if options[:page] && options[:per]
-          #nodyna <ID:send-47> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1340> <SD COMPLEX (change-prone variables)>
           scope = scope.send(Kaminari.config.page_method_name, options[:page]).per(options[:per])
         end
         scope = sort_by(options, scope) if options[:sort]
@@ -126,8 +126,6 @@ module RailsAdmin
         end
       end
 
-      # filters example => {"string_field"=>{"0055"=>{"o"=>"like", "v"=>"test_value"}}, ...}
-      # "0055" is the filter index, no use here. o is the operator, v the value
       def filter_conditions(filters, fields = config.list.fields.select(&:filterable?))
         statements = []
 
@@ -165,10 +163,8 @@ module RailsAdmin
         result = []
         conditions_per_collection.each do |collection_name, conditions|
           if collection_name == table_name
-            # conditions referring current model column are passed directly
             result.concat conditions
           else
-            # otherwise, collect ids of documents that satisfy search condition
             result.concat perform_search_on_associated_collection(target_field.name, conditions)
           end
         end
@@ -181,10 +177,10 @@ module RailsAdmin
         model = target_association.klass
         case target_association.type
         when :belongs_to, :has_and_belongs_to_many
-          #nodyna <ID:send-48> <SD COMPLEX (array)>
+          #nodyna <send-1341> <SD COMPLEX (array)>
           [{target_association.foreign_key.to_s => {'$in' => model.where('$or' => conditions).all.collect { |r| r.send(target_association.primary_key) }}}]
         when :has_many
-          #nodyna <ID:send-49> <SD COMPLEX (array)>
+          #nodyna <send-1342> <SD COMPLEX (array)>
           [{target_association.primary_key.to_s => {'$in' => model.where('$or' => conditions).all.collect { |r| r.send(target_association.foreign_key) }}}]
         end
       end

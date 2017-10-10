@@ -1,41 +1,20 @@
 module API
-  # Projects API
   class ProjectHooks < Grape::API
     before { authenticate! }
     before { authorize_admin_project }
 
     resource :projects do
-      # Get project hooks
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      # Example Request:
-      #   GET /projects/:id/hooks
       get ":id/hooks" do
         @hooks = paginate user_project.hooks
         present @hooks, with: Entities::ProjectHook
       end
 
-      # Get a project hook
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   hook_id (required) - The ID of a project hook
-      # Example Request:
-      #   GET /projects/:id/hooks/:hook_id
       get ":id/hooks/:hook_id" do
         @hook = user_project.hooks.find(params[:hook_id])
         present @hook, with: Entities::ProjectHook
       end
 
 
-      # Add hook to project
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   url (required) - The hook URL
-      # Example Request:
-      #   POST /projects/:id/hooks
       post ":id/hooks" do
         required_attributes! [:url]
         attrs = attributes_for_keys [
@@ -58,14 +37,6 @@ module API
         end
       end
 
-      # Update an existing project hook
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   hook_id (required) - The ID of a project hook
-      #   url (required) - The hook URL
-      # Example Request:
-      #   PUT /projects/:id/hooks/:hook_id
       put ":id/hooks/:hook_id" do
         @hook = user_project.hooks.find(params[:hook_id])
         required_attributes! [:url]
@@ -88,13 +59,6 @@ module API
         end
       end
 
-      # Deletes project hook. This is an idempotent function.
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   hook_id (required) - The ID of hook to delete
-      # Example Request:
-      #   DELETE /projects/:id/hooks/:hook_id
       delete ":id/hooks/:hook_id" do
         required_attributes! [:hook_id]
 
@@ -102,7 +66,6 @@ module API
           @hook = ProjectHook.find(params[:hook_id])
           @hook.destroy
         rescue
-          # ProjectHook can raise Error if hook_id not found
         end
       end
     end

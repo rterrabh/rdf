@@ -1,4 +1,3 @@
-# Make redirects for SEO needs
 module Spree
   module Frontend
     module Middleware
@@ -13,13 +12,11 @@ module Spree
 
           taxon_id = params['taxon']
 
-          #redirect requests using taxon id's to their permalinks
           if !taxon_id.blank? && !taxon_id.is_a?(Hash) && taxon = Taxon.find(taxon_id)
             params.delete('taxon')
 
             return build_response(params, "#{request.script_name}t/#{taxon.permalink}" )
           elsif env["PATH_INFO"] =~ /^\/(t|products)(\/\S+)?\/$/
-            #ensures no trailing / for taxon and product urls
 
             return build_response(params, env["PATH_INFO"][0...-1])
           end

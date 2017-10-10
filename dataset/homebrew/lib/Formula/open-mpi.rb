@@ -50,12 +50,9 @@ class OpenMpi < Formula
     system "make", "check"
     system "make", "install"
 
-    # If Fortran bindings were built, there will be stray `.mod` files
-    # (Fortran header) in `lib` that need to be moved to `include`.
     include.install Dir["#{lib}/*.mod"]
 
     if build.stable?
-      # Move vtsetup.jar from bin to libexec.
       libexec.install bin/"vtsetup.jar"
       inreplace bin/"vtsetup", "$bindir/vtsetup.jar", "$prefix/libexec/vtsetup.jar"
     end
@@ -63,8 +60,6 @@ class OpenMpi < Formula
 
   test do
     (testpath/"hello.c").write <<-EOS.undent
-      #include <mpi.h>
-      #include <stdio.h>
 
       int main()
       {

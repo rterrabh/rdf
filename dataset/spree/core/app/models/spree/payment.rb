@@ -31,10 +31,8 @@ module Spree
 
     after_save :create_payment_profile, if: :profiles_supported?
 
-    # update the order totals, etc.
     after_save :update_order
 
-    # invalidate previously entered payments
     after_create :invalidate_old_payments
 
     attr_accessor :source_attributes, :request_env
@@ -47,7 +45,6 @@ module Spree
 
     scope :from_credit_card, -> { where(source_type: 'Spree::CreditCard') }
     scope :with_state, ->(s) { where(state: s.to_s) }
-    # "offset" is reserved by activerecord
     scope :offset_payment, -> { where("source_type = 'Spree::Payment' AND amount < 0 AND state = 'completed'") }
 
     scope :checkout, -> { with_state('checkout') }
@@ -59,37 +56,26 @@ module Spree
     scope :risky, -> { where("avs_response IN (?) OR (cvv_response_code IS NOT NULL and cvv_response_code != 'M') OR state = 'failed'", RISKY_AVS_CODES) }
     scope :valid, -> { where.not(state: %w(failed invalid)) }
 
-    # transaction_id is much easier to understand
     def transaction_id
       response_code
     end
 
-    # order state machine (see http://github.com/pluginaweek/state_machine/tree/master for details)
     state_machine initial: :checkout do
-      # With card payments, happens before purchase or authorization happens
-      #
-      # Setting it after creating a profile and authorizing a full amount will
-      # prevent the payment from being authorized again once Order transitions
-      # to complete
       event :started_processing do
         transition from: [:checkout, :pending, :completed, :processing], to: :processing
       end
-      # When processing during checkout fails
       event :failure do
         transition from: [:pending, :processing], to: :failed
       end
-      # With card payments this represents authorizing the payment
       event :pend do
         transition from: [:checkout, :processing], to: :pending
       end
-      # With card payments this represents completing a purchase or capture transaction
       event :complete do
         transition from: [:processing, :pending, :checkout], to: :completed
       end
       event :void do
         transition from: [:pending, :processing, :completed, :checkout], to: :void
       end
-      # when the card brand isnt supported
       event :invalidate do
         transition from: [:checkout], to: :invalid
       end
@@ -134,7 +120,6 @@ module Spree
       credit_allowed > 0
     end
 
-    # see https://github.com/spree/spree/issues/981
     def build_source
       return unless new_record?
       if source_attributes.present? && source.blank? && payment_method.try(:payment_source_class)
@@ -146,7 +131,7 @@ module Spree
 
     def actions
       return [] unless payment_source and payment_source.respond_to? :actions
-      #nodyna <ID:send-114> <SD COMPLEX (array)>
+      #nodyna <send-2523> <SD COMPLEX (array)>
       payment_source.actions.select { |action| !payment_source.respond_to?("can_#{action}?") or payment_source.send("can_#{action}?", self) }
     end
 
@@ -196,11 +181,8 @@ module Spree
       end
 
       def create_payment_profile
-        # Don't attempt to create on bad payments.
         return if %w(invalid failed).include?(state)
-        # Payment profile cannot be created without source
         return unless source
-        # Imported payments shouldn't create a payment profile.
         return if source.imported
 
         payment_method.create_profile(self)

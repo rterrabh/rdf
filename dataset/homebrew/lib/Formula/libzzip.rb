@@ -25,7 +25,6 @@ class Libzzip < Formula
   def install
     if build.universal?
       ENV.universal_binary
-      # See: https://sourceforge.net/tracker/?func=detail&aid=3511669&group_id=6389&atid=356389
       ENV["ac_cv_sizeof_long"] = "(LONG_BIT/8)"
     end
 

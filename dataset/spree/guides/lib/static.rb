@@ -7,13 +7,10 @@ module Nanoc3::DataSources
     identifier :static
 
     def items
-      # Get prefix
       prefix = config[:prefix] || 'static'
 
-      # Get all files under prefix dir
       filenames = Dir[prefix + '/**/*'].select { |f| File.file?(f) }
 
-      # Convert filenames to items
       filenames.map do |filename|
         attributes = {
           :extension => File.extname(filename)[1..-1],
@@ -35,8 +32,6 @@ module Nanoc3::DataSources
 
   private
 
-    # Returns a checksum of the given filenames
-    # TODO un-duplicate this somewhere
     def checksum_for(*filenames)
       filenames.flatten.map do |filename|
         digest = Digest::SHA1.new

@@ -19,13 +19,10 @@ class Jbigkit < Formula
   option "with-check", "Verify the library during install"
 
   def install
-    # Set for a universal build and patch the Makefile.
-    # There's no configure. It creates a static lib.
     ENV.universal_binary if build.universal?
     system "make", "CC=#{ENV.cc}", "CCFLAGS=#{ENV.cflags}"
 
     if build.with? "check"
-      # It needs j1 to make the tests happen in sequence.
       ENV.deparallelize
       system "make", "test"
     end

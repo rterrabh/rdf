@@ -1,6 +1,3 @@
-# markdown normalizer to be used by importers
-#
-#
 require 'htmlentities'
 module Import; end
 module Import::Normalize

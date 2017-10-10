@@ -2,17 +2,6 @@ module ActiveAdmin
   module ViewHelpers
     module FormHelper
 
-      # Flatten a params Hash to an array of fields.
-      #
-      # @param params [Hash]
-      # @param options [Hash] :namespace and :except
-      #
-      # @return [Array] of [Hash] with one element.
-      #
-      # @example
-      #   fields_for_params(scope: "all", users: ["greg"])
-      #     => [ {"scope" => "all"} , {"users[]" => "greg"} ]
-      #
       def fields_for_params(params, options = {})
         namespace = options[:namespace]
         except = options[:except].is_a?(Array) ? options[:except] : [options[:except]]

@@ -13,7 +13,6 @@ class Cassandra < Formula
 
   depends_on :python if MacOS.version <= :snow_leopard
 
-  # Only Yosemite has new enough setuptools for successful compile of the below deps.
   resource "setuptools" do
     url "https://pypi.python.org/packages/source/s/setuptools/setuptools-12.0.5.tar.gz"
     sha256 "bda326cad34921060a45004b0dd81f828d471695346e303f4ca53b8ba6f4547f"
@@ -62,20 +61,14 @@ class Cassandra < Formula
     inreplace "bin/cassandra", "-Dcassandra.logdir\=$CASSANDRA_HOME/logs", "-Dcassandra.logdir\=#{var}/log/cassandra"
     inreplace "bin/cassandra.in.sh" do |s|
       s.gsub! "CASSANDRA_HOME=\"`dirname \"$0\"`/..\"", "CASSANDRA_HOME=\"#{libexec}\""
-      # Store configs in etc, outside of keg
       s.gsub! "CASSANDRA_CONF=\"$CASSANDRA_HOME/conf\"", "CASSANDRA_CONF=\"#{etc}/cassandra\""
-      # Jars installed to prefix, no longer in a lib folder
       s.gsub! "\"$CASSANDRA_HOME\"/lib/*.jar", "\"$CASSANDRA_HOME\"/*.jar"
-      # The jammm Java agent is not in a lib/ subdir either:
       s.gsub! "JAVA_AGENT=\"$JAVA_AGENT -javaagent:$CASSANDRA_HOME/lib/jamm-", "JAVA_AGENT=\"$JAVA_AGENT -javaagent:$CASSANDRA_HOME/jamm-"
-      # Storage path
       s.gsub! "cassandra_storagedir\=\"$CASSANDRA_HOME/data\"", "cassandra_storagedir\=\"#{var}/lib/cassandra\""
     end
 
     rm Dir["bin/*.bat", "bin/*.ps1"]
 
-    # This breaks on `brew uninstall cassandra && brew install cassandra`
-    # https://github.com/Homebrew/homebrew/pull/38309
     (etc+"cassandra").install Dir["conf/*"]
 
     libexec.install Dir["*.txt", "{bin,interface,javadoc,pylib,lib/licenses}"]

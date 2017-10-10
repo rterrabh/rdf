@@ -5,8 +5,6 @@ require_dependency "staff_constraint"
 require_dependency "homepage_constraint"
 require_dependency "permalink_constraint"
 
-# This used to be User#username_format, but that causes a preload of the User object
-# and makes Guard not work properly.
 USERNAME_ROUTE_FORMAT = /[A-Za-z0-9\_]+/ unless defined? USERNAME_ROUTE_FORMAT
 BACKUP_ROUTE_FORMAT = /[a-zA-Z0-9\-_]*\d{4}(-\d{2}){2}-\d{6}\.(tar\.gz|t?gz)/i unless defined? BACKUP_ROUTE_FORMAT
 
@@ -284,7 +282,6 @@ Discourse::Application.routes.draw do
   get "users/:username/notifications" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/pending" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   delete "users/:username" => "users#destroy", constraints: {username: USERNAME_ROUTE_FORMAT}
-  # The external_id constraint is to allow periods to be used in the value without becoming part of the format. ie: foo.bar.json
   get "users/by-external/:external_id" => "users#show", constraints: {external_id: /[^\/]+/}
   get "users/:username/flagged-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
   get "users/:username/deleted-posts" => "users#show", constraints: {username: USERNAME_ROUTE_FORMAT}
@@ -300,11 +297,8 @@ Discourse::Application.routes.draw do
 
   post "uploads" => "uploads#create"
 
-  # used to download original images
   get "uploads/:site/:sha" => "uploads#show", constraints: { site: /\w+/, sha: /[a-f0-9]{40}/ }
-  # used to dowwload attachments
   get "uploads/:site/original/:tree:sha" => "uploads#show", constraints: { site: /\w+/, tree: /(\w+\/)+/i, sha: /[a-f0-9]{40}/ }
-  # used to download attachments (old route)
   get "uploads/:site/:id/:sha" => "uploads#show", constraints: { site: /\w+/, id: /\d+/, sha: /[a-f0-9]{16}/ }
 
   get "posts" => "posts#latest"
@@ -322,7 +316,6 @@ Discourse::Application.routes.draw do
     delete "members/:username" => "groups#remove_member"
   end
 
-  # In case people try the wrong URL
   get '/group/:id', to: redirect('/groups/%{id}')
   get '/group/:id/members', to: redirect('/groups/%{id}/members')
 
@@ -412,7 +405,6 @@ Discourse::Application.routes.draw do
   get "search/query" => "search#query"
   get "search" => "search#show"
 
-  # Topics resource
   get "t/:id" => "topics#show"
   post "t" => "topics#create"
   put "t/:id" => "topics#update"
@@ -435,7 +427,6 @@ Discourse::Application.routes.draw do
 
   get "new-topic" => "list#latest"
 
-  # Topic routes
   get "t/id_for/:slug" => "topics#id_for_slug"
   get "t/:slug/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
   get "t/:topic_id/wordpress" => "topics#wordpress", constraints: {topic_id: /\d+/}
@@ -527,9 +518,7 @@ Discourse::Application.routes.draw do
   Discourse.filters.each do |filter|
     root to: "list##{filter}", constraints: HomePageConstraint.new("#{filter}"), :as => "list_#{filter}"
   end
-  # special case for categories
   root to: "categories#index", constraints: HomePageConstraint.new("categories"), :as => "categories_index"
-  # special case for top
   root to: "list#top", constraints: HomePageConstraint.new("top"), :as => "top_lists"
 
   get "*url", to: 'permalinks#show', constraints: PermalinkConstraint.new

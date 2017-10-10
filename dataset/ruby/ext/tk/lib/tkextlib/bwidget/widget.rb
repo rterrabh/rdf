@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/widget.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/bwidget.rb'
@@ -52,10 +48,10 @@ module Tk::BWidget::Widget
     win = window(tk_call('Widget::create', klass, path, rename))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-28> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1604> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-131> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1605> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

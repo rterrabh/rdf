@@ -7,7 +7,6 @@ class Hornetq < Formula
 
   def wrapper_script(target)
     <<-EOS.undent
-      #!/bin/bash
       cd #{libexec}/bin/
       ./#{target} "$@"
     EOS
@@ -21,7 +20,6 @@ class Hornetq < Formula
 
   def caveats; <<-EOF.undent
     HornetQ has been installed to:
-      #{libexec}
 
     `run.sh` and `stop.sh` have been wrapped as`hornet-start` and `hornet-stop`
     to avoid naming conflicts.

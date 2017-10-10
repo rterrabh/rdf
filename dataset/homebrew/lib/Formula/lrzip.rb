@@ -26,11 +26,9 @@ class Lrzip < Formula
     original_contents = "." * 1000
     path.write original_contents
 
-    # compress: data.txt -> data.txt.lrz
     system bin/"lrzip", "-o", "#{path}.lrz", path
     path.unlink
 
-    # decompress: data.txt.lrz -> data.txt
     system bin/"lrzip", "-d", "#{path}.lrz"
     assert_equal original_contents, path.read
   end

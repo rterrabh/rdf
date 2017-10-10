@@ -13,21 +13,13 @@ class Samba < Formula
 
   conflicts_with "talloc", :because => "both install `include/talloc.h`"
 
-  # Once the smbd daemon is executed with required root permissions
-  # contents of these two directories becomes owned by root. Sad face.
   skip_clean "private"
   skip_clean "var/locks"
 
-  # Fixes the Grouplimit of 16 users os OS X.
-  # Bug has been raised upstream:
-  # https://bugzilla.samba.org/show_bug.cgi?id=8773
   patch :DATA
 
   def install
     cd "source3" do
-      # This stops samba dumping .msg and .dat files directly into lib
-      # It can't be set with a configure switch - There isn't one that fine-grained.
-      # https://bugzilla.samba.org/show_bug.cgi?id=11120
       inreplace "configure", "${MODULESDIR}", "#{share}/codepages"
 
       system "./configure", "--disable-debug",
@@ -36,7 +28,6 @@ class Samba < Formula
                             "--without-ldap",
                             "--without-krb5"
 
-      # https://bugzilla.samba.org/show_bug.cgi?id=11113
       inreplace "Makefile" do |s|
         s.gsub! /(lib\w+).dylib(.[\.\d]+)/, "\\1\\2.dylib"
       end
@@ -45,11 +36,9 @@ class Samba < Formula
       (prefix/"var/locks").mkpath
 
       system "make", "install"
-      # makefile doesn't have an install target for these
       (lib/"pkgconfig").install Dir["pkgconfig/*.pc"]
     end
 
-    # Install basic example configuration
     inreplace "examples/smb.conf.default" do |s|
       s.gsub! "/usr/local/samba/var/log.%m", "#{prefix}/var/log/samba/log.%m"
     end
@@ -101,4 +90,3 @@ __END__
 +#elif defined(SYSCONF_SC_NGROUPS_MAX)
  	int ret = sysconf(_SC_NGROUPS_MAX);
  	return (ret == -1) ? NGROUPS_MAX : ret;
- #else

@@ -19,9 +19,6 @@ class Zsh < Formula
   depends_on "gdbm"
   depends_on "pcre"
 
-  # zsh 5.0.8 broke du tab-completion for files, but this has been fixed in
-  # bug #35467. We ship our own version of the patch to avoid CHANGELOG conflict.
-  # http://sourceforge.net/p/zsh/code/ci/806f73a0b3d3959d5af12ce97e0258b4d4fe7d76/
   patch :DATA
 
   def install
@@ -48,7 +45,6 @@ class Zsh < Formula
 
     system "./configure", *args
 
-    # Do not version installation directories.
     inreplace ["Makefile", "Src/Makefile"],
       "$(libdir)/$(tzsh)/$(VERSION)", "$(libdir)"
 

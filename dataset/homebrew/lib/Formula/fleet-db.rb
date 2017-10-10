@@ -7,7 +7,6 @@ class FleetDb < Formula
   def install
     libexec.install "fleetdb-standalone-#{version}.jar"
     (bin+"fleetdb-server").write <<-EOS.undent
-      #!/bin/sh
       java -cp "#{libexec}/fleetdb-standalone-#{version}.jar" fleetdb.server "$@"
     EOS
   end

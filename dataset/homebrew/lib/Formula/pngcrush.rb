@@ -12,8 +12,6 @@ class Pngcrush < Formula
   end
 
   def install
-    # Required to enable "-cc" (color counting) option (disabled by default
-    # since 1.5.1)
     ENV.append_to_cflags "-DPNGCRUSH_COUNT_COLORS"
 
     system "make", "CC=#{ENV.cc}",

@@ -11,7 +11,6 @@ class Lysp < Formula
     cause "use of unknown builtin '__builtin_return'"
   end
 
-  # Use our CFLAGS
   patch :DATA
 
   def install

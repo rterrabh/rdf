@@ -10,7 +10,6 @@ class CategoryUser < ActiveRecord::Base
     self.where(user: user, category: category)
   end
 
-  # same for now
   def self.notification_levels
     TopicUser.notification_levels
   end
@@ -20,9 +19,7 @@ class CategoryUser < ActiveRecord::Base
       category_id = topic.category_id
 
       if new_category && topic.created_at > 5.days.ago
-        # we want to apply default of the new category
         category_id = new_category.id
-        # remove defaults from previous category
         remove_default_from_topic(topic.id, TopicUser.notification_levels[:"#{s}ing"], TopicUser.notification_reasons[:"auto_#{s}_category"])
       end
 
@@ -58,7 +55,6 @@ class CategoryUser < ActiveRecord::Base
   end
 
   def self.apply_default_to_topic(topic_id, category_id, level, reason)
-    # Can not afford to slow down creation of topics when a pile of users are watching new topics, reverting to SQL for max perf here
     sql = <<-SQL
       INSERT INTO topic_users(user_id, topic_id, notification_level, notifications_reason_id)
            SELECT user_id, :topic_id, :level, :reason
@@ -95,12 +91,3 @@ class CategoryUser < ActiveRecord::Base
   private_class_method :apply_default_to_topic, :remove_default_from_topic
 end
 
-# == Schema Information
-#
-# Table name: category_users
-#
-#  id                 :integer          not null, primary key
-#  category_id        :integer          not null
-#  user_id            :integer          not null
-#  notification_level :integer          not null
-#

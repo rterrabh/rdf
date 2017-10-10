@@ -23,7 +23,6 @@ class CrosstoolNg < Formula
   depends_on "homebrew/dupes/grep" => :optional
   depends_on "homebrew/dupes/make" => :optional
 
-  # Avoid superenv to prevent https://github.com/mxcl/homebrew/pull/10552#issuecomment-9736248
   env :std
 
   def install
@@ -46,7 +45,6 @@ class CrosstoolNg < Formula
 
     system "./configure", *args
 
-    # Must be done in two steps
     system "make"
     system "make install"
   end

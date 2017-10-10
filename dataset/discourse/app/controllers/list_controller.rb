@@ -6,20 +6,16 @@ class ListController < ApplicationController
   skip_before_filter :check_xhr
 
   @@categories = [
-    # filtered topics lists
     Discourse.filters.map { |f| "category_#{f}".to_sym },
     Discourse.filters.map { |f| "category_none_#{f}".to_sym },
     Discourse.filters.map { |f| "parent_category_category_#{f}".to_sym },
     Discourse.filters.map { |f| "parent_category_category_none_#{f}".to_sym },
-    # top summaries
     :category_top,
     :category_none_top,
     :parent_category_category_top,
-    # top pages (ie. with a period)
     TopTopic.periods.map { |p| "category_top_#{p}".to_sym },
     TopTopic.periods.map { |p| "category_none_top_#{p}".to_sym },
     TopTopic.periods.map { |p| "parent_category_category_top_#{p}".to_sym },
-    # category feeds
     :category_feed,
   ].flatten
 
@@ -27,31 +23,25 @@ class ListController < ApplicationController
 
   before_filter :ensure_logged_in, except: [
     :topics_by,
-    # anonymous filters
     Discourse.anonymous_filters,
     Discourse.anonymous_filters.map { |f| "#{f}_feed".to_sym },
-    # anonymous categorized filters
     Discourse.anonymous_filters.map { |f| "category_#{f}".to_sym },
     Discourse.anonymous_filters.map { |f| "category_none_#{f}".to_sym },
     Discourse.anonymous_filters.map { |f| "parent_category_category_#{f}".to_sym },
     Discourse.anonymous_filters.map { |f| "parent_category_category_none_#{f}".to_sym },
-    # category feeds
     :category_feed,
-    # top summaries
     :top,
     :category_top,
     :category_none_top,
     :parent_category_category_top,
-    # top pages (ie. with a period)
     TopTopic.periods.map { |p| "top_#{p}".to_sym },
     TopTopic.periods.map { |p| "category_top_#{p}".to_sym },
     TopTopic.periods.map { |p| "category_none_top_#{p}".to_sym },
     TopTopic.periods.map { |p| "parent_category_category_top_#{p}".to_sym },
   ].flatten
 
-  # Create our filters
   Discourse.filters.each_with_index do |filter, idx|
-    #nodyna <ID:define_method-14> <DM MODERATE (array)>
+    #nodyna <define_method-419> <DM MODERATE (array)>
     define_method(filter) do |options = nil|
       list_opts = build_topic_list_options
       list_opts.merge!(options) if options
@@ -61,7 +51,7 @@ class ListController < ApplicationController
         list_opts[:no_definitions] = true
       end
 
-      #nodyna <ID:send-100> <SD MODERATE (array)>
+      #nodyna <send-420> <SD MODERATE (array)>
       list = TopicQuery.new(user, list_opts).public_send("list_#{filter}")
       list.more_topics_url = construct_url_with(:next, list_opts)
       list.prev_topics_url = construct_url_with(:prev, list_opts)
@@ -69,7 +59,6 @@ class ListController < ApplicationController
         @description = SiteSetting.site_description
         @rss = filter
 
-        # Note the first is the default and we don't add a title
         if (filter.to_s != current_homepage) && use_crawler_layout?
           filter_title = I18n.t("js.filters.#{filter.to_s}.title", count: 0)
           if list_opts[:category]
@@ -83,35 +72,35 @@ class ListController < ApplicationController
       respond_with_list(list)
     end
 
-    #nodyna <ID:define_method-15> <DM MODERATE (array)>
+    #nodyna <define_method-421> <DM MODERATE (array)>
     define_method("category_#{filter}") do
       canonical_url "#{Discourse.base_url}#{@category.url}"
-      #nodyna <ID:send-101> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-422> <SD COMPLEX (change-prone variables)>
       self.send(filter, { category: @category.id })
     end
 
-    #nodyna <ID:define_method-16> <DM MODERATE (array)>
+    #nodyna <define_method-423> <DM MODERATE (array)>
     define_method("category_none_#{filter}") do
-      #nodyna <ID:send-102> <SD MODERATE (change-prone variables)>
+      #nodyna <send-424> <SD MODERATE (change-prone variables)>
       self.send(filter, { category: @category.id, no_subcategories: true })
     end
 
-    #nodyna <ID:define_method-17> <DM MODERATE (array)>
+    #nodyna <define_method-425> <DM MODERATE (array)>
     define_method("parent_category_category_#{filter}") do
       canonical_url "#{Discourse.base_url}#{@category.url}"
-      #nodyna <ID:send-103> <SD MODERATE (change-prone variables)>
+      #nodyna <send-426> <SD MODERATE (change-prone variables)>
       self.send(filter, { category: @category.id })
     end
 
-    #nodyna <ID:define_method-18> <DM MODERATE (array)>
+    #nodyna <define_method-427> <DM MODERATE (array)>
     define_method("parent_category_category_none_#{filter}") do
-      #nodyna <ID:send-104> <SD MODERATE (change-prone variables)>
+      #nodyna <send-428> <SD MODERATE (change-prone variables)>
       self.send(filter, { category: @category.id })
     end
   end
 
   Discourse.feed_filters.each do |filter|
-    #nodyna <ID:define_method-19> <DM MODERATE (array)>
+    #nodyna <define_method-429> <DM MODERATE (array)>
     define_method("#{filter}_feed") do
       discourse_expires_in 1.minute
 
@@ -119,7 +108,7 @@ class ListController < ApplicationController
       @link = "#{Discourse.base_url}/#{filter}"
       @description = I18n.t("rss_description.#{filter}")
       @atom_link = "#{Discourse.base_url}/#{filter}.rss"
-      #nodyna <ID:send-105> <SD MODERATE (change-prone variables)>
+      #nodyna <send-430> <SD MODERATE (change-prone variables)>
       @topic_list = TopicQuery.new(nil, order: 'created').public_send("list_#{filter}")
 
       render 'list', formats: [:rss]
@@ -127,7 +116,7 @@ class ListController < ApplicationController
   end
 
   [:topics_by, :private_messages, :private_messages_sent, :private_messages_unread].each do |action|
-    #nodyna <ID:define_method-20> <DM MODERATE (array)>
+    #nodyna <define_method-431> <DM MODERATE (array)>
     define_method("#{action}") do
       list_opts = build_topic_list_options
       target_user = fetch_user_from_params
@@ -156,7 +145,7 @@ class ListController < ApplicationController
   def top(options=nil)
     options ||= {}
     period = ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])
-    #nodyna <ID:send-106> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-432> <SD COMPLEX (change-prone variables)>
     send("top_#{period}", options)
   end
 
@@ -173,7 +162,7 @@ class ListController < ApplicationController
   end
 
   TopTopic.periods.each do |period|
-    #nodyna <ID:define_method-21> <DM MODERATE (array)>
+    #nodyna <define_method-433> <DM MODERATE (array)>
     define_method("top_#{period}") do |options = nil|
       top_options = build_topic_list_options
       top_options.merge!(options) if options
@@ -191,21 +180,21 @@ class ListController < ApplicationController
       respond_with_list(list)
     end
 
-    #nodyna <ID:define_method-22> <DM MODERATE (array)>
+    #nodyna <define_method-434> <DM MODERATE (array)>
     define_method("category_top_#{period}") do
-      #nodyna <ID:send-107> <SD MODERATE (change-prone variables)>
+      #nodyna <send-435> <SD MODERATE (change-prone variables)>
       self.send("top_#{period}", { category: @category.id })
     end
 
-    #nodyna <ID:define_method-23> <DM MODERATE (array)>
+    #nodyna <define_method-436> <DM MODERATE (array)>
     define_method("category_none_top_#{period}") do
-      #nodyna <ID:send-108> <SD MODERATE (change-prone variables)>
+      #nodyna <send-437> <SD MODERATE (change-prone variables)>
       self.send("top_#{period}", { category: @category.id, no_subcategories: true })
     end
 
-    #nodyna <ID:define_method-24> <DM MODERATE (array)>
+    #nodyna <define_method-438> <DM MODERATE (array)>
     define_method("parent_category_category_top_#{period}") do
-      #nodyna <ID:send-109> <SD MODERATE (change-prone variables)>
+      #nodyna <send-439> <SD MODERATE (change-prone variables)>
       self.send("top_#{period}", { category: @category.id })
     end
   end
@@ -256,7 +245,6 @@ class ListController < ApplicationController
   end
 
   def build_topic_list_options
-    # exclude_category = 1. from params / 2. parsed from top menu / 3. nil
     options = {
       page: params[:page],
       topic_ids: param_to_integer_list(:topic_ids),
@@ -298,17 +286,17 @@ class ListController < ApplicationController
   end
 
   def generate_list_for(action, target_user, opts)
-    #nodyna <ID:send-110> <SD MODERATE (change-prone variables)>
+    #nodyna <send-440> <SD MODERATE (change-prone variables)>
     TopicQuery.new(current_user, opts).send("list_#{action}", target_user)
   end
 
   def construct_url_with(action, opts, url_prefix = nil)
     method = url_prefix.blank? ? "#{action_name}_path" : "#{url_prefix}_#{action_name}_path"
     url = if action == :prev
-      #nodyna <ID:send-111> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-441> <SD COMPLEX (change-prone variables)>
       public_send(method, opts.merge(prev_page_params(opts)))
     else # :next
-      #nodyna <ID:send-112> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-442> <SD COMPLEX (change-prone variables)>
       public_send(method, opts.merge(next_page_params(opts)))
     end
     url.sub('.json?','?')
@@ -322,7 +310,7 @@ class ListController < ApplicationController
 
     periods = [ListController.best_period_for(current_user.try(:previous_visit_at), options[:category])]
 
-    #nodyna <ID:send-113> <SD COMPLEX (array)>
+    #nodyna <send-443> <SD COMPLEX (array)>
     periods.each { |period| top.send("#{period}=", topic_query.list_top_for(period)) }
 
     top
@@ -336,7 +324,6 @@ class ListController < ApplicationController
       end
       return period if top_topics.count >= SiteSetting.topics_per_period_in_top_page
     end
-    # default period is yearly
     :yearly
   end
 

@@ -31,7 +31,6 @@ module Gitlab
       def user_map
         @user_map ||= begin
           user_map = Hash.new do |hash, user| 
-            # Replace ... by \.\.\., so `johnsm...@gmail.com` isn't autolinked.
             Client.mask_email(user).sub("...", "\\.\\.\\.")
           end
 
@@ -143,7 +142,6 @@ module Gitlab
               attachments
             )
 
-            # Needs to match order of `comment_columns` below.
             Note.create!(
               project_id:     project.id,
               noteable_type:  "Issue",
@@ -212,17 +210,13 @@ module Gitlab
       end
 
       def escape_for_markdown(s)
-        # No headings and lists
         s = s.gsub(/^#/, "\\#")
         s = s.gsub(/^-/, "\\-")
 
-        # No inline code
         s = s.gsub("`", "\\`")
 
-        # Carriage returns make me sad
         s = s.gsub("\r", "")
 
-        # Markdown ignores single newlines, but we need them as <br />.
         s = s.gsub("\n", "  \n")
 
         s

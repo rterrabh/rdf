@@ -7,18 +7,13 @@ class Vmalloc < Formula
   version "2013-05-31"
 
   def install
-    # Vmalloc makefile does not work in parallel mode
     ENV.deparallelize
-    # override Vmalloc makefile flags
     inreplace Dir["src/**/Makefile"] do |s|
       s.change_make_var! "CC", ENV.cc
       s.change_make_var! "CXFLAGS", ENV.cflags
       s.change_make_var! "CCMODE", ""
     end
-    # make all Vmalloc stuff
     system "/bin/sh ./Runmake"
-    # install manually
-    # put all includes into a directory of their own
     (include + "vmalloc").install Dir["include/*.h"]
     lib.install Dir["lib/*.a"]
     man.install "man/man3"

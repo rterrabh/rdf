@@ -8,7 +8,6 @@ class Ndiff < Formula
 
   def install
     ENV.j1
-    # Install manually as the `install` make target is crufty
     system "./configure", "--prefix=.", "--mandir=."
     mkpath "bin"
     mkpath "man/man1"

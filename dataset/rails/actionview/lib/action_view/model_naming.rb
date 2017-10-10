@@ -1,6 +1,5 @@
 module ActionView
   module ModelNaming
-    # Converts the given object to an ActiveModel compliant one.
     def convert_to_model(object)
       object.respond_to?(:to_model) ? object.to_model : object
     end

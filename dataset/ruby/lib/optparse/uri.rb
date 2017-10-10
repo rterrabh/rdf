@@ -1,4 +1,3 @@
-# -*- ruby -*-
 
 require 'optparse'
 require 'uri'

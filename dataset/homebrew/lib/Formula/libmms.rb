@@ -15,7 +15,6 @@ class Libmms < Formula
   depends_on "pkg-config" => :build
   depends_on "glib"
 
-  # https://trac.macports.org/ticket/27988
   patch :p0 do
     url "https://trac.macports.org/export/87883/trunk/dports/multimedia/libmms/files/src_mms-common.h.patch"
     sha1 "57b526dc9de76cfde236d3331e18eb7ae92f999f"

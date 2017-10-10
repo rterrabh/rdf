@@ -6,7 +6,6 @@ class Zopfli < Formula
   head "https://code.google.com/p/zopfli/", :using => :git
 
   def install
-    # Makefile hardcodes gcc
     inreplace "makefile", "gcc", ENV.cc
     system "make", "-f", "makefile"
     bin.install "zopfli"

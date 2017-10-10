@@ -111,13 +111,11 @@ class Hugo < Formula
         :revision => "6549b98005f3e4026ad9f50ef7d5011f40ba1397"
   end
 
-  # dependency for blackfriday
   go_resource "github.com/shurcooL/sanitized_anchor_name" do
     url "https://github.com/shurcooL/sanitized_anchor_name.git",
         :revision => "11a20b799bf22a02808c862eb6ca09f7fb38f84a"
   end
 
-  # dependencies for cobra
   go_resource "github.com/spf13/pflag" do
     url "https://github.com/spf13/pflag.git",
         :revision => "0ed81a961505a7dfaab5490049a7a324743e6f03"
@@ -127,13 +125,11 @@ class Hugo < Formula
         :revision => "76626ae9c91c4f2a10f34cad8ce83ea42c93bb75"
   end
 
-  # dependency for purell
   go_resource "github.com/opennota/urlesc" do
     url "https://github.com/opennota/urlesc.git",
         :revision => "5fa9ff0392746aeae1c4b37fcc42c65afa7a9587"
   end
 
-  # dependencies for viper
   go_resource "github.com/kr/pretty" do
     url "https://github.com/kr/pretty.git",
         :revision => "cb0850c1681cbca3233e84f7e6ec3e4c3f352085"
@@ -147,13 +143,11 @@ class Hugo < Formula
         :revision => "d5929c67198951106f49f7ea425198d0f1a08f7f"
   end
 
-  # dependency for pretty
   go_resource "github.com/kr/text" do
     url "https://github.com/kr/text.git",
         :revision => "6807e777504f54ad073ecef66747de158294b639"
   end
 
-  # dependencies for crypt
   go_resource "github.com/armon/consul-api" do
     url "https://github.com/armon/consul-api.git",
         :revision => "dcfedd50ed5334f96adee43fc88518a4f095e15c"
@@ -168,7 +162,6 @@ class Hugo < Formula
         :revision => "73a8ef737e8ea002281a28b4cb92a1de121ad4c6"
   end
 
-  # dependency for go-etcd
   go_resource "github.com/coreos/etcd" do
     url "https://github.com/coreos/etcd.git",
         :revision => "b3e6ad136a184afbffd1a803f75955d393c53e21"

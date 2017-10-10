@@ -1,4 +1,3 @@
-# This class is inherited by the has_one and belongs_to association classes
 
 module ActiveRecord::Associations::Builder
   class SingularAssociation < Association #:nodoc:
@@ -11,8 +10,8 @@ module ActiveRecord::Associations::Builder
       define_constructors(model.generated_association_methods, reflection.name) if reflection.constructable?
     end
 
-    # Defines the (build|create)_association methods for belongs_to or has_one association
     def self.define_constructors(mixin, name)
+      #nodyna <class_eval-892> <not yet classified>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def build_#{name}(*args, &block)
           association(:#{name}).build(*args, &block)

@@ -37,13 +37,9 @@ class Pypy < Formula
     sha256 "cfec177552fdd0b2d12b72651c8e874f955b4c62c1c2c9f2588cbdc1c0d0d416"
   end
 
-  # https://bugs.launchpad.net/ubuntu/+source/gcc-4.2/+bug/187391
   fails_with :gcc
 
   def install
-    # Having PYTHONPATH set can cause the build to fail if another
-    # Python is present, e.g. a Homebrew-provided Python 2.x
-    # See https://github.com/Homebrew/homebrew/issues/24364
     ENV["PYTHONPATH"] = ""
     ENV["PYPY_USESSION_DIR"] = buildpath
 
@@ -70,10 +66,6 @@ class Pypy < Formula
     (libexec/"lib").install libexec/"bin/libpypy-c.dylib"
     system *%W[install_name_tool -change @rpath/libpypy-c.dylib #{libexec}/lib/libpypy-c.dylib #{libexec}/bin/pypy]
 
-    # The PyPy binary install instructions suggest installing somewhere
-    # (like /opt) and symlinking in binaries as needed. Specifically,
-    # we want to avoid putting PyPy's Python.h somewhere that configure
-    # scripts will find it.
     bin.install_symlink libexec/"bin/pypy"
     lib.install_symlink libexec/"lib/libpypy-c.dylib"
 
@@ -83,17 +75,11 @@ class Pypy < Formula
   end
 
   def post_install
-    # Post-install, fix up the site-packages and install-scripts folders
-    # so that user-installed Python software survives minor updates, such
-    # as going from 1.7.0 to 1.7.1.
 
-    # Create a site-packages in the prefix.
     prefix_site_packages.mkpath
 
-    # Symlink the prefix site-packages into the cellar.
     libexec.install_symlink prefix_site_packages
 
-    # Tell distutils-based installers where to put scripts
     scripts_folder.mkpath
     (distutils+"distutils.cfg").atomic_write <<-EOF.undent
       [install]
@@ -107,19 +93,15 @@ class Pypy < Formula
       end
     end
 
-    # Symlinks to easy_install_pypy and pip_pypy
     bin.install_symlink scripts_folder/"easy_install" => "easy_install_pypy"
     bin.install_symlink scripts_folder/"pip" => "pip_pypy"
 
-    # post_install happens after linking
     %w[easy_install_pypy pip_pypy].each { |e| (HOMEBREW_PREFIX/"bin").install_symlink bin/e }
   end
 
   def caveats; <<-EOS.undent
     A "distutils.cfg" has been written to:
-      #{distutils}
     specifying the install-scripts folder as:
-      #{scripts_folder}
 
     If you install Python packages via "pypy setup.py install", easy_install_pypy,
     or pip_pypy, any provided scripts will go into the install-scripts folder
@@ -135,17 +117,14 @@ class Pypy < Formula
     EOS
   end
 
-  # The HOMEBREW_PREFIX location of site-packages
   def prefix_site_packages
     HOMEBREW_PREFIX+"lib/pypy/site-packages"
   end
 
-  # Where setuptools will install executable scripts
   def scripts_folder
     HOMEBREW_PREFIX+"share/pypy"
   end
 
-  # The Cellar location of distutils
   def distutils
     libexec+"lib-python/2.7/distutils"
   end

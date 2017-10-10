@@ -1,18 +1,7 @@
-#
-#   load.rb -
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 require "irb/cmd/nop.rb"
 require "irb/ext/loader"
 
-# :stopdoc:
 module IRB
   module ExtendCommand
     class Load<Nop
@@ -63,4 +52,3 @@ module IRB
   end
 
 end
-# :startdoc:

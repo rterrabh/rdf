@@ -9,22 +9,14 @@ module JsLocaleHelper
     @loaded_translations[locale] ||= begin
       locale_str = locale.to_s
 
-      # load default translations
       translations = YAML::load(File.open("#{Rails.root}/config/locales/client.#{locale_str}.yml"))
-      # load plugins translations
       plugin_translations = {}
       Dir["#{Rails.root}/plugins/*/config/locales/client.#{locale_str}.yml"].each do |file|
         plugin_translations.deep_merge! YAML::load(File.open(file))
       end
 
-      # merge translations (plugin translations overwrite default translations)
       translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['js']
 
-      # We used to split the admin versus the client side, but it's much simpler to just
-      # include both for now due to the small size of the admin section.
-      #
-      # For now, let's leave it split out in the translation file in case we want to split
-      # it again later, so we'll merge the JSON ourselves.
       admin_contents = translations[locale_str].delete('admin_js')
       translations[locale_str]['js'].deep_merge!(admin_contents) if admin_contents.present?
       translations[locale_str]['js'].deep_merge!(plugin_translations[locale_str]['admin_js']) if translations[locale_str] && plugin_translations[locale_str] && plugin_translations[locale_str]['admin_js']
@@ -33,14 +25,12 @@ module JsLocaleHelper
     end
   end
 
-  # purpose-built recursive algorithm ahoy!
   def self.deep_delete_matches(deleting_from, *checking_hashes)
     checking_hashes.compact!
 
     new_hash = deleting_from.dup
     deleting_from.each do |key, value|
       if value.is_a? Hash
-        # Recurse
         new_at_key = deep_delete_matches(deleting_from[key], *(checking_hashes.map {|h| h[key]}))
         if new_at_key.empty?
           new_hash.delete key
@@ -99,7 +89,6 @@ module JsLocaleHelper
 
     result << "I18n.translations = #{translations.to_json};\n"
     result << "I18n.locale = '#{locale_str}';\n"
-    # loading moment here cause we must customize it
     result << File.read("#{Rails.root}/lib/javascripts/moment.js")
     result << moment_locale(locale_str)
     result << moment_formats
@@ -162,9 +151,9 @@ module JsLocaleHelper
     ctx.load(Rails.root + 'lib/javascripts/messageformat.js')
     path = Rails.root + "lib/javascripts/locale/#{locale}.js"
     ctx.load(path) if File.exists?(path)
-    #nodyna <ID:eval-26> <EV COMPLEX (variable definition)>
+    #nodyna <eval-252> <EV COMPLEX (variable definition)>
     ctx.eval("mf = new MessageFormat('#{locale}');")
-    #nodyna <ID:eval-27> <EV COMPLEX (private methods)>
+    #nodyna <eval-253> <EV COMPLEX (private methods)>
     ctx.eval("mf.precompile(mf.parse(#{format.inspect}))")
 
   rescue V8::Error => e

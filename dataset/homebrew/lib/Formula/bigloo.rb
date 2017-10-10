@@ -33,7 +33,6 @@ class Bigloo < Formula
     args << "--jvm=yes" if build.with? "jvm"
     args << "--no-gmp" if build.without? "gmp"
 
-    # SRFI 27 is 32-bit only
     args << "--disable-srfi27" if MacOS.prefer_64_bit?
 
     system "./configure", *args
@@ -41,7 +40,6 @@ class Bigloo < Formula
     system "make"
     system "make", "install"
 
-    # Install the other manpages too
     manpages = %w[bgldepend bglmake bglpp bgltags bglafile bgljfile bglmco bglprof]
     manpages.each { |m| man1.install "manuals/#{m}.man" => "#{m}.1" }
   end

@@ -18,13 +18,13 @@ module ActiveModel
         members = if delimiter.respond_to?(:call)
                     delimiter.call(record)
                   elsif delimiter.respond_to?(:to_sym)
-                    #nodyna <ID:send-26> <SD COMPLEX (change-prone variables)>
+                    #nodyna <send-945> <SD COMPLEX (change-prone variables)>
                     record.send(delimiter)
                   else
                     delimiter
                   end
 
-        #nodyna <ID:send-27> <SD MODERATE (change-prone variables)>
+        #nodyna <send-946> <SD MODERATE (change-prone variables)>
         members.send(inclusion_method(members), value)
       end
 
@@ -32,10 +32,6 @@ module ActiveModel
         @delimiter ||= options[:in] || options[:within]
       end
 
-      # In Ruby 1.9 <tt>Range#include?</tt> on non-number-or-time-ish ranges checks all
-      # possible values in the range for equality, which is slower but more accurate.
-      # <tt>Range#cover?</tt> uses the previous logic of comparing a value with the range
-      # endpoints, which is fast but is only accurate on Numeric, Time, or DateTime ranges.
       def inclusion_method(enumerable)
         if enumerable.is_a? Range
           case enumerable.first

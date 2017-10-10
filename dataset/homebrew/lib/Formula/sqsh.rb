@@ -10,8 +10,6 @@ class Sqsh < Formula
   depends_on "freetds"
   depends_on "readline"
 
-  # this patch fixes detection of freetds being installed, it was reported
-  # upstream via email and should be fixed in the next release
   patch :DATA
 
   def install
@@ -47,8 +45,6 @@ diff -Naur sqsh-2.5-orig/configure sqsh-2.5/configure
 --- sqsh-2.5-orig/configure	2014-06-08 11:10:37.000000000 +0200
 +++ sqsh-2.5/configure	2014-06-08 13:46:17.000000000 +0200
 @@ -3937,12 +3937,12 @@
-		# Assume this is a FreeTDS build
-		#
 			SYBASE_VERSION="FreeTDS"
 -			if [ "$ac_cv_bit_mode" = "64" -a -f $SYBASE_OCOS/lib64/libct.so ]; then
 +			if [ "$ac_cv_bit_mode" = "64" -a -f $SYBASE_OCOS/lib64/libct.a ]; then

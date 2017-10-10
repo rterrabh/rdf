@@ -14,7 +14,6 @@ class Fbida < Formula
   depends_on "libexif"
   depends_on "jpeg"
 
-  # Fix issue in detection of jpeg library
   patch :DATA
 
   def install

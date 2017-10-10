@@ -1,6 +1,5 @@
 require 'spec_helper'
 
-# Regression tests for #2179
 module Spree
   describe OrderMerger, type: :model do
     let(:variant) { create(:variant) }
@@ -49,7 +48,6 @@ module Spree
       end
 
       after do
-        # reset to avoid test pollution
         Spree::Order.line_item_comparison_hooks = Set.new
       end
 
@@ -109,7 +107,6 @@ module Spree
         expect(order_1.item_count).to eq 2
         expect(order_1.item_total).to eq line_items.map(&:amount).sum
 
-        # No guarantee on ordering of line items, so we do this:
         expect(line_items.pluck(:quantity)).to match_array([1, 1])
         expect(line_items.pluck(:variant_id)).to match_array([variant.id, variant_2.id])
       end

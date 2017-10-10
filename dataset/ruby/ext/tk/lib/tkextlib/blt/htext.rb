@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/htext.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/itemconfig.rb'

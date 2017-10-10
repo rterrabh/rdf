@@ -11,7 +11,6 @@ class Cscope < Formula
     sha1 "bbccd86980669360c5085429a462166d8f238a15" => :mountain_lion
   end
 
-  # Patch from http://bugs.gentoo.org/show_bug.cgi?ctype=html&id=111621
   patch :DATA
 
   def install
@@ -22,8 +21,6 @@ class Cscope < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <stdlib.h>
 
       void func()
       {
@@ -48,14 +45,9 @@ index 7ad8005..844836e 100644
 --- a/src/constants.h
 +++ b/src/constants.h
 @@ -103,7 +103,7 @@
- #define INCLUDES	8
- #define	FIELDS		10
  
 -#if (BSD || V9) && !__NetBSD__ && !__FreeBSD__
 +#if (BSD || V9) && !__NetBSD__ && !__FreeBSD__ && !__MACH__
- # define TERMINFO	0	/* no terminfo curses */
- #else
- # define TERMINFO	1
 -- 
 1.6.4
 

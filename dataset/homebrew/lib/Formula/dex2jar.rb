@@ -6,10 +6,8 @@ class Dex2jar < Formula
   sha256 "7907eb4d6e9280b6e17ddce7ee0507eae2ef161ee29f70a10dbc6944fdca75bc"
 
   def install
-    # Remove Windows scripts
     rm_rf Dir["*.bat"]
 
-    # Install files
     prefix.install_metafiles
     chmod 0755, Dir["*"]
     libexec.install Dir["*"]

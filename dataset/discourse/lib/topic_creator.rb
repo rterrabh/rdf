@@ -19,9 +19,6 @@ class TopicCreator
 
   def valid?
     topic = Topic.new(setup_topic_params)
-    # validate? will clear the error hash
-    # so we fire the validation event after
-    # this allows us to add errors
     valid = topic.valid?
     DiscourseEvent.trigger(:after_validate_topic, topic, self)
     valid &&= topic.errors.empty?
@@ -49,13 +46,10 @@ class TopicCreator
   def create_warning(topic)
     return unless @opts[:is_warning]
 
-    # We can only attach warnings to PMs
     rollback_with!(topic, :warning_requires_pm) unless topic.private_message?
 
-    # Don't create it if there is more than one user
     rollback_with!(topic, :too_many_users) if @added_users.size != 1
 
-    # Create a warning record
     Warning.create(topic: topic, user: @added_users.first, created_by: @user)
   end
 
@@ -90,7 +84,6 @@ class TopicCreator
       topic_params[:views] = @opts[:views].to_i
     end
 
-    # Automatically give it a moderator warning subtype if specified
     topic_params[:subtype] = TopicSubtype.moderator_warning if @opts[:is_warning]
 
     category = find_category
@@ -108,12 +101,8 @@ class TopicCreator
   end
 
   def find_category
-    # PM can't have a category
     @opts.delete(:category) if @opts[:archetype].present? && @opts[:archetype] == Archetype.private_message
 
-    # Temporary fix to allow older clients to create topics.
-    # When all clients are updated the category variable should
-    # be set directly to the contents of the if statement.
     if (@opts[:category].is_a? Integer) || (@opts[:category] =~ /^\d+$/)
       Category.find_by(id: @opts[:category])
     else

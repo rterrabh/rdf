@@ -4,7 +4,6 @@ class AddTOCFilter < Nanoc::Filter
 
   def run(content, params={})
     content.gsub('{{TOC}}') do
-      # Find all top-level sections
       doc = Nokogiri::HTML(content)
       headers = []
       doc.css("#main-content").css("h2, h3").each do |header_tag|
@@ -18,7 +17,6 @@ class AddTOCFilter < Nanoc::Filter
         end
       end
 
-      # Build table of contents
       res = '<ol class="toc">'
       headers.each do |header|
         res << %[<li><a href="##{header[:id]}">#{header[:title]}</a>]

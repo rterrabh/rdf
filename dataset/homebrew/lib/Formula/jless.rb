@@ -1,5 +1,3 @@
-# jless (Jam Less) is Japan-ized Less.
-# jless supports ISO 2022 code extension techniques and Japanese codes.
 
 class Jless < Formula
   desc "Jless file pager supporting ISO2022"

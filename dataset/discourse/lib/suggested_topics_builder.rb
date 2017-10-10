@@ -14,14 +14,11 @@ class SuggestedTopicsBuilder
 
   def add_results(results, priority=:low)
 
-    # WARNING .blank? will execute an Active Record query
     return unless results
 
-    # Only add results if we don't have those topic ids already
     results = results.where('topics.id NOT IN (?)', @excluded_topic_ids)
                      .where(visible: true)
 
-    # If limit suggested to category is enabled, restrict to that category
     if @category_id && SiteSetting.limit_suggested_to_category?
       results = results.where(category_id: @category_id)
     end
@@ -29,7 +26,6 @@ class SuggestedTopicsBuilder
     results = results.to_a.reject { |topic| @category_topic_ids.include?(topic.id) }
 
     unless results.empty?
-      # Keep track of the ids we've added
       @excluded_topic_ids.concat results.map {|r| r.id}
       splice_results(results,priority)
     end
@@ -38,7 +34,6 @@ class SuggestedTopicsBuilder
   def splice_results(results, priority)
     if  @category_id && priority == :high
 
-      # Topics from category @category_id need to be first in the list, all others after.
 
       other_category_index = @results.index { |r| r.category_id != @category_id }
       category_results, other_category_results = results.partition{ |r| r.category_id == @category_id }

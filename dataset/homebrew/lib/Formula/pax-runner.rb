@@ -7,7 +7,6 @@ class PaxRunner < Formula
 
   def install
     (bin+"pax-runner").write <<-EOS.undent
-      #!/bin/sh
       exec java $JAVA_OPTS -cp  #{libexec}/bin/pax-runner-#{version}.jar org.ops4j.pax.runner.Run "$@"
     EOS
 

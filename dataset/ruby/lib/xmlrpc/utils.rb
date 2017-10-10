@@ -1,41 +1,17 @@
-#
-# Copyright (C) 2001, 2002, 2003 by Michael Neumann (mneumann@ntecs.de)
-#
-# $Id$
-#
 module XMLRPC # :nodoc:
 
 
-  # This module enables a user-class to be marshalled
-  # by XML-RPC for Ruby into a Hash, with one additional
-  # key/value pair <code>___class___ => ClassName</code>
-  #
   module Marshallable
   end
 
 
-  # Defines ParserWriterChooseMixin, which makes it possible to choose a
-  # different XMLWriter and/or XMLParser then the default one.
-  #
-  # The Mixin is used in client.rb (class XMLRPC::Client)
-  # and server.rb (class XMLRPC::BasicServer)
   module ParserWriterChooseMixin
 
-    # Sets the XMLWriter to use for generating XML output.
-    #
-    # Should be an instance of a class from module XMLRPC::XMLWriter.
-    #
-    # If this method is not called, then XMLRPC::Config::DEFAULT_WRITER is used.
     def set_writer(writer)
       @create = Create.new(writer)
       self
     end
 
-    # Sets the XMLParser to use for parsing XML documents.
-    #
-    # Should be an instance of a class from module XMLRPC::XMLParser.
-    #
-    # If this method is not called, then XMLRPC::Config::DEFAULT_PARSER is used.
     def set_parser(parser)
       @parser = parser
       self
@@ -44,7 +20,6 @@ module XMLRPC # :nodoc:
     private
 
     def create
-      # if set_writer was not already called then call it now
       if @create.nil? then
         set_writer(Config::DEFAULT_WRITER.new)
       end
@@ -52,7 +27,6 @@ module XMLRPC # :nodoc:
     end
 
     def parser
-      # if set_parser was not already called then call it now
       if @parser.nil? then
         set_parser(Config::DEFAULT_PARSER.new)
       end
@@ -64,8 +38,6 @@ module XMLRPC # :nodoc:
 
   module Service
 
-  # Base class for XMLRPC::Service::Interface definitions, used
-  # by XMLRPC::BasicServer#add_handler
   class BasicInterface
     attr_reader :prefix, :methods
 
@@ -91,7 +63,6 @@ module XMLRPC # :nodoc:
     private
 
     def parse_sig(sig)
-      # sig is a String
       if sig =~ /^\s*(\w+)\s+([^(]+)(\(([^)]*)\))?\s*$/
         params = [$1]
         name   = $2.strip
@@ -104,15 +75,11 @@ module XMLRPC # :nodoc:
 
   end # class BasicInterface
 
-  #
-  # Class which wraps a XMLRPC::Service::Interface definition, used
-  # by XMLRPC::BasicServer#add_handler
-  #
   class Interface < BasicInterface
     def initialize(prefix, &p)
       raise "No interface specified" if p.nil?
       super(prefix)
-      #nodyna <ID:instance_eval-144> <IEV COMPLEX (block execution)>
+      #nodyna <instance_eval-2016> <IEV COMPLEX (block execution)>
       instance_eval(&p)
     end
 
@@ -148,14 +115,10 @@ module XMLRPC # :nodoc:
   end # module Service
 
 
-  #
-  # Short-form to create a XMLRPC::Service::Interface
-  #
   def self.interface(prefix, &p)
     Service::Interface.new(prefix, &p)
   end
 
-  # Short-cut for creating a XMLRPC::Service::PublicInstanceMethodsInterface
   def self.iPIMethods(prefix)
     Service::PublicInstanceMethodsInterface.new(prefix)
   end

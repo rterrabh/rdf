@@ -1,5 +1,4 @@
 if AppConfig.environment.assets.upload? && AppConfig.environment.s3.enable?
-  # Monkey patch to make Rails.root available early
   require 'pathname'
   module Rails
     def self.root

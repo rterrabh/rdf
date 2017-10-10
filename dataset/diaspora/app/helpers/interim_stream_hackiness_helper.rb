@@ -10,7 +10,6 @@ module InterimStreamHackinessHelper
     end
   end
 
-  ##### These methods need to go away once we pass publisher object into the partial ######
   def publisher_formatted_text
     if params[:prefill].present?
       params[:prefill]

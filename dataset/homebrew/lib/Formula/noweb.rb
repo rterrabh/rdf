@@ -44,7 +44,6 @@ class Noweb < Formula
   def caveats; <<-EOS.undent
     TeX support files are installed in the directory:
 
-      #{texpath}
 
     You may need to add the directory to TEXINPUTS to run noweb properly.
     EOS

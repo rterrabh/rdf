@@ -34,7 +34,6 @@ class Libav < Formula
   depends_on "pkg-config" => :build
   depends_on "yasm" => :build
 
-  # manpages won't be built without texi2html
   depends_on "texi2html" => :build if MacOS.version >= :mountain_lion
 
   depends_on "faac" => :recommended
@@ -109,7 +108,6 @@ class Libav < Formula
   end
 
   test do
-    # Create an example mp4 file
     system "#{bin}/avconv", "-y", "-filter_complex",
         "testsrc=rate=1:duration=1", "#{testpath}/video.mp4"
     assert (testpath/"video.mp4").exist?

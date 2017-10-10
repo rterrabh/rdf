@@ -1,7 +1,6 @@
 require 'active_support/deprecation'
 
 module Paperclip
-  # Provides helper methods that can be used in migrations.
   module Schema
     COLUMNS = {:file_name    => :string,
                :content_type => :string,
@@ -9,15 +8,15 @@ module Paperclip
                :updated_at   => :datetime}
 
     def self.included(base)
-      #nodyna <ID:send-35> <SD TRIVIAL (public methods)>
+      #nodyna <send-739> <SD TRIVIAL (public methods)>
       ActiveRecord::ConnectionAdapters::Table.send :include, TableDefinition
-      #nodyna <ID:send-36> <SD TRIVIAL (public methods)>
+      #nodyna <send-740> <SD TRIVIAL (public methods)>
       ActiveRecord::ConnectionAdapters::TableDefinition.send :include, TableDefinition
-      #nodyna <ID:send-37> <SD TRIVIAL (public methods)>
+      #nodyna <send-741> <SD TRIVIAL (public methods)>
       ActiveRecord::ConnectionAdapters::AbstractAdapter.send :include, Statements
 
       if defined?(ActiveRecord::Migration::CommandRecorder) # Rails 3.1+
-        #nodyna <ID:send-38> <SD TRIVIAL (public methods)>
+        #nodyna <send-742> <SD TRIVIAL (public methods)>
         ActiveRecord::Migration::CommandRecorder.send :include, CommandRecorder
       end
     end

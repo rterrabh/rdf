@@ -32,7 +32,6 @@ class AescryptPacketizer < Formula
       system "make", "install"
     else
       cd "src" do
-        # https://www.aescrypt.com/mac_aes_crypt.html
         inreplace "Makefile", "#LIBS=-liconv", "LIBS=-liconv"
         system "make"
 
@@ -42,7 +41,6 @@ class AescryptPacketizer < Formula
       man1.install "man/aescrypt.1"
     end
 
-    # To prevent conflict with our other aescrypt, rename the binaries.
     if build.without? "default-names"
       mv "#{bin}/aescrypt", "#{bin}/paescrypt"
       mv "#{bin}/aescrypt_keygen", "#{bin}/paescrypt_keygen"

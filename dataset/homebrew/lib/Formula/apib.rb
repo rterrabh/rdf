@@ -18,9 +18,6 @@ class Apib < Formula
   depends_on "openssl"
 
   def install
-    # Upstream hardcodes finding apr in /usr/include. When CLT is not present
-    # we need to fix this so our apr requirement works.
-    # https://github.com/apigee/apib/issues/11
     unless MacOS::CLT.installed?
       inreplace "configure" do |s|
         s.gsub! "/usr/include/apr-1.0", "#{Formula["apr"].opt_prefix}/libexec/include/apr-1"

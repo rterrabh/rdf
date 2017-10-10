@@ -1,5 +1,3 @@
-# Builds a Mail::Message we can use for sending. Optionally supports using a template
-# for the body and subject
 module Email
 
   module BuildEmailHelper
@@ -72,7 +70,7 @@ module Email
       styled.format_basic
 
       if style = @opts[:style]
-        #nodyna <ID:send-39> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-356> <SD COMPLEX (change-prone variables)>
         styled.send "format_#{style}"
       end
 

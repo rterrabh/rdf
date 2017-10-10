@@ -19,7 +19,6 @@ module Rails
 
       hook_for :template_engine, :test_framework, as: :scaffold
 
-      # Invoke the helper using the controller name (pluralized)
       hook_for :helper, as: :scaffold do |invoked|
         invoke invoked, [ controller_name ]
       end

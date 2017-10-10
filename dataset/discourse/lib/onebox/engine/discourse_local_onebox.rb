@@ -5,7 +5,6 @@ module Onebox
 
       matches_regexp Regexp.new("^#{Discourse.base_url.gsub(".","\\.")}.*$", true)
 
-      # Use this onebox before others
       def self.priority
         1
       end
@@ -17,7 +16,6 @@ module Onebox
             route = Rails.application.routes.recognize_path(uri.path)
             case route[:controller]
             when 'topics'
-              # super will use matches_regexp to match the domain name
               super
             else
               false
@@ -35,13 +33,11 @@ module Onebox
         route = Rails.application.routes.recognize_path(uri.path)
 
 
-        # Figure out what kind of onebox to show based on the URL
         case route[:controller]
         when 'topics'
 
           linked = "<a href='#{@url}'>#{@url}</a>"
           if route[:post_number].present? && route[:post_number].to_i > 1
-            # Post Link
             post = Post.find_by(topic_id: route[:topic_id], post_number: route[:post_number].to_i)
             return linked unless post
             return linked if post.hidden
@@ -52,7 +48,6 @@ module Onebox
 
             excerpt = post.excerpt(SiteSetting.post_onebox_maxlength)
             excerpt.gsub!("\n"," ")
-            # hack to make it render for now
             excerpt.gsub!("[/quote]", "[quote]")
             quote = "[quote=\"#{post.user.username}, topic:#{topic.id}, slug:#{slug}, post:#{post.post_number}\"]#{excerpt}[/quote]"
 
@@ -60,7 +55,6 @@ module Onebox
             return cooked
 
           else
-            # Topic Link
             topic = Topic.where(id: route[:topic_id].to_i).includes(:user).first
             return linked unless topic
             return linked unless Guardian.new.can_see?(topic)

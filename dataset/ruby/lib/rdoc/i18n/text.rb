@@ -1,45 +1,22 @@
-##
-# An i18n supported text.
-#
-# This object provides the following two features:
-#
-#   * Extracts translation messages from wrapped raw text.
-#   * Translates wrapped raw text in specified locale.
-#
-# Wrapped raw text is one of String, RDoc::Comment or Array of them.
 
 class RDoc::I18n::Text
 
-  ##
-  # Creates a new i18n supported text for +raw+ text.
 
   def initialize(raw)
     @raw = raw
   end
 
-  ##
-  # Extracts translation target messages and yields each message.
-  #
-  # Each yielded message is a Hash. It consists of the followings:
-  #
-  # :type      :: :paragraph
-  # :paragraph :: String (The translation target message itself.)
-  # :line_no   :: Integer (The line number of the :paragraph is started.)
-  #
-  # The above content may be added in the future.
 
   def extract_messages
     parse do |part|
       case part[:type]
       when :empty_line
-        # ignore
       when :paragraph
         yield(part)
       end
     end
   end
 
-  # Translates raw text into +locale+.
   def translate(locale)
     translated_text = ''
     parse do |part|

@@ -21,7 +21,6 @@ class Automysqlbackup < Formula
 
   def caveats; <<-EOS.undent
     You will have to edit
-      #{etc}/automysqlbackup/automysqlbackup.conf
     to set AutoMySQLBackup up to find your database and backup directory.
 
     The included plist file will run AutoMySQLBackup every day at 04:00.

@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/toolbar.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -23,7 +19,6 @@ class Tk::Iwidgets::Toolbar
   end
   private :__tkvariable_optkeys
 
-  ####################################
 
   include TkItemConfigMethod
 
@@ -46,12 +41,10 @@ class Tk::Iwidgets::Toolbar
     if tagOrId.kind_of?(Tk::Itk::Component)
       tagOrId.name
     else
-      #_get_eval_string(tagOrId)
       tagOrId
     end
   end
 
-  ####################################
 
   def __strval_optkeys
     super() << 'balloonbackground' << 'balloonforeground'

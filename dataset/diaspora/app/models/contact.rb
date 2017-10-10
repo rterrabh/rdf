@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Contact < ActiveRecord::Base
   belongs_to :user
@@ -28,10 +25,8 @@ class Contact < ActiveRecord::Base
 
   scope :all_contacts_of_person, ->(x) { where(:person_id => x.id) }
 
-    # contact.sharing is true when contact.person is sharing with contact.user
   scope :sharing, -> { where(:sharing => true) }
 
-  # contact.receiving is true when contact.user is sharing with contact.person
   scope :receiving, -> { where(:receiving => true) }
 
   scope :for_a_stream, -> {

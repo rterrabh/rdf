@@ -9,7 +9,6 @@ class Admin::EmojisController < Admin::AdminController
     name = params[:name] || File.basename(file.original_filename, ".*")
 
     Scheduler::Defer.later("Upload Emoji") do
-      # fix the name
       name = name.gsub(/[^a-z0-9]+/i, '_')
                  .gsub(/_{2,}/, '_')
                  .downcase

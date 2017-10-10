@@ -5,7 +5,6 @@ class Dwatch < Formula
   sha256 "ba093d11414e629b4d4c18c84cc90e4eb079a3ba4cfba8afe5026b96bf25d007"
 
   def install
-    # Makefile uses cp, not install
     bin.mkpath
     man1.mkpath
 
@@ -19,7 +18,6 @@ class Dwatch < Formula
   end
 
   test do
-    # '-h' is not actually an option, but it exits 0
     system "#{bin}/dwatch", "-h"
   end
 end

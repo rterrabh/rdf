@@ -7,7 +7,6 @@ class Autospec::ReloadCss
     WATCHERS[pattern] = blk
   end
 
-  # css, scss, sass or handlebars
   watch(/\.css$/)
   watch(/\.ca?ss\.erb$/)
   watch(/\.s[ac]ss$/)
@@ -16,8 +15,6 @@ class Autospec::ReloadCss
   def self.message_bus
     MessageBus::Instance.new.tap do |bus|
       bus.site_id_lookup do
-        # this is going to be dev the majority of the time
-        # if you have multisite configured in dev stuff may be different
         "default"
       end
     end
@@ -25,7 +22,6 @@ class Autospec::ReloadCss
 
   def self.run_on_change(paths)
     if paths.any? { |p| p =~ /\.(css|s[ac]ss)/ }
-      # todo connect to dev instead?
       ActiveRecord::Base.establish_connection
       [:desktop, :mobile].each do |style|
         s = DiscourseStylesheets.new(style)

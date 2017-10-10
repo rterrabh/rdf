@@ -26,10 +26,6 @@ class Libquantum < Formula
 
   test do
     (testpath/"qtest.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <stdlib.h>
-      #include <time.h>
-      #include <quantum.h>
 
       int main ()
       {

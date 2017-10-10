@@ -40,8 +40,6 @@ module ActiveAdmin
         active_admin_config.decorator_class
       end
 
-      # When using Draper, we wrap the collection draper in a new class that
-      # correctly delegates methods that Active Admin depends on.
       def collection_decorator
         if decorator_class
           Wrapper.wrap decorator_class
@@ -74,8 +72,6 @@ module ActiveAdmin
           end
         end
 
-        # Draper::CollectionDecorator was introduced in 1.0.0
-        # Draper::Decorator#collection_decorator_class was introduced in 1.3.0
         def self.find_collection_decorator(decorator)
           if Dependency.draper?    '>= 1.3.0'
             decorator.collection_decorator_class

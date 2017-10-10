@@ -34,8 +34,6 @@ module Spree
       refund
     end
 
-    # If you have multiple methods of crediting a customer, overwrite this method
-    # Must return an array of objects the respond to #description, #display_amount
     def create_credit(reimbursement, unpaid_amount, simulate)
       creditable = create_creditable(reimbursement, unpaid_amount)
       credit = reimbursement.credits.build(creditable: creditable, amount: unpaid_amount)

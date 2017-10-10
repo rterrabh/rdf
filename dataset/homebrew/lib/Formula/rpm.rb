@@ -35,7 +35,6 @@ class Rpm < Formula
   depends_on "rpm2cpio" => :build
 
   def install
-    # only rpm should go into HOMEBREW_CELLAR, not rpms built
     inreplace "macros/macros.in", "@prefix@", HOMEBREW_PREFIX
     args = %W[
       --prefix=#{prefix}
@@ -66,9 +65,7 @@ class Rpm < Formula
     inreplace "Makefile", "--tag=CC", "--tag=CXX"
     inreplace "Makefile", "--mode=link $(CCLD)", "--mode=link $(CXX)"
     system "make"
-    # enable rpmbuild macros, for building *.rpm packages
     inreplace "macros/macros", "#%%{load:%{_usrlibrpm}/macros.rpmbuild}", "%{load:%{_usrlibrpm}/macros.rpmbuild}"
-    # using __scriptlet_requires needs bash --rpm-requires
     inreplace "macros/macros.rpmbuild", "%_use_internal_dependency_generator\t2", "%_use_internal_dependency_generator\t1"
     system "make", "install"
   end
@@ -101,6 +98,7 @@ class Rpm < Formula
   end
 
   def rpmdir(macro)
+    #nodyna <eval-598> <not yet classified>
     Pathname.new(`#{bin}/rpm --eval #{macro}`.chomp)
   end
 

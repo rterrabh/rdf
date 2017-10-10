@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 module PeopleHelper
   include ERB::Util
@@ -45,12 +42,10 @@ module PeopleHelper
       opts[:class] << " hovercardable" if defined?(user_signed_in?) && user_signed_in? && current_user.person != person
       remote_or_hovercard_link = Rails.application.routes.url_helpers.person_path(person).html_safe
       "<a href='#{remote_or_hovercard_link}' class='#{opts[:class]}' #{ ("target=" + opts[:target]) if opts[:target]}>
-      #{person_image_tag(person, opts[:size])}
       </a>".html_safe
     end
   end
 
-  # Rails.application.routes.url_helpers is needed since this is indirectly called from a model
   def local_or_remote_person_path(person, opts={})
     opts.merge!(:protocol => AppConfig.pod_uri.scheme, :host => AppConfig.pod_uri.authority)
     absolute = opts.delete(:absolute)

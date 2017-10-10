@@ -17,7 +17,6 @@ class StylesheetsController < ApplicationController
       query = query.order('id desc')
     end
 
-    # Security note, safe due to route constraint
     underscore_digest = digest ? "_" + digest : ""
     location = "#{Rails.root}/#{DiscourseStylesheets::CACHE_PATH}/#{target}#{underscore_digest}.css"
 

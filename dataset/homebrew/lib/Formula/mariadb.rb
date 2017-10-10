@@ -13,8 +13,6 @@ class Mariadb < Formula
   devel do
     url "http://ftp.osuosl.org/pub/mariadb/mariadb-10.1.6/source/mariadb-10.1.6.tar.gz"
     sha256 "492f28f0d7aee5bf0a0efd21c542ca4f291f349e66063695c5003df16e064959"
-    # fix compilation failure with clang in mroonga storage engine
-    # https://mariadb.atlassian.net/projects/MDEV/issues/MDEV-8551
     patch :DATA
   end
 
@@ -39,25 +37,17 @@ class Mariadb < Formula
     :because => "both install MySQL client libraries"
 
   def install
-    # Don't hard-code the libtool path. See:
-    # https://github.com/Homebrew/homebrew/issues/20185
     inreplace "cmake/libutils.cmake",
       "COMMAND /usr/bin/libtool -static -o ${TARGET_LOCATION}",
       "COMMAND libtool -static -o ${TARGET_LOCATION}"
 
-    # Set basedir and ldata so that mysql_install_db can find the server
-    # without needing an explicit path to be set. This can still
-    # be overridden by calling --basedir= when calling.
     inreplace "scripts/mysql_install_db.sh" do |s|
       s.change_make_var! "basedir", "\"#{prefix}\""
       s.change_make_var! "ldata", "\"#{var}/mysql\""
     end
 
-    # Build without compiler or CPU specific optimization flags to facilitate
-    # compilation of gems and other software that queries `mysql-config`.
     ENV.minimal_optimization
 
-    # -DINSTALL_* are relative to prefix
     args = %W[
       .
       -DCMAKE_INSTALL_PREFIX=#{prefix}
@@ -76,7 +66,6 @@ class Mariadb < Formula
       -DCOMPILATION_COMMENT=Homebrew
     ]
 
-    # disable TokuDB, which is currently not supported on Mac OS X
     if build.stable?
       args << "-DWITHOUT_TOKUDB=1"
     else
@@ -85,13 +74,10 @@ class Mariadb < Formula
 
     args << "-DWITH_UNIT_TESTS=OFF" if build.without? "tests"
 
-    # Build the embedded server
     args << "-DWITH_EMBEDDED_SERVER=ON" if build.with? "embedded"
 
-    # Compile with readline unless libedit is explicitly chosen
     args << "-DWITH_READLINE=yes" if build.without? "libedit"
 
-    # Compile with ARCHIVE engine enabled if chosen
     if build.with? "archive-storage-engine"
       if build.stable?
         args << "-DWITH_ARCHIVE_STORAGE_ENGINE=1"
@@ -100,7 +86,6 @@ class Mariadb < Formula
       end
     end
 
-    # Compile with BLACKHOLE engine enabled if chosen
     if build.with? "blackhole-storage-engine"
       if build.stable?
         args << "-DWITH_BLACKHOLE_STORAGE_ENGINE=1"
@@ -109,50 +94,40 @@ class Mariadb < Formula
       end
     end
 
-    # Make universal for binding to universal applications
     if build.universal?
       ENV.universal_binary
       args << "-DCMAKE_OSX_ARCHITECTURES=#{Hardware::CPU.universal_archs.as_cmake_arch_flags}"
     end
 
-    # Build with local infile loading support
     args << "-DENABLED_LOCAL_INFILE=1" if build.with? "local-infile"
 
     system "cmake", *args
     system "make"
     system "make", "install"
 
-    # Fix my.cnf to point to #{etc} instead of /etc
     (etc+"my.cnf.d").mkpath
     inreplace "#{etc}/my.cnf" do |s|
       s.gsub!("!includedir /etc/my.cnf.d", "!includedir #{etc}/my.cnf.d")
     end
     touch etc/"my.cnf.d/.homebrew_dont_prune_me"
 
-    # Don't create databases inside of the prefix!
-    # See: https://github.com/Homebrew/homebrew/issues/4975
     rm_rf prefix+"data"
 
     (prefix+"mysql-test").rmtree if build.without? "tests" # save 121MB!
     (prefix+"sql-bench").rmtree if build.without? "bench"
 
-    # Link the setup script into bin
     bin.install_symlink prefix/"scripts/mysql_install_db"
 
-    # Fix up the control script and link into bin
     inreplace "#{prefix}/support-files/mysql.server" do |s|
       s.gsub!(/^(PATH=".*)(")/, "\\1:#{HOMEBREW_PREFIX}/bin\\2")
-      # pidof can be replaced with pgrep from proctools on Mountain Lion
       s.gsub!(/pidof/, "pgrep") if MacOS.version >= :mountain_lion
     end
 
     bin.install_symlink prefix/"support-files/mysql.server"
 
     if build.devel?
-      # Move sourced non-executable out of bin into libexec
       libexec.mkpath
       libexec.install "#{bin}/wsrep_sst_common"
-      # Fix up references to wsrep_sst_common
       %W[
         wsrep_sst_mysqldump
         wsrep_sst_rsync
@@ -167,7 +142,6 @@ class Mariadb < Formula
   end
 
   def post_install
-    # Make sure the var/mysql directory exists
     (var+"mysql").mkpath
     unless File.exist? "#{var}/mysql/mysql/user.frm"
       ENV["TMPDIR"] = nil
@@ -235,5 +209,4 @@ index ebe7f6b..609f77d 100644
 +endif()
 +
  if(NOT DEFINED CMAKE_C_COMPILE_OPTIONS_PIC)
-   # For old CMake
    if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_COMPILER_IS_CLANGCXX)

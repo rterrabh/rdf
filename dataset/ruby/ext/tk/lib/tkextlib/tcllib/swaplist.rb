@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/swaplist.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * A dialog which allows a user to move options between two lists
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('swaplist', '0.1')
 TkPackage.require('swaplist')
 
 module Tk::Tcllib
@@ -45,7 +37,6 @@ class Tk::Tcllib::Swaplist_Dialog
   end
 
   def initialize(*args)
-    # args = (parent=nil, complete_list=[], selected_list=[], keys=nil)
     keys = args.pop
     if keys.kind_of?(Hash)
       @selected_list = args.pop
@@ -68,7 +59,6 @@ class Tk::Tcllib::Swaplist_Dialog
   end
 
   def create_self(keys)
-    # dummy
   end
   private :create_self
 

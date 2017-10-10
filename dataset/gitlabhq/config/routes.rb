@@ -8,20 +8,16 @@ Gitlab::Application.routes.draw do
                 authorizations: 'oauth/authorizations'
   end
 
-  # Autocomplete
   get '/autocomplete/users' => 'autocomplete#users'
   get '/autocomplete/users/:id' => 'autocomplete#user'
 
 
-  # Search
   get 'search' => 'search#show'
   get 'search/autocomplete' => 'search#autocomplete', as: :search_autocomplete
 
-  # API
   API::API.logger Rails.logger
   mount API::API => '/api'
 
-  # Get all keys of user
   get ':username.keys' => 'profiles/keys#get_keys' , constraints: { username: /.*/ }
 
   constraint = lambda { |request| request.env['warden'].authenticate? and request.env['warden'].user.admin? }
@@ -29,7 +25,6 @@ Gitlab::Application.routes.draw do
     mount Sidekiq::Web, at: '/admin/sidekiq', as: :sidekiq
   end
 
-  # Enable Grack support
   mount Grack::Bundle.new({
     git_path:     Gitlab.config.git.bin_path,
     project_root: Gitlab.config.gitlab_shell.repos_path,
@@ -37,15 +32,11 @@ Gitlab::Application.routes.draw do
     receive_pack: Gitlab.config.gitlab_shell.receive_pack
   }), at: '/', constraints: lambda { |request| /[-\/\w\.]+\.git\//.match(request.path_info) }, via: [:get, :post]
 
-  # Help
   get 'help'                  => 'help#index'
   get 'help/:category/:file'  => 'help#show', as: :help_page, constraints: { category: /.*/, file: /[^\/\.]+/ }
   get 'help/shortcuts'
   get 'help/ui'               => 'help#ui'
 
-  #
-  # Global snippets
-  #
   resources :snippets do
     member do
       get 'raw'
@@ -54,9 +45,6 @@ Gitlab::Application.routes.draw do
 
   get '/s/:username' => 'snippets#index', as: :user_snippets, constraints: { username: /.*/ }
 
-  #
-  # Invites
-  #
 
   resources :invites, only: [:show], constraints: { id: /[A-Za-z0-9_-]+/ } do
     member do
@@ -65,12 +53,8 @@ Gitlab::Application.routes.draw do
     end
   end
 
-  # Spam reports
   resources :abuse_reports, only: [:new, :create]
 
-  #
-  # Import
-  #
   namespace :import do
     resource :github, only: [:create, :new], controller: :github do
       get :status
@@ -106,30 +90,21 @@ Gitlab::Application.routes.draw do
     end
   end
 
-  #
-  # Uploads
-  #
 
   scope path: :uploads do
-    # Note attachments and User/Group/Project avatars
     get ":model/:mounted_as/:id/:filename",
         to:           "uploads#show",
         constraints:  { model: /note|user|group|project/, mounted_as: /avatar|attachment/, filename: /[^\/]+/ }
 
-    # Project markdown uploads
     get ":namespace_id/:project_id/:secret/:filename",
       to:           "projects/uploads#show",
       constraints:  { namespace_id: /[a-zA-Z.0-9_\-]+/, project_id: /[a-zA-Z.0-9_\-]+/, filename: /[^\/]+/ }
   end
 
-  # Redirect old note attachments path to new uploads path.
   get "files/note/:id/:filename",
     to:           redirect("uploads/note/attachment/%{id}/%{filename}"),
     constraints:  { filename: /[^\/]+/ }
 
-  #
-  # Explore area
-  #
   namespace :explore do
     resources :projects, only: [:index] do
       collection do
@@ -142,13 +117,9 @@ Gitlab::Application.routes.draw do
     root to: 'projects#trending'
   end
 
-  # Compatibility with old routing
   get 'public' => 'explore/projects#index'
   get 'public/projects' => 'explore/projects#index'
 
-  #
-  # Admin Area
-  #
   namespace :admin do
     resources :users, constraints: { id: /[a-zA-Z.\/0-9_\-]+/ } do
       resources :keys, only: [:show, :destroy]
@@ -209,9 +180,6 @@ Gitlab::Application.routes.draw do
     root to: 'dashboard#index'
   end
 
-  #
-  # Profile Area
-  #
   resource :profile, only: [:show, :update] do
     member do
       get :audit_log
@@ -254,9 +222,6 @@ Gitlab::Application.routes.draw do
   get '/u/:username' => 'users#show', as: :user,
       constraints: { username: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }
 
-  #
-  # Dashboard Area
-  #
   resource :dashboard, controller: 'dashboard', only: [:show] do
     member do
       get :issues
@@ -276,9 +241,6 @@ Gitlab::Application.routes.draw do
     end
   end
 
-  #
-  # Groups Area
-  #
   resources :groups, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }  do
     member do
       get :issues
@@ -307,9 +269,6 @@ Gitlab::Application.routes.draw do
 
   root to: "root#show"
 
-  #
-  # Project Area
-  #
   resources :namespaces, path: '/', constraints: { id: /[a-zA-Z.0-9_\-]+/ }, only: [] do
     resources(:projects, constraints: { id: /[a-zA-Z.0-9_\-]+(?<!\.atom)/ }, except:
               [:new, :create, :index], path: "/") do
@@ -324,7 +283,6 @@ Gitlab::Application.routes.draw do
       end
 
       scope module: :projects do
-        # Blob routes:
         get '/new/*id', to: 'blob#new', constraints: { id: /.+/ }, as: 'new_blob'
         post '/create/*id', to: 'blob#create', constraints: { id: /.+/ }, as: 'create_blob'
         get '/edit/*id', to: 'blob#edit', constraints: { id: /.+/ }, as: 'edit_blob'
@@ -450,7 +408,6 @@ Gitlab::Application.routes.draw do
           end
 
           member do
-            # tree viewer logs
             get 'logs_tree', constraints: { id: Gitlab::Regex.git_reference_regex }
             get 'logs_tree/*path' => 'refs#logs_tree', as: :logs_file, constraints: {
               id: Gitlab::Regex.git_reference_regex,
@@ -512,8 +469,6 @@ Gitlab::Application.routes.draw do
           collection do
             delete :leave
 
-            # Used for import team
-            # from another project
             get :import
             post :apply_import
           end

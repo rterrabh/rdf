@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/watch.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -14,7 +10,7 @@ module Tk::BLT
 
     WATCH_ID_TBL = TkCore::INTERP.create_table
 
-    #nodyna <ID:instance_eval-88> <IEV MODERATE (method definition)>
+    #nodyna <instance_eval-1583> <IEV MODERATE (method definition)>
     (BLT_WATCH_ID = ['blt_watch_id'.freeze, TkUtil.untrust('00000')]).instance_eval{
       @mutex = Mutex.new
       def mutex; @mutex; end
@@ -92,7 +88,6 @@ module Tk::BLT
         k = k[1..-1]
         case k
         when /^(#{__strval_optkeys.join('|')})$/
-          # do nothing
 
         when /^(#{__numval_optkeys.join('|')})$/
           begin
@@ -163,10 +158,8 @@ module Tk::BLT
           cget_strict(key)
         rescue => e
           if current_configinfo.has_key?(key.to_s)
-            # error on known option
             fail e
           else
-            # unknown option
             nil
           end
         end

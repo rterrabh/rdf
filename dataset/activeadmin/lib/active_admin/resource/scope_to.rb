@@ -2,38 +2,6 @@ module ActiveAdmin
   class Resource
     module ScopeTo
 
-      # Scope this controller to some object which has a relation
-      # to the resource. Can either accept a block or a symbol
-      # of a method to call.
-      #
-      # Eg:
-      #
-      #   ActiveAdmin.register Post do
-      #     scope_to :current_user
-      #   end
-      #
-      # Then every time we instantiate and object, it would call
-      #
-      #   current_user.posts.build
-      #
-      # By default Active Admin will use the resource name to build a
-      # method to call as the association. If its different, you can
-      # pass in the association_method as an option.
-      #
-      #   scope_to :current_user, association_method: :blog_posts
-      #
-      # will result in the following
-      #
-      #   current_user.blog_posts.build
-      #
-      # To conditionally use this scope, you can use conditional procs
-      #
-      #   scope_to :current_user, if: proc{ admin_user_signed_in? }
-      #
-      # or
-      #
-      #   scope_to :current_user, unless: proc{ current_user.admin? }
-      #
       def scope_to(*args, &block)
         options = args.extract_options!
         method = args.first

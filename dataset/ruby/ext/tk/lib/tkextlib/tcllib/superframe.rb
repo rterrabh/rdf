@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/superframe.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Superframe widget - enhanced labelframe widget
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::superframe', '1.0')
 TkPackage.require('widget::superframe')
 
 module Tk::Tcllib

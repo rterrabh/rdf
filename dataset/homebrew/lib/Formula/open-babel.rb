@@ -6,13 +6,11 @@ class OpenBabel < Formula
     url "https://downloads.sourceforge.net/project/openbabel/openbabel/2.3.2/openbabel-2.3.2.tar.gz"
     sha256 "4eaca26679aa6cc85ebf96af19191472ac63ca442c36b0427b369c3a25705188"
 
-    # Patch to support libc++ in OS X 10.9+, backport of upstream commit c3abbddae78e654df9322ad1020ff79dd6332946
     patch do
       url "https://gist.githubusercontent.com/erlendurj/40689d57bea3b0b0c767/raw/f8c87557bcdbd79fb796e06088cdd77123c9260a/ob-mavericks.patch"
       sha256 "b6b1a46f5c0e98763e1fec85523646bb43aae800449e076d63adff93e7302212"
     end
 
-    # Patch to fix Molecule.draw() in pybel in accordance with upstream commit df59c4a630cf753723d1318c40479d48b7507e1c
     patch do
       url "https://gist.githubusercontent.com/fredrikw/5858168/raw/e4b5899e781d5707f5c386e436b5fc7810f2010d/ob-2-3-2-patch.diff"
       sha256 "52141601c7c87eaf3dec877b9120ac0eac2d1a75e3f0c1d82b6521f32410a892"
@@ -47,13 +45,11 @@ class OpenBabel < Formula
     args << "-DJAVA_BINDINGS=ON" if build.with? "java"
     args << "-DBUILD_GUI=ON" if build.with? "wxmac"
 
-    # Look for Cairo in HOMEBREW_PREFIX (automatic detection with cmake is fixed in HEAD)
     if build.with?("cairo") && !build.head?
       args << "-DCAIRO_INCLUDE_DIRS='#{HOMEBREW_PREFIX}/include/cairo'"
       args << "-DCAIRO_LIBRARIES='#{HOMEBREW_PREFIX}/lib/libcairo.dylib'"
     end
 
-    # Point cmake towards correct python
     if build.with? "python"
       pypref = `python -c 'import sys;print(sys.prefix)'`.strip
       pyinc = `python -c 'from distutils import sysconfig;print(sysconfig.get_python_inc(True))'`.strip
@@ -70,7 +66,6 @@ class OpenBabel < Formula
       system "make", "install"
     end
 
-    # Manually install the python files (fixed in HEAD)
     if build.with?("python") && !build.head?
       (lib+"python2.7/site-packages").install lib/"openbabel.py", lib/"pybel.py", lib/"_openbabel.so"
     end

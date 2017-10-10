@@ -1,9 +1,5 @@
 class RecreateSpreeReturnAuthorizations < ActiveRecord::Migration
   def up
-    # If the app has any legacy return authorizations then rename the table & columns and leave them there
-    # for the spree_legacy_return_authorizations extension to pick up with.
-    # Otherwise just drop the tables/columns as they are no longer used in stock spree.  The spree_legacy_return_authorizations
-    # extension will recreate these tables for dev environments & etc as needed.
     if Spree::ReturnAuthorization.exists?
       rename_table :spree_return_authorizations, :spree_legacy_return_authorizations
       rename_column :spree_inventory_units, :return_authorization_id, :legacy_return_authorization_id
@@ -14,8 +10,6 @@ class RecreateSpreeReturnAuthorizations < ActiveRecord::Migration
 
     Spree::Adjustment.where(source_type: 'Spree::ReturnAuthorization').update_all(source_type: 'Spree::LegacyReturnAuthorization')
 
-    # For now just recreate the table as it was.  Future changes to the schema (including dropping "amount") will be coming in a
-    # separate commit.
     create_table :spree_return_authorizations do |t|
       t.string   "number"
       t.string   "state"

@@ -20,11 +20,9 @@ class Rzip < Formula
     original_contents = "." * 1000
     path.write original_contents
 
-    # compress: data.txt -> data.txt.rz
     system bin/"rzip", path
     assert !path.exist?
 
-    # decompress: data.txt.rz -> data.txt
     system bin/"rzip", "-d", "#{path}.rz"
     assert_equal original_contents, path.read
   end

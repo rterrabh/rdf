@@ -19,9 +19,6 @@ class Ortp < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include "ortp/logging.h"
-      #include "ortp/rtpsession.h"
-      #include "ortp/sessionset.h"
       int main()
       {
         ORTP_PUBLIC void ortp_init(void);

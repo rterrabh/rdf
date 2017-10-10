@@ -35,7 +35,6 @@ module Spree
         expect(json_response['email']).to eq 'new@example.com'
       end
 
-      # there's no validations on LegacyUser?
       xit "cannot create a new user with invalid attributes" do
         api_post :create, :user => {}, token: user.spree_api_key
         expect(response.status).to eq(422)

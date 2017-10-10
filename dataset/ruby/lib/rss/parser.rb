@@ -9,9 +9,6 @@ module RSS
   class NotWellFormedError < Error
     attr_reader :line, :element
 
-    # Create a new NotWellFormedError for an error at +line+
-    # in +element+.  If a block is given the return value of
-    # the block ends up in the error message.
     def initialize(line=nil, element=nil)
       message = "This is not well formed XML"
       if element or line
@@ -61,8 +58,6 @@ module RSS
         @@default_parser || AVAILABLE_PARSERS.first
       end
 
-      # Set @@default_parser to new_value if it is one of the
-      # available parsers. Else raise NotValidXMLParser error.
       def default_parser=(new_value)
         if AVAILABLE_PARSERS.include?(new_value)
           @@default_parser = new_value
@@ -91,9 +86,6 @@ module RSS
 
     private
 
-    # Try to get the XML associated with +rss+.
-    # Return +rss+ if it already looks like XML, or treat it as a URI,
-    # or a file to get the XML,
     def normalize_rss(rss)
       return rss if maybe_xml?(rss)
 
@@ -108,13 +100,10 @@ module RSS
       end
     end
 
-    # maybe_xml? tests if source is a string that looks like XML.
     def maybe_xml?(source)
       source.is_a?(String) and /</ =~ source
     end
 
-    # Attempt to convert rss to a URI, but just return it if
-    # there's a ::URI::Error
     def to_uri(rss)
       return rss if rss.is_a?(::URI::Generic)
 
@@ -178,7 +167,6 @@ module RSS
       @@registered_uris = {}
       @@class_names = {}
 
-      # return the setter for the uri, tag_name pair, or nil.
       def setter(uri, tag_name)
         _getter = getter(uri, tag_name)
         if _getter
@@ -192,30 +180,24 @@ module RSS
         (@@accessor_bases[uri] || {})[tag_name]
       end
 
-      # return the tag_names for setters associated with uri
       def available_tags(uri)
         (@@accessor_bases[uri] || {}).keys
       end
 
-      # register uri against this name.
       def register_uri(uri, name)
         @@registered_uris[name] ||= {}
         @@registered_uris[name][uri] = nil
       end
 
-      # test if this uri is registered against this name
       def uri_registered?(uri, name)
         @@registered_uris[name].has_key?(uri)
       end
 
-      # record class_name for the supplied uri and tag_name
       def install_class_name(uri, tag_name, class_name)
         @@class_names[uri] ||= {}
         @@class_names[uri][tag_name] = class_name
       end
 
-      # retrieve class_name for the supplied uri and tag_name
-      # If it doesn't exist, capitalize the tag_name
       def class_name(uri, tag_name)
         name = (@@class_names[uri] || {})[tag_name]
         return name if name
@@ -234,7 +216,6 @@ module RSS
       end
 
       private
-      # set the accessor for the uri, tag_name pair
       def install_accessor_base(uri, tag_name, accessor_base)
         @@accessor_bases[uri] ||= {}
         @@accessor_bases[uri][tag_name] = accessor_base.chomp("=")
@@ -244,7 +225,7 @@ module RSS
         register_uri(uri, element_name)
         method_name = "start_#{element_name}"
         unless private_method_defined?(method_name)
-          #nodyna <ID:define_method-41> <DM MODERATE (events)>
+          #nodyna <define_method-2096> <DM MODERATE (events)>
           define_method(method_name) do |name, prefix, attrs, ns|
             uri = _ns(ns, prefix)
             if self.class.uri_registered?(uri, element_name)
@@ -281,7 +262,6 @@ module RSS
       @last_xml_element = nil
     end
 
-    # set instance vars for version, encoding, standalone
     def xmldecl(version, encoding, standalone)
       @version, @encoding, @standalone = version, encoding, standalone
     end
@@ -374,9 +354,6 @@ module RSS
     end
 
     CONTENT_PATTERN = /\s*([^=]+)=(["'])([^\2]+?)\2/
-    # Extract the first name="value" pair from content.
-    # Works with single quotes according to the constant
-    # CONTENT_PATTERN. Return a Hash.
     def parse_pi_content(content)
       params = {}
       content.scan(CONTENT_PATTERN) do |name, quote, value|
@@ -389,7 +366,7 @@ module RSS
       class_name = self.class.class_name(_ns(ns, prefix), local)
       current_class = @last_element.class
       if known_class?(current_class, class_name)
-        #nodyna <ID:const_get-38> <CG COMPLEX (change-prone variable)>
+        #nodyna <const_get-2097> <CG COMPLEX (change-prone variable)>
         next_class = current_class.const_get(class_name)
         start_have_something_element(local, prefix, attrs, ns, next_class)
       else
@@ -438,7 +415,6 @@ module RSS
         elsif @do_validate
           raise NSError.new(tag_name, prefix, require_uri)
         else
-          # Force bind required URI with prefix
           @ns_stack.last[prefix] = require_uri
           true
         end
@@ -547,7 +523,6 @@ module RSS
   end
 
   unless const_defined? :AVAILABLE_PARSER_LIBRARIES
-    # The list of all available libraries for parsing.
     AVAILABLE_PARSER_LIBRARIES = [
       ["rss/xmlparser", :XMLParserParser],
       ["rss/xmlscanner", :XMLScanParser],
@@ -555,13 +530,12 @@ module RSS
     ]
   end
 
-  # The list of all available parsers, in constant form.
   AVAILABLE_PARSERS = []
 
   AVAILABLE_PARSER_LIBRARIES.each do |lib, parser|
     begin
       require lib
-      #nodyna <ID:const_get-39> <CG MODERATE (array)>
+      #nodyna <const_get-2098> <CG MODERATE (array)>
       AVAILABLE_PARSERS.push(const_get(parser))
     rescue LoadError
     end

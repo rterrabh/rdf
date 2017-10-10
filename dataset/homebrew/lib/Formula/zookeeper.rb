@@ -7,8 +7,6 @@ class Zookeeper < Formula
     url "https://www.apache.org/dyn/closer.cgi?path=zookeeper/zookeeper-3.4.6/zookeeper-3.4.6.tar.gz"
     sha256 "01b3938547cd620dc4c93efe07c0360411f4a66962a70500b163b59014046994"
 
-    # To resolve Yosemite build errors.
-    # https://issues.apache.org/jira/browse/ZOOKEEPER-2049
     if MacOS.version == :yosemite
       patch :p0 do
         url "https://issues.apache.org/jira/secure/attachment/12673210/ZOOKEEPER-2049.noprefix.branch-3.4.patch"
@@ -27,8 +25,6 @@ class Zookeeper < Formula
   head do
     url "https://svn.apache.org/repos/asf/zookeeper/trunk"
 
-    # To resolve Yosemite build errors.
-    # https://issues.apache.org/jira/browse/ZOOKEEPER-2049
     if MacOS.version == :yosemite
       patch :p0 do
         url "https://issues.apache.org/jira/secure/attachment/12673212/ZOOKEEPER-2049.noprefix.trunk.patch"
@@ -51,7 +47,6 @@ class Zookeeper < Formula
 
   def shim_script(target)
     <<-EOS.undent
-      #!/usr/bin/env bash
       . "#{etc}/zookeeper/defaults"
       cd "#{libexec}/bin"
       ./#{target} "$@"
@@ -76,7 +71,6 @@ class Zookeeper < Formula
   end
 
   def install
-    # Don't try to build extensions for PPC
     if Hardware.is_32_bit?
       ENV["ARCHFLAGS"] = "-arch #{Hardware::CPU.arch_32_bit}"
     else

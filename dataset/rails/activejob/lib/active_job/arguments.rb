@@ -1,9 +1,6 @@
 require 'active_support/core_ext/hash'
 
 module ActiveJob
-  # Raised when an exception is raised during job arguments deserialization.
-  #
-  # Wraps the original exception raised as +original_exception+.
   class DeserializationError < StandardError
     attr_reader :original_exception
 
@@ -14,11 +11,6 @@ module ActiveJob
     end
   end
 
-  # Raised when an unsupported argument type is being set as job argument. We
-  # currently support NilClass, Fixnum, Float, String, TrueClass, FalseClass,
-  # Bignum and object that can be represented as GlobalIDs (ex: Active Record).
-  # Also raised if you set the key for a Hash something else than a string or
-  # a symbol.
   class SerializationError < ArgumentError
   end
 
@@ -26,16 +18,10 @@ module ActiveJob
     extend self
     TYPE_WHITELIST = [ NilClass, Fixnum, Float, String, TrueClass, FalseClass, Bignum ]
 
-    # Serializes a set of arguments. Whitelisted types are returned
-    # as-is. Arrays/Hashes are serialized element by element.
-    # All other types are serialized using GlobalID.
     def serialize(arguments)
       arguments.map { |argument| serialize_argument(argument) }
     end
 
-    # Deserializes a set of arguments. Whitelisted types are returned
-    # as-is. Arrays/Hashes are deserialized element by element.
-    # All other types are deserialized using GlobalID.
     def deserialize(arguments)
       arguments.map { |argument| deserialize_argument(argument) }
     rescue => e

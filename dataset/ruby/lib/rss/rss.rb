@@ -3,14 +3,6 @@ require "time"
 class Time
   class << self
     unless respond_to?(:w3cdtf)
-      # This method converts a W3CDTF string date/time format to Time object.
-      #
-      # The W3CDTF format is defined here: http://www.w3.org/TR/NOTE-datetime
-      #
-      #   Time.w3cdtf('2003-02-15T13:50:05-05:00')
-      #   # => 2003-02-15 10:50:05 -0800
-      #   Time.w3cdtf('2003-02-15T13:50:05-05:00').class
-      #   # => Time
       def w3cdtf(date)
         if /\A\s*
             (-?\d+)-(\d\d)-(\d\d)
@@ -42,13 +34,6 @@ class Time
   end
 
   unless method_defined?(:w3cdtf)
-    # This method converts a Time object to a String. The String contains the
-    # time in W3CDTF date/time format.
-    #
-    # The W3CDTF format is defined here: http://www.w3.org/TR/NOTE-datetime
-    #
-    #  Time.now.w3cdtf
-    #  # => "2013-08-26T14:12:10.817124-07:00"
     def w3cdtf
       if usec.zero?
         fraction_digits = 0
@@ -68,20 +53,14 @@ require "rss/xml-stylesheet"
 
 module RSS
 
-  # The current version of RSS
   VERSION = "0.2.7"
 
-  # The URI of the RSS 1.0 specification
   URI = "http://purl.org/rss/1.0/"
 
   DEBUG = false # :nodoc:
 
-  # The basic error all other RSS errors stem from. Rescue this error if you
-  # want to handle any given RSS error and you don't care about the details.
   class Error < StandardError; end
 
-  # RSS, being an XML-based format, has namespace support. If two namespaces are
-  # declared with the same name, an OverlappedPrefixError will be raised.
   class OverlappedPrefixError < Error
     attr_reader :prefix
     def initialize(prefix)
@@ -89,13 +68,8 @@ module RSS
     end
   end
 
-  # The InvalidRSSError error is the base class for a variety of errors
-  # related to a poorly-formed RSS feed. Rescue this error if you only
-  # care that a file could be invalid, but don't care how it is invalid.
   class InvalidRSSError < Error; end
 
-  # Since RSS is based on XML, it must have opening and closing tags that
-  # match. If they don't, a MissingTagError will be raised.
   class MissingTagError < InvalidRSSError
     attr_reader :tag, :parent
     def initialize(tag, parent)
@@ -104,9 +78,6 @@ module RSS
     end
   end
 
-  # Some tags must only exist a specific number of times in a given RSS feed.
-  # If a feed has too many occurrences of one of these tags, a TooMuchTagError
-  # will be raised.
   class TooMuchTagError < InvalidRSSError
     attr_reader :tag, :parent
     def initialize(tag, parent)
@@ -115,8 +86,6 @@ module RSS
     end
   end
 
-  # Certain attributes are required on specific tags in an RSS feed. If a feed
-  # is missing one of these attributes, a MissingAttributeError is raised.
   class MissingAttributeError < InvalidRSSError
     attr_reader :tag, :attribute
     def initialize(tag, attribute)
@@ -125,8 +94,6 @@ module RSS
     end
   end
 
-  # RSS does not allow for free-form tag names, so if an RSS feed contains a
-  # tag that we don't know about, an UnknownTagError is raised.
   class UnknownTagError < InvalidRSSError
     attr_reader :tag, :uri
     def initialize(tag, uri)
@@ -135,7 +102,6 @@ module RSS
     end
   end
 
-  # Raised when an unexpected tag is encountered.
   class NotExpectedTagError < InvalidRSSError
     attr_reader :tag, :uri, :parent
     def initialize(tag, uri, parent)
@@ -143,11 +109,8 @@ module RSS
       super("tag <{#{uri}}#{tag}> is not expected in tag <#{parent}>")
     end
   end
-  # For backward compatibility :X
   NotExceptedTagError = NotExpectedTagError # :nodoc:
 
-  # Attributes are in key-value form, and if there's no value provided for an
-  # attribute, a NotAvailableValueError will be raised.
   class NotAvailableValueError < InvalidRSSError
     attr_reader :tag, :value, :attribute
     def initialize(tag, value, attribute=nil)
@@ -159,7 +122,6 @@ module RSS
     end
   end
 
-  # Raised when an unknown conversion error occurs.
   class UnknownConversionMethodError < Error
     attr_reader :to, :from
     def initialize(to, from)
@@ -168,10 +130,8 @@ module RSS
       super("can't convert to #{to} from #{from}.")
     end
   end
-  # for backward compatibility
   UnknownConvertMethod = UnknownConversionMethodError # :nodoc:
 
-  # Raised when a conversion failure occurs.
   class ConversionError < Error
     attr_reader :string, :to, :from
     def initialize(string, to, from)
@@ -182,7 +142,6 @@ module RSS
     end
   end
 
-  # Raised when a required variable is not set.
   class NotSetError < Error
     attr_reader :name, :variables
     def initialize(name, variables)
@@ -192,7 +151,6 @@ module RSS
     end
   end
 
-  # Raised when a RSS::Maker attempts to use an unknown maker.
   class UnsupportedMakerVersionError < Error
     attr_reader :version
     def initialize(version)
@@ -286,7 +244,6 @@ EOC
       add_need_initialize_variable(name)
       install_model(tag_name, uri, occurs, name)
 
-      # accessor
       convert_attr_reader name
       date_writer(name, type, disp_name)
 
@@ -315,9 +272,9 @@ EOC
       elem_name = name.sub('_', ':')
       method_name = "#{name}_element#{postfix}"
       add_to_element_method(method_name)
+      #nodyna <module_eval-2102> <not yet classified>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{method_name}(need_convert=true, indent='')
-        #{yield(name, elem_name)}
       end
       private :#{method_name}
 EOC
@@ -326,6 +283,7 @@ EOC
     def inherit_convert_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
+        #nodyna <module_eval-2103> <not yet classified>
         module_eval(<<-EOC, *get_file_and_line_from_caller(2))
         def #{attr}_without_inherit
           convert(@#{attr})
@@ -333,7 +291,6 @@ EOC
 
         def #{attr}
           if @#{attr}
-            #{attr}_without_inherit
           elsif @parent
             @parent.#{attr}
           else
@@ -347,6 +304,7 @@ EOC
     def uri_convert_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
+        #nodyna <module_eval-2104> <not yet classified>
         module_eval(<<-EOC, *get_file_and_line_from_caller(2))
         def #{attr}_without_base
           convert(@#{attr})
@@ -368,6 +326,7 @@ EOC
     def convert_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
+        #nodyna <module_eval-2105> <not yet classified>
         module_eval(<<-EOC, *get_file_and_line_from_caller(2))
         def #{attr}
           convert(@#{attr})
@@ -379,6 +338,7 @@ EOC
     def yes_clean_other_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
+        #nodyna <module_eval-2106> <not yet classified>
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           attr_reader(:#{attr})
           def #{attr}?
@@ -391,6 +351,7 @@ EOC
     def yes_other_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
+        #nodyna <module_eval-2107> <not yet classified>
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           attr_reader(:#{attr})
           def #{attr}?
@@ -409,6 +370,7 @@ EOC
       separator ||= ", "
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
+        #nodyna <module_eval-2108> <not yet classified>
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           attr_reader(:#{attr})
           def #{attr}_content
@@ -423,6 +385,7 @@ EOC
     end
 
     def date_writer(name, type, disp_name=name)
+      #nodyna <module_eval-2109> <not yet classified>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.nil?
@@ -449,7 +412,6 @@ EOC
           end
         end
 
-        # Is it need?
         if @#{name}
           class << @#{name}
             undef_method(:to_s)
@@ -462,6 +424,7 @@ EOC
     end
 
     def integer_writer(name, disp_name=name)
+      #nodyna <module_eval-2110> <not yet classified>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.nil?
@@ -482,6 +445,7 @@ EOC
     end
 
     def positive_integer_writer(name, disp_name=name)
+      #nodyna <module_eval-2111> <not yet classified>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.nil?
@@ -504,6 +468,7 @@ EOC
     end
 
     def boolean_writer(name, disp_name=name)
+      #nodyna <module_eval-2112> <not yet classified>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.nil?
@@ -524,6 +489,7 @@ EOC
     end
 
     def text_type_writer(name, disp_name=name)
+      #nodyna <module_eval-2113> <not yet classified>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if @do_validate and
@@ -537,6 +503,7 @@ EOC
 
     def content_writer(name, disp_name=name)
       klass_name = "self.class::#{Utils.to_class_name(name)}"
+      #nodyna <module_eval-2114> <not yet classified>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.is_a?(#{klass_name})
@@ -550,6 +517,7 @@ EOC
     end
 
     def yes_clean_other_writer(name, disp_name=name)
+      #nodyna <module_eval-2115> <not yet classified>
       module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         def #{name}=(value)
           value = (value ? "yes" : "no") if [true, false].include?(value)
@@ -559,6 +527,7 @@ EOC
     end
 
     def yes_other_writer(name, disp_name=name)
+      #nodyna <module_eval-2116> <not yet classified>
       module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         def #{name}=(new_value)
           if [true, false].include?(new_value)
@@ -570,6 +539,7 @@ EOC
     end
 
     def csv_writer(name, disp_name=name)
+      #nodyna <module_eval-2117> <not yet classified>
       module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         def #{name}=(new_value)
           @#{name} = Utils::CSV.parse(new_value)
@@ -578,6 +548,7 @@ EOC
     end
 
     def csv_integer_writer(name, disp_name=name)
+      #nodyna <module_eval-2118> <not yet classified>
       module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         def #{name}=(new_value)
           @#{name} = Utils::CSV.parse(new_value) {|v| Integer(v)}
@@ -586,6 +557,7 @@ EOC
     end
 
     def def_children_accessor(accessor_name, plural_name)
+      #nodyna <module_eval-2119> <not yet classified>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{plural_name}
         @#{accessor_name}
@@ -711,24 +683,26 @@ EOC
       end
 
       def inherited(klass)
-        #nodyna <ID:const_set-52> <CS TRIVIAL (static values)>
+        #nodyna <const_set-2120> <CS TRIVIAL (static values)>
         klass.const_set(:MUST_CALL_VALIDATORS, {})
-        #nodyna <ID:const_set-53> <CS TRIVIAL (static values)>
+        #nodyna <const_set-2121> <CS TRIVIAL (static values)>
         klass.const_set(:MODELS, [])
-        #nodyna <ID:const_set-54> <CS TRIVIAL (static values)>
+        #nodyna <const_set-2122> <CS TRIVIAL (static values)>
         klass.const_set(:GET_ATTRIBUTES, [])
-        #nodyna <ID:const_set-55> <CS TRIVIAL (static values)>
+        #nodyna <const_set-2123> <CS TRIVIAL (static values)>
         klass.const_set(:HAVE_CHILDREN_ELEMENTS, [])
-        #nodyna <ID:const_set-56> <CS TRIVIAL (static values)>
+        #nodyna <const_set-2124> <CS TRIVIAL (static values)>
         klass.const_set(:TO_ELEMENT_METHODS, [])
-        #nodyna <ID:const_set-57> <CS TRIVIAL (static values)>
+        #nodyna <const_set-2125> <CS TRIVIAL (static values)>
         klass.const_set(:NEED_INITIALIZE_VARIABLES, [])
-        #nodyna <ID:const_set-58> <CS TRIVIAL (static values)>
+        #nodyna <const_set-2126> <CS TRIVIAL (static values)>
         klass.const_set(:PLURAL_FORMS, {})
 
         tag_name = klass.name.split(/::/).last
         tag_name[0, 1] = tag_name[0, 1].downcase
+        #nodyna <instance_variable_set-2127> <not yet classified>
         klass.instance_variable_set(:@tag_name, tag_name)
+        #nodyna <instance_variable_set-2128> <not yet classified>
         klass.instance_variable_set(:@have_content, false)
       end
 
@@ -988,6 +962,7 @@ EOC
         if value
           __send__("#{variable_name}=", value)
         else
+          #nodyna <instance_variable_set-2129> <not yet classified>
           instance_variable_set("@#{variable_name}", nil)
         end
       end
@@ -997,6 +972,7 @@ EOC
 
     def initialize_have_children_elements
       self.class.have_children_elements.each do |variable_name, plural_name|
+        #nodyna <instance_variable_set-2130> <not yet classified>
         instance_variable_set("@#{variable_name}", [])
       end
     end
@@ -1062,7 +1038,6 @@ EOC
       "#{prefix}:#{tag_name}"
     end
 
-    # For backward compatibility
     def calc_indent
       ''
     end
@@ -1120,6 +1095,7 @@ EOC
 
     def validate_attribute
       _attrs.each do |a_name, required, alias_name|
+        #nodyna <instance_variable_get-2131> <not yet classified>
         value = instance_variable_get("@#{alias_name || a_name}")
         if required and value.nil?
           raise MissingAttributeError.new(tag_name, a_name)

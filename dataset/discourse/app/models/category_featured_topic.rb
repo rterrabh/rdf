@@ -2,7 +2,6 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   belongs_to :category
   belongs_to :topic
 
-  # Populates the category featured topics
   def self.feature_topics
     transaction do
       current = {}
@@ -40,7 +39,6 @@ class CategoryFeaturedTopic < ActiveRecord::Base
   end
 
   def self.fake_admin
-    # fake an admin
     admin = User.new
     admin.admin = true
     admin.id = -1
@@ -49,19 +47,3 @@ class CategoryFeaturedTopic < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: category_featured_topics
-#
-#  category_id :integer          not null
-#  topic_id    :integer          not null
-#  created_at  :datetime         not null
-#  updated_at  :datetime         not null
-#  rank        :integer          default(0), not null
-#  id          :integer          not null, primary key
-#
-# Indexes
-#
-#  cat_featured_threads                                    (category_id,topic_id) UNIQUE
-#  index_category_featured_topics_on_category_id_and_rank  (category_id,rank)
-#

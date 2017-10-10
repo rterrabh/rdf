@@ -1,7 +1,6 @@
 require 'mime/types'
 
 module API
-  # Projects API
   class Repositories < Grape::API
     before { authenticate! }
     before { authorize! :download_code, user_project }
@@ -16,26 +15,11 @@ module API
         end
       end
 
-      # Get a project repository tags
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      # Example Request:
-      #   GET /projects/:id/repository/tags
       get ":id/repository/tags" do
         present user_project.repo.tags.sort_by(&:name).reverse,
                 with: Entities::RepoTag, project: user_project
       end
 
-      # Create tag
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   tag_name (required) - The name of the tag
-      #   ref (required) - Create tag from commit sha or branch
-      #   message (optional) - Specifying a message creates an annotated tag.
-      # Example Request:
-      #   POST /projects/:id/repository/tags
       post ':id/repository/tags' do
         authorize_push_project
         message = params[:message] || nil
@@ -51,13 +35,6 @@ module API
         end
       end
 
-      # Get a project repository tree
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   ref_name (optional) - The name of a repository branch or tag, if not given the default branch is used
-      # Example Request:
-      #   GET /projects/:id/repository/tree
       get ':id/repository/tree' do
         ref = params[:ref_name] || user_project.try(:default_branch) || 'master'
         path = params[:path] || nil
@@ -70,14 +47,6 @@ module API
         present tree.sorted_entries, with: Entities::RepoTreeObject
       end
 
-      # Get a raw file contents
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   sha (required) - The commit or branch name
-      #   filepath (required) - The path to the file to display
-      # Example Request:
-      #   GET /projects/:id/repository/blobs/:sha
       get [ ":id/repository/blobs/:sha", ":id/repository/commits/:sha/blob" ] do
         required_attributes! [:filepath]
 
@@ -95,13 +64,6 @@ module API
         present blob.data
       end
 
-      # Get a raw blob contents by blob sha
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   sha (required) - The blob's sha
-      # Example Request:
-      #   GET /projects/:id/repository/raw_blobs/:sha
       get ':id/repository/raw_blobs/:sha' do
         ref = params[:sha]
 
@@ -121,13 +83,6 @@ module API
         present blob.data
       end
 
-      # Get a an archive of the repository
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   sha (optional) - the commit sha to download defaults to the tip of the default branch
-      # Example Request:
-      #   GET /projects/:id/repository/archive
       get ':id/repository/archive',
           requirements: { format: Gitlab::Regex.archive_formats_regex } do
         authorize! :download_code, user_project
@@ -154,14 +109,6 @@ module API
         end
       end
 
-      # Compare two branches, tags or commits
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   from (required) - the commit sha or branch name
-      #   to (required) - the commit sha or branch name
-      # Example Request:
-      #   GET /projects/:id/repository/compare?from=master&to=feature
       get ':id/repository/compare' do
         authorize! :download_code, user_project
         required_attributes! [:from, :to]
@@ -169,12 +116,6 @@ module API
         present compare, with: Entities::Compare
       end
 
-      # Get repository contributors
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      # Example Request:
-      #   GET /projects/:id/repository/contributors
       get ':id/repository/contributors' do
         authorize! :download_code, user_project
 

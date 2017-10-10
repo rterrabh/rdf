@@ -1,24 +1,17 @@
-# -*- coding: us-ascii -*-
-# module to create Makefile for extension modules
-# invoke like: ruby -r mkmf extconf.rb
 
 require 'rbconfig'
 require 'fileutils'
 require 'shellwords'
 
-# :stopdoc:
 class String
-  # Wraps a string in escaped quotes if it contains whitespace.
   def quote
     /\s/ =~ self ? "\"#{self}\"" : "#{self}"
   end
 
-  # Escape whitespaces for Makefile.
   def unspace
     gsub(/\s/, '\\\\\\&')
   end
 
-  # Generates a string used as cpp macro name.
   def tr_cpp
     strip.upcase.tr_s("^A-Z0-9_*", "_").tr_s("*", "P")
   end
@@ -33,55 +26,29 @@ class String
 end
 
 class Array
-  # Wraps all strings in escaped quotes if they contain whitespace.
   def quote
     map {|s| s.quote}
   end
 end
-# :startdoc:
 
-##
-# mkmf.rb is used by Ruby C extensions to generate a Makefile which will
-# correctly compile and link the C extension to Ruby and a third-party
-# library.
 module MakeMakefile
-  #### defer until this module become global-state free.
-  # def self.extended(obj)
-  #   obj.init_mkmf
-  #   super
-  # end
-  #
-  # def initialize(*args, rbconfig: RbConfig, **rest)
-  #   init_mkmf(rbconfig::MAKEFILE_CONFIG, rbconfig::CONFIG)
-  #   super(*args, **rest)
-  # end
 
-  ##
-  # The makefile configuration using the defaults from when Ruby was built.
 
   CONFIG = RbConfig::MAKEFILE_CONFIG
   ORIG_LIBPATH = ENV['LIB']
 
-  ##
-  # Extensions for files compiled with a C compiler
 
   C_EXT = %w[c m]
 
-  ##
-  # Extensions for files complied with a C++ compiler
 
   CXX_EXT = %w[cc mm cxx cpp]
   unless File.exist?(File.join(*File.split(__FILE__).tap {|d, b| b.swapcase}))
     CXX_EXT.concat(%w[C])
   end
 
-  ##
-  # Extensions for source files
 
   SRC_EXT = C_EXT + CXX_EXT
 
-  ##
-  # Extensions for header files
 
   HDR_EXT = %w[h hpp]
   $static = nil
@@ -139,7 +106,6 @@ module MakeMakefile
   $universal = /universal/ =~ RUBY_PLATFORM
   $dest_prefix_pattern = (File::PATH_SEPARATOR == ';' ? /\A([[:alpha:]]:)?/ : /\A/)
 
-  # :stopdoc:
 
   def config_string(key, config = CONFIG)
     s = config[key] and !s.empty? and block_given? ? yield(s) : s
@@ -265,8 +231,6 @@ module MakeMakefile
   end
   module_function :rm_rf
 
-  # Returns time stamp of the +target+ file if it exists and is newer than or
-  # equal to all of +times+.
   def modified?(target, times)
     (t = File.mtime(target)) rescue return nil
     Array === times or times = [times]
@@ -291,12 +255,6 @@ module MakeMakefile
     end
   end
 
-  # This is a custom logging module. It generates an mkmf.log file when you
-  # run your extconf.rb script. This can be useful for debugging unexpected
-  # failures.
-  #
-  # This module and its associated methods are meant for internal use only.
-  #
   module Logging
     @log = nil
     @logfile = 'mkmf.log'
@@ -365,7 +323,6 @@ module MakeMakefile
   end
 
   def libpath_env
-    # used only if native compiling
     if libpathenv = config_string("LIBPATHENV")
       pathenv = ENV[libpathenv]
       libpath = RbConfig.expand($DEFLIBPATH.join(File::PATH_SEPARATOR))
@@ -413,7 +370,6 @@ module MakeMakefile
     src = src.split(/^/)
     fmt = "%#{src.size.to_s.size}d: %s"
     Logging::message <<"EOM"
-#{heading}:
 /* begin */
 EOM
     src.each_with_index {|line, no| Logging::message fmt, no+1, line}
@@ -542,31 +498,12 @@ MSG
     end and File.executable?(CONFTEST+$EXEEXT)
   end
 
-  # Returns whether or not the +src+ can be compiled as a C source and linked
-  # with its depending libraries successfully.  +opt+ is passed to the linker
-  # as options. Note that +$CFLAGS+ and +$LDFLAGS+ are also passed to the
-  # linker.
-  #
-  # If a block given, it is called with the source before compilation. You can
-  # modify the source in the block.
-  #
-  # [+src+] a String which contains a C source
-  # [+opt+] a String which contains linker options
   def try_link(src, opt="", *opts, &b)
     try_link0(src, opt, *opts, &b)
   ensure
     MakeMakefile.rm_f "#{CONFTEST}*", "c0x32*"
   end
 
-  # Returns whether or not the +src+ can be compiled as a C source.  +opt+ is
-  # passed to the C compiler as options. Note that +$CFLAGS+ is also passed to
-  # the compiler.
-  #
-  # If a block given, it is called with the source before compilation. You can
-  # modify the source in the block.
-  #
-  # [+src+] a String which contains a C source
-  # [+opt+] a String which contains compiler options
   def try_compile(src, opt="", *opts, &b)
     with_werror(opt, *opts) {|_opt, *_opts| try_do(src, cc_command(_opt), *_opts, &b)} and
       File.file?("#{CONFTEST}.#{$OBJEXT}")
@@ -574,15 +511,6 @@ MSG
     MakeMakefile.rm_f "#{CONFTEST}*"
   end
 
-  # Returns whether or not the +src+ can be preprocessed with the C
-  # preprocessor.  +opt+ is passed to the preprocessor as options. Note that
-  # +$CFLAGS+ is also passed to the preprocessor.
-  #
-  # If a block given, it is called with the source before preprocessing. You
-  # can modify the source in the block.
-  #
-  # [+src+] a String which contains a C source
-  # [+opt+] a String which contains preprocessor options
   def try_cpp(src, opt="", *opts, &b)
     try_do(src, cpp_command(CPPOUTFILE, opt), *opts, &b) and
       File.file?("#{CONFTEST}.i")
@@ -640,7 +568,6 @@ MSG
   def try_static_assert(expr, headers = nil, opt = "", &b)
     headers = cpp_include(headers)
     try_compile(<<SRC, opt, &b)
-#{headers}
 /*top*/
 int conftest_const[(#{expr}) ? 1 : -1];
 SRC
@@ -653,11 +580,9 @@ SRC
       if neg
         const = "-(#{const})"
       elsif try_static_assert("#{const} > 0", headers, opt)
-        # positive constant
       elsif try_static_assert("#{const} == 0", headers, opt)
         return 0
       else
-        # not a constant
         return nil
       end
       upper = 1
@@ -678,16 +603,10 @@ SRC
       return upper
     else
       src = %{#{includes}
-#include <stdio.h>
 /*top*/
 typedef#{neg ? '' : ' unsigned'}
-#ifdef PRI_LL_PREFIX
-#define PRI_CONFTEST_PREFIX PRI_LL_PREFIX
 LONG_LONG
-#else
-#define PRI_CONFTEST_PREFIX "l"
 long
-#endif
 conftest_type;
 conftest_type conftest_const = (conftest_type)(#{const});
 int main() {printf("%"PRI_CONFTEST_PREFIX"#{neg ? 'd' : 'u'}\\n", conftest_const); return 0;}
@@ -705,12 +624,6 @@ int main() {printf("%"PRI_CONFTEST_PREFIX"#{neg ? 'd' : 'u'}\\n", conftest_const
     nil
   end
 
-  # You should use +have_func+ rather than +try_func+.
-  #
-  # [+func+] a String which contains a symbol name
-  # [+libs+] a String which contains library names.
-  # [+headers+] a String or an Array of strings which contains names of header
-  #             files.
   def try_func(func, libs, headers = nil, opt = "", &b)
     headers = cpp_include(headers)
     case func
@@ -725,7 +638,7 @@ int main() {printf("%"PRI_CONFTEST_PREFIX"#{neg ? 'd' : 'u'}\\n", conftest_const
     if opt and !opt.empty?
       [[:to_str], [:join, " "], [:to_s]].each do |meth, *args|
         if opt.respond_to?(meth)
-          #nodyna <ID:send-134> <SD MODERATE (array)>
+          #nodyna <send-2223> <SD MODERATE (array)>
           break opt = opt.send(meth, *args)
         end
       end
@@ -734,45 +647,26 @@ int main() {printf("%"PRI_CONFTEST_PREFIX"#{neg ? 'd' : 'u'}\\n", conftest_const
       opt = libs
     end
     decltype && try_link(<<"SRC", opt, &b) or
-#{headers}
 /*top*/
 extern int t(void);
-#{MAIN_DOES_NOTHING 't'}
 int t(void) { #{decltype["volatile p"]}; p = (#{decltype[]})#{func}; return 0; }
 SRC
     call && try_link(<<"SRC", opt, &b)
-#{headers}
 /*top*/
 extern int t(void);
-#{MAIN_DOES_NOTHING 't'}
 int t(void) { #{call}; return 0; }
 SRC
   end
 
-  # You should use +have_var+ rather than +try_var+.
   def try_var(var, headers = nil, opt = "", &b)
     headers = cpp_include(headers)
     try_compile(<<"SRC", opt, &b)
-#{headers}
 /*top*/
 extern int t(void);
-#{MAIN_DOES_NOTHING 't'}
 int t(void) { const volatile void *volatile p; p = &(&#{var})[0]; return 0; }
 SRC
   end
 
-  # Returns whether or not the +src+ can be preprocessed with the C
-  # preprocessor and matches with +pat+.
-  #
-  # If a block given, it is called with the source before compilation. You can
-  # modify the source in the block.
-  #
-  # [+pat+] a Regexp or a String
-  # [+src+] a String which contains a C source
-  # [+opt+] a String which contains preprocessor options
-  #
-  # NOTE: When pat is a Regexp the matching will be checked in process,
-  # otherwise egrep(1) will be invoked to check it.
   def egrep_cpp(pat, src, opt = "", &b)
     src = create_tmpsrc(src, &b)
     xpopen(cpp_command('', opt)) do |f|
@@ -799,36 +693,14 @@ SRC
     log_src(src)
   end
 
-  # This is used internally by the have_macro? method.
   def macro_defined?(macro, src, opt = "", &b)
     src = src.sub(/[^\n]\z/, "\\&\n")
     try_compile(src + <<"SRC", opt, &b)
 /*top*/
-#ifndef #{macro}
-# error
 |:/ === #{macro} undefined === /:|
-#endif
 SRC
   end
 
-  # Returns whether or not:
-  # * the +src+ can be compiled as a C source,
-  # * the result object can be linked with its depending libraries
-  #   successfully,
-  # * the linked file can be invoked as an executable
-  # * and the executable exits successfully
-  #
-  # +opt+ is passed to the linker as options. Note that +$CFLAGS+ and
-  # +$LDFLAGS+ are also passed to the linker.
-  #
-  # If a block given, it is called with the source before compilation. You can
-  # modify the source in the block.
-  #
-  # [+src+] a String which contains a C source
-  # [+opt+] a String which contains linker options
-  #
-  # Returns true when the executable exits successfully, false when it fails,
-  # or nil when preprocessing, compilation or link fails.
   def try_run(src, opt = "", &b)
     raise "cannot run test program while cross compiling" if CROSS_COMPILING
     if try_link0(src, opt, &b)
@@ -851,11 +723,9 @@ SRC
       dir = map_dir(dir, map)
       prefix &&= %r|\A#{Regexp.quote(prefix)}/?|
       if /\A\.\// =~ files
-        # install files which are in current working directory.
         files = files[2..-1]
         len = nil
       else
-        # install files which are under the $(srcdir).
         files = File.join(srcdir, files)
         len = srcdir.size
       end
@@ -898,11 +768,6 @@ SRC
     end
   end
 
-  # This emits a string to stdout that allows users to see the results of the
-  # various have* and find* methods as they are tested.
-  #
-  # Internal use only.
-  #
   def checking_for(m, fmt = nil)
     f = caller[0][/in `([^<].*)'$/, 1] and f << ": " #` for vim #'
     m = "checking #{/\Acheck/ =~ f ? '' : 'for '}#{m}... "
@@ -923,7 +788,7 @@ SRC
       if noun
         [[:to_str], [:join, ","], [:to_s]].each do |meth, *args|
           if noun.respond_to?(meth)
-            #nodyna <ID:send-135> <SD MODERATE (array)>
+            #nodyna <send-2224> <SD MODERATE (array)>
             break noun = noun.send(meth, *args)
           end
         end
@@ -933,30 +798,13 @@ SRC
     end
   end
 
-  # :startdoc:
 
-  # Returns whether or not +macro+ is defined either in the common header
-  # files or within any +headers+ you provide.
-  #
-  # Any options you pass to +opt+ are passed along to the compiler.
-  #
   def have_macro(macro, headers = nil, opt = "", &b)
     checking_for checking_message(macro, headers, opt) do
       macro_defined?(macro, cpp_include(headers), opt, &b)
     end
   end
 
-  # Returns whether or not the given entry point +func+ can be found within
-  # +lib+.  If +func+ is +nil+, the <code>main()</code> entry point is used by
-  # default.  If found, it adds the library to list of libraries to be used
-  # when linking your extension.
-  #
-  # If +headers+ are provided, it will include those header files as the
-  # header files it looks in when searching for +func+.
-  #
-  # The real name of the library to be linked can be altered by
-  # <code>--with-FOOlib</code> configuration option.
-  #
   def have_library(lib, func = nil, headers = nil, opt = "", &b)
     func = "main" if !func or func.empty?
     lib = with_config(lib+'lib', lib)
@@ -975,14 +823,6 @@ SRC
     end
   end
 
-  # Returns whether or not the entry point +func+ can be found within the
-  # library +lib+ in one of the +paths+ specified, where +paths+ is an array
-  # of strings.  If +func+ is +nil+ , then the <code>main()</code> function is
-  # used as the entry point.
-  #
-  # If +lib+ is found, then the path it was found on is added to the list of
-  # library paths searched and linked against.
-  #
   def find_library(lib, func, *paths, &b)
     func = "main" if !func or func.empty?
     lib = with_config(lib+'lib', lib)
@@ -1005,18 +845,6 @@ SRC
     end
   end
 
-  # Returns whether or not the function +func+ can be found in the common
-  # header files, or within any +headers+ that you provide.  If found, a macro
-  # is passed as a preprocessor constant to the compiler using the function
-  # name, in uppercase, prepended with +HAVE_+.
-  #
-  # To check functions in an additional library, you need to check that
-  # library first using <code>have_library()</code>.  The +func+ shall be
-  # either mere function name or function name with arguments.
-  #
-  # For example, if <code>have_func('foo')</code> returned +true+, then the
-  # +HAVE_FOO+ preprocessor macro would be passed to the compiler.
-  #
   def have_func(func, headers = nil, opt = "", &b)
     checking_for checking_message(func.funcall_style, headers, opt) do
       if try_func(func, $libs, headers, opt, &b)
@@ -1028,17 +856,6 @@ SRC
     end
   end
 
-  # Returns whether or not the variable +var+ can be found in the common
-  # header files, or within any +headers+ that you provide.  If found, a macro
-  # is passed as a preprocessor constant to the compiler using the variable
-  # name, in uppercase, prepended with +HAVE_+.
-  #
-  # To check variables in an additional library, you need to check that
-  # library first using <code>have_library()</code>.
-  #
-  # For example, if <code>have_var('foo')</code> returned true, then the
-  # +HAVE_FOO+ preprocessor macro would be passed to the compiler.
-  #
   def have_var(var, headers = nil, opt = "", &b)
     checking_for checking_message(var, headers, opt) do
       if try_var(var, headers, opt, &b)
@@ -1050,13 +867,6 @@ SRC
     end
   end
 
-  # Returns whether or not the given +header+ file can be found on your system.
-  # If found, a macro is passed as a preprocessor constant to the compiler
-  # using the header file name, in uppercase, prepended with +HAVE_+.
-  #
-  # For example, if <code>have_header('foo.h')</code> returned true, then the
-  # +HAVE_FOO_H+ preprocessor macro would be passed to the compiler.
-  #
   def have_header(header, preheaders = nil, opt = "", &b)
     checking_for header do
       if try_header(cpp_include(preheaders)+cpp_include(header), opt, &b)
@@ -1068,17 +878,6 @@ SRC
     end
   end
 
-  # Returns whether or not the given +framework+ can be found on your system.
-  # If found, a macro is passed as a preprocessor constant to the compiler
-  # using the framework name, in uppercase, prepended with +HAVE_FRAMEWORK_+.
-  #
-  # For example, if <code>have_framework('Ruby')</code> returned true, then
-  # the +HAVE_FRAMEWORK_RUBY+ preprocessor macro would be passed to the
-  # compiler.
-  #
-  # If +fw+ is a pair of the framework name and its header file name
-  # that header file is checked, instead of the normally used header
-  # file which is named same as the framework.
   def have_framework(fw, &b)
     if Array === fw
       fw, header = *fw
@@ -1090,8 +889,6 @@ SRC
       opt = " -framework #{fw}"
       if try_link(src, opt, &b) or (objc = try_link(src, "-ObjC#{opt}", &b))
         $defs.push(format("-DHAVE_FRAMEWORK_%s", fw.tr_cpp))
-        # TODO: non-worse way than this hack, to get rid of separating
-        # option and its argument.
         $LDFLAGS << " -ObjC" if objc and /(\A|\s)-ObjC(\s|\z)/ !~ $LDFLAGS
         $LIBS << opt
         true
@@ -1101,13 +898,6 @@ SRC
     end
   end
 
-  # Instructs mkmf to search for the given +header+ in any of the +paths+
-  # provided, and returns whether or not it was found in those paths.
-  #
-  # If the header is found then the path it was found on is added to the list
-  # of included directories that are sent to the compiler (via the
-  # <code>-I</code> switch).
-  #
   def find_header(header, *paths)
     message = checking_message(header, paths)
     header = cpp_include(header)
@@ -1129,28 +919,11 @@ SRC
     end
   end
 
-  # Returns whether or not the struct of type +type+ contains +member+.  If
-  # it does not, or the struct type can't be found, then false is returned.
-  # You may optionally specify additional +headers+ in which to look for the
-  # struct (in addition to the common header files).
-  #
-  # If found, a macro is passed as a preprocessor constant to the compiler
-  # using the type name and the member name, in uppercase, prepended with
-  # +HAVE_+.
-  #
-  # For example, if <code>have_struct_member('struct foo', 'bar')</code>
-  # returned true, then the +HAVE_STRUCT_FOO_BAR+ preprocessor macro would be
-  # passed to the compiler.
-  #
-  # +HAVE_ST_BAR+ is also defined for backward compatibility.
-  #
   def have_struct_member(type, member, headers = nil, opt = "", &b)
     checking_for checking_message("#{type}.#{member}", headers) do
       if try_compile(<<"SRC", opt, &b)
-#{cpp_include(headers)}
 /*top*/
 int s = (char *)&((#{type}*)0)->#{member} - (char *)0;
-#{MAIN_DOES_NOTHING}
 SRC
         $defs.push(format("-DHAVE_%s_%s", type.tr_cpp, member.tr_cpp))
         $defs.push(format("-DHAVE_ST_%s", member.tr_cpp)) # backward compatibility
@@ -1161,13 +934,8 @@ SRC
     end
   end
 
-  # Returns whether or not the static type +type+ is defined.
-  #
-  # See also +have_type+
-  #
   def try_type(type, headers = nil, opt = "", &b)
     if try_compile(<<"SRC", opt, &b)
-#{cpp_include(headers)}
 /*top*/
 typedef #{type} conftest_type;
 int conftestval[sizeof(conftest_type)?1:-1];
@@ -1179,32 +947,12 @@ SRC
     end
   end
 
-  # Returns whether or not the static type +type+ is defined.  You may
-  # optionally pass additional +headers+ to check against in addition to the
-  # common header files.
-  #
-  # You may also pass additional flags to +opt+ which are then passed along to
-  # the compiler.
-  #
-  # If found, a macro is passed as a preprocessor constant to the compiler
-  # using the type name, in uppercase, prepended with +HAVE_TYPE_+.
-  #
-  # For example, if <code>have_type('foo')</code> returned true, then the
-  # +HAVE_TYPE_FOO+ preprocessor macro would be passed to the compiler.
-  #
   def have_type(type, headers = nil, opt = "", &b)
     checking_for checking_message(type, headers, opt) do
       try_type(type, headers, opt, &b)
     end
   end
 
-  # Returns where the static type +type+ is defined.
-  #
-  # You may also pass additional flags to +opt+ which are then passed along to
-  # the compiler.
-  #
-  # See also +have_type+.
-  #
   def find_type(type, opt, *headers, &b)
     opt ||= ""
     fmt = "not found"
@@ -1218,14 +966,9 @@ SRC
     end
   end
 
-  # Returns whether or not the constant +const+ is defined.
-  #
-  # See also +have_const+
-  #
   def try_const(const, headers = nil, opt = "", &b)
     const, type = *const
     if try_compile(<<"SRC", opt, &b)
-#{cpp_include(headers)}
 /*top*/
 typedef #{type || 'int'} conftest_type;
 conftest_type conftestval = #{type ? '' : '(int)'}#{const};
@@ -1237,29 +980,12 @@ SRC
     end
   end
 
-  # Returns whether or not the constant +const+ is defined.  You may
-  # optionally pass the +type+ of +const+ as <code>[const, type]</code>,
-  # such as:
-  #
-  #   have_const(%w[PTHREAD_MUTEX_INITIALIZER pthread_mutex_t], "pthread.h")
-  #
-  # You may also pass additional +headers+ to check against in addition to the
-  # common header files, and additional flags to +opt+ which are then passed
-  # along to the compiler.
-  #
-  # If found, a macro is passed as a preprocessor constant to the compiler
-  # using the type name, in uppercase, prepended with +HAVE_CONST_+.
-  #
-  # For example, if <code>have_const('foo')</code> returned true, then the
-  # +HAVE_CONST_FOO+ preprocessor macro would be passed to the compiler.
-  #
   def have_const(const, headers = nil, opt = "", &b)
     checking_for checking_message([*const].compact.join(' '), headers, opt) do
       try_const(const, headers, opt, &b)
     end
   end
 
-  # :stopdoc:
   STRING_OR_FAILED_FORMAT = "%s"
   def STRING_OR_FAILED_FORMAT.%(x) # :nodoc:
     x ? super : "failed"
@@ -1281,19 +1007,7 @@ SRC
     end
   end
 
-  # :startdoc:
 
-  # Returns the size of the given +type+.  You may optionally specify
-  # additional +headers+ to search in for the +type+.
-  #
-  # If found, a macro is passed as a preprocessor constant to the compiler
-  # using the type name, in uppercase, prepended with +SIZEOF_+, followed by
-  # the type name, followed by <code>=X</code> where "X" is the actual size.
-  #
-  # For example, if <code>check_sizeof('mystruct')</code> returned 12, then
-  # the <code>SIZEOF_MYSTRUCT=12</code> preprocessor macro would be passed to
-  # the compiler.
-  #
   def check_sizeof(type, headers = nil, opts = "", &b)
     typedef, member, prelude = typedef_expr(type, headers)
     prelude << "static #{typedef} *rbcv_ptr_;\n"
@@ -1308,21 +1022,6 @@ SRC
     end
   end
 
-  # Returns the signedness of the given +type+.  You may optionally specify
-  # additional +headers+ to search in for the +type+.
-  #
-  # If the +type+ is found and is a numeric type, a macro is passed as a
-  # preprocessor constant to the compiler using the +type+ name, in uppercase,
-  # prepended with +SIGNEDNESS_OF_+, followed by the +type+ name, followed by
-  # <code>=X</code> where "X" is positive integer if the +type+ is unsigned
-  # and a negative integer if the +type+ is signed.
-  #
-  # For example, if +size_t+ is defined as unsigned, then
-  # <code>check_signedness('size_t')</code> would return +1 and the
-  # <code>SIGNEDNESS_OF_SIZE_T=+1</code> preprocessor macro would be passed to
-  # the compiler.  The <code>SIGNEDNESS_OF_INT=-1</code> macro would be set
-  # for <code>check_signedness('int')</code>
-  #
   def check_signedness(type, headers = nil, opts = nil, &b)
     typedef, member, prelude = typedef_expr(type, headers)
     signed = nil
@@ -1334,30 +1033,6 @@ SRC
     signed
   end
 
-  # Returns the convertible integer type of the given +type+.  You may
-  # optionally specify additional +headers+ to search in for the +type+.
-  # _convertible_ means actually the same type, or typedef'd from the same
-  # type.
-  #
-  # If the +type+ is a integer type and the _convertible_ type is found,
-  # the following macros are passed as preprocessor constants to the compiler
-  # using the +type+ name, in uppercase.
-  #
-  # * +TYPEOF_+, followed by the +type+ name, followed by <code>=X</code>
-  #   where "X" is the found _convertible_ type name.
-  # * +TYP2NUM+ and +NUM2TYP+,
-  #   where +TYP+ is the +type+ name in uppercase with replacing an +_t+
-  #   suffix with "T", followed by <code>=X</code> where "X" is the macro name
-  #   to convert +type+ to an Integer object, and vice versa.
-  #
-  # For example, if +foobar_t+ is defined as unsigned long, then
-  # <code>convertible_int("foobar_t")</code> would return "unsigned long", and
-  # define these macros:
-  #
-  #   #define TYPEOF_FOOBAR_T unsigned long
-  #   #define FOOBART2NUM ULONG2NUM
-  #   #define NUM2FOOBART NUM2ULONG
-  #
   def convertible_int(type, headers = nil, opts = nil, &b)
     type, macname = *type
     checking_for("convertible type of #{type}", STRING_OR_FAILED_FORMAT) do
@@ -1394,42 +1069,30 @@ SRC
       end
     end
   end
-  # :stopdoc:
 
-  # Used internally by the what_type? method to determine if +type+ is a scalar
-  # pointer.
   def scalar_ptr_type?(type, member = nil, headers = nil, &b)
     try_compile(<<"SRC", &b)   # pointer
-#{cpp_include(headers)}
 /*top*/
 volatile #{type} conftestval;
 extern int t(void);
-#{MAIN_DOES_NOTHING 't'}
 int t(void) {return (int)(1-*(conftestval#{member ? ".#{member}" : ""}));}
 SRC
   end
 
-  # Used internally by the what_type? method to determine if +type+ is a scalar
-  # pointer.
   def scalar_type?(type, member = nil, headers = nil, &b)
     try_compile(<<"SRC", &b)   # pointer
-#{cpp_include(headers)}
 /*top*/
 volatile #{type} conftestval;
 extern int t(void);
-#{MAIN_DOES_NOTHING 't'}
 int t(void) {return (int)(1-(conftestval#{member ? ".#{member}" : ""}));}
 SRC
   end
 
-  # Used internally by the what_type? method to check if the _typeof_ GCC
-  # extension is available.
   def have_typeof?
     return $typeof if defined?($typeof)
     $typeof = %w[__typeof__ typeof].find do |t|
       try_compile(<<SRC)
 int rbcv_foo;
-#{t}(rbcv_foo) rbcv_bar;
 SRC
     end
   end
@@ -1493,10 +1156,6 @@ SRC
     end
   end
 
-  # This method is used internally by the find_executable method.
-  #
-  # Internal use only.
-  #
   def find_executable0(bin, path = nil)
     executable_file = proc do |name|
       begin
@@ -1530,24 +1189,13 @@ SRC
     nil
   end
 
-  # :startdoc:
 
-  # Searches for the executable +bin+ on +path+.  The default path is your
-  # +PATH+ environment variable. If that isn't defined, it will resort to
-  # searching /usr/local/bin, /usr/ucb, /usr/bin and /bin.
-  #
-  # If found, it will return the full path, including the executable name, of
-  # where it was found.
-  #
-  # Note that this method does not actually affect the generated Makefile.
-  #
   def find_executable(bin, path = nil)
     checking_for checking_message(bin, path) do
       find_executable0(bin, path)
     end
   end
 
-  # :stopdoc:
 
   def arg_config(config, default=nil, &block)
     $arg_config << [config, default]
@@ -1560,22 +1208,7 @@ SRC
     $configure_args.fetch(config.tr('_', '-'), *defaults, &block)
   end
 
-  # :startdoc:
 
-  # Tests for the presence of a <tt>--with-</tt>_config_ or
-  # <tt>--without-</tt>_config_ option.  Returns +true+ if the with option is
-  # given, +false+ if the without option is given, and the default value
-  # otherwise.
-  #
-  # This can be useful for adding custom definitions, such as debug
-  # information.
-  #
-  # Example:
-  #
-  #    if with_config("debug")
-  #       $defs.push("-DOSSL_DEBUG") unless $defs.include? "-DOSSL_DEBUG"
-  #    end
-  #
   def with_config(config, default=nil)
     config = config.sub(/^--with[-_]/, '')
     val = arg_config("--with-"+config) do
@@ -1597,20 +1230,6 @@ SRC
     end
   end
 
-  # Tests for the presence of an <tt>--enable-</tt>_config_ or
-  # <tt>--disable-</tt>_config_ option. Returns +true+ if the enable option is
-  # given, +false+ if the disable option is given, and the default value
-  # otherwise.
-  #
-  # This can be useful for adding custom definitions, such as debug
-  # information.
-  #
-  # Example:
-  #
-  #    if enable_config("debug")
-  #       $defs.push("-DOSSL_DEBUG") unless $defs.include? "-DOSSL_DEBUG"
-  #    end
-  #
   def enable_config(config, default=nil)
     if arg_config("--enable-"+config)
       true
@@ -1623,32 +1242,6 @@ SRC
     end
   end
 
-  # Generates a header file consisting of the various macro definitions
-  # generated by other methods such as have_func and have_header. These are
-  # then wrapped in a custom <code>#ifndef</code> based on the +header+ file
-  # name, which defaults to "extconf.h".
-  #
-  # For example:
-  #
-  #   # extconf.rb
-  #   require 'mkmf'
-  #   have_func('realpath')
-  #   have_header('sys/utime.h')
-  #   create_header
-  #   create_makefile('foo')
-  #
-  # The above script would generate the following extconf.h file:
-  #
-  #   #ifndef EXTCONF_H
-  #   #define EXTCONF_H
-  #   #define HAVE_REALPATH 1
-  #   #define HAVE_SYS_UTIME_H 1
-  #   #endif
-  #
-  # Given that the create_header method generates a file based on definitions
-  # set earlier in your extconf.rb file, you will probably want to make this
-  # one of the last methods you call in your script.
-  #
   def create_header(header = "extconf.h")
     message "creating %s\n", header
     sym = header.tr_cpp
@@ -1672,33 +1265,6 @@ SRC
     $extconf_h = header
   end
 
-  # call-seq:
-  #   dir_config(target)
-  #   dir_config(target, prefix)
-  #   dir_config(target, idefault, ldefault)
-  #
-  # Sets a +target+ name that the user can then use to configure
-  # various "with" options with on the command line by using that
-  # name.  For example, if the target is set to "foo", then the user
-  # could use the <code>--with-foo-dir=prefix</code>,
-  # <code>--with-foo-include=dir</code> and
-  # <code>--with-foo-lib=dir</code> command line options to tell where
-  # to search for header/library files.
-  #
-  # You may pass along additional parameters to specify default
-  # values.  If one is given it is taken as default +prefix+, and if
-  # two are given they are taken as "include" and "lib" defaults in
-  # that order.
-  #
-  # In any case, the return value will be an array of determined
-  # "include" and "lib" directories, either of which can be nil if no
-  # corresponding command line option is given when no default value
-  # is specified.
-  #
-  # Note that dir_config only adds to the list of places to search for
-  # libraries and include files.  It does not link the libraries into your
-  # application.
-  #
   def dir_config(target, idefault=nil, ldefault=nil)
     if dir = with_config(target + "-dir", (idefault unless ldefault))
       defaults = Array === dir ? dir : dir.split(File::PATH_SEPARATOR)
@@ -1733,40 +1299,18 @@ SRC
     [idir, ldir]
   end
 
-  # Returns compile/link information about an installed library in a
-  # tuple of <code>[cflags, ldflags, libs]</code>, by using the
-  # command found first in the following commands:
-  #
-  # 1. If <code>--with-{pkg}-config={command}</code> is given via
-  #    command line option: <code>{command} {option}</code>
-  #
-  # 2. <code>{pkg}-config {option}</code>
-  #
-  # 3. <code>pkg-config {option} {pkg}</code>
-  #
-  # Where {option} is, for instance, <code>--cflags</code>.
-  #
-  # The values obtained are appended to +$CFLAGS+, +$LDFLAGS+ and
-  # +$libs+.
-  #
-  # If an <code>option</code> argument is given, the config command is
-  # invoked with the option and a stripped output string is returned
-  # without modifying any of the global values mentioned above.
   def pkg_config(pkg, option=nil)
     if pkgconfig = with_config("#{pkg}-config") and find_executable0(pkgconfig)
-      # iff package specific config command is given
     elsif ($PKGCONFIG ||=
            (pkgconfig = with_config("pkg-config", ("pkg-config" unless CROSS_COMPILING))) &&
            find_executable0(pkgconfig) && pkgconfig) and
         system("#{$PKGCONFIG} --exists #{pkg}")
-      # default to pkg-config command
       pkgconfig = $PKGCONFIG
       get = proc {|opt|
         opt = IO.popen("#{$PKGCONFIG} --#{opt} #{pkg}", err:[:child, :out], &:read)
         opt.strip if $?.success?
       }
     elsif find_executable0(pkgconfig = "#{pkg}-config")
-      # default to package specific config command, as a last resort.
     else
       pkgconfig = nil
     end
@@ -1809,31 +1353,20 @@ SRC
     end
   end
 
-  # :stopdoc:
 
   def with_destdir(dir)
     dir = dir.sub($dest_prefix_pattern, '')
     /\A\$[\(\{]/ =~ dir ? dir : "$(DESTDIR)"+dir
   end
 
-  # Converts forward slashes to backslashes. Aimed at MS Windows.
-  #
-  # Internal use only.
-  #
   def winsep(s)
     s.tr('/', '\\')
   end
 
-  # Converts native path to format acceptable in Makefile
-  #
-  # Internal use only.
-  #
   if !CROSS_COMPILING
     case CONFIG['build_os']
     when 'mingw32'
       def mkintpath(path)
-        # mingw uses make from msys and it needs special care
-        # converts from C:\some\path to /C/some/path
         path = path.dup
         path.tr!('\\', '/')
         path.sub!(/\A([A-Za-z]):(?=\/)/, '/\1')
@@ -1860,7 +1393,6 @@ SRC
     mk << %{
 SHELL = /bin/sh
 
-# V=0 quiet, V=1 verbose.  other values don't work.
 V = 0
 Q1 = $(V:1=)
 Q = $(Q1:0=@)
@@ -1868,8 +1400,6 @@ ECHO1 = $(V:1=@#{CONFIG['NULLCMD']})
 ECHO = $(ECHO1:0=@echo)
 NULLCMD = #{CONFIG['NULLCMD']}
 
-#### Start of system configuration section. ####
-#{"top_srcdir = " + $top_srcdir.sub(%r"\A#{Regexp.quote($topdir)}/", "$(topdir)/") if $extmk}
 srcdir = #{srcdir.gsub(/\$\((srcdir)\)|\$\{(srcdir)\}/) {mkintpath(CONFIG[$1||$2]).unspace}}
 topdir = #{mkintpath(topdir = $extmk ? CONFIG["topdir"] : $topdir).unspace}
 hdrdir = #{(hdrdir = CONFIG["hdrdir"]) == topdir ? "$(topdir)" : mkintpath(hdrdir).unspace}
@@ -1971,7 +1501,6 @@ INSTALL_DATA = #{config_string('INSTALL_DATA') || '$(INSTALL) -m 0644'}
 COPY = #{config_string('CP', &possible_command) || '@$(RUBY) -run -e cp -- -v'}
 TOUCH = exit >
 
-#### End of system configuration section. ####
 
 preload = #{defined?($preload) && $preload ? $preload.join(' ') : ''}
 }
@@ -1998,10 +1527,7 @@ preload = #{defined?($preload) && $preload ? $preload.join(' ') : ''}
     name = name.gsub(/(\$[({]|[})])|(\/+)|[^-.\w]+/) {$1 ? "" : $2 ? ".-." : "_"}
     "$(TIMESTAMP_DIR)/.#{name}.time"
   end
-  # :startdoc:
 
-  # creates a stub Makefile.
-  #
   def dummy_makefile(srcdir)
     configuration(srcdir) << <<RULES << CLEANINGS
 CLEANFILES = #{$cleanfiles.join(' ')}
@@ -2027,11 +1553,6 @@ RULES
     end
   end
 
-  # Processes the data contents of the "depend" file.  Each line of this file
-  # is expected to be a file name.
-  #
-  # Returns the output of findings, in Makefile format.
-  #
   def depend_rules(depend)
     suffixes = []
     depout = []
@@ -2092,59 +1613,6 @@ RULES
     depout
   end
 
-  # Generates the Makefile for your extension, passing along any options and
-  # preprocessor constants that you may have generated through other methods.
-  #
-  # The +target+ name should correspond the name of the global function name
-  # defined within your C extension, minus the +Init_+.  For example, if your
-  # C extension is defined as +Init_foo+, then your target would simply be
-  # "foo".
-  #
-  # If any "/" characters are present in the target name, only the last name
-  # is interpreted as the target name, and the rest are considered toplevel
-  # directory names, and the generated Makefile will be altered accordingly to
-  # follow that directory structure.
-  #
-  # For example, if you pass "test/foo" as a target name, your extension will
-  # be installed under the "test" directory.  This means that in order to
-  # load the file within a Ruby program later, that directory structure will
-  # have to be followed, e.g. <code>require 'test/foo'</code>.
-  #
-  # The +srcprefix+ should be used when your source files are not in the same
-  # directory as your build script. This will not only eliminate the need for
-  # you to manually copy the source files into the same directory as your
-  # build script, but it also sets the proper +target_prefix+ in the generated
-  # Makefile.
-  #
-  # Setting the +target_prefix+ will, in turn, install the generated binary in
-  # a directory under your <code>RbConfig::CONFIG['sitearchdir']</code> that
-  # mimics your local filesystem when you run <code>make install</code>.
-  #
-  # For example, given the following file tree:
-  #
-  #   ext/
-  #     extconf.rb
-  #     test/
-  #       foo.c
-  #
-  # And given the following code:
-  #
-  #   create_makefile('test/foo', 'test')
-  #
-  # That will set the +target_prefix+ in the generated Makefile to "test".
-  # That, in turn, will create the following file tree when installed via the
-  # <code>make install</code> command:
-  #
-  #   /path/to/ruby/sitearchdir/test/foo.so
-  #
-  # It is recommended that you use this approach to generate your makefiles,
-  # instead of copying files around manually, because some third party
-  # libraries may depend on the +target_prefix+ being set properly.
-  #
-  # The +srcprefix+ argument can be used to override the default source
-  # directory, i.e. the current directory.  It is included as part of the
-  # +VPATH+ and added to the list of +INCFLAGS+.
-  #
   def create_makefile(target, srcprefix = nil)
     $target = target
     libpath = $LIBPATH|$DEFLIBPATH
@@ -2251,10 +1719,8 @@ TARGET_ENTRY = #{EXPORT_PREFIX || ''}Init_$(TARGET_NAME)
 DLLIB = #{dllib}
 EXTSTATIC = #{$static || ""}
 STATIC_LIB = #{staticlib unless $static.nil?}
-#{!$extout && defined?($installed_list) ? "INSTALLED_LIST = #{$installed_list}\n" : ""}
 TIMESTAMP_DIR = #{$extout ? '$(extout)/.timestamp' : '.'}
 " #"
-    # TODO: fixme
     install_dirs.each {|d| mfile.print("%-14s= %s\n" % d) if /^[[:upper:]]/ =~ d[0]}
     n = ($extout ? '$(RUBYARCHDIR)/' : '') + '$(TARGET)'
     mfile.print "
@@ -2429,7 +1895,6 @@ site-install-rb: install-rb
     mfile.close if mfile
   end
 
-  # :stopdoc:
 
   def init_mkmf(config = CONFIG, rbconfig = RbConfig::CONFIG)
     $makefile_created = false
@@ -2438,7 +1903,6 @@ site-install-rb: install-rb
     $defs = []
     $extconf_h = nil
     if $warnflags = CONFIG['warnflags'] and CONFIG['GCC'] == 'yes'
-      # turn warnings into errors only for bundled extensions.
       config['warnflags'] = $warnflags.gsub(/(\A|\s)-Werror[-=]/, '\1-W')
       RbConfig.expand(rbconfig['warnflags'] = config['warnflags'].dup)
       config.each do |key, val|
@@ -2499,11 +1963,6 @@ need configuration options.
 Provided configuration options:
 MESSAGE
 
-  # Returns whether or not the Makefile was successfully generated. If not,
-  # the script will abort with an error message.
-  #
-  # Internal use only.
-  #
   def mkmf_failed(path)
     unless $makefile_created or File.exist?("Makefile")
       opts = $arg_config.collect {|t, n| "\t#{t}#{n ? "=#{n}" : ""}\n"}
@@ -2561,7 +2020,6 @@ MESSAGE
 
   RbConfig.expand(CONFIG["RUBY_SO_NAME"])
 
-  # :startdoc:
 
   split = Shellwords.method(:shellwords).to_proc
 
@@ -2580,51 +2038,33 @@ MESSAGE
     Shellwords.shellwords(s).each {|w| hdr << "#include <#{w}>"}
   end
 
-  ##
-  # Common headers for Ruby C extensions
 
   COMMON_HEADERS = hdr.join("\n")
 
-  ##
-  # Common libraries for Ruby C extensions
 
   COMMON_LIBS = config_string('COMMON_LIBS', &split) || []
 
-  ##
-  # make compile rules
 
   COMPILE_RULES = config_string('COMPILE_RULES', &split) || %w[.%s.%s:]
   RULE_SUBST = config_string('RULE_SUBST')
 
-  ##
-  # Command which will compile C files in the generated Makefile
 
   COMPILE_C = config_string('COMPILE_C') || '$(CC) $(INCFLAGS) $(CPPFLAGS) $(CFLAGS) $(COUTFLAG)$@ -c $<'
 
-  ##
-  # Command which will compile C++ files in the generated Makefile
 
   COMPILE_CXX = config_string('COMPILE_CXX') || '$(CXX) $(INCFLAGS) $(CPPFLAGS) $(CXXFLAGS) $(COUTFLAG)$@ -c $<'
 
-  ##
-  # Command which will translate C files to assembler sources in the generated Makefile
 
   ASSEMBLE_C = config_string('ASSEMBLE_C') || COMPILE_C.sub(/(?<=\s)-c(?=\s)/, '-S')
 
-  ##
-  # Command which will translate C++ files to assembler sources in the generated Makefile
 
   ASSEMBLE_CXX = config_string('ASSEMBLE_CXX') || COMPILE_CXX.sub(/(?<=\s)-c(?=\s)/, '-S')
 
-  ##
-  # Command which will compile a program in order to test linking a library
 
   TRY_LINK = config_string('TRY_LINK') ||
     "$(CC) #{OUTFLAG}#{CONFTEST}#{$EXEEXT} $(INCFLAGS) $(CPPFLAGS) " \
     "$(CFLAGS) $(src) $(LIBPATH) $(LDFLAGS) $(ARCH_FLAG) $(LOCAL_LIBS) $(LIBS)"
 
-  ##
-  # Command which will link a shared library
 
   LINK_SO = (config_string('LINK_SO') || "").sub(/^$/) do
     if CONFIG["DLEXT"] == $OBJEXT
@@ -2635,19 +2075,13 @@ MESSAGE
     end
   end
 
-  ##
-  # Argument which will add a library path to the linker
 
   LIBPATHFLAG = config_string('LIBPATHFLAG') || ' -L%s'
   RPATHFLAG = config_string('RPATHFLAG') || ''
 
-  ##
-  # Argument which will add a library to the linker
 
   LIBARG = config_string('LIBARG') || '-l%s'
 
-  ##
-  # A C main function which does no work
 
   MAIN_DOES_NOTHING = config_string('MAIN_DOES_NOTHING') || "int main(int argc, char **argv)\n{\n  return 0;\n}"
   UNIVERSAL_INTS = config_string('UNIVERSAL_INTS') {|s| Shellwords.shellwords(s)} ||
@@ -2655,8 +2089,6 @@ MESSAGE
 
   sep = config_string('BUILD_FILE_SEPARATOR') {|s| ":/=#{s}" if s != "/"} || ""
 
-  ##
-  # Makefile rules that will clean the extension build directory
 
   CLEANINGS = "
 clean-static::

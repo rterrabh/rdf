@@ -13,11 +13,9 @@ class XmlrpcC < Formula
 
   def install
     ENV.deparallelize
-    # --enable-libxml2-backend to lose some weight and not statically link in expat
     system "./configure", "--enable-libxml2-backend",
                           "--prefix=#{prefix}"
 
-    # xmlrpc-config.h cannot be found if only calling make install
     system "make"
     system "make", "install"
   end

@@ -32,7 +32,6 @@ class Nrpe < Formula
                           "--with-nagios-user=#{user}",
                           "--with-nagios-group=#{group}",
                           "--with-ssl=#{Formula["openssl"].opt_prefix}",
-                          # Set both or it still looks for /usr/lib
                           "--with-ssl-lib=#{Formula["openssl"].opt_lib}",
                           "--enable-ssl",
                           "--enable-command-args"
@@ -69,10 +68,8 @@ class Nrpe < Formula
   def caveats
     <<-EOS.undent
     The nagios plugin check_nrpe has been installed in:
-      #{HOMEBREW_PREFIX}/sbin
 
     You can start the daemon with
-      #{bin}/nrpe -c #{etc}/nrpe.cfg -d
     EOS
   end
 end

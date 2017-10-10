@@ -20,8 +20,6 @@ class Cpptest < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <assert.h>
-      #include <cpptest.h>
 
       class TestCase: public Test::Suite
       {

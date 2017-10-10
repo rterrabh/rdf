@@ -23,13 +23,11 @@ class Openrtsp < Formula
 
     system "make", "PREFIX=#{prefix}", "install"
 
-    # Move the testing executables out of the main PATH
     libexec.install Dir.glob(bin/"test*")
   end
 
   def caveats; <<-EOS.undent
     Testing executables have been placed in:
-      #{libexec}
     EOS
   end
 end

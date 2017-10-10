@@ -6,8 +6,6 @@ module ActiveSupport
   module XmlMini_LibXMLSAX #:nodoc:
     extend self
 
-    # Class that will build the hash while the XML document
-    # is being parsed using SAX events.
     class HashBuilder
 
       include LibXML::XML::SaxParser::Callbacks

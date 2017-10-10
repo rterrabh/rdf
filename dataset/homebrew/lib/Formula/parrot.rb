@@ -27,7 +27,6 @@ class Parrot < Formula
 
     system "make"
     system "make", "install"
-    # Don't install this file in HOMEBREW_PREFIX/lib
     rm_rf lib/"VERSION"
   end
 

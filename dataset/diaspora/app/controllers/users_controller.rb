@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class UsersController < ApplicationController
   before_action :authenticate_user!, :except => [:new, :create, :public, :user_photo]
@@ -22,11 +19,9 @@ class UsersController < ApplicationController
 
     if u = user_params
 
-      # change email notifications
       if u[:email_preferences]
         @user.update_user_preferences(u[:email_preferences])
         flash[:notice] = I18n.t 'users.update.email_notifications_changed'
-      # change password
       elsif params[:change_password]
         if @user.update_with_password(u)
           password_changed = true

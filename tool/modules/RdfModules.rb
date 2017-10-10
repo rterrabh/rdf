@@ -52,23 +52,24 @@ module RdfModules
     def showLocations(rbfiles, statement, classification)
       total = 0
       rbfiles.each do |rbfile|
+        absolutePath = File.absolute_path(rbfile)
         number = 0
         File.open(rbfile, 'r').each do |line|
           number += 1
           if line.include? "#nodyna"
             if statement and classification
               if getStatement(line) == statement.to_sym and getClassification(line) == classification
-                puts "#{rbfile}.#{number}.#{getClassification(line)}.#{getID(line)}"
+                puts "#{absolutePath}.#{number}.#{getClassification(line)}.#{getID(line)}"
                 total += 1
               end
             elsif statement
               if getStatement(line) == statement.to_sym
-                puts "#{rbfile}.#{number}.#{getClassification(line)}.#{getID(line)}"
+                puts "#{absolutePath}.#{number}.#{getClassification(line)}.#{getID(line)}"
                 total += 1
               end
             elsif classification
               if getClassification(line) == classification
-                puts "#{rbfile}.#{number}.#{getClassification(line)}.#{getID(line)}"
+                puts "#{absolutePath}.#{number}.#{getClassification(line)}.#{getID(line)}"
                 total += 1
               end
             end

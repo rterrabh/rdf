@@ -6,8 +6,6 @@ class Casperjs < Formula
     url "https://github.com/n1k0/casperjs/archive/1.0.4.tar.gz"
     sha256 "d71b9dd77ac202f3fbb958f8876f12b89aee2a1b09b2c2c55fd11aa928a1fb1f"
 
-    # https://github.com/Homebrew/homebrew/pull/38632
-    # Once 1.1.x is stable combine all the PhantomJS resource into one.
     resource "phantomjs" do
       url "https://phantomjs.googlecode.com/files/phantomjs-1.8.2-macosx.zip"
       sha256 "7d19c1cce6c66bb3153d335522b4effe68ddd249f427776b82f2662fb5ed81cf"
@@ -42,7 +40,6 @@ class Casperjs < Formula
     end
   end
 
-  # For embedded Phantomjs
   depends_on :macos => :snow_leopard
 
   def install
@@ -50,7 +47,6 @@ class Casperjs < Formula
     (libexec/"phantomjs").install resource("phantomjs")
 
     (bin/"casperjs").write <<-EOS.undent
-      #!/bin/bash
       export PATH=#{libexec}/phantomjs/bin:$PATH
       exec "#{libexec}/bin/casperjs" "$@"
     EOS

@@ -3,26 +3,6 @@ require 'uri'
 require 'set'
 
 module ActionController
-  # \Caching is a cheap way of speeding up slow applications by keeping the result of
-  # calculations, renderings, and database calls around for subsequent requests.
-  #
-  # You can read more about each approach by clicking the modules below.
-  #
-  # Note: To turn off all caching, set
-  #   config.action_controller.perform_caching = false
-  #
-  # == \Caching stores
-  #
-  # All the caching stores from ActiveSupport::Cache are available to be used as backends
-  # for Action Controller caching.
-  #
-  # Configuration examples (FileStore is the default):
-  #
-  #   config.action_controller.cache_store = :memory_store
-  #   config.action_controller.cache_store = :file_store, '/path/to/cache/directory'
-  #   config.action_controller.cache_store = :mem_cache_store, 'localhost'
-  #   config.action_controller.cache_store = :mem_cache_store, Memcached::Rails.new('localhost:11211')
-  #   config.action_controller.cache_store = MyOwnStore.new('parameter')
   module Caching
     extend ActiveSupport::Concern
     extend ActiveSupport::Autoload
@@ -73,12 +53,11 @@ module ActionController
     end
 
     def view_cache_dependencies
-      #nodyna <ID:instance_exec-3> <IEX COMPLEX (block without parameters)>
+      #nodyna <instance_exec-1308> <IEX COMPLEX (block without parameters)>
       self.class._view_cache_dependencies.map { |dep| instance_exec(&dep) }.compact
     end
 
     protected
-      # Convenience accessor.
       def cache(key, options = {}, &block)
         if cache_configured?
           cache_store.fetch(ActiveSupport::Cache.expand_cache_key(key, :controller), options, &block)

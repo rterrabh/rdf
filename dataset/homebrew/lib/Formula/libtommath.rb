@@ -1,6 +1,5 @@
 class Libtommath < Formula
   desc "C library for number theoretic multiple-precision integers"
-  # homepage/url down since ~May 2015
   homepage "http://libtom.org/?page=features&newsitems=5&whatfile=ltm"
   url "http://libtom.org/files/ltm-0.42.0.tar.bz2"
   mirror "https://distfiles.macports.org/libtommath/ltm-0.42.0.tar.bz2"

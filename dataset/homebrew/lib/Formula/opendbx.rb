@@ -13,7 +13,6 @@ class Opendbx < Formula
   depends_on "sqlite"
 
   def install
-    # Reported upstream: http://bugs.linuxnetworks.de/index.php?do=details&id=40
     inreplace "utils/Makefile.in", "$(LIBSUFFIX)", ".dylib"
 
     system "./configure", "--disable-dependency-tracking",

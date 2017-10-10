@@ -1,16 +1,8 @@
-#
-#  tkextlib/tcllib/history.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Provides a history for Entry widgets
-#
 
 require 'tk'
 require 'tk/entry'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('history', '0.1')
 TkPackage.require('history')
 
 module Tk::Tcllib

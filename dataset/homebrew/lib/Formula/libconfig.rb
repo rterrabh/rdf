@@ -29,7 +29,6 @@ class Libconfig < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <libconfig.h>
       int main() {
         config_t cfg;
         config_init(&cfg);

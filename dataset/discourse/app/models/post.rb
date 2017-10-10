@@ -17,7 +17,6 @@ class Post < ActiveRecord::Base
   include HasCustomFields
   include LimitedEdit
 
-  # increase this number to force a system wide post rebake
   BAKED_VERSION = 1
 
   rate_limit
@@ -48,7 +47,6 @@ class Post < ActiveRecord::Base
 
   validates_with ::Validators::PostValidator
 
-  # We can pass several creating options to a post via attributes
   attr_accessor :image_sizes, :quoted_post_numbers, :no_bump, :invalidate_oneboxes, :cooking_options, :skip_unique_check
 
   SHORT_POST_CHARS = 1200
@@ -96,9 +94,6 @@ class Post < ActiveRecord::Base
   end
 
   def publish_change_to_clients!(type)
-    # special failsafe for posts missing topics
-    # consistency checks should fix, but message
-    # is safe to skip
     MessageBus.publish("/topic/#{topic_id}", {
       id: id,
       post_number: post_number,
@@ -122,7 +117,6 @@ class Post < ActiveRecord::Base
     end
   end
 
-  # The key we use in redis to ensure unique posts
   def unique_post_key
     "unique-post-#{user_id}:#{raw_hash}"
   end
@@ -153,16 +147,14 @@ class Post < ActiveRecord::Base
   end
 
   %w{raw_mentions linked_hosts image_count attachment_count link_count raw_links}.each do |attr|
-    #nodyna <ID:define_method-32> <DM MODERATE (array)>
+    #nodyna <define_method-397> <DM MODERATE (array)>
     define_method(attr) do
-      #nodyna <ID:send-182> <SD MODERATE (change-prone variables)>
+      #nodyna <send-398> <SD MODERATE (change-prone variables)>
       post_analyzer.send(attr)
     end
   end
 
   def cook(*args)
-    # For some posts, for example those imported via RSS, we support raw HTML. In that
-    # case we can skip the rendering pipeline.
     return raw if cook_method == Post.cook_methods[:raw_html]
 
     cooked = nil
@@ -172,7 +164,6 @@ class Post < ActiveRecord::Base
       cooked = if !self.user || SiteSetting.tl3_links_no_follow || !self.user.has_trust_level?(TrustLevel[3])
                  post_analyzer.cook(*args)
                else
-                 # At trust level 3, we don't apply nofollow to links
                  cloned = args.dup
                  cloned[1] ||= {}
                  cloned[1][:omit_nofollow] = true
@@ -193,9 +184,6 @@ class Post < ActiveRecord::Base
     new_cooked
   end
 
-  # Sometimes the post is being edited by someone else, for example, a mod.
-  # If that's the case, they should not be bound by the original poster's
-  # restrictions, for example on not posting images.
   def acting_user
     @acting_user || user
   end
@@ -239,7 +227,6 @@ class Post < ActiveRecord::Base
     hosts
   end
 
-  # Prevent new users from posting the same hosts too many times.
   def has_host_spam?
     return false if acting_user.present? && acting_user.has_trust_level?(TrustLevel[1])
 
@@ -263,11 +250,8 @@ class Post < ActiveRecord::Base
   end
 
   def self.summary(topic_id=nil)
-    # PERF: if you pass in nil it is WAY slower
-    #  pg chokes getting a reasonable plan
     topic_id = topic_id ? topic_id.to_i : "posts.topic_id"
 
-    # percent rank has tons of ties
     where(["post_number = 1 or id in (
             SELECT p1.id
             FROM posts p1
@@ -288,7 +272,6 @@ class Post < ActiveRecord::Base
   def filter_quotes(parent_post = nil)
     return cooked if parent_post.blank?
 
-    # We only filter quotes when there is exactly 1
     return cooked unless (quote_count == 1)
 
     parent_raw = parent_post.raw.sub(/\[quote.+\/quote\]/m, '')
@@ -319,7 +302,6 @@ class Post < ActiveRecord::Base
     PrettyText.excerpt(cooked, maxlength, options)
   end
 
-  # Strip out most of the markup
   def excerpt(maxlength = nil, options = {})
     Post.excerpt(cooked, maxlength, options)
   end
@@ -393,11 +375,9 @@ class Post < ActiveRecord::Base
 
     update_columns(cooked: new_cooked, baked_at: Time.new, baked_version: BAKED_VERSION)
 
-    # Extracts urls from the body
     TopicLink.extract_from(self)
     QuotedPost.extract_from(self)
 
-    # make sure we trigger the post process
     trigger_post_process(true)
 
     publish_change_to_clients!(:rebaked)
@@ -420,8 +400,6 @@ class Post < ActiveRecord::Base
     PostCreator.before_create_tasks(self)
   end
 
-  # This calculates the geometric mean of the post timings and stores it along with
-  # each post.
   def self.calculate_avg_time(min_topic_age=nil)
     retry_lock_error do
       builder = SqlBuilder.new("UPDATE posts
@@ -462,15 +440,11 @@ class Post < ActiveRecord::Base
     DraftSequence.next!(last_editor_id, topic.draft_key)
   end
 
-  # TODO: move to post-analyzer?
-  # Determine what posts are quoted by this post
   def extract_quoted_post_numbers
     temp_collector = []
 
-    # Create relationships for the quotes
     raw.scan(/\[quote=\"([^"]+)"\]/).each do |quote|
       args = parse_quote_into_arguments(quote)
-      # If the topic attribute is present, ensure it's the same topic
       temp_collector << args[:post] unless (args[:topic].present? && topic_id != args[:topic])
     end
 
@@ -484,14 +458,12 @@ class Post < ActiveRecord::Base
     add_to_quoted_post_numbers(reply_to_post_number)
     return if self.quoted_post_numbers.blank?
 
-    # Create a reply relationship between quoted posts and this new post
     self.quoted_post_numbers.each do |p|
       post = Post.find_by(topic_id: topic_id, post_number: p)
       create_reply_relationship_with(post)
     end
   end
 
-  # Enqueue post processing for this post
   def trigger_post_process(bypass_bump = false)
     args = {
       post_id: id,
@@ -525,7 +497,6 @@ class Post < ActiveRecord::Base
     post_ids.map! {|r| r['id'].to_i }
             .reject! {|post_id| post_id == id}
 
-    # [1,2,3][-10,-1] => nil
     post_ids = (post_ids[(0-max_replies)..-1] || post_ids)
 
     Post.where(id: post_ids).includes(:user, :topic).order(:id).to_a
@@ -583,65 +554,3 @@ class Post < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: posts
-#
-#  id                      :integer          not null, primary key
-#  user_id                 :integer
-#  topic_id                :integer          not null
-#  post_number             :integer          not null
-#  raw                     :text             not null
-#  cooked                  :text             not null
-#  created_at              :datetime         not null
-#  updated_at              :datetime         not null
-#  reply_to_post_number    :integer
-#  reply_count             :integer          default(0), not null
-#  quote_count             :integer          default(0), not null
-#  deleted_at              :datetime
-#  off_topic_count         :integer          default(0), not null
-#  like_count              :integer          default(0), not null
-#  incoming_link_count     :integer          default(0), not null
-#  bookmark_count          :integer          default(0), not null
-#  avg_time                :integer
-#  score                   :float
-#  reads                   :integer          default(0), not null
-#  post_type               :integer          default(1), not null
-#  vote_count              :integer          default(0), not null
-#  sort_order              :integer
-#  last_editor_id          :integer
-#  hidden                  :boolean          default(FALSE), not null
-#  hidden_reason_id        :integer
-#  notify_moderators_count :integer          default(0), not null
-#  spam_count              :integer          default(0), not null
-#  illegal_count           :integer          default(0), not null
-#  inappropriate_count     :integer          default(0), not null
-#  last_version_at         :datetime         not null
-#  user_deleted            :boolean          default(FALSE), not null
-#  reply_to_user_id        :integer
-#  percent_rank            :float            default(1.0)
-#  notify_user_count       :integer          default(0), not null
-#  like_score              :integer          default(0), not null
-#  deleted_by_id           :integer
-#  edit_reason             :string(255)
-#  word_count              :integer
-#  version                 :integer          default(1), not null
-#  cook_method             :integer          default(1), not null
-#  wiki                    :boolean          default(FALSE), not null
-#  baked_at                :datetime
-#  baked_version           :integer
-#  hidden_at               :datetime
-#  self_edits              :integer          default(0), not null
-#  reply_quoted            :boolean          default(FALSE), not null
-#  via_email               :boolean          default(FALSE), not null
-#  raw_email               :text
-#  public_version          :integer          default(1), not null
-#
-# Indexes
-#
-#  idx_posts_created_at_topic_id            (created_at,topic_id)
-#  idx_posts_user_id_deleted_at             (user_id)
-#  index_posts_on_reply_to_post_number      (reply_to_post_number)
-#  index_posts_on_topic_id_and_post_number  (topic_id,post_number) UNIQUE
-#  index_posts_on_user_id_and_created_at    (user_id,created_at)
-#

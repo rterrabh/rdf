@@ -17,7 +17,6 @@ class Tcptrace < Formula
                           "--prefix=#{prefix}"
     system "make", "tcptrace"
 
-    # don't install with owner/group
     inreplace "Makefile", "-o bin -g bin", ""
     system "make", "install", "BINDIR=#{bin}", "MANDIR=#{man}"
   end

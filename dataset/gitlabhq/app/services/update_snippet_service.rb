@@ -7,7 +7,6 @@ class UpdateSnippetService < BaseService
   end
 
   def execute
-    # check that user is allowed to set specified visibility_level
     new_visibility = params[:visibility_level]
 
     if new_visibility && new_visibility.to_i != snippet.visibility_level

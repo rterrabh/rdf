@@ -19,7 +19,6 @@ class LibvoAacenc < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <vo-aacenc/cmnMemory.h>
 
       int main()
       {

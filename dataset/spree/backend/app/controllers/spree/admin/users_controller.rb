@@ -5,7 +5,6 @@ module Spree
 
       after_action :sign_in_if_change_own_password, only: :update
 
-      # http://spreecommerce.com/blog/2010/11/02/json-hijacking-vulnerability/
       before_action :check_json_authenticity, only: :index
       before_action :load_roles
       before_action :extract_roles_from_params, only: [:create, :update]
@@ -131,13 +130,11 @@ module Spree
                                       bill_address_attributes: permitted_address_attributes])
       end
 
-      # handling raise from Spree::Admin::ResourceController#destroy
       def user_destroy_with_orders_error
         invoke_callbacks(:destroy, :fails)
         render status: :forbidden, text: Spree.t(:error_user_destroy_with_orders)
       end
 
-      # Allow different formats of json data to suit different ajax calls
       def json_data
         json_format = params[:json_format] || 'default'
         case json_format

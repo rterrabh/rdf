@@ -3,7 +3,6 @@ module ActiveAdmin
 
     module NamespaceHelper
 
-      # Returns true if the namespace allows comments
       def comments?
         comments == true
       end

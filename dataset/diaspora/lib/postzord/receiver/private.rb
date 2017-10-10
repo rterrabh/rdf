@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Postzord::Receiver::Private < Postzord::Receiver
 
@@ -37,7 +34,6 @@ class Postzord::Receiver::Private < Postzord::Receiver
     receive_object
   end
 
-  # @return [void]
   def receive_object
     obj = @object.receive(@user, @author)
     Notification.notify(@user, obj, @author) if obj.respond_to?(:notification_type)
@@ -54,7 +50,6 @@ class Postzord::Receiver::Private < Postzord::Receiver
 
   def xml_author
     if @object.respond_to?(:relayable?)
-      #if A and B are friends, and A sends B a comment from C, we delegate the validation to the owner of the post being commented on
       xml_author = @user.owns?(@object.parent) ? @object.diaspora_handle : @object.parent_author.diaspora_handle
       @author = Webfinger.new(@object.diaspora_handle).fetch if @object.author
     else
@@ -72,7 +67,6 @@ class Postzord::Receiver::Private < Postzord::Receiver
 
   private
 
-  # validations
 
   def validate_object
     raise Diaspora::XMLNotParseable if @object.nil?
@@ -93,7 +87,6 @@ class Postzord::Receiver::Private < Postzord::Receiver
   end
 
   def assign_sender_handle_if_request
-    #special casey
     if @object.is_a?(Request)
       @object.sender_handle = @author.diaspora_handle
     end

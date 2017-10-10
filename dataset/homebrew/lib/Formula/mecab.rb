@@ -21,7 +21,6 @@ class Mecab < Formula
                           "--sysconfdir=#{etc}"
     system "make", "install"
 
-    # Put dic files in HOMEBREW_PREFIX/lib instead of lib
     inreplace "#{bin}/mecab-config", "${exec_prefix}/lib/mecab/dic", "#{HOMEBREW_PREFIX}/lib/mecab/dic"
     inreplace "#{etc}/mecabrc", "#{lib}/mecab/dic", "#{HOMEBREW_PREFIX}/lib/mecab/dic"
   end

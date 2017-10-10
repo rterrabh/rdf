@@ -24,8 +24,6 @@ class Libssh < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <libssh/libssh.h>
-      #include <stdlib.h>
       int main()
       {
         ssh_session my_ssh_session = ssh_new();

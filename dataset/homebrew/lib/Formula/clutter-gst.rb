@@ -26,7 +26,6 @@ class ClutterGst < Formula
       --disable-gtk-doc-html
     ]
 
-    # the source code requires gdk-pixbuf but configure doesn't look for it
     ENV.append "CFLAGS", `pkg-config --cflags gdk-pixbuf-2.0`.chomp
     ENV.append "LIBS", `pkg-config --libs gdk-pixbuf-2.0`.chomp
 
@@ -36,7 +35,6 @@ class ClutterGst < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <clutter-gst/clutter-gst.h>
 
       int main(int argc, char *argv[]) {
         clutter_gst_init(&argc, &argv);

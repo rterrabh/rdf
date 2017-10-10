@@ -44,14 +44,14 @@ class FileSizeValidator < ActiveModel::EachValidator
         when Integer
           check_value
         when Symbol
-          #nodyna <ID:send-9> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-499> <SD COMPLEX (change-prone variables)>
           record.send(check_value)
         end
 
       value ||= [] if key == :maximum
 
       value_size = value.size
-      #nodyna <ID:send-10> <SD MODERATE (change-prone variables)>
+      #nodyna <send-500> <SD MODERATE (change-prone variables)>
       next if value_size.send(validity_check, check_value)
 
       errors_options = options.except(*RESERVED_OPTIONS)

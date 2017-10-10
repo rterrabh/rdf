@@ -97,7 +97,6 @@ class Projects::WikisController < Projects::ApplicationController
   def load_project_wiki
     @project_wiki = ProjectWiki.new(@project, current_user)
 
-    # Call #wiki to make sure the Wiki Repo is initialized
     @project_wiki.wiki
   rescue ProjectWiki::CouldNotCreateWikiError => ex
     flash[:notice] = "Could not create Wiki Repository at this time. Please try again later."

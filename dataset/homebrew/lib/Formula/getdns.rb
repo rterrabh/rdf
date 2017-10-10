@@ -36,7 +36,6 @@ class Getdns < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <getdns/getdns.h>
 
       int main(int argc, char *argv[]) {
         getdns_context *context;

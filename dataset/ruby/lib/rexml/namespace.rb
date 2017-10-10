@@ -1,16 +1,12 @@
 require 'rexml/xmltokens'
 
 module REXML
-  # Adds named attributes to an object.
   module Namespace
-    # The name of the object, valid if set
     attr_reader :name, :expanded_name
-    # The expanded name of the object, valid if name is set
     attr_accessor :prefix
     include XMLTokens
     NAMESPLIT = /^(?:(#{NCNAME_STR}):)?(#{NCNAME_STR})/u
 
-    # Sets the name and the expanded name
     def name=( name )
       @expanded_name = name
       name =~ NAMESPLIT
@@ -23,7 +19,6 @@ module REXML
       @name = $2
     end
 
-    # Compares names optionally WITH namespaces
     def has_name?( other, ns=nil )
       if ns
         return (namespace() == ns and name() == other)
@@ -36,8 +31,6 @@ module REXML
 
     alias :local_name :name
 
-    # Fully expand the name, even if the prefix wasn't specified in the
-    # source file.
     def fully_expanded_name
       ns = prefix
       return "#{ns}:#@name" if ns.size > 0

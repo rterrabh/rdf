@@ -3,10 +3,6 @@ require "ostruct"
 require "options"
 require "utils/json"
 
-# Inherit from OpenStruct to gain a generic initialization method that takes a
-# hash and creates an attribute for each key and value. `Tab.new` probably
-# should not be called directly, instead use one of the class methods like
-# `Tab.create`.
 class Tab < OpenStruct
   FILENAME = "INSTALL_RECEIPT.json"
 
@@ -175,7 +171,6 @@ class Tab < OpenStruct
   end
 
   def cxxstdlib
-    # Older tabs won't have these values, so provide sensible defaults
     lib = stdlib.to_sym if stdlib
     CxxStdlib.create(lib, compiler.to_sym)
   end

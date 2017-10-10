@@ -34,7 +34,6 @@ class Aubio < Formula
   def install
     ENV.universal_binary if build.universal?
 
-    # Needed due to issue with recent cland (-fno-fused-madd))
     ENV.refurbish_args
 
     system "./waf", "configure", "--prefix=#{prefix}"

@@ -157,7 +157,6 @@ command to remove old versions.
     Dir.chdir update_dir do
       say "Installing RubyGems #{version}"
 
-      # Make sure old rubygems isn't loaded
       old = ENV["RUBYOPT"]
       ENV.delete("RUBYOPT") if old
       installed = system Gem.ruby, 'setup.rb', *args
@@ -226,8 +225,6 @@ command to remove old versions.
     @updated
   end
 
-  ##
-  # Update RubyGems software to the latest version.
 
   def update_rubygems
     check_update_arguments
@@ -247,7 +244,6 @@ command to remove old versions.
   def update_rubygems_arguments # :nodoc:
     args = []
     args << '--prefix' << Gem.prefix if Gem.prefix
-    # TODO use --document for >= 1.9 , --no-rdoc --no-ri < 1.9
     args << '--no-rdoc' unless options[:document].include? 'rdoc'
     args << '--no-ri'   unless options[:document].include? 'ri'
     args << '--no-format-executable' if options[:no_format_executable]

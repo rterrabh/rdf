@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 module Workers
   class Base
@@ -10,15 +7,11 @@ module Workers
 
     include Diaspora::Logging
 
-    # In the long term we need to eliminate the cause of these
     def suppress_annoying_errors(&block)
       yield
     rescue Diaspora::ContactRequiredUnlessRequest,
            Diaspora::RelayableObjectWithoutParent,
-           # Friendica seems to provoke these
            Diaspora::AuthorXMLAuthorMismatch,
-           # We received a private object to our public endpoint, again something
-           # Friendica seems to provoke
            Diaspora::NonPublic,
            Diaspora::XMLNotParseable => e
       logger.warn "error on receive: #{e.class}"

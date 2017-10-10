@@ -20,8 +20,6 @@ class Unibilium < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <unibilium.h>
-      #include <stdio.h>
 
       int main()
       {

@@ -11,21 +11,17 @@ module Backup
 
     def dump
       FileUtils.rm_rf(@db_dir)
-      # Ensure the parent dir of @db_dir exists
       FileUtils.mkdir_p(Gitlab.config.backup.path)
-      # Fail if somebody raced to create @db_dir before us
       FileUtils.mkdir(@db_dir, mode: 0700)
 
       success = case config["adapter"]
       when /^mysql/ then
         $progress.print "Dumping MySQL database #{config['database']} ... "
-        # Workaround warnings from MySQL 5.6 about passwords on cmd line
         ENV['MYSQL_PWD'] = config["password"].to_s if config["password"]
         system('mysqldump', *mysql_args, config['database'], out: db_file_name)
       when "postgresql" then
         $progress.print "Dumping PostgreSQL database #{config['database']} ... "
         pg_env
-        # Pass '--clean' to include 'DROP TABLE' statements in the DB dump.
         system('pg_dump', '--clean', config['database'], out: db_file_name)
       end
       report_success(success)
@@ -46,7 +42,6 @@ module Backup
       success = case config["adapter"]
       when /^mysql/ then
         $progress.print "Restoring MySQL database #{config['database']} ... "
-        # Workaround warnings from MySQL 5.6 about passwords on cmd line
         ENV['MYSQL_PWD'] = config["password"].to_s if config["password"]
         system('mysql', *mysql_args, config['database'], in: db_file_name)
       when "postgresql" then

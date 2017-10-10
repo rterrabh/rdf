@@ -6,10 +6,6 @@ module ActiveRecord
     class File # :nodoc:
       include Enumerable
 
-      ##
-      # Open a fixture file named +file+.  When called with a block, the block
-      # is called with the filehandle and the filehandle is automatically closed
-      # when the block finishes.
       def self.open(file)
         x = new file
         block_given? ? yield(x) : x
@@ -42,7 +38,6 @@ module ActiveRecord
           ERB.new(content).result(context.get_binding)
         end
 
-        # Validate our unmarshalled data.
         def validate(data)
           unless Hash === data || YAML::Omap === data
             raise Fixture::FormatError, 'fixture is not a hash'

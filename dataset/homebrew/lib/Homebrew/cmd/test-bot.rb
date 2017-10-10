@@ -1,27 +1,3 @@
-# Comprehensively test a formula or pull request.
-#
-# Usage: brew test-bot [options...] <pull-request|formula>
-#
-# Options:
-# --keep-logs:     Write and keep log files under ./brewbot/
-# --cleanup:       Clean the Homebrew directory. Very dangerous. Use with care.
-# --clean-cache:   Remove all cached downloads. Use with care.
-# --skip-setup:    Don't check the local system is setup correctly.
-# --skip-homebrew: Don't check Homebrew's files and tests are all valid.
-# --junit:         Generate a JUnit XML test results file.
-# --email:         Generate an email subject file.
-# --no-bottle:     Run brew install without --build-bottle
-# --HEAD:          Run brew install with --HEAD
-# --local:         Ask Homebrew to write verbose logs under ./logs/ and set HOME to ./home/
-# --tap=<tap>:     Use the git repository of the given tap
-# --dry-run:       Just print commands, don't run them.
-# --fail-fast:     Immediately exit on a failing step.
-#
-# --ci-master:           Shortcut for Homebrew master branch CI options.
-# --ci-pr:               Shortcut for Homebrew pull request CI options.
-# --ci-testing:          Shortcut for Homebrew testing CI options.
-# --ci-upload:           Homebrew CI bottle upload.
-# --ci-reset-and-update: Homebrew CI repository and tap reset and update.
 
 require "formula"
 require "utils"
@@ -97,7 +73,7 @@ module Homebrew
     end
 
     def puts_result
-      #nodyna <ID:send-19> <SD MODERATE (change-prone variables)>
+      #nodyna <send-620> <SD MODERATE (change-prone variables)>
       puts " #{Tty.send status_colour}#{status_upcase}#{Tty.reset}"
     end
 
@@ -156,7 +132,6 @@ module Homebrew
     if String.method_defined?(:force_encoding)
       def fix_encoding(str)
         return str if str.valid_encoding?
-        # Assume we are starting from a "mostly" UTF-8 string
         str.force_encoding(Encoding::UTF_8)
         str.encode!(Encoding::UTF_16, :invalid => :replace)
         str.encode!(Encoding::UTF_8)
@@ -268,7 +243,6 @@ module Homebrew
       @category = __method__
       @start_branch = current_branch
 
-      # Use Jenkins environment variables if present.
       if no_args? && ENV["GIT_PREVIOUS_COMMIT"] && ENV["GIT_COMMIT"] \
          && !ENV["ghprbPullLink"]
         diff_start_sha1 = shorten_revision ENV["GIT_PREVIOUS_COMMIT"]
@@ -282,7 +256,6 @@ module Homebrew
         brew_update
       end
 
-      # Handle Jenkins pull request builder plugin.
       if ENV["ghprbPullLink"]
         @url = ENV["ghprbPullLink"]
         @hash = nil
@@ -307,7 +280,6 @@ module Homebrew
         diff_end_sha1 = current_sha1
         @short_url = @url.gsub("https://github.com/", "")
         if @short_url.include? "/commit/"
-          # 7 characters should be enough for a commit (not 40).
           @short_url.gsub!(/(commit\/\w{7}).*/, '\1')
           @name = @short_url
         else
@@ -340,7 +312,7 @@ module Homebrew
     end
 
     def satisfied_requirements?(formula, spec, dependency = nil)
-      #nodyna <ID:send-20> <SD MODERATE (change-prone variables)>
+      #nodyna <send-621> <SD MODERATE (change-prone variables)>
       requirements = formula.send(spec).requirements
 
       unsatisfied_requirements = requirements.reject do |requirement|
@@ -486,10 +458,7 @@ module Homebrew
 
       unless changed_dependences.empty?
         test "brew", "fetch", "--retry", "--build-bottle", *changed_dependences
-        # Install changed dependencies as new bottles so we don't have checksum problems.
         test "brew", "install", "--build-bottle", *changed_dependences
-        # Run postinstall on them because the tested formula might depend on
-        # this step
         test "brew", "postinstall", *changed_dependences
       end
       formula_fetch_options = []
@@ -502,8 +471,6 @@ module Homebrew
       install_args << "--build-bottle" unless ARGV.include? "--no-bottle"
       install_args << "--HEAD" if ARGV.include? "--HEAD"
 
-      # Pass --devel or --HEAD to install in the event formulae lack stable. Supports devel-only/head-only.
-      # head-only should not have devel, but devel-only can have head. Stable can have all three.
       if devel_only_tap? formula
         install_args << "--devel"
       elsif head_only_tap? formula
@@ -511,7 +478,6 @@ module Homebrew
       end
 
       install_args << canonical_formula_name
-      # Don't care about e.g. bottle failures for dependencies.
       run_as_not_developer do
         test "brew", "install", "--only-dependencies", *install_args unless dependencies.empty?
         test "brew", "install", *install_args
@@ -697,7 +663,6 @@ module Homebrew
 
     git_url = ENV["UPSTREAM_GIT_URL"] || ENV["GIT_URL"]
     if !tap && git_url
-      # Also can get tap from Jenkins GIT_URL.
       url_path = git_url.gsub(%r{^https?://github\.com/}, "").gsub(%r{/$}, "")
       HOMEBREW_TAP_ARGS_REGEX =~ url_path
       tap = "#{$1}/#{$3}" if $1 && $3
@@ -709,8 +674,6 @@ module Homebrew
 
     if ARGV.include? "--email"
       File.open EMAIL_SUBJECT_FILE, "w" do |file|
-        # The file should be written at the end but in case we don't get to that
-        # point ensure that we have something valid.
         file.write "#{MacOS.version}: internal error."
       end
     end
@@ -748,8 +711,6 @@ module Homebrew
 
     repository = Homebrew.homebrew_git_repo tap
 
-    # Tap repository if required, this is done before everything else
-    # because Formula parsing and/or git commit hash lookup depends on it.
     if tap && !repository.directory?
       safe_system "brew", "tap", tap
     end
@@ -766,7 +727,6 @@ module Homebrew
         raise "Missing BINTRAY_USER or BINTRAY_KEY variables!"
       end
 
-      # Don't pass keys/cookies to subprocesses..
       ENV["BINTRAY_KEY"] = nil
       ENV["HUDSON_SERVER_COOKIE"] = nil
       ENV["JENKINS_SERVER_COOKIE"] = nil
@@ -827,7 +787,6 @@ module Homebrew
         if system "curl", "-I", "--silent", "--fail", "--output", "/dev/null",
                   "#{BottleSpecification::DEFAULT_DOMAIN}/#{bintray_repo}/#{filename}"
           raise <<-EOS.undent
-            #{filename} is already published. Please remove it manually from
             https://bintray.com/homebrew/#{bintray_repo}/#{bintray_package}/view#files
           EOS
         end
@@ -859,7 +818,6 @@ module Homebrew
     tests = []
     any_errors = false
     if ARGV.named.empty?
-      # With no arguments just build the most recent commit.
       head_test = Test.new("HEAD", tap)
       any_errors = !head_test.run
       tests << head_test
@@ -896,7 +854,6 @@ module Homebrew
           testcase.add_attribute "time", step.time
 
           if step.has_output?
-            # Remove invalid XML CData characters from step output.
             output = step.output.delete("\000\a\b\e\f\x2\x1f")
 
             if output.bytesize > BYTES_IN_1_MEGABYTE

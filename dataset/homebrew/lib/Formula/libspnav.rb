@@ -31,7 +31,6 @@ class Libspnav < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <spnav.h>
 
       int main() {
         bool connected = spnav_open() != -1;

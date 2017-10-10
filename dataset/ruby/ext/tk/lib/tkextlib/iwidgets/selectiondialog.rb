@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/selectiondialog.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -49,7 +45,6 @@ class Tk::Iwidgets::Selectiondialog
     self
   end
 
-  # based on Tk::Listbox ( and TkTextWin )
   def curselection
     list(tk_send_without_enc('curselection'))
   end

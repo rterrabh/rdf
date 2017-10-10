@@ -7,7 +7,6 @@ class IPAddr
 
     return val if num_wildcards == 0
 
-    # strip ranges like "/16" from the end if present
     v = val.gsub(/\/.*/, '')
 
     return if v[v.index('*')..-1] =~ /[^\.\*]/

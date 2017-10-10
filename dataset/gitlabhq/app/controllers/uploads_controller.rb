@@ -3,7 +3,7 @@ class UploadsController < ApplicationController
   before_action :find_model, :authorize_access!
 
   def show
-    #nodyna <ID:send-37> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-531> <SD COMPLEX (change-prone variables)>
     uploader = @model.send(upload_mount)
 
     unless uploader.file_storage?
@@ -38,7 +38,6 @@ class UploadsController < ApplicationController
       when Note
         can?(current_user, :read_project, @model.project)
       else
-        # No authentication required for user avatars.
         true
       end
 

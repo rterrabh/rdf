@@ -21,7 +21,6 @@ class ParseInfoBoxes < Nanoc::Filter
       "<p>**************** TODO ****************</p>" + $1 + "<p>**************************************</p>"
     end
 
-    # add filename headers to code blocks
     content = content.gsub(/^---(.*?)---/m) do
       "<pre class='headers'><code>" + $1 + "</code></pre>"
     end

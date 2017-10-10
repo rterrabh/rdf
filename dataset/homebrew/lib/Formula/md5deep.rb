@@ -12,8 +12,6 @@ class Md5deep < Formula
     sha1 "6e40dd2d2902ef7b01c855089cf5b28098288bdf" => :mountain_lion
   end
 
-  # This won't work on < Leopard due to using the CommonCrypto Library
-  # Not completely impossible to fix, but doubt the demand is there.
   depends_on "autoconf" => :build
   depends_on "automake" => :build
 
@@ -25,7 +23,6 @@ class Md5deep < Formula
 
   test do
     (testpath/"testfile.txt").write("This is a test file")
-    # Do not reduce the spacing of the below text.
     assert_equal "91b7b0b1e27bfbf7bc646946f35fa972c47c2d32  testfile.txt",
     shell_output("#{bin}/sha1deep -b testfile.txt").strip
   end

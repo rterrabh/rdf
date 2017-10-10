@@ -23,11 +23,11 @@ describe Spree::Admin::GeneralSettingsController, type: :controller do
     end
 
     context 'when callback implemented' do
+      #nodyna <class_eval-2422> <not yet classified>
       Spree::Admin::GeneralSettingsController.class_eval do
         custom_callback(:clear_cache).after :foo
 
         def foo
-          # Make a call to Akamai, CloudFlare, etc invalidation....
         end
       end
 

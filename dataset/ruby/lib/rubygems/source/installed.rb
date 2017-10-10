@@ -1,5 +1,3 @@
-##
-# Represents an installed gem.  This is used for dependency resolution.
 
 class Gem::Source::Installed < Gem::Source
 
@@ -7,8 +5,6 @@ class Gem::Source::Installed < Gem::Source
     @uri = nil
   end
 
-  ##
-  # Installed sources sort before all other sources
 
   def <=> other
     case other
@@ -25,8 +21,6 @@ class Gem::Source::Installed < Gem::Source
     end
   end
 
-  ##
-  # We don't need to download an installed gem
 
   def download spec, path
     nil

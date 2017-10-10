@@ -26,50 +26,33 @@ module ActionView
     class ERBTracker # :nodoc:
       EXPLICIT_DEPENDENCY = /# Template Dependency: (\S+)/
 
-      # A valid ruby identifier - suitable for class, method and specially variable names
       IDENTIFIER = /
         [[:alpha:]_] # at least one uppercase letter, lowercase letter or underscore
         [[:word:]]*  # followed by optional letters, numbers or underscores
       /x
 
-      # Any kind of variable name. e.g. @instance, @@class, $global or local.
-      # Possibly following a method call chain
       VARIABLE_OR_METHOD_CHAIN = /
         (?:\$|@{1,2})?            # optional global, instance or class variable indicator
         (?:#{IDENTIFIER}\.)*      # followed by an optional chain of zero-argument method calls
         (?<dynamic>#{IDENTIFIER}) # and a final valid identifier, captured as DYNAMIC
       /x
 
-      # A simple string literal. e.g. "School's out!"
       STRING = /
         (?<quote>['"]) # an opening quote
         (?<static>.*?) # with anything inside, captured as STATIC
         \k<quote>      # and a matching closing quote
       /x
 
-      # Part of any hash containing the :partial key
       PARTIAL_HASH_KEY = /
         (?:\bpartial:|:partial\s*=>) # partial key in either old or new style hash syntax
         \s*                          # followed by optional spaces
       /x
 
-      # Part of any hash containing the :layout key
       LAYOUT_HASH_KEY = /
         (?:\blayout:|:layout\s*=>)   # layout key in either old or new style hash syntax
         \s*                          # followed by optional spaces
       /x
 
-      # Matches:
-      #   partial: "comments/comment", collection: @all_comments => "comments/comment"
-      #   (object: @single_comment, partial: "comments/comment") => "comments/comment"
-      #
-      #   "comments/comments"
-      #   'comments/comments'
-      #   ('comments/comments')
-      #
-      #   (@topic)         => "topics/topic"
-      #    topics          => "topics/topic"
-      #   (message.topics) => "topics/topic"
       RENDER_ARGUMENTS = /\A
         (?:\s*\(?\s*)                                  # optional opening paren surrounded by spaces
         (?:.*?#{PARTIAL_HASH_KEY}|#{LAYOUT_HASH_KEY})? # optional hash, up to the partial or layout key declaration

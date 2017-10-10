@@ -12,16 +12,12 @@ class Capstone < Formula
   end
 
   def install
-    # Capstone's Make script ignores the prefix env and was installing
-    # in /usr/local directly. So just inreplace the prefix for less pain.
-    # https://github.com/aquynh/capstone/issues/228
     inreplace "make.sh", "export PREFIX=/usr/local", "export PREFIX=#{prefix}"
 
     ENV["HOMEBREW_CAPSTONE"] = "1"
     system "./make.sh"
     system "./make.sh", "install"
 
-    # As per the above inreplace, the pkgconfig file needs fixing as well.
     inreplace lib/"pkgconfig/capstone.pc" do |s|
       s.gsub! "/usr/lib", lib
       s.gsub! "/usr/include/capstone", "#{include}/capstone"
@@ -29,12 +25,7 @@ class Capstone < Formula
   end
 
   test do
-    # code comes from http://www.capstone-engine.org/lang_c.html
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <inttypes.h>
-      #include <capstone/capstone.h>
-      #define CODE "\\x55\\x48\\x8b\\x05\\xb8\\x13\\x00\\x00"
 
       int main()
       {

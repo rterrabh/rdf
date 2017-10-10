@@ -7,7 +7,6 @@ class Redpen < Formula
   depends_on :java => "1.8"
 
   def install
-    # Don't need Windows files.
     rm_f Dir["bin/*.bat"]
     libexec.install %w[conf lib sample-doc]
 

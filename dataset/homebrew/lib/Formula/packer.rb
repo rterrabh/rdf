@@ -4,7 +4,6 @@ class Packer < Formula
   desc "Tool for creating identical machine images for multiple platforms"
   homepage "https://packer.io"
 
-  # buildscript requires the .git directory be present
   url "https://github.com/mitchellh/packer.git",
     :tag => "v0.8.6", :revision => "f8f7b7a34c1be06058f5aca23a51247db12cdbc5"
 
@@ -192,8 +191,6 @@ class Packer < Formula
     ENV["XC_OS"] = "darwin"
     ENV["XC_ARCH"] = MacOS.prefer_64_bit? ? "amd64" : "386"
     ENV["GOPATH"] = buildpath
-    # For the gox buildtool used by packer, which doesn't need to
-    # get installed permanently
     ENV.append_path "PATH", buildpath
 
     packerpath = buildpath/"src/github.com/mitchellh/packer"

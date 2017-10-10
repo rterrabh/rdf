@@ -51,7 +51,6 @@ class Nagios < Formula
     system "make", "all"
     system "make", "install"
 
-    # Install config
     system "make install-config"
     system "make install-webconf"
     mkdir HOMEBREW_PREFIX+"var/lib/nagios/rw" unless File.exist? HOMEBREW_PREFIX+"var/lib/nagios/rw"

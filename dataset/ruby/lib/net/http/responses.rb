@@ -1,4 +1,3 @@
-# :stopdoc:
 class Net::HTTPUnknownResponse < Net::HTTPResponse
   HAS_BODY = true
   EXCEPTION_TYPE = Net::HTTPError
@@ -30,7 +29,6 @@ end
 class Net::HTTPSwitchProtocol < Net::HTTPInformation     # 101
   HAS_BODY = false
 end
-# 102 - RFC 2518; removed in RFC 4918
 
 class Net::HTTPOK < Net::HTTPSuccess                            # 200
   HAS_BODY = true
@@ -56,7 +54,6 @@ end
 class Net::HTTPMultiStatus < Net::HTTPSuccess                   # 207 - RFC 4918
   HAS_BODY = true
 end
-# 208 Already Reported - RFC 5842; experimental
 class Net::HTTPIMUsed < Net::HTTPSuccess                        # 226 - RFC 3229
   HAS_BODY = true
 end
@@ -81,7 +78,6 @@ end
 class Net::HTTPUseProxy < Net::HTTPRedirection           # 305
   HAS_BODY = false
 end
-# 306 Switch Proxy - no longer unused
 class Net::HTTPTemporaryRedirect < Net::HTTPRedirection  # 307
   HAS_BODY = true
 end
@@ -144,8 +140,6 @@ end
 class Net::HTTPExpectationFailed < Net::HTTPClientError             # 417
   HAS_BODY = true
 end
-# 418 I'm a teapot - RFC 2324; a joke RFC
-# 420 Enhance Your Calm - Twitter
 class Net::HTTPUnprocessableEntity < Net::HTTPClientError           # 422 - RFC 4918
   HAS_BODY = true
 end
@@ -155,7 +149,6 @@ end
 class Net::HTTPFailedDependency < Net::HTTPClientError              # 424 - RFC 4918
   HAS_BODY = true
 end
-# 425 Unordered Collection - existed only in draft
 class Net::HTTPUpgradeRequired < Net::HTTPClientError               # 426 - RFC 2817
   HAS_BODY = true
 end
@@ -168,10 +161,6 @@ end
 class Net::HTTPRequestHeaderFieldsTooLarge < Net::HTTPClientError   # 431 - RFC 6585
   HAS_BODY = true
 end
-# 444 No Response - Nginx
-# 449 Retry With - Microsoft
-# 450 Blocked by Windows Parental Controls - Microsoft
-# 499 Client Closed Request - Nginx
 
 class Net::HTTPInternalServerError < Net::HTTPServerError           # 500
   HAS_BODY = true
@@ -191,13 +180,9 @@ end
 class Net::HTTPVersionNotSupported < Net::HTTPServerError           # 505
   HAS_BODY = true
 end
-# 506 Variant Also Negotiates - RFC 2295; experimental
 class Net::HTTPInsufficientStorage < Net::HTTPServerError           # 507 - RFC 4918
   HAS_BODY = true
 end
-# 508 Loop Detected - RFC 5842; experimental
-# 509 Bandwidth Limit Exceeded - Apache bw/limited extension
-# 510 Not Extended - RFC 2774; experimental
 class Net::HTTPNetworkAuthenticationRequired < Net::HTTPServerError # 511 - RFC 6585
   HAS_BODY = true
 end
@@ -269,5 +254,4 @@ class Net::HTTPResponse
   }
 end
 
-# :startdoc:
 

@@ -1,5 +1,3 @@
-# Note, the version of pstree used on Linux requires
-# the /proc file system, which is not available on OS X.
 
 class Pstree < Formula
   desc "Show ps output as a tree"

@@ -17,14 +17,12 @@ module EmbedHelper
   def get_html(cooked)
     fragment = Nokogiri::HTML.fragment(cooked)
 
-    # convert lazyYT div to link
     fragment.css('div.lazyYT').each do |yt_div|
       youtube_id = yt_div["data-youtube-id"]
       youtube_link = "https://www.youtube.com/watch?v=#{youtube_id}"
       yt_div.replace "<p><a href='#{youtube_link}'>#{youtube_link}</a></p>"
     end
 
-    # convert Vimeo iframe to link
     fragment.css('iframe').each do |iframe|
       if iframe['src'] =~ /player.vimeo.com/
         vimeo_id = iframe['src'].split('/').last
@@ -32,7 +30,6 @@ module EmbedHelper
       end
     end
 
-    # Strip lightbox metadata
     fragment.css('.lightbox-wrapper .meta').remove
 
     raw fragment

@@ -27,8 +27,6 @@ class Libxc < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <xc.h>
       int main()
       {
         int i, vmajor, vminor, func_id = 1;

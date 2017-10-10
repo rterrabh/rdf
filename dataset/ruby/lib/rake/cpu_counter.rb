@@ -1,7 +1,5 @@
 module Rake
 
-  # Based on a script at:
-  #   http://stackoverflow.com/questions/891537/ruby-detect-number-of-cpus-installed
   class CpuCounter # :nodoc: all
     def self.count
       new.count_with_default
@@ -27,10 +25,10 @@ module Rake
 end
 
 unless Rake::CpuCounter.method_defined?(:count)
+  #nodyna <class_eval-2034> <not yet classified>
   Rake::CpuCounter.class_eval <<-'end;', __FILE__, __LINE__+1
     require 'rbconfig'
 
-    # TODO: replace with IO.popen using array-style arguments in Rake 11
     require 'open3'
 
     def count
@@ -49,7 +47,6 @@ unless Rake::CpuCounter.method_defined?(:count)
         when /mswin|mingw/
           count_via_win32
         else
-          # Try everything
           count_via_win32 ||
             count_via_sysctl ||
             count_via_hwprefs_thread_count ||

@@ -17,8 +17,6 @@ class Libdbi < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <dbi/dbi.h>
       int main(void) {
         dbi_inst instance;
         dbi_initialize_r(NULL, &instance);

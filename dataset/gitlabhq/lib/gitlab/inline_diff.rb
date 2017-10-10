@@ -13,7 +13,6 @@ module Gitlab
           second_line = diff_arr[index+2]
           max_length = [first_line.size, second_line.size].max
 
-          # Skip inline diff if empty line was replaced with content
           next if first_line == "-\n"
 
           first_the_same_symbols = 0
@@ -28,7 +27,6 @@ module Gitlab
           start = first_token + START
 
           if first_token.empty?
-            # In case if we remove string of spaces in commit
             diff_arr[index+1].sub!("-", "-" => "-#{START}")
             diff_arr[index+2].sub!("+", "+" => "+#{START}")
           else
@@ -46,8 +44,6 @@ module Gitlab
           end
           last_the_same_symbols += 1
           last_token = first_line[last_the_same_symbols..-1]
-          # This is tricky: escape backslashes so that `sub` doesn't interpret them
-          # as backreferences. Regexp.escape does NOT do the right thing.
           replace_token = FINISH + last_token.gsub(/\\/, '\&\&')
           diff_arr[index+1].sub!(/#{Regexp.escape(last_token)}$/, replace_token)
           diff_arr[index+2].sub!(/#{Regexp.escape(last_token)}$/, replace_token)

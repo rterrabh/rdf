@@ -43,19 +43,16 @@ module Spree
 
         @taxon.save!
 
-        # regenerate permalink
         regenerate_permalink if parent_id
 
         set_permalink_params
 
-        #check if we need to rename child taxons if parent name or permalink changes
         @update_children = true if params[:taxon][:name] != @taxon.name || params[:taxon][:permalink] != @taxon.permalink
 
         if @taxon.update_attributes(taxon_params)
           flash[:success] = flash_message_for(@taxon, :successfully_updated)
         end
 
-        #rename child taxons
         rename_child_taxons if @update_children
 
         respond_with(@taxon) do |format|

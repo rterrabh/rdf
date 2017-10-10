@@ -1,7 +1,3 @@
-#
-#  tmenubutton widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -31,8 +27,6 @@ class Tk::Tile::TMenubutton < Tk::Menubutton
   end
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Menubutton,
-#                            :TkMenubutton, :TkMenuButton)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tmenubutton.rb',
                                    :Ttk, Tk::Tile::Menubutton,
                                    :TkMenubutton, :TkMenuButton)

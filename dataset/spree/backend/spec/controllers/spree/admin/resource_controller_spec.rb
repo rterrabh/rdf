@@ -16,7 +16,6 @@ describe Spree::Admin::WidgetsController, :type => :controller do
   stub_authorization!
 
   after(:all) do
-    # Spree::Core::Engine.routes.reload_routes!
     Rails.application.reload_routes!
   end
 
@@ -192,7 +191,6 @@ describe Spree::Admin::Submodule::PostsController, type: :controller do
   stub_authorization!
 
   after(:all) do
-    # Spree::Core::Engine.routes.reload_routes!
     Rails.application.reload_routes!
   end
 

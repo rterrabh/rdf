@@ -1,24 +1,12 @@
 module ActiveAdmin
-  # Page is the primary data storage for page configuration in Active Admin
-  #
-  # When you register a page (ActiveAdmin.register_page "Status") you are actually creating
-  # a new Page instance within the given Namespace.
-  #
-  # The instance of the current page is available in PageController and views
-  # by calling the #active_admin_config method.
-  #
   class Page
 
-    # The namespace this config belongs to
     attr_reader :namespace
 
-    # The name of the page
     attr_reader :name
 
-    # An array of custom actions defined for this page
     attr_reader :page_actions
 
-    # Set breadcrumb builder
     attr_accessor :breadcrumb
 
     module Base
@@ -39,7 +27,6 @@ module ActiveAdmin
     include Resource::Naming
     include Resource::Routes
 
-    # label is singular
     def plural_resource_label
       name
     end
@@ -68,7 +55,6 @@ module ActiveAdmin
       [namespace.module_name, camelized_resource_name + "Controller"].compact.join('::')
     end
 
-    # Override from `ActiveAdmin::Resource::Controllers`
     def route_uncountable?
       false
     end
@@ -83,7 +69,6 @@ module ActiveAdmin
     def add_default_sidebar_sections
     end
 
-    # Clears all the custom actions this page knows about
     def clear_page_actions!
       @page_actions = []
     end

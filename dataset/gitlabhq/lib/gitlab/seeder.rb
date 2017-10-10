@@ -18,7 +18,7 @@ def Notify.delay
   self
 end
       eos
-      #nodyna <ID:eval-1> <EV TRIVIAL (method definition)>
+      #nodyna <eval-494> <EV TRIVIAL (method definition)>
       eval(code)
     end
   end

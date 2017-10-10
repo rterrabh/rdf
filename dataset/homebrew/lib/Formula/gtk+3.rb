@@ -41,11 +41,9 @@ class Gtkx3 < Formula
     args << "--enable-quartz-relocation" if build.with?("quartz-relocation")
 
     system "./configure", *args
-    # necessary to avoid gtk-update-icon-cache not being found during make install
     bin.mkpath
     ENV.prepend_path "PATH", "#{bin}"
     system "make", "install"
-    # Prevent a conflict between this and Gtk+2
     mv bin/"gtk-update-icon-cache", bin/"gtk3-update-icon-cache"
   end
 
@@ -55,7 +53,6 @@ class Gtkx3 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gtk/gtk.h>
 
       int main(int argc, char *argv[]) {
         gtk_disable_setlocale();

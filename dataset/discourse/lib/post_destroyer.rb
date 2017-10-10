@@ -1,7 +1,3 @@
-#
-# How a post is deleted is affected by who is performing the action.
-# this class contains the logic to delete it.
-#
 class PostDestroyer
 
   def self.destroy_old_hidden_posts
@@ -13,7 +9,6 @@ class PostDestroyer
   end
 
   def self.destroy_stubs
-    # exclude deleted topics and posts that are actively flagged
     Post.where(deleted_at: nil, user_deleted: true)
         .where("NOT EXISTS (
             SELECT 1 FROM topics t
@@ -66,8 +61,6 @@ class PostDestroyer
     @post.publish_change_to_clients! :recovered
   end
 
-  # When a post is properly deleted. Well, it's still soft deleted, but it will no longer
-  # show up in the topic
   def perform_delete
     Post.transaction do
       @post.trash!(@user)
@@ -97,7 +90,6 @@ class PostDestroyer
     @post.publish_change_to_clients! :deleted if @post.topic
   end
 
-  # When a user 'deletes' their own post. We just change the text.
   def mark_for_deletion
     I18n.with_locale(SiteSetting.default_locale) do
       Post.transaction do
@@ -200,7 +192,6 @@ class PostDestroyer
     author.user_stat.post_count -= 1
     author.user_stat.topic_count -= 1 if @post.is_first_post?
 
-    # We don't count replies to your own topics
     if @topic && author.id != @topic.user_id
       author.user_stat.update_topic_reply_count
     end

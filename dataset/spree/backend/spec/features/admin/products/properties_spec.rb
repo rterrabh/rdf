@@ -85,11 +85,8 @@ describe "Properties", type: :feature, js: true do
       click_link "Properties"
     end
 
-    # Regression test for #2279
     it "successfully create and then remove product property" do
       fill_in_property
-      # Sometimes the page doesn't load before the all check is done
-      # lazily finding the element gives the page 10 seconds
       expect(page).to have_css("tbody#product_properties tr:nth-child(2)")
       expect(all("tbody#product_properties tr").count).to eq(2)
 
@@ -98,7 +95,6 @@ describe "Properties", type: :feature, js: true do
       check_property_row_count(1)
     end
 
-    # Regression test for #4466
     it "successfully remove and create a product property at the same time" do
       fill_in_property
 
@@ -107,7 +103,6 @@ describe "Properties", type: :feature, js: true do
 
       delete_product_property
 
-      # Give fadeOut time to complete
       expect(page).not_to have_selector("#product_product_properties_attributes_0_property_name")
       expect(page).not_to have_selector("#product_product_properties_attributes_0_value")
 

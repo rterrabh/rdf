@@ -1,5 +1,3 @@
-# Used by Prioritizer to adjust item quantities
-# see prioritizer_spec for use cases
 module Spree
   module Stock
     class Adjuster

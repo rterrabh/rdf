@@ -16,7 +16,6 @@ class Galen < Formula
   def install
     libexec.install "galen.jar"
     (bin/"galen").write <<-EOS.undent
-      #!/bin/sh
       set -e
       java -cp "#{libexec}/galen.jar:lib/*:libs/*" com.galenframework.GalenMain "$@"
     EOS

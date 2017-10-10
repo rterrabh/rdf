@@ -24,11 +24,11 @@ module Paperclip
     private
 
     def define_flush_errors
-      #nodyna <ID:send-21> <SD TRIVIAL (public methods)>
+      #nodyna <send-715> <SD TRIVIAL (public methods)>
       @klass.send(:validates_each, @name) do |record, attr, value|
-        #nodyna <ID:send-22> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-716> <SD COMPLEX (change-prone variables)>
         attachment = record.send(@name)
-        #nodyna <ID:send-23> <SD EASY (private methods)>
+        #nodyna <send-717> <SD EASY (private methods)>
         attachment.send(:flush_errors)
       end
     end
@@ -42,14 +42,16 @@ module Paperclip
       name = @name
       options = @options
 
-      #nodyna <ID:send-24> <SD MODERATE (private methods)>
-      #nodyna <ID:define_method-3> <DM COMPLEX (events)>
+      #nodyna <send-718> <SD MODERATE (private methods)>
+      #nodyna <define_method-719> <DM COMPLEX (events)>
       @klass.send :define_method, @name do |*args|
         ivar = "@attachment_#{name}"
+        #nodyna <instance_variable_get-720> <not yet classified>
         attachment = instance_variable_get(ivar)
 
         if attachment.nil?
           attachment = Attachment.new(name, self, options)
+          #nodyna <instance_variable_set-721> <not yet classified>
           instance_variable_set(ivar, attachment)
         end
 
@@ -67,20 +69,20 @@ module Paperclip
 
     def define_setter
       name = @name
-      #nodyna <ID:send-25> <SD MODERATE (private methods)>
-      #nodyna <ID:define_method-4> <DM COMPLEX (events)>
+      #nodyna <send-722> <SD MODERATE (private methods)>
+      #nodyna <define_method-723> <DM COMPLEX (events)>
       @klass.send :define_method, "#{@name}=" do |file|
-        #nodyna <ID:send-26> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-724> <SD COMPLEX (change-prone variables)>
         send(name).assign(file)
       end
     end
 
     def define_query
       name = @name
-      #nodyna <ID:send-27> <SD MODERATE (private methods)>
-      #nodyna <ID:define_method-5> <DM COMPLEX (events)>
+      #nodyna <send-725> <SD MODERATE (private methods)>
+      #nodyna <define_method-726> <DM COMPLEX (events)>
       @klass.send :define_method, "#{@name}?" do
-        #nodyna <ID:send-28> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-727> <SD COMPLEX (change-prone variables)>
         send(name).file?
       end
     end
@@ -94,29 +96,29 @@ module Paperclip
       if options[:validate_media_type] != false
         name = @name
         @klass.validates_media_type_spoof_detection name,
-          #nodyna <ID:send-29> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-728> <SD COMPLEX (change-prone variables)>
           :if => ->(instance){ instance.send(name).dirty? }
       end
     end
 
     def add_active_record_callbacks
       name = @name
-      #nodyna <ID:send-30> <SD TRIVIAL (public methods)>
-      #nodyna <ID:send-30> <SD COMPLEX (change-prone variables)>
-      #nodyna <ID:send-30> <SD TRIVIAL (public methods)>
+      #nodyna <send-729> <SD TRIVIAL (public methods)>
+      #nodyna <send-730> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-731> <SD TRIVIAL (public methods)>
       @klass.send(:after_save) { send(name).send(:save) }
-      #nodyna <ID:send-31> <SD TRIVIAL (public methods)>
-      #nodyna <ID:send-31> <SD COMPLEX (change-prone variables)>
-      #nodyna <ID:send-31> <SD EASY (private methods)>
+      #nodyna <send-732> <SD TRIVIAL (public methods)>
+      #nodyna <send-733> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-734> <SD EASY (private methods)>
       @klass.send(:before_destroy) { send(name).send(:queue_all_for_delete) }
-      #nodyna <ID:send-32> <SD TRIVIAL (public methods)>
-      #nodyna <ID:send-32> <SD COMPLEX (change-prone variables)>
-      #nodyna <ID:send-32> <SD TRIVIAL (public methods)>
+      #nodyna <send-735> <SD TRIVIAL (public methods)>
+      #nodyna <send-736> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-737> <SD TRIVIAL (public methods)>
       @klass.send(:after_commit, :on => :destroy) { send(name).send(:flush_deletes) }
     end
 
     def add_paperclip_callbacks
-      #nodyna <ID:send-33> <SD TRIVIAL (public methods)>
+      #nodyna <send-738> <SD TRIVIAL (public methods)>
       @klass.send(
         :define_paperclip_callbacks,
         :post_process, :"#{@name}_post_process")

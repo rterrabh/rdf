@@ -4,7 +4,6 @@ module ActiveAdmin
     class SidebarSection < Panel
       builder_method :sidebar_section
 
-      # Takes a ActiveAdmin::SidebarSection instance
       def build(section)
         @section = section
         super(@section.title, icon: @section.icon)
@@ -17,7 +16,7 @@ module ActiveAdmin
 
       def build_sidebar_content
         if @section.block
-          #nodyna <ID:instance_exec-21> <IEX COMPLEX (block without parameters)>
+          #nodyna <instance_exec-55> <IEX COMPLEX (block without parameters)>
           rvalue = instance_exec(&@section.block)
           self << rvalue if rvalue.is_a?(String)
         else

@@ -20,7 +20,6 @@ end
 module XML
   class Parser
     unless defined?(Error)
-      # This error is legacy, so we just set it to the new one
       Error = ::XMLParserError # :nodoc:
     end
   end
@@ -85,7 +84,6 @@ module RSS
 
     def xmldecl(version, encoding, standalone)
       super
-      # Encoding is converted to UTF-8 when XMLParser parses XML.
       @encoding = 'UTF-8'
     end
 

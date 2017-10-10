@@ -1,16 +1,8 @@
-#
-#  tkextlib/tcllib/tkpiechart.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Create 2D or 3D pies with labels in Tcl canvases
-#
 
 require 'tk'
 require 'tk/canvas'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('tkpiechart', '6.6')
 TkPackage.require('tkpiechart')
 
 module Tk
@@ -74,7 +66,6 @@ module Tk::Tcllib::Tkpiechart
     private :__listval_optkeys
   end
 
-  ####################################
   class PieChartObj < TkcItem
     include ConfigMethod
 
@@ -84,7 +75,6 @@ module Tk::Tcllib::Tkpiechart
     private :__font_optkeys
   end
 
-  ####################################
   class Pie < TkcItem
     include ConfigMethod
 
@@ -155,7 +145,6 @@ module Tk::Tcllib::Tkpiechart
     end
   end
 
-  ####################################
   class Slice < TkcItem
     include ConfigMethod
 
@@ -164,7 +153,6 @@ module Tk::Tcllib::Tkpiechart
     end
     private :__config_cmd
 
-    #------------------------
 
     def initialize(pie, *args)
       unless pie.kind_of?(Pie) && pie != :no_create
@@ -223,7 +211,6 @@ module Tk::Tcllib::Tkpiechart
     end
   end
 
-  ####################################
   class BoxLabeler < TkcItem
     include ConfigMethod
 
@@ -232,7 +219,6 @@ module Tk::Tcllib::Tkpiechart
     end
     private :__config_cmd
 
-    #------------------------
 
     def create_self(keys=None)
       if keys and keys != None
@@ -250,7 +236,6 @@ module Tk::Tcllib::Tkpiechart
     private :create_self
   end
 
-  ####################################
   class PeripheralLabeler < TkcItem
     include ConfigMethod
 
@@ -264,7 +249,6 @@ module Tk::Tcllib::Tkpiechart
     end
     private :__config_cmd
 
-    #------------------------
 
     def create_self(keys=None)
       if keys and keys != None
@@ -283,7 +267,6 @@ module Tk::Tcllib::Tkpiechart
     private :create_self
   end
 
-  ####################################
   class Label < TkcItem
     include ConfigMethod
 
@@ -292,7 +275,6 @@ module Tk::Tcllib::Tkpiechart
     end
     private :__config_cmd
 
-    #------------------------
 
     def create_self(x, y, keys=None)
       if keys and keys != None

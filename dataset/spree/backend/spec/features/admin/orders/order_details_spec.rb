@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'spec_helper'
 
 describe "Order Details", type: :feature, js: true do
@@ -59,16 +58,13 @@ describe "Order Details", type: :feature, js: true do
           end
         end
 
-        # Click "ok" on confirmation dialog
         expect(page).not_to have_content("spree t-shirt")
       end
 
-      # Regression test for #3862
       it "can cancel removing an item from a shipment" do
         expect(page).to have_content("spree t-shirt")
 
         within_row(1) do
-          # Click "cancel" on confirmation dialog
           dismiss_alert do
             click_icon :delete
           end
@@ -138,7 +134,6 @@ describe "Order Details", type: :feature, js: true do
       context "variant doesn't track inventory" do
         before do
           tote.master.update_column :track_inventory, false
-          # make sure there's no stock level for any item
           tote.master.stock_items.update_all count_on_hand: 0, backorderable: false
         end
 
@@ -183,8 +178,6 @@ describe "Order Details", type: :feature, js: true do
 
       context 'splitting to location' do
         before { visit spree.edit_admin_order_path(order) }
-        # can not properly implement until poltergeist supports checking alert text
-        # see https://github.com/teampoltergeist/poltergeist/pull/516
         it 'should warn you if you have not selected a location or shipment'
 
         context 'there is enough stock at the other location' do
@@ -481,14 +474,12 @@ describe "Order Details", type: :feature, js: true do
       expect(page).not_to have_button('cancel')
       expect(page).not_to have_button('Resend')
 
-      # Order Tabs
       expect(page).not_to have_link('Details')
       expect(page).not_to have_link('Customer')
       expect(page).not_to have_link('Adjustments')
       expect(page).not_to have_link('Payments')
       expect(page).not_to have_link('Returns')
 
-      # Order item actions
       expect(page).not_to have_css('.delete-item')
       expect(page).not_to have_css('.split-item')
       expect(page).not_to have_css('.edit-item')
@@ -500,9 +491,7 @@ describe "Order Details", type: :feature, js: true do
 
   context 'as Fakedispatch' do
     custom_authorization! do |user|
-      # allow dispatch to :admin, :index, and :edit on Spree::Order
       can [:admin, :edit, :index, :read], Spree::Order
-      # allow dispatch to :index, :show, :create and :update shipments on the admin
       can [:admin, :manage, :read, :ship], Spree::Shipment
     end
 
@@ -515,9 +504,7 @@ describe "Order Details", type: :feature, js: true do
     it 'should not display order tabs or edit buttons without ability' do
       visit spree.edit_admin_order_path(order)
 
-      # Order Form
       expect(page).not_to have_css('.edit-item')
-      # Order Tabs
       expect(page).not_to have_link('Details')
       expect(page).not_to have_link('Customer')
       expect(page).not_to have_link('Adjustments')

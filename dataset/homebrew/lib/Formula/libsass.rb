@@ -25,10 +25,7 @@ class Libsass < Formula
   end
 
   test do
-    # This will need to be updated when devel = stable due to API changes.
     (testpath/"test.c").write <<-EOS.undent
-      #include <sass_context.h>
-      #include <string.h>
 
       int main()
       {

@@ -5,31 +5,6 @@ module Rouge
     class HTMLGitlab < Rouge::Formatter
       tag 'html_gitlab'
 
-      # Creates a new <tt>Rouge::Formatter::HTMLGitlab</tt> instance.
-      #
-      # [+nowrap+]          If set to True, don't wrap the output at all, not
-      #                     even inside a <tt><pre></tt> tag (default: false).
-      # [+cssclass+]        CSS class for the wrapping <tt><div></tt> tag
-      #                     (default: 'highlight').
-      # [+linenos+]         If set to 'table', output line numbers as a table
-      #                     with two cells, one containing the line numbers,
-      #                     the other the whole code. This is copy paste friendly,
-      #                     but may cause alignment problems with some browsers
-      #                     or fonts. If set to 'inline', the line numbers will
-      #                     be integrated in the <tt><pre></tt> tag that contains
-      #                     the code (default: nil).
-      # [+linenostart+]     The line number for the first line (default: 1).
-      # [+lineanchors+]     If set to true the formatter will wrap each output
-      #                     line in an anchor tag with a name of L-linenumber.
-      #                     This allows easy linking to certain lines
-      #                     (default: false).
-      # [+lineanchorsid+]   If lineanchors is true the name of the anchors can
-      #                     be changed with lineanchorsid to e.g. foo-linenumber
-      #                     (default: 'L').
-      # [+anchorlinenos+]   If set to true, will wrap line numbers in <tt><a></tt>
-      #                     tags. Used in combination with linenos and lineanchors
-      #                     (default: false).
-      # [+inline_theme+]    Inline CSS styles for the <pre> tag (default: false).
       def initialize(
           nowrap: false,
           cssclass: 'highlight',
@@ -97,8 +72,6 @@ module Rouge
         current_line = ''
 
         tokens.each do |tok, val|
-          # In the case of multi-line values (e.g. comments), we need to apply
-          # styling to each line since span elements are inline.
           val.lines.each do |line|
             stripped = line.chomp
             current_line << span(tok, stripped)
@@ -110,7 +83,6 @@ module Rouge
           end
         end
 
-        # Add leftover text
         rendered << current_line if current_line.present?
 
         num_lines = rendered.size
@@ -158,7 +130,6 @@ module Rouge
       end
 
       def span(tok, val)
-        # http://stackoverflow.com/a/1600584/2587286
         val = CGI.escapeHTML(val)
 
         if tok.shortname.empty?

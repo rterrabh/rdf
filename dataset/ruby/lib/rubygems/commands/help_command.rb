@@ -2,7 +2,6 @@ require 'rubygems/command'
 
 class Gem::Commands::HelpCommand < Gem::Command
 
-  # :stopdoc:
   EXAMPLES = <<-EOF
 Some examples of 'gem' usage.
 
@@ -268,7 +267,6 @@ Gem::Platform::CURRENT.  This will correctly mark the gem with your ruby's
 platform.
   EOF
 
-  # NOTE when updating also update Gem::Command::HELP
 
   SUBCOMMANDS = [
     ["commands",         :show_commands],
@@ -277,7 +275,6 @@ platform.
     ["gem_dependencies", GEM_DEPENDENCIES],
     ["platforms",        PLATFORMS],
   ]
-  # :startdoc:
 
   def initialize
     super 'help', "Provide help on the 'gem' command"
@@ -298,7 +295,7 @@ platform.
 
     if help then
       if Symbol === help then
-        #nodyna <ID:send-69> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2319> <SD COMPLEX (change-prone variables)>
         send help
       else
         say help
@@ -374,7 +371,6 @@ platform.
   def show_help # :nodoc:
     command = @command_manager[options[:help]]
     if command then
-      # help with provided command
       command.invoke("--help")
     else
       alert_error "Unknown command #{options[:help]}.  Try 'gem help commands'"

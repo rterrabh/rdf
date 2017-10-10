@@ -16,7 +16,7 @@ module ActionMailer
     def any(*args, &block)
       options = args.extract_options!
       raise ArgumentError, "You have to supply at least one format" if args.empty?
-      #nodyna <ID:send-1> <SD MODERATE (change-prone variables)>
+      #nodyna <send-1190> <SD MODERATE (change-prone variables)>
       args.each { |type| send(type, options.dup, &block) }
     end
     alias :all :any

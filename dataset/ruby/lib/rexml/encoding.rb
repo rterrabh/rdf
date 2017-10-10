@@ -1,7 +1,5 @@
-# coding: US-ASCII
 module REXML
   module Encoding
-    # ID ---> Encoding name
     attr_reader :encoding
     def encoding=(encoding)
       encoding = encoding.name if encoding.is_a?(Encoding)

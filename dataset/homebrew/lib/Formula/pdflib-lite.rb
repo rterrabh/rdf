@@ -13,9 +13,6 @@ class PdflibLite < Formula
   end
 
   def install
-    # Without the following substitution, pdflib-lite runs into weird
-    # build errors due to bad interactions with the TIFF headers.
-    # This workaround comes from the MacPorts.org portfile for pdflib.
     ENV["CPPFLAGS"] = "-isystem#{prefix}"
 
     system "./configure", "--disable-debug", "--disable-dependency-tracking",

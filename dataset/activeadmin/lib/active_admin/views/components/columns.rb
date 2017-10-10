@@ -1,74 +1,13 @@
 module ActiveAdmin
   module Views
 
-    # = Columns Component
-    #
-    # The Columns component allows you draw content into scalable columns. All
-    # you need to do is define the number of columns and the component will
-    # take care of the rest.
-    #
-    # == Simple Columns
-    #
-    # To display columns, use the #columns method. Within the block, call the
-    # #column method to create a new column.
-    #
-    # To create a two column layout:
-    #
-    #     colums do
-    #       column do
-    #         span "Column # 1
-    #       end
-    #       column do
-    #         span "Column # 2
-    #       end
-    #     end
-    #
-    #
-    # == Multiple Span Columns
-    #
-    # To make a column span multiple, pass the :span option to the column method:
-    #
-    #     colums do
-    #       column span: 2 do
-    #         span "Column # 1
-    #       end
-    #       column do
-    #         span "Column # 2
-    #       end
-    #     end
-    #
-    # By default, each column spans 1 column. So the above layout would have 2 columns,
-    # the first being 2 time bigger than the second.
-    #
-    #
-    # == Max and Mix Column Sizes
-    #
-    # Active Admin is a fluid width layout, which means that columns are all defined
-    # using percentages. Sometimes this can cause issues if you don't want a column
-    # to shrink or expand past a certain point.
-    #
-    # To overcome this, columns include a :max_width and :min_width option.
-    #
-    #     colums do
-    #       column max_width: "200px", min_width: "100px" do
-    #         span "Column # 1
-    #       end
-    #       column do
-    #         span "Column # 2
-    #       end
-    #     end
-    #
-    # Now the first column will not grow bigger than 200px and will not shrink smaller
-    # than 100px.
     class Columns < ActiveAdmin::Component
       builder_method :columns
 
-      # For documentation, please take a look at Column#build
       def column(*args, &block)
         insert_tag Column, *args, &block
       end
 
-      # Override add child to set widths
       def add_child(*)
         super
         calculate_columns!
@@ -76,7 +15,6 @@ module ActiveAdmin
 
       protected
 
-      # Override the closing tag to include a clear
       def closing_tag
         "<div style=\"clear:both;\"></div>" + super
       end
@@ -85,7 +23,6 @@ module ActiveAdmin
         2
       end
 
-      # Calculate our columns sizes and margins
       def calculate_columns!
         span_count = columns_span_count
         columns_count = children.size
@@ -112,9 +49,6 @@ module ActiveAdmin
 
       attr_accessor :span_size, :max_width, :min_width
 
-      # @param [Hash] options An options hash for the column
-      #
-      # @option options [Integer] :span The columns this column should span
       def build(options = {})
         options = options.dup
         @span_size = options.delete(:span) || 1
@@ -146,7 +80,6 @@ module ActiveAdmin
 
       private
 
-      # Converts values without a '%' or 'px' suffix to a pixel value
       def safe_width(width)
         width.to_s.gsub(/\A(\d+)\z/, '\1px')
       end

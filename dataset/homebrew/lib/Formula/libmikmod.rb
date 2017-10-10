@@ -17,7 +17,6 @@ class Libmikmod < Formula
   def install
     ENV.O2 if build.with? "debug"
 
-    # OSX has CoreAudio, but ALSA is not for this OS nor is SAM9407 nor ULTRA.
     args = %W[
       --prefix=#{prefix}
       --disable-alsa

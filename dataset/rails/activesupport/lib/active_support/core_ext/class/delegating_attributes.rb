@@ -5,33 +5,27 @@ require 'active_support/core_ext/module/deprecation'
 
 class Class
   def superclass_delegating_accessor(name, options = {})
-    # Create private _name and _name= methods that can still be used if the public
-    # methods are overridden.
     _superclass_delegating_accessor("_#{name}", options)
 
-    # Generate the public methods name, name=, and name?.
-    # These methods dispatch to the private _name, and _name= methods, making them
-    # overridable.
-    #nodyna <ID:send-240> <SD COMPLEX (private methods)>
-    #nodyna <ID:send-241> <SD COMPLEX (change-prone variables)>
-    #nodyna <ID:define_method-49> <DM COMPLEX (events)>
+    #nodyna <send-1060> <SD COMPLEX (private methods)>
+    #nodyna <send-1061> <SD COMPLEX (change-prone variables)>
+    #nodyna <define_method-1062> <DM COMPLEX (events)>
     singleton_class.send(:define_method, name) { send("_#{name}") }
-    #nodyna <ID:send-242> <SD COMPLEX (private methods)>
-    #nodyna <ID:send-243> <SD COMPLEX (change-prone variables)>
-    #nodyna <ID:define_method-50> <DM COMPLEX (events)>
+    #nodyna <send-1063> <SD COMPLEX (private methods)>
+    #nodyna <send-1064> <SD COMPLEX (change-prone variables)>
+    #nodyna <define_method-1065> <DM COMPLEX (events)>
     singleton_class.send(:define_method, "#{name}?") { !!send("_#{name}") }
-    #nodyna <ID:send-244> <SD COMPLEX (private methods)>
-    #nodyna <ID:send-245> <SD COMPLEX (array)>
-    #nodyna <ID:define_method-51> <DM COMPLEX (events)>
+    #nodyna <send-1066> <SD COMPLEX (private methods)>
+    #nodyna <send-1067> <SD COMPLEX (array)>
+    #nodyna <define_method-1068> <DM COMPLEX (events)>
     singleton_class.send(:define_method, "#{name}=") { |value| send("_#{name}=", value) }
 
-    # If an instance_reader is needed, generate public instance methods name and name?.
     if options[:instance_reader] != false
-      #nodyna <ID:send-246> <SD COMPLEX (change-prone variables)>
-      #nodyna <ID:define_method-52> <DM COMPLEX (events)>
+      #nodyna <send-1069> <SD COMPLEX (change-prone variables)>
+      #nodyna <define_method-1070> <DM COMPLEX (events)>
       define_method(name) { send("_#{name}") }
-      #nodyna <ID:send-247> <SD COMPLEX (change-prone variables)>
-      #nodyna <ID:define_method-53> <DM COMPLEX (events)>
+      #nodyna <send-1071> <SD COMPLEX (change-prone variables)>
+      #nodyna <define_method-1072> <DM COMPLEX (events)>
       define_method("#{name}?") { !!send("#{name}") }
     end
   end
@@ -39,26 +33,23 @@ class Class
   deprecate superclass_delegating_accessor: :class_attribute
 
   private
-    # Take the object being set and store it in a method. This gives us automatic
-    # inheritance behavior, without having to store the object in an instance
-    # variable and look up the superclass chain manually.
     def _stash_object_in_method(object, method, instance_reader = true)
       singleton_class.remove_possible_method(method)
-      #nodyna <ID:send-248> <SD COMPLEX (private methods)>
-      #nodyna <ID:define_method-54> <DM COMPLEX (events)>
+      #nodyna <send-1073> <SD COMPLEX (private methods)>
+      #nodyna <define_method-1074> <DM COMPLEX (events)>
       singleton_class.send(:define_method, method) { object }
       remove_possible_method(method)
-      #nodyna <ID:define_method-55> <DM COMPLEX (events)>
+      #nodyna <define_method-1075> <DM COMPLEX (events)>
       define_method(method) { object } if instance_reader
     end
 
     def _superclass_delegating_accessor(name, options = {})
-      #nodyna <ID:send-249> <SD COMPLEX (private methods)>
-      #nodyna <ID:define_method-56> <DM COMPLEX (events)>
+      #nodyna <send-1076> <SD COMPLEX (private methods)>
+      #nodyna <define_method-1077> <DM COMPLEX (events)>
       singleton_class.send(:define_method, "#{name}=") do |value|
         _stash_object_in_method(value, name, options[:instance_reader] != false)
       end
-      #nodyna <ID:send-250> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-1078> <SD COMPLEX (change-prone variables)>
       send("#{name}=", nil)
     end
 end

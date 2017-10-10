@@ -17,8 +17,6 @@ class Solid < Formula
   option "with-doubles", "Use internal double precision floats"
   option "with-tracer", "Use rounding error tracer"
 
-  # This patch fixes a broken build on clang-600.0.56.
-  # Was reported to bugs@dtecta.com (since it also applies to solid-3.5.6)
   patch :DATA
 
   def install
@@ -31,9 +29,6 @@ class Solid < Formula
 
     system "./configure", *args
 
-    # exclude the examples from compiling!
-    # the examples do not compile because the include statements
-    # for the GLUT library are not platform independent
     inreplace "Makefile", " examples ", " "
 
     system "make", "install"
@@ -64,4 +59,3 @@ index 7fc7c5d..16ce972 100644
 
 +inline DT_CBox computeCBox(MT_Scalar margin, const MT_Transform& xform);
 +
- #endif

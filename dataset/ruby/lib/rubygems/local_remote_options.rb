@@ -1,19 +1,10 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
 require 'uri'
 require 'rubygems'
 
-##
-# Mixin methods for local and remote Gem::Command options.
 
 module Gem::LocalRemoteOptions
 
-  ##
-  # Allows OptionParser to handle HTTP URIs.
 
   def accept_uri_http
     OptionParser.accept URI::HTTP do |value|
@@ -31,8 +22,6 @@ module Gem::LocalRemoteOptions
     end
   end
 
-  ##
-  # Add local/remote options to the command line parser.
 
   def add_local_remote_options
     add_option(:"Local/Remote", '-l', '--local',
@@ -57,8 +46,6 @@ module Gem::LocalRemoteOptions
     add_update_sources_option
   end
 
-  ##
-  # Add the --bulk-threshold option
 
   def add_bulk_threshold_option
     add_option(:"Local/Remote", '-B', '--bulk-threshold COUNT',
@@ -69,8 +56,6 @@ module Gem::LocalRemoteOptions
     end
   end
 
-  ##
-  # Add the --clear-sources option
 
   def add_clear_sources_option
     add_option(:"Local/Remote", '--clear-sources',
@@ -81,8 +66,6 @@ module Gem::LocalRemoteOptions
     end
   end
 
-  ##
-  # Add the --http-proxy option
 
   def add_proxy_option
     accept_uri_http
@@ -94,8 +77,6 @@ module Gem::LocalRemoteOptions
     end
   end
 
-  ##
-  # Add the --source option
 
   def add_source_option
     accept_uri_http
@@ -113,8 +94,6 @@ module Gem::LocalRemoteOptions
     end
   end
 
-  ##
-  # Add the --update-sources option
 
   def add_update_sources_option
     add_option(:Deprecated, '-u', '--[no-]update-sources',
@@ -123,22 +102,16 @@ module Gem::LocalRemoteOptions
     end
   end
 
-  ##
-  # Is fetching of local and remote information enabled?
 
   def both?
     options[:domain] == :both
   end
 
-  ##
-  # Is local fetching enabled?
 
   def local?
     options[:domain] == :local || options[:domain] == :both
   end
 
-  ##
-  # Is remote fetching enabled?
 
   def remote?
     options[:domain] == :remote || options[:domain] == :both

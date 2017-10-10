@@ -9,7 +9,6 @@ module Paperclip
     end
   end
 
-  # Get list of styles saved on previous deploy (running rake paperclip:refresh:missing_styles)
   def self.get_registered_attachments_styles
     YAML.load_file(Paperclip.registered_attachments_styles_path)
   rescue Errno::ENOENT
@@ -23,19 +22,9 @@ module Paperclip
     end
   end
 
-  # Returns hash with styles for all classes using Paperclip.
-  # Unfortunately current version does not work with lambda styles:(
-  #   {
-  #     :User => {:avatar => [:small, :big]},
-  #     :Book => {
-  #       :cover => [:thumb, :croppable]},
-  #       :sample => [:thumb, :big]},
-  #     }
-  #   }
   def self.current_attachments_styles
     Hash.new.tap do |current_styles|
       Paperclip::AttachmentRegistry.each_definition do |klass, attachment_name, attachment_attributes|
-        # TODO: is it even possible to take into account Procs?
         next if attachment_attributes[:styles].kind_of?(Proc)
         attachment_attributes[:styles].try(:keys).try(:each) do |style_name|
           klass_sym = klass.to_s.to_sym
@@ -49,13 +38,6 @@ module Paperclip
   end
   private_class_method :current_attachments_styles
 
-  # Returns hash with styles missing from recent run of rake paperclip:refresh:missing_styles
-  #   {
-  #     :User => {:avatar => [:big]},
-  #     :Book => {
-  #       :cover => [:croppable]},
-  #     }
-  #   }
   def self.missing_attachments_styles
     current_styles = current_attachments_styles
     registered_styles = get_registered_attachments_styles

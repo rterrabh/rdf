@@ -12,7 +12,6 @@ module ActiveRecord
       private
 
       def new_time(year, mon, mday, hour, min, sec, microsec, offset = nil)
-        # Treat 0000-00-00 00:00:00 as nil.
         return if year.nil? || (year == 0 && mon == 0 && mday == 0)
 
         if offset
@@ -22,12 +21,11 @@ module ActiveRecord
           time -= offset
           Base.default_timezone == :utc ? time : time.getlocal
         else
-          #nodyna <ID:send-206> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-863> <SD COMPLEX (change-prone variables)>
           ::Time.public_send(Base.default_timezone, year, mon, mday, hour, min, sec, microsec) rescue nil
         end
       end
 
-      # Doesn't handle time zones.
       def fast_string_to_time(string)
         if string =~ ConnectionAdapters::Column::Format::ISO_DATETIME
           microsec = ($7.to_r * 1_000_000).to_i

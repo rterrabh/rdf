@@ -87,8 +87,6 @@ module Spree
 
       it 'can create a new stock item' do
         variant = create(:variant)
-        # Creating a variant also creates stock items.
-        # We don't want any to exist (as they would conflict with what we're about to create)
         StockItem.delete_all
         params = {
           stock_location_id: stock_location.to_param,

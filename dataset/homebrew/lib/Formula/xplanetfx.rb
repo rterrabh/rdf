@@ -45,7 +45,6 @@ class Xplanetfx < Formula
 
   def post_install
     if build.with?("gui")
-      # Change the version directory below with any future update
       ENV["GDK_PIXBUF_MODULEDIR"]="#{HOMEBREW_PREFIX}/lib/gdk-pixbuf-2.0/2.10.0/loaders"
       system "#{HOMEBREW_PREFIX}/bin/gdk-pixbuf-query-loaders", "--update-cache"
     end

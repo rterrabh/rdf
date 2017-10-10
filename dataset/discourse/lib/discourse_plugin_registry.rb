@@ -1,6 +1,3 @@
-#
-#  A class that handles interaction between a plugin and the Discourse App.
-#
 class DiscoursePluginRegistry
 
   class << self
@@ -17,7 +14,6 @@ class DiscoursePluginRegistry
 
     attr_accessor :custom_html
 
-    # Default accessor values
     def javascripts
       @javascripts ||= Set.new
     end
@@ -64,7 +60,6 @@ class DiscoursePluginRegistry
   end
 
   def register_js(filename, options={})
-    # If we have a server side option, add that too.
     self.class.server_side_javascripts << options[:server_side] if options[:server_side].present?
     self.class.javascripts << filename
   end

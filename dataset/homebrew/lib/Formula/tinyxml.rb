@@ -15,12 +15,6 @@ class Tinyxml < Formula
 
   depends_on "cmake" => :build
 
-  # The first two patches are taken from the debian packaging of tinyxml.
-  #   The first patch enforces use of stl strings, rather than a custom string type.
-  #   The second patch is a fix for incorrect encoding of elements with special characters
-  #   originally posted at http://sourceforge.net/p/tinyxml/patches/51/
-  # The third patch adds a CMakeLists.txt file to build a shared library and provide an install target
-  #   submitted upstream as https://sourceforge.net/p/tinyxml/patches/66/
   patch do
     url "https://raw.githubusercontent.com/robotology/yarp/master/extern/tinyxml/patches/enforce-use-stl.patch"
     sha256 "16a5b5e842eb0336be606131e5fb12a9165970f7bd943780ba09df2e1e8b29b1"
@@ -63,7 +57,6 @@ class Tinyxml < Formula
       <Hello>World</Hello>
     EOS
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <tinyxml.h>
 
       int main()
       {

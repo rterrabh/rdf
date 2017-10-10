@@ -24,7 +24,6 @@ class Libglade < Formula
   end
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <glade/glade.h>
 
       int main(int argc, char *argv[]) {
         glade_init();

@@ -21,8 +21,6 @@ class Gwyddion < Formula
   depends_on "gtksourceview" if build.with? "python"
 
   def install
-    # Add Python library path and prevent explicit linkage for the gwy module.
-    # Upstream patch: <http://sourceforge.net/p/gwyddion/mailman/message/34347458/>
     inreplace "configure", 'PYTHON_LIBS=-l$libpython',
                            %(py_prefix=`$PYTHON -c "import sys; print sys.prefix"`
                            PYTHON_LIBS="-L${py_prefix}/lib -l$libpython")
@@ -39,7 +37,6 @@ class Gwyddion < Formula
   test do
     system "#{bin}/gwyddion", "--version"
     (testpath/"test.c").write <<-EOS.undent
-      #include <libgwyddion/gwyddion.h>
 
       int main(int argc, char *argv[]) {
         const gchar *string = gwy_version_string();

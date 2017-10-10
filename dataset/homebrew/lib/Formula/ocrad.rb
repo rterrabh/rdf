@@ -20,7 +20,6 @@ class Ocrad < Formula
   test do
     (testpath/"test.pbm").write <<-EOS.undent
       P1
-      # This is an example bitmap of the letter "J"
       6 10
       0 0 0 0 1 0
       0 0 0 0 1 0

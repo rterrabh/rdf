@@ -39,7 +39,6 @@ class Pulseaudio < Formula
   depends_on "gtk+3" => :optional
   depends_on "jack" => :optional
 
-  # i386 patch per MacPorts
   patch :p0 do
     url "https://trac.macports.org/export/135547/trunk/dports/audio/pulseaudio/files/i386.patch"
     sha256 "d3a2180600a4fbea538949b6c4e9e70fe7997495663334e50db96d18bfb1da5f"
@@ -70,7 +69,6 @@ class Pulseaudio < Formula
     end
 
     if build.head?
-      # autogen.sh runs bootstrap.sh then ./configure
       system "./autogen.sh", *args
     else
       system "./configure", *args

@@ -1,9 +1,5 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 module ErrorMessagesHelper
-  # Render error messages for the given objects. The :message and :header_message options are allowed.
   def error_messages_for(*objects)
     options = objects.extract_options!
     options[:message] ||= I18n.t('error_messages.helper.correct_the_following_errors_and_try_again')
@@ -23,5 +19,5 @@ module ErrorMessagesHelper
   end
 end
 
-#nodyna <ID:send-228> <SD TRIVIAL (public methods)>
+#nodyna <send-232> <SD TRIVIAL (public methods)>
 ActionView::Helpers::FormBuilder.send(:include, ErrorMessagesHelper::FormBuilderAdditions)

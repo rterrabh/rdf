@@ -23,17 +23,13 @@ class ShrewsoftVpnClient < Formula
   depends_on "qt" if build.with? "gui"
 
   def install
-    # upstream request to support specifying Application/Framework folders:
-    # https://lists.shrew.net/pipermail/vpn-devel/2014-January/000636.html
 
-    # there is no suport for an alternate Frameworks folder, must change hard-coded paths
     Dir.glob(%w[source/*/CMakeLists.txt package/macosx/vpn-client-install.packproj]) do |path|
       next unless File.read(path).include? "/Library/Frameworks"
       inreplace path, "/Library/Frameworks", frameworks
     end
     frameworks.mkpath
 
-    # there is no suport for an alternate Applications folder, must change hard-coded paths
     if build.with? "gui"
       files = %w[
         package/macosx/vpn-client-install.packproj
@@ -57,7 +53,6 @@ class ShrewsoftVpnClient < Formula
 
     system "cmake", *cmake_args
 
-    # change relative framework paths to absolute ones (otherwise /Library/Frameworks is assumed)
     Dir.glob("source/*/cmake_install.cmake") do |path|
       inreplace path, /"(ShrewSoft.+?\.framework)/, "\"#{frameworks}/\\1"
     end

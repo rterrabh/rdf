@@ -31,7 +31,6 @@ class Remarshal < Formula
     ln_sf buildpath, buildpath/"src/github.com/dbohdan/remarshal"
     Language::Go.stage_deps resources, buildpath/"src"
 
-    # Build and install
     system "go", "build", "-o", "remarshal"
     bin.install "remarshal"
 

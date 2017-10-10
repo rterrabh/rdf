@@ -11,9 +11,6 @@ module ActiveRecord
       attr_internal :db_runtime
 
       def process_action(action, *args)
-        # We also need to reset the runtime before each action
-        # because of queries in middleware or in cases we are streaming
-        # and it won't be cleaned up by the method below.
         ActiveRecord::LogSubscriber.reset_runtime
         super
       end

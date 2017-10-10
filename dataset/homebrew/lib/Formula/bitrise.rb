@@ -59,9 +59,7 @@ class Bitrise < Formula
               - content: printf 'Test - OK' > brew.test.file
     EOS
 
-    # setup with --minimal flag, to skip the included `brew doctor` check
     system "#{bin}/bitrise", "setup", "--minimal"
-    # run the defined test_wf workflow
     system "#{bin}/bitrise", "run", "test_wf"
     assert_equal "Test - OK", (testpath/"brew.test.file").read.chomp
   end

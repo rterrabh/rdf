@@ -16,9 +16,6 @@ class Libdc1394 < Formula
 
   depends_on "sdl"
 
-  # fix issue due to bug in OSX Firewire stack
-  # libdc1394 author comments here:
-  # http://permalink.gmane.org/gmane.comp.multimedia.libdc1394.devel/517
   patch :DATA
 
   def install

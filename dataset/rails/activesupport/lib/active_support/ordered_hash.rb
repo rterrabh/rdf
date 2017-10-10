@@ -5,20 +5,6 @@ YAML.add_builtin_type("omap") do |type, val|
 end
 
 module ActiveSupport
-  # <tt>ActiveSupport::OrderedHash</tt> implements a hash that preserves
-  # insertion order.
-  #
-  #   oh = ActiveSupport::OrderedHash.new
-  #   oh[:a] = 1
-  #   oh[:b] = 2
-  #   oh.keys # => [:a, :b], this order is guaranteed
-  #
-  # Also, maps the +omap+ feature for YAML files
-  # (See http://yaml.org/type/omap.html) to support ordered items
-  # when loading from yaml.
-  #
-  # <tt>ActiveSupport::OrderedHash</tt> is namespaced to prevent conflicts
-  # with other implementations.
   class OrderedHash < ::Hash
     def to_yaml_type
       "!tag:yaml.org,2002:omap"
@@ -40,7 +26,6 @@ module ActiveSupport
       self
     end
 
-    # Returns true to make sure that this hash is extractable via <tt>Array#extract_options!</tt>
     def extractable_options?
       true
     end

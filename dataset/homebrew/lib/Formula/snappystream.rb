@@ -26,11 +26,6 @@ class Snappystream < Formula
 
   test do
     (testpath/"testsnappystream.cxx").write <<-EOS.undent
-      #include <iostream>
-      #include <fstream>
-      #include <iterator>
-      #include <algorithm>
-      #include <snappystream.hpp>
 
       int main()
       {

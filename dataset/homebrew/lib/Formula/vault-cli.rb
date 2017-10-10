@@ -5,7 +5,6 @@ class VaultCli < Formula
   sha256 "639ccdc5c70eb75c2423b6ae62e0560a2056d2cea34cc82ed99504a097bfce88"
 
   def install
-    # Remove windows files
     rm_f Dir["bin/*.bat"]
 
     libexec.install Dir["*"]
@@ -13,7 +12,6 @@ class VaultCli < Formula
   end
 
   test do
-    # Bad test, but we're limited without a Jackrabbit repo to speak to...
     system "#{bin}/vlt", "--version"
   end
 end

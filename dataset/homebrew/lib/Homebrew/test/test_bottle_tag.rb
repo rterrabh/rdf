@@ -25,7 +25,6 @@ class BottleTagTests < Homebrew::TestCase
     assert_equal :tiger_g5_64, bottle_tag
   end
 
-  # Note that this will probably never be used
   def test_tag_tiger_intel_64
     MacOS.stubs(:version).returns(MacOS::Version.new("10.4"))
     Hardware::CPU.stubs(:type).returns(:intel)

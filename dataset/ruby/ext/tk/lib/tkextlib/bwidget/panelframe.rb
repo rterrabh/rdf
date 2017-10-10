@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/panelframe.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/frame'
@@ -38,10 +34,10 @@ class Tk::BWidget::PanelFrame
     win = window(tk_send_without_enc('getframe'))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-9> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1606> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-110> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1607> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

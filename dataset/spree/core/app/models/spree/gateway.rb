@@ -11,7 +11,6 @@ module Spree
       CreditCard
     end
 
-    # instantiates the selected gateway and configures with the options stored in the database
     def self.current
       super
     end
@@ -33,7 +32,7 @@ module Spree
       if @provider.nil? || !@provider.respond_to?(method)
         super
       else
-        #nodyna <ID:send-96> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2499> <SD COMPLEX (change-prone variables)>
         provider.send(method, *args)
       end
     end

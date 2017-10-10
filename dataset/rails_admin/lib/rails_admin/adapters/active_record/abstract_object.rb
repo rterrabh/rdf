@@ -2,12 +2,8 @@ module RailsAdmin
   module Adapters
     module ActiveRecord
       class AbstractObject
-        # undef almost all of this class's methods so it will pass almost
-        # everything through to its delegate using method_missing (below).
+        #nodyna <send-1336> <not yet classified>
         instance_methods.each { |m| undef_method m unless m.to_s =~ /(^__|^send$|^object_id$)/ }
-        #                                                  ^^^^^
-        # the unnecessary "to_s" above is a workaround for meta_where, see
-        # https://github.com/sferik/rails_admin/issues/374
 
         attr_accessor :object
 
@@ -24,7 +20,7 @@ module RailsAdmin
         end
 
         def method_missing(name, *args, &block)
-          #nodyna <ID:send-54> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1337> <SD COMPLEX (change-prone variables)>
           object.send(name, *args, &block)
         end
       end

@@ -19,14 +19,11 @@ class Verilator < Formula
 
   skip_clean "bin" # Allows perl scripts to keep their executable flag
 
-  # Needs a newer flex on Lion (and presumably below)
-  # http://www.veripool.org/issues/720-Verilator-verilator-not-building-on-Mac-OS-X-Lion-10-7-
   depends_on "flex" if MacOS.version <= :lion
 
   def install
     system "autoconf" if build.head?
     system "./configure", "--prefix=#{prefix}"
-    # `make` and `make install` need to be separate for parallel builds
     system "make"
     system "make", "install"
   end
@@ -38,11 +35,10 @@ class Verilator < Formula
       endmodule
     EOS
     (testpath/"test.cpp").write <<-EOS.undent
-      #include "Vtest.h"
-      #include "verilated.h"
       int main(int argc, char **argv, char **env) {
           Verilated::commandArgs(argc, argv);
           Vtest* top = new Vtest;
+          #nodyna <eval-568> <not yet classified>
           while (!Verilated::gotFinish()) { top->eval(); }
           delete top;
           exit(0);

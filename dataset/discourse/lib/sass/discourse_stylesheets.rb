@@ -113,7 +113,6 @@ class DiscourseStylesheets
   end
 
   def ensure_digestless_file
-    # file without digest is only for auto-reloading css in dev env
     unless Rails.env.production? || (File.exist?(stylesheet_fullpath_no_digest) && File.mtime(stylesheet_fullpath) == File.mtime(stylesheet_fullpath_no_digest))
       FileUtils.cp(stylesheet_fullpath, stylesheet_fullpath_no_digest)
     end
@@ -142,7 +141,6 @@ class DiscourseStylesheets
     "#{GlobalSetting.relative_url_root}/"
   end
 
-  # using uploads cause we already have all the routing in place
   def stylesheet_relpath
     "#{root_path}stylesheets/#{stylesheet_filename}"
   end
@@ -158,7 +156,6 @@ class DiscourseStylesheets
     "#{@target}.css"
   end
 
-  # digest encodes the things that trigger a recompile
   def digest
     @digest ||= begin
       theme = (cs = ColorScheme.enabled) ? "#{cs.id}-#{cs.version}" : false

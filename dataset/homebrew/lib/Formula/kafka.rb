@@ -18,9 +18,6 @@ class Kafka < Formula
   depends_on "zookeeper"
   depends_on :java => "1.7+"
 
-  # Related to https://issues.apache.org/jira/browse/KAFKA-2034
-  # Since Kafka does not currently set the source or target compability version inside build.gradle
-  # if you do not have Java 1.8 installed you cannot used the bottled version of Kafka
   def pour_bottle?
     quiet_system("/usr/libexec/java_home --version 1.8 --failfast")
   end
@@ -40,10 +37,8 @@ class Kafka < Formula
     inreplace "config/zookeeper.properties",
       "dataDir=/tmp/zookeeper", "dataDir=#{data}/zookeeper"
 
-    # Workaround for conflicting slf4j-log4j12 jars (1.7.6 is preferred)
     rm_f "core/build/dependant-libs-2.10.4/slf4j-log4j12-1.6.1.jar"
 
-    # remove Windows scripts
     rm_rf "bin/windows"
 
     libexec.install %w[clients contrib core examples system_test]
@@ -55,7 +50,6 @@ class Kafka < Formula
     etc.install "kafka"
     libexec.install_symlink etc/"kafka" => "config"
 
-    # create directory for kafka stdout+stderr output logs when run by launchd
     (var+"log/kafka").mkpath
   end
 
@@ -68,8 +62,6 @@ class Kafka < Formula
   test do
     cp_r libexec/"system_test", testpath
     cd testpath/"system_test" do
-      # skip plot graph if matplotlib is unavailable.
-      # https://github.com/Homebrew/homebrew/pull/37264#issuecomment-76514574
       unless quiet_system "python", "-c", "import matplotlib"
         inreplace testpath/"system_test/utils/metrics.py" do |s|
           s.gsub! "import matplotlib as mpl", ""

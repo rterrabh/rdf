@@ -21,7 +21,6 @@ class Openh264 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <wels/codec_api.h>
       int main() {
         ISVCDecoder *dec;
         WelsCreateDecoder (&dec);

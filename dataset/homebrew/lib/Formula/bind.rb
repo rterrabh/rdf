@@ -18,7 +18,6 @@ class Bind < Formula
 
   def install
     ENV.libxml2
-    # libxml2 appends one inc dir to CPPFLAGS but bind ignores CPPFLAGS
     ENV.append "CFLAGS", ENV.cppflags
 
     json = build.with?("json-c") ? "yes" : "no"
@@ -28,7 +27,6 @@ class Bind < Formula
                           "--with-openssl=#{Formula["openssl"].opt_prefix}",
                           "--with-libjson=#{json}"
 
-    # From the bind9 README: "Do not use a parallel "make"."
     ENV.deparallelize
     system "make"
     system "make", "install"
@@ -41,8 +39,6 @@ class Bind < Formula
   def post_install
     (var+"log/named").mkpath
 
-    # Create initial configuration/zone/ca files.
-    # (Mirrors Apple system install from 10.8)
     unless (var+"named").exist?
       (var+"named").mkpath
       (var+"named/localhost.zone").write localhost_zone

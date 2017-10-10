@@ -23,7 +23,6 @@ class Libxslt < Formula
     depends_on "automake" => :build
     depends_on "libtool" => :build
 
-    # https://bugzilla.gnome.org/show_bug.cgi?id=743148
     patch :DATA
   end
 

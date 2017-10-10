@@ -95,21 +95,16 @@ class User < ActiveRecord::Base
   after_save :expire_old_email_tokens
 
   before_destroy do
-    # These tables don't have primary keys, so destroying them with activerecord is tricky:
     PostTiming.delete_all(user_id: self.id)
     TopicViewItem.delete_all(user_id: self.id)
   end
 
-  # Whether we need to be sending a system message after creation
   attr_accessor :send_welcome_message
 
-  # This is just used to pass some information into the serializer
   attr_accessor :notification_channel_position
 
-  # set to true to optimize creation and save for imports
   attr_accessor :import_mode
 
-  # excluding fake users like the system user or anonymous users
   scope :real, -> { where('id > 0').where('NOT EXISTS(
                      SELECT 1
                      FROM user_custom_fields ucf
@@ -121,9 +116,6 @@ class User < ActiveRecord::Base
 
   scope :staff, -> { where("admin OR moderator") }
 
-  # TODO-PERF: There is no indexes on any of these
-  # and NotifyMailingListSubscribers does a select-all-and-loop
-  # may want to create an index on (active, blocked, suspended_till, mailing_list_mode)?
   scope :blocked, -> { where(blocked: true) }
   scope :not_blocked, -> { where(blocked: false) }
   scope :suspended, -> { where('suspended_till IS NOT NULL AND suspended_till > ?', Time.zone.now) }
@@ -210,7 +202,6 @@ class User < ActiveRecord::Base
 
   alias_method :topic_count, :created_topic_count
 
-  # tricky, we need our bus to be subscribed from the right spot
   def sync_notification_channel_position
     @unread_notifications_by_type = nil
     self.notification_channel_position = MessageBus.last_id("/notification/#{id}")
@@ -221,7 +212,6 @@ class User < ActiveRecord::Base
     used_invite.try(:invited_by)
   end
 
-  # Approve this user
   def approve(approved_by, send_mail=true)
     self.approved = true
 
@@ -254,7 +244,6 @@ class User < ActiveRecord::Base
   def unread_private_messages
     @unread_pms ||=
       begin
-        # perf critical, much more efficient than AR
         sql = "
            SELECT COUNT(*) FROM notifications n
            LEFT JOIN topics t ON n.topic_id = t.id
@@ -273,7 +262,6 @@ class User < ActiveRecord::Base
   def unread_notifications
     @unread_notifications ||=
       begin
-        # perf critical, much more efficient than AR
         sql = "
            SELECT COUNT(*) FROM notifications n
            LEFT JOIN topics t ON n.topic_id = t.id
@@ -299,7 +287,6 @@ class User < ActiveRecord::Base
     User.where("id = ? and seen_notification_id < ?", id, notification_id)
         .update_all ["seen_notification_id = ?", notification_id]
 
-    # mark all "badge granted" and "invite accepted" notifications read
     Notification.where('user_id = ? AND NOT read AND notification_type IN (?)', id, [Notification.types[:granted_badge], Notification.types[:invitee_accepted]])
         .update_all ["read = ?", true]
   end
@@ -313,13 +300,11 @@ class User < ActiveRecord::Base
     )
   end
 
-  # A selection of people to autocomplete on @mention
   def self.mentionable_usernames
     User.select(:username).order('last_posted_at desc').limit(20)
   end
 
   def password=(password)
-    # special case for passwordless accounts
     unless password.blank?
       @raw_password = password
       self.auth_token = nil
@@ -330,7 +315,6 @@ class User < ActiveRecord::Base
     '' # so that validator doesn't complain that a password attribute doesn't exist
   end
 
-  # Indicate that this is NOT a passwordless account for the purposes of validation
   def password_required!
     @password_required = true
   end
@@ -411,13 +395,11 @@ class User < ActiveRecord::Base
 
   def update_last_seen!(now=Time.zone.now)
     now_date = now.to_date
-    # Only update last seen once every minute
     redis_key = "user:#{id}:#{now_date}"
     return unless $redis.setnx(redis_key, "1")
 
     $redis.expire(redis_key, SiteSetting.active_user_rate_limit_secs)
     update_previous_visit(now)
-    # using update_column to avoid the AR transaction
     update_column(:last_seen_at, now)
   end
 
@@ -426,10 +408,6 @@ class User < ActiveRecord::Base
     "//www.gravatar.com/avatar/#{email_hash}.png?s={size}&r=pg&d=identicon"
   end
 
-  # Don't pass this up to the client - it's meant for server side use
-  # This is used in
-  #   - self oneboxes in open graph data
-  #   - emails
   def small_avatar_url
     avatar_template_url.gsub("{size}", "45")
   end
@@ -468,8 +446,6 @@ class User < ActiveRecord::Base
     self.class.avatar_template(username,uploaded_avatar_id)
   end
 
-  # The following count methods are somewhat slow - definitely don't use them in a loop.
-  # They might need to be denormalized
   def like_count
     UserAction.where(user_id: id, action_type: UserAction::WAS_LIKED).count
   end
@@ -501,7 +477,6 @@ class User < ActiveRecord::Base
 
   def posted_too_much_in_topic?(topic_id)
 
-    # Does not apply to staff, non-new members or your own topics
     return false if staff? ||
                     (trust_level != TrustLevel[0]) ||
                     Topic.where(id: topic_id, user_id: id).exists?
@@ -535,14 +510,11 @@ class User < ActiveRecord::Base
     suspend_record.try(:details) if suspended?
   end
 
-  # Use this helper to determine if the user has a particular trust level.
-  # Takes into account admin, etc.
   def has_trust_level?(level)
     raise "Invalid trust level #{level}" unless TrustLevel.valid?(level)
     admin? || moderator? || TrustLevel.compare(trust_level, level)
   end
 
-  # a touch faster than automatic
   def admin?
     admin
   end
@@ -627,14 +599,12 @@ class User < ActiveRecord::Base
   end
 
 
-  # Flag all posts from a user as spam
   def flag_linked_posts_as_spam
     admin = Discourse.system_user
     topic_links.includes(:post).each do |tl|
       begin
         PostAction.act(admin, tl.post, PostActionType.types[:spam], message: I18n.t('flag_reason.spam_hosts'))
       rescue PostAction::AlreadyActed
-        # If the user has already acted, just ignore it
       end
     end
   end
@@ -677,11 +647,8 @@ class User < ActiveRecord::Base
   end
 
   def redirected_to_top_reason
-    # redirect is enabled
     return unless SiteSetting.redirect_users_to_top_page
-    # top must be in the top_menu
     return unless SiteSetting.top_menu =~ /top/i
-    # there should be enough topics
     return unless SiteSetting.has_enough_topics_to_redirect_to_top
 
     if !seen_before? || (trust_level == 0 && !redirected_to_top_yet?)
@@ -692,7 +659,6 @@ class User < ActiveRecord::Base
       return I18n.t('redirected_to_top_reasons.not_seen_in_a_month')
     end
 
-    # no reason
     nil
   end
 
@@ -704,11 +670,9 @@ class User < ActiveRecord::Base
     key = "user:#{id}:update_last_redirected_to_top"
     delay = SiteSetting.active_user_rate_limit_secs
 
-    # only update last_redirected_to_top_at once every minute
     return unless $redis.setnx(key, "1")
     $redis.expire(key, delay)
 
-    # delay the update
     Jobs.enqueue_in(delay / 2, :update_top_redirection, user_id: self.id, redirected_at: Time.zone.now)
   end
 
@@ -721,7 +685,6 @@ class User < ActiveRecord::Base
       Jobs.enqueue(:update_gravatar, user_id: self.id, avatar_id: avatar.id)
     end
 
-    # mark all the user's quoted posts as "needing a rebake"
     Post.rebake_all_quoted_posts(self.id) if self.uploaded_avatar_id_changed?
   end
 
@@ -866,7 +829,6 @@ class User < ActiveRecord::Base
   end
 
   def add_trust_level
-    # there is a possibility we did not load trust level column, skip it
     return unless has_attribute? :trust_level
     self.trust_level ||= SiteSetting.default_trust_level
   end
@@ -917,7 +879,6 @@ class User < ActiveRecord::Base
     set_default_other_disable_jump_reply
     set_default_other_edit_history_public
 
-    # needed, otherwise the callback chain is broken...
     true
   end
 
@@ -925,7 +886,7 @@ class User < ActiveRecord::Base
     values = []
 
     %w{watching tracking muted}.each do |s|
-      #nodyna <ID:send-208> <SD MODERATE (array)>
+      #nodyna <send-360> <SD MODERATE (array)>
       category_ids = SiteSetting.send("default_categories_#{s}").split("|")
       category_ids.each do |category_id|
         values << "(#{self.id}, #{category_id}, #{CategoryUser.notification_levels[s.to_sym]})"
@@ -937,7 +898,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Delete unactivated accounts (without verified email) that are over a week old
   def self.purge_unactivated
     to_destroy = User.where(active: false)
                      .joins('INNER JOIN user_stats AS us ON us.user_id = users.id')
@@ -950,7 +910,6 @@ class User < ActiveRecord::Base
       begin
         destroyer.destroy(u, context: I18n.t(:purge_reason))
       rescue Discourse::InvalidAccess, UserDestroyer::PostsExistError
-        # if for some reason the user can't be deleted, continue on to the next one
       end
     end
   end
@@ -984,93 +943,31 @@ class User < ActiveRecord::Base
   end
 
   %w{private_messages direct always}.each do |s|
-    #nodyna <ID:define_method-35> <DM MODERATE (array)>
+    #nodyna <define_method-361> <DM MODERATE (array)>
     define_method("set_default_email_#{s}") do
-      #nodyna <ID:send-209> <SD EASY (change-prone variables)>
-      #nodyna <ID:send-209> <SD EASY (change-prone variables)>
+      #nodyna <send-362> <SD EASY (change-prone variables)>
+      #nodyna <send-363> <SD EASY (change-prone variables)>
       self.send("email_#{s}=", SiteSetting.send("default_email_#{s}")) if has_attribute?("email_#{s}")
     end
   end
 
   %w{new_topic_duration_minutes auto_track_topics_after_msecs}.each do |s|
-    #nodyna <ID:define_method-36> <DM MODERATE (array)>
+    #nodyna <define_method-364> <DM MODERATE (array)>
     define_method("set_default_other_#{s}") do
-      #nodyna <ID:send-210> <SD EASY (change-prone variables)>
-      #nodyna <ID:send-210> <SD EASY (change-prone variables)>
+      #nodyna <send-365> <SD EASY (change-prone variables)>
+      #nodyna <send-366> <SD EASY (change-prone variables)>
       self.send("#{s}=", SiteSetting.send("default_other_#{s}").to_i) if has_attribute?(s)
     end
   end
 
   %w{external_links_in_new_tab enable_quoting dynamic_favicon disable_jump_reply edit_history_public}.each do |s|
-    #nodyna <ID:define_method-37> <DM MODERATE (array)>
+    #nodyna <define_method-367> <DM MODERATE (array)>
     define_method("set_default_other_#{s}") do
-      #nodyna <ID:send-211> <SD EASY (change-prone variables)>
-      #nodyna <ID:send-211> <SD EASY (change-prone variables)>
+      #nodyna <send-368> <SD EASY (change-prone variables)>
+      #nodyna <send-369> <SD EASY (change-prone variables)>
       self.send("#{s}=", SiteSetting.send("default_other_#{s}")) if has_attribute?(s)
     end
   end
 
 end
 
-# == Schema Information
-#
-# Table name: users
-#
-#  id                            :integer          not null, primary key
-#  username                      :string(60)       not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  name                          :string(255)
-#  seen_notification_id          :integer          default(0), not null
-#  last_posted_at                :datetime
-#  email                         :string(256)      not null
-#  password_hash                 :string(64)
-#  salt                          :string(32)
-#  active                        :boolean          default(FALSE), not null
-#  username_lower                :string(60)       not null
-#  auth_token                    :string(32)
-#  last_seen_at                  :datetime
-#  admin                         :boolean          default(FALSE), not null
-#  last_emailed_at               :datetime
-#  email_digests                 :boolean          not null
-#  trust_level                   :integer          not null
-#  email_private_messages        :boolean          default(TRUE)
-#  email_direct                  :boolean          default(TRUE), not null
-#  approved                      :boolean          default(FALSE), not null
-#  approved_by_id                :integer
-#  approved_at                   :datetime
-#  digest_after_days             :integer
-#  previous_visit_at             :datetime
-#  suspended_at                  :datetime
-#  suspended_till                :datetime
-#  date_of_birth                 :date
-#  auto_track_topics_after_msecs :integer
-#  views                         :integer          default(0), not null
-#  flag_level                    :integer          default(0), not null
-#  ip_address                    :inet
-#  new_topic_duration_minutes    :integer
-#  external_links_in_new_tab     :boolean          not null
-#  enable_quoting                :boolean          default(TRUE), not null
-#  moderator                     :boolean          default(FALSE)
-#  blocked                       :boolean          default(FALSE)
-#  dynamic_favicon               :boolean          default(FALSE), not null
-#  title                         :string(255)
-#  uploaded_avatar_id            :integer
-#  email_always                  :boolean          default(FALSE), not null
-#  mailing_list_mode             :boolean          default(FALSE), not null
-#  locale                        :string(10)
-#  primary_group_id              :integer
-#  registration_ip_address       :inet
-#  last_redirected_to_top_at     :datetime
-#  disable_jump_reply            :boolean          default(FALSE), not null
-#  edit_history_public           :boolean          default(FALSE), not null
-#  trust_level_locked            :boolean          default(FALSE), not null
-#
-# Indexes
-#
-#  index_users_on_auth_token      (auth_token)
-#  index_users_on_last_posted_at  (last_posted_at)
-#  index_users_on_last_seen_at    (last_seen_at)
-#  index_users_on_username        (username) UNIQUE
-#  index_users_on_username_lower  (username_lower) UNIQUE
-#

@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/treeview.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -26,7 +22,6 @@ module Tk::BLT
   end
 end
 
-######################################
 
 module Tk::BLT::Treeview::ConfigMethod
   include TkItemConfigMethod
@@ -34,7 +29,6 @@ module Tk::BLT::Treeview::ConfigMethod
   def __item_boolval_optkeys(id)
     case id
     when Array
-      # id := [ 'column', name ]
       ['edit', 'hide']
     when 'sort'
       ['decreasing']
@@ -47,7 +41,6 @@ module Tk::BLT::Treeview::ConfigMethod
   def __item_strval_optkeys(id)
     case id
     when Array
-      # id := [ 'column', name ]
       super() << 'titleforeground' << 'titleshadow'
     when 'sort'
       ['decreasing']
@@ -69,7 +62,6 @@ module Tk::BLT::Treeview::ConfigMethod
 
   def __item_cget_cmd(id)
     if id.kind_of?(Array)
-      # id := [ type, name ]
       [self.path, id[0], 'cget', id[1]]
     else
       [self.path, id, 'cget']
@@ -79,7 +71,6 @@ module Tk::BLT::Treeview::ConfigMethod
 
   def __item_config_cmd(id)
     if id.kind_of?(Array)
-      # id := [ type, name ]
       [self.path, id[0], 'configure', id[1]]
     else
       [self.path, id, 'configure']
@@ -242,7 +233,6 @@ class Tk::BLT::Treeview
   include ItemValidateConfigure
   include Tk::BLT::Treeview::ConfigMethod
 
-  ########################
 
   def __boolval_optkeys
     ['autocreate', 'allowduplicates', 'exportselection', 'flat', 'hideroot',
@@ -255,7 +245,6 @@ class Tk::BLT::Treeview
   end
   private :__strval_optkeys
 
-  ########################
 
   class OpenCloseCommand < TkValidateCommand
     class ValidateArgs < TkUtil::CallbackSubst
@@ -275,7 +264,6 @@ class Tk::BLT::Treeview
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -310,7 +298,6 @@ class Tk::BLT::Treeview
 
   Tk::ValidateConfigure.__def_validcmd(binding, OpenCloseCommand)
 
-  ########################
 
   def __item_validation_class_list(id)
     case id
@@ -323,7 +310,6 @@ class Tk::BLT::Treeview
 
   Tk::ItemValidateConfigure.__def_validcmd(binding, OpenCloseCommand)
 
-  ########################
 
   def __destroy_hook__
     Tk::BLT::Treeview::Node::TreeNodeID_TBL.mutex.synchronize{
@@ -510,7 +496,6 @@ class Tk::BLT::Treeview
   end
   private :_search_flags
 
-  ################################
 
   class FindExecFlagValue < TkValidateCommand
     class ValidateArgs < TkUtil::CallbackSubst
@@ -530,7 +515,6 @@ class Tk::BLT::Treeview
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -562,7 +546,6 @@ class Tk::BLT::Treeview
   def _find_exec_flag_value(val)
     if val.kind_of?(Array)
       cmd, *args = val
-      #FindExecFlagValue.new(cmd, args.join(' '))
       FindExecFlagValue.new(cmd, *args)
     elsif TkComm._callback_entry?(val)
       FindExecFlagValue.new(val)
@@ -571,7 +554,6 @@ class Tk::BLT::Treeview
     end
   end
 
-  ################################
 
   def find(first, last, keys={})
     keys = _search_flags(keys)
@@ -839,7 +821,6 @@ class Tk::BLT::Treeview
   end
 end
 
-######################################
 
 module Tk::BLT::Treeview::TagOrID_Methods
   def bbox
@@ -1037,14 +1018,13 @@ module Tk::BLT::Treeview::TagOrID_Methods
   end
 end
 
-######################################
 
 class Tk::BLT::Treeview::Node < TkObject
   include Tk::BLT::Treeview::TagOrID_Methods
 
   TreeNodeID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-70> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1565> <IEV MODERATE (method definition)>
   (TreeNode_ID = ['blt_treeview_node'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -1063,10 +1043,9 @@ class Tk::BLT::Treeview::Node < TkObject
           TreeNodeID_TBL[tpath][id]
         else
           begin
-            # self.new(tree, nil, nil, 'node'=>Integer(id))
             unless (tk_call(@tpath, 'get', id)).empty?
               id = Integer(id)
-              #nodyna <ID:instance_eval-71> <IEV MODERATE (private access)>
+              #nodyna <instance_eval-1566> <IEV MODERATE (private access)>
               (obj = self.allocate).instance_eval{
                 @parent = @tree = tree
                 @tpath = @parent.path
@@ -1105,8 +1084,7 @@ class Tk::BLT::Treeview::Node < TkObject
         return obj
       end
 
-      #super(tree, pos, parent, keys)
-      #nodyna <ID:instance_eval-72> <IEV MODERATE (private access)>
+      #nodyna <instance_eval-1567> <IEV MODERATE (private access)>
       (obj = self.allocate).instance_eval{
         initialize(tree, pos, parent, keys)
         TreeNodeID_TBL[tpath][@id] = self
@@ -1120,9 +1098,6 @@ class Tk::BLT::Treeview::Node < TkObject
     @tpath = @parent.path
 
     if (id = keys['node'])
-      # if tk_call(@tpath, 'get', id).empty?
-      #   fail RuntimeError, "not exist the node '#{id}'"
-      # end
       @path = @id = id
       tk_call(@tpath, 'move', @id, pos, tagid(parent)) if parent
       configure(keys) if keys && ! keys.empty?
@@ -1161,14 +1136,13 @@ class Tk::BLT::Treeview::Node < TkObject
   end
 end
 
-######################################
 
 class Tk::BLT::Treeview::Tag < TkObject
   include Tk::BLT::Treeview::TagOrID_Methods
 
   TreeTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-73> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1568> <IEV MODERATE (method definition)>
   (TreeTag_ID = ['blt_treeview_tag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -1186,8 +1160,7 @@ class Tk::BLT::Treeview::Tag < TkObject
         if TreeTagID_TBL[tpath][name]
           TreeTagID_TBL[tpath][name]
         else
-          #self.new(tree, name)
-          #nodyna <ID:instance_eval-74> <IEV MODERATE (private access)>
+          #nodyna <instance_eval-1569> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             @parent = @tree = tree
             @tpath = @parent.path
@@ -1206,7 +1179,7 @@ class Tk::BLT::Treeview::Tag < TkObject
   def self.new_by_name(tree, name, *ids)
     TreeTagID_TBL.mutex.synchronize{
       unless (obj = TreeTagID_TBL[tree.path][name])
-        #nodyna <ID:instance_eval-75> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1570> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           initialize(tree, name, ids)
           TreeTagID_TBL[@tpath] = {} unless TreeTagID_TBL[@tpath]
@@ -1219,7 +1192,7 @@ class Tk::BLT::Treeview::Tag < TkObject
 
   def self.new(tree, *ids)
     TreeTagID_TBL.mutex.synchronize{
-      #nodyna <ID:instance_eval-76> <IEV MODERATE (private access)>
+      #nodyna <instance_eval-1571> <IEV MODERATE (private access)>
       (obj = self.allocate).instance_eval{
         if tree.kind_of?(Array)
           initialize(tree[0], tree[1], ids)

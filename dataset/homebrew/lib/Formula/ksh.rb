@@ -27,10 +27,8 @@ class Ksh < Formula
     system "tar", "xzf", "lib/package/tgz/INIT.2012-08-01.tgz"
     system "/bin/ksh", "bin/package", "read"
 
-    # Needed due to unusal build system.
     ENV.refurbish_args
 
-    # From Apple"s ksh makefile.
     kshcppdefines = "-DSHOPT_SPAWN=0 -D_ast_int8_t=int64_t -D_lib_memccpy"
     system "/bin/ksh", "bin/package", "make", "CCFLAGS=#{kshcppdefines}"
 

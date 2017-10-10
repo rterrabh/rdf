@@ -1,11 +1,8 @@
 module Rake
 
-  # The TaskManager module is a mixin for managing tasks.
   module TaskManager
-    # Track the last comment made in the Rakefile.
     attr_accessor :last_description
 
-    # TODO: Remove in Rake 11
 
     alias :last_comment :last_description # :nodoc: Backwards compatibility
 
@@ -47,13 +44,10 @@ module Rake
       @scope = original_scope
     end
 
-    # Lookup a task.  Return an existing task if found, otherwise
-    # create a task of the current type.
     def intern(task_class, task_name)
       @tasks[task_name.to_s] ||= task_class.new(task_name, self)
     end
 
-    # Find a matching task for +task_name+.
     def [](task_name, scopes=nil)
       task_name = task_name.to_s
       self.lookup(task_name, scopes) or
@@ -67,8 +61,6 @@ module Rake
       define_task(Rake::FileTask, task_name)
     end
 
-    # Resolve the arguments for a task/rule.  Returns a triplet of
-    # [task_name, arg_name_list, prerequisites].
     def resolve_args(args)
       if args.last.is_a?(Hash)
         deps = args.pop
@@ -78,14 +70,6 @@ module Rake
       end
     end
 
-    # Resolve task arguments for a task or rule when there are no
-    # dependencies declared.
-    #
-    # The patterns recognized by this argument resolving function are:
-    #
-    #   task :t
-    #   task :t, [:a]
-    #
     def resolve_args_without_dependencies(args)
       task_name = args.shift
       if args.size == 1 && args.first.respond_to?(:to_ary)
@@ -97,14 +81,6 @@ module Rake
     end
     private :resolve_args_without_dependencies
 
-    # Resolve task arguments for a task or rule when there are
-    # dependencies declared.
-    #
-    # The patterns recognized by this argument resolving function are:
-    #
-    #   task :t => [:d]
-    #   task :t, [a] => [:d]
-    #
     def resolve_args_with_dependencies(args, hash) # :nodoc:
       fail "Task Argument Error" if hash.size != 1
       key, value = hash.map { |k, v| [k, v] }.first
@@ -122,10 +98,6 @@ module Rake
     end
     private :resolve_args_with_dependencies
 
-    # If a rule can be found that matches the task name, enhance the
-    # task with the prerequisites and actions from the rule.  Set the
-    # source attribute of the task appropriately for the rule.  Return
-    # the enhanced task or nil of no rule was found.
     def enhance_with_matching_rule(task_name, level=0)
       fail Rake::RuleRecursionOverflowError,
         "Rule Recursion Too Deep" if level >= 16
@@ -141,13 +113,10 @@ module Rake
       fail ex
     end
 
-    # List of all defined tasks in this application.
     def tasks
       @tasks.values.sort_by { |t| t.name }
     end
 
-    # List of all the tasks defined in the given scope (and its
-    # sub-scopes).
     def tasks_in_scope(scope)
       prefix = scope.path
       tasks.select { |t|
@@ -155,17 +124,11 @@ module Rake
       }
     end
 
-    # Clear all tasks in this application.
     def clear
       @tasks.clear
       @rules.clear
     end
 
-    # Lookup a task, using scope and the scope hints in the task name.
-    # This method performs straight lookups without trying to
-    # synthesize file tasks or rules.  Special scope names (e.g. '^')
-    # are recognized.  If no scope argument is supplied, use the
-    # current scope.  Return nil if the task cannot be found.
     def lookup(task_name, initial_scope=nil)
       initial_scope ||= @scope
       task_name = task_name.to_s
@@ -181,7 +144,6 @@ module Rake
       lookup_in_scope(task_name, scopes)
     end
 
-    # Lookup the task name
     def lookup_in_scope(name, scope)
       loop do
         tn = scope.path_with_task_name(name)
@@ -194,14 +156,10 @@ module Rake
     end
     private :lookup_in_scope
 
-    # Return the list of scope names currently active in the task
-    # manager.
     def current_scope
       @scope
     end
 
-    # Evaluate the block in a nested namespace named +name+.  Create
-    # an anonymous namespace if +name+ is nil.
     def in_namespace(name)
       name ||= generate_name
       @scope = Scope.new(name, @scope)
@@ -214,14 +172,12 @@ module Rake
 
     private
 
-    # Add a location to the locations field of the given task.
     def add_location(task)
       loc = find_location
       task.locations << loc if loc
       task
     end
 
-    # Find the location that called into the dsl layer.
     def find_location
       locations = caller
       i = 0
@@ -232,7 +188,6 @@ module Rake
       nil
     end
 
-    # Generate an anonymous namespace name.
     def generate_name
       @seed ||= 0
       @seed += 1
@@ -244,7 +199,6 @@ module Rake
         Rake.application.options.trace_rules
     end
 
-    # Attempt to create a rule given the list of prerequisites.
     def attempt_rule(task_name, args, extensions, block, level)
       sources = make_sources(task_name, extensions)
       prereqs = sources.map { |source|
@@ -265,8 +219,6 @@ module Rake
       task
     end
 
-    # Make a list of sources from the list of file name extensions /
-    # translation procs.
     def make_sources(task_name, extensions)
       result = extensions.map { |ext|
         case ext
@@ -294,7 +246,6 @@ module Rake
 
     private
 
-    # Return the current description, clearing it in the process.
     def get_description(task)
       desc = @last_description
       @last_description = nil

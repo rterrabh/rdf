@@ -1,12 +1,8 @@
-# encoding: utf-8
 require 'uri'
 require 'paperclip/url_generator'
 require 'active_support/deprecation'
 
 module Paperclip
-  # The Attachment class manages the files for a given attachment. It saves
-  # when the model saves, deletes when the model is destroyed, and processes
-  # the file upon assignment.
   class Attachment
     def self.default_options
       @default_options ||= {
@@ -40,33 +36,6 @@ module Paperclip
                 :options, :interpolator, :source_file_options
     attr_accessor :post_processing
 
-    # Creates an Attachment object. +name+ is the name of the attachment,
-    # +instance+ is the model object instance it's attached to, and
-    # +options+ is the same as the hash passed to +has_attached_file+.
-    #
-    # Options include:
-    #
-    # +url+ - a relative URL of the attachment. This is interpolated using +interpolator+
-    # +path+ - where on the filesystem to store the attachment. This is interpolated using +interpolator+
-    # +styles+ - a hash of options for processing the attachment. See +has_attached_file+ for the details
-    # +only_process+ - style args to be run through the post-processor. This defaults to the empty list
-    # +default_url+ - a URL for the missing image
-    # +default_style+ - the style to use when an argument is not specified e.g. #url, #path
-    # +storage+ - the storage mechanism. Defaults to :filesystem
-    # +use_timestamp+ - whether to append an anti-caching timestamp to image URLs. Defaults to true
-    # +whiny+, +whiny_thumbnails+ - whether to raise when thumbnailing fails
-    # +use_default_time_zone+ - related to +use_timestamp+. Defaults to true
-    # +hash_digest+ - a string representing a class that will be used to hash URLs for obfuscation
-    # +hash_data+ - the relative URL for the hash data. This is interpolated using +interpolator+
-    # +hash_secret+ - a secret passed to the +hash_digest+
-    # +convert_options+ - flags passed to the +convert+ command for processing
-    # +source_file_options+ - flags passed to the +convert+ command that controls how the file is read
-    # +processors+ - classes that transform the attachment. Defaults to [:thumbnail]
-    # +preserve_files+ - whether to keep files on the filesystem when deleting or clearing the attachment. Defaults to false
-    # +filename_cleaner+ - An object that responds to #call(filename) that will strip unacceptable charcters from filename
-    # +interpolator+ - the object used to interpolate filenames and URLs. Defaults to Paperclip::Interpolations
-    # +url_generator+ - the object used to generate URLs, using the interpolator. Defaults to Paperclip::UrlGenerator
-    # +escape_url+ - Perform URI escaping to URLs. Defaults to true
     def initialize(name, instance, options = {})
       @name              = name
       @instance          = instance
@@ -87,12 +56,6 @@ module Paperclip
       initialize_storage
     end
 
-    # What gets called when you call instance.attachment = File. It clears
-    # errors, assigns attributes, and processes the file. It also queues up the
-    # previous file for deletion, to be flushed away on #save of its host.  In
-    # addition to form uploads, you can also assign another Paperclip
-    # attachment:
-    #   new_user.avatar = old_user.avatar
     def assign(uploaded_file)
       @file = Paperclip.io_adapters.for(uploaded_file)
       ensure_required_accessors!
@@ -113,28 +76,6 @@ module Paperclip
       end
     end
 
-    # Returns the public URL of the attachment with a given style. This does
-    # not necessarily need to point to a file that your Web server can access
-    # and can instead point to an action in your app, for example for fine grained
-    # security; this has a serious performance tradeoff.
-    #
-    # Options:
-    #
-    # +timestamp+ - Add a timestamp to the end of the URL. Default: true.
-    # +escape+    - Perform URI escaping to the URL. Default: true.
-    #
-    # Global controls (set on has_attached_file):
-    #
-    # +interpolator+  - The object that fills in a URL pattern's variables.
-    # +default_url+   - The image to show when the attachment has no image.
-    # +url+           - The URL for a saved image.
-    # +url_generator+ - The object that generates a URL. Default: Paperclip::UrlGenerator.
-    #
-    # As mentioned just above, the object that generates this URL can be passed
-    # in, for finer control. This object must respond to two methods:
-    #
-    # +#new(Paperclip::Attachment, options_hash)+
-    # +#for(style_name, options_hash)+
 
     def url(style_name = default_style, options = {})
       return nil if @instance.new_record?
@@ -153,35 +94,25 @@ module Paperclip
       }
     end
 
-    # Alias to +url+ that allows using the expiring_url method provided by the cloud
-    # storage implementations, but keep using filesystem storage for development and
-    # testing.
     def expiring_url(time = 3600, style_name = default_style)
       url(style_name)
     end
 
-    # Returns the path of the attachment as defined by the :path option. If the
-    # file is stored in the filesystem the path refers to the path of the file
-    # on disk. If the file is stored in S3, the path is the "key" part of the
-    # URL, and the :bucket option refers to the S3 bucket.
     def path(style_name = default_style)
       path = original_filename.nil? ? nil : interpolate(path_option, style_name)
       path.respond_to?(:unescape) ? path.unescape : path
     end
 
-    # :nodoc:
     def staged_path(style_name = default_style)
       if staged?
         @queued_for_write[style_name].path
       end
     end
 
-    # :nodoc:
     def staged?
       ! @queued_for_write.empty?
     end
 
-    # Alias to +url+
     def to_s style_name = default_style
       url(style_name)
     end
@@ -223,18 +154,14 @@ module Paperclip
       end
     end
 
-    # Returns an array containing the errors on this attachment.
     def errors
       @errors
     end
 
-    # Returns true if there are changes that need to be saved.
     def dirty?
       @dirty
     end
 
-    # Saves the file, if there are no errors. If there are, it flushes them to
-    # the instance's errors and returns false, cancelling the save.
     def save
       flush_deletes unless @options[:keep_old_files]
       flush_writes
@@ -242,9 +169,6 @@ module Paperclip
       true
     end
 
-    # Clears out the attachment. Has the same effect as previously assigning
-    # nil to the attachment. Does NOT save. If you wish to clear AND save,
-    # use #destroy.
     def clear(*styles_to_clear)
       if styles_to_clear.any?
         queue_some_for_delete(*styles_to_clear)
@@ -255,45 +179,31 @@ module Paperclip
       end
     end
 
-    # Destroys the attachment. Has the same effect as previously assigning
-    # nil to the attachment *and saving*. This is permanent. If you wish to
-    # wipe out the existing attachment but not save, use #clear.
     def destroy
       clear
       save
     end
 
-    # Returns the uploaded file if present.
     def uploaded_file
       instance_read(:uploaded_file)
     end
 
-    # Returns the name of the file as originally assigned, and lives in the
-    # <attachment>_file_name attribute of the model.
     def original_filename
       instance_read(:file_name)
     end
 
-    # Returns the size of the file as originally assigned, and lives in the
-    # <attachment>_file_size attribute of the model.
     def size
       instance_read(:file_size) || (@queued_for_write[:original] && @queued_for_write[:original].size)
     end
 
-    # Returns the fingerprint of the file, if one's defined. The fingerprint is
-    # stored in the <attachment>_fingerprint attribute of the model.
     def fingerprint
       instance_read(:fingerprint)
     end
 
-    # Returns the content_type of the file as originally assigned, and lives
-    # in the <attachment>_content_type attribute of the model.
     def content_type
       instance_read(:content_type)
     end
 
-    # Returns the creation time of the file as originally assigned, and
-    # lives in the <attachment>_created_at attribute of the model.
     def created_at
       if able_to_store_created_at?
         time = instance_read(:created_at)
@@ -301,36 +211,23 @@ module Paperclip
       end
     end
 
-    # Returns the last modified time of the file as originally assigned, and
-    # lives in the <attachment>_updated_at attribute of the model.
     def updated_at
       time = instance_read(:updated_at)
       time && time.to_f.to_i
     end
 
-    # The time zone to use for timestamp interpolation.  Using the default
-    # time zone ensures that results are consistent across all threads.
     def time_zone
       @options[:use_default_time_zone] ? Time.zone_default : Time.zone
     end
 
-    # Returns a unique hash suitable for obfuscating the URL of an otherwise
-    # publicly viewable attachment.
     def hash_key(style_name = default_style)
       raise ArgumentError, "Unable to generate hash without :hash_secret" unless @options[:hash_secret]
       require 'openssl' unless defined?(OpenSSL)
       data = interpolate(@options[:hash_data], style_name)
-      #nodyna <ID:const_get-4> <CG COMPLEX (change-prone variable)>
+      #nodyna <const_get-710> <CG COMPLEX (change-prone variable)>
       OpenSSL::HMAC.hexdigest(OpenSSL::Digest.const_get(@options[:hash_digest]).new, @options[:hash_secret], data)
     end
 
-    # This method really shouldn't be called that often. It's expected use is
-    # in the paperclip:refresh rake task and that's it. It will regenerate all
-    # thumbnails forcefully, by reobtaining the original file and going through
-    # the post-process again.
-    # NOTE: Calling reprocess WILL NOT delete existing files. This is due to
-    # inconsistencies in timing of S3 commands. It's possible that calling
-    # #reprocess! will lose data if the files are not kept.
     def reprocess!(*style_args)
       saved_only_process, @options[:only_process] = @options[:only_process], style_args
       saved_preserve_files, @options[:preserve_files] = @options[:preserve_files], true
@@ -347,7 +244,6 @@ module Paperclip
       end
     end
 
-    # Returns true if a file has been assigned.
     def file?
       !original_filename.blank?
     end
@@ -358,29 +254,22 @@ module Paperclip
       not present?
     end
 
-    # Determines whether the instance responds to this attribute. Used to prevent
-    # calculations on fields we won't even store.
     def instance_respond_to?(attr)
       instance.respond_to?(:"#{name}_#{attr}")
     end
 
-    # Writes the attachment-specific attribute on the instance. For example,
-    # instance_write(:file_name, "me.jpg") will write "me.jpg" to the instance's
-    # "avatar_file_name" field (assuming the attachment is called avatar).
     def instance_write(attr, value)
       setter = :"#{name}_#{attr}="
       if instance.respond_to?(setter)
-        #nodyna <ID:send-11> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-711> <SD COMPLEX (change-prone variables)>
         instance.send(setter, value)
       end
     end
 
-    # Reads the attachment-specific attribute on the instance. See instance_write
-    # for more details.
     def instance_read(attr)
       getter = :"#{name}_#{attr}"
       if instance.respond_to?(getter)
-        #nodyna <ID:send-12> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-712> <SD COMPLEX (change-prone variables)>
         instance.send(getter)
       end
     end
@@ -420,7 +309,7 @@ module Paperclip
     def initialize_storage #:nodoc:
       storage_class_name = @options[:storage].to_s.downcase.camelize
       begin
-        #nodyna <ID:const_get-5> <CG COMPLEX (change-prone variable)>
+        #nodyna <const_get-713> <CG COMPLEX (change-prone variable)>
         storage_module = Paperclip::Storage.const_get(storage_class_name)
       rescue NameError
         raise Errors::StorageMethodNotFound, "Cannot load storage module '#{storage_class_name}'"
@@ -475,7 +364,7 @@ module Paperclip
 
     def reset_updater
       if instance.respond_to?(updater)
-        #nodyna <ID:send-13> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-714> <SD COMPLEX (change-prone variables)>
         instance.send(updater)
       end
     end
@@ -578,7 +467,6 @@ module Paperclip
       end
     end
 
-    # called by storage after the writes are flushed and before @queued_for_write is cleared
     def after_flush_writes
       unlink_files(@queued_for_write.values)
     end
@@ -590,9 +478,6 @@ module Paperclip
       end
     end
 
-    # You can either specifiy :restricted_characters or you can define your own
-    # :filename_cleaner object. This object needs to respond to #call and takes
-    # the filename that will be cleaned. It should return the cleaned filenme.
     def filename_cleaner
       @options[:filename_cleaner] || FilenameCleaner.new(@options[:restricted_characters])
     end
@@ -601,12 +486,10 @@ module Paperclip
       filename_cleaner.call(filename)
     end
 
-    # Check if attachment database table has a created_at field
     def able_to_store_created_at?
       @instance.respond_to?("#{name}_created_at".to_sym)
     end
 
-    # Check if attachment database table has a created_at field which is not yet set
     def has_enabled_but_unset_created_at?
       able_to_store_created_at? && !instance_read(:created_at)
     end

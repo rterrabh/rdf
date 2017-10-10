@@ -34,7 +34,6 @@ class Unac < Formula
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
 
-    # Separate steps to prevent race condition in folder creation
     system "make"
     ENV.j1
     system "make", "install"
@@ -45,7 +44,6 @@ class Unac < Formula
   end
 end
 
-# configure.ac doesn't properly detect Mac OS's iconv library. This patch fixes that.
 __END__
 diff --git a/configure.ac b/configure.ac
 index 4a4eab6..9f25d50 100644

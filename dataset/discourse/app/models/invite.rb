@@ -46,7 +46,6 @@ class Invite < ActiveRecord::Base
     created_at < SiteSetting.invite_expiry_days.days.ago
   end
 
-  # link_valid? indicates whether the invite link can be used to log in to the site
   def link_valid?
     invalidated_at.nil?
   end
@@ -71,9 +70,6 @@ class Invite < ActiveRecord::Base
       end
     end
   end
-  # Create an invite for a user, supplying an optional topic
-  #
-  # Return the previously existing invite if already exists. Returns nil if the invite can't be created.
   def self.invite_by_email(email, invited_by, topic=nil, group_ids=nil)
     lower_email = Email.downcase(email)
     user = User.find_by(email: lower_email)
@@ -99,7 +95,6 @@ class Invite < ActiveRecord::Base
 
     if topic && !invite.topic_invites.pluck(:topic_id).include?(topic.id)
       invite.topic_invites.create!(invite_id: invite.id, topic_id: topic.id)
-      # to correct association
       topic.reload
     end
 
@@ -121,7 +116,6 @@ class Invite < ActiveRecord::Base
     invite
   end
 
-  # generate invite tokens without email
   def self.generate_disposable_tokens(invited_by, quantity=nil, group_names=nil)
     invite_tokens = []
     quantity ||= 1
@@ -234,24 +228,3 @@ class Invite < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: invites
-#
-#  id             :integer          not null, primary key
-#  invite_key     :string(32)       not null
-#  email          :string(255)
-#  invited_by_id  :integer          not null
-#  user_id        :integer
-#  redeemed_at    :datetime
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  deleted_at     :datetime
-#  deleted_by_id  :integer
-#  invalidated_at :datetime
-#
-# Indexes
-#
-#  index_invites_on_email_and_invited_by_id  (email,invited_by_id)
-#  index_invites_on_invite_key               (invite_key) UNIQUE
-#

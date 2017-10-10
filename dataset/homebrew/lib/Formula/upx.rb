@@ -33,7 +33,6 @@ class Upx < Formula
 
   test do
     (testpath/"hello-c.c").write <<-EOS.undent
-      #include <stdio.h>
       int main()
       {
         puts("Hello, world!");

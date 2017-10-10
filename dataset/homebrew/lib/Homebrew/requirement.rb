@@ -3,9 +3,6 @@ require "dependency"
 require "dependencies"
 require "build_environment"
 
-# A base class for non-formula requirements needed by formulae.
-# A "fatal" requirement is one that will fail the build if it is not present.
-# By default, Requirements are non-fatal.
 class Requirement
   include Dependable
 
@@ -26,7 +23,6 @@ class Requirement
     @name ||= infer_name
   end
 
-  # The message to show when the requirement is not met.
   def message
     s = ""
     if cask
@@ -41,23 +37,18 @@ class Requirement
       s += <<-EOS.undent
 
         You can download from:
-          #{download}
       EOS
     end
     s
   end
 
-  # Overriding #satisfied? is deprecated.
-  # Pass a block or boolean to the satisfy DSL method instead.
   def satisfied?
-    #nodyna <ID:instance_eval-2> <IEV COMPLEX (block execution)>
+    #nodyna <instance_eval-667> <IEV COMPLEX (block execution)>
     result = self.class.satisfy.yielder { |p| instance_eval(&p) }
     @satisfied_result = result
     !!result
   end
 
-  # Overriding #fatal? is deprecated.
-  # Pass a boolean to the fatal DSL method instead.
   def fatal?
     self.class.fatal || false
   end
@@ -66,21 +57,10 @@ class Requirement
     self.class.default_formula || false
   end
 
-  # Overriding #modify_build_environment is deprecated.
-  # Pass a block to the the env DSL method instead.
-  # Note: #satisfied? should be called before invoking this method
-  # as the env modifications may depend on its side effects.
   def modify_build_environment
-    #nodyna <ID:instance_eval-3> <IEV COMPLEX (block execution)>
+    #nodyna <instance_eval-668> <IEV COMPLEX (block execution)>
     instance_eval(&env_proc) if env_proc
 
-    # XXX If the satisfy block returns a Pathname, then make sure that it
-    # remains available on the PATH. This makes requirements like
-    #   satisfy { which("executable") }
-    # work, even under superenv where "executable" wouldn't normally be on the
-    # PATH.
-    # This is undocumented magic and it should be removed, but we need to add
-    # a way to declare path-based requirements that work with superenv first.
     if Pathname === @satisfied_result
       parent = @satisfied_result.parent
       unless ENV["PATH"].split(File::PATH_SEPARATOR).include?(parent.to_s)
@@ -139,7 +119,6 @@ class Requirement
     attr_reader :env_proc
     attr_rw :fatal, :default_formula
     attr_rw :cask, :download
-    # build is deprecated, use `depends_on <requirement> => :build` instead
     attr_rw :build
 
     def satisfy(options = {}, &block)
@@ -180,11 +159,6 @@ class Requirement
   end
 
   class << self
-    # Expand the requirements of dependent recursively, optionally yielding
-    # [dependent, req] pairs to allow callers to apply arbitrary filters to
-    # the list.
-    # The default filter, which is applied when a block is not given, omits
-    # optionals and recommendeds based on what the dependent has asked for.
     def expand(dependent, &block)
       reqs = Requirements.new
 
@@ -214,7 +188,6 @@ class Requirement
       end
     end
 
-    # Used to prune requirements when calling expand with a block.
     def prune
       throw(:prune, true)
     end

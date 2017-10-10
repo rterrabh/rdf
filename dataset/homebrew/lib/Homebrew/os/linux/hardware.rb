@@ -8,7 +8,6 @@ module LinuxCPUs
     OPTIMIZATION_FLAGS
   end
 
-  # Linux supports x86 only, and universal archs do not apply
   def arch_32_bit
     :i386
   end
@@ -46,14 +45,12 @@ module LinuxCPUs
     @flags ||= cpuinfo[/^flags.*/, 0].split
   end
 
-  # Compatibility with Mac method, which returns lowercase symbols
-  # instead of strings
   def features
     @features ||= flags[1..-1].map(&:intern)
   end
 
   %w[aes altivec avx avx2 lm sse3 ssse3 sse4 sse4_2].each do |flag|
-    #nodyna <ID:define_method-8> <DM MODERATE (array)>
+    #nodyna <define_method-624> <DM MODERATE (array)>
     define_method(flag + "?") { flags.include? flag }
   end
   alias_method :is_64_bit?, :lm?

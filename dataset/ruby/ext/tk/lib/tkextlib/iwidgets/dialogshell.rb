@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/dialogshell.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -18,7 +14,6 @@ class Tk::Iwidgets::Dialogshell
   WidgetClassName = 'Dialogshell'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ####################################
 
   include TkItemConfigMethod
 
@@ -41,7 +36,6 @@ class Tk::Iwidgets::Dialogshell
     if tagOrId.kind_of?(Tk::Itk::Component)
       tagOrId.name
     else
-      #_get_eval_string(tagOrId)
       tagOrId
     end
   end
@@ -56,7 +50,6 @@ class Tk::Iwidgets::Dialogshell
   private :itemcget_tkstring, :itemcget, :itemcget_strict
   private :itemconfigure, :itemconfiginfo, :current_itemconfiginfo
 
-  ####################################
 
   def add(tag=nil, keys={})
     if tag.kind_of?(Hash)

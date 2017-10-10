@@ -1,7 +1,4 @@
 module ActiveAdmin
-  # Exception class to raise when there is an authorized access
-  # exception thrown. The exception has a few goodies that may
-  # be useful for capturing / recognizing security issues.
   class AccessDenied < StandardError
     attr_reader :user, :action, :subject
 
@@ -20,7 +17,6 @@ module ActiveAdmin
   end
 
   class ErrorLoading < Error
-    # Locates the most recent file and line from the caught exception's backtrace.
     def find_cause(folder, backtrace)
       backtrace.grep(/\/(#{folder}\/.*\.rb):(\d+)/){ [$1, $2] }.first
     end

@@ -23,15 +23,6 @@ class Class
     end
   end
 
-  # Returns an array with the direct children of +self+.
-  #
-  #   Integer.subclasses # => [Fixnum, Bignum]
-  #
-  #   class Foo; end
-  #   class Bar < Foo; end
-  #   class Baz < Bar; end
-  #
-  #   Foo.subclasses # => [Bar]
   def subclasses
     subclasses, chain = [], descendants
     chain.each do |k|

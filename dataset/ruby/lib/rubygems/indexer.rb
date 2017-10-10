@@ -8,45 +8,29 @@ begin
 rescue LoadError
 end
 
-##
-# Top level class for building the gem repository index.
 
 class Gem::Indexer
 
   include Gem::UserInteraction
 
-  ##
-  # Build indexes for RubyGems 1.2.0 and newer when true
 
   attr_accessor :build_modern
 
-  ##
-  # Index install location
 
   attr_reader :dest_directory
 
-  ##
-  # Specs index install location
 
   attr_reader :dest_specs_index
 
-  ##
-  # Latest specs index install location
 
   attr_reader :dest_latest_specs_index
 
-  ##
-  # Prerelease specs index install location
 
   attr_reader :dest_prerelease_specs_index
 
-  ##
-  # Index build directory
 
   attr_reader :directory
 
-  ##
-  # Create an indexer that will index the gems in +directory+.
 
   def initialize(directory, options = {})
     require 'fileutils'
@@ -92,13 +76,6 @@ class Gem::Indexer
     @files = []
   end
 
-  ##
-  # Abbreviate the spec for downloading.  Abbreviated specs are only used for
-  # searching, downloading and related activities and do not need deployment
-  # specific information (e.g. list of files).  So we abbreviate the spec,
-  # making it much smaller for quicker downloads.
-  #--
-  # TODO move to Gem::Specification
 
   def abbreviate(spec)
     spec.files = []
@@ -109,8 +86,6 @@ class Gem::Indexer
     spec
   end
 
-  ##
-  # Build various indicies
 
   def build_indicies
     Gem::Specification.dirs = []
@@ -122,8 +97,6 @@ class Gem::Indexer
     compress_indicies
   end
 
-  ##
-  # Builds Marshal quick index gemspecs.
 
   def build_marshal_gemspecs
     count = Gem::Specification.count { |s| not s.default_gem? }
@@ -155,8 +128,6 @@ class Gem::Indexer
     files
   end
 
-  ##
-  # Build a single index for RubyGems 1.2 and newer
 
   def build_modern_index(index, file, name)
     say "Generating #{name} index"
@@ -164,12 +135,9 @@ class Gem::Indexer
     Gem.time "Generated #{name} index" do
       open(file, 'wb') do |io|
         specs = index.map do |*spec|
-          # We have to splat here because latest_specs is an array, while the
-          # others are hashes.
           spec = spec.flatten.last
           platform = spec.original_platform
 
-          # win32-api-1.0.4-x86-mswin32-60
           unless String === platform then
             alert_warning "Skipping invalid platform in gem: #{spec.full_name}"
             next
@@ -185,8 +153,6 @@ class Gem::Indexer
     end
   end
 
-  ##
-  # Builds indicies for RubyGems 1.2 and newer. Handles full, latest, prerelease
 
   def build_modern_indicies
     specs = Gem::Specification.reject { |s| s.default_gem? }
@@ -221,15 +187,6 @@ class Gem::Indexer
         spec = Gem::Package.new(gemfile).spec
         spec.loaded_from = gemfile
 
-        # HACK: fuck this shit - borks all tests that use pl1
-        # if File.basename(gemfile, ".gem") != spec.original_name then
-        #   exp = spec.full_name
-        #   exp << " (#{spec.original_name})" if
-        #     spec.original_name != spec.full_name
-        #   msg = "Skipping misnamed gem: #{gemfile} should be named #{exp}"
-        #   alert_warning msg
-        #   next
-        # end
 
         abbreviate spec
         sanitize spec
@@ -247,10 +204,6 @@ class Gem::Indexer
     }.compact
   end
 
-  ##
-  # Compresses indicies on disk
-  #--
-  # All future files should be compressed using gzip, not deflate
 
   def compress_indicies
     say "Compressing indicies"
@@ -264,9 +217,6 @@ class Gem::Indexer
     end
   end
 
-  ##
-  # Compacts Marshal output for the specs index data source by using identical
-  # objects as much as possible.
 
   def compact_specs(specs)
     names = {}
@@ -282,8 +232,6 @@ class Gem::Indexer
     end
   end
 
-  ##
-  # Compress +filename+ with +extension+.
 
   def compress(filename, extension)
     data = Gem.read_binary filename
@@ -295,15 +243,11 @@ class Gem::Indexer
     end
   end
 
-  ##
-  # List of gem file names to index.
 
   def gem_file_list
     Dir[File.join(@dest_directory, "gems", '*.gem')]
   end
 
-  ##
-  # Builds and installs indicies.
 
   def generate_index
     make_temp_directories
@@ -314,8 +258,6 @@ class Gem::Indexer
     FileUtils.rm_rf @directory
   end
 
-  ##
-  # Zlib::GzipWriter wrapper that gzips +filename+ on disk.
 
   def gzip(filename)
     Zlib::GzipWriter.open "#{filename}.gz" do |io|
@@ -323,8 +265,6 @@ class Gem::Indexer
     end
   end
 
-  ##
-  # Install generated indicies into the destination directory.
 
   def install_indicies
     verbose = Gem.configuration.really_verbose
@@ -359,8 +299,6 @@ class Gem::Indexer
     end
   end
 
-  ##
-  # Make directories for index generation
 
   def make_temp_directories
     FileUtils.rm_rf @directory
@@ -368,8 +306,6 @@ class Gem::Indexer
     FileUtils.mkdir_p @quick_marshal_dir
   end
 
-  ##
-  # Ensure +path+ and path with +extension+ are identical.
 
   def paranoid(path, extension)
     data = Gem.read_binary path
@@ -380,10 +316,6 @@ class Gem::Indexer
     end
   end
 
-  ##
-  # Sanitize the descriptive fields in the spec.  Sometimes non-ASCII
-  # characters will garble the site index.  Non-ASCII characters will
-  # be replaced by their XML entity equivalent.
 
   def sanitize(spec)
     spec.summary              = sanitize_string(spec.summary)
@@ -394,15 +326,10 @@ class Gem::Indexer
     spec
   end
 
-  ##
-  # Sanitize a single string.
 
   def sanitize_string(string)
     return string unless string
 
-    # HACK the #to_s is in here because RSpec has an Array of Arrays of
-    # Strings for authors.  Need a way to disallow bad values on gemspec
-    # generation.  (Probably won't happen.)
     string = string.to_s
 
     begin
@@ -412,8 +339,6 @@ class Gem::Indexer
     end
   end
 
-  ##
-  # Perform an in-place update of the repository from newly added gems.
 
   def update_index
     make_temp_directories
@@ -476,9 +401,6 @@ class Gem::Indexer
     end
   end
 
-  ##
-  # Combines specs in +index+ and +source+ then writes out a new copy to
-  # +dest+.  For a latest index, does not ensure the new file is minimal.
 
   def update_specs_index(index, source, dest)
     specs_index = Marshal.load Gem.read_binary(source)

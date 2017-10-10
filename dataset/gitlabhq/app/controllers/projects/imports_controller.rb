@@ -1,5 +1,4 @@
 class Projects::ImportsController < Projects::ApplicationController
-  # Authorize
   before_action :authorize_admin_project!
   before_action :require_no_repo
   before_action :redirect_if_progress, except: :show

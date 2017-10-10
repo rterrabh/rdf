@@ -46,26 +46,9 @@ class Draft < ActiveRecord::Base
                      s.user_id = drafts.user_id
             )")
 
-    # remove old drafts
     delete_drafts_older_than_n_days = SiteSetting.delete_drafts_older_than_n_days.days.ago
     Draft.where("updated_at < ?", delete_drafts_older_than_n_days).destroy_all
   end
 
 end
 
-# == Schema Information
-#
-# Table name: drafts
-#
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  draft_key  :string(255)      not null
-#  data       :text             not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  sequence   :integer          default(0), not null
-#
-# Indexes
-#
-#  index_drafts_on_user_id_and_draft_key  (user_id,draft_key)
-#

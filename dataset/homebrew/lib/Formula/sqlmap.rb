@@ -36,7 +36,6 @@ class Sqlmap < Formula
 
     query_select = "select name, age from students order by age asc;"
 
-    # Create the test database
     `sqlite3 < #{query_path} school.sqlite`
 
     output = `#{bin}/sqlmap --batch -d "sqlite://school.sqlite" --sql-query "#{query_select}"`

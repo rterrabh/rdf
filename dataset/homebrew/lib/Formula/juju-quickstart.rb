@@ -22,11 +22,6 @@ class JujuQuickstart < Formula
   end
 
   test do
-    # While a --version test is noted to be a "bad" test it does
-    # exercise that most of the packages can be imported, so it is
-    # better than nothing.  Can't really test the spinning up of Juju
-    # environments on ec2 as part of installation, given that would
-    # cost real money.
     system "#{bin}/juju-quickstart", "--version"
   end
 end

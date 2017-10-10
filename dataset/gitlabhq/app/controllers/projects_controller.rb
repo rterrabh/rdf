@@ -4,7 +4,6 @@ class ProjectsController < ApplicationController
   before_action :project, except: [:new, :create]
   before_action :repository, except: [:new, :create]
 
-  # Authorize
   before_action :authorize_admin_project!, only: [:edit, :update, :destroy, :transfer, :archive, :unarchive]
   before_action :event_filter, only: [:show, :activity]
 

@@ -25,7 +25,6 @@ module ActionMailer
         options.preview_path  ||= defined?(Rails.root) ? "#{Rails.root}/test/mailers/previews" : nil
       end
 
-      # make sure readers methods get compiled
       options.asset_host          ||= app.config.asset_host
       options.relative_url_root   ||= app.config.relative_url_root
 
@@ -38,7 +37,7 @@ module ActionMailer
         register_preview_interceptors(options.delete(:preview_interceptors))
         register_observers(options.delete(:observers))
 
-        #nodyna <ID:send-7> <SD COMPLEX (array)>
+        #nodyna <send-1186> <SD COMPLEX (array)>
         options.each { |k,v| send("#{k}=", v) }
 
         if options.show_previews

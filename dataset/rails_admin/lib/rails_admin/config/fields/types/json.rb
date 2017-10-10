@@ -5,7 +5,6 @@ module RailsAdmin
     module Fields
       module Types
         class Json < RailsAdmin::Config::Fields::Types::Text
-          # Register field type for the type loader
           RailsAdmin::Config::Fields::Types.register(self)
           RailsAdmin::Config::Fields::Types.register(:jsonb, self)
 

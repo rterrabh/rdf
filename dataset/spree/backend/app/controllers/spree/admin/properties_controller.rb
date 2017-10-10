@@ -9,7 +9,6 @@ module Spree
 
       def collection
         return @collection if @collection.present?
-        # params[:q] can be blank upon pagination
         params[:q] = {} if params[:q].blank?
 
         @collection = super

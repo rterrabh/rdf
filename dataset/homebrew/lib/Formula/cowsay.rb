@@ -10,8 +10,6 @@ class Cowsay < Formula
     sha1 "65f118084f895e553faf2eac15335fc23e331b77" => :mountain_lion
   end
 
-  # Official download is 404:
-  # url "http://www.nog.net/~tony/warez/cowsay-3.03.tar.gz"
 
   def install
     system "/bin/sh", "install.sh", prefix

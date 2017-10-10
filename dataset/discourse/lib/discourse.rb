@@ -3,7 +3,6 @@ require_dependency 'plugin/instance'
 require_dependency 'auth/default_current_user_provider'
 require_dependency 'version'
 
-# Prevents errors with reloading dev with conditional includes
 if Rails.env.development?
   require_dependency 'file_store/s3_store'
   require_dependency 'file_store/local_store'
@@ -16,12 +15,6 @@ module Discourse
     extend Sidekiq::ExceptionHandler
   end
 
-  # Log an exception.
-  #
-  # If your code is in a scheduled job, it is recommended to use the
-  # error_context() method in Jobs::Base to pass the job arguments and any
-  # other desired context.
-  # See app/jobs/base.rb for the error_context function.
   def self.handle_job_exception(ex, context = {}, parent_logger = nil)
     context ||= {}
     parent_logger ||= SidekiqExceptionHandler
@@ -33,31 +26,22 @@ module Discourse
     }.merge(context))
   end
 
-  # Expected less matches than what we got in a find
   class TooManyMatches < StandardError; end
 
-  # When they try to do something they should be logged in for
   class NotLoggedIn < StandardError; end
 
-  # When the input is somehow bad
   class InvalidParameters < StandardError; end
 
-  # When they don't have permission to do something
   class InvalidAccess < StandardError; end
 
-  # When something they want is not found
   class NotFound < StandardError; end
 
-  # When a setting is missing
   class SiteSettingMissing < StandardError; end
 
-  # When ImageMagick is missing
   class ImageMagickMissing < StandardError; end
 
-  # When read-only mode is enabled
   class ReadOnly < StandardError; end
 
-  # Cross site request forgery
   class CSRF < StandardError; end
 
   def self.filters
@@ -87,7 +71,6 @@ module Discourse
   PIXEL_RATIOS ||= [1, 2, 3]
 
   def self.avatar_sizes
-    # TODO: should cache these when we get a notification system for site settings
     set = Set.new
 
     SiteSetting.avatar_sizes.split("|").map(&:to_i).each do |size|
@@ -150,12 +133,7 @@ module Discourse
   end
 
   def self.authenticators
-    # TODO: perhaps we don't need auth providers and authenticators maybe one object is enough
 
-    # NOTE: this bypasses the site settings and gives a list of everything, we need to register every middleware
-    #  for the cases of multisite
-    # In future we may change it so we don't include them all for cases where we are not a multisite, but we would
-    #  require a restart after site settings change
     Users::OmniauthCallbacksController::BUILTIN_AUTH + auth_providers.map(&:authenticator)
   end
 
@@ -174,7 +152,6 @@ module Discourse
     @cache ||= Cache.new
   end
 
-  # Get the current base URL for the current site
   def self.current_hostname
     if SiteSetting.force_hostname.present?
       SiteSetting.force_hostname
@@ -220,7 +197,6 @@ module Discourse
   end
 
   def self.keep_readonly_mode
-    # extend the expiry by 1 minute every 30 seconds
     Thread.new do
       while readonly_mode?
         $redis.expire(readonly_mode_key, 1.minute)
@@ -240,17 +216,12 @@ module Discourse
   end
 
   def self.request_refresh!
-    # Causes refresh on next click for all clients
-    #
-    # This is better than `MessageBus.publish "/file-change", ["refresh"]` because
-    # it spreads the refreshes out over a time period
     MessageBus.publish '/global/asset-version', 'clobber'
   end
 
   def self.git_version
     return $git_version if $git_version
 
-    # load the version stamped by the "build:stamp" task
     f = Rails.root.to_s + "/config/version"
     require f if File.exists?("#{f}.rb")
 
@@ -271,7 +242,6 @@ module Discourse
     end
   end
 
-  # Either returns the site_contact_username user or the first admin.
   def self.site_contact_user
     user = User.find_by(username_lower: SiteSetting.site_contact_username.downcase) if SiteSetting.site_contact_username.present?
     user ||= User.admins.real.order(:id).first
@@ -313,11 +283,7 @@ module Discourse
     "/site/read-only"
   end
 
-  # all forking servers must call this
-  # after fork, otherwise Discourse will be
-  # in a bad state
   def self.after_fork
-    # note: all this reconnecting may no longer be needed per https://github.com/redis/redis-rb/pull/414
     current_db = RailsMultisite::ConnectionManagement.current_db
     RailsMultisite::ConnectionManagement.establish_connection(db: current_db)
     MessageBus.after_fork
@@ -325,9 +291,7 @@ module Discourse
     $redis.client.reconnect
     Rails.cache.reconnect
     Logster.store.redis.reconnect
-    # shuts down all connections in the pool
     Sidekiq.redis_pool.shutdown{|c| nil}
-    # re-establish
     Sidekiq.redis = sidekiq_redis_config
     start_connection_reaper
     nil
@@ -337,7 +301,6 @@ module Discourse
     return if GlobalSetting.connection_reaper_age < 1 ||
               GlobalSetting.connection_reaper_interval < 1
 
-    # this helps keep connection counts in check
     Thread.new do
       while true
         begin

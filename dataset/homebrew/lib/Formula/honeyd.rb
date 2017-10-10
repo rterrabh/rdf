@@ -6,14 +6,11 @@ class Honeyd < Formula
 
   depends_on "libdnet"
 
-  # Requires libevent1, not 2 - http://libevent.org/
   resource "libevent1" do
     url "https://github.com/downloads/libevent/libevent/libevent-1.4.14b-stable.tar.gz"
     sha256 "afa61b476a222ba43fc7cca2d24849ab0bbd940124400cb699915d3c60e46301"
   end
 
-  # make the setrlimit function work
-  # honeyd is no longer developed so patching upstream won't happen
   patch :DATA
 
   def install

@@ -44,7 +44,6 @@ module ActionDispatch
         [301, headers, []]
       end
 
-      # http://tools.ietf.org/html/draft-hodges-strict-transport-sec-02
       def hsts_headers
         if @hsts
           value = "max-age=#{@hsts[:expires].to_i}"

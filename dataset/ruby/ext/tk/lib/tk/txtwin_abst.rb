@@ -1,14 +1,7 @@
-#
-# tk/txtwin_abst.rb : TkTextWin abstruct class
-#
 require 'tk'
 
 class TkTextWin<TkWindow
   TkCommandNames = [].freeze
-  #def create_self
-  #  fail RuntimeError, "TkTextWin is an abstract class"
-  #end
-  #private :create_self
 
   def bbox(index)
     list(tk_send_without_enc('bbox', index))

@@ -1,7 +1,3 @@
-#
-#  tlabel widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -29,6 +25,5 @@ class Tk::Tile::TLabel < Tk::Label
   end
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Label, :TkLabel)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tlabel.rb',
                                    :Ttk, Tk::Tile::Label, :TkLabel)

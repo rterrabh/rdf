@@ -37,7 +37,6 @@ class CategoryList
       @options[:latest_posts].to_i > 0 ? @options[:latest_posts].to_i : SiteSetting.category_featured_topics
     end
 
-    # Retrieve a list of all the topics we'll need
     def find_relevant_topics
       @topics_by_category_id = {}
       category_featured_topics = CategoryFeaturedTopic.select([:category_id, :topic_id]).order(:rank)
@@ -56,7 +55,6 @@ class CategoryList
       end
     end
 
-    # Find a list of all categories to associate the topics with
     def find_categories
       @categories = Category
                         .includes(:featured_users, :topic_only_relative_url, subcategories: [:topic_only_relative_url])
@@ -119,7 +117,6 @@ class CategoryList
             topics_in_cat.each do |topic_id|
               topic = @topics_by_id[topic_id]
               if topic.present? && @guardian.can_see?(topic)
-                # topic.category is very slow under rails 4.2
                 topic.association(:category).target = c
                 c.displayable_topics << topic
               end
@@ -130,35 +127,28 @@ class CategoryList
     end
 
 
-    # Remove any empty categories unless we can create them (so we can see the controls)
     def prune_empty
       if !@guardian.can_create?(Category)
-        # Remove categories with no featured topics unless we have the ability to edit one
         @categories.delete_if do |c|
           c.displayable_topics.blank? && c.description.blank?
         end
       elsif !SiteSetting.allow_uncategorized_topics
-        # Don't show uncategorized to admins either, if uncategorized topics are not allowed
-        # and there are none.
         @categories.delete_if do |c|
           c.uncategorized? && c.displayable_topics.blank?
         end
       end
     end
 
-    # Get forum topic user records if appropriate
     def find_user_data
       if @guardian.current_user && @all_topics.present?
         topic_lookup = TopicUser.lookup_for(@guardian.current_user, @all_topics)
 
-        # Attach some data for serialization to each topic
         @all_topics.each { |ft| ft.user_data = topic_lookup[ft.id] }
       end
     end
 
     def sort_unpinned
       if @guardian.current_user && @all_topics.present?
-        # Put unpinned topics at the end of the list
         @categories.each do |c|
           next if c.displayable_topics.blank? || c.displayable_topics.size <= latest_posts_count
           unpinned = []

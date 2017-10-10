@@ -2,11 +2,6 @@ require_dependency 'post_creator'
 require_dependency 'new_post_result'
 require_dependency 'post_enqueuer'
 
-# Determines what actions should be taken with new posts.
-#
-# The default action is to create the post, but this can be extended
-# with `NewPostManager.add_handler` to take other approaches depending
-# on the user or input.
 class NewPostManager
 
   attr_reader :user, :args
@@ -106,13 +101,11 @@ class NewPostManager
 
   def perform
 
-    # We never queue private messages
     return perform_create_post if @args[:archetype] == Archetype.private_message
     if args[:topic_id] && Topic.where(id: args[:topic_id], archetype: Archetype.private_message).exists?
       return perform_create_post
     end
 
-    # Perform handlers until one returns a result
     handled = NewPostManager.handlers.any? do |handler|
       result = handler.call(self)
       return result if result
@@ -123,7 +116,6 @@ class NewPostManager
     perform_create_post unless handled
   end
 
-  # Enqueue this post in a queue
   def enqueue(queue, reason=nil)
     result = NewPostResult.new(:enqueued)
     enqueuer = PostEnqueuer.new(@user, queue)

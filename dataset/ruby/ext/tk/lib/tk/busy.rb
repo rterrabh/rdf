@@ -1,6 +1,3 @@
-#
-# tk/busy.rb: support 'tk busy' command (Tcl/Tk8.6 or later)
-#
 require 'tk'
 
 module Tk::Busy
@@ -11,19 +8,16 @@ end
 
 class << Tk::Busy
   def __item_cget_cmd(win)
-    # maybe need to override
     ['tk', 'busy', 'cget', win.path]
   end
   private :__item_cget_cmd
 
   def __item_config_cmd(win)
-    # maybe need to override
     ['tk', 'busy', 'configure', win.path]
   end
   private :__item_config_cmd
 
   def __item_confinfo_cmd(win)
-    # maybe need to override
     __item_config_cmd(win)
   end
   private :__item_confinfo_cmd

@@ -26,7 +26,6 @@ class Gdl < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gdl/gdl.h>
 
       int main(int argc, char *argv[]) {
         GType type = gdl_dock_object_get_type();

@@ -13,11 +13,8 @@ class EyeD3 < Formula
 
   depends_on :python if MacOS.version <= :snow_leopard
 
-  # Looking for documentation? Please submit a PR to build some!
-  # See https://github.com/Homebrew/homebrew/issues/32770 for previous attempt.
 
   def install
-    # Install in our prefix, not the first-in-the-path python site-packages dir.
     ENV.prepend_create_path "PYTHONPATH", libexec+"lib/python2.7/site-packages"
 
     system "python", "setup.py", "install", "--prefix=#{libexec}"

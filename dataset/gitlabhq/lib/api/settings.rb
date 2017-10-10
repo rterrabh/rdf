@@ -9,18 +9,10 @@ module API
       end
     end
 
-    # Get current applicaiton settings
-    #
-    # Example Request:
-    #   GET /application/settings
     get "application/settings" do
       present current_settings, with: Entities::ApplicationSetting
     end
 
-    # Modify applicaiton settings
-    #
-    # Example Request:
-    #   PUT /application/settings
     put "application/settings" do
       attributes = current_settings.attributes.keys - ["id"]
       attrs = attributes_for_keys(attributes)

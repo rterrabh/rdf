@@ -1,10 +1,9 @@
 module ActiveRecord
-  # = Active Record Belongs To Association
   module Associations
     class BelongsToAssociation < SingularAssociation #:nodoc:
 
       def handle_dependency
-        #nodyna <ID:send-123> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-899> <SD COMPLEX (change-prone variables)>
         target.send(options[:dependent]) if load_target
       end
 
@@ -75,7 +74,6 @@ module ActiveRecord
           end
         end
 
-        # Checks whether record is different to the current target, without loading it
         def different_target?(record)
           record.id != owner._read_attribute(reflection.foreign_key)
         end
@@ -92,8 +90,6 @@ module ActiveRecord
           owner._read_attribute(reflection.foreign_key)
         end
 
-        # NOTE - for now, we're only supporting inverse setting from belongs_to back onto
-        # has_one associations.
         def invertible_for?(record)
           inverse = inverse_reflection_for(record)
           inverse && inverse.has_one?
@@ -101,7 +97,7 @@ module ActiveRecord
 
         def target_id
           if options[:primary_key]
-            #nodyna <ID:send-124> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-900> <SD COMPLEX (change-prone variables)>
             owner.send(reflection.name).try(:id)
           else
             owner._read_attribute(reflection.foreign_key)

@@ -21,7 +21,6 @@ class Liblacewing < Formula
     system "make"
     system "make", "install"
 
-    # https://github.com/udp/lacewing/issues/104
     mv "#{lib}/liblacewing.dylib.0.5", "#{lib}/liblacewing.0.5.dylib"
   end
 end

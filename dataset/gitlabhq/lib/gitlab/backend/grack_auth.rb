@@ -12,10 +12,7 @@ module Grack
 
       @gitlab_ci = false
 
-      # Need this patch due to the rails mount
-      # Need this if under RELATIVE_URL_ROOT
       unless Gitlab.config.gitlab.relative_url_root.empty?
-        # If website is mounted using relative_url_root need to remove it first
         @env['PATH_INFO'] = @request.path.sub(Gitlab.config.gitlab.relative_url_root,'')
       else
         @env['PATH_INFO'] = @request.path
@@ -27,7 +24,6 @@ module Grack
 
       if project && authorized_request?
         if ENV['GITLAB_GRACK_AUTH_ONLY'] == '1'
-          # Tell gitlab-git-http-server the request is OK, and what the GL_ID is
           render_grack_auth_ok
         else
           @app.call(env)
@@ -46,11 +42,8 @@ module Grack
 
       return bad_request unless @auth.basic?
 
-      # Authentication with username and password
       login, password = @auth.credentials
 
-      # Allow authentication for GitLab CI service
-      # if valid token passed
       if gitlab_ci_request?(login, password)
         @gitlab_ci = true
         return
@@ -90,26 +83,13 @@ module Grack
         user = oauth_access_token_check(login, password)
       end
 
-      # If the user authenticated successfully, we reset the auth failure count
-      # from Rack::Attack for that IP. A client may attempt to authenticate
-      # with a username and blank password first, and only after it receives
-      # a 401 error does it present a password. Resetting the count prevents
-      # false positives from occurring.
-      #
-      # Otherwise, we let Rack::Attack know there was a failed authentication
-      # attempt from this IP. This information is stored in the Rails cache
-      # (Redis) and will be used by the Rack::Attack middleware to decide
-      # whether to block requests from this IP.
       config = Gitlab.config.rack_attack.git_basic_auth
 
       if config.enabled
         if user
-          # A successful login will reset the auth failure count from this IP
           Rack::Attack::Allow2Ban.reset(@request.ip, config)
         else
           banned = Rack::Attack::Allow2Ban.filter(@request.ip, config) do
-            # Unless the IP is whitelisted, return true so that Allow2Ban
-            # increments the counter (stored in Rails.cache) for the IP
             if config.ip_whitelist.include?(@request.ip)
               false
             else
@@ -135,15 +115,12 @@ module Grack
         if user
           Gitlab::GitAccess.new(user, project).download_access_check.allowed?
         elsif project.public?
-          # Allow clone/fetch for public projects
           true
         else
           false
         end
       when *Gitlab::GitAccess::PUSH_COMMANDS
         if user
-          # Skip user authorization on upload request.
-          # It will be done by the pre-receive hook in the repository.
           true
         else
           false

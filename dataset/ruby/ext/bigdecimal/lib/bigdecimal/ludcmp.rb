@@ -1,12 +1,8 @@
 require 'bigdecimal'
 
-#
-# Solves a*x = b for x, using LU decomposition.
-#
 module LUSolve
   module_function
 
-  # Performs LU decomposition of the n by n matrix a.
   def ludecomp(a,n,zero=0,one=1)
     prec = BigDecimal.limit(nil)
     ps     = []
@@ -57,12 +53,6 @@ module LUSolve
     ps
   end
 
-  # Solves a*x = b for x, using LU decomposition.
-  #
-  # a is a matrix, b is a constant vector, x is the solution vector.
-  #
-  # ps is the pivot, a vector which indicates the permutation of rows performed
-  # during LU decomposition.
   def lusolve(a,b,ps,zero=0.0)
     prec = BigDecimal.limit(nil)
     n = ps.size

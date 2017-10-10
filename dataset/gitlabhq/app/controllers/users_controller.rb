@@ -9,7 +9,6 @@ class UsersController < ApplicationController
     @projects = @user.personal_projects.
       where(id: authorized_projects_ids).includes(:namespace)
 
-    # Collect only groups common for both users
     @groups = @user.groups & GroupsFinder.new.execute(current_user)
 
     respond_to do |format|
@@ -58,7 +57,6 @@ class UsersController < ApplicationController
   end
 
   def authorized_projects_ids
-    # Projects user can view
     @authorized_projects_ids ||=
       ProjectsFinder.new.execute(current_user).pluck(:id)
   end
@@ -75,7 +73,6 @@ class UsersController < ApplicationController
   end
 
   def load_events
-    # Get user activity feed for projects common for both users
     @events = @user.recent_events.
       where(project_id: authorized_projects_ids).
       with_associations

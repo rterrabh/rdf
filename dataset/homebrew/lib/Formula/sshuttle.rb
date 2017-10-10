@@ -14,9 +14,6 @@ class Sshuttle < Formula
   end
 
   def install
-    # Building the docs requires installing
-    # markdown & BeautifulSoup Python modules
-    # so we don't.
     libexec.install Dir["*"]
     bin.write_exec_script libexec/"src/sshuttle"
   end

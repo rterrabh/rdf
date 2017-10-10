@@ -1,7 +1,5 @@
 module EmailsHelper
 
-  # Google Actions
-  # https://developers.google.com/gmail/markup/reference/go-to-action
   def email_action(url)
     name = action_title(url)
     if name

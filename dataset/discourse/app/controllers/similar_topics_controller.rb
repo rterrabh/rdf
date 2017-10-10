@@ -21,7 +21,6 @@ class SimilarTopicsController < ApplicationController
     title, raw = params[:title], params[:raw]
     [:title, :raw].each { |key| check_length_of(key, params[key]) }
 
-    # Only suggest similar topics if the site has a minimum amount of topics present.
     return render json: [] unless Topic.count_exceeds_minimum?
 
     topics = Topic.similar_to(title, raw, current_user).to_a
@@ -33,7 +32,7 @@ class SimilarTopicsController < ApplicationController
 
     def check_length_of(key, attr)
       str = (key == :raw) ? "body" : key.to_s
-      #nodyna <ID:send-114> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-454> <SD COMPLEX (change-prone variables)>
       raise Discourse::InvalidParameters.new(key) if attr.length < SiteSetting.send("min_#{str}_similar_length")
     end
 

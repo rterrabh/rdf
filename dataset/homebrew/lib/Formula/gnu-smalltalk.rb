@@ -58,7 +58,6 @@ class GnuSmalltalk < Formula
       args << "--without-tcl" << "--without-tk" << "--without-x"
     end
 
-    # disable generational gc in 32-bit and if libsigsegv is absent
     if !MacOS.prefer_64_bit? || build.without?("libsigsegv")
       args << "--disable-generational-gc"
     end

@@ -22,9 +22,6 @@ class Djview4 < Formula
                           "--disable-desktopfiles"
     system "make", "CC=#{ENV.cc}", "CXX=#{ENV.cxx}"
 
-    # From the djview4.8 README:
-    # Note3: Do not use command "make install".
-    # Simply copy the application bundle where you want it.
     prefix.install "src/djview.app"
   end
 end

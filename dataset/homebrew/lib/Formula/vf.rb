@@ -7,8 +7,6 @@ class Vf < Formula
   head "https://github.com/glejeune/vf.git"
 
   def install
-    # Since the shell file is sourced instead of run
-    # install to prefix instead of bin
     prefix.install Dir["*"]
   end
 

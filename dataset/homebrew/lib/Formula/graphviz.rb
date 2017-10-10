@@ -19,7 +19,6 @@ class Graphviz < Formula
     sha1 "ec730f7cdd3e9549610960ecab86dac349e2f8ea" => :mountain_lion
   end
 
-  # To find Ruby and Co.
   env :std
 
   option :universal
@@ -71,7 +70,6 @@ class Graphviz < Formula
     args << "--without-rsvg" if build.without? "librsvg"
 
     if build.with? "bindings"
-      # http://www.graphviz.org/mantisbt/view.php?id=2486
       inreplace "configure", 'PYTHON_LIBS="-lpython$PYTHON_VERSION_SHORT"',
                              'PYTHON_LIBS="-L$PYTHON_PREFIX/lib -lpython$PYTHON_VERSION_SHORT"'
     end

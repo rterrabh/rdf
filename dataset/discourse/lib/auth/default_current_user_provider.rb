@@ -8,17 +8,14 @@ class Auth::DefaultCurrentUserProvider
   TOKEN_COOKIE ||= "_t".freeze
   PATH_INFO ||= "PATH_INFO".freeze
 
-  # do all current user initialization here
   def initialize(env)
     @env = env
     @request = Rack::Request.new(env)
   end
 
-  # our current user, return nil if none is found
   def current_user
     return @env[CURRENT_USER_KEY] if @env.key?(CURRENT_USER_KEY)
 
-    # bypass if we have the shared session header
     if shared_key = @env['HTTP_X_SHARED_SESSION_KEY']
       uid = $redis.get("shared_session_key_#{shared_key}")
       user = nil
@@ -51,7 +48,6 @@ class Auth::DefaultCurrentUserProvider
       end
     end
 
-    # possible we have an api call, impersonate
     if api_key = request[API_KEY]
       current_user = lookup_api_user(api_key, request)
       raise Discourse::InvalidAccess unless current_user
@@ -91,7 +87,6 @@ class Auth::DefaultCurrentUserProvider
   end
 
 
-  # api has special rights return true if api was detected
   def is_api?
     current_user
     @env[API_KEY_ENV]

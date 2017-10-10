@@ -14,11 +14,9 @@ class Boxes < Formula
   def install
     ENV.m32
 
-    # distro uses /usr/share/boxes change to prefix
     system "make",
       "GLOBALCONF=#{share}/boxes-config",
       "CC=#{ENV.cc}",
-      # Force 32 bit compile
       "CFLAGS_ADDTL=-m32",
       "LDFLAGS_ADDTL=-m32"
 

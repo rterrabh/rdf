@@ -1,9 +1,3 @@
-#!/usr/bin/env ruby
-#
-#  Ruby/Tk extension library checker
-#
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 
 TkRoot.new.withdraw  # hide root window
@@ -164,10 +158,8 @@ Dir.chdir(dir)
   subdir = File.basename(f, '.*')
 =begin
   begin
-    # read 'setup.rb' as if the library has standard structure
     require File.join(subdir, 'setup.rb')
   rescue LoadError
-    # ignore error
   end
 =end
   print "\n"

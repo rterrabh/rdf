@@ -1,5 +1,3 @@
-# Post processing that we can do after a post has already been cooked.
-# For example, inserting the onebox content, or image sizes/thumbnails.
 
 require_dependency 'url_helper'
 
@@ -64,15 +62,10 @@ class CookedPostProcessor
   end
 
   def extract_images
-    # all image with a src attribute
     @doc.css("img[src]") -
-    # minus, data images
     @doc.css("img[src^='data']") -
-    # minus, emojis
     @doc.css("img.emoji") -
-    # minus, image inside oneboxes
     oneboxed_images -
-    # minus, images inside quotes
     @doc.css(".quote img")
   end
 
@@ -81,14 +74,9 @@ class CookedPostProcessor
   end
 
   def limit_size!(img)
-    # retrieve the size from
-    #  1) the width/height attributes
-    #  2) the dimension from the preview (image_sizes)
-    #  3) the dimension of the original image (HTTP request)
     w, h = get_size_from_attributes(img) ||
            get_size_from_image_sizes(img["src"], @opts[:image_sizes]) ||
            get_size(img["src"])
-    # limit the size of the thumbnail
     img["width"], img["height"] = ImageSizer.resize(w, h)
   end
 
@@ -113,12 +101,10 @@ class CookedPostProcessor
 
     absolute_url = url
     absolute_url = Discourse.base_url_no_prefix + absolute_url if absolute_url =~ /^\/[^\/]/
-    # FastImage fails when there's no scheme
     absolute_url = SiteSetting.scheme + ":" + absolute_url if absolute_url.start_with?("//")
 
     return unless is_valid_image_url?(absolute_url)
 
-    # we can *always* crawl our own images
     return unless SiteSetting.crawl_images? || Discourse.store.has_been_uploaded?(url)
 
     @size_cache[url] ||= FastImage.size(absolute_url)
@@ -138,7 +124,6 @@ class CookedPostProcessor
     width, height = img["width"].to_i, img["height"].to_i
     original_width, original_height = get_size(src)
 
-    # can't reach the image...
     if original_width.nil? || original_height.nil?
       Rails.logger.info "Can't reach '#{src}' to get its dimension."
       return
@@ -167,13 +152,11 @@ class CookedPostProcessor
   end
 
   def add_lightbox!(img, original_width, original_height, upload=nil)
-    # first, create a div to hold our lightbox
     lightbox = Nokogiri::XML::Node.new("div", @doc)
     lightbox["class"] = "lightbox-wrapper"
     img.add_next_sibling(lightbox)
     lightbox.add_child(img)
 
-    # then, the link to our larger image
     a = Nokogiri::XML::Node.new("a", @doc)
     img.add_next_sibling(a)
 
@@ -185,11 +168,9 @@ class CookedPostProcessor
     a["class"] = "lightbox"
     a.add_child(img)
 
-    # replace the image by its thumbnail
     w, h = img["width"].to_i, img["height"].to_i
     img["src"] = upload.thumbnail(w, h).url if upload && upload.has_thumbnail?(w, h)
 
-    # then, some overlay informations
     meta = Nokogiri::XML::Node.new("div", @doc)
     meta["class"] = "meta"
     img.add_next_sibling(meta)
@@ -231,10 +212,8 @@ class CookedPostProcessor
       invalidate_oneboxes: !!@opts[:invalidate_oneboxes],
     }
 
-    # apply oneboxes
     Oneboxer.apply(@doc) { |url| Oneboxer.onebox(url, args) }
 
-    # make sure we grab dimensions for oneboxed images
     oneboxed_images.each { |img| limit_size!(img) }
   end
 
@@ -253,15 +232,10 @@ class CookedPostProcessor
   end
 
   def pull_hotlinked_images(bypass_bump = false)
-    # is the job enabled?
     return unless SiteSetting.download_remote_images_to_local?
-    # have we enough disk space?
     return if disable_if_low_on_disk_space
-    # we only want to run the job whenever it's changed by a user
     return if @post.last_editor_id == Discourse.system_user.id
-    # make sure no other job is scheduled
     Jobs.cancel_scheduled_job(:pull_hotlinked_images, post_id: @post.id)
-    # schedule the job
     delay = SiteSetting.ninja_edit_window + 1
     Jobs.enqueue_in(delay.seconds.to_i, :pull_hotlinked_images, post_id: @post.id, bypass_bump: bypass_bump)
   end
@@ -270,12 +244,10 @@ class CookedPostProcessor
     return false if available_disk_space >= SiteSetting.download_remote_images_threshold
 
     SiteSetting.download_remote_images_to_local = false
-    # log the site setting change
     reason = I18n.t("disable_remote_images_download_reason")
     staff_action_logger = StaffActionLogger.new(Discourse.system_user)
     staff_action_logger.log_site_setting_change("download_remote_images_to_local", true, false, { details: reason })
 
-    # also send a private message to the site contact user
     notify_about_low_disk_space
 
     true

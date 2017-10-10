@@ -5,10 +5,6 @@ require 'uri/common'
 
 module ActiveSupport
   module Cache
-    # A cache store implementation which stores everything on the filesystem.
-    #
-    # FileStore implements the Strategy::LocalCache strategy which implements
-    # an in-memory cache inside of a block.
     class FileStore < Store
       attr_reader :cache_path
 
@@ -23,15 +19,11 @@ module ActiveSupport
         extend Strategy::LocalCache
       end
 
-      # Deletes all items from the cache. In this case it deletes all the entries in the specified
-      # file store directory except for .gitkeep. Be careful which directory is specified in your
-      # config file when using +FileStore+ because everything in that directory will be deleted.
       def clear(options = nil)
         root_dirs = Dir.entries(cache_path).reject {|f| (EXCLUDED_DIRS + [".gitkeep"]).include?(f)}
         FileUtils.rm_r(root_dirs.collect{|f| File.join(cache_path, f)})
       end
 
-      # Preemptively iterates through all stored keys and removes the ones which have expired.
       def cleanup(options = nil)
         options = merged_options(options)
         search_dir(cache_path) do |fname|
@@ -41,14 +33,10 @@ module ActiveSupport
         end
       end
 
-      # Increments an already existing integer value that is stored in the cache.
-      # If the key is not found nothing is done.
       def increment(name, amount = 1, options = nil)
         modify_value(name, amount, options)
       end
 
-      # Decrements an already existing integer value that is stored in the cache.
-      # If the key is not found nothing is done.
       def decrement(name, amount = 1, options = nil)
         modify_value(name, -amount, options)
       end
@@ -92,7 +80,6 @@ module ActiveSupport
               delete_empty_directories(File.dirname(file_name))
               true
             rescue => e
-              # Just in case the error was caused by another process deleting the file first.
               raise e if File.exist?(file_name)
               false
             end
@@ -100,7 +87,6 @@ module ActiveSupport
         end
 
       private
-        # Lock a file for a block so only one process can modify it at a time.
         def lock_file(file_name, &block) # :nodoc:
           if File.exist?(file_name)
             File.open(file_name, 'r+') do |f|
@@ -116,7 +102,6 @@ module ActiveSupport
           end
         end
 
-        # Translate a key into a file path.
         def key_file_path(key)
           if key.size > FILEPATH_MAX_SIZE
             key = Digest::MD5.hexdigest(key)
@@ -128,7 +113,6 @@ module ActiveSupport
           dir_2 = hash.modulo(0x1000)
           fname_paths = []
 
-          # Make sure file name doesn't exceed file system limits.
           begin
             fname_paths << fname[0, FILENAME_MAX_SIZE]
             fname = fname[FILENAME_MAX_SIZE..-1]
@@ -137,13 +121,11 @@ module ActiveSupport
           File.join(cache_path, DIR_FORMATTER % dir_1, DIR_FORMATTER % dir_2, *fname_paths)
         end
 
-        # Translate a file path into a key.
         def file_path_key(path)
           fname = path[cache_path.to_s.size..-1].split(File::SEPARATOR, 4).last
           URI.decode_www_form_component(fname, Encoding::UTF_8)
         end
 
-        # Delete empty directories in the cache.
         def delete_empty_directories(dir)
           return if File.realpath(dir) == File.realpath(cache_path)
           if Dir.entries(dir).reject {|f| EXCLUDED_DIRS.include?(f)}.empty?
@@ -152,7 +134,6 @@ module ActiveSupport
           end
         end
 
-        # Make sure a file path's directories exist.
         def ensure_cache_path(path)
           FileUtils.makedirs(path) unless File.exist?(path)
         end
@@ -170,8 +151,6 @@ module ActiveSupport
           end
         end
 
-        # Modifies the amount of an already existing integer value that is stored in the cache.
-        # If the key is not found nothing is done.
         def modify_value(name, amount, options)
           file_name = key_file_path(namespaced_key(name, options))
 

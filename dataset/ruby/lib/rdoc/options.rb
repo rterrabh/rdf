@@ -1,80 +1,9 @@
 require 'optparse'
 require 'pathname'
 
-##
-# RDoc::Options handles the parsing and storage of options
-#
-# == Saved Options
-#
-# You can save some options like the markup format in the
-# <tt>.rdoc_options</tt> file in your gem.  The easiest way to do this is:
-#
-#   rdoc --markup tomdoc --write-options
-#
-# Which will automatically create the file and fill it with the options you
-# specified.
-#
-# The following options will not be saved since they interfere with the user's
-# preferences or with the normal operation of RDoc:
-#
-# * +--coverage-report+
-# * +--dry-run+
-# * +--encoding+
-# * +--force-update+
-# * +--format+
-# * +--pipe+
-# * +--quiet+
-# * +--template+
-# * +--verbose+
-#
-# == Custom Options
-#
-# Generators can hook into RDoc::Options to add generator-specific command
-# line options.
-#
-# When <tt>--format</tt> is encountered in ARGV, RDoc calls ::setup_options on
-# the generator class to add extra options to the option parser.  Options for
-# custom generators must occur after <tt>--format</tt>.  <tt>rdoc --help</tt>
-# will list options for all installed generators.
-#
-# Example:
-#
-#   class RDoc::Generator::Spellcheck
-#     RDoc::RDoc.add_generator self
-#
-#     def self.setup_options rdoc_options
-#       op = rdoc_options.option_parser
-#
-#       op.on('--spell-dictionary DICTIONARY',
-#             RDoc::Options::Path) do |dictionary|
-#         rdoc_options.spell_dictionary = dictionary
-#       end
-#     end
-#   end
-#
-# Of course, RDoc::Options does not respond to +spell_dictionary+ by default
-# so you will need to add it:
-#
-#   class RDoc::Options
-#
-#     ##
-#     # The spell dictionary used by the spell-checking plugin.
-#
-#     attr_accessor :spell_dictionary
-#
-#   end
-#
-# == Option Validators
-#
-# OptionParser validators will validate and cast user input values.  In
-# addition to the validators that ship with OptionParser (String, Integer,
-# Float, TrueClass, FalseClass, Array, Regexp, Date, Time, URI, etc.),
-# RDoc::Options adds Path, PathArray and Template.
 
 class RDoc::Options
 
-  ##
-  # The deprecated options.
 
   DEPRECATED = {
     '--accessor'      => 'support discontinued',
@@ -90,8 +19,6 @@ class RDoc::Options
     '--ri-system'     => 'Ruby installers use other techniques',
   }
 
-  ##
-  # RDoc options ignored (or handled specially) by --write-options
 
   SPECIAL = %w[
     coverage_report
@@ -118,222 +45,122 @@ class RDoc::Options
     write_options
   ]
 
-  ##
-  # Option validator for OptionParser that matches a directory that exists on
-  # the filesystem.
 
   Directory = Object.new
 
-  ##
-  # Option validator for OptionParser that matches a file or directory that
-  # exists on the filesystem.
 
   Path = Object.new
 
-  ##
-  # Option validator for OptionParser that matches a comma-separated list of
-  # files or directories that exist on the filesystem.
 
   PathArray = Object.new
 
-  ##
-  # Option validator for OptionParser that matches a template directory for an
-  # installed generator that lives in
-  # <tt>"rdoc/generator/template/#{template_name}"</tt>
 
   Template = Object.new
 
-  ##
-  # Character-set for HTML output.  #encoding is preferred over #charset
 
   attr_accessor :charset
 
-  ##
-  # If true, RDoc will not write any files.
 
   attr_accessor :dry_run
 
-  ##
-  # The output encoding.  All input files will be transcoded to this encoding.
-  #
-  # The default encoding is UTF-8.  This is set via --encoding.
 
   attr_accessor :encoding
 
-  ##
-  # Files matching this pattern will be excluded
 
   attr_accessor :exclude
 
-  ##
-  # The list of files to be processed
 
   attr_accessor :files
 
-  ##
-  # Create the output even if the output directory does not look
-  # like an rdoc output directory
 
   attr_accessor :force_output
 
-  ##
-  # Scan newer sources than the flag file if true.
 
   attr_accessor :force_update
 
-  ##
-  # Formatter to mark up text with
 
   attr_accessor :formatter
 
-  ##
-  # Description of the output generator (set with the <tt>--format</tt> option)
 
   attr_accessor :generator
 
-  ##
-  # For #==
 
   attr_reader :generator_name # :nodoc:
 
-  ##
-  # Loaded generator options.  Used to prevent --help from loading the same
-  # options multiple times.
 
   attr_accessor :generator_options
 
-  ##
-  # Old rdoc behavior: hyperlink all words that match a method name,
-  # even if not preceded by '#' or '::'
 
   attr_accessor :hyperlink_all
 
-  ##
-  # Include line numbers in the source code
 
   attr_accessor :line_numbers
 
-  ##
-  # The output locale.
 
   attr_accessor :locale
 
-  ##
-  # The directory where locale data live.
 
   attr_accessor :locale_dir
 
-  ##
-  # Name of the file, class or module to display in the initial index page (if
-  # not specified the first file we encounter is used)
 
   attr_accessor :main_page
 
-  ##
-  # The default markup format.  The default is 'rdoc'.  'markdown', 'tomdoc'
-  # and 'rd' are also built-in.
 
   attr_accessor :markup
 
-  ##
-  # If true, only report on undocumented files
 
   attr_accessor :coverage_report
 
-  ##
-  # The name of the output directory
 
   attr_accessor :op_dir
 
-  ##
-  # The OptionParser for this instance
 
   attr_accessor :option_parser
 
-  ##
-  # Output heading decorations?
   attr_accessor :output_decoration
 
-  ##
-  # Directory where guides, FAQ, and other pages not associated with a class
-  # live.  You may leave this unset if these are at the root of your project.
 
   attr_accessor :page_dir
 
-  ##
-  # Is RDoc in pipe mode?
 
   attr_accessor :pipe
 
-  ##
-  # Array of directories to search for files to satisfy an :include:
 
   attr_accessor :rdoc_include
 
-  ##
-  # Root of the source documentation will be generated for.  Set this when
-  # building documentation outside the source directory.  Defaults to the
-  # current directory.
 
   attr_accessor :root
 
-  ##
-  # Include the '#' at the front of hyperlinked instance method names
 
   attr_accessor :show_hash
 
-  ##
-  # Directory to copy static files from
 
   attr_accessor :static_path
 
-  ##
-  # The number of columns in a tab
 
   attr_accessor :tab_width
 
-  ##
-  # Template to be used when generating output
 
   attr_accessor :template
 
-  ##
-  # Directory the template lives in
 
   attr_accessor :template_dir
 
-  ##
-  # Additional template stylesheets
 
   attr_accessor :template_stylesheets
 
-  ##
-  # Documentation title
 
   attr_accessor :title
 
-  ##
-  # Should RDoc update the timestamps in the output dir?
 
   attr_accessor :update_output_dir
 
-  ##
-  # Verbosity, zero means quiet
 
   attr_accessor :verbosity
 
-  ##
-  # URL of web cvs frontend
 
   attr_accessor :webcvs
 
-  ##
-  # Minimum visibility of a documented method. One of +:public+, +:protected+,
-  # +:private+ or +:nodoc+.
-  #
-  # The +:nodoc+ visibility ignores all directives related to visibility.  The
-  # other visibilities may be overridden on a per-method basis with the :doc:
-  # directive.
 
   attr_reader :visibility
 
@@ -442,8 +269,6 @@ class RDoc::Options
       @webcvs         == other.webcvs
   end
 
-  ##
-  # Check that the files on the command line exist
 
   def check_files
     @files.delete_if do |file|
@@ -463,8 +288,6 @@ class RDoc::Options
     end
   end
 
-  ##
-  # Ensure only one generator is loaded
 
   def check_generator
     if @generator then
@@ -473,17 +296,11 @@ class RDoc::Options
     end
   end
 
-  ##
-  # Set the title, but only if not already set. Used to set the title
-  # from a source file, so that a title set from the command line
-  # will have the priority.
 
   def default_title=(string)
     @title ||= string
   end
 
-  ##
-  # For dumping YAML
 
   def encode_with coder # :nodoc:
     encoding = @encoding ? @encoding.name : nil
@@ -496,14 +313,11 @@ class RDoc::Options
     ivars -= SPECIAL
 
     ivars.sort.each do |ivar|
+      #nodyna <instance_variable_get-2024> <not yet classified>
       coder.add ivar, instance_variable_get("@#{ivar}")
     end
   end
 
-  ##
-  # Completes any unfinished option setup business such as filtering for
-  # existent files, creating a regexp for #exclude and setting a default
-  # #template.
 
   def finish
     @op_dir ||= 'doc'
@@ -513,7 +327,6 @@ class RDoc::Options
     @rdoc_include << root unless @rdoc_include.include?(root)
 
     if @exclude.nil? or Regexp === @exclude then
-      # done, #finish is being re-run
     elsif @exclude.empty? then
       @exclude = nil
     else
@@ -524,8 +337,6 @@ class RDoc::Options
 
     check_files
 
-    # If no template was specified, use the default template for the output
-    # formatter
 
     unless @template then
       @template     = @generator_name
@@ -542,9 +353,6 @@ class RDoc::Options
     self
   end
 
-  ##
-  # Fixes the page_dir to be relative to the root_dir and adds the page_dir to
-  # the files list.
 
   def finish_page_dir
     return unless @page_dir
@@ -556,8 +364,6 @@ class RDoc::Options
     @page_dir = page_dir
   end
 
-  ##
-  # Returns a properly-space list of generators and their descriptions.
 
   def generator_descriptions
     lengths = []
@@ -582,8 +388,6 @@ class RDoc::Options
     end.join "\n"
   end
 
-  ##
-  # Parses command line options.
 
   def parse argv
     ignore_invalid = true
@@ -618,7 +422,6 @@ Usage: #{opt.program_name} [options] [names...]
 
   Available formatters:
 
-#{generator_descriptions}
 
   RDoc understands the following file formats:
 
@@ -1130,22 +933,16 @@ Usage: #{opt.program_name} [options] [names...]
     self
   end
 
-  ##
-  # Don't display progress as we process the files
 
   def quiet
     @verbosity.zero?
   end
 
-  ##
-  # Set quietness to +bool+
 
   def quiet= bool
     @verbosity = bool ? 0 : 1
   end
 
-  ##
-  # Removes directories from +path+ that are outside the current directory
 
   def sanitize_path path
     require 'pathname'
@@ -1158,12 +955,6 @@ Usage: #{opt.program_name} [options] [names...]
     end
   end
 
-  ##
-  # Set up an output generator for the named +generator_name+.
-  #
-  # If the found generator responds to :setup_options it will be called with
-  # the options instance.  This allows generators to add custom options or set
-  # default options.
 
   def setup_generator generator_name = @generator_name
     @generator = @generators[generator_name]
@@ -1184,8 +975,6 @@ Usage: #{opt.program_name} [options] [names...]
     end
   end
 
-  ##
-  # Finds the template dir for +template+
 
   def template_dir_for template
     template_path = File.join 'rdoc', 'generator', 'template', template
@@ -1197,8 +986,6 @@ Usage: #{opt.program_name} [options] [names...]
     end
   end
 
-  ##
-  # This is compatibility code for syck
 
   def to_yaml opts = {} # :nodoc:
     return super if YAML.const_defined?(:ENGINE) and not YAML::ENGINE.syck?
@@ -1210,12 +997,6 @@ Usage: #{opt.program_name} [options] [names...]
     end
   end
 
-  # Sets the minimum visibility of a documented method.
-  #
-  # Accepts +:public+, +:protected+, +:private+, +:nodoc+, or +:all+.
-  #
-  # When +:all+ is passed, visibility is set to +:private+, similarly to
-  # RDOCOPT="--all", see #visibility for more information.
 
   def visibility= visibility
     case visibility
@@ -1226,16 +1007,11 @@ Usage: #{opt.program_name} [options] [names...]
     end
   end
 
-  ##
-  # Displays a warning using Kernel#warn if we're being verbose
 
   def warn message
     super message if @verbosity > 1
   end
 
-  ##
-  # Writes the YAML file .rdoc_options to the current directory containing the
-  # parsed options.
 
   def write_options
     RDoc.load_yaml

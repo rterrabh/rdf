@@ -18,7 +18,6 @@ class Libvirt < Formula
   depends_on "yajl"
 
   if MacOS.version <= :leopard
-    # Definitely needed on Leopard, but not on Snow Leopard.
     depends_on "readline"
     depends_on "libxml2"
   end
@@ -46,17 +45,13 @@ class Libvirt < Formula
 
     system "./configure", *args
 
-    # Compilation of docs doesn't get done if we jump straight to "make install"
     system "make"
     system "make", "install"
 
-    # Update the SASL config file with the Homebrew prefix
     inreplace "#{etc}/sasl2/libvirt.conf" do |s|
       s.gsub! "/etc/", "#{HOMEBREW_PREFIX}/etc/"
     end
 
-    # If the libvirt daemon is built, update its config file to reflect
-    # the Homebrew prefix
     if build.with? "libvirtd"
       inreplace "#{etc}/libvirt/libvirtd.conf" do |s|
         s.gsub! "/etc/", "#{HOMEBREW_PREFIX}/etc/"

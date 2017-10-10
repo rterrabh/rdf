@@ -17,16 +17,12 @@ class Rdup < Formula
 
     system "./configure", "--prefix=#{prefix}"
 
-    # let rdup know that we actually have dirfd
     system "echo '#define HAVE_DIRFD 1' >> config.h"
 
     system "make", "install"
   end
 
   test do
-    # tell rdup to archive itself, then let rdup-tr make a tar archive of it,
-    # and test with tar and grep whether the resulting tar archive actually
-    # contains rdup
     system "#{bin}/rdup /dev/null #{bin}/rdup | #{bin}/rdup-tr -O tar | tar tvf - | grep #{bin}/rdup"
   end
 end

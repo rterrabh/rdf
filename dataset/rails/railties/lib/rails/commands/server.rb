@@ -55,7 +55,6 @@ module Rails
       set_environment
     end
 
-    # TODO: this is no longer required but we keep it for the moment to support older config.ru files.
     def app
       @app ||= begin
         app = super
@@ -79,8 +78,6 @@ module Rails
 
       super
     ensure
-      # The '-h' option calls exit before @options is set.
-      # If we call 'options' with it unset, we get double help banners.
       puts 'Exiting' unless @options && options[:daemonize]
     end
 
@@ -91,10 +88,6 @@ module Rails
       end
       middlewares << [::Rack::ContentLength]
 
-      # FIXME: add Rack::Lock in the case people are using webrick.
-      # This is to remain backwards compatible for those who are
-      # running webrick in production. We should consider removing this
-      # in development.
       if server.name == 'Rack::Handler::WEBrick'
         middlewares << [::Rack::Lock]
       end

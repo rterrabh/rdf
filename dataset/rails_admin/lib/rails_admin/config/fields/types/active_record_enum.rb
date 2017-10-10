@@ -16,7 +16,7 @@ module RailsAdmin
           end
 
           register_instance_option :pretty_value do
-            #nodyna <ID:send-29> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1350> <SD COMPLEX (change-prone variables)>
             bindings[:object].send(name).presence || ' - '
           end
 

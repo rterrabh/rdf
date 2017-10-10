@@ -39,7 +39,6 @@ class UserAvatarsController < ApplicationController
   def show
     no_cookies
 
-    # we need multisite support to keep a single origin pull for CDNs
     RailsMultisite::ConnectionManagement.with_hostname(params[:hostname]) do
       show_in_site(params[:hostname])
     end
@@ -94,7 +93,6 @@ class UserAvatarsController < ApplicationController
     end
   end
 
-  # this protects us from a DoS
   def render_dot
     expires_in 10.minutes, public: true
     render text: DOT, content_type: "image/png"

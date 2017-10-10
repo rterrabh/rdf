@@ -10,9 +10,6 @@ class Smake < Formula
     sha256 "ce1edbcc0ec3f7db2208e39a09183d7dcfa21d50250393f5ad5c83204ab7b3ed" => :mountain_lion
   end
 
-  # A sed operation silently fails on Lion or older, due
-  # to some locale settings in smake's build files. The sed
-  # wrapper on 10.8+ overrides them.
   env :std if MacOS.version <= :lion
 
   def install

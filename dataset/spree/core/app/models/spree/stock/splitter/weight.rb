@@ -22,7 +22,6 @@ module Spree
           while package.weight > self.threshold
             contents = package.contents_by_weight
             break if contents.size == 1
-            # Deleting the second heaviest item in the package should yield best results
             removed << package.contents.delete(contents[1])
           end
           removed

@@ -1,12 +1,3 @@
-#
-# filehandler.rb -- FileHandler Module
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2001 TAKAHASHI Masayoshi, GOTOU Yuuzou
-# Copyright (c) 2003 Internet Programming with Ruby writers. All rights
-# reserved.
-#
-# $IPR: filehandler.rb,v 1.44 2003/06/07 01:34:51 gotoyuzo Exp $
 
 require 'thread'
 require 'time'
@@ -18,28 +9,15 @@ require 'webrick/httpstatus'
 module WEBrick
   module HTTPServlet
 
-    ##
-    # Servlet for serving a single file.  You probably want to use the
-    # FileHandler servlet instead as it handles directories and fancy indexes.
-    #
-    # Example:
-    #
-    #   server.mount('/my_page.txt', WEBrick::HTTPServlet::DefaultFileHandler,
-    #                '/path/to/my_page.txt')
-    #
-    # This servlet handles If-Modified-Since and Range requests.
 
     class DefaultFileHandler < AbstractServlet
 
-      ##
-      # Creates a DefaultFileHandler instance for the file at +local_path+.
 
       def initialize(server, local_path)
         super(server, local_path)
         @local_path = local_path
       end
 
-      # :stopdoc:
 
       def do_GET(req, res)
         st = File::stat(@local_path)
@@ -141,44 +119,22 @@ module WEBrick
         return first, last
       end
 
-      # :startdoc:
     end
 
-    ##
-    # Serves a directory including fancy indexing and a variety of other
-    # options.
-    #
-    # Example:
-    #
-    #   server.mount '/assets', WEBrick::FileHandler, '/path/to/assets'
 
     class FileHandler < AbstractServlet
       HandlerTable = Hash.new # :nodoc:
 
-      ##
-      # Allow custom handling of requests for files with +suffix+ by class
-      # +handler+
 
       def self.add_handler(suffix, handler)
         HandlerTable[suffix] = handler
       end
 
-      ##
-      # Remove custom handling of requests for files with +suffix+
 
       def self.remove_handler(suffix)
         HandlerTable.delete(suffix)
       end
 
-      ##
-      # Creates a FileHandler servlet on +server+ that serves files starting
-      # at directory +root+
-      #
-      # +options+ may be a Hash containing keys from
-      # WEBrick::Config::FileHandler or +true+ or +false+.
-      #
-      # If +options+ is true or false then +:FancyIndexing+ is enabled or
-      # disabled respectively.
 
       def initialize(server, root, options={}, default=Config::FileHandler)
         @config = server.config
@@ -190,11 +146,8 @@ module WEBrick
         @options = default.dup.update(options)
       end
 
-      # :stopdoc:
 
       def service(req, res)
-        # if this class is mounted on "/" and /~username is requested.
-        # we're going to override path informations before invoking service.
         if defined?(Etc) && @options[:UserDir] && req.script_name.empty?
           if %r|^(/~([^/]+))| =~ req.path_info
             script_name, user = $1, $2
@@ -231,43 +184,18 @@ module WEBrick
         end
       end
 
-      # ToDo
-      # RFC2518: HTTP Extensions for Distributed Authoring -- WEBDAV
-      #
-      # PROPFIND PROPPATCH MKCOL DELETE PUT COPY MOVE
-      # LOCK UNLOCK
 
-      # RFC3253: Versioning Extensions to WebDAV
-      #          (Web Distributed Authoring and Versioning)
-      #
-      # VERSION-CONTROL REPORT CHECKOUT CHECK_IN UNCHECKOUT
-      # MKWORKSPACE UPDATE LABEL MERGE ACTIVITY
 
       private
 
       def trailing_pathsep?(path)
-        # check for trailing path separator:
-        #   File.dirname("/aaaa/bbbb/")      #=> "/aaaa")
-        #   File.dirname("/aaaa/bbbb/x")     #=> "/aaaa/bbbb")
-        #   File.dirname("/aaaa/bbbb")       #=> "/aaaa")
-        #   File.dirname("/aaaa/bbbbx")      #=> "/aaaa")
         return File.dirname(path) != File.dirname(path+"x")
       end
 
       def prevent_directory_traversal(req, res)
-        # Preventing directory traversal on Windows platforms;
-        # Backslashes (0x5c) in path_info are not interpreted as special
-        # character in URI notation. So the value of path_info should be
-        # normalize before accessing to the filesystem.
 
-        # dirty hack for filesystem encoding; in nature, File.expand_path
-        # should not be used for path normalization.  [Bug #3345]
         path = req.path_info.dup.force_encoding(Encoding.find("filesystem"))
         if trailing_pathsep?(req.path_info)
-          # File.expand_path removes the trailing path separator.
-          # Adding a character is a workaround to save it.
-          #  File.expand_path("/aaa/")        #=> "/aaa"
-          #  File.expand_path("/aaa/" + "x")  #=> "/aaa/x"
           expanded = File.expand_path(path + "x")
           expanded.chop!  # remove trailing "x"
         else
@@ -507,7 +435,6 @@ module WEBrick
 
         res.body << <<-_end_of_html_
     <ADDRESS>
-     #{HTMLUtils::escape(@config[:ServerSoftware])}<BR>
      at #{req.host}:#{req.port}
     </ADDRESS>
   </BODY>
@@ -515,7 +442,6 @@ module WEBrick
         _end_of_html_
       end
 
-      # :startdoc:
     end
   end
 end

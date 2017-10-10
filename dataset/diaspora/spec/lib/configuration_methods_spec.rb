@@ -12,6 +12,7 @@ describe Configuration::Methods do
   describe "#pod_uri" do
     before do
       @settings.environment.url = nil
+      #nodyna <instance_variable_set-116> <not yet classified>
       @settings.instance_variable_set(:@pod_uri, nil)
     end
 
@@ -60,6 +61,7 @@ describe Configuration::Methods do
   describe "#url_to" do
     before do
       @settings.environment.url = "https://example.org"
+      #nodyna <instance_variable_set-117> <not yet classified>
       @settings.instance_variable_set(:@pod_uri, nil)
     end
 
@@ -131,6 +133,7 @@ describe Configuration::Methods do
       allow(@version).to receive(:release?).and_return(true)
       allow(@settings).to receive(:version).and_return(@version)
       allow(@settings).to receive(:git_available?).and_return(false)
+      #nodyna <instance_variable_set-118> <not yet classified>
       @settings.instance_variable_set(:@version_string, nil)
     end
 

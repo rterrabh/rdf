@@ -23,7 +23,6 @@ module ActiveRecord
     def render_bind(column, value)
       if column
         if column.binary?
-          # This specifically deals with the PG adapter that casts bytea columns into a Hash.
           value = value[:value] if value.is_a?(Hash)
           value = value ? "<#{value.bytesize} bytes of binary data>" : "<NULL binary data>"
         end

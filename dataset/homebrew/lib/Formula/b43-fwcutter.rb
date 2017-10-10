@@ -14,13 +14,10 @@ class B43Fwcutter < Formula
 
   def install
     inreplace "Makefile" do |m|
-      # Don't try to chown root:root on generated files
       m.gsub! /install -o 0 -g 0/, "install"
       m.gsub! /install -d -o 0 -g 0/, "install -d"
-      # Fix manpage installation directory
       m.gsub! "$(PREFIX)/man", man
     end
-    # b43-fwcutter has no ./configure
     system "make", "PREFIX=#{prefix}", "install"
   end
 

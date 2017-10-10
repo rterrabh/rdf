@@ -6,14 +6,12 @@ class Ccze < Formula
 
   depends_on "pcre"
 
-  # Taken from debian
   patch :DATA
 
   def install
     system "./configure", "--prefix=#{prefix}",
                           "--with-builtins=all"
     system "make", "install"
-    # Strange but true: using --mandir above causes the build to fail!
     share.install prefix/"man"
   end
 

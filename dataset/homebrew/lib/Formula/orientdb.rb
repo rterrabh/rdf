@@ -12,7 +12,6 @@ class Orientdb < Formula
     sha256 "d84a89f602cb8cd9e0948f2ad1acb3a47c52fd3fe56abbbea59e64dc97a84cc1" => :mountain_lion
   end
 
-  # Fixing OrientDB init scripts
   patch do
     url "https://gist.githubusercontent.com/maggiolo00/84835e0b82a94fe9970a/raw/1ed577806db4411fd8b24cd90e516580218b2d53/orientdbsh"
     sha256 "d8b89ecda7cb78c940b3c3a702eee7b5e0f099338bb569b527c63efa55e6487e"

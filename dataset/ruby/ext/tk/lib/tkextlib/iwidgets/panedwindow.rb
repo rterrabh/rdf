@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/panedwindow.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -18,7 +14,6 @@ class Tk::Iwidgets::Panedwindow
   WidgetClassName = 'Panedwindow'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ####################################
 
   include TkItemConfigMethod
 
@@ -36,7 +31,6 @@ class Tk::Iwidgets::Panedwindow
     if tagOrId.kind_of?(Tk::Itk::Component)
       tagOrId.name
     else
-      #_get_eval_string(tagOrId)
       tagOrId
     end
   end
@@ -51,7 +45,6 @@ class Tk::Iwidgets::Panedwindow
   private :itemcget_tkstring, :itemcget, :itemcget_strict
   private :itemconfigure, :itemconfiginfo, :current_itemconfiginfo
 
-  ####################################
 
   def __boolval_optkeys
     super() << 'showhandle'

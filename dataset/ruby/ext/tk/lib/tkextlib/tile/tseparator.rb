@@ -1,7 +1,3 @@
-#
-#  tseparator widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -29,6 +25,5 @@ class Tk::Tile::TSeparator < TkWindow
   end
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Separator, :TkSeparator)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tseparator.rb',
                                    :Ttk, Tk::Tile::Separator, :TkSeparator)

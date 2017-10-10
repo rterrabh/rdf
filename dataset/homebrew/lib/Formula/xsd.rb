@@ -15,15 +15,6 @@ class Xsd < Formula
   depends_on "pkg-config" => :build
   depends_on "xerces-c"
 
-  # Patches:
-  # 1. As of version 4.0.0, Clang fails to compile if the <iostream> header is
-  #    not explicitly included. The developers are aware of this problem, see:
-  #    http://www.codesynthesis.com/pipermail/xsd-users/2015-February/004522.html
-  # 2. As of version 4.0.0, building fails because this makefile invokes find
-  #    with action -printf, which GNU find supports but BSD find does not. There
-  #    is no place to file a bug report upstream other than the xsd-users mailing
-  #    list (xsd-users@codesynthesis.com). I have sent this patch there but have
-  #    received no response (yet).
   patch :DATA
 
   def install
@@ -50,8 +41,6 @@ class Xsd < Formula
     EOS
     xsdtest = testpath/"xsdtest.cxx"
     xsdtest.write <<-EOS.undent
-    #include <cassert>
-    #include "meaningoflife.hxx"
     int main (int argc, char *argv[]) {
         assert(2==argc);
         std::auto_ptr< ::xml_schema::positive_integer> x = XSDTest::MeaningOfLife(argv[1]);
@@ -78,9 +67,7 @@ index fa48a9a..59994ae 100644
  // license   : GNU GPL v2 + exceptions; see accompanying LICENSE file
 
 +#include <iostream>
- #include <algorithm>
 
- #include <cutl/compiler/type-info.hxx>
 diff --git a/xsd/examples/cxx/tree/makefile b/xsd/examples/cxx/tree/makefile
 index 172195a..d8c8198 100644
 --- a/xsd/examples/cxx/tree/makefile

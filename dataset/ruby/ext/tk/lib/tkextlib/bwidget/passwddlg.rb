@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/passwddlg.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/bwidget.rb'

@@ -1,6 +1,5 @@
 class PostSerializer < BasicPostSerializer
 
-  # To pass in additional information we might need
   INSTANCE_VARS = [
     :topic_view,
     :parent_post,
@@ -12,7 +11,7 @@ class PostSerializer < BasicPostSerializer
   ]
 
   INSTANCE_VARS.each do |v|
-    #nodyna <ID:send-144> <SD MODERATE (array)>
+    #nodyna <send-472> <SD MODERATE (array)>
     self.send(:attr_accessor, v)
   end
 
@@ -65,7 +64,7 @@ class PostSerializer < BasicPostSerializer
     super(object, opts)
     PostSerializer::INSTANCE_VARS.each do |name|
       if opts.include? name
-        #nodyna <ID:send-145> <SD MODERATE (array)>
+        #nodyna <send-473> <SD MODERATE (array)>
         self.send("#{name}=", opts[name])
       end
     end
@@ -120,7 +119,6 @@ class PostSerializer < BasicPostSerializer
   def link_counts
     return @single_post_link_counts if @single_post_link_counts.present?
 
-    # TODO: This could be better, just porting the old one over
     @topic_view.link_counts[object.id].map do |link|
       result = {}
       result[:url] = link[:url]
@@ -168,21 +166,19 @@ class PostSerializer < BasicPostSerializer
     scope.is_staff? && object.deleted_by.present?
   end
 
-  # Helper function to decide between #post_actions and @all_post_actions
   def actions
     return post_actions if post_actions.present?
     return all_post_actions[object.id] if all_post_actions.present?
     nil
   end
 
-  # Summary of the actions taken on this post
   def actions_summary
     result = []
     PostActionType.types.each do |sym, id|
       next if [:bookmark].include?(sym)
       count_col = "#{sym}_count".to_sym
 
-      #nodyna <ID:send-146> <SD MODERATE (array)>
+      #nodyna <send-474> <SD MODERATE (array)>
       count = object.send(count_col) if object.respond_to?(count_col)
       summary = { id: id, count: count }
       summary[:hidden] = true if sym == :vote
@@ -192,7 +188,6 @@ class PostSerializer < BasicPostSerializer
         summary.delete(:can_act)
       end
 
-      # The following only applies if you're logged in
       if summary[:can_act] && scope.current_user.present?
         summary[:can_defer_flags] = true if scope.is_staff? &&
                                                    PostActionType.flag_types.values.include?(id) &&
@@ -205,14 +200,12 @@ class PostSerializer < BasicPostSerializer
         summary[:can_undo] = true if scope.can_delete?(actions[id])
       end
 
-      # only show public data
       unless scope.is_staff? || PostActionType.public_types.values.include?(id)
         summary[:count] = summary[:acted] ? 1 : 0
       end
 
       summary.delete(:count) if summary[:count] == 0
 
-      # Only include it if the user can do it or it has a count
       if summary[:can_act] || summary[:count]
         result << summary
       end

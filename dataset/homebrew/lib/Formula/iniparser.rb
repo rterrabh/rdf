@@ -8,7 +8,6 @@ class Iniparser < Formula
   conflicts_with "fastbit", :because => "Both install `include/dictionary.h`"
 
   def install
-    # Only make the *.a file; the *.so target is useless (and fails).
     system "make", "libiniparser.a", "CC=#{ENV.cc}", "RANLIB=ranlib"
     lib.install "libiniparser.a"
     include.install Dir["src/*.h"]

@@ -127,7 +127,6 @@ class ExternalPatch
   def apply
     dir = Pathname.pwd
     resource.unpack do
-      # Assumption: the only file in the staging directory is the patch
       patchfile = Pathname.pwd.children.first
       dir.cd { safe_system "/usr/bin/patch", "-g", "0", "-f", "-#{strip}", "-i", patchfile }
     end
@@ -158,7 +157,6 @@ class ExternalPatch
   end
 end
 
-# Legacy patches have no checksum and are not cached
 class LegacyPatch < ExternalPatch
   def initialize(strip, url)
     super(strip)
@@ -172,7 +170,6 @@ class LegacyPatch < ExternalPatch
   end
 
   def verify_download_integrity(_fn)
-    # no-op
   end
 
   def apply

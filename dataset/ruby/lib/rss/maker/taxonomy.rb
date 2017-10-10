@@ -13,6 +13,7 @@ module RSS
       end
 
       def self.install_taxo_topics(klass)
+        #nodyna <module_eval-2064> <not yet classified>
         klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           class TaxonomyTopics < TaxonomyTopicsBase
             def to_feed(feed, current)
@@ -45,6 +46,7 @@ EOC
       end
 
       def self.install_taxo_topic(klass)
+        #nodyna <module_eval-2065> <not yet classified>
         klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           class TaxonomyTopics < TaxonomyTopicsBase
             class TaxonomyTopic < TaxonomyTopicBase
@@ -100,6 +102,7 @@ EOC
     end
 
     makers.each do |maker|
+      #nodyna <module_eval-2066> <not yet classified>
       maker.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         TaxonomyTopicModel.install_taxo_topic(self)
 

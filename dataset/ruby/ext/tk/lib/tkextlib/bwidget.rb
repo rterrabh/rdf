@@ -1,25 +1,15 @@
-#
-#  BWidget extension support
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/bwidget/setup.rb'
 
-# load all image format handlers
-#TkPackage.require('BWidget', '1.7')
 TkPackage.require('BWidget')
 
 module Tk
   module BWidget
     TkComm::TkExtlibAutoloadModule.unshift(self)
-    # Require autoload-symbols which is a same name as widget classname.
-    # Those are used at  TkComm._genobj_for_tkwidget method.
 
     extend TkCore
 
@@ -114,7 +104,6 @@ module Tk
       tk_call('BWidget::wrongNumArgsString', str)
     end
 
-    ####################################################
 
     autoload :ArrowButton,     'tkextlib/bwidget/arrowbutton'
     autoload :Bitmap,          'tkextlib/bwidget/bitmap'

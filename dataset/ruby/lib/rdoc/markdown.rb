@@ -1,185 +1,12 @@
-# coding: UTF-8
-# :markup: markdown
 
-##
-# RDoc::Markdown as described by the [markdown syntax][syntax].
-#
-# To choose Markdown as your only default format see
-# RDoc::Options@Saved+Options for instructions on setting up a `.doc_options`
-# file to store your project default.
-#
-# ## Usage
-#
-# Here is a brief example of using this parse to read a markdown file by hand.
-#
-#     data = File.read("README.md")
-#     formatter = RDoc::Markup::ToHtml.new(RDoc::Options.new, nil)
-#     html = RDoc::Markdown.parse(data).accept(@formatter)
-#
-#     # do something with html
-#
-# ## Extensions
-#
-# The following markdown extensions are supported by the parser, but not all
-# are used in RDoc output by default.
-#
-# ### RDoc
-#
-# The RDoc Markdown parser has the following built-in behaviors that cannot be
-# disabled.
-#
-# Underscores embedded in words are never interpreted as emphasis.  (While the
-# [markdown dingus][dingus] emphasizes in-word underscores, neither the
-# Markdown syntax nor MarkdownTest mention this behavior.)
-#
-# For HTML output, RDoc always auto-links bare URLs.
-#
-# ### Break on Newline
-#
-# The break_on_newline extension converts all newlines into hard line breaks
-# as in [Github Flavored Markdown][GFM].  This extension is disabled by
-# default.
-#
-# ### CSS
-#
-# The #css extension enables CSS blocks to be included in the output, but they
-# are not used for any built-in RDoc output format.  This extension is disabled
-# by default.
-#
-# Example:
-#
-#     <style type="text/css">
-#     h1 { font-size: 3em }
-#     </style>
-#
-# ### Definition Lists
-#
-# The definition_lists extension allows definition lists using the [PHP
-# Markdown Extra syntax][PHPE], but only one label and definition are supported
-# at this time.  This extension is enabled by default.
-#
-# Example:
-#
-# ```
-# cat
-# :   A small furry mammal
-# that seems to sleep a lot
-#
-# ant
-# :   A little insect that is known
-# to enjoy picnics
-#
-# ```
-#
-# Produces:
-#
-# cat
-# :   A small furry mammal
-# that seems to sleep a lot
-#
-# ant
-# :   A little insect that is known
-# to enjoy picnics
-#
-# ### Github
-#
-# The #github extension enables a partial set of [Github Flavored Markdown]
-# [GFM].  This extension is enabled by default.
-#
-# Supported github extensions include:
-#
-# #### Fenced code blocks
-#
-# Use ` ``` ` around a block of code instead of indenting it four spaces.
-#
-# #### Syntax highlighting
-#
-# Use ` ``` ruby ` as the start of a code fence to add syntax highlighting.
-# (Currently only `ruby` syntax is supported).
-#
-# ### HTML
-#
-# Enables raw HTML to be included in the output.  This extension is enabled by
-# default.
-#
-# Example:
-#
-#     <table>
-#     ...
-#     </table>
-#
-# ### Notes
-#
-# The #notes extension enables footnote support.  This extension is enabled by
-# default.
-#
-# Example:
-#
-#     Here is some text[^1] including an inline footnote ^[for short footnotes]
-#
-#     ...
-#
-#     [^1]: With the footnote text down at the bottom
-#
-# Produces:
-#
-# Here is some text[^1] including an inline footnote ^[for short footnotes]
-#
-# [^1]: With the footnote text down at the bottom
-#
-# ## Limitations
-#
-# * Link titles are not used
-# * Footnotes are collapsed into a single paragraph
-#
-# ## Author
-#
-# This markdown parser is a port to kpeg from [peg-markdown][pegmarkdown] by
-# John MacFarlane.
-#
-# It is used under the MIT license:
-#
-# Permission is hereby granted, free of charge, to any person obtaining a copy
-# of this software and associated documentation files (the "Software"), to deal
-# in the Software without restriction, including without limitation the rights
-# to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-# copies of the Software, and to permit persons to whom the Software is
-# furnished to do so, subject to the following conditions:
-#
-# The above copyright notice and this permission notice shall be included in
-# all copies or substantial portions of the Software.
-#
-# THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-# IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-# FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-# AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-# LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-# OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
-# THE SOFTWARE.
-#
-# The port to kpeg was performed by Eric Hodel and Evan Phoenix
-#
-# [dingus]: http://daringfireball.net/projects/markdown/dingus
-# [GFM]: http://github.github.com/github-flavored-markdown/
-# [pegmarkdown]: https://github.com/jgm/peg-markdown
-# [PHPE]: http://michelf.com/projects/php-markdown/extra/#def-list
-# [syntax]: http://daringfireball.net/projects/markdown/syntax
-#--
-# Last updated to jgm/peg-markdown commit 8f8fc22ef0
 class RDoc::Markdown
-  # :stopdoc:
 
-    # This is distinct from setup_parser so that a standalone parser
-    # can redefine #initialize and still have access to the proper
-    # parser setup code.
     def initialize(str, debug=false)
       setup_parser(str, debug)
     end
 
 
 
-    # Prepares for parsing +str+.  If you define a custom initialize you must
-    # call this method before #parse
     def setup_parser(str, debug=false)
       set_string str, 0
       @memoizations = Hash.new { |h,k| h[k] = {} }
@@ -227,7 +54,6 @@ class RDoc::Markdown
       @string[start..@pos-1]
     end
 
-    # Sets the string and current parsing position for the parser.
     def set_string string, pos
       @string = string
       @string_size = string ? string.size : 0
@@ -363,10 +189,6 @@ class RDoc::Markdown
     end
 
     def parse(rule=nil)
-      # We invoke the rules indirectly via apply
-      # instead of by just calling them as methods because
-      # if the rules use left recursion, apply needs to
-      # manage that.
 
       if !rule
         apply(:_root)
@@ -439,8 +261,6 @@ class RDoc::Markdown
 
         m.move! ans, @pos, @result
 
-        # Don't bother trying to grow the left recursion
-        # if it's failing straight away (thus there is no seed)
         if ans and lr
           return grow_lr(rule, args, start_pos, m)
         else
@@ -473,8 +293,6 @@ class RDoc::Markdown
 
         m.move! ans, @pos, @result
 
-        # Don't bother trying to grow the left recursion
-        # if it's failing straight away (thus there is no seed)
         if ans and lr
           return grow_lr(rule, nil, start_pos, m)
         else
@@ -521,7 +339,6 @@ class RDoc::Markdown
     end
 
 
-  # :startdoc:
 
 
 
@@ -536,13 +353,9 @@ class RDoc::Markdown
     require 'rdoc/markdown/literals_1_8'
   end
 
-  ##
-  # Supported extensions
 
   EXTENSIONS = []
 
-  ##
-  # Extensions enabled by default
 
   DEFAULT_EXTENSIONS = [
     :definition_lists,
@@ -551,61 +364,41 @@ class RDoc::Markdown
     :notes,
   ]
 
-  # :section: Extensions
 
-  ##
-  # Creates extension methods for the `name` extension to enable and disable
-  # the extension and to query if they are active.
 
   def self.extension name
     EXTENSIONS << name
 
-    #nodyna <ID:define_method-15> <DM COMPLEX (events)>
+    #nodyna <define_method-2019> <DM COMPLEX (events)>
     define_method "#{name}?" do
       extension? name
     end
 
-    #nodyna <ID:define_method-16> <DM COMPLEX (events)>
+    #nodyna <define_method-2020> <DM COMPLEX (events)>
     define_method "#{name}=" do |enable|
       extension name, enable
     end
   end
 
-  ##
-  # Converts all newlines into hard breaks
 
   extension :break_on_newline
 
-  ##
-  # Allow style blocks
 
   extension :css
 
-  ##
-  # Allow PHP Markdown Extras style definition lists
 
   extension :definition_lists
 
-  ##
-  # Allow Github Flavored Markdown
 
   extension :github
 
-  ##
-  # Allow HTML
 
   extension :html
 
-  ##
-  # Enables the notes extension
 
   extension :notes
 
-  # :section:
 
-  ##
-  # Parses the `markdown` document into an RDoc::Document using the default
-  # extensions.
 
   def self.parse markdown
     parser = new
@@ -613,11 +406,8 @@ class RDoc::Markdown
     parser.parse markdown
   end
 
-  # TODO remove when kpeg 0.10 is released
   alias orig_initialize initialize # :nodoc:
 
-  ##
-  # Creates a new markdown parser that enables the given +extensions+.
 
   def initialize extensions = DEFAULT_EXTENSIONS, debug = false
     @debug      = debug
@@ -631,8 +421,6 @@ class RDoc::Markdown
     @note_order      = nil
   end
 
-  ##
-  # Wraps `text` in emphasis for rdoc inline formatting
 
   def emphasis text
     if text =~ /\A[a-z\d.\/]+\z/i then
@@ -642,19 +430,11 @@ class RDoc::Markdown
     end
   end
 
-  ##
-  # :category: Extensions
-  #
-  # Is the extension `name` enabled?
 
   def extension? name
     @extensions.include? name
   end
 
-  ##
-  # :category: Extensions
-  #
-  # Enables or disables the extension with `name`
 
   def extension name, enable
     if enable then
@@ -664,9 +444,6 @@ class RDoc::Markdown
     end
   end
 
-  ##
-  # Parses `text` in a clone of this parser.  This is used for handling nested
-  # lists the same way as markdown_parser.
 
   def inner_parse text # :nodoc:
     parser = clone
@@ -682,11 +459,6 @@ class RDoc::Markdown
     doc.parts
   end
 
-  ##
-  # Finds a link reference for `label` and creates a new link to it with
-  # `content` as the link text.  If `label` was not encountered in the
-  # reference-gathering parser pass the label and content are reconstructed
-  # with the linking `text` (usually whitespace).
 
   def link_to content, label = content, text = nil
     raise 'enable notes extension' if
@@ -701,31 +473,20 @@ class RDoc::Markdown
     end
   end
 
-  ##
-  # Creates an RDoc::Markup::ListItem by parsing the `unparsed` content from
-  # the first parsing pass.
 
   def list_item_from unparsed
     parsed = inner_parse unparsed.join
     RDoc::Markup::ListItem.new nil, *parsed
   end
 
-  ##
-  # Stores `label` as a note and fills in previously unknown note references.
 
   def note label
-    #foottext = "rdoc-label:foottext-#{label}:footmark-#{label}"
 
-    #ref.replace foottext if ref = @unlinked_notes.delete(label)
 
     @notes[label] = foottext
 
-    #"{^1}[rdoc-label:footmark-#{label}:foottext-#{label}] "
   end
 
-  ##
-  # Creates a new link for the footnote `reference` and adds the reference to
-  # the note order list for proper display at the end of the document.
 
   def note_for ref
     @note_order << ref
@@ -735,14 +496,9 @@ class RDoc::Markdown
     "{*#{label}}[rdoc-label:foottext-#{label}:footmark-#{label}]"
   end
 
-  ##
-  # The internal kpeg parse method
 
   alias peg_parse parse # :nodoc:
 
-  ##
-  # Creates an RDoc::Markup::Paragraph from `parts` and including
-  # extension-specific behavior
 
   def paragraph parts
     parts = parts.map do |part|
@@ -756,8 +512,6 @@ class RDoc::Markdown
     RDoc::Markup::Paragraph.new(*parts)
   end
 
-  ##
-  # Parses `markdown` into an RDoc::Document
 
   def parse markdown
     @references          = {}
@@ -774,7 +528,6 @@ class RDoc::Markdown
       setup_parser markdown, @debug
       peg_parse 'Notes'
 
-      # using note_order on the first pass would be a bug
       @note_order      = []
     end
 
@@ -802,9 +555,6 @@ class RDoc::Markdown
     doc
   end
 
-  ##
-  # Stores `label` as a reference to `link` and fills in previously unknown
-  # link references.
 
   def reference label, link
     if ref = @unlinked_references.delete(label) then
@@ -814,8 +564,6 @@ class RDoc::Markdown
     @references[label] = link
   end
 
-  ##
-  # Wraps `text` in strong markup for rdoc inline formatting
 
   def strong text
     if text =~ /\A[a-z\d.\/-]+\z/i then
@@ -826,19 +574,16 @@ class RDoc::Markdown
   end
 
 
-  # :stopdoc:
   def setup_foreign_grammar
     @_grammar_literals = RDoc::Markdown::Literals.new(nil)
   end
 
-  # root = Doc
   def _root
     _tmp = apply(:_Doc)
     set_failed_rule :_root unless _tmp
     return _tmp
   end
 
-  # Doc = BOM? Block*:a { RDoc::Markup::Document.new(*a.compact) }
   def _Doc
 
     _save = self.pos
@@ -878,7 +623,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Block = @BlankLine* (BlockQuote | Verbatim | CodeFence | Note | Reference | HorizontalRule | Heading | OrderedList | BulletList | DefinitionList | HtmlBlock | StyleBlock | Para | Plain)
   def _Block
 
     _save = self.pos
@@ -950,7 +694,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Para = @NonindentSpace Inlines:a @BlankLine+ { paragraph a }
   def _Para
 
     _save = self.pos
@@ -993,7 +736,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Plain = Inlines:a { paragraph a }
   def _Plain
 
     _save = self.pos
@@ -1016,7 +758,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # AtxInline = !@Newline !(@Sp? /#*/ @Sp @Newline) Inline
   def _AtxInline
 
     _save = self.pos
@@ -1077,7 +818,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # AtxStart = < /\#{1,6}/ > { text.length }
   def _AtxStart
 
     _save = self.pos
@@ -1103,7 +843,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # AtxHeading = AtxStart:s @Sp? AtxInline+:a (@Sp? /#*/ @Sp)? @Newline { RDoc::Markup::Heading.new(s, a.join) }
   def _AtxHeading
 
     _save = self.pos
@@ -1195,7 +934,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # SetextHeading = (SetextHeading1 | SetextHeading2)
   def _SetextHeading
 
     _save = self.pos
@@ -1213,7 +951,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # SetextBottom1 = /={3,}/ @Newline
   def _SetextBottom1
 
     _save = self.pos
@@ -1234,7 +971,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # SetextBottom2 = /-{3,}/ @Newline
   def _SetextBottom2
 
     _save = self.pos
@@ -1255,7 +991,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # SetextHeading1 = &(@RawLine SetextBottom1) @StartList:a (!@Endline Inline:b { a << b })+ @Sp? @Newline SetextBottom1 { RDoc::Markup::Heading.new(1, a.join) }
   def _SetextHeading1
 
     _save = self.pos
@@ -1382,7 +1117,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # SetextHeading2 = &(@RawLine SetextBottom2) @StartList:a (!@Endline Inline:b { a << b })+ @Sp? @Newline SetextBottom2 { RDoc::Markup::Heading.new(2, a.join) }
   def _SetextHeading2
 
     _save = self.pos
@@ -1509,7 +1243,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Heading = (SetextHeading | AtxHeading)
   def _Heading
 
     _save = self.pos
@@ -1527,7 +1260,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # BlockQuote = BlockQuoteRaw:a { RDoc::Markup::BlockQuote.new(*a) }
   def _BlockQuote
 
     _save = self.pos
@@ -1550,7 +1282,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # BlockQuoteRaw = @StartList:a (">" " "? Line:l { a << l } (!">" !@BlankLine Line:c { a << c })* (@BlankLine:n { a << n })*)+ { inner_parse a.join }
   def _BlockQuoteRaw
 
     _save = self.pos
@@ -1782,7 +1513,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # NonblankIndentedLine = !@BlankLine IndentedLine
   def _NonblankIndentedLine
 
     _save = self.pos
@@ -1806,7 +1536,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # VerbatimChunk = @BlankLine*:a NonblankIndentedLine+:b { a.concat b }
   def _VerbatimChunk
 
     _save = self.pos
@@ -1856,7 +1585,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Verbatim = VerbatimChunk+:a { RDoc::Markup::Verbatim.new(*a.flatten) }
   def _Verbatim
 
     _save = self.pos
@@ -1893,7 +1621,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HorizontalRule = @NonindentSpace ("*" @Sp "*" @Sp "*" (@Sp "*")* | "-" @Sp "-" @Sp "-" (@Sp "-")* | "_" @Sp "_" @Sp "_" (@Sp "_")*) @Sp @Newline @BlankLine+ { RDoc::Markup::Rule.new 1 }
   def _HorizontalRule
 
     _save = self.pos
@@ -2115,7 +1842,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Bullet = !HorizontalRule @NonindentSpace /[+*-]/ @Spacechar+
   def _Bullet
 
     _save = self.pos
@@ -2159,7 +1885,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # BulletList = &Bullet (ListTight | ListLoose):a { RDoc::Markup::List.new(:BULLET, *a) }
   def _BulletList
 
     _save = self.pos
@@ -2200,7 +1925,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ListTight = ListItemTight+:a @BlankLine* !(Bullet | Enumerator) { a }
   def _ListTight
 
     _save = self.pos
@@ -2265,7 +1989,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ListLoose = @StartList:a (ListItem:b @BlankLine* { a << b })+ { a }
   def _ListLoose
 
     _save = self.pos
@@ -2353,7 +2076,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ListItem = (Bullet | Enumerator) @StartList:a ListBlock:b { a << b } (ListContinuationBlock:c { a.push(*c) })* { list_item_from a }
   def _ListItem
 
     _save = self.pos
@@ -2429,7 +2151,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ListItemTight = (Bullet | Enumerator) ListBlock:a (!@BlankLine ListContinuationBlock:b { a.push(*b) })* !ListContinuationBlock { list_item_from a }
   def _ListItemTight
 
     _save = self.pos
@@ -2509,7 +2230,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ListBlock = !@BlankLine Line:a ListBlockLine*:c { [a, *c] }
   def _ListBlock
 
     _save = self.pos
@@ -2553,7 +2273,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ListContinuationBlock = @StartList:a @BlankLine* { a << "\n" } (Indent ListBlock:b { a.concat b })+ { a }
   def _ListContinuationBlock
 
     _save = self.pos
@@ -2648,7 +2367,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Enumerator = @NonindentSpace [0-9]+ "." @Spacechar+
   def _Enumerator
 
     _save = self.pos
@@ -2713,7 +2431,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # OrderedList = &Enumerator (ListTight | ListLoose):a { RDoc::Markup::List.new(:NUMBER, *a) }
   def _OrderedList
 
     _save = self.pos
@@ -2754,7 +2471,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ListBlockLine = !@BlankLine !(Indent? (Bullet | Enumerator)) !HorizontalRule OptionallyIndentedLine
   def _ListBlockLine
 
     _save = self.pos
@@ -2824,7 +2540,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlOpenAnchor = "<" Spnl ("a" | "A") Spnl HtmlAttribute* ">"
   def _HtmlOpenAnchor
 
     _save = self.pos
@@ -2880,7 +2595,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlCloseAnchor = "<" Spnl "/" ("a" | "A") Spnl ">"
   def _HtmlCloseAnchor
 
     _save = self.pos
@@ -2932,7 +2646,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlAnchor = HtmlOpenAnchor (HtmlAnchor | !HtmlCloseAnchor .)* HtmlCloseAnchor
   def _HtmlAnchor
 
     _save = self.pos
@@ -2990,7 +2703,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenAddress = "<" Spnl ("address" | "ADDRESS") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenAddress
 
     _save = self.pos
@@ -3046,7 +2758,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseAddress = "<" Spnl "/" ("address" | "ADDRESS") Spnl ">"
   def _HtmlBlockCloseAddress
 
     _save = self.pos
@@ -3098,7 +2809,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockAddress = HtmlBlockOpenAddress (HtmlBlockAddress | !HtmlBlockCloseAddress .)* HtmlBlockCloseAddress
   def _HtmlBlockAddress
 
     _save = self.pos
@@ -3156,7 +2866,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenBlockquote = "<" Spnl ("blockquote" | "BLOCKQUOTE") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenBlockquote
 
     _save = self.pos
@@ -3212,7 +2921,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseBlockquote = "<" Spnl "/" ("blockquote" | "BLOCKQUOTE") Spnl ">"
   def _HtmlBlockCloseBlockquote
 
     _save = self.pos
@@ -3264,7 +2972,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockBlockquote = HtmlBlockOpenBlockquote (HtmlBlockBlockquote | !HtmlBlockCloseBlockquote .)* HtmlBlockCloseBlockquote
   def _HtmlBlockBlockquote
 
     _save = self.pos
@@ -3322,7 +3029,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenCenter = "<" Spnl ("center" | "CENTER") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenCenter
 
     _save = self.pos
@@ -3378,7 +3084,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseCenter = "<" Spnl "/" ("center" | "CENTER") Spnl ">"
   def _HtmlBlockCloseCenter
 
     _save = self.pos
@@ -3430,7 +3135,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCenter = HtmlBlockOpenCenter (HtmlBlockCenter | !HtmlBlockCloseCenter .)* HtmlBlockCloseCenter
   def _HtmlBlockCenter
 
     _save = self.pos
@@ -3488,7 +3192,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenDir = "<" Spnl ("dir" | "DIR") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenDir
 
     _save = self.pos
@@ -3544,7 +3247,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseDir = "<" Spnl "/" ("dir" | "DIR") Spnl ">"
   def _HtmlBlockCloseDir
 
     _save = self.pos
@@ -3596,7 +3298,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockDir = HtmlBlockOpenDir (HtmlBlockDir | !HtmlBlockCloseDir .)* HtmlBlockCloseDir
   def _HtmlBlockDir
 
     _save = self.pos
@@ -3654,7 +3355,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenDiv = "<" Spnl ("div" | "DIV") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenDiv
 
     _save = self.pos
@@ -3710,7 +3410,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseDiv = "<" Spnl "/" ("div" | "DIV") Spnl ">"
   def _HtmlBlockCloseDiv
 
     _save = self.pos
@@ -3762,7 +3461,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockDiv = HtmlBlockOpenDiv (HtmlBlockDiv | !HtmlBlockCloseDiv .)* HtmlBlockCloseDiv
   def _HtmlBlockDiv
 
     _save = self.pos
@@ -3820,7 +3518,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenDl = "<" Spnl ("dl" | "DL") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenDl
 
     _save = self.pos
@@ -3876,7 +3573,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseDl = "<" Spnl "/" ("dl" | "DL") Spnl ">"
   def _HtmlBlockCloseDl
 
     _save = self.pos
@@ -3928,7 +3624,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockDl = HtmlBlockOpenDl (HtmlBlockDl | !HtmlBlockCloseDl .)* HtmlBlockCloseDl
   def _HtmlBlockDl
 
     _save = self.pos
@@ -3986,7 +3681,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenFieldset = "<" Spnl ("fieldset" | "FIELDSET") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenFieldset
 
     _save = self.pos
@@ -4042,7 +3736,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseFieldset = "<" Spnl "/" ("fieldset" | "FIELDSET") Spnl ">"
   def _HtmlBlockCloseFieldset
 
     _save = self.pos
@@ -4094,7 +3787,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockFieldset = HtmlBlockOpenFieldset (HtmlBlockFieldset | !HtmlBlockCloseFieldset .)* HtmlBlockCloseFieldset
   def _HtmlBlockFieldset
 
     _save = self.pos
@@ -4152,7 +3844,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenForm = "<" Spnl ("form" | "FORM") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenForm
 
     _save = self.pos
@@ -4208,7 +3899,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseForm = "<" Spnl "/" ("form" | "FORM") Spnl ">"
   def _HtmlBlockCloseForm
 
     _save = self.pos
@@ -4260,7 +3950,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockForm = HtmlBlockOpenForm (HtmlBlockForm | !HtmlBlockCloseForm .)* HtmlBlockCloseForm
   def _HtmlBlockForm
 
     _save = self.pos
@@ -4318,7 +4007,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenH1 = "<" Spnl ("h1" | "H1") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenH1
 
     _save = self.pos
@@ -4374,7 +4062,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseH1 = "<" Spnl "/" ("h1" | "H1") Spnl ">"
   def _HtmlBlockCloseH1
 
     _save = self.pos
@@ -4426,7 +4113,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockH1 = HtmlBlockOpenH1 (HtmlBlockH1 | !HtmlBlockCloseH1 .)* HtmlBlockCloseH1
   def _HtmlBlockH1
 
     _save = self.pos
@@ -4484,7 +4170,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenH2 = "<" Spnl ("h2" | "H2") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenH2
 
     _save = self.pos
@@ -4540,7 +4225,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseH2 = "<" Spnl "/" ("h2" | "H2") Spnl ">"
   def _HtmlBlockCloseH2
 
     _save = self.pos
@@ -4592,7 +4276,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockH2 = HtmlBlockOpenH2 (HtmlBlockH2 | !HtmlBlockCloseH2 .)* HtmlBlockCloseH2
   def _HtmlBlockH2
 
     _save = self.pos
@@ -4650,7 +4333,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenH3 = "<" Spnl ("h3" | "H3") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenH3
 
     _save = self.pos
@@ -4706,7 +4388,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseH3 = "<" Spnl "/" ("h3" | "H3") Spnl ">"
   def _HtmlBlockCloseH3
 
     _save = self.pos
@@ -4758,7 +4439,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockH3 = HtmlBlockOpenH3 (HtmlBlockH3 | !HtmlBlockCloseH3 .)* HtmlBlockCloseH3
   def _HtmlBlockH3
 
     _save = self.pos
@@ -4816,7 +4496,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenH4 = "<" Spnl ("h4" | "H4") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenH4
 
     _save = self.pos
@@ -4872,7 +4551,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseH4 = "<" Spnl "/" ("h4" | "H4") Spnl ">"
   def _HtmlBlockCloseH4
 
     _save = self.pos
@@ -4924,7 +4602,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockH4 = HtmlBlockOpenH4 (HtmlBlockH4 | !HtmlBlockCloseH4 .)* HtmlBlockCloseH4
   def _HtmlBlockH4
 
     _save = self.pos
@@ -4982,7 +4659,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenH5 = "<" Spnl ("h5" | "H5") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenH5
 
     _save = self.pos
@@ -5038,7 +4714,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseH5 = "<" Spnl "/" ("h5" | "H5") Spnl ">"
   def _HtmlBlockCloseH5
 
     _save = self.pos
@@ -5090,7 +4765,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockH5 = HtmlBlockOpenH5 (HtmlBlockH5 | !HtmlBlockCloseH5 .)* HtmlBlockCloseH5
   def _HtmlBlockH5
 
     _save = self.pos
@@ -5148,7 +4822,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenH6 = "<" Spnl ("h6" | "H6") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenH6
 
     _save = self.pos
@@ -5204,7 +4877,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseH6 = "<" Spnl "/" ("h6" | "H6") Spnl ">"
   def _HtmlBlockCloseH6
 
     _save = self.pos
@@ -5256,7 +4928,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockH6 = HtmlBlockOpenH6 (HtmlBlockH6 | !HtmlBlockCloseH6 .)* HtmlBlockCloseH6
   def _HtmlBlockH6
 
     _save = self.pos
@@ -5314,7 +4985,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenMenu = "<" Spnl ("menu" | "MENU") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenMenu
 
     _save = self.pos
@@ -5370,7 +5040,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseMenu = "<" Spnl "/" ("menu" | "MENU") Spnl ">"
   def _HtmlBlockCloseMenu
 
     _save = self.pos
@@ -5422,7 +5091,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockMenu = HtmlBlockOpenMenu (HtmlBlockMenu | !HtmlBlockCloseMenu .)* HtmlBlockCloseMenu
   def _HtmlBlockMenu
 
     _save = self.pos
@@ -5480,7 +5148,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenNoframes = "<" Spnl ("noframes" | "NOFRAMES") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenNoframes
 
     _save = self.pos
@@ -5536,7 +5203,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseNoframes = "<" Spnl "/" ("noframes" | "NOFRAMES") Spnl ">"
   def _HtmlBlockCloseNoframes
 
     _save = self.pos
@@ -5588,7 +5254,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockNoframes = HtmlBlockOpenNoframes (HtmlBlockNoframes | !HtmlBlockCloseNoframes .)* HtmlBlockCloseNoframes
   def _HtmlBlockNoframes
 
     _save = self.pos
@@ -5646,7 +5311,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenNoscript = "<" Spnl ("noscript" | "NOSCRIPT") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenNoscript
 
     _save = self.pos
@@ -5702,7 +5366,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseNoscript = "<" Spnl "/" ("noscript" | "NOSCRIPT") Spnl ">"
   def _HtmlBlockCloseNoscript
 
     _save = self.pos
@@ -5754,7 +5417,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockNoscript = HtmlBlockOpenNoscript (HtmlBlockNoscript | !HtmlBlockCloseNoscript .)* HtmlBlockCloseNoscript
   def _HtmlBlockNoscript
 
     _save = self.pos
@@ -5812,7 +5474,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenOl = "<" Spnl ("ol" | "OL") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenOl
 
     _save = self.pos
@@ -5868,7 +5529,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseOl = "<" Spnl "/" ("ol" | "OL") Spnl ">"
   def _HtmlBlockCloseOl
 
     _save = self.pos
@@ -5920,7 +5580,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOl = HtmlBlockOpenOl (HtmlBlockOl | !HtmlBlockCloseOl .)* HtmlBlockCloseOl
   def _HtmlBlockOl
 
     _save = self.pos
@@ -5978,7 +5637,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenP = "<" Spnl ("p" | "P") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenP
 
     _save = self.pos
@@ -6034,7 +5692,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseP = "<" Spnl "/" ("p" | "P") Spnl ">"
   def _HtmlBlockCloseP
 
     _save = self.pos
@@ -6086,7 +5743,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockP = HtmlBlockOpenP (HtmlBlockP | !HtmlBlockCloseP .)* HtmlBlockCloseP
   def _HtmlBlockP
 
     _save = self.pos
@@ -6144,7 +5800,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenPre = "<" Spnl ("pre" | "PRE") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenPre
 
     _save = self.pos
@@ -6200,7 +5855,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockClosePre = "<" Spnl "/" ("pre" | "PRE") Spnl ">"
   def _HtmlBlockClosePre
 
     _save = self.pos
@@ -6252,7 +5906,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockPre = HtmlBlockOpenPre (HtmlBlockPre | !HtmlBlockClosePre .)* HtmlBlockClosePre
   def _HtmlBlockPre
 
     _save = self.pos
@@ -6310,7 +5963,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenTable = "<" Spnl ("table" | "TABLE") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenTable
 
     _save = self.pos
@@ -6366,7 +6018,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseTable = "<" Spnl "/" ("table" | "TABLE") Spnl ">"
   def _HtmlBlockCloseTable
 
     _save = self.pos
@@ -6418,7 +6069,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockTable = HtmlBlockOpenTable (HtmlBlockTable | !HtmlBlockCloseTable .)* HtmlBlockCloseTable
   def _HtmlBlockTable
 
     _save = self.pos
@@ -6476,7 +6126,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenUl = "<" Spnl ("ul" | "UL") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenUl
 
     _save = self.pos
@@ -6532,7 +6181,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseUl = "<" Spnl "/" ("ul" | "UL") Spnl ">"
   def _HtmlBlockCloseUl
 
     _save = self.pos
@@ -6584,7 +6232,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockUl = HtmlBlockOpenUl (HtmlBlockUl | !HtmlBlockCloseUl .)* HtmlBlockCloseUl
   def _HtmlBlockUl
 
     _save = self.pos
@@ -6642,7 +6289,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenDd = "<" Spnl ("dd" | "DD") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenDd
 
     _save = self.pos
@@ -6698,7 +6344,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseDd = "<" Spnl "/" ("dd" | "DD") Spnl ">"
   def _HtmlBlockCloseDd
 
     _save = self.pos
@@ -6750,7 +6395,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockDd = HtmlBlockOpenDd (HtmlBlockDd | !HtmlBlockCloseDd .)* HtmlBlockCloseDd
   def _HtmlBlockDd
 
     _save = self.pos
@@ -6808,7 +6452,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenDt = "<" Spnl ("dt" | "DT") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenDt
 
     _save = self.pos
@@ -6864,7 +6507,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseDt = "<" Spnl "/" ("dt" | "DT") Spnl ">"
   def _HtmlBlockCloseDt
 
     _save = self.pos
@@ -6916,7 +6558,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockDt = HtmlBlockOpenDt (HtmlBlockDt | !HtmlBlockCloseDt .)* HtmlBlockCloseDt
   def _HtmlBlockDt
 
     _save = self.pos
@@ -6974,7 +6615,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenFrameset = "<" Spnl ("frameset" | "FRAMESET") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenFrameset
 
     _save = self.pos
@@ -7030,7 +6670,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseFrameset = "<" Spnl "/" ("frameset" | "FRAMESET") Spnl ">"
   def _HtmlBlockCloseFrameset
 
     _save = self.pos
@@ -7082,7 +6721,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockFrameset = HtmlBlockOpenFrameset (HtmlBlockFrameset | !HtmlBlockCloseFrameset .)* HtmlBlockCloseFrameset
   def _HtmlBlockFrameset
 
     _save = self.pos
@@ -7140,7 +6778,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenLi = "<" Spnl ("li" | "LI") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenLi
 
     _save = self.pos
@@ -7196,7 +6833,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseLi = "<" Spnl "/" ("li" | "LI") Spnl ">"
   def _HtmlBlockCloseLi
 
     _save = self.pos
@@ -7248,7 +6884,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockLi = HtmlBlockOpenLi (HtmlBlockLi | !HtmlBlockCloseLi .)* HtmlBlockCloseLi
   def _HtmlBlockLi
 
     _save = self.pos
@@ -7306,7 +6941,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenTbody = "<" Spnl ("tbody" | "TBODY") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenTbody
 
     _save = self.pos
@@ -7362,7 +6996,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseTbody = "<" Spnl "/" ("tbody" | "TBODY") Spnl ">"
   def _HtmlBlockCloseTbody
 
     _save = self.pos
@@ -7414,7 +7047,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockTbody = HtmlBlockOpenTbody (HtmlBlockTbody | !HtmlBlockCloseTbody .)* HtmlBlockCloseTbody
   def _HtmlBlockTbody
 
     _save = self.pos
@@ -7472,7 +7104,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenTd = "<" Spnl ("td" | "TD") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenTd
 
     _save = self.pos
@@ -7528,7 +7159,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseTd = "<" Spnl "/" ("td" | "TD") Spnl ">"
   def _HtmlBlockCloseTd
 
     _save = self.pos
@@ -7580,7 +7210,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockTd = HtmlBlockOpenTd (HtmlBlockTd | !HtmlBlockCloseTd .)* HtmlBlockCloseTd
   def _HtmlBlockTd
 
     _save = self.pos
@@ -7638,7 +7267,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenTfoot = "<" Spnl ("tfoot" | "TFOOT") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenTfoot
 
     _save = self.pos
@@ -7694,7 +7322,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseTfoot = "<" Spnl "/" ("tfoot" | "TFOOT") Spnl ">"
   def _HtmlBlockCloseTfoot
 
     _save = self.pos
@@ -7746,7 +7373,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockTfoot = HtmlBlockOpenTfoot (HtmlBlockTfoot | !HtmlBlockCloseTfoot .)* HtmlBlockCloseTfoot
   def _HtmlBlockTfoot
 
     _save = self.pos
@@ -7804,7 +7430,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenTh = "<" Spnl ("th" | "TH") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenTh
 
     _save = self.pos
@@ -7860,7 +7485,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseTh = "<" Spnl "/" ("th" | "TH") Spnl ">"
   def _HtmlBlockCloseTh
 
     _save = self.pos
@@ -7912,7 +7536,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockTh = HtmlBlockOpenTh (HtmlBlockTh | !HtmlBlockCloseTh .)* HtmlBlockCloseTh
   def _HtmlBlockTh
 
     _save = self.pos
@@ -7970,7 +7593,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenThead = "<" Spnl ("thead" | "THEAD") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenThead
 
     _save = self.pos
@@ -8026,7 +7648,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseThead = "<" Spnl "/" ("thead" | "THEAD") Spnl ">"
   def _HtmlBlockCloseThead
 
     _save = self.pos
@@ -8078,7 +7699,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockThead = HtmlBlockOpenThead (HtmlBlockThead | !HtmlBlockCloseThead .)* HtmlBlockCloseThead
   def _HtmlBlockThead
 
     _save = self.pos
@@ -8136,7 +7756,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenTr = "<" Spnl ("tr" | "TR") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenTr
 
     _save = self.pos
@@ -8192,7 +7811,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseTr = "<" Spnl "/" ("tr" | "TR") Spnl ">"
   def _HtmlBlockCloseTr
 
     _save = self.pos
@@ -8244,7 +7862,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockTr = HtmlBlockOpenTr (HtmlBlockTr | !HtmlBlockCloseTr .)* HtmlBlockCloseTr
   def _HtmlBlockTr
 
     _save = self.pos
@@ -8302,7 +7919,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockOpenScript = "<" Spnl ("script" | "SCRIPT") Spnl HtmlAttribute* ">"
   def _HtmlBlockOpenScript
 
     _save = self.pos
@@ -8358,7 +7974,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockCloseScript = "<" Spnl "/" ("script" | "SCRIPT") Spnl ">"
   def _HtmlBlockCloseScript
 
     _save = self.pos
@@ -8410,7 +8025,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockScript = HtmlBlockOpenScript (!HtmlBlockCloseScript .)* HtmlBlockCloseScript
   def _HtmlBlockScript
 
     _save = self.pos
@@ -8457,7 +8071,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockInTags = (HtmlAnchor | HtmlBlockAddress | HtmlBlockBlockquote | HtmlBlockCenter | HtmlBlockDir | HtmlBlockDiv | HtmlBlockDl | HtmlBlockFieldset | HtmlBlockForm | HtmlBlockH1 | HtmlBlockH2 | HtmlBlockH3 | HtmlBlockH4 | HtmlBlockH5 | HtmlBlockH6 | HtmlBlockMenu | HtmlBlockNoframes | HtmlBlockNoscript | HtmlBlockOl | HtmlBlockP | HtmlBlockPre | HtmlBlockTable | HtmlBlockUl | HtmlBlockDd | HtmlBlockDt | HtmlBlockFrameset | HtmlBlockLi | HtmlBlockTbody | HtmlBlockTd | HtmlBlockTfoot | HtmlBlockTh | HtmlBlockThead | HtmlBlockTr | HtmlBlockScript)
   def _HtmlBlockInTags
 
     _save = self.pos
@@ -8571,7 +8184,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlock = < (HtmlBlockInTags | HtmlComment | HtmlBlockSelfClosing | HtmlUnclosed) > @BlankLine+ { if html? then                 RDoc::Markup::Raw.new text               end }
   def _HtmlBlock
 
     _save = self.pos
@@ -8631,7 +8243,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlUnclosed = "<" Spnl HtmlUnclosedType Spnl HtmlAttribute* Spnl ">"
   def _HtmlUnclosed
 
     _save = self.pos
@@ -8681,7 +8292,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlUnclosedType = ("HR" | "hr")
   def _HtmlUnclosedType
 
     _save = self.pos
@@ -8699,7 +8309,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockSelfClosing = "<" Spnl HtmlBlockType Spnl HtmlAttribute* "/" Spnl ">"
   def _HtmlBlockSelfClosing
 
     _save = self.pos
@@ -8754,7 +8363,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlBlockType = ("ADDRESS" | "BLOCKQUOTE" | "CENTER" | "DD" | "DIR" | "DIV" | "DL" | "DT" | "FIELDSET" | "FORM" | "FRAMESET" | "H1" | "H2" | "H3" | "H4" | "H5" | "H6" | "HR" | "ISINDEX" | "LI" | "MENU" | "NOFRAMES" | "NOSCRIPT" | "OL" | "P" | "PRE" | "SCRIPT" | "TABLE" | "TBODY" | "TD" | "TFOOT" | "TH" | "THEAD" | "TR" | "UL" | "address" | "blockquote" | "center" | "dd" | "dir" | "div" | "dl" | "dt" | "fieldset" | "form" | "frameset" | "h1" | "h2" | "h3" | "h4" | "h5" | "h6" | "hr" | "isindex" | "li" | "menu" | "noframes" | "noscript" | "ol" | "p" | "pre" | "script" | "table" | "tbody" | "td" | "tfoot" | "th" | "thead" | "tr" | "ul")
   def _HtmlBlockType
 
     _save = self.pos
@@ -8976,7 +8584,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # StyleOpen = "<" Spnl ("style" | "STYLE") Spnl HtmlAttribute* ">"
   def _StyleOpen
 
     _save = self.pos
@@ -9032,7 +8639,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # StyleClose = "<" Spnl "/" ("style" | "STYLE") Spnl ">"
   def _StyleClose
 
     _save = self.pos
@@ -9084,7 +8690,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # InStyleTags = StyleOpen (!StyleClose .)* StyleClose
   def _InStyleTags
 
     _save = self.pos
@@ -9131,7 +8736,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # StyleBlock = < InStyleTags > @BlankLine* { if css? then                     RDoc::Markup::Raw.new text                   end }
   def _StyleBlock
 
     _save = self.pos
@@ -9168,7 +8772,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Inlines = (!@Endline Inline:i { i } | @Endline:c &Inline { c })+:chunks @Endline? { chunks }
   def _Inlines
 
     _save = self.pos
@@ -9331,7 +8934,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Inline = (Str | @Endline | UlOrStarLine | @Space | Strong | Emph | Image | Link | NoteReference | InlineNote | Code | RawHtml | Entity | EscapedChar | Symbol)
   def _Inline
 
     _save = self.pos
@@ -9388,7 +8990,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Space = @Spacechar+ { " " }
   def _Space
 
     _save = self.pos
@@ -9420,7 +9021,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Str = @StartList:a < @NormalChar+ > { a = text } (StrChunk:c { a << c })* { a }
   def _Str
 
     _save = self.pos
@@ -9493,7 +9093,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # StrChunk = < (@NormalChar | /_+/ &Alphanumeric)+ > { text }
   def _StrChunk
 
     _save = self.pos
@@ -9583,7 +9182,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # EscapedChar = "\\" !@Newline < /[:\\`|*_{}\[\]()#+.!><-]/ > { text }
   def _EscapedChar
 
     _save = self.pos
@@ -9622,7 +9220,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Entity = (HexEntity | DecEntity | CharEntity):a { a }
   def _Entity
 
     _save = self.pos
@@ -9659,7 +9256,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Endline = (@LineBreak | @TerminalEndline | @NormalEndline)
   def _Endline
 
     _save = self.pos
@@ -9680,7 +9276,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # NormalEndline = @Sp @Newline !@BlankLine !">" !AtxStart !(Line /={3,}|-{3,}=/ @Newline) { "\n" }
   def _NormalEndline
 
     _save = self.pos
@@ -9758,7 +9353,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # TerminalEndline = @Sp @Newline @Eof
   def _TerminalEndline
 
     _save = self.pos
@@ -9784,7 +9378,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # LineBreak = "  " @NormalEndline { RDoc::Markup::HardBreak.new }
   def _LineBreak
 
     _save = self.pos
@@ -9811,7 +9404,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Symbol = < @SpecialChar > { text }
   def _Symbol
 
     _save = self.pos
@@ -9837,7 +9429,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # UlOrStarLine = (UlLine | StarLine):a { a }
   def _UlOrStarLine
 
     _save = self.pos
@@ -9871,7 +9462,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # StarLine = (< /\*{4,}/ > { text } | < @Spacechar /\*+/ &@Spacechar > { text })
   def _StarLine
 
     _save = self.pos
@@ -9948,7 +9538,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # UlLine = (< /_{4,}/ > { text } | < @Spacechar /_+/ &@Spacechar > { text })
   def _UlLine
 
     _save = self.pos
@@ -10025,7 +9614,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Emph = (EmphStar | EmphUl)
   def _Emph
 
     _save = self.pos
@@ -10043,7 +9631,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # OneStarOpen = !StarLine "*" !@Spacechar !@Newline
   def _OneStarOpen
 
     _save = self.pos
@@ -10083,7 +9670,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # OneStarClose = !@Spacechar !@Newline Inline:a "*" { a }
   def _OneStarClose
 
     _save = self.pos
@@ -10127,7 +9713,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # EmphStar = OneStarOpen @StartList:a (!OneStarClose Inline:l { a << l })* OneStarClose:l { a << l } { emphasis a.join }
   def _EmphStar
 
     _save = self.pos
@@ -10200,7 +9785,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # OneUlOpen = !UlLine "_" !@Spacechar !@Newline
   def _OneUlOpen
 
     _save = self.pos
@@ -10240,7 +9824,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # OneUlClose = !@Spacechar !@Newline Inline:a "_" { a }
   def _OneUlClose
 
     _save = self.pos
@@ -10284,7 +9867,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # EmphUl = OneUlOpen @StartList:a (!OneUlClose Inline:l { a << l })* OneUlClose:l { a << l } { emphasis a.join }
   def _EmphUl
 
     _save = self.pos
@@ -10357,7 +9939,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Strong = (StrongStar | StrongUl)
   def _Strong
 
     _save = self.pos
@@ -10375,7 +9956,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # TwoStarOpen = !StarLine "**" !@Spacechar !@Newline
   def _TwoStarOpen
 
     _save = self.pos
@@ -10415,7 +9995,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # TwoStarClose = !@Spacechar !@Newline Inline:a "**" { a }
   def _TwoStarClose
 
     _save = self.pos
@@ -10459,7 +10038,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # StrongStar = TwoStarOpen @StartList:a (!TwoStarClose Inline:l { a << l })* TwoStarClose:l { a << l } { strong a.join }
   def _StrongStar
 
     _save = self.pos
@@ -10532,7 +10110,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # TwoUlOpen = !UlLine "__" !@Spacechar !@Newline
   def _TwoUlOpen
 
     _save = self.pos
@@ -10572,7 +10149,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # TwoUlClose = !@Spacechar !@Newline Inline:a "__" { a }
   def _TwoUlClose
 
     _save = self.pos
@@ -10616,7 +10192,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # StrongUl = TwoUlOpen @StartList:a (!TwoUlClose Inline:i { a << i })* TwoUlClose:l { a << l } { strong a.join }
   def _StrongUl
 
     _save = self.pos
@@ -10689,7 +10264,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Image = "!" (ExplicitLink | ReferenceLink):a { "rdoc-image:#{a[/\[(.*)\]/, 1]}" }
   def _Image
 
     _save = self.pos
@@ -10728,7 +10302,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Link = (ExplicitLink | ReferenceLink | AutoLink)
   def _Link
 
     _save = self.pos
@@ -10749,7 +10322,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ReferenceLink = (ReferenceLinkDouble | ReferenceLinkSingle)
   def _ReferenceLink
 
     _save = self.pos
@@ -10767,7 +10339,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ReferenceLinkDouble = Label:content < Spnl > !"[]" Label:label { link_to content, label, text }
   def _ReferenceLinkDouble
 
     _save = self.pos
@@ -10813,7 +10384,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ReferenceLinkSingle = Label:content < (Spnl "[]")? > { link_to content, content, text }
   def _ReferenceLinkSingle
 
     _save = self.pos
@@ -10864,7 +10434,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ExplicitLink = Label:l Spnl "(" @Sp Source:s Spnl Title @Sp ")" { "{#{l}}[#{s}]" }
   def _ExplicitLink
 
     _save = self.pos
@@ -10928,7 +10497,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Source = ("<" < SourceContents > ">" | < SourceContents >) { text }
   def _Source
 
     _save = self.pos
@@ -10988,7 +10556,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # SourceContents = (((!"(" !")" !">" Nonspacechar)+ | "(" SourceContents ")")* | "")
   def _SourceContents
 
     _save = self.pos
@@ -11116,7 +10683,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Title = (TitleSingle | TitleDouble | ""):a { a }
   def _Title
 
     _save = self.pos
@@ -11153,7 +10719,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # TitleSingle = "'" (!("'" @Sp (")" | @Newline)) .)* "'"
   def _TitleSingle
 
     _save = self.pos
@@ -11230,7 +10795,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # TitleDouble = "\"" (!("\"" @Sp (")" | @Newline)) .)* "\""
   def _TitleDouble
 
     _save = self.pos
@@ -11307,7 +10871,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # AutoLink = (AutoLinkUrl | AutoLinkEmail)
   def _AutoLink
 
     _save = self.pos
@@ -11325,7 +10888,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # AutoLinkUrl = "<" < /[A-Za-z]+/ "://" (!@Newline !">" .)+ > ">" { text }
   def _AutoLinkUrl
 
     _save = self.pos
@@ -11440,7 +11002,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # AutoLinkEmail = "<" "mailto:"? < /[\w+.\/!%~$-]+/i "@" (!@Newline !">" .)+ > ">" { "mailto:#{text}" }
   def _AutoLinkEmail
 
     _save = self.pos
@@ -11565,7 +11126,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Reference = @NonindentSpace !"[]" Label:label ":" Spnl RefSrc:link RefTitle @BlankLine+ { # TODO use title               reference label, link               nil             }
   def _Reference
 
     _save = self.pos
@@ -11640,7 +11200,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Label = "[" (!"^" &{ notes? } | &. &{ !notes? }) @StartList:a (!"]" Inline:l { a << l })* "]" { a.join.gsub(/\s+/, ' ') }
   def _Label
 
     _save = self.pos
@@ -11759,7 +11318,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # RefSrc = < Nonspacechar+ > { text }
   def _RefSrc
 
     _save = self.pos
@@ -11795,7 +11353,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # RefTitle = (RefTitleSingle | RefTitleDouble | RefTitleParens | EmptyTitle)
   def _RefTitle
 
     _save = self.pos
@@ -11819,14 +11376,12 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # EmptyTitle = ""
   def _EmptyTitle
     _tmp = match_string("")
     set_failed_rule :_EmptyTitle unless _tmp
     return _tmp
   end
 
-  # RefTitleSingle = Spnl "'" < (!("'" @Sp @Newline | @Newline) .)* > "'" { text }
   def _RefTitleSingle
 
     _save = self.pos
@@ -11918,7 +11473,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # RefTitleDouble = Spnl "\"" < (!("\"" @Sp @Newline | @Newline) .)* > "\"" { text }
   def _RefTitleDouble
 
     _save = self.pos
@@ -12010,7 +11564,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # RefTitleParens = Spnl "(" < (!(")" @Sp @Newline | @Newline) .)* > ")" { text }
   def _RefTitleParens
 
     _save = self.pos
@@ -12102,7 +11655,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # References = (Reference | SkipBlock)*
   def _References
     while true
 
@@ -12124,7 +11676,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Ticks1 = "`" !"`"
   def _Ticks1
 
     _save = self.pos
@@ -12148,7 +11699,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Ticks2 = "``" !"`"
   def _Ticks2
 
     _save = self.pos
@@ -12172,7 +11722,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Ticks3 = "```" !"`"
   def _Ticks3
 
     _save = self.pos
@@ -12196,7 +11745,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Ticks4 = "````" !"`"
   def _Ticks4
 
     _save = self.pos
@@ -12220,7 +11768,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Ticks5 = "`````" !"`"
   def _Ticks5
 
     _save = self.pos
@@ -12244,7 +11791,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Code = (Ticks1 @Sp < ((!"`" Nonspacechar)+ | !Ticks1 /`+/ | !(@Sp Ticks1) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks1 | Ticks2 @Sp < ((!"`" Nonspacechar)+ | !Ticks2 /`+/ | !(@Sp Ticks2) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks2 | Ticks3 @Sp < ((!"`" Nonspacechar)+ | !Ticks3 /`+/ | !(@Sp Ticks3) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks3 | Ticks4 @Sp < ((!"`" Nonspacechar)+ | !Ticks4 /`+/ | !(@Sp Ticks4) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks4 | Ticks5 @Sp < ((!"`" Nonspacechar)+ | !Ticks5 /`+/ | !(@Sp Ticks5) (@Spacechar | @Newline !@BlankLine))+ > @Sp Ticks5) { "<code>#{text}</code>" }
   def _Code
 
     _save = self.pos
@@ -13841,7 +13387,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # RawHtml = < (HtmlComment | HtmlBlockScript | HtmlTag) > { if html? then text else '' end }
   def _RawHtml
 
     _save = self.pos
@@ -13881,7 +13426,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # BlankLine = @Sp @Newline { "\n" }
   def _BlankLine
 
     _save = self.pos
@@ -13908,7 +13452,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Quoted = ("\"" (!"\"" .)* "\"" | "'" (!"'" .)* "'")
   def _Quoted
 
     _save = self.pos
@@ -14006,7 +13549,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlAttribute = (AlphanumericAscii | "-")+ Spnl ("=" Spnl (Quoted | (!">" Nonspacechar)+))? Spnl
   def _HtmlAttribute
 
     _save = self.pos
@@ -14148,7 +13690,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlComment = "<!--" (!"-->" .)* "-->"
   def _HtmlComment
 
     _save = self.pos
@@ -14195,7 +13736,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # HtmlTag = "<" Spnl "/"? AlphanumericAscii+ Spnl HtmlAttribute* "/"? Spnl ">"
   def _HtmlTag
 
     _save = self.pos
@@ -14275,7 +13815,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Eof = !.
   def _Eof
     _save = self.pos
     _tmp = get_byte
@@ -14285,7 +13824,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Nonspacechar = !@Spacechar !@Newline .
   def _Nonspacechar
 
     _save = self.pos
@@ -14317,7 +13855,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Sp = @Spacechar*
   def _Sp
     while true
       _tmp = _Spacechar()
@@ -14328,7 +13865,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Spnl = @Sp (@Newline @Sp)?
   def _Spnl
 
     _save = self.pos
@@ -14368,7 +13904,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # SpecialChar = (/[*_`&\[\]()<!#\\'"]/ | @ExtendedSpecialChar)
   def _SpecialChar
 
     _save = self.pos
@@ -14386,7 +13921,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # NormalChar = !(@SpecialChar | @Spacechar | @Newline) .
   def _NormalChar
 
     _save = self.pos
@@ -14424,7 +13958,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Digit = [0-9]
   def _Digit
     _save = self.pos
     _tmp = get_byte
@@ -14438,49 +13971,42 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Alphanumeric = %literals.Alphanumeric
   def _Alphanumeric
     _tmp = @_grammar_literals.external_invoke(self, :_Alphanumeric)
     set_failed_rule :_Alphanumeric unless _tmp
     return _tmp
   end
 
-  # AlphanumericAscii = %literals.AlphanumericAscii
   def _AlphanumericAscii
     _tmp = @_grammar_literals.external_invoke(self, :_AlphanumericAscii)
     set_failed_rule :_AlphanumericAscii unless _tmp
     return _tmp
   end
 
-  # BOM = %literals.BOM
   def _BOM
     _tmp = @_grammar_literals.external_invoke(self, :_BOM)
     set_failed_rule :_BOM unless _tmp
     return _tmp
   end
 
-  # Newline = %literals.Newline
   def _Newline
     _tmp = @_grammar_literals.external_invoke(self, :_Newline)
     set_failed_rule :_Newline unless _tmp
     return _tmp
   end
 
-  # NonAlphanumeric = %literals.NonAlphanumeric
   def _NonAlphanumeric
     _tmp = @_grammar_literals.external_invoke(self, :_NonAlphanumeric)
     set_failed_rule :_NonAlphanumeric unless _tmp
     return _tmp
   end
 
-  # Spacechar = %literals.Spacechar
   def _Spacechar
     _tmp = @_grammar_literals.external_invoke(self, :_Spacechar)
     set_failed_rule :_Spacechar unless _tmp
     return _tmp
   end
 
-  # HexEntity = /&#x/i < /[0-9a-fA-F]+/ > ";" { [text.to_i(16)].pack 'U' }
   def _HexEntity
 
     _save = self.pos
@@ -14516,7 +14042,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # DecEntity = "&#" < /[0-9]+/ > ";" { [text.to_i].pack 'U' }
   def _DecEntity
 
     _save = self.pos
@@ -14552,7 +14077,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # CharEntity = "&" < /[A-Za-z0-9]+/ > ";" { if entity = HTML_ENTITIES[text] then                  entity.pack 'U*'                else                  "&#{text};"                end              }
   def _CharEntity
 
     _save = self.pos
@@ -14593,21 +14117,18 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # NonindentSpace = / {0,3}/
   def _NonindentSpace
     _tmp = scan(/\A(?-mix: {0,3})/)
     set_failed_rule :_NonindentSpace unless _tmp
     return _tmp
   end
 
-  # Indent = /\t|    /
   def _Indent
     _tmp = scan(/\A(?-mix:\t|    )/)
     set_failed_rule :_Indent unless _tmp
     return _tmp
   end
 
-  # IndentedLine = Indent Line
   def _IndentedLine
 
     _save = self.pos
@@ -14628,7 +14149,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # OptionallyIndentedLine = Indent? Line
   def _OptionallyIndentedLine
 
     _save = self.pos
@@ -14654,7 +14174,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # StartList = &. { [] }
   def _StartList
 
     _save = self.pos
@@ -14678,7 +14197,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Line = @RawLine:a { a }
   def _Line
 
     _save = self.pos
@@ -14701,7 +14219,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # RawLine = (< (!"\r" !"\n" .)* @Newline > | < .+ > @Eof) { text }
   def _RawLine
 
     _save = self.pos
@@ -14809,7 +14326,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # SkipBlock = (HtmlBlock | (!"#" !SetextBottom1 !SetextBottom2 !@BlankLine @RawLine)+ @BlankLine* | @BlankLine+ | @RawLine)
   def _SkipBlock
 
     _save = self.pos
@@ -14953,7 +14469,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # ExtendedSpecialChar = &{ notes? } "^"
   def _ExtendedSpecialChar
 
     _save = self.pos
@@ -14976,7 +14491,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # NoteReference = &{ notes? } RawNoteReference:ref { note_for ref }
   def _NoteReference
 
     _save = self.pos
@@ -15006,7 +14520,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # RawNoteReference = "[^" < (!@Newline !"]" .)+ > "]" { text }
   def _RawNoteReference
 
     _save = self.pos
@@ -15102,7 +14615,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Note = &{ notes? } @NonindentSpace RawNoteReference:ref ":" @Sp @StartList:a RawNoteBlock:i { a.concat i } (&Indent RawNoteBlock:i { a.concat i })* { @footnotes[ref] = paragraph a                    nil                 }
   def _Note
 
     _save = self.pos
@@ -15200,7 +14712,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # InlineNote = &{ notes? } "^[" @StartList:a (!"]" Inline:l { a << l })+ "]" {                ref = [:inline, @note_order.length]                @footnotes[ref] = paragraph a                 note_for ref              }
   def _InlineNote
 
     _save = self.pos
@@ -15308,7 +14819,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # Notes = (Note | SkipBlock)*
   def _Notes
     while true
 
@@ -15330,7 +14840,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # RawNoteBlock = @StartList:a (!@BlankLine OptionallyIndentedLine:l { a << l })+ < @BlankLine* > { a << text } { a }
   def _RawNoteBlock
 
     _save = self.pos
@@ -15435,7 +14944,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # CodeFence = &{ github? } Ticks3 (@Sp StrChunk:format)? Spnl < ((!"`" Nonspacechar)+ | !Ticks3 /`+/ | Spacechar | @Newline)+ > Ticks3 @Sp @Newline* { verbatim = RDoc::Markup::Verbatim.new text               verbatim.format = format.intern if format               verbatim             }
   def _CodeFence
 
     _save = self.pos
@@ -15691,7 +15199,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # DefinitionList = &{ definition_lists? } DefinitionListItem+:list { RDoc::Markup::List.new :NOTE, *list.flatten }
   def _DefinitionList
 
     _save = self.pos
@@ -15735,7 +15242,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # DefinitionListItem = DefinitionListLabel+:label DefinitionListDefinition+:defns { list_items = []                        list_items <<                          RDoc::Markup::ListItem.new(label, defns.shift)                         list_items.concat defns.map { |defn|                          RDoc::Markup::ListItem.new nil, defn                        } unless list_items.empty?                         list_items                      }
   def _DefinitionListItem
 
     _save = self.pos
@@ -15801,7 +15307,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # DefinitionListLabel = StrChunk:label @Sp @Newline { label }
   def _DefinitionListLabel
 
     _save = self.pos
@@ -15834,7 +15339,6 @@ class RDoc::Markdown
     return _tmp
   end
 
-  # DefinitionListDefinition = @NonindentSpace ":" @Space Inlines:a @BlankLine+ { paragraph a }
   def _DefinitionListDefinition
 
     _save = self.pos
@@ -16131,5 +15635,4 @@ class RDoc::Markdown
   Rules[:_DefinitionListItem] = rule_info("DefinitionListItem", "DefinitionListLabel+:label DefinitionListDefinition+:defns { list_items = []                        list_items <<                          RDoc::Markup::ListItem.new(label, defns.shift)                         list_items.concat defns.map { |defn|                          RDoc::Markup::ListItem.new nil, defn                        } unless list_items.empty?                         list_items                      }")
   Rules[:_DefinitionListLabel] = rule_info("DefinitionListLabel", "StrChunk:label @Sp @Newline { label }")
   Rules[:_DefinitionListDefinition] = rule_info("DefinitionListDefinition", "@NonindentSpace \":\" @Space Inlines:a @BlankLine+ { paragraph a }")
-  # :startdoc:
 end

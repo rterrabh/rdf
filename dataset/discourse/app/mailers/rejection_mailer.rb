@@ -11,13 +11,6 @@ class RejectionMailer < ActionMailer::Base
                               :template, :allow_reply_by_email,
                               :private_reply, :from_alias]
 
-  # Send an email rejection message.
-  #
-  # template - i18n key under system_messages
-  # message_from - Who to send the rejection messsage to
-  # template_args - arguments to pass to i18n for interpolation into the message
-  #     Certain keys are disallowed in template_args to avoid confusing the
-  #     BuildEmailHelper. You can see the list in DISALLOWED_TEMPLATE_ARGS.
   def send_rejection(template, message_from, template_args)
     if template_args.keys.any? { |k| DISALLOWED_TEMPLATE_ARGS.include? k }
       raise ArgumentError.new('Reserved key in template arguments')

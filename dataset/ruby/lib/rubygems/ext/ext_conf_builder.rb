@@ -1,8 +1,3 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
 require 'fileutils'
 require 'tempfile'
@@ -11,8 +6,6 @@ class Gem::Ext::ExtConfBuilder < Gem::Ext::Builder
   FileEntry = FileUtils::Entry_ # :nodoc:
 
   def self.build(extension, directory, dest_path, results, args=[], lib_dir=nil)
-    # relative path required as some versions of mktmpdir return an absolute
-    # path which breaks make if it includes a space in the name
     tmp_dest = get_relative_path(Dir.mktmpdir(".gem.", "."))
 
     t = nil
@@ -44,7 +37,6 @@ class Gem::Ext::ExtConfBuilder < Gem::Ext::Builder
         make dest_path, results
 
         if tmp_dest
-          # TODO remove in RubyGems 3
           if Gem.install_extension_in_lib and lib_dir then
             FileUtils.mkdir_p lib_dir
             entries = Dir.entries(tmp_dest) - %w[. ..]

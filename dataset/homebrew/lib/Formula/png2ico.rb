@@ -14,7 +14,6 @@ class Png2ico < Formula
 
   depends_on "libpng"
 
-  # Fix build with recent clang
   patch :DATA
 
   def install
@@ -36,10 +35,5 @@ index 8fb87e4..9dedb97 100644
 --- a/png2ico.cpp
 +++ b/png2ico.cpp
 @@ -34,6 +34,7 @@ Notes about transparent and inverted pixels:
- #include <cstdio>
- #include <vector>
- #include <climits>
 +#include <cstdlib>
  
- #if __GNUC__ > 2
- #include <ext/hash_map>

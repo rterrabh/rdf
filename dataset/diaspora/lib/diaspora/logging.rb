@@ -1,4 +1,3 @@
-# a logging mixin providing the logger
 module Diaspora
   module Logging
     private

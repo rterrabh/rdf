@@ -23,12 +23,9 @@ class AptCacherNg < Formula
   def install
     ENV.cxx11
 
-    # https://alioth.debian.org/tracker/index.php?func=detail&aid=315130&group_id=100566&atid=413111
-    # Clang expects a semicolon after expression usage.
     inreplace "source/lockable.cc",
               "r=pthread_cond_timedwait(&m_obj_cond, &m_obj_mutex, &timeout)",
               "r=pthread_cond_timedwait(&m_obj_cond, &m_obj_mutex, &timeout);"
-    # --as-needed is unrecognised by LD on OS X and breaks compile.
     inreplace "CMakeLists.txt", "--as-needed", ""
 
     inreplace "conf/acng.conf" do |s|

@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 require 'spec_helper'
 
@@ -17,7 +14,6 @@ describe Postzord::Receiver::Public do
 
       comment = bob.build_comment(:text => 'yo', :post => sm)
       comment.save
-      #bob signs his comment, and then sends it up
       xml = Salmon::Slap.create_by_user_and_activity(bob, comment.to_diaspora_xml).xml_for(nil)
       bob.destroy
       comment.destroy
@@ -103,6 +99,7 @@ describe Postzord::Receiver::Public do
 
     it 'receives only for the parent author if he is local to the pod' do
       comment = double.as_null_object
+      #nodyna <instance_variable_set-151> <not yet classified>
       @receiver.instance_variable_set(:@object, comment)
 
       expect(comment).to receive(:receive)
@@ -111,6 +108,7 @@ describe Postzord::Receiver::Public do
 
     it 'calls notifiy_users' do
       comment = double.as_null_object
+      #nodyna <instance_variable_set-152> <not yet classified>
       @receiver.instance_variable_set(:@object, comment)
 
       local_batch_receiver = double.as_null_object

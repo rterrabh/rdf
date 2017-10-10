@@ -28,7 +28,6 @@ class Gexiv2 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gexiv2/gexiv2.h>
       int main() {
         GExiv2Metadata *metadata = gexiv2_metadata_new();
         return 0;

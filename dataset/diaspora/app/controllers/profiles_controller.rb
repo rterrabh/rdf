@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class ProfilesController < ApplicationController
   before_action :authenticate_user!, :except => ['show']
@@ -8,8 +5,6 @@ class ProfilesController < ApplicationController
   respond_to :html, :except => [:show]
   respond_to :js, :only => :update
 
-  # this is terrible because we're actually serving up the associated person here;
-  # however, this is the effect that we want for now
   def show
     @person = Person.find_by_guid!(params[:id])
 
@@ -32,12 +27,10 @@ class ProfilesController < ApplicationController
   end
 
   def update
-    # upload and set new profile photo
     @profile_attrs = profile_params
 
     munge_tag_string
 
-    #checkbox tags wtf
     @profile_attrs[:searchable] ||= false
     @profile_attrs[:nsfw] ||= false
 

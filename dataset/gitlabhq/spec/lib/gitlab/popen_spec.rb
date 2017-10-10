@@ -5,7 +5,7 @@ describe 'Gitlab::Popen', no_db: true do
 
   before do
     @klass = Class.new(Object)
-    #nodyna <ID:send-4> <SD TRIVIAL (public methods)>
+    #nodyna <send-489> <SD TRIVIAL (public methods)>
     @klass.send(:include, Gitlab::Popen)
   end
 

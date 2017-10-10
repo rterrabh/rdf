@@ -15,7 +15,6 @@ class Enchant < Formula
   depends_on "glib"
   depends_on "aspell"
 
-  # http://pythonhosted.org/pyenchant/
   resource "pyenchant" do
     url "https://pypi.python.org/packages/source/p/pyenchant/pyenchant-1.6.5.tar.gz"
     sha256 "623f332a9fbb70ae6c9c2d0d4e7f7bae5922d36ba0fe34be8e32df32ebbb4f84"
@@ -30,7 +29,6 @@ class Enchant < Formula
 
     if build.with? "python"
       resource("pyenchant").stage do
-        # Don't download and install distribute now
         inreplace "setup.py", "distribute_setup.use_setuptools()", ""
         ENV["PYENCHANT_LIBRARY_PATH"] = lib/"libenchant.dylib"
         system "python", "setup.py", "install", "--prefix=#{prefix}",

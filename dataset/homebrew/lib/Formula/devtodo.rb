@@ -6,12 +6,9 @@ class Devtodo < Formula
 
   depends_on "readline"
 
-  # Fix invalid regex. See http://swapoff.org/ticket/54
-  # @adamv - this url not responding 3/17/2012
   patch :DATA
 
   def install
-    # Rename Regex.h to Regex.hh to avoid case-sensitivity confusion with regex.h
     mv "util/Regex.h", "util/Regex.hh"
     inreplace ["util/Lexer.h", "util/Makefile.in", "util/Regex.cc"],
       "Regex.h", "Regex.hh"

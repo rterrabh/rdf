@@ -1,5 +1,4 @@
 class Projects::ProjectMembersController < Projects::ApplicationController
-  # Authorize
   before_action :authorize_admin_project!, except: :leave
 
   def index

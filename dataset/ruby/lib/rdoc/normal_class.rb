@@ -1,12 +1,6 @@
-##
-# A normal class, neither singleton nor anonymous
 
 class RDoc::NormalClass < RDoc::ClassModule
 
-  ##
-  # The ancestors of this class including modules.  Unlike Module#ancestors,
-  # this class is not included in the result.  The result will contain both
-  # RDoc::ClassModules and Strings.
 
   def ancestors
     if String === superclass then
@@ -24,8 +18,6 @@ class RDoc::NormalClass < RDoc::ClassModule
     'class'
   end
 
-  ##
-  # The definition of this class, <tt>class MyClassName</tt>
 
   def definition
     "class #{full_name}"

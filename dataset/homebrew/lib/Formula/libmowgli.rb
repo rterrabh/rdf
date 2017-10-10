@@ -26,7 +26,6 @@ class Libmowgli < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <mowgli.h>
 
       int main(int argc, char *argv[]) {
         char buf[65535];

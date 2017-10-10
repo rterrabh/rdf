@@ -2,7 +2,6 @@ require 'securerandom'
 
 module ActiveSupport
   module Notifications
-    # Instrumenters are stored in a thread local.
     class Instrumenter
       attr_reader :id
 
@@ -11,9 +10,6 @@ module ActiveSupport
         @notifier = notifier
       end
 
-      # Instrument the given block by measuring the time taken to execute it
-      # and publish it. Notice that events get sent even if an error occurs
-      # in the passed-in block.
       def instrument(name, payload={})
         start name, payload
         begin
@@ -26,12 +22,10 @@ module ActiveSupport
         end
       end
 
-      # Send a start notification with +name+ and +payload+.
       def start(name, payload)
         @notifier.start name, @id, payload
       end
 
-      # Send a finish notification with +name+ and +payload+.
       def finish(name, payload)
         @notifier.finish name, @id, payload
       end

@@ -1,24 +1,8 @@
 module Gitlab
   module Markdown
-    # HTML filter that replaces snippet references with links. References to
-    # snippets that do not exist are ignored.
-    #
-    # This filter supports cross-project references.
     class SnippetReferenceFilter < ReferenceFilter
       include CrossProjectReference
 
-      # Public: Find `$123` snippet references in text
-      #
-      #   SnippetReferenceFilter.references_in(text) do |match, snippet|
-      #     "<a href=...>$#{snippet}</a>"
-      #   end
-      #
-      # text - String text to search.
-      #
-      # Yields the String match, the Integer snippet ID, and an optional String
-      # of the external project reference.
-      #
-      # Returns a String replaced with the return of the block.
       def self.references_in(text)
         text.gsub(Snippet.reference_pattern) do |match|
           yield match, $~[:snippet].to_i, $~[:project]
@@ -31,13 +15,6 @@ module Gitlab
         end
       end
 
-      # Replace `$123` snippet references in text with links to the referenced
-      # snippets's details page.
-      #
-      # text - String text to replace references in.
-      #
-      # Returns a String with `$123` references replaced with links. All links
-      # have `gfm` and `gfm-snippet` class names attached for styling.
       def snippet_link_filter(text)
         self.class.references_in(text) do |match, id, project_ref|
           project = self.project_from_ref(project_ref)

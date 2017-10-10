@@ -7,7 +7,6 @@ module ActionDispatch
     module Parameters
       PARAMETERS_KEY = 'action_dispatch.request.path_parameters'
 
-      # Returns both GET and POST \parameters in a single hash.
       def parameters
         @env["action_dispatch.request.parameters"] ||= begin
           params = begin
@@ -32,18 +31,12 @@ module ActionDispatch
         path_parameters
       end
 
-      # Returns a hash with the \parameters used to form the \path of the request.
-      # Returned hash keys are strings:
-      #
-      #   {'action' => 'my_action', 'controller' => 'my_controller'}
       def path_parameters
         @env[PARAMETERS_KEY] ||= {}
       end
 
     private
 
-      # Convert nested Hash to HashWithIndifferentAccess.
-      #
       def normalize_encode_params(params)
         case params
         when Hash

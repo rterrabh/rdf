@@ -2,6 +2,7 @@ module Spree
   class Order < Spree::Base
     module Checkout
       def self.included(klass)
+        #nodyna <class_eval-2506> <not yet classified>
         klass.class_eval do
           class_attribute :next_event_transitions
           class_attribute :previous_states
@@ -29,25 +30,16 @@ module Spree
             self.previous_states = [:cart]
             self.removed_transitions = []
 
-            # Build the checkout flow using the checkout_flow defined either
-            # within the Order class, or a decorator for that class.
-            #
-            # This method may be called multiple times depending on if the
-            # checkout_flow is re-defined in a decorator or not.
-            #nodyna <ID:instance_eval-4> <IEV COMPLEX (block execution)>
+            #nodyna <instance_eval-2507> <IEV COMPLEX (block execution)>
             instance_eval(&checkout_flow)
 
             klass = self
 
-            # To avoid a ton of warnings when the state machine is re-defined
             StateMachines::Machine.ignore_method_conflicts = true
-            # To avoid multiple occurrences of the same transition being defined
-            # On first definition, state_machines will not be defined
             state_machines.clear if respond_to?(:state_machines)
             state_machine :state, initial: :cart, use_transactions: false, action: :save_state do
               klass.next_event_transitions.each { |t| transition(t.merge(on: :next)) }
 
-              # Persist the state on the order
               after_transition do |order, transition|
                 order.state = order.state
                 order.state_changes.create(
@@ -195,7 +187,6 @@ module Spree
               next if options.include?(:if) && !options[:if].call(self)
               checkout_steps << step
             end).map(&:to_s)
-            # Ensure there is always a complete step
             steps << "complete" unless steps.include?("complete")
             steps
           end
@@ -225,8 +216,6 @@ module Spree
             success = false
             @updating_params = params
             run_callbacks :updating_from_params do
-              # Set existing card after setting permitted parameters because
-              # rails would slice parameters containg ruby objects, apparently
               existing_card_id = @updating_params[:order] ? @updating_params[:order].delete(:existing_card) : nil
 
               attributes = @updating_params[:order] ? @updating_params[:order].permit(permitted_params).delete_if { |_k, v| v.nil? } : {}
@@ -259,8 +248,6 @@ module Spree
           def assign_default_addresses!
             if user
               clone_billing
-              # Skip setting ship address if order doesn't have a delivery checkout step
-              # to avoid triggering validations on shipping address
               clone_shipping if checkout_steps.include?("delivery")
             end
           end
@@ -305,19 +292,6 @@ module Spree
 
           private
 
-          # For payment step, filter order parameters to produce the expected nested
-          # attributes for a single payment and its source, discarding attributes
-          # for payment methods other than the one selected
-          #
-          # In case a existing credit card is provided it needs to build the payment
-          # attributes from scratch so we can set the amount. example payload:
-          #
-          #   {
-          #     "order": {
-          #       "existing_card": "2"
-          #     }
-          #   }
-          #
           def update_params_payment_source
             if @updating_params[:payment_source].present?
               source_params = @updating_params.

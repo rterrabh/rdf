@@ -1,9 +1,4 @@
-# Boxen (and perhaps others) want to override our bottling infrastructure so
-# they can avoid declaring checksums in formulae files.
-# Instead of periodically breaking their monkeypatches let's add some hooks that
-# we can query to allow their own behaviour.
 
-# PLEASE DO NOT EVER RENAME THIS CLASS OR ADD/REMOVE METHOD ARGUMENTS!
 module Homebrew
   module Hooks
     module Bottles

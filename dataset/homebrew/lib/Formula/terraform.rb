@@ -101,8 +101,6 @@ class Terraform < Formula
 
   def install
     ENV["GOPATH"] = buildpath
-    # For the gox buildtool used by terraform, which doesn't need to
-    # get installed permanently
     ENV.append_path "PATH", buildpath
 
     terrapath = buildpath/"src/github.com/hashicorp/terraform"
@@ -149,7 +147,6 @@ class Terraform < Formula
           }
       }
 
-      # Specify the provider and access details
       provider "aws" {
           access_key = "this_is_a_fake_access"
           secret_key = "this_is_a_fake_secret"

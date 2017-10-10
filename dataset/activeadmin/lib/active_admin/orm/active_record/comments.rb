@@ -3,23 +3,19 @@ require 'active_admin/orm/active_record/comments/show_page_helper'
 require 'active_admin/orm/active_record/comments/namespace_helper'
 require 'active_admin/orm/active_record/comments/resource_helper'
 
-# Add the comments configuration
 ActiveAdmin::Application.inheritable_setting :comments,                   true
 ActiveAdmin::Application.inheritable_setting :show_comments_in_menu,      true
 ActiveAdmin::Application.inheritable_setting :comments_registration_name, 'Comment'
 
-# Insert helper modules
-#nodyna <ID:send-35> <SD TRIVIAL (public methods)>
+#nodyna <send-2> <SD TRIVIAL (public methods)>
 ActiveAdmin::Namespace.send :include, ActiveAdmin::Comments::NamespaceHelper
-#nodyna <ID:send-36> <SD TRIVIAL (public methods)>
+#nodyna <send-3> <SD TRIVIAL (public methods)>
 ActiveAdmin::Resource.send  :include, ActiveAdmin::Comments::ResourceHelper
-#nodyna <ID:send-37> <SD TRIVIAL (public methods)>
+#nodyna <send-4> <SD TRIVIAL (public methods)>
 ActiveAdmin.application.view_factory.show_page.send :include, ActiveAdmin::Comments::ShowPageHelper
 
-# Load the model as soon as it's referenced. By that point, Rails & Kaminari will be ready
 ActiveAdmin.autoload :Comment, 'active_admin/orm/active_record/comments/comment'
 
-# Walk through all the loaded namespaces after they're loaded
 ActiveAdmin.after_load do |app|
   app.namespaces.each do |namespace|
     namespace.register ActiveAdmin::Comment, as: namespace.comments_registration_name do
@@ -31,22 +27,18 @@ ActiveAdmin.after_load do |app|
       config.batch_actions = false # The default destroy batch action isn't showing up anyway...
 
       scope :all, show_count: false
-      # Register a scope for every namespace that exists.
-      # The current namespace will be the default scope.
       app.namespaces.map(&:name).each do |name|
         scope name, default: namespace.name == name do |scope|
           scope.where namespace: name.to_s
         end
       end
  	
-      # Store the author and namespace
       before_save do |comment|
         comment.namespace = active_admin_config.namespace.name
         comment.author    = current_active_admin_user
       end
 
       controller do
-        # Prevent N+1 queries
         def scoped_collection
           super.includes *( # rails/rails#14734
             ActiveAdmin::Dependency.rails?('>= 4.1.0', '<= 4.1.1') ?
@@ -54,7 +46,6 @@ ActiveAdmin.after_load do |app|
           )
         end
 
-        # Redirect to the resource show page after comment creation
         def create
           create! do |success, failure|
             success.html{ redirect_to :back }
@@ -66,7 +57,6 @@ ActiveAdmin.after_load do |app|
         end
       end
 
-      # Set up permitted params in case the app is using Strong Parameters
       unless Rails::VERSION::MAJOR == 3 && !defined? StrongParameters
         permit_params :body, :namespace, :resource_id, :resource_type
       end

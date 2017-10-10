@@ -1,50 +1,20 @@
-##
-# ClassModule is the base class for objects representing either a class or a
-# module.
 
 class RDoc::ClassModule < RDoc::Context
 
-  ##
-  # 1::
-  #   RDoc 3.7
-  #   * Added visibility, singleton and file to attributes
-  #   * Added file to constants
-  #   * Added file to includes
-  #   * Added file to methods
-  # 2::
-  #   RDoc 3.13
-  #   * Added extends
-  # 3::
-  #   RDoc 4.0
-  #   * Added sections
-  #   * Added in_files
-  #   * Added parent name
-  #   * Complete Constant dump
 
   MARSHAL_VERSION = 3 # :nodoc:
 
-  ##
-  # Constants that are aliases for this class or module
 
   attr_accessor :constant_aliases
 
-  ##
-  # Comment and the location it came from.  Use #add_comment to add comments
 
   attr_accessor :comment_location
 
   attr_accessor :diagram # :nodoc:
 
-  ##
-  # Class or module this constant is an alias for
 
   attr_accessor :is_alias_for
 
-  ##
-  # Return a RDoc::ClassModule of class +class_type+ that is a copy
-  # of module +module+. Used to promote modules to classes.
-  #--
-  # TODO move to RDoc::NormalClass (I think)
 
   def self.from_module class_type, mod
     klass = class_type.new mod.name
@@ -84,7 +54,6 @@ class RDoc::ClassModule < RDoc::Context
     klass.force_documentation = mod.force_documentation
     klass.done_documenting = mod.done_documenting
 
-    # update the parent of all children
 
     (klass.attributes +
      klass.method_list +
@@ -102,10 +71,6 @@ class RDoc::ClassModule < RDoc::Context
     klass
   end
 
-  ##
-  # Creates a new ClassModule with +name+ with optional +superclass+
-  #
-  # This is a constructor for subclasses, and must never be called directly.
 
   def initialize(name, superclass = nil)
     @constant_aliases = []
@@ -118,10 +83,6 @@ class RDoc::ClassModule < RDoc::Context
     super()
   end
 
-  ##
-  # Adds +comment+ to this ClassModule's list of comments at +location+.  This
-  # method is preferred over #comment= since it allows ri data to be updated
-  # across multiple runs.
 
   def add_comment comment, location
     return unless document_self
@@ -153,17 +114,6 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
-  ##
-  # Ancestors list for this ClassModule: the list of included modules
-  # (classes will add their superclass if any).
-  #
-  # Returns the included classes or modules, not the includes
-  # themselves. The returned values are either String or
-  # RDoc::NormalModule instances (see RDoc::Include#module).
-  #
-  # The values are returned in reverse order of their inclusion,
-  # which is the order suitable for searching methods/attributes
-  # in the ancestors. The superclass, if any, comes last.
 
   def ancestors
     includes.map { |i| i.module }.reverse
@@ -173,31 +123,19 @@ class RDoc::ClassModule < RDoc::Context
     raise NotImplementedError, "missing aref_prefix for #{self.class}"
   end
 
-  ##
-  # HTML fragment reference for this module or class.  See
-  # RDoc::NormalClass#aref and RDoc::NormalModule#aref
 
   def aref
     "#{aref_prefix}-#{full_name}"
   end
 
-  ##
-  # Ancestors of this class or module only
 
   alias direct_ancestors ancestors
 
-  ##
-  # Clears the comment. Used by the Ruby parser.
 
   def clear_comment
     @comment = ''
   end
 
-  ##
-  # This method is deprecated, use #add_comment instead.
-  #
-  # Appends +comment+ to the current comment, but separated by a rule.  Works
-  # more like <tt>+=</tt>.
 
   def comment= comment # :nodoc:
     comment = case comment
@@ -212,10 +150,6 @@ class RDoc::ClassModule < RDoc::Context
     super comment
   end
 
-  ##
-  # Prepares this ClassModule for use by a generator.
-  #
-  # See RDoc::Store#complete
 
   def complete min_visibility
     update_aliases
@@ -224,16 +158,11 @@ class RDoc::ClassModule < RDoc::Context
     remove_invisible min_visibility
   end
 
-  ##
-  # Does this ClassModule or any of its methods have document_self set?
 
   def document_self_or_methods
     document_self || method_list.any?{ |m| m.document_self }
   end
 
-  ##
-  # Does this class or module have a comment with content or is
-  # #received_nodoc true?
 
   def documented?
     return true if @received_nodoc
@@ -241,9 +170,6 @@ class RDoc::ClassModule < RDoc::Context
     @comment_location.any? { |comment, _| not comment.empty? }
   end
 
-  ##
-  # Iterates the ancestors of this class or module for which an
-  # RDoc::ClassModule exists.
 
   def each_ancestor # :yields: module
     return enum_for __method__ unless block_given?
@@ -255,8 +181,6 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
-  ##
-  # Looks for a symbol in the #ancestors. See Context#find_local_symbol.
 
   def find_ancestor_local_symbol symbol
     each_ancestor do |m|
@@ -267,8 +191,6 @@ class RDoc::ClassModule < RDoc::Context
     nil
   end
 
-  ##
-  # Finds a class or module with +name+ in this namespace or its descendants
 
   def find_class_named name
     return self if full_name == name
@@ -280,8 +202,6 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
-  ##
-  # Return the fully qualified name of this class or module
 
   def full_name
     @full_name ||= if RDoc::ClassModule === parent then
@@ -291,8 +211,6 @@ class RDoc::ClassModule < RDoc::Context
                    end
   end
 
-  ##
-  # TODO: filter included items by #display?
 
   def marshal_dump # :nodoc:
     attrs = attributes.sort.map do |attr|
@@ -424,10 +342,6 @@ class RDoc::ClassModule < RDoc::Context
     @parent_class = array[13]
   end
 
-  ##
-  # Merges +class_module+ into this ClassModule.
-  #
-  # The data in +class_module+ is preferred over the receiver.
 
   def merge class_module
     @parent      = class_module.parent
@@ -498,20 +412,6 @@ class RDoc::ClassModule < RDoc::Context
     self
   end
 
-  ##
-  # Merges collection +mine+ with +other+ preferring other.  +other_files+ is
-  # used to help determine which items should be deleted.
-  #
-  # Yields whether the item should be added or removed (true or false) and the
-  # item to be added or removed.
-  #
-  #   merge_collections things, other.things, other.in_files do |add, thing|
-  #     if add then
-  #       # add the thing
-  #     else
-  #       # remove the thing
-  #     end
-  #   end
 
   def merge_collections mine, other, other_files, &block # :nodoc:
     my_things    = mine. group_by { |thing| thing.file }
@@ -521,9 +421,6 @@ class RDoc::ClassModule < RDoc::Context
     add_things    my_things, other_things, &block
   end
 
-  ##
-  # Merges the comments in this ClassModule with the comments in the other
-  # ClassModule +cm+.
 
   def merge_sections cm # :nodoc:
     my_sections    =    sections.group_by { |section| section.title }
@@ -561,25 +458,16 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
-  ##
-  # Does this object represent a module?
 
   def module?
     false
   end
 
-  ##
-  # Allows overriding the initial name.
-  #
-  # Used for modules and classes that are constant aliases.
 
   def name= new_name
     @name = new_name
   end
 
-  ##
-  # Parses +comment_location+ into an RDoc::Markup::Document composed of
-  # multiple RDoc::Markup::Documents with their file set.
 
   def parse comment_location
     case comment_location
@@ -604,38 +492,21 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
-  ##
-  # Path to this class or module for use with HTML generator output.
 
   def path
     http_url @store.rdoc.generator.class_dir
   end
 
-  ##
-  # Name to use to generate the url:
-  # modules and classes that are aliases for another
-  # module or class return the name of the latter.
 
   def name_for_path
     is_alias_for ? is_alias_for.full_name : full_name
   end
 
-  ##
-  # Returns the classes and modules that are not constants
-  # aliasing another class or module. For use by formatters
-  # only (caches its result).
 
   def non_aliases
     @non_aliases ||= classes_and_modules.reject { |cm| cm.is_alias_for }
   end
 
-  ##
-  # Updates the child modules or classes of class/module +parent+ by
-  # deleting the ones that have been removed from the documentation.
-  #
-  # +parent_hash+ is either <tt>parent.modules_hash</tt> or
-  # <tt>parent.classes_hash</tt> and +all_hash+ is ::all_modules_hash or
-  # ::all_classes_hash.
 
   def remove_nodoc_children
     prefix = self.full_name + '::'
@@ -663,8 +534,6 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
-  ##
-  # Search record used by RDoc::Generator::JsonIndex
 
   def search_record
     [
@@ -678,8 +547,6 @@ class RDoc::ClassModule < RDoc::Context
     ]
   end
 
-  ##
-  # Sets the store for this class or module and its contained code objects.
 
   def store= store
     super
@@ -691,16 +558,11 @@ class RDoc::ClassModule < RDoc::Context
     @method_list.each do |meth|  meth.store  = store end
   end
 
-  ##
-  # Get the superclass of this class.  Attempts to retrieve the superclass
-  # object, returns the name if it is not known.
 
   def superclass
     @store.find_class_named(@superclass) || @superclass
   end
 
-  ##
-  # Set the superclass of this class to +superclass+
 
   def superclass=(superclass)
     raise NoMethodError, "#{full_name} is a module" if module?
@@ -715,27 +577,11 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
-  ##
-  # 'module' or 'class'
 
   def type
     module? ? 'module' : 'class'
   end
 
-  ##
-  # Updates the child modules & classes by replacing the ones that are
-  # aliases through a constant.
-  #
-  # The aliased module/class is replaced in the children and in
-  # RDoc::Store#modules_hash or RDoc::Store#classes_hash
-  # by a copy that has <tt>RDoc::ClassModule#is_alias_for</tt> set to
-  # the aliased module/class, and this copy is added to <tt>#aliases</tt>
-  # of the aliased module/class.
-  #
-  # Formatters can use the #non_aliases method to retrieve children that
-  # are not aliases, for instance to list the namespace content, since
-  # the aliased modules are included in the constants of the class/module,
-  # that are listed separately.
 
   def update_aliases
     constants.each do |const|
@@ -743,7 +589,6 @@ class RDoc::ClassModule < RDoc::Context
       cm_alias = cm.dup
       cm_alias.name = const.name
 
-      # Don't move top-level aliases under Object, they look ugly there
       unless RDoc::TopLevel === cm_alias.parent then
         cm_alias.parent = self
         cm_alias.full_name = nil # force update for new parent
@@ -764,11 +609,6 @@ class RDoc::ClassModule < RDoc::Context
     end
   end
 
-  ##
-  # Deletes from #includes those whose module has been removed from the
-  # documentation.
-  #--
-  # FIXME: includes are not reliably removed, see _possible_bug test case
 
   def update_includes
     includes.reject! do |include|
@@ -779,11 +619,6 @@ class RDoc::ClassModule < RDoc::Context
     includes.uniq!
   end
 
-  ##
-  # Deletes from #extends those whose module has been removed from the
-  # documentation.
-  #--
-  # FIXME: like update_includes, extends are not reliably removed
 
   def update_extends
     extends.reject! do |ext|

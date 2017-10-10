@@ -1,5 +1,4 @@
 class Caf < Formula
-  # Renamed from libccpa
   desc "Implementation of the Actor Model for C++"
   homepage "http://actor-framework.org/"
   url "https://github.com/actor-framework/actor-framework/archive/0.14.1.tar.gz"
@@ -33,8 +32,6 @@ class Caf < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
-      #include <caf/all.hpp>
       using namespace caf;
       int main() {
         scoped_actor self;

@@ -34,7 +34,6 @@ index aa271ec..03c4db9 100644
 --- i/grammar/parserif.h
 +++ w/grammar/parserif.h
 @@ -3,7 +3,7 @@
- #include "rainerscript.h"
  int cnfSetLexFile(char*);
  int yyparse();
 -char *cnfcurrfn;

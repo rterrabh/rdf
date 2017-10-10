@@ -1,13 +1,9 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Person < ActiveRecord::Base
   include ROXML
   include Encryptor::Public
   include Diaspora::Guid
 
-  # NOTE API V1 to be extracted
   acts_as_api
   api_accessible :backbone do |t|
     t.add :id
@@ -71,7 +67,6 @@ class Person < ActiveRecord::Base
       .includes(:profile)
   }
 
-  # @note user is passed in here defensively
   scope :all_from_aspects, ->(aspect_ids, user) {
     joins(:contacts => :aspect_memberships).
          where(:contacts => {:user_id => user.id}).
@@ -82,7 +77,6 @@ class Person < ActiveRecord::Base
     all_from_aspects(aspect_ids, user).select('DISTINCT people.*')
   }
 
-  #not defensive
   scope :in_aspects, ->(aspect_ids) {
     joins(:contacts => :aspect_memberships).
         where(:aspect_memberships => {:aspect_id => aspect_ids})
@@ -103,13 +97,6 @@ class Person < ActiveRecord::Base
     Person.joins(:roles).where(:roles => {:name => 'spotlight'})
   end
 
-  # Set a default of an empty profile when a new Person record is instantiated.
-  # Passing :profile => nil to Person.new will instantiate a person with no profile.
-  # Calling Person.new with a block:
-  #   Person.new do |p|
-  #     p.profile = nil
-  #   end
-  # will not work!  The nil profile will be overriden with an empty one.
   def initialize(params={})
     profile_set = params.has_key?(:profile) || params.has_key?("profile")
     params[:profile_attributes] = params.delete(:profile) if params.has_key?(:profile) && params[:profile].is_a?(Hash)
@@ -161,7 +148,6 @@ class Person < ActiveRecord::Base
     ).order(search_order)
   end
 
-  # @return [Array<String>] postgreSQL and mysql deal with null values in orders differently, it seems.
   def self.search_order
     @search_order ||= Proc.new {
       order = if AppConfig.postgres?
@@ -238,7 +224,6 @@ class Person < ActiveRecord::Base
     serialized_public_key = new_key
   end
 
-  # database calls
   def self.by_account_identifier(identifier)
     identifier = identifier.strip.downcase.sub("acct:", "")
     find_by(diaspora_handle: identifier)
@@ -260,7 +245,6 @@ class Person < ActiveRecord::Base
     new_person.diaspora_handle = profile.account
     new_person.url = profile.seed_location
 
-    #hcard_profile = HCard.find profile.hcard.first[:href]
     ::Logging::Logger[self].info "event=webfinger_marshal valid=#{new_person.valid?} " \
                                  "target=#{new_person.diaspora_handle}"
     new_person.assign_new_profile_from_hcard(hcard)
@@ -303,22 +287,16 @@ class Person < ActiveRecord::Base
     json
   end
 
-  # Update an array of people given a url, and set it as the new destination_url
-  # @param people [Array<People>]
-  # @param url [String]
   def self.url_batch_update(people, url)
     people.each do |person|
       person.update_url(url)
     end
   end
 
-  #gross method pulled out from controller, not exactly sure how it should be used.
   def shares_with(user)
     user.contacts.receiving.where(:person_id => self.id).first if user
   end
 
-  # @param person [Person]
-  # @param url [String]
   def update_url(url)
     @uri = URI.parse(url)
     @uri.path = "/"
@@ -346,14 +324,11 @@ class Person < ActiveRecord::Base
 
   private
 
-  # @return [URI]
   def uri
     @uri ||= URI.parse(self[:url])
     @uri.dup
   end
 
-  # @param path [String]
-  # @return [String]
   def url_to(path)
     uri.tap {|uri| uri.path = path }.to_s
   end

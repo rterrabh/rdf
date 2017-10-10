@@ -1,13 +1,9 @@
-#   Copyright (c) 2009, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Photo < ActiveRecord::Base
   include Diaspora::Federated::Shareable
   include Diaspora::Commentable
   include Diaspora::Shareable
 
-  # NOTE API V1 to be extracted
   acts_as_api
   api_accessible :backbone do |t|
     t.add :id

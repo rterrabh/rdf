@@ -26,9 +26,7 @@ class Assimp < Formula
   end
 
   test do
-    # Library test.
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <assimp/Importer.hpp>
       int main() {
         Assimp::Importer importer;
         return 0;
@@ -37,21 +35,16 @@ class Assimp < Formula
     system ENV.cc, "test.cpp", "-L#{lib}", "-lassimp", "-o", "test"
     system "./test"
 
-    # Application test.
     (testpath/"test.obj").write <<-EOS.undent
-      # WaveFront .obj file - a single square based pyramid
 
-      # Start a new group:
       g MySquareBasedPyramid
 
-      # List of vertices:
       v -0.5 0 0.5    # Front left.
       v 0.5 0 0.5   # Front right.
       v 0.5 0 -0.5    # Back right
       v -0.5 0 -0.5   # Back left.
       v 0 1 0           # Top point (top of pyramid).
 
-      # List of faces:
       f 4 3 2 1       # Square base (note: normals are placed anti-clockwise).
       f 1 2 5         # Triangle on front.
       f 3 4 5         # Triangle on back.

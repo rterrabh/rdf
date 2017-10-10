@@ -4,7 +4,6 @@ class Md < Formula
   url "https://opensource.apple.com/tarballs/adv_cmds/adv_cmds-147.tar.gz"
   sha256 "e74d93496dd031ffea1ad8995686c1e9369a92de70c4c95a7f6e3d6ce2e7e434"
 
-  # OS X up to and including Lion 10.7 includes 'md'
   keg_only :provided_pre_mountain_lion
 
   def install

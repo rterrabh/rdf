@@ -15,8 +15,6 @@ class Libyaml < Formula
 
   option :universal
 
-  # address CVE-2014-9130
-  # https://web.nvd.nist.gov/view/vuln/detail?vulnId=CVE-2014-9130
   patch do
     url "https://bitbucket.org/xi/libyaml/commits/2b9156756423e967cfd09a61d125d883fca6f4f2/raw/"
     sha256 "30546a280c4f9764a93ff5f4f88671a02222e9886e7f63ee19aebf1b2086a7fe"
@@ -31,7 +29,6 @@ class Libyaml < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <yaml.h>
 
       int main()
       {

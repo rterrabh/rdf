@@ -1,5 +1,3 @@
-# This class performs calculations to determine if a user qualifies for
-# the Leader (3) trust level.
 class TrustLevel3Requirements
 
   include ActiveModel::Serialization
@@ -167,7 +165,6 @@ class TrustLevel3Requirements
   end
 
   def num_likes_received_days
-    # don't do a COUNT(DISTINCT date(created_at)) here!
     num_likes_received_query.pluck('date(created_at)').uniq.size
   end
 
@@ -176,7 +173,6 @@ class TrustLevel3Requirements
   end
 
   def num_likes_received_users
-    # don't do a COUNT(DISTINCT acting_user_id) here!
     num_likes_received_query.pluck(:acting_user_id).uniq.size
   end
 

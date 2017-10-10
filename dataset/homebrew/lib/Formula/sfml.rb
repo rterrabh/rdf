@@ -1,5 +1,4 @@
 class Sfml < Formula
-  # Don't update SFML until there's a corresponding CSFML release
   desc "Multi-media library with bindings for multiple languages"
   homepage "http://www.sfml-dev.org/"
   url "http://www.sfml-dev.org/files/SFML-2.3-sources.zip"
@@ -24,16 +23,12 @@ class Sfml < Formula
   depends_on "libvorbis"
   depends_on "openal-soft"
 
-  # https://github.com/Homebrew/homebrew/issues/40301
   depends_on :macos => :lion
 
   def install
     args = std_cmake_args
     args << "-DSFML_BUILD_DOC=TRUE" if build.with? "doxygen"
 
-    # Always remove the "extlibs" to avoid install_name_tool failure
-    # (https://github.com/Homebrew/homebrew/pull/35279) but leave the
-    # headers that were moved there in https://github.com/SFML/SFML/pull/795
     rm_rf Dir["extlibs/*"] - ["extlibs/headers"]
 
     system "cmake", ".", *args
@@ -42,7 +37,6 @@ class Sfml < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include "Time.hpp"
       int main() {
         sf::Time t1 = sf::milliseconds(10);
         return 0;

@@ -1,4 +1,3 @@
-# A very simple formatter for imported emails
 class EmailCook
 
   def initialize(raw)

@@ -8,8 +8,6 @@ require "utils/json"
 
 module Homebrew
   def info
-    # eventually we'll solidify an API, but we'll keep old versions
-    # awhile around for compatibility
     if ARGV.json == "v1"
       print_json
     elsif ARGV.flag? "--github"
@@ -35,7 +33,6 @@ module Homebrew
             info_formula Formulary.find_with_priority(f)
           end
         rescue FormulaUnavailableError
-          # No formula with this name, try a blacklist lookup
           if (blacklist = blacklisted?(f))
             puts blacklist
           else
@@ -130,7 +127,7 @@ module Homebrew
     unless f.deps.empty?
       ohai "Dependencies"
       %w[build required recommended optional].map do |type|
-        #nodyna <ID:send-8> <SD MODERATE (array)>
+        #nodyna <send-611> <SD MODERATE (array)>
         deps = f.deps.send(type).uniq
         puts "#{type.capitalize}: #{decorate_dependencies deps}" unless deps.empty?
       end
@@ -146,7 +143,6 @@ module Homebrew
   end
 
   def decorate_dependencies(dependencies)
-    # necessary for 1.8.7 unicode handling since many installs are on 1.8.7
     tick = ["2714".hex].pack("U*")
     cross = ["2718".hex].pack("U*")
 

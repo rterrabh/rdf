@@ -18,9 +18,6 @@ class Bgpq3 < Formula
     version "0.1.32-rc5"
   end
 
-  # Makefile: upstream has been informed of the patch through email (multiple
-  # times) but no plans yet to incorporate it https://github.com/snar/bgpq3/pull/2
-  # there was discussion about this patch for 0.1.18 and 0.1.19 as well
   patch :DATA
 
   def install

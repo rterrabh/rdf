@@ -19,7 +19,6 @@ class Tachyon < Formula
 
   def caveats; <<-EOS.undent
     To configure tachyon, edit
-      #{etc}/tacyon/tachyon-env.sh
     EOS
   end
 end

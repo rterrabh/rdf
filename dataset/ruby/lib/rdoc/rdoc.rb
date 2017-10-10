@@ -5,90 +5,48 @@ require 'fileutils'
 require 'pathname'
 require 'time'
 
-##
-# This is the driver for generating RDoc output.  It handles file parsing and
-# generation of output.
-#
-# To use this class to generate RDoc output via the API, the recommended way
-# is:
-#
-#   rdoc = RDoc::RDoc.new
-#   options = rdoc.load_options # returns an RDoc::Options instance
-#   # set extra options
-#   rdoc.document options
-#
-# You can also generate output like the +rdoc+ executable:
-#
-#   rdoc = RDoc::RDoc.new
-#   rdoc.document argv
-#
-# Where +argv+ is an array of strings, each corresponding to an argument you'd
-# give rdoc on the command line.  See <tt>rdoc --help<tt> for details.
 
 class RDoc::RDoc
 
   @current = nil
 
-  ##
-  # This is the list of supported output generators
 
   GENERATORS = {}
 
-  ##
-  # File pattern to exclude
 
   attr_accessor :exclude
 
-  ##
-  # Generator instance used for creating output
 
   attr_accessor :generator
 
-  ##
-  # Hash of files and their last modified times.
 
   attr_reader :last_modified
 
-  ##
-  # RDoc options
 
   attr_accessor :options
 
-  ##
-  # Accessor for statistics.  Available after each call to parse_files
 
   attr_reader :stats
 
-  ##
-  # The current documentation store
 
   attr_reader :store
 
-  ##
-  # Add +klass+ that can generate output after parsing
 
   def self.add_generator(klass)
     name = klass.name.sub(/^RDoc::Generator::/, '').downcase
     GENERATORS[name] = klass
   end
 
-  ##
-  # Active RDoc::RDoc instance
 
   def self.current
     @current
   end
 
-  ##
-  # Sets the active RDoc::RDoc instance
 
   def self.current= rdoc
     @current = rdoc
   end
 
-  ##
-  # Creates a new RDoc::RDoc instance.  Call #document to parse files and
-  # generate documentation.
 
   def initialize
     @current       = nil
@@ -101,16 +59,11 @@ class RDoc::RDoc
     @store         = nil
   end
 
-  ##
-  # Report an error message and exit
 
   def error(msg)
     raise RDoc::Error, msg
   end
 
-  ##
-  # Gathers a set of parseable files from the files and directories listed in
-  # +files+.
 
   def gather_files files
     files = ["."] if files.empty?
@@ -124,8 +77,6 @@ class RDoc::RDoc
     file_list.sort
   end
 
-  ##
-  # Turns RDoc from stdin into HTML
 
   def handle_pipe
     @html = RDoc::Markup::ToHtml.new @options
@@ -139,8 +90,6 @@ class RDoc::RDoc
     $stdout.write out
   end
 
-  ##
-  # Installs a siginfo handler that prints the current filename.
 
   def install_siginfo_handler
     return unless Signal.list.include? 'INFO'
@@ -150,9 +99,6 @@ class RDoc::RDoc
     end
   end
 
-  ##
-  # Loads options from .rdoc_options if the file exists, otherwise creates a
-  # new RDoc::Options instance.
 
   def load_options
     options_file = File.expand_path '.rdoc_options'
@@ -177,10 +123,6 @@ class RDoc::RDoc
     options
   end
 
-  ##
-  # Create an output dir if it doesn't exist. If it does exist, but doesn't
-  # contain the flag file <tt>created.rid</tt> then we refuse to use it, as
-  # we may clobber some manually generated documentation
 
   def setup_output_dir(dir, force)
     flag_file = output_flag_file dir
@@ -188,7 +130,6 @@ class RDoc::RDoc
     last = {}
 
     if @options.dry_run then
-      # do nothing
     elsif File.exist? dir then
       error "#{dir} exists and is not a directory" unless File.directory? dir
 
@@ -223,17 +164,12 @@ option)
     last
   end
 
-  ##
-  # Sets the current documentation tree to +store+ and sets the store's rdoc
-  # driver to this instance.
 
   def store= store
     @store = store
     @store.rdoc = self
   end
 
-  ##
-  # Update the flag file in an output directory.
 
   def update_output_dir(op_dir, time, last = {})
     return if @options.dry_run or not @options.update_output_dir
@@ -246,20 +182,13 @@ option)
     end
   end
 
-  ##
-  # Return the path name of the flag file in an output directory.
 
   def output_flag_file(op_dir)
     File.join op_dir, "created.rid"
   end
 
-  ##
-  # The .document file contains a list of file and directory name patterns,
-  # representing candidates for documentation. It may also contain comments
-  # (starting with '#')
 
   def parse_dot_doc_file in_dir, filename
-    # read and strip comments
     patterns = File.read(filename).gsub(/#.*/, '')
 
     result = []
@@ -272,17 +201,6 @@ option)
     result
   end
 
-  ##
-  # Given a list of files and directories, create a list of all the Ruby
-  # files they contain.
-  #
-  # If +force_doc+ is true we always add the given files, if false, only
-  # add files that we guarantee we can parse.  It is true when looking at
-  # files given on the command line, false when recursing through
-  # subdirectories.
-  #
-  # The effect of this is that if you want a file with a non-standard
-  # extension parsed, you must name it explicitly.
 
   def normalized_file_list(relative_files, force_doc = false,
                            exclude_pattern = nil)
@@ -323,11 +241,6 @@ option)
     file_list.flatten
   end
 
-  ##
-  # Return a list of the files to be processed in a directory. We know that
-  # this directory doesn't have a .document file, so we're looking for real
-  # files. However we may well contain subdirectories which must be tested
-  # for .document files.
 
   def list_files_in_directory dir
     files = Dir.glob File.join(dir, "*")
@@ -335,8 +248,6 @@ option)
     normalized_file_list files, false, @options.exclude
   end
 
-  ##
-  # Parses +filename+ and returns an RDoc::TopLevel
 
   def parse_file filename
     if Object.const_defined? :Encoding then
@@ -369,7 +280,6 @@ option)
 
     parser.scan
 
-    # restart documentation for the classes & modules found
     top_level.classes_or_modules.each do |cm|
       cm.done_documenting = false
     end
@@ -389,7 +299,6 @@ this is not your library please report a bug to the author.
 Before reporting this, could you check that the file you're documenting
 has proper syntax:
 
-  #{Gem.ruby} -c #{filename}
 
 RDoc is not a full Ruby parser and will fail when fed invalid ruby programs.
 
@@ -405,8 +314,6 @@ The internal error was:
     nil
   end
 
-  ##
-  # Parse each file on the command line, recursively entering directories.
 
   def parse_files files
     file_list = gather_files files
@@ -426,9 +333,6 @@ The internal error was:
     file_info
   end
 
-  ##
-  # Removes file extensions known to be unparseable from +files+ and TAGS
-  # files for emacs and vim.
 
   def remove_unparseable files
     files.reject do |file|
@@ -440,19 +344,6 @@ The internal error was:
     end
   end
 
-  ##
-  # Generates documentation or a coverage report depending upon the settings
-  # in +options+.
-  #
-  # +options+ can be either an RDoc::Options instance or an array of strings
-  # equivalent to the strings that would be passed on the command line like
-  # <tt>%w[-q -o doc -t My\ Doc\ Title]</tt>.  #document will automatically
-  # call RDoc::Options#finish if an options instance was given.
-  #
-  # For a list of options, see either RDoc::Options or <tt>rdoc --help</tt>.
-  #
-  # By default, output will be stored in a directory called "doc" below the
-  # current directory, so make sure you're somewhere writable before invoking.
 
   def document options
     self.store = RDoc::Store.new
@@ -516,10 +407,6 @@ The internal error was:
     exit @stats.fully_documented? if @options.coverage_report
   end
 
-  ##
-  # Generates documentation for +file_info+ (from #parse_files) into the
-  # output dir using the generator selected
-  # by the RDoc options
 
   def generate
     Dir.chdir @options.op_dir do
@@ -532,8 +419,6 @@ The internal error was:
     end
   end
 
-  ##
-  # Removes a siginfo handler and replaces the previous
 
   def remove_siginfo_handler
     return unless Signal.list.key? 'INFO'
@@ -563,7 +448,6 @@ begin
 rescue LoadError
 end
 
-# require built-in generators after discovery in case they've been replaced
 require 'rdoc/generator/darkfish'
 require 'rdoc/generator/ri'
 require 'rdoc/generator/pot'

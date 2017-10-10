@@ -7,12 +7,10 @@ class IncomingDomain < ActiveRecord::Base
     current = find_by(name: name, https: https, port: port)
     return current if current
 
-    # concurrency ...
 
     begin
       current = create!(name: name, https: https, port: port)
     rescue ActiveRecord::RecordNotUnique
-      # duplicate key is just ignored
     end
 
     current || find_by(name: name, https: https, port: port)
@@ -29,16 +27,3 @@ class IncomingDomain < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: incoming_domains
-#
-#  id    :integer          not null, primary key
-#  name  :string(100)      not null
-#  https :boolean          default(FALSE), not null
-#  port  :integer          not null
-#
-# Indexes
-#
-#  index_incoming_domains_on_name_and_https_and_port  (name,https,port) UNIQUE
-#

@@ -14,7 +14,6 @@ class Svdlibc < Formula
   end
 
   def install
-    # make only builds - no configure or install targets, have to copy files manually
     system "make HOSTTYPE=target"
     include.install "svdlib.h"
     lib.install "target/libsvd.a"

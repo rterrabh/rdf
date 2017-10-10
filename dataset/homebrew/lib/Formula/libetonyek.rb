@@ -28,7 +28,6 @@ class Libetonyek < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libetonyek/EtonyekDocument.h>
       int main() {
         return libetonyek::EtonyekDocument::RESULT_OK;
       }

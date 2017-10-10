@@ -11,7 +11,6 @@ class Zile < Formula
     sha1 "1a32cf3d3c235bba1fd570e7bff81190851ec411" => :lion
   end
 
-  # https://github.com/mistydemeo/tigerbrew/issues/215
   fails_with :gcc_4_0 do
     cause "src/funcs.c:1128: error: #pragma GCC diagnostic not allowed inside functions"
   end

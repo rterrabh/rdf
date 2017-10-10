@@ -17,7 +17,6 @@ class Djbdns < Formula
     inreplace "hier.c", 'c("/"', "c(auto_home"
     inreplace "dnscache-conf.c", "/etc/dnsroots", "#{etc}/dnsroots"
 
-    # Write these variables ourselves.
     rm %w[conf-home conf-ld conf-cc]
     (buildpath/"conf-home").write prefix
     (buildpath/"conf-ld").write "gcc"

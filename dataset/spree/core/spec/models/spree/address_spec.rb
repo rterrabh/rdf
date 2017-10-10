@@ -85,8 +85,6 @@ describe Spree::Address, :type => :model do
 
     it "full state name is in state_name and country does contain that state" do
       address.state_name = 'alabama'
-      # called by state_validate to set up state_id.
-      # Perhaps this should be a before_validation instead?
       expect(address).to be_valid
       expect(address.state).not_to be_nil
       expect(address.state_name).to be_nil
@@ -219,7 +217,6 @@ describe Spree::Address, :type => :model do
         expect(Spree::Address.default.country).to eq(Spree::Country.find(Spree::Config[:default_country_id]))
       end
 
-      # Regression test for #1142
       it "uses the first available country if :default_country_id is set to an invalid value" do
         Spree::Config[:default_country_id] = "0"
         expect(Spree::Address.default.country).to eq(Spree::Country.first)
@@ -286,7 +283,7 @@ describe Spree::Address, :type => :model do
 
   context "defines require_phone? helper method" do
     let(:address) { stub_model(Spree::Address) }
-    #nodyna <ID:instance_eval-3> <IEV EASY (private access)>
+    #nodyna <instance_eval-2483> <IEV EASY (private access)>
     specify { expect(address.instance_eval{ require_phone? }).to be true}
   end
 end

@@ -17,22 +17,6 @@ class Pstoedit < Formula
   depends_on "imagemagick"
   depends_on "xz" if MacOS.version < :mavericks
 
-  # Fix for pstoedit search for plugins, thereby restoring formats that
-  # worked in 3.62 but now don't in 3.70, including PIC, DXF, FIG, and
-  # many others.
-  #
-  # This patch has been submitted upstream; see:
-  # http://sourceforge.net/p/pstoedit/bugs/19/
-  #
-  # Taken from:
-  # https://build.opensuse.org/package/view_file/openSUSE:Factory/pstoedit/pstoedit-pkglibdir.patch?expand=1
-  #
-  # This patch changes the behavior of "make install" so that:
-  # * If common/plugindir is defined, it checks only that directory.
-  # * It swaps the check order: First checks whether PSTOEDITLIBDIR exists. If
-  #   it exists, it skips blind attempts to find plugins.
-  # As PSTOEDITLIBDIR is always defined by makefile, the blind fallback will
-  # be attempted only in obscure environments.
   patch :DATA
 
   def install
@@ -125,12 +109,9 @@ index 7f66d23..a16f57d 100644
 --- a/src/pstoedit.cpp
 +++ b/src/pstoedit.cpp
 @@ -30,6 +30,7 @@
- #include I_string_h
  
- #include <assert.h>
 +#include <sys/stat.h>
  
- #include "pstoeditoptions.h"
  
 @@ -261,33 +262,33 @@ static void loadpstoeditplugins(const char *progname, ostream & errstream, bool
  		loadPlugInDrivers(plugindir.c_str(), errstream, verbose);	// load the driver plugins
@@ -156,7 +137,6 @@ index 7f66d23..a16f57d 100644
 -		pluginsloaded = true;
 -	}
 -
- #ifdef PSTOEDITLIBDIR
 -	if (!pluginsloaded) {
 +	struct stat s;
 +	if (!pluginsloaded &&
@@ -166,7 +146,6 @@ index 7f66d23..a16f57d 100644
  	  loadPlugInDrivers(PSTOEDITLIBDIR, errstream,verbose);
  	  pluginsloaded = true;
  	}
- #endif
 +	// If the above failed, also look in the directory where the pstoedit .exe/dll was found
 +	if (!pluginsloaded) {
 +	  char szExePath[1000];

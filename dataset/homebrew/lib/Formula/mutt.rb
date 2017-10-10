@@ -1,9 +1,3 @@
-# Note: Mutt has a large number of non-upstream patches available for
-# it, some of which conflict with each other. These patches are also
-# not kept up-to-date when new versions of mutt (occasionally) come
-# out.  To reduce Homebrew's maintenance burden, new patches are not
-# being accepted for this formula. Mutt power-users are encouraged to
-# copy the formula and modify it locally, adding needed patches.
 class Mutt < Formula
   desc "Mongrel of mail user agents (part elm, pine, mush, mh, etc.)"
   homepage "http://www.mutt.org/"
@@ -55,8 +49,6 @@ class Mutt < Formula
     sha1 "c597566c26e270b99c6f57e046512a663d2f415e"
   end if build.with? "trash-patch"
 
-  # original source for this went missing, patch sourced from Arch at
-  # https://aur.archlinux.org/packages/mutt-ignore-thread/
   patch do
     url "https://gist.githubusercontent.com/mistydemeo/5522742/raw/1439cc157ab673dc8061784829eea267cd736624/ignore-thread-1.5.21.patch"
     sha1 "dbcf5de46a559bca425028a18da0a63d34f722d3"
@@ -84,9 +76,6 @@ class Mutt < Formula
             "--enable-pop",
             "--enable-hcache",
             "--with-tokyocabinet",
-            # This is just a trick to keep 'make install' from trying
-            # to chgrp the mutt_dotlock file (which we can't do if
-            # we're running as an unprivileged user)
             "--with-homespool=.mbox"]
     args << "--with-slang" if build.with? "s-lang"
     args << "--enable-gpgme" if build.with? "gpgme"

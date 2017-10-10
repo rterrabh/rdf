@@ -6,7 +6,6 @@ class Mplayer < Formula
     url "http://www.mplayerhq.hu/MPlayer/releases/MPlayer-1.1.1.tar.xz"
     sha256 "ce8fc7c3179e6a57eb3a58cb7d1604388756b8a61764cc93e095e7aff3798c76"
 
-    # Fix compilation on 10.9, adapted from upstream revision r36500
     patch do
       url "https://gist.githubusercontent.com/jacknagel/7441175/raw/37657c264a6a3bb4d30dee14538c367f7ffccba9/vo_corevideo.h.patch"
       sha256 "19296cbfa2d3b9af4f12d3fc8a4fdbf5b095bc85fc31b3328ab20bfbadb12b3d"
@@ -24,8 +23,6 @@ class Mplayer < Formula
     url "svn://svn.mplayerhq.hu/mplayer/trunk"
     depends_on "subversion" => :build if MacOS.version <= :leopard
 
-    # When building SVN, configure prompts the user to pull FFmpeg from git.
-    # Don't do that.
     patch :DATA
   end
 
@@ -38,8 +35,6 @@ class Mplayer < Formula
   deprecated_option "with-x" => "with-x11"
 
   if build.with?("osd") || build.with?("x11")
-    # These are required for the OSD. We can get them from X11, or we can
-    # build our own.
     depends_on "fontconfig"
     depends_on "freetype"
     depends_on "libpng"
@@ -50,19 +45,11 @@ class Mplayer < Formula
     cause "Inline asm errors during compile on 32bit Snow Leopard."
   end unless MacOS.prefer_64_bit?
 
-  # ld fails with: Unknown instruction for architecture x86_64
   fails_with :llvm
 
   def install
-    # It turns out that ENV.O1 fixes link errors with llvm.
     ENV.O1 if ENV.compiler == :llvm
 
-    # we disable cdparanoia because homebrew's version is hacked to work on OS X
-    # and mplayer doesn't expect the hacks we apply. So it chokes.
-    # Specify our compiler to stop ffmpeg from defaulting to gcc.
-    # Disable openjpeg because it defines int main(), which hides mplayer's main().
-    # This issue was reported upstream against openjpeg 1.5.0:
-    # http://code.google.com/p/openjpeg/issues/detail?id=152
     args = %W[
       --prefix=#{prefix}
       --cc=#{ENV.cc}

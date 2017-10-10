@@ -3,7 +3,6 @@ module Gitlab
     def self.force_push?(project, oldrev, newrev)
       return false if project.empty_repo?
 
-      # Created or deleted branch
       if Gitlab::Git.blank_ref?(oldrev) || Gitlab::Git.blank_ref?(newrev)
         false
       else

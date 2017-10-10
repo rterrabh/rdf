@@ -22,7 +22,6 @@ class Qemu < Formula
   depends_on "gtk+" => :optional
   depends_on "libssh2" => :optional
 
-  # 3.2MB working disc-image file hosted on upstream's servers for people to use to test qemu functionality.
   resource "armtest" do
     url "http://wiki.qemu.org/download/arm-test-0.2.tar.gz"
     sha256 "4b4c2dce4c055f0a2adb93d571987a3d40c96c6cbfd9244d19b9708ce5aea454"

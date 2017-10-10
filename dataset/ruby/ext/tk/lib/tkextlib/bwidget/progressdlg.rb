@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/progressdlg.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/variable'
@@ -22,7 +18,6 @@ class Tk::BWidget::ProgressDlg
   WidgetClassNames[WidgetClassName] ||= self
 
   def create_self(keys)
-    # NOT create widget for reusing the object
     super(keys)
     @keys['textvariable'] = TkVariable.new unless @keys.key?('textvariable')
     @keys['variable']     = TkVariable.new unless @keys.key?('variable')

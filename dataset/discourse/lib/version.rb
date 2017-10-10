@@ -1,5 +1,4 @@
 module Discourse
-  # work around reloader
   unless defined? ::Discourse::VERSION
     module VERSION #:nodoc:
       MAJOR = 1
@@ -21,7 +20,6 @@ module Discourse
       c0 = (needed_split[idx] || '').sub('beta', '').to_i
       c1 = (current_str || '').sub('beta', '').to_i
 
-      # beta is less than stable
       return false if current_str.include?('beta') && (c0 == 0) && (c1 > 0)
 
       return true if c1 > c0

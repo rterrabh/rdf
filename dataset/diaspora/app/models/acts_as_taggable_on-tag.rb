@@ -13,7 +13,6 @@ module ActsAsTaggableOn
 
     def self.normalize(name)
       if name =~ /^#?<3/
-        # Special case for love, because the world needs more love.
         '<3'
       elsif name
         name.gsub(/[^#{self.tag_text_regexp}]/, '').downcase

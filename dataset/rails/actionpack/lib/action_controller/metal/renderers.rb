@@ -1,12 +1,10 @@
 require 'set'
 
 module ActionController
-  # See <tt>Renderers.add</tt>
   def self.add_renderer(key, &block)
     Renderers.add(key, &block)
   end
 
-  # See <tt>Renderers.remove</tt>
   def self.remove_renderer(key)
     Renderers.remove(key)
   end
@@ -42,63 +40,25 @@ module ActionController
         if options.key?(name)
           _process_options(options)
           method_name = Renderers._render_with_renderer_method_name(name)
-          #nodyna <ID:send-74> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1306> <SD COMPLEX (change-prone variables)>
           return send(method_name, options.delete(name), options)
         end
       end
       nil
     end
 
-    # A Set containing renderer names that correspond to available renderer procs.
-    # Default values are <tt>:json</tt>, <tt>:js</tt>, <tt>:xml</tt>.
     RENDERERS = Set.new
 
     def self._render_with_renderer_method_name(key)
       "_render_with_renderer_#{key}"
     end
 
-    # Adds a new renderer to call within controller actions.
-    # A renderer is invoked by passing its name as an option to
-    # <tt>AbstractController::Rendering#render</tt>. To create a renderer
-    # pass it a name and a block. The block takes two arguments, the first
-    # is the value paired with its key and the second is the remaining
-    # hash of options passed to +render+.
-    #
-    # Create a csv renderer:
-    #
-    #   ActionController::Renderers.add :csv do |obj, options|
-    #     filename = options[:filename] || 'data'
-    #     str = obj.respond_to?(:to_csv) ? obj.to_csv : obj.to_s
-    #     send_data str, type: Mime::CSV,
-    #       disposition: "attachment; filename=#{filename}.csv"
-    #   end
-    #
-    # Note that we used Mime::CSV for the csv mime type as it comes with Rails.
-    # For a custom renderer, you'll need to register a mime type with
-    # <tt>Mime::Type.register</tt>.
-    #
-    # To use the csv renderer in a controller action:
-    #
-    #   def show
-    #     @csvable = Csvable.find(params[:id])
-    #     respond_to do |format|
-    #       format.html
-    #       format.csv { render csv: @csvable, filename: @csvable.name }
-    #     end
-    #   end
-    # To use renderers and their mime types in more concise ways, see
-    # <tt>ActionController::MimeResponds::ClassMethods.respond_to</tt>
     def self.add(key, &block)
-      #nodyna <ID:define_method-11> <DM COMPLEX (events)>
+      #nodyna <define_method-1307> <DM COMPLEX (events)>
       define_method(_render_with_renderer_method_name(key), &block)
       RENDERERS << key.to_sym
     end
 
-    # This method is the opposite of add method.
-    #
-    # Usage:
-    #
-    #   ActionController::Renderers.remove(:csv)
     def self.remove(key)
       RENDERERS.delete(key.to_sym)
       method_name = _render_with_renderer_method_name(key)

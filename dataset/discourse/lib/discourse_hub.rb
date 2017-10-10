@@ -33,12 +33,12 @@ module DiscourseHub
   end
 
   def self.singular_action(action, rel_url, params={})
-    #nodyna <ID:send-64> <SD MODERATE (change-prone variables)>
+    #nodyna <send-256> <SD MODERATE (change-prone variables)>
     JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", {params: params, accept: accepts, referer: referer } )
   end
 
   def self.collection_action(action, rel_url, params={})
-    #nodyna <ID:send-65> <SD MODERATE (change-prone variables)>
+    #nodyna <send-257> <SD MODERATE (change-prone variables)>
     JSON.parse RestClient.send(action, "#{hub_base_url}#{rel_url}", params, content_type: :json, accept: accepts, referer: referer )
   end
 

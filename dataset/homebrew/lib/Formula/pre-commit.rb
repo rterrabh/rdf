@@ -68,7 +68,6 @@ class PreCommit < Formula
       end
     end
 
-    # fix aspy.yaml (because namespace .pth isn't processed)
     touch libexec/"vendor/lib/python2.7/site-packages/aspy/__init__.py"
 
     system "python", *Language::Python.setup_install_args(libexec)

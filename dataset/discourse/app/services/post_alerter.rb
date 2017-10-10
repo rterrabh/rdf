@@ -17,7 +17,6 @@ class PostAlerter
 
   def after_create_post(post)
     if post.topic.private_message?
-      # If it's a private message, notify the topic_allowed_users
       allowed_users(post).each do |user|
         if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:tracking]
           next unless post.reply_to_post_number || post.reply_to_post.try(:user_id) == user.id
@@ -25,7 +24,6 @@ class PostAlerter
         create_notification(user, Notification.types[:private_message], post)
       end
     elsif post.post_type == Post.types[:regular]
-      # If it's not a private message and it's not an automatic post caused by a moderator action, notify the users
       notify_post_users(post)
     end
   end
@@ -78,7 +76,6 @@ class PostAlerter
 
     user.notifications.where(notification_type: type,
                              topic_id: topic.id).destroy_all
-    # HACK so notification counts sync up correctly
     user.reload
   end
 
@@ -90,21 +87,17 @@ class PostAlerter
     return if user.blank?
     return if user.id == Discourse::SYSTEM_USER_ID
 
-    # Make sure the user can see the post
     return unless Guardian.new(user).can_see?(post)
 
     notifier_id = opts[:user_id] || post.user_id
 
-    # apply muting here
     return if notifier_id && MutedUser.where(user_id: user.id, muted_user_id: notifier_id)
                                       .joins(:muted_user)
                                       .where('NOT admin AND NOT moderator')
                                       .exists?
 
-    # skip if muted on the topic
     return if TopicUser.get(post.topic, user).try(:notification_level) == TopicUser.notification_levels[:muted]
 
-    # Don't notify the same user about the same notification on the same post
     existing_notification = user.notifications
                                 .order("notifications.id desc")
                                 .find_by(topic_id: post.topic_id,
@@ -142,7 +135,6 @@ class PostAlerter
 
     UserActionObserver.log_notification(original_post, user, type, opts[:acting_user_id])
 
-    # Create the notification
     user.notifications.create(notification_type: type,
                               topic_id: post.topic_id,
                               post_number: post.post_number,
@@ -154,7 +146,6 @@ class PostAlerter
 
    if (!existing_notification) && NOTIFIABLE_TYPES.include?(type)
 
-     # we may have an invalid post somehow, dont blow up
      post_url = original_post.url rescue nil
      if post_url
         MessageBus.publish("/notification-alert/#{user.id}", {
@@ -171,14 +162,10 @@ class PostAlerter
 
   end
 
-  # TODO: Move to post-analyzer?
-  # Returns a list users who have been mentioned
   def extract_mentioned_users(post)
     User.where(username_lower: post.raw_mentions).where("id <> ?", post.user_id)
   end
 
-  # TODO: Move to post-analyzer?
-  # Returns a list of users who were quoted in the post
   def extract_quoted_users(post)
     post.raw.scan(/\[quote=\"([^,]+),.+\"\]/).uniq.map do |m|
       User.find_by("username_lower = :username and id != :id", username: m.first.strip.downcase, id: post.user_id)
@@ -195,7 +182,6 @@ class PostAlerter
     end.compact
   end
 
-  # Notify a bunch of users
   def notify_users(users, type, post)
     users = [users] unless users.is_a?(Array)
 
@@ -209,9 +195,7 @@ class PostAlerter
     end
   end
 
-  # TODO: This should use javascript for parsing rather than re-doing it this way.
   def notify_post_users(post)
-    # Is this post a reply to a user?
     reply_to_user = post.reply_notification_target
     notify_users(reply_to_user, :replied, post)
 

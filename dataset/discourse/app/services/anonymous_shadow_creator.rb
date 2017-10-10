@@ -48,7 +48,6 @@ class AnonymousShadowCreator
       shadow.email_tokens.update_all(confirmed: true)
       shadow.activate
 
-      # can not hold dupes
       UserCustomField.where(user_id: user.id, name: "shadow_id").destroy_all
 
       UserCustomField.create!(user_id: user.id, name: "shadow_id", value: shadow.id)

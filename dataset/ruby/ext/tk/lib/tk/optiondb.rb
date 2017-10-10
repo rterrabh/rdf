@@ -1,6 +1,3 @@
-#
-# tk/optiondb.rb : treat option database
-#
 require 'tk'
 
 module TkOptionDB
@@ -8,7 +5,7 @@ module TkOptionDB
   extend Tk
 
   TkCommandNames = ['option'.freeze].freeze
-  #nodyna <ID:instance_eval-56> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1807> <IEV MODERATE (method definition)>
   (CmdClassID = ['CMD_CLASS'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -23,15 +20,9 @@ module TkOptionDB
   end
 
   def add(pat, value, pri=None)
-    # if $SAFE >= 4
-    #   fail SecurityError, "can't call 'TkOptionDB.add' at $SAFE >= 4"
-    # end
     tk_call('option', 'add', pat, value, pri)
   end
   def clear
-    # if $SAFE >= 4
-    #   fail SecurityError, "can't call 'TkOptionDB.crear' at $SAFE >= 4"
-    # end
     tk_call_without_enc('option', 'clear')
   end
   def get(win, name, klass)
@@ -59,7 +50,6 @@ module TkOptionDB
     cline = ''
     open(file, 'r') {|f|
       while line = f.gets
-        #cline += line.chomp!
         cline.concat(line.chomp!)
         case cline
         when /\\$/    # continue
@@ -89,7 +79,6 @@ module TkOptionDB
   module_function :read_entries
 
   def read_with_encoding(file, f_enc=nil, pri=None)
-    # try to read the file as an OptionDB file
     read_entries(file, f_enc).each{|pat, val|
       add(pat, val, pri)
     }
@@ -132,15 +121,17 @@ module TkOptionDB
   end
   module_function :read_with_encoding
 
-  # support procs on the resource database
   @@resource_proc_class = Class.new
 
-  #nodyna <ID:const_set-15> <CS TRIVIAL (static values)>
+  #nodyna <const_set-1808> <CS TRIVIAL (static values)>
   @@resource_proc_class.const_set(:CARRIER, '.'.freeze)
 
+  #nodyna <instance_variable_set-1809> <not yet classified>
   @@resource_proc_class.instance_variable_set('@method_tbl',
                                               TkCore::INTERP.create_table)
+  #nodyna <instance_variable_set-1810> <not yet classified>
   @@resource_proc_class.instance_variable_set('@add_method', false)
+  #nodyna <instance_variable_set-1811> <not yet classified>
   @@resource_proc_class.instance_variable_set('@safe_mode', 4)
 
   class << @@resource_proc_class
@@ -172,41 +163,34 @@ module TkOptionDB
 =end
 
     def __check_proc_string__(str)
-      # If you want to check the proc_string, do it in this method.
-      # Please define this in the block given to 'new_proc_class' method.
       str
     end
 
     def method_missing(id, *args)
-      #res_proc, proc_str = self::METHOD_TBL[id]
       res_proc, proc_str = @method_tbl[id]
 
       proc_source = TkOptionDB.get(self::CARRIER, id.id2name, '').strip
       res_proc = nil if proc_str != proc_source # resource is changed
 
-      # unless res_proc.kind_of?(Proc)
       unless TkComm._callback_entry?(res_proc)
-        #if id == :new || !(self::METHOD_TBL.has_key?(id) || self::ADD_METHOD)
         if id == :new || !(@method_tbl.has_key?(id) || @add_method)
           raise NoMethodError,
                 "not support resource-proc '#{id.id2name}' for #{self.name}"
         end
         proc_str = proc_source
         proc_str = '{' + proc_str + '}' unless /\A\{.*\}\Z/ =~ proc_str
-        #proc_str = __closed_block_check__(proc_str)
         proc_str = __check_proc_string__(proc_str)
         res_proc = proc{
           begin
-            #eval("$SAFE = #{self::SAFE_MODE};\nProc.new" + proc_str)
-            #nodyna <ID:eval-56> <EV COMPLEX (change-prone variables)>
+            #nodyna <eval-1812> <EV COMPLEX (change-prone variables)>
             eval("$SAFE = #{@safe_mode};\nProc.new" + proc_str)
           rescue SyntaxError=>err
             raise SyntaxError,
+              #nodyna <eval-1813> <not yet classified>
               TkCore::INTERP._toUTF8(err.message.gsub(/\(eval\):\d:/,
                                                       "(#{id.id2name}):"))
           end
         }.call
-        #self::METHOD_TBL[id] = [res_proc, proc_source]
         @method_tbl[id] = [res_proc, proc_source]
       end
       res_proc.call(*args)
@@ -236,6 +220,7 @@ module TkOptionDB
     carrier = Tk.tk_call_without_enc('frame', @path, '-class', klass)
 
     body = <<-"EOD"
+      #nodyna <module_eval-1814> <not yet classified>
       class #{klass} < TkOptionDB.module_eval('@@resource_proc_class')
         CARRIER    = '#{carrier}'.freeze
         METHOD_TBL = TkCore::INTERP.create_table
@@ -246,10 +231,14 @@ module TkOptionDB
     EOD
 
     if parent.kind_of?(Class) && parent <= @@resource_proc_class
+      #nodyna <class_eval-1815> <not yet classified>
       parent.class_eval(body)
+      #nodyna <eval-1816> <not yet classified>
       eval(parent.name + '::' + klass)
     else
+      #nodyna <eval-1817> <not yet classified>
       eval(body)
+      #nodyna <eval-1818> <not yet classified>
       eval('TkOptionDB::' + klass)
     end
   end
@@ -287,20 +276,28 @@ module TkOptionDB
     if parent.kind_of?(Class) && parent <= @@resource_proc_class
       cmd_klass = Class.new(parent)
     else
+      #nodyna <module_eval-1819> <not yet classified>
       cmd_klass = Class.new(TkOptionDB.module_eval('@@resource_proc_class'))
     end
-    #nodyna <ID:const_set-16> <CS TRIVIAL (static values)>
+    #nodyna <const_set-1820> <CS TRIVIAL (static values)>
     cmd_klass.const_set(:CARRIER, carrier.dup.freeze)
 
+    #nodyna <instance_variable_set-1821> <not yet classified>
     cmd_klass.instance_variable_set('@method_tbl', TkCore::INTERP.create_table)
+    #nodyna <instance_variable_set-1822> <not yet classified>
     cmd_klass.instance_variable_set('@add_method', add)
+    #nodyna <instance_variable_set-1823> <not yet classified>
     cmd_klass.instance_variable_set('@safe_mode', safe)
     func.each{|f|
+      #nodyna <instance_variable_get-1824> <not yet classified>
       cmd_klass.instance_variable_get('@method_tbl')[f.to_s.intern] = nil
     }
 =begin
+    #nodyna <const_set-1825> <not yet classified>
     cmd_klass.const_set(:METHOD_TBL, TkCore::INTERP.create_table)
+    #nodyna <const_set-1826> <not yet classified>
     cmd_klass.const_set(:ADD_METHOD, add)
+    #nodyna <const_set-1827> <not yet classified>
     cmd_klass.const_set(:SAFE_MODE, safe)
     func.each{|f| cmd_klass::METHOD_TBL[f.to_s.intern] = nil }
 =end
@@ -311,17 +308,24 @@ module TkOptionDB
   private_class_method :__create_new_class
 
   def __remove_methods_of_proc_class(klass)
-    # for security, make these methods invalid
     class << klass
       def __null_method(*args); nil; end
+      #nodyna <class_eval-1828> <not yet classified>
       [ :class_eval, :name, :superclass, :clone, :dup, :autoload, :autoload?,
+        #nodyna <const_set-1829> <not yet classified>
+        #nodyna <const_get-1830> <not yet classified>
         :ancestors, :const_defined?, :const_get, :const_set, :const_missing,
         :class_variables, :constants, :included_modules, :instance_methods,
+        #nodyna <module_eval-1831> <not yet classified>
         :method_defined?, :module_eval, :private_instance_methods,
         :protected_instance_methods, :public_instance_methods,
         :singleton_methods, :remove_const, :remove_method, :undef_method,
         :to_s, :inspect, :display, :method, :methods, :respond_to?,
+        #nodyna <instance_variable_get-1832> <not yet classified>
+        #nodyna <instance_variable_set-1833> <not yet classified>
         :instance_variable_get, :instance_variable_set, :instance_method,
+        #nodyna <instance_eval-1834> <not yet classified>
+        #nodyna <instance_exec-1835> <not yet classified>
         :instance_eval, :instance_exec, :instance_variables, :kind_of?, :is_a?,
         :private_methods, :protected_methods, :public_methods ].each{|m|
         alias_method(m, :__null_method)
@@ -347,12 +351,9 @@ module TkOptionDB
   module_function :__get_random_basename
   private_class_method :__get_random_basename
 
-  # define new proc class :
-  # If you want to modify the new class or create a new subclass,
-  # you must do such operation in the block parameter.
-  # Because the created class is flozen after evaluating the block.
   def new_proc_class(klass, func, safe = 4, add = false, parent = nil, &b)
     new_klass = __create_new_class(klass, func, safe, add, parent)
+    #nodyna <class_eval-1836> <not yet classified>
     new_klass.class_eval(&b) if block_given?
     __remove_methods_of_proc_class(new_klass)
     new_klass.freeze
@@ -363,6 +364,7 @@ module TkOptionDB
   def eval_under_random_base(parent = nil, &b)
     new_klass = __create_new_class(__get_random_basename(),
                                    [], 4, false, parent)
+    #nodyna <class_eval-1837> <not yet classified>
     ret = new_klass.class_eval(&b) if block_given?
     __remove_methods_of_proc_class(new_klass)
     new_klass.freeze

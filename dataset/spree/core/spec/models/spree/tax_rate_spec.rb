@@ -124,8 +124,6 @@ describe Spree::TaxRate, :type => :model do
 
             context "when the tax is a VAT" do
               let(:included_in_price) { true }
-              # The rate should match in this instance because:
-              # 1) It's the default rate (and as such, a negative adjustment should apply)
               it { is_expected.to eq([rate]) }
             end
 
@@ -141,11 +139,6 @@ describe Spree::TaxRate, :type => :model do
 
             context "when the tax is a VAT" do
               let(:included_in_price) { true }
-              # The rate should match in this instance because:
-              # 1) The order has no tax address by this stage
-              # 2) With no tax address, it has no tax zone
-              # 3) Therefore, we assume the default tax zone
-              # 4) This default zone has a default tax rate.
               it { is_expected.to eq([rate]) }
             end
 
@@ -265,9 +258,6 @@ describe Spree::TaxRate, :type => :model do
 
         context "when order's zone is neither the default zone, or included in the default zone, but matches the rate's zone" do
           before do
-            # With no zone members, this zone will not contain anything
-            # Previously:
-            # Zone.stub_chain :default_tax, :contains? => false
             @zone.zone_members.delete_all
           end
           it "should create an adjustment" do
@@ -358,10 +348,8 @@ describe Spree::TaxRate, :type => :model do
         context "when two rates apply" do
           before do
             @price_before_taxes = line_item.price / (1 + @rate1.amount + @rate2.amount)
-            # Use the same rounding method as in DefaultTax calculator
             @price_before_taxes = BigDecimal.new(@price_before_taxes).round(2, BigDecimal::ROUND_HALF_UP)
             line_item.update_column(:pre_tax_amount, @price_before_taxes)
-            # Clear out any previously automatically-applied adjustments
             @order.all_adjustments.delete_all
             @rate1.adjust(@order, line_item)
             @rate2.adjust(@order, line_item)

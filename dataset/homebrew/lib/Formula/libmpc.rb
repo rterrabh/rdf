@@ -31,7 +31,6 @@ class Libmpc < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <mpc.h>
 
       int main()
       {

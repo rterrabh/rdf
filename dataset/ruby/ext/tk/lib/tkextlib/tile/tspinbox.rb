@@ -1,7 +1,3 @@
-#
-#  ttk::spinbox widget  (Tcl/Tk 8.6b1 or later)
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -38,7 +34,6 @@ class Tk::Tile::TSpinbox < Tk::Tile::TEntry
         [ ?w, TkComm.method(:window) ],
 
         [ ?e, proc{|val|
-            #enc = Tk.encoding
             enc = ((Tk.encoding)? Tk.encoding : Tk.encoding_system)
             if enc
               Tk.fromUTF8(TkComm::string(val), enc)
@@ -102,6 +97,5 @@ class Tk::Tile::TSpinbox < Tk::Tile::TEntry
   alias identify ttk_identify
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Spinbox, :TkSpinbox)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tspinbox.rb',
                                    :Ttk, Tk::Tile::Spinbox, :TkSpinbox)

@@ -32,7 +32,6 @@ class Augeas < Formula
       system "./configure", *args
     end
 
-    # libfa example program doesn't compile cleanly on OSX, so skip it
     inreplace "Makefile" do |s|
       s.change_make_var! "SUBDIRS", "gnulib/lib src gnulib/tests tests man doc"
     end
@@ -42,7 +41,6 @@ class Augeas < Formula
 
   def caveats; <<-EOS.undent
     Lenses have been installed to:
-      #{HOMEBREW_PREFIX}/share/augeas/lenses/dist
     EOS
   end
 

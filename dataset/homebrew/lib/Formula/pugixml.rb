@@ -45,9 +45,6 @@ class Pugixml < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <pugixml.hpp>
-      #include <cassert>
-      #include <cstring>
 
       int main(int argc, char *argv[]) {
         pugi::xml_document doc;

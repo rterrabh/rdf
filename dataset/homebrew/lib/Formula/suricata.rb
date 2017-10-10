@@ -39,7 +39,6 @@ class Suricata < Formula
   end
 
   def install
-    # bug raised https://redmine.openinfosecfoundation.org/issues/1470
     ENV.deparallelize
 
     libnet = Formula["libnet"]
@@ -85,7 +84,6 @@ class Suricata < Formula
 
     bin.env_script_all_files(libexec/"bin", :PYTHONPATH => ENV["PYTHONPATH"])
 
-    # Leave the magic-file: prefix in otherwise it overrides a commented out line rather than intended line.
     inreplace etc/"suricata/suricata.yaml", %r{magic-file: /.+/magic}, "magic-file: #{libmagic.opt_share}/misc/magic"
   end
 

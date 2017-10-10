@@ -7,7 +7,6 @@ class Groovysdk < Formula
   def install
     ENV["GROOVY_HOME"] = libexec
 
-    # We don't need Windows' files.
     rm_f Dir["bin/*.bat"]
 
     prefix.install_metafiles

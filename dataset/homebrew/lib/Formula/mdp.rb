@@ -19,7 +19,6 @@ class Mdp < Formula
   end
 
   test do
-    # Go through two slides and quit.
     ENV["TERM"] = "xterm"
     pipe_output "#{bin}/mdp #{share}/sample.md", "jjq", 0
   end

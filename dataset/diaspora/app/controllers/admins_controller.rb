@@ -18,6 +18,7 @@ class AdminsController < Admin::AdminController
     user = User.find_by_email(email)
 
     unless user
+      #nodyna <send-237> <not yet classified>
       EmailInviter.new(email, inviter).send!
       flash[:notice] = "invitation sent to #{email}"
     else
@@ -70,8 +71,6 @@ class AdminsController < Admin::AdminController
 
     @user_count = User.count
 
-    #@posts[:new_public] = Post.where(:type => ['StatusMessage','ActivityStreams::Photo'],
-    #                                 :public => true).order('created_at DESC').limit(15).all
 
   end
 
@@ -88,7 +87,7 @@ class AdminsController < Admin::AdminController
   def create_hash(model, opts={})
     opts[:range] ||= 1.day
     plural = model.to_s.underscore.pluralize
-    #nodyna <ID:eval-1> <EV MODERATE (variable definition)>
+    #nodyna <eval-238> <EV MODERATE (variable definition)>
     eval(<<DATA
       @#{plural} = {
         :day_before => #{model}.where(:created_at => ((Time.now.midnight - #{opts[:range]*2})..Time.now.midnight - #{opts[:range]})).count,
@@ -116,13 +115,13 @@ DATA
 
     def assign_attributes(values)
       values.each do |k, v|
-        #nodyna <ID:send-180> <SD MODERATE (array)>
+        #nodyna <send-239> <SD MODERATE (array)>
         public_send("#{k}=", v)
       end
     end
 
     def any_searchfield_present?
-      #nodyna <ID:send-181> <SD MODERATE (array)>
+      #nodyna <send-240> <SD MODERATE (array)>
       if %w(username email guid under13).all? { |attr| public_send(attr).blank? }
         errors.add :base, "no fields for search set"
       end

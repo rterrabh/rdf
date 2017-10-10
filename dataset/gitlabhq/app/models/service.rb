@@ -1,25 +1,4 @@
-# == Schema Information
-#
-# Table name: services
-#
-#  id                    :integer          not null, primary key
-#  type                  :string(255)
-#  title                 :string(255)
-#  project_id            :integer
-#  created_at            :datetime
-#  updated_at            :datetime
-#  active                :boolean          default(FALSE), not null
-#  properties            :text
-#  template              :boolean          default(FALSE)
-#  push_events           :boolean          default(TRUE)
-#  issues_events         :boolean          default(TRUE)
-#  merge_requests_events :boolean          default(TRUE)
-#  tag_push_events       :boolean          default(TRUE)
-#  note_events           :boolean          default(TRUE), not null
-#
 
-# To add new service you should build a class inherited from Service
-# and implement a set of methods
 class Service < ActiveRecord::Base
   include Sortable
   serialize :properties, JSON
@@ -63,23 +42,18 @@ class Service < ActiveRecord::Base
   end
 
   def title
-    # implement inside child
   end
 
   def description
-    # implement inside child
   end
 
   def help
-    # implement inside child
   end
 
   def to_param
-    # implement inside child
   end
 
   def fields
-    # implement inside child
     []
   end
 
@@ -88,11 +62,9 @@ class Service < ActiveRecord::Base
   end
 
   def execute(data)
-    # implement inside child
   end
 
   def test(data)
-    # default implementation
     result = execute(data)
     { success: result.present?, result: result }
   end
@@ -101,10 +73,9 @@ class Service < ActiveRecord::Base
     !project.empty_repo?
   end
 
-  # Provide convenient accessor methods
-  # for each serialized property.
   def self.prop_accessor(*args)
     args.each do |arg|
+      #nodyna <class_eval-502> <not yet classified>
       class_eval %{
         def #{arg}
           properties['#{arg}']

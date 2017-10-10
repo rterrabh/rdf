@@ -1,12 +1,7 @@
-# coding: utf-8
 
-##
-# For RDoc::Text#to_html
 
 require 'strscan'
 
-##
-# For RDoc::Text#snippet
 
 begin
   gem 'json'
@@ -15,14 +10,9 @@ end
 
 require 'json'
 
-##
-# Methods for manipulating comment text
 
 module RDoc::Text
 
-  ##
-  # Maps markup formats to classes that can parse them.  If the format is
-  # unknown, "rdoc" format is used.
 
   MARKUP_FORMAT = {
     'markdown' => RDoc::Markdown,
@@ -33,11 +23,6 @@ module RDoc::Text
 
   MARKUP_FORMAT.default = RDoc::Markup
 
-  ##
-  # Maps an encoding to a Hash of characters properly transcoded for that
-  # encoding.
-  #
-  # See also encode_fallback.
 
   TO_HTML_CHARACTERS = Hash.new do |h, encoding|
     h[encoding] = {
@@ -53,16 +38,12 @@ module RDoc::Text
     }
   end if Object.const_defined? :Encoding
 
-  ##
-  # Transcodes +character+ to +encoding+ with a +fallback+ character.
 
   def self.encode_fallback character, encoding, fallback
     character.encode(encoding, :fallback => { character => fallback },
                      :undef => :replace, :replace => fallback)
   end
 
-  ##
-  # Expands tab characters in +text+ to eight spaces
 
   def expand_tabs text
     expanded = []
@@ -80,8 +61,6 @@ module RDoc::Text
     expanded.join
   end
 
-  ##
-  # Flush +text+ left based on the shortest line
 
   def flush_left text
     indent = 9999
@@ -97,10 +76,6 @@ module RDoc::Text
     text.gsub(/^ {0,#{indent}}/, empty)
   end
 
-  ##
-  # Convert a string in markup format into HTML.
-  #
-  # Requires the including class to implement #formatter
 
   def markup text
     if @store.rdoc.options
@@ -115,8 +90,6 @@ module RDoc::Text
     parse(text).accept formatter
   end
 
-  ##
-  # Strips hashes, expands tabs then flushes +text+ to the left
 
   def normalize_comment text
     return text if text.empty?
@@ -129,8 +102,6 @@ module RDoc::Text
     text
   end
 
-  ##
-  # Normalizes +text+ then builds a RDoc::Markup::Document from it
 
   def parse text, format = 'rdoc'
     return text if RDoc::Markup::Document === text
@@ -143,8 +114,6 @@ module RDoc::Text
     MARKUP_FORMAT[format].parse text
   end
 
-  ##
-  # The first +limit+ characters of +text+ as HTML
 
   def snippet text, limit = 100
     document = parse text
@@ -152,8 +121,6 @@ module RDoc::Text
     RDoc::Markup::ToHtmlSnippet.new(options, limit).convert document
   end
 
-  ##
-  # Strips leading # characters from +text+
 
   def strip_hashes text
     return text if text =~ /^(?>\s*)[^\#]/
@@ -164,15 +131,11 @@ module RDoc::Text
     text.gsub(/^\s*(#+)/) { $1.tr '#', ' ' }.gsub(/^\s+$/, empty)
   end
 
-  ##
-  # Strips leading and trailing \n characters from +text+
 
   def strip_newlines text
     text.gsub(/\A\n*(.*?)\n*\z/m) do $1 end # block preserves String encoding
   end
 
-  ##
-  # Strips /* */ style comments
 
   def strip_stars text
     return text unless text =~ %r%/\*.*\*/%m
@@ -193,9 +156,6 @@ module RDoc::Text
     text.gsub(/^\s+$/, empty)
   end
 
-  ##
-  # Converts ampersand, dashes, ellipsis, quotes, copyright and registered
-  # trademark symbols in +text+ to properly encoded characters.
 
   def to_html text
     if Object.const_defined? :Encoding then
@@ -264,7 +224,6 @@ module RDoc::Text
           html << encoded[:close_squote]
           insquotes = false
         elsif after_word
-          # Mary's dog, my parents' house: do not start paired quotes
           html << encoded[:close_squote]
         else
           html << encoded[:open_squote]
@@ -288,8 +247,6 @@ module RDoc::Text
     html
   end
 
-  ##
-  # Wraps +txt+ to +line_len+
 
   def wrap(txt, line_len = 76)
     res = []
@@ -297,7 +254,6 @@ module RDoc::Text
     ep = txt.length
 
     while sp < ep
-      # scan back for a space
       p = sp + line_len - 1
       if p >= ep
         p = ep

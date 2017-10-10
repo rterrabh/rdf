@@ -3,9 +3,6 @@ module Spree
     class PromotionAccumulator
       attr_reader :adjustments, :sources, :promotions
 
-      # Adds accumulator as an attribute of adjustable to
-      # avoid changing number of passed arguments to
-      # adjustment#update! and concequential methods
       def self.add_to(adjustable)
         class << adjustable
           attr_accessor :promotion_accumulator
@@ -68,7 +65,7 @@ module Spree
       end
 
       def where(array, opts = {})
-        #nodyna <ID:send-117> <SD COMPLEX (array)>
+        #nodyna <send-2530> <SD COMPLEX (array)>
         array.select { |a| opts.all? { |k, v| a.respond_to?(k) && a.send(k) == v } }
       end
     end

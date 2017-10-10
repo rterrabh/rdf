@@ -27,7 +27,6 @@ module DiffHelper
   end
 
   def diff_hard_limit_enabled?
-    # Enabling hard limit allows user to see more diff information
     if params[:force_show_diff].present?
       true
     else
@@ -43,13 +42,6 @@ module DiffHelper
     lines = []
     skip_next = false
 
-    # Building array of lines
-    #
-    # [
-    # left_type, left_line_number, left_line_content, left_line_code,
-    # right_line_type, right_line_number, right_line_content, right_line_code
-    # ]
-    #
     diff_file.diff_lines.each do |line|
 
       full_line = line.text
@@ -67,28 +59,22 @@ module DiffHelper
       end
 
       if type == 'match' || type.nil?
-        # line in the right panel is the same as in the left one
         line = [type, line_old, full_line, line_code, type, line_new, full_line, line_code]
         lines.push(line)
       elsif type == 'old'
         if next_type == 'new'
-          # Left side has text removed, right side has text added
           line = [type, line_old, full_line, line_code, next_type, line_new, next_line, next_line_code]
           lines.push(line)
           skip_next = true
         elsif next_type == 'old' || next_type.nil?
-          # Left side has text removed, right side doesn't have any change
-          # No next line code, no new line number, no new line text
           line = [type, line_old, full_line, line_code, next_type, nil, "&nbsp;", nil]
           lines.push(line)
         end
       elsif type == 'new'
         if skip_next
-          # Change has been already included in previous line so no need to do it again
           skip_next = false
           next
         else
-          # Change is only on the right side, left side has no change
           line = [nil, nil, "&nbsp;", line_code, type, line_new, full_line, line_code]
           lines.push(line)
         end
@@ -134,7 +120,6 @@ module DiffHelper
   def inline_diff_btn
     params_copy = params.dup
     params_copy[:view] = 'inline'
-    # Always use HTML to handle case where JSON diff rendered this button
     params_copy.delete(:format)
 
     link_to url_for(params_copy), id: "commit-diff-viewtype", class: (params[:view] != 'parallel' ? 'btn btn-sm active' : 'btn btn-sm') do
@@ -145,7 +130,6 @@ module DiffHelper
   def parallel_diff_btn
     params_copy = params.dup
     params_copy[:view] = 'parallel'
-    # Always use HTML to handle case where JSON diff rendered this button
     params_copy.delete(:format)
 
     link_to url_for(params_copy), id: "commit-diff-viewtype", class: (params[:view] == 'parallel' ? 'btn active btn-sm' : 'btn btn-sm') do

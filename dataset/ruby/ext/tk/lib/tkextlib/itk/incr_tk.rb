@@ -1,16 +1,10 @@
-#
-#  tkextlib/itk/incr_tk.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/menuspec'
 require 'tkextlib/itcl.rb'
 
-# call setup script
 require 'tkextlib/itk.rb'
 
-#TkPackage.require('Itk', '3.2')
 TkPackage.require('Itk')
 
 module Tk
@@ -41,12 +35,9 @@ module Tk
       list(tk_call('::itk::usual'))
     end
 
-    ############################
 
     class Archetype < TkWindow
       TkCommandNames = [].freeze
-      # WidgetClassName = 'Archetype'.freeze
-      # WidgetClassNames[WidgetClassName] = self
 
       def self.to_eval
         '::itk::' << self::WidgetClassName
@@ -56,7 +47,6 @@ module Tk
         Tk::Itk::Component::ComponentID_TBL.delete(self.path)
       end
 
-      #### [incr Tk] public methods
       def component
         simplelist(tk_send('component'))
       end
@@ -75,7 +65,6 @@ module Tk
         names.collect{|name| Tk::Itk::Component.new(self.path, name) }
       end
 
-      #### [incr Tk] protected methods
 =begin
       def itk_component_add(visibility, name, create_cmds, option_cmds=None)
         args = []
@@ -106,7 +95,6 @@ module Tk
 =end
     end
 
-    ############################
 
     class Toplevel < Archetype
       TkCommandNames = ['::itk::Toplevel'].freeze
@@ -122,7 +110,6 @@ module Tk
       private :__strval_optkeys
     end
 
-    ############################
 
     class Widget < Archetype
       TkCommandNames = ['::itk::Widget'].freeze
@@ -131,7 +118,6 @@ module Tk
     end
 
 
-    ############################
 
     class Component < TkObject
       def __cget_cmd
@@ -146,7 +132,7 @@ module Tk
 
       ComponentID_TBL = TkCore::INTERP.create_table
 
-      #nodyna <ID:instance_eval-136> <IEV MODERATE (method definition)>
+      #nodyna <instance_eval-1644> <IEV MODERATE (method definition)>
       (Itk_Component_ID = ['itk:component'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -275,13 +261,11 @@ module Tk
       def method_missing(id, *args)
         name = id.id2name
 
-        # try 1 : component command
         begin
           return tk_call(@master, 'component', @component, name, *args)
         rescue
         end
 
-        # try 2 : component configure
         len = args.length
         begin
           case len
@@ -297,7 +281,6 @@ module Tk
         rescue
         end
 
-        # try 3 : widget method or widget configure
         begin
           unless @widget
             @widget = window(tk_call(@master, 'component', @component))
@@ -307,9 +290,7 @@ module Tk
         rescue
         end
 
-        # unknown method
         super(id, *args)
-        # fail RuntimeError, "unknown method '#{name}' for #{self.inspect}"
       end
 
       def tk_send(cmd, *rest)
@@ -360,17 +341,6 @@ module Tk
         end
       end
 
-      #def bind(*args)
-      #  unless @widget
-      #    begin
-      #      @widget = window(tk_call(@master, 'component', @component))
-      #      @path = @widget.path
-      #    rescue
-      #      fail RuntimeError, 'component is not assigned to a widget'
-      #    end
-      #  end
-      #  @widget.bind(*args)
-      #end
       def bind(context, *args)
         unless @widget
           begin
@@ -380,7 +350,6 @@ module Tk
             fail RuntimeError, 'component is not assigned to a widget'
           end
         end
-        # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
         if TkComm._callback_entry?(args[0]) || !block_given?
           cmd = args.shift
         else
@@ -389,17 +358,6 @@ module Tk
         @widget.bind(context, cmd, *args)
       end
 
-      #def bind_append(*args)
-      #  unless @widget
-      #    begin
-      #      @widget = window(tk_call(@master, 'component', @component))
-      #      @path = @widget.path
-      #    rescue
-      #      fail RuntimeError, 'component is not assigned to a widget'
-      #    end
-      #  end
-      #  @widget.bind_append(*args)
-      #end
       def bind_append(context, *args)
         unless @widget
           begin
@@ -409,7 +367,6 @@ module Tk
             fail RuntimeError, 'component is not assigned to a widget'
           end
         end
-        # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
         if TkComm._callback_entry?(args[0]) || !block_given?
           cmd = args.shift
         else

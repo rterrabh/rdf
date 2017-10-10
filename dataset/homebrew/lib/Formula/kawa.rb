@@ -10,7 +10,6 @@ class Kawa < Formula
   def install
     libexec.install "kawa-#{version}.jar"
     (bin/"kawa").write <<-EOS.undent
-      #!/bin/sh
       KAWA_HOME="#{libexec}"
       java -jar "$KAWA_HOME/kawa-#{version}.jar"
     EOS

@@ -63,7 +63,6 @@ describe Statistics do
 
   describe '#contacts_sharing_with_count_sql' do
     it "pulls back an array of mentions following counts and ids" do
-      # bob is sharing with alice and eve in the spec setup
       alice.share_with(eve.person, alice.aspects.first)
       @result = [{"id" => alice.id , "count" => 2 },
                  {"id" => bob.id , "count" => 2 },
@@ -111,7 +110,7 @@ describe Statistics do
     it "#{method}_sql calls where_sql" do
       expect(@stats).to receive(:where_clause_sql)
 
-      #nodyna <ID:send-113> <SD MODERATE (array)>
+      #nodyna <send-190> <SD MODERATE (array)>
       @stats.send("#{method}_sql".to_sym)
     end
 
@@ -163,12 +162,10 @@ describe Statistics do
       skip
     end
 
-    # requires a threshold
 
     describe '#disabled_email_count_sql' do
     end
 
-    # binary things
     describe '#completed_getting_started_count_sql' do
     end
 

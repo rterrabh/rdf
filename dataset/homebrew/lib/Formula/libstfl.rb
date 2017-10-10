@@ -23,14 +23,10 @@ class Libstfl < Formula
     args << "FOUND_RUBY = 0" unless MacOS::CLT.installed? || MacOS.version >= :mavericks
 
     if build.with? "python"
-      # Install into the site-packages in the Cellar (so uninstall works)
       inreplace "python/Makefile.snippet" do |s|
         s.change_make_var! "PYTHON_SITEARCH", lib/"python2.7/site-packages"
         s.gsub! "lib-dynload/", ""
       end
-      # Fails race condition of test:
-      #   ImportError: dynamic module does not define init function (init_stfl)
-      #   make: *** [python/_stfl.so] Error 1
       ENV.deparallelize
     else
       args << "FOUND_PYTHON = 0"
@@ -133,7 +129,6 @@ index 1c4fa58..501ff7d 100644
 +++ b/perl5/Makefile.PL
 @@ -3,6 +3,6 @@ WriteMakefile(
          "NAME"      => "stfl",
- 	# The -D_LARGEFILE64_SOURCE -D_GNU_SOURCE are needed by perl (not STFL!) on some systems
  	"CCFLAGS"   => "-pthread -I.. -D_LARGEFILE64_SOURCE -D_GNU_SOURCE",
 -        "LIBS"      => ["-lpthread -lncursesw"],
 +        "LIBS"      => ["-lpthread -lncurses"],
@@ -187,12 +182,9 @@ index 3f9f45b..1559626 100644
 --- a/stfl_internals.h
 +++ b/stfl_internals.h
 @@ -28,7 +28,7 @@ extern "C" {
- #endif
  
- #include "stfl.h"
 -#include <ncursesw/ncurses.h>
 +#include <ncurses.h>
- #include <pthread.h>
  
  struct stfl_widget_type;
 -- 

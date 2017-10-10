@@ -1,6 +1,5 @@
 class FreeimageHttpDownloadStrategy < CurlDownloadStrategy
   def stage
-    # need to convert newlines or patch chokes
     quiet_safe_system "/usr/bin/unzip", { :quiet_flag => "-qq" }, "-aa", cached_location
     chdir
   end
@@ -43,7 +42,6 @@ index b59c419..6e177fc
 +++ b/Makefile.fip
 @@ -5,8 +5,9 @@ include fipMakefile.srcs
  
- # General configuration variables:
  DESTDIR ?= /
 -INCDIR ?= $(DESTDIR)/usr/include
 -INSTALLDIR ?= $(DESTDIR)/usr/lib
@@ -51,7 +49,6 @@ index b59c419..6e177fc
 +INCDIR ?= $(DESTDIR)$(PREFIX)/include
 +INSTALLDIR ?= $(DESTDIR)$(PREFIX)/lib
  
- # Converts cr/lf to just lf
  DOS2UNIX = dos2unix
 @@ -35,9 +36,9 @@ endif
  
@@ -104,7 +101,6 @@ index 92f6358..264b70f
 +++ b/Makefile.gnu
 @@ -5,8 +5,9 @@ include Makefile.srcs
  
- # General configuration variables:
  DESTDIR ?= /
 -INCDIR ?= $(DESTDIR)/usr/include
 -INSTALLDIR ?= $(DESTDIR)/usr/lib
@@ -112,7 +108,6 @@ index 92f6358..264b70f
 +INCDIR ?= $(DESTDIR)$(PREFIX)/include
 +INSTALLDIR ?= $(DESTDIR)$(PREFIX)/lib
  
- # Converts cr/lf to just lf
  DOS2UNIX = dos2unix
 @@ -35,9 +36,9 @@ endif
  
@@ -153,4 +148,3 @@ index 92f6358..264b70f
 +	install -m 755 $(SHAREDLIB) $(INSTALLDIR)
  	ln -sf $(SHAREDLIB) $(INSTALLDIR)/$(VERLIBNAME)
  	ln -sf $(VERLIBNAME) $(INSTALLDIR)/$(LIBNAME)	
- #	ldconfig

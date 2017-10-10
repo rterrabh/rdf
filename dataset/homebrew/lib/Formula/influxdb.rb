@@ -152,7 +152,6 @@ class Influxdb < Formula
   def caveats; <<-EOS.undent
     Config files from old InfluxDB versions are incompatible with version 0.9.
     If upgrading from a pre-0.9 version, the new configuration file will be named:
-        #{etc}/influxdb.conf.default
     To generate a new config file:
         influxd config > influxdb.conf.generated
     EOS

@@ -24,8 +24,6 @@ if Rails.version >= "4.2.0"
 end
 
 class ActiveRecord::ConnectionAdapters::ConnectionPool
-  # drain all idle connections
-  # if idle_time is specified only connections idle for N seconds will be drained
   def drain(idle_time=nil)
     synchronize do
       @available.clear

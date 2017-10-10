@@ -22,7 +22,6 @@ class Sickbeard < Formula
   end
 
   def install
-    # TODO: - strip down to the minimal install
     prefix.install_metafiles
     libexec.install Dir["*"]
 
@@ -61,7 +60,6 @@ class Sickbeard < Formula
   end
 
   def startup_script; <<-EOS.undent
-    #!/bin/bash
     export PYTHONPATH="#{libexec}/lib/python2.7/site-packages:$PYTHONPATH"
     python "#{libexec}/SickBeard.py"\
            "--pidfile=#{var}/run/sickbeard.pid"\

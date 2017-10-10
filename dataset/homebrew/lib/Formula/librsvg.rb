@@ -31,8 +31,6 @@ class Librsvg < Formula
 
     system "./configure", *args
 
-    # disable updating gdk-pixbuf cache, we will do this manually in post_install
-    # https://github.com/Homebrew/homebrew/issues/40833
     inreplace "gdk-pixbuf-loader/Makefile", "$(GDK_PIXBUF_QUERYLOADERS) > $(DESTDIR)$(gdk_pixbuf_cache_file) ;", ""
 
     system "make", "install",
@@ -41,15 +39,12 @@ class Librsvg < Formula
   end
 
   def post_install
-    # librsvg is not aware GDK_PIXBUF_MODULEDIR must be set
-    # set GDK_PIXBUF_MODULEDIR and update loader cache
     ENV["GDK_PIXBUF_MODULEDIR"] = "#{HOMEBREW_PREFIX}/lib/gdk-pixbuf-2.0/2.10.0/loaders"
     system "#{Formula["gdk-pixbuf"].opt_bin}/gdk-pixbuf-query-loaders", "--update-cache"
   end
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <librsvg/rsvg.h>
 
       int main(int argc, char *argv[]) {
         RsvgHandle *handle = rsvg_handle_new();

@@ -12,7 +12,6 @@ class Profiles::PreferencesController < Profiles::ApplicationController
         flash[:alert] = 'Failed to save preferences.'
       end
     rescue ArgumentError => e
-      # Raised when `dashboard` is given an invalid value.
       flash[:alert] = "Failed to save preferences (#{e.message})."
     end
 

@@ -14,7 +14,6 @@ class Whitedb < Formula
   depends_on "python" => :optional
 
   def install
-    # https://github.com/priitj/whitedb/issues/15
     ENV.append "CFLAGS", "-std=gnu89"
 
     args = ["--prefix=#{prefix}"]

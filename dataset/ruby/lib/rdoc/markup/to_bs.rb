@@ -1,13 +1,6 @@
-##
-# Outputs RDoc markup with hot backspace action!  You will probably need a
-# pager to use this output format.
-#
-# This formatter won't work on 1.8.6 because it lacks String#chars.
 
 class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
 
-  ##
-  # Returns a new ToBs that is ready for hot backspace action!
 
   def initialize markup = nil
     super
@@ -16,9 +9,6 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
     @in_em = false
   end
 
-  ##
-  # Sets a flag that is picked up by #annotate to do the right thing in
-  # #convert_string
 
   def init_tags
     add_tag :BOLD, '+b', '-b'
@@ -26,8 +16,6 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
     add_tag :TT,   ''  , ''   # we need in_tt information maintained
   end
 
-  ##
-  # Makes heading text bold.
 
   def accept_heading heading
     use_prefix or @res << ' ' * @indent
@@ -39,8 +27,6 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
     @res << "\n"
   end
 
-  ##
-  # Turns on or off special handling for +convert_string+
 
   def annotate tag
     case tag
@@ -52,15 +38,11 @@ class RDoc::Markup::ToBs < RDoc::Markup::ToRdoc
     ''
   end
 
-  ##
-  # Calls convert_string on the result of convert_special
 
   def convert_special special
     convert_string super
   end
 
-  ##
-  # Adds bold or underline mixed with backspaces
 
   def convert_string string
     return string unless string.respond_to? :chars # your ruby is lame

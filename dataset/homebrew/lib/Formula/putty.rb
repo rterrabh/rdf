@@ -54,13 +54,14 @@ class Putty < Formula
 
   test do
     (testpath/"testing/command.sh").write <<-EOS.undent
-      #!/usr/bin/expect -f
       set timeout -1
       spawn #{bin}/puttygen -t rsa -b 4096 -q -o test.key
       expect -exact "Enter passphrase to save key: "
+      #nodyna <send-559> <not yet classified>
       send -- "Homebrew\n"
       expect -exact "\r
       Re-enter passphrase to verify: "
+      #nodyna <send-560> <not yet classified>
       send -- "Homebrew\n"
       expect eof
     EOS

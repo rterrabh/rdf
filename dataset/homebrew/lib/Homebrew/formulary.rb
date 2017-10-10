@@ -1,8 +1,6 @@
 require "digest/md5"
 require "formula_renames"
 
-# The Formulary is responsible for creating instances of Formula.
-# It is not meant to be used directy from formulae.
 
 class Formulary
   FORMULAE = {}
@@ -17,14 +15,15 @@ class Formulary
 
   def self.load_formula(name, path)
     mod = Module.new
-    #nodyna <ID:const_set-1> <CS COMPLEX (change-prone variable)>
+    #nodyna <const_set-645> <CS COMPLEX (change-prone variable)>
     const_set("FormulaNamespace#{Digest::MD5.hexdigest(path.to_s)}", mod)
     contents = path.open("r") { |f| set_encoding(f).read }
+    #nodyna <module_eval-646> <not yet classified>
     mod.module_eval(contents, path)
     class_name = class_s(name)
 
     begin
-      #nodyna <ID:const_get-1> <CG COMPLEX (change-prone variable)>
+      #nodyna <const_get-647> <CG COMPLEX (change-prone variable)>
       klass = mod.const_get(class_name)
     rescue NameError => e
       raise FormulaUnavailableError, name, e.backtrace
@@ -50,12 +49,8 @@ class Formulary
     class_name
   end
 
-  # A FormulaLoader returns instances of formulae.
-  # Subclasses implement loaders for particular sources of formulae.
   class FormulaLoader
-    # The formula's name
     attr_reader :name
-    # The formula's ruby file's path or filename
     attr_reader :path
 
     def initialize(name, path)
@@ -63,7 +58,6 @@ class Formulary
       @path = path.resolved_path
     end
 
-    # Gets the formula instance.
     def get_formula(spec)
       klass.new(name, path, spec)
     end
@@ -82,7 +76,6 @@ class Formulary
     end
   end
 
-  # Loads formulae from bottles.
   class BottleLoader < FormulaLoader
     def initialize(bottle_name)
       @bottle_filename = Pathname(bottle_name).realpath
@@ -110,7 +103,6 @@ class Formulary
     end
   end
 
-  # Loads formulae from disk using a path
   class FromPathLoader < FormulaLoader
     def initialize(path)
       path = Pathname.new(path).expand_path
@@ -118,7 +110,6 @@ class Formulary
     end
   end
 
-  # Loads formulae from URLs
   class FromUrlLoader < FormulaLoader
     attr_reader :url
 
@@ -137,7 +128,6 @@ class Formulary
     end
   end
 
-  # Loads tapped formulae.
   class TapLoader < FormulaLoader
     attr_reader :tap
 
@@ -168,18 +158,10 @@ class Formulary
     end
   end
 
-  # Return a Formula instance for the given reference.
-  # `ref` is string containing:
-  # * a formula name
-  # * a formula pathname
-  # * a formula URL
-  # * a local bottle reference
   def self.factory(ref, spec = :stable)
     loader_for(ref).get_formula(spec)
   end
 
-  # Return a Formula instance for the given rack.
-  # It will auto resolve formula's spec when requested spec is nil
   def self.from_rack(rack, spec = nil)
     kegs = rack.directory? ? rack.subdirs.map { |d| Keg.new(d) } : []
 
@@ -198,20 +180,16 @@ class Formulary
   end
 
   def self.to_rack(ref)
-    # First, check whether the rack with the given name exists.
     if (rack = HOMEBREW_CELLAR/File.basename(ref, ".rb")).directory?
       return rack.resolved_path
     end
 
-    # Second, use canonical name to locate rack.
     (HOMEBREW_CELLAR/canonical_name(ref)).resolved_path
   end
 
   def self.canonical_name(ref)
     loader_for(ref).name
   rescue TapFormulaAmbiguityError
-    # If there are multiple tap formulae with the name of ref,
-    # then ref is the canonical name
     ref.downcase
   end
 
@@ -309,7 +287,6 @@ class Formulary
       selected_formula = factory(possible_pinned_tap_formulae.first, spec)
       if core_path(ref).file?
         opoo <<-EOS.undent
-          #{ref} is provided by core, but is now shadowed by #{selected_formula.full_name}.
           To refer to the core formula, use Homebrew/homebrew/#{ref} instead.
         EOS
       end

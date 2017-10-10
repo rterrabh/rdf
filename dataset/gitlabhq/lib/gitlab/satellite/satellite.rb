@@ -53,9 +53,6 @@ module Gitlab
         File.exists? path
       end
 
-      # * Locks the satellite
-      # * Changes the current directory to the satellite's working dir
-      # * Yields
       def lock
         project.ensure_satellite_exists
 
@@ -90,41 +87,26 @@ module Gitlab
 
       private
 
-      # Clear the working directory
       def clear_working_dir!
         repo.git.reset(hard: true)
         repo.git.clean(f: true, d: true, x: true)
       end
 
-      # Deletes all branches except the parking branch
-      #
-      # This ensures we have no name clashes or issues updating branches when
-      # working with the satellite.
       def delete_heads!
         heads = repo.heads.map(&:name)
 
-        # update or create the parking branch
         repo.git.checkout(default_options({ B: true }), PARKING_BRANCH)
 
-        # remove the parking branch from the list of heads ...
         heads.delete(PARKING_BRANCH)
-        # ... and delete all others
         heads.each { |head| repo.git.branch(default_options({ D: true }), head) }
       end
 
-      # Deletes all remotes except origin
-      #
-      # This ensures we have no remote name clashes or issues updating branches when
-      # working with the satellite.
       def remove_remotes!
         remotes = repo.git.remote.split(' ')
         remotes.delete('origin')
         remotes.each { |name| repo.git.remote(default_options,'rm', name)}
       end
 
-      # Updates the satellite from bare repo
-      #
-      # Note: this will only update remote branches (i.e. origin/*)
       def update_from_source!
         repo.git.remote(default_options, 'set-url', :origin, project.repository.path_to_repo)
         repo.git.fetch(default_options, :origin)
@@ -134,8 +116,6 @@ module Gitlab
         { raise: true, timeout: true }.merge(options)
       end
 
-      # Create directory for storing
-      # satellites lock files
       def create_locks_dir
         FileUtils.mkdir_p(lock_files_dir)
       end

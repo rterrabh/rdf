@@ -19,7 +19,6 @@ class Notmuch < Formula
   depends_on "talloc"
   depends_on "gmime"
 
-  # Requires zlib >= 1.2.5.2
   resource "zlib" do
     url "http://zlib.net/zlib-1.2.8.tar.gz"
     sha256 "36658cb768a54c1d4dec43c3116c27ed893e88b02ecfcb44f2166f9c0b7f2a0d"

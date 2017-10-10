@@ -1,14 +1,3 @@
-#
-#   irb/ruby-token.rb - ruby tokens
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
-# :stopdoc:
 module RubyToken
   EXPR_BEG = :EXPR_BEG
   EXPR_MID = :EXPR_MID
@@ -234,8 +223,6 @@ module RubyToken
     [:TkDOLLAR,     TkUnknownChar,  "$"],
   ]
 
-  # {reading => token_class}
-  # {reading => [token_class, *opt]}
   TkReading2Token = {}
   TkSymbol2Token = {}
 
@@ -244,7 +231,7 @@ module RubyToken
     if RubyToken.const_defined?(token_n)
       IRB.fail AlreadyDefinedToken, token_n
     end
-    #nodyna <ID:eval-112> <EV MODERATE (class definition)>
+    #nodyna <eval-2175> <EV MODERATE (class definition)>
     token_c = eval("class #{token_n} < #{super_token}; end; #{token_n}")
 
     if reading
@@ -264,4 +251,3 @@ module RubyToken
     def_token(*defs)
   end
 end
-# :startdoc:

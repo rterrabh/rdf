@@ -51,7 +51,6 @@ module ActiveAdmin
       end
 
       def add_default_user_to_migration
-        # Don't assume that we have a migration!
         devise_migration_file = Dir["db/migrate/*_devise_create_#{table_name}.rb"].first
         return if devise_migration_file.nil? || !options[:default_user]
 

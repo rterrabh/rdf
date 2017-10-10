@@ -257,9 +257,6 @@ class BuildError < RuntimeError
   end
 end
 
-# raised by FormulaInstaller.check_dependencies_bottled and
-# FormulaInstaller.install if the formula or its dependencies are not bottled
-# and are being installed on a system without necessary build tools
 class BuildToolsError < RuntimeError
   def initialize(formulae)
     if formulae.length > 1
@@ -297,16 +294,11 @@ class BuildToolsError < RuntimeError
 
     super <<-EOS.undent
       The following #{formula_text}:
-        #{formulae.join(", ")}
       cannot be installed as a #{package_text} and must be built from source.
-      #{xcode_text}
     EOS
   end
 end
 
-# raised by Homebrew.install, Homebrew.reinstall, and Homebrew.upgrade
-# if the user passes any flags/environment that would case a bottle-only
-# installation on a system without build tools to fail
 class BuildFlagsError < RuntimeError
   def initialize(flags)
     if flags.length > 1
@@ -343,38 +335,29 @@ class BuildFlagsError < RuntimeError
 
     super <<-EOS.undent
       The following #{flag_text}:
-        #{flags.join(", ")}
-      #{require_text} building tools, but none are installed.
       Either remove the #{flag_text} to attempt bottle installation,
-      #{xcode_text}
     EOS
   end
 end
 
-# raised by CompilerSelector if the formula fails with all of
-# the compilers available on the user's system
 class CompilerSelectionError < RuntimeError
   def initialize(formula)
     super <<-EOS.undent
-      #{formula.full_name} cannot be built with any available compilers.
       To install this formula, you may need to:
         brew install gcc
       EOS
   end
 end
 
-# Raised in Resource.fetch
 class DownloadError < RuntimeError
   def initialize(resource, cause)
     super <<-EOS.undent
       Failed to download resource #{resource.download_name.inspect}
-      #{cause.message}
       EOS
     set_backtrace(cause.backtrace)
   end
 end
 
-# raised in CurlDownloadStrategy.fetch
 class CurlDownloadStrategyError < RuntimeError
   def initialize(url)
     case url
@@ -386,7 +369,6 @@ class CurlDownloadStrategyError < RuntimeError
   end
 end
 
-# raised by safe_system in utils.rb
 class ErrorDuringExecution < RuntimeError
   def initialize(cmd, args = [])
     args = args.map { |a| a.to_s.gsub " ", "\\ " }.join(" ")
@@ -394,10 +376,8 @@ class ErrorDuringExecution < RuntimeError
   end
 end
 
-# raised by Pathname#verify_checksum when "expected" is nil or empty
 class ChecksumMissingError < ArgumentError; end
 
-# raised by Pathname#verify_checksum when verification fails
 class ChecksumMismatchError < RuntimeError
   attr_reader :expected, :hash_type
 
@@ -406,7 +386,6 @@ class ChecksumMismatchError < RuntimeError
     @hash_type = expected.hash_type.to_s.upcase
 
     super <<-EOS.undent
-      #{@hash_type} mismatch
       Expected: #{expected}
       Actual: #{actual}
       Archive: #{fn}

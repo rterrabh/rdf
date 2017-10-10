@@ -64,12 +64,10 @@ module RailsAdmin
           @search_operator ||= RailsAdmin::Config.default_search_operator
         end
 
-        # serials and dates are reversed in list, which is more natural (last modified items first).
         register_instance_option :sort_reverse? do
           false
         end
 
-        # list of columns I should search for that field [{ column: 'table_name.column', type: field.type }, {..}]
         register_instance_option :searchable_columns do
           @searchable_columns ||= begin
             case searchable
@@ -108,17 +106,14 @@ module RailsAdmin
           value
         end
 
-        # output for pretty printing (show, list)
         register_instance_option :pretty_value do
           formatted_value.presence || ' - '
         end
 
-        # output for printing in export view (developers beware: no bindings[:view] and no data!)
         register_instance_option :export_value do
           pretty_value
         end
 
-        # Accessor for field's help text displayed below input field.
         register_instance_option :help do
           (@help ||= {})[::I18n.locale] ||= generic_field_help
         end
@@ -133,9 +128,6 @@ module RailsAdmin
           nil
         end
 
-        # Accessor for field's label.
-        #
-        # @see RailsAdmin::AbstractModel.properties
         register_instance_option :label do
           (@label ||= {})[::I18n.locale] ||= abstract_model.model.human_attribute_name name
         end
@@ -144,15 +136,10 @@ module RailsAdmin
           (@hint ||= '')
         end
 
-        # Accessor for field's maximum length per database.
-        #
-        # @see RailsAdmin::AbstractModel.properties
         register_instance_option :length do
           @length ||= properties && properties.length
         end
 
-        # Accessor for field's length restrictions per validations
-        #
         register_instance_option :valid_length do
           @valid_length ||= abstract_model.model.validators_on(name).detect { |v| v.kind == :length }.try(&:options) || {}
         end
@@ -161,9 +148,6 @@ module RailsAdmin
           :form_field
         end
 
-        # Accessor for whether this is field is mandatory.
-        #
-        # @see RailsAdmin::AbstractModel.properties
         register_instance_option :required? do
           context = begin
             if bindings && bindings[:object]
@@ -182,9 +166,6 @@ module RailsAdmin
           end
         end
 
-        # Accessor for whether this is a serial field (aka. primary key, identifier).
-        #
-        # @see RailsAdmin::AbstractModel.properties
         register_instance_option :serial? do
           properties && properties.serial?
         end
@@ -197,7 +178,6 @@ module RailsAdmin
           !editable?
         end
 
-        # init status in the view
         register_instance_option :active? do
           false
         end
@@ -211,7 +191,6 @@ module RailsAdmin
           returned
         end
 
-        # columns mapped (belongs_to, paperclip, etc.). First one is used for searching/sorting by default
         register_instance_option :children_fields do
           []
         end
@@ -224,55 +203,41 @@ module RailsAdmin
           !(@properties && @properties.read_only?)
         end
 
-        # Is this an association
         def association?
           is_a?(RailsAdmin::Config::Fields::Association)
         end
 
-        # Reader for validation errors of the bound object
         def errors
           ([name] + children_fields).uniq.collect do |column_name|
             bindings[:object].errors[column_name]
           end.uniq.flatten
         end
 
-        # Reader whether field is optional.
-        #
-        # @see RailsAdmin::Config::Fields::Base.register_instance_option :required?
         def optional?
           !required?
         end
 
-        # Inverse accessor whether this field is required.
-        #
-        # @see RailsAdmin::Config::Fields::Base.register_instance_option :required?
         def optional(state = nil, &block)
           if !state.nil? || block # rubocop:disable NonNilCheck
-            #nodyna <ID:instance_eval-7> <IEV COMPLEX (block execution)>
+            #nodyna <instance_eval-1365> <IEV COMPLEX (block execution)>
             required state.nil? ? proc { false == (instance_eval(&block)) } : false == state
           else
             optional?
           end
         end
 
-        # Writer to make field optional.
-        #
-        # @see RailsAdmin::Config::Fields::Base.optional
         def optional=(state)
           optional(state)
         end
 
-        # Reader for field's type
         def type
           @type ||= self.class.name.to_s.demodulize.underscore.to_sym
         end
 
-        # Reader for field's value
         def value
           bindings[:object].safe_send(name)
         rescue NoMethodError => e
           raise e.exception <<-EOM.gsub(/^\s{10}/, '')
-          #{e.message}
           If you want to use a RailsAdmin virtual field(= a field without corresponding instance method),
           you should declare 'formatted_value' in the field definition.
             field :#{name} do
@@ -281,12 +246,10 @@ module RailsAdmin
           EOM
         end
 
-        # Reader for nested attributes
         register_instance_option :nested_form do
           false
         end
 
-        # Allowed methods for the field in forms
         register_instance_option :allowed_methods do
           [method_name]
         end
@@ -303,7 +266,6 @@ module RailsAdmin
         end
 
         def parse_input(_params)
-          # overriden
         end
 
         def inverse_of
@@ -325,6 +287,7 @@ module RailsAdmin
         def inspect
           "#<#{self.class.name}[#{name}] #{
             instance_variables.collect do |v|
+              #nodyna <instance_variable_get-1366> <not yet classified>
               value = instance_variable_get(v)
               if [:@parent, :@root, :@section, :@children_fields_registered,
                   :@associated_model_config, :@group, :@bindings].include? v

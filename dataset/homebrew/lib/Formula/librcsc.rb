@@ -22,7 +22,6 @@ class Librcsc < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <rcsc/rcg.h>
       int main() {
         rcsc::rcg::PlayerT p;
         return 0;

@@ -8,8 +8,6 @@ end
 
 module Psych
   module Visitors
-    ###
-    # This class walks a YAML AST, converting each node to Ruby
     class ToRuby < Psych::Visitors::Visitor
       def self.create
         class_loader = ClassLoader.new
@@ -173,7 +171,7 @@ module Psych
               member = accept(k)
               value  = accept(v)
               if struct_members.include?(class_loader.symbolize(member))
-                #nodyna <ID:send-4> <SD COMPLEX (change-prone variables)>
+                #nodyna <send-1466> <SD COMPLEX (change-prone variables)>
                 s.send("#{member}=", value)
               else
                 members[member.to_s.sub(/^@/, '')] = value
@@ -238,6 +236,7 @@ module Psych
           list.replace members['internal']
 
           members['ivars'].each do |ivar, v|
+            #nodyna <instance_variable_set-1467> <not yet classified>
             list.instance_variable_set ivar, v
           end
           list
@@ -370,12 +369,12 @@ module Psych
           end
           o.yaml_initialize c.tag, c.map
         else
+          #nodyna <instance_variable_set-1468> <not yet classified>
           h.each { |k,v| o.instance_variable_set(:"@#{k}", v) }
         end
         o
       end
 
-      # Convert +klassname+ to a Class
       def resolve_class klassname
         class_loader.load klassname
       end

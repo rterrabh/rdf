@@ -7,8 +7,6 @@ class Modules < Formula
   depends_on :x11 => :optional
 
   def install
-    # -DUSE_INTERP_ERRORLINE fixes
-    # error: no member named 'errorLine' in 'struct Tcl_Interp'
     args = %W[
       --disable-debug
       --disable-dependency-tracking

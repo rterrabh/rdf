@@ -8,8 +8,6 @@ class Lrzsz < Formula
     system "./configure", "--prefix=#{prefix}", "--mandir=#{man}"
     system "make"
 
-    # there's a bug in lrzsz when using custom --prefix
-    # must install the binaries manually first
     bin.install "src/lrz", "src/lsz"
 
     system "make", "install"

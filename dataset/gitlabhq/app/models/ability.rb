@@ -19,8 +19,6 @@ class Ability
       end.concat(global_abilities(user))
     end
 
-    # List of possible abilities
-    # for non-authenticated user
     def not_auth_abilities(user, subject)
       project = if subject.kind_of?(Project)
                   subject
@@ -75,7 +73,6 @@ class Ability
       RequestStore.store[key] ||= begin
         team = project.team
 
-        # Rules based on role in project
         if team.master?(user)
           rules.push(*project_master_rules)
 
@@ -222,14 +219,12 @@ class Ability
         rules << :read_group
       end
 
-      # Only group masters and group owners can create new projects in group
       if group.has_master?(user) || group.has_owner?(user) || user.admin?
         rules.push(*[
           :create_projects,
         ])
       end
 
-      # Only group owner and administrators can admin group
       if group.has_owner?(user) || user.admin?
         rules.push(*[
           :admin_group,
@@ -244,7 +239,6 @@ class Ability
     def namespace_abilities(user, namespace)
       rules = []
 
-      # Only namespace owner and administrators can admin it
       if namespace.owner == user || user.admin?
         rules.push(*[
           :create_projects,
@@ -257,7 +251,7 @@ class Ability
 
 
     [:issue, :merge_request].each do |name|
-      #nodyna <ID:define_method-3> <DM MODERATE (array)>
+      #nodyna <define_method-518> <DM MODERATE (array)>
       define_method "#{name}_abilities" do |user, subject|
         rules = []
 
@@ -274,7 +268,7 @@ class Ability
     end
 
     [:note, :project_snippet, :personal_snippet].each do |name|
-      #nodyna <ID:define_method-4> <DM MODERATE (array)>
+      #nodyna <define_method-519> <DM MODERATE (array)>
       define_method "#{name}_abilities" do |user, subject|
         rules = []
 

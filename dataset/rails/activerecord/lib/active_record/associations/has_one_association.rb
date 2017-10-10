@@ -1,5 +1,4 @@
 module ActiveRecord
-  # = Active Record Belongs To Has One Association
   module Associations
     class HasOneAssociation < SingularAssociation #:nodoc:
       include ForeignAssociation
@@ -65,10 +64,6 @@ module ActiveRecord
 
       private
 
-        # The reason that the save param for replace is false, if for create (not just build),
-        # is because the setting of the foreign keys is actually handled by the scoping when
-        # the record is instantiated, and so they are set straight away and do not need to be
-        # updated within replace.
         def set_new_record(record)
           replace(record, false)
         end

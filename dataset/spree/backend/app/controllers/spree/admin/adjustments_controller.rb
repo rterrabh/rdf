@@ -19,7 +19,6 @@ module Spree
       private
 
       def find_adjustment
-        # Need to assign to @object here to keep ResourceController happy
         @adjustment = @object = parent.all_adjustments.find(params[:id])
       end
 
@@ -27,8 +26,6 @@ module Spree
         @order.reload.update!
       end
 
-      # Override method used to create a new instance to correctly
-      # associate adjustment with order
       def build_resource
         parent.adjustments.build(order: parent)
       end

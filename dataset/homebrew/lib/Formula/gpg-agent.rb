@@ -18,12 +18,9 @@ class GpgAgent < Formula
   depends_on "pth"
   depends_on "pinentry"
 
-  # Adjust package name to fit our scheme of packaging both
-  # gnupg 1.x and 2.x, and gpg-agent separately
   patch :DATA
 
   def install
-    # don't use Clang's internal stdint.h
     ENV["gl_cv_absolute_stdint_h"] = "#{MacOS.sdk_path}/usr/include/stdint.h"
 
     system "./configure", "--disable-dependency-tracking",
@@ -53,7 +50,6 @@ index c022805..96ea7ed 100755
 @@ -578,8 +578,8 @@ MFLAGS=
  MAKEFLAGS=
 
- # Identity of this package.
 -PACKAGE_NAME='gnupg'
 -PACKAGE_TARNAME='gnupg'
 +PACKAGE_NAME='gpg-agent'

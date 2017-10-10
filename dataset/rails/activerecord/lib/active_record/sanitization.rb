@@ -7,18 +7,12 @@ module ActiveRecord
         connection.quote(value, column)
       end
 
-      # Used to sanitize objects before they're used in an SQL SELECT statement. Delegates to <tt>connection.quote</tt>.
       def sanitize(object) #:nodoc:
         connection.quote(object)
       end
 
       protected
 
-      # Accepts an array, hash, or string of SQL conditions and sanitizes
-      # them into a valid SQL fragment for a WHERE clause.
-      #   ["name='%s' and group_id='%s'", "foo'bar", 4]  returns  "name='foo''bar' and group_id='4'"
-      #   { name: "foo'bar", group_id: 4 }  returns "name='foo''bar' and group_id='4'"
-      #   "name='foo''bar' and group_id='4'" returns "name='foo''bar' and group_id='4'"
       def sanitize_sql_for_conditions(condition, table_name = self.table_name)
         return nil if condition.blank?
 
@@ -31,9 +25,6 @@ module ActiveRecord
       alias_method :sanitize_sql, :sanitize_sql_for_conditions
       alias_method :sanitize_conditions, :sanitize_sql
 
-      # Accepts an array, hash, or string of SQL conditions and sanitizes
-      # them into a valid SQL fragment for a SET clause.
-      #   { name: nil, group_id: 4 }  returns "name = NULL , group_id='4'"
       def sanitize_sql_for_assignment(assignments, default_table_name = self.table_name)
         case assignments
         when Array; sanitize_sql_array(assignments)
@@ -42,17 +33,6 @@ module ActiveRecord
         end
       end
 
-      # Accepts a hash of SQL conditions and replaces those attributes
-      # that correspond to a +composed_of+ relationship with their expanded
-      # aggregate attribute values.
-      # Given:
-      #     class Person < ActiveRecord::Base
-      #       composed_of :address, class_name: "Address",
-      #         mapping: [%w(address_street street), %w(address_city city)]
-      #     end
-      # Then:
-      #     { address: Address.new("813 abc st.", "chicago") }
-      #       # => { address_street: "813 abc st.", address_city: "chicago" }
       def expand_hash_conditions_for_aggregates(attrs)
         expanded_attrs = {}
         attrs.each do |attr, value|
@@ -62,7 +42,7 @@ module ActiveRecord
               if mapping.size == 1 && !value.respond_to?(aggregate_attr)
                 expanded_attrs[field_attr] = value
               else
-                #nodyna <ID:send-161> <SD COMPLEX (change-prone variables)>
+                #nodyna <send-939> <SD COMPLEX (change-prone variables)>
                 expanded_attrs[field_attr] = value.send(aggregate_attr)
               end
             end
@@ -73,20 +53,6 @@ module ActiveRecord
         expanded_attrs
       end
 
-      # Sanitizes a hash of attribute/value pairs into SQL conditions for a WHERE clause.
-      #   { name: "foo'bar", group_id: 4 }
-      #     # => "name='foo''bar' and group_id= 4"
-      #   { status: nil, group_id: [1,2,3] }
-      #     # => "status IS NULL and group_id IN (1,2,3)"
-      #   { age: 13..18 }
-      #     # => "age BETWEEN 13 AND 18"
-      #   { 'other_records.id' => 7 }
-      #     # => "`other_records`.`id` = 7"
-      #   { other_records: { id: 7 } }
-      #     # => "`other_records`.`id` = 7"
-      # And for value objects on a composed_of relationship:
-      #   { address: Address.new("123 abc st.", "chicago") }
-      #     # => "address_street='123 abc st.' and address_city='chicago'"
       def sanitize_sql_hash_for_conditions(attrs, default_table_name = self.table_name)
         ActiveSupport::Deprecation.warn(<<-EOWARN)
 sanitize_sql_hash_for_conditions is deprecated, and will be removed in Rails 5.0
@@ -101,9 +67,6 @@ sanitize_sql_hash_for_conditions is deprecated, and will be removed in Rails 5.0
       end
       alias_method :sanitize_sql_hash, :sanitize_sql_hash_for_conditions
 
-      # Sanitizes a hash of attribute/value pairs into SQL conditions for a SET clause.
-      #   { status: nil, group_id: 1 }
-      #     # => "status = NULL , group_id = 1"
       def sanitize_sql_hash_for_assignment(attrs, table)
         c = connection
         attrs.map do |attr, value|
@@ -111,16 +74,11 @@ sanitize_sql_hash_for_conditions is deprecated, and will be removed in Rails 5.0
         end.join(', ')
       end
 
-      # Sanitizes a +string+ so that it is safe to use within an SQL
-      # LIKE statement. This method uses +escape_character+ to escape all occurrences of "\", "_" and "%"
       def sanitize_sql_like(string, escape_character = "\\")
         pattern = Regexp.union(escape_character, "%", "_")
         string.gsub(pattern) { |x| [escape_character, x].join }
       end
 
-      # Accepts an array of conditions. The array has each value
-      # sanitized and interpolated into the SQL statement.
-      #   ["name='%s' and group_id='%s'", "foo'bar", 4]  returns  "name='foo''bar' and group_id='4'"
       def sanitize_sql_array(ary)
         statement, *values = ary
         if values.first.is_a?(Hash) && statement =~ /:\w+/
@@ -184,7 +142,6 @@ sanitize_sql_hash_for_conditions is deprecated, and will be removed in Rails 5.0
       end
     end
 
-    # TODO: Deprecate this
     def quoted_id
       self.class.quote_value(id, column_for_attribute(self.class.primary_key))
     end

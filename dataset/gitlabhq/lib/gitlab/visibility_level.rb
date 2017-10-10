@@ -1,8 +1,3 @@
-# Gitlab::VisibilityLevel module
-#
-# Define allowed public modes that can be used for
-# GitLab projects to determine project public mode
-#
 module Gitlab
   module VisibilityLevel
     extend CurrentSettings
@@ -28,8 +23,6 @@ module Gitlab
         user.is_admin? || allowed_level?(level.to_i)
       end
 
-      # Return true if the specified level is allowed for the current user.
-      # Level should be a numeric value, e.g. `20`.
       def allowed_level?(level)
         valid_level?(level) && non_restricted_level?(level)
       end

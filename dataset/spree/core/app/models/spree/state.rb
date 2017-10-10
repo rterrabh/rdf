@@ -16,8 +16,6 @@ module Spree
       where('name = ? OR abbr = ?', name_or_abbr, name_or_abbr)
     end
 
-    # table of { country.id => [ state.id , state.name ] }, arrays sorted by name
-    # blank is added elsewhere, if needed
     def self.states_group_by_country_id
       state_info = Hash.new { |h, k| h[k] = [] }
       self.order('name ASC').each { |state|

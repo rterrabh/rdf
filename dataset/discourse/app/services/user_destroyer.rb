@@ -1,6 +1,5 @@
 require_dependency 'ip_addr'
 
-# Responsible for destroying a User record
 class UserDestroyer
 
   class PostsExistError < RuntimeError; end
@@ -11,8 +10,6 @@ class UserDestroyer
     @guardian = Guardian.new(actor)
   end
 
-  # Returns false if the user failed to be deleted.
-  # Returns a frozen instance of the User if the delete succeeded.
   def destroy(user, opts={})
     raise Discourse::InvalidParameters.new('user is nil') unless user and user.is_a?(User)
     @guardian.ensure_can_delete_user!(user)
@@ -25,10 +22,8 @@ class UserDestroyer
 
       if opts[:delete_posts]
         user.posts.each do |post|
-          # agree with flags
           PostAction.agree_flags!(post, @actor) if opts[:delete_as_spammer]
 
-          # block all external urls
           if opts[:block_urls]
             post.topic_links.each do |link|
               unless link.internal or Oneboxer.oneboxer_exists_for_url?(link.url)
@@ -68,7 +63,6 @@ class UserDestroyer
 
           Post.with_deleted.where(user_id: user.id).update_all("user_id = NULL")
 
-          # If this user created categories, fix those up:
           categories = Category.where(user_id: user.id)
           categories.each do |c|
             c.user_id = Discourse.system_user.id

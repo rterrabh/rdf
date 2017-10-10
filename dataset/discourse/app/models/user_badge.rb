@@ -21,22 +21,3 @@ class UserBadge < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: user_badges
-#
-#  id              :integer          not null, primary key
-#  badge_id        :integer          not null
-#  user_id         :integer          not null
-#  granted_at      :datetime         not null
-#  granted_by_id   :integer          not null
-#  post_id         :integer
-#  notification_id :integer
-#  seq             :integer          default(0), not null
-#
-# Indexes
-#
-#  index_user_badges_on_badge_id_and_user_id              (badge_id,user_id)
-#  index_user_badges_on_badge_id_and_user_id_and_post_id  (badge_id,user_id,post_id) UNIQUE
-#  index_user_badges_on_badge_id_and_user_id_and_seq      (badge_id,user_id,seq) UNIQUE
-#

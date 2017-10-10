@@ -24,7 +24,6 @@ class Libgroove < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <groove/groove.h>
       int main() {
         groove_init();
         groove_version();

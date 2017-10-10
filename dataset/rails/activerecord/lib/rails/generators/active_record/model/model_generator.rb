@@ -13,7 +13,6 @@ module ActiveRecord
       class_option :indexes,    :type => :boolean, :default => true, :desc => "Add indexes for references and belongs_to columns"
 
       
-      # creates the migration file for the model.
 
       def create_migration_file
         return unless options[:migration] && options[:parent].nil?
@@ -42,7 +41,6 @@ module ActiveRecord
 
       protected
 
-        # Used by the migration template to determine the parent name of the model
         def parent_class_name
           options[:parent] || "ActiveRecord::Base"
         end

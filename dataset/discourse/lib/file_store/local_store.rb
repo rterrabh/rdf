@@ -16,7 +16,6 @@ module FileStore
       FileUtils.mkdir_p(Pathname.new(tombstone).dirname)
       FileUtils.move(path, tombstone, :force => true)
     rescue Errno::ENOENT
-      # don't care if the file isn't there
     end
 
     def has_been_uploaded?(url)
@@ -62,8 +61,6 @@ module FileStore
 
     def copy_file(file, path)
       FileUtils.mkdir_p(Pathname.new(path).dirname)
-      # move the file to the right location
-      # not using mv, cause permissions are no good on move
       File.open(path, "wb") { |f| f.write(file.read) }
     end
 

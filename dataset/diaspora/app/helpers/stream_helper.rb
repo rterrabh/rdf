@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 module StreamHelper
   def next_page_path(opts ={})
@@ -33,7 +30,7 @@ module StreamHelper
     if stream.stream_posts.empty?
       (Time.now() + 1).to_i
     else
-      #nodyna <ID:send-227> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-231> <SD COMPLEX (change-prone variables)>
       stream.stream_posts.last.send(stream.order.to_sym).to_i
     end
   end

@@ -33,7 +33,6 @@ class ClutterGtk < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <clutter-gtk/clutter-gtk.h>
 
       int main(int argc, char *argv[]) {
         GOptionGroup *group = gtk_clutter_get_option_group();

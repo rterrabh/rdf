@@ -1,5 +1,3 @@
-# Originally:
-#   homepage 'http://www.spinnaker.de/lbdb/'
 
 class Lbdb < Formula
   desc "Little brother's database for the mutt mail reader"

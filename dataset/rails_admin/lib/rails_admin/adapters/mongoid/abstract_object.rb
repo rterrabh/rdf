@@ -7,10 +7,9 @@ module RailsAdmin
           super
           object.associations.each do |name, association|
             if [:has_many, :references_many].include? association.macro
-              #nodyna <ID:instance_eval-19> <IEV COMPLEX (method definition)>
+              #nodyna <instance_eval-1334> <IEV COMPLEX (method definition)>
               instance_eval <<-RUBY, __FILE__, __LINE__ + 1
                 def #{name.to_s.singularize}_ids
-                  #{name}.map{|item| item.id }
                 end
 
                 def #{name.to_s.singularize}_ids=(item_ids)
@@ -24,7 +23,7 @@ module RailsAdmin
                 end
 RUBY
             elsif [:has_one, :references_one].include? association.macro
-              #nodyna <ID:instance_eval-20> <IEV COMPLEX (method definition)>
+              #nodyna <instance_eval-1335> <IEV COMPLEX (method definition)>
               instance_eval <<-RUBY, __FILE__, __LINE__ + 1
                 def #{name}_id=(item_id)
                   item = (#{association.klass}.find(item_id) rescue nil)

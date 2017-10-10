@@ -20,7 +20,7 @@ class PostEnqueuer
 
     validate_method = :"validate_#{@queue}"
     if respond_to?(validate_method)
-      #nodyna <ID:send-5> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-318> <SD COMPLEX (change-prone variables)>
       return unless send(validate_method, queued_post.create_options)
     end
 

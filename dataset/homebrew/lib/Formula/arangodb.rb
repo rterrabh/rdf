@@ -18,9 +18,6 @@ class Arangodb < Formula
   needs :cxx11
 
   def install
-    # clang on 10.8 will still try to build against libstdc++,
-    # which fails because it doesn't have the C++0x features
-    # arangodb requires.
     ENV.libcxx
 
     args = %W[

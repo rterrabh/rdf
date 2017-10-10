@@ -1,6 +1,3 @@
-#
-# tk/package.rb : package command
-#
 require 'tk'
 
 module TkPackage
@@ -22,23 +19,19 @@ module TkPackage
     size = arg.size
 
     if size==0 && !b
-      # proc info
       procedure(tk_call('package', 'ifneeded', pkg, ver))
 
     elsif size==0 && b
-      # set proc
       cmd = proc(&b)
       tk_call('package', 'ifneeded', pkg, ver, cmd)
       cmd
 
     elsif size==1 && !b
-      # set proc
       cmd = arg[0]
       if cmd
         tk_call('package', 'ifneeded', pkg, ver, cmd)
         cmd
       else
-        # remove proc
         tk_call('package', 'ifneeded', pkg, ver, '')
         nil
       end
@@ -99,23 +92,19 @@ module TkPackage
     size = arg.size
 
     if size==0 && !b
-      # proc info
       procedure(tk_call('package', 'unknown'))
 
     elsif size==0 && b
-      # set proc
       cmd = proc(&b)
       tk_call('package', 'unknown', cmd)
       cmd
 
     elsif size==1 && !b
-      # set proc
       cmd = arg[0]
       if cmd
         tk_call('package', 'unknown', cmd)
         cmd
       else
-        # remove proc
         tk_call('package', 'unknown', '')
         nil
       end

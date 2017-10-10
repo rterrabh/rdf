@@ -5,13 +5,9 @@ require 'active_support/per_thread_registry'
 module ActiveSupport
   module Cache
     module Strategy
-      # Caches that implement LocalCache will be backed by an in-memory cache for the
-      # duration of a block. Repeated calls to the cache for the same key will hit the
-      # in-memory cache for faster access.
       module LocalCache
         autoload :Middleware, 'active_support/cache/strategy/local_cache_middleware'
 
-        # Class for storing and registering the local caches.
         class LocalCacheRegistry # :nodoc:
           extend ActiveSupport::PerThreadRegistry
 
@@ -31,15 +27,12 @@ module ActiveSupport
           def self.cache_for(l); instance.cache_for l; end
         end
 
-        # Simple memory backed cache. This cache is not thread safe and is intended only
-        # for serving as a temporary memory cache for a single thread.
         class LocalStore < Store
           def initialize
             super
             @data = {}
           end
 
-          # Don't allow synchronizing since it isn't thread safe,
           def synchronize # :nodoc:
             yield
           end
@@ -62,12 +55,9 @@ module ActiveSupport
           end
         end
 
-        # Use a local cache for the duration of block.
         def with_local_cache
           use_temporary_local_cache(LocalStore.new) { yield }
         end
-        # Middleware class can be inserted as a Rack handler to be local cache for the
-        # duration of request.
         def middleware
           @middleware ||= Middleware.new(
             "ActiveSupport::Cache::Strategy::LocalCache",

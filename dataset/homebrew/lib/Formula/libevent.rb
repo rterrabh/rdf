@@ -56,7 +56,6 @@ class Libevent < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <event2/event.h>
 
       int main()
       {

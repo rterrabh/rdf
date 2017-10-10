@@ -1,23 +1,12 @@
-# -*- coding: utf-8 -*-
-#--
-# Copyright (C) 2004 Mauricio Julio Fernández Pradier
-# See LICENSE.txt for additional licensing information.
-#++
 
-##
-# TarReader reads tar files and allows iteration over their items
 
 class Gem::Package::TarReader
 
   include Enumerable
 
-  ##
-  # Raised if the tar IO is not seekable
 
   class UnexpectedEOF < StandardError; end
 
-  ##
-  # Creates a new TarReader on +io+ and yields it to the block, if given.
 
   def self.new(io)
     reader = super
@@ -33,23 +22,16 @@ class Gem::Package::TarReader
     nil
   end
 
-  ##
-  # Creates a new tar file reader on +io+ which needs to respond to #pos,
-  # #eof?, #read, #getc and #pos=
 
   def initialize(io)
     @io = io
     @init_pos = io.pos
   end
 
-  ##
-  # Close the tar file
 
   def close
   end
 
-  ##
-  # Iterates over files in the tarball yielding each entry
 
   def each
     return enum_for __method__ unless block_given?
@@ -67,7 +49,6 @@ class Gem::Package::TarReader
       pending = size - entry.bytes_read
 
       begin
-        # avoid reading...
         @io.seek pending, IO::SEEK_CUR
         pending = 0
       rescue Errno::EINVAL, NameError
@@ -80,15 +61,12 @@ class Gem::Package::TarReader
 
       @io.read skip # discard trailing zeros
 
-      # make sure nobody can use #read, #getc or #rewind anymore
       entry.close
     end
   end
 
   alias each_entry each
 
-  ##
-  # NOTE: Do not call #rewind during #each
 
   def rewind
     if @init_pos == 0 then
@@ -100,10 +78,6 @@ class Gem::Package::TarReader
     end
   end
 
-  ##
-  # Seeks through the tar file until it finds the +entry+ with +name+ and
-  # yields it.  Rewinds the tar file to the beginning when the block
-  # terminates.
 
   def seek name # :yields: entry
     found = find do |entry|

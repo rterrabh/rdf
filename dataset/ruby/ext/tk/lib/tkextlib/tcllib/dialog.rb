@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/dialog.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Generic dialog widget (themed)
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::dialog', '1.2')
 TkPackage.require('widget::dialog')
 
 module Tk::Tcllib

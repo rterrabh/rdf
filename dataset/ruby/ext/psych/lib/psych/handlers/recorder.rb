@@ -2,24 +2,6 @@ require 'psych/handler'
 
 module Psych
   module Handlers
-    ###
-    # This handler will capture an event and record the event.  Recorder events
-    # are available vial Psych::Handlers::Recorder#events.
-    #
-    # For example:
-    #
-    #   recorder = Psych::Handlers::Recorder.new
-    #   parser = Psych::Parser.new recorder
-    #   parser.parse '--- foo'
-    #
-    #   recorder.events # => [list of events]
-    #
-    #   # Replay the events
-    #
-    #   emitter = Psych::Emitter.new $stdout
-    #   recorder.events.each do |m, args|
-    #     emitter.send m, *args
-    #   end
 
     class Recorder < Psych::Handler
       attr_reader :events
@@ -30,7 +12,7 @@ module Psych
       end
 
       EVENTS.each do |event|
-        #nodyna <ID:define_method-8> <DM MODERATE (array)>
+        #nodyna <define_method-1482> <DM MODERATE (array)>
         define_method event do |*args|
           @events << [event, args]
         end

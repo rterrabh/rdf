@@ -34,9 +34,6 @@ class UserAction < ActiveRecord::Base
     EDIT
   ].each_with_index.to_a.flatten]
 
-  # note, this is temporary until we upgrade to rails 4
-  #  in rails 4 types are mapped correctly so you dont end up
-  #  having strings where you would expect bools
   class UserActionRow < OpenStruct
     include ActiveModel::SerializerSupport
 
@@ -53,7 +50,6 @@ class UserAction < ActiveRecord::Base
 
   def self.stats(user_id, guardian)
 
-    # Sam: I tried this in AR and it got complex
     builder = UserAction.sql_builder <<SQL
 
     SELECT action_type, COUNT(*) count
@@ -78,7 +74,6 @@ SQL
 
   def self.private_messages_stats(user_id, guardian)
     return unless guardian.can_see_private_messages?(user_id)
-    # list the stats for: all/mine/unread (topic-based)
     private_messages = Topic.where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user_id})")
                             .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user_id})")
                             .private_messages
@@ -136,8 +131,6 @@ SQL
     offset = opts[:offset] || 0
     limit = opts[:limit] || 60
 
-    # The weird thing is that target_post_id can be null, so it makes everything
-    #  ever so more complex. Should we allow this, not sure.
     builder = SqlBuilder.new <<-SQL
       SELECT
         a.id,
@@ -201,9 +194,7 @@ SQL
 
     transaction(requires_new: true) do
       begin
-        # TODO there are conditions when this is called and user_id was already rolled back and is invalid.
 
-        # protect against dupes, for some reason this is failing in some cases
         action = self.find_by(hash.select { |k, _| required_parameters.include?(k) })
         return action if action
 
@@ -219,7 +210,6 @@ SQL
 
         topic = Topic.includes(:category).find_by(id: hash[:target_topic_id])
 
-        # move into Topic perhaps
         group_ids = nil
         if topic && topic.category && topic.category.read_restricted
           group_ids = topic.category.groups.pluck("groups.id")
@@ -232,7 +222,6 @@ SQL
         action
 
       rescue ActiveRecord::RecordNotUnique
-        # can happen, don't care already logged
         raise ActiveRecord::Rollback
       end
     end
@@ -250,7 +239,6 @@ SQL
 
   def self.synchronize_target_topic_ids(post_ids = nil)
 
-    # nuke all dupes, using magic
     builder = SqlBuilder.new <<SQL
 DELETE FROM user_actions USING user_actions ua2
 /*where*/
@@ -297,10 +285,8 @@ SQL
 
   def self.apply_common_filters(builder,user_id,guardian,ignore_private_messages=false)
 
-    # We never return deleted topics in activity
     builder.where("t.deleted_at is null")
 
-    # We will return deleted posts though if the user can see it
     unless guardian.can_see_deleted_posts?
       builder.where("p.deleted_at is null and p2.deleted_at is null")
 
@@ -341,23 +327,3 @@ SQL
   end
 end
 
-# == Schema Information
-#
-# Table name: user_actions
-#
-#  id              :integer          not null, primary key
-#  action_type     :integer          not null
-#  user_id         :integer          not null
-#  target_topic_id :integer
-#  target_post_id  :integer
-#  target_user_id  :integer
-#  acting_user_id  :integer
-#  created_at      :datetime         not null
-#  updated_at      :datetime         not null
-#
-# Indexes
-#
-#  idx_unique_rows                                (action_type,user_id,target_topic_id,target_post_id,acting_user_id) UNIQUE
-#  index_user_actions_on_acting_user_id           (acting_user_id)
-#  index_user_actions_on_user_id_and_action_type  (user_id,action_type)
-#

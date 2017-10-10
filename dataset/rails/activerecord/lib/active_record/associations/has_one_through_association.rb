@@ -1,5 +1,4 @@
 module ActiveRecord
-  # = Active Record Has One Through Association
   module Associations
     class HasOneThroughAssociation < HasOneAssociation #:nodoc:
       include ThroughAssociation
@@ -15,7 +14,7 @@ module ActiveRecord
           ensure_not_nested
 
           through_proxy  = owner.association(through_reflection.name)
-          #nodyna <ID:send-109> <SD TRIVIAL (public methods)>
+          #nodyna <send-897> <SD TRIVIAL (public methods)>
           through_record = through_proxy.send(:load_target)
 
           if through_record && !record

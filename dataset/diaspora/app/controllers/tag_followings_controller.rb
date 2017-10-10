@@ -1,7 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
-#
 
 class TagFollowingsController < ApplicationController
   before_action :authenticate_user!
@@ -9,8 +5,6 @@ class TagFollowingsController < ApplicationController
   respond_to :json
   respond_to :html, only: [:manage]
 
-  # POST /tag_followings
-  # POST /tag_followings.xml
   def create
     name_normalized = ActsAsTaggableOn::Tag.normalize(params['name'])
 
@@ -28,8 +22,6 @@ class TagFollowingsController < ApplicationController
     end
   end
 
-  # DELETE /tag_followings/1
-  # DELETE /tag_followings/1.xml
   def destroy
     tag_following = current_user.tag_followings.find_by_tag_id( params['id'] )
 

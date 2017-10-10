@@ -7,7 +7,6 @@ unless defined? Gem::Commands::MirrorCommand
       begin
         Gem::Specification.find_by_name('rubygems-mirror').activate
       rescue Gem::LoadError
-        # no-op
       end
     end
 

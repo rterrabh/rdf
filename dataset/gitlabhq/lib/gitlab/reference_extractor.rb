@@ -1,5 +1,4 @@
 module Gitlab
-  # Extract possible GFM references from an arbitrary String for further processing.
   class ReferenceExtractor
     attr_accessor :project, :current_user
 
@@ -14,7 +13,7 @@ module Gitlab
     end
 
     %i(user label issue merge_request snippet commit commit_range).each do |type|
-      #nodyna <ID:define_method-1> <DM MODERATE (array)>
+      #nodyna <define_method-491> <DM MODERATE (array)>
       define_method("#{type}s") do
         references[type]
       end
@@ -35,12 +34,6 @@ module Gitlab
       end
     end
 
-    # Instantiate and call HTML::Pipeline with a single reference filter type,
-    # returning the result
-    #
-    # filter_type - Symbol reference type (e.g., :commit, :issue, etc.)
-    #
-    # Returns the results Array for the requested filter type
     def pipeline_result(filter_type)
       klass  = filter_type.to_s.camelize + 'ReferenceFilter'
       filter = "Gitlab::Markdown::#{klass}".constantize
@@ -48,7 +41,6 @@ module Gitlab
       context = {
         project: project,
         current_user: current_user,
-        # We don't actually care about the links generated
         only_path: true,
         ignore_blockquotes: true
       }

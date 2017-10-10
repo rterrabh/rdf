@@ -6,9 +6,6 @@ module ActiveSupport
     module Strategy
       module LocalCache
 
-        #--
-        # This class wraps up local storage for middlewares. Only the middleware method should
-        # construct them.
         class Middleware # :nodoc:
           attr_reader :name, :local_cache_key
 

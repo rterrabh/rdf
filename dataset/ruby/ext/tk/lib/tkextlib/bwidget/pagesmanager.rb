@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/pagesmanager.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/frame'
@@ -20,7 +16,6 @@ class Tk::BWidget::PagesManager
   WidgetClassNames[WidgetClassName] ||= self
 
   def tagid(id)
-    # id.to_s
     _get_eval_string(id)
   end
 
@@ -28,10 +23,10 @@ class Tk::BWidget::PagesManager
     win = window(tk_send('add', tagid(page)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-26> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1635> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-129> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1636> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -52,10 +47,10 @@ class Tk::BWidget::PagesManager
     win = window(tk_send('getframe', tagid(page)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-27> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1637> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-130> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1638> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

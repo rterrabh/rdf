@@ -13,14 +13,12 @@ class Veraxx < Formula
 
   depends_on "cmake" => :build
 
-  # Use prebuilt docs to avoid need for pandoc
   resource "doc" do
     url "https://bitbucket.org/verateam/vera/downloads/vera++-1.3.0-doc.tar.gz"
     sha256 "122a15e33a54265d62a6894974ca2f0a8f6ff98742cf8e6152d310cc23099400"
   end
 
   def install
-    # don't use system lua to avoid a dependency on lua 5.1
     system "cmake", ".", "-DVERA_USE_SYSTEM_LUA:BOOL=OFF", *std_cmake_args
     system "make", "install"
     system "ctest"

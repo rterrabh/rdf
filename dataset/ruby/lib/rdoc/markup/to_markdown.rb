@@ -1,12 +1,7 @@
-# :markup: markdown
 
-##
-# Outputs parsed markup as Markdown
 
 class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
 
-  ##
-  # Creates a new formatter that will output Markdown format text
 
   def initialize markup = nil
     super
@@ -24,8 +19,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     @hard_break = "  \n"
   end
 
-  ##
-  # Maps attributes to HTML sequences
 
   def init_tags
     add_tag :BOLD, '**', '**'
@@ -33,15 +26,11 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     add_tag :TT,   '`',  '`'
   end
 
-  ##
-  # Adds a newline to the output
 
   def handle_special_HARD_BREAK special
     "  \n"
   end
 
-  ##
-  # Finishes consumption of `list`
 
   def accept_list_end list
     @res << "\n"
@@ -49,8 +38,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     super
   end
 
-  ##
-  # Finishes consumption of `list_item`
 
   def accept_list_item_end list_item
     width = case @list_type.last
@@ -68,8 +55,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     @indent -= width
   end
 
-  ##
-  # Prepares the visitor for consuming `list_item`
 
   def accept_list_item_start list_item
     type = @list_type.last
@@ -93,8 +78,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     end
   end
 
-  ##
-  # Prepares the visitor for consuming `list`
 
   def accept_list_start list
     case list.type
@@ -110,8 +93,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     @list_type << list.type
   end
 
-  ##
-  # Adds `rule` to the output
 
   def accept_rule rule
     use_prefix or @res << ' ' * @indent
@@ -119,8 +100,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     @res << "\n"
   end
 
-  ##
-  # Outputs `verbatim` indented 4 columns
 
   def accept_verbatim verbatim
     indent = ' ' * (@indent + 4)
@@ -133,8 +112,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     @res << "\n" unless @res =~ /\n\z/
   end
 
-  ##
-  # Creates a Markdown-style URL from +url+ with +text+.
 
   def gen_url url, text
     scheme, url, = parse_url url
@@ -142,8 +119,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     "[#{text.sub(%r{^#{scheme}:/*}i, '')}](#{url})"
   end
 
-  ##
-  # Handles <tt>rdoc-</tt> type links for footnotes.
 
   def handle_rdoc_link url
     case url
@@ -162,8 +137,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     end
   end
 
-  ##
-  # Converts the RDoc markup tidylink into a Markdown.style link.
 
   def handle_special_TIDYLINK special
     text = special.text
@@ -180,8 +153,6 @@ class RDoc::Markup::ToMarkdown < RDoc::Markup::ToRdoc
     end
   end
 
-  ##
-  # Converts the rdoc-...: links into a Markdown.style links.
 
   def handle_special_RDOCLINK special
     handle_rdoc_link special.text

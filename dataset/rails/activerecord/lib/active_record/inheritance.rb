@@ -1,50 +1,15 @@
 require 'active_support/core_ext/hash/indifferent_access'
 
 module ActiveRecord
-  # == Single table inheritance
-  #
-  # Active Record allows inheritance by storing the name of the class in a column that by
-  # default is named "type" (can be changed by overwriting <tt>Base.inheritance_column</tt>).
-  # This means that an inheritance looking like this:
-  #
-  #   class Company < ActiveRecord::Base; end
-  #   class Firm < Company; end
-  #   class Client < Company; end
-  #   class PriorityClient < Client; end
-  #
-  # When you do <tt>Firm.create(name: "37signals")</tt>, this record will be saved in
-  # the companies table with type = "Firm". You can then fetch this row again using
-  # <tt>Company.where(name: '37signals').first</tt> and it will return a Firm object.
-  #
-  # Be aware that because the type column is an attribute on the record every new
-  # subclass will instantly be marked as dirty and the type column will be included
-  # in the list of changed attributes on the record. This is different from non
-  # STI classes:
-  #
-  #   Company.new.changed? # => false
-  #   Firm.new.changed?    # => true
-  #   Firm.new.changes     # => {"type"=>["","Firm"]}
-  #
-  # If you don't have a type column defined in your table, single-table inheritance won't
-  # be triggered. In that case, it'll work just like normal subclasses with no special magic
-  # for differentiating between them or reloading the right type with find.
-  #
-  # Note, all the attributes for all the cases are kept in the same table. Read more:
-  # http://www.martinfowler.com/eaaCatalog/singleTableInheritance.html
-  #
   module Inheritance
     extend ActiveSupport::Concern
 
     included do
-      # Determines whether to store the full constant name including namespace when using STI.
       class_attribute :store_full_sti_class, instance_writer: false
       self.store_full_sti_class = true
     end
 
     module ClassMethods
-      # Determines if one of the attributes passed in is the inheritance column,
-      # and if the inheritance column is attr accessible, it initializes an
-      # instance of the given subclass instead of the base class.
       def new(*args, &block)
         if abstract_class? || self == Base
           raise NotImplementedError, "#{self} is an abstract class and cannot be instantiated."
@@ -62,8 +27,6 @@ module ActiveRecord
         end
       end
 
-      # Returns +true+ if this does not need STI type condition. Returns
-      # +false+ if STI type condition needs to be applied.
       def descends_from_active_record?
         if self == Base
           false
@@ -75,7 +38,6 @@ module ActiveRecord
       end
 
       def finder_needs_type_condition? #:nodoc:
-        # This is like this because benchmarking justifies the strange :false stuff
         :true == (@finder_needs_type_condition ||= descends_from_active_record? ? :false : :true)
       end
 
@@ -89,14 +51,6 @@ module ActiveRecord
         @symbolized_sti_name ||= sti_name.present? ? sti_name.to_sym : symbolized_base_class
       end
 
-      # Returns the class descending directly from ActiveRecord::Base, or
-      # an abstract class, if any, in the inheritance hierarchy.
-      #
-      # If A extends AR::Base, A.base_class will return A. If B descends from A
-      # through some arbitrarily deep hierarchy, B.base_class will return A.
-      #
-      # If B < A and C < B and if A is an abstract_class then both B.base_class
-      # and C.base_class would return B as the answer since A is an abstract_class.
       def base_class
         unless self < Base
           raise ActiveRecordError, "#{name} doesn't belong in a hierarchy descending from ActiveRecord"
@@ -109,24 +63,8 @@ module ActiveRecord
         end
       end
 
-      # Set this to true if this is an abstract class (see <tt>abstract_class?</tt>).
-      # If you are using inheritance with ActiveRecord and don't want child classes
-      # to utilize the implied STI table name of the parent class, this will need to be true.
-      # For example, given the following:
-      #
-      #   class SuperClass < ActiveRecord::Base
-      #     self.abstract_class = true
-      #   end
-      #   class Child < SuperClass
-      #     self.table_name = 'the_table_i_really_want'
-      #   end
-      #
-      #
-      # <tt>self.abstract_class = true</tt> is required to make <tt>Child<.find,.create, or any Arel method></tt> use <tt>the_table_i_really_want</tt> instead of a table called <tt>super_classes</tt>
-      #
       attr_accessor :abstract_class
 
-      # Returns whether this class is an abstract class or not.
       def abstract_class?
         defined?(@abstract_class) && @abstract_class == true
       end
@@ -137,15 +75,10 @@ module ActiveRecord
 
       protected
 
-      # Returns the class type of the record using the current module as a prefix. So descendants of
-      # MyApp::Business::Account would appear as MyApp::Business::AccountSubclass.
       def compute_type(type_name)
         if type_name.match(/^::/)
-          # If the type is prefixed with a scope operator then we assume that
-          # the type_name is an absolute reference.
           ActiveSupport::Dependencies.constantize(type_name)
         else
-          # Build a list of candidates to search for
           candidates = []
           name.scan(/::|$/) { candidates.unshift "#{$`}::#{type_name}" }
           candidates << type_name
@@ -161,9 +94,6 @@ module ActiveRecord
 
       private
 
-      # Called by +instantiate+ to decide which class to use for a new
-      # record instance. For single-table inheritance, we check the record
-      # for a +type+ column and return the corresponding class.
       def discriminate_class_for_record(record)
         if using_single_table_inheritance?(record)
           find_sti_class(record[inheritance_column])
@@ -197,10 +127,6 @@ module ActiveRecord
         sti_column.in(sti_names)
       end
 
-      # Detect the subclass from the inheritance column of attrs. If the inheritance column value
-      # is not self or a valid subclass, raises ActiveRecord::SubclassNotFound
-      # If this is a StrongParameters hash, and access to inheritance_column is not permitted,
-      # this will ignore the inheritance column and return nil
       def subclass_from_attributes?(attrs)
         columns_hash.include?(inheritance_column) && attrs.is_a?(Hash)
       end
@@ -232,11 +158,6 @@ module ActiveRecord
       ensure_proper_type
     end
 
-    # Sets the attribute used for single table inheritance to this class name if this is not the
-    # ActiveRecord::Base descendant.
-    # Considering the hierarchy Reply < Message < ActiveRecord::Base, this makes it possible to
-    # do Reply.new without having to set <tt>Reply[Reply.inheritance_column] = "Reply"</tt> yourself.
-    # No such attribute would be set for objects of the Message class in that example.
     def ensure_proper_type
       klass = self.class
       if klass.finder_needs_type_condition?

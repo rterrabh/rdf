@@ -5,25 +5,6 @@ require 'set'
 
 module REXML
   module Parsers
-    # = Using the Pull Parser
-    # <em>This API is experimental, and subject to change.</em>
-    #  parser = PullParser.new( "<a>text<b att='val'/>txet</a>" )
-    #  while parser.has_next?
-    #    res = parser.next
-    #    puts res[1]['att'] if res.start_tag? and res[0] == 'b'
-    #  end
-    # See the PullEvent class for information on the content of the results.
-    # The data is identical to the arguments passed for the various events to
-    # the StreamListener API.
-    #
-    # Notice that:
-    #  parser = PullParser.new( "<a>BAD DOCUMENT" )
-    #  while parser.has_next?
-    #    res = parser.next
-    #    raise res[1] if res.error?
-    #  end
-    #
-    # Nat Price gave me some good ideas for the API.
     class BaseParser
       LETTER = '[:alpha:]'
       DIGIT = '[:digit:]'
@@ -83,7 +64,6 @@ module REXML
 
       TEXT_PATTERN = /\A([^<]*)/um
 
-      # Entity constants
       PUBIDCHAR = "\x20\x0D\x0Aa-zA-Z0-9\\-()+,./:=?;!*@$_%#"
       SYSTEMLITERAL = %Q{((?:"[^"]*")|(?:'[^']*'))}
       PUBIDLITERAL = %Q{("[#{PUBIDCHAR}']*"|'[#{PUBIDCHAR}]*')}
@@ -107,10 +87,6 @@ module REXML
       }
 
 
-      ######################################################################
-      # These are patterns to identify common markup errors, to make the
-      # error messages more informative.
-      ######################################################################
       MISSING_ATTRIBUTE_QUOTES = /^<#{NAME_STR}\s+#{NAME_STR}\s*=\s*[^"']/um
 
       def initialize( source )
@@ -138,33 +114,22 @@ module REXML
         if @source.respond_to? :position
           @source.position
         else
-          # FIXME
           0
         end
       end
 
-      # Returns true if there are no more events
       def empty?
         return (@source.empty? and @stack.empty?)
       end
 
-      # Returns true if there are more events.  Synonymous with !empty?
       def has_next?
         return !(@source.empty? and @stack.empty?)
       end
 
-      # Push an event back on the head of the stream.  This method
-      # has (theoretically) infinite depth.
       def unshift token
         @stack.unshift(token)
       end
 
-      # Peek at the +depth+ event in the stack.  The first element on the stack
-      # is at depth 0.  If +depth+ is -1, will parse to the end of the input
-      # stream and return the last event, which is always :end_document.
-      # Be aware that this causes the stream to be parsed up to the +depth+
-      # event, so you can effectively pre-parse the entire document (pull the
-      # entire thing into memory) using this method.
       def peek depth=0
         raise %Q[Illegal argument "#{depth}"] if depth < -1
         temp = []
@@ -179,7 +144,6 @@ module REXML
         @stack[depth]
       end
 
-      # Returns the next event.  This is a +PullEvent+ object.
       def pull
         pull_event.tap do |event|
           @listeners.each do |listener|
@@ -195,19 +159,14 @@ module REXML
         end
         return [ :end_document ] if empty?
         return @stack.shift if @stack.size > 0
-        #STDERR.puts @source.encoding
         @source.read if @source.buffer.size<2
-        #STDERR.puts "BUFFER = #{@source.buffer.inspect}"
         if @document_status == nil
-          #@source.consume( /^\s*/um )
           word = @source.match( /^((?:\s+)|(?:<[^>]*>))/um )
           word = word[1] unless word.nil?
-          #STDERR.puts "WORD = #{word.inspect}"
           case word
           when COMMENT_START
             return [ :comment, @source.match( COMMENT_PATTERN, true )[1] ]
           when XMLDECL_START
-            #STDERR.puts "XMLDECL"
             results = @source.match( XMLDECL_PATTERN, true )[1]
             version = VERSION.match( results )
             version = version[1] unless version.nil?
@@ -273,22 +232,16 @@ module REXML
               ref = true
               match.delete_at 1
             end
-            # Now we have to sort out what kind of entity reference this is
             if match[2] == 'SYSTEM'
-              # External reference
               match[3] = match[3][1..-2] # PUBID
               match.delete_at(4) if match.size > 4 # Chop out NDATA decl
-              # match is [ :entity, name, SYSTEM, pubid(, ndata)? ]
             elsif match[2] == 'PUBLIC'
-              # External reference
               match[3] = match[3][1..-2] # PUBID
               match[4] = match[4][1..-2] # HREF
               match.delete_at(5) if match.size > 5 # Chop out NDATA decl
-              # match is [ :entity, name, PUBLIC, pubid, href(, ndata)? ]
             else
               match[2] = match[2][1..-2]
               match.pop if match.size == 4
-              # match is [ :entity, name, value ]
             end
             match << '%' if ref
             return match
@@ -335,7 +288,6 @@ module REXML
             if @source.buffer[1] == ?/
               @nsstack.shift
               last_tag = @tags.pop
-              #md = @source.match_to_consume( '>', CLOSE_MATCH)
               md = @source.match( CLOSE_MATCH, true )
               raise REXML::ParseException.new( "Missing end tag for "+
                 "'#{last_tag}' (got \"#{md[1]}\")",
@@ -343,7 +295,6 @@ module REXML
               return [ :end_element, last_tag ]
             elsif @source.buffer[1] == ?!
               md = @source.match(/\A(\s*[^>]*>)/um)
-              #STDERR.puts "SOURCE BUFFER = #{source.buffer}, #{source.buffer.size}"
               raise REXML::ParseException.new("Malformed node", @source) unless md
               if md[0][2] == ?-
                 md = @source.match( COMMENT_PATTERN, true )
@@ -366,10 +317,8 @@ module REXML
               raise REXML::ParseException.new( "Bad instruction declaration",
                 @source)
             else
-              # Get the next tag
               md = @source.match(TAG_MATCH, true)
               unless md
-                # Check for missing attribute quotes
                 raise REXML::ParseException.new("missing attribute quote", @source) if @source.match(MISSING_ATTRIBUTE_QUOTES )
                 raise REXML::ParseException.new("malformed XML: missing tag start", @source)
               end
@@ -407,7 +356,6 @@ module REXML
                 end
               end
 
-              # Verify that all of the prefixes have been defined
               for prefix in prefixes
                 unless @nsstack.find{|k| k.member?(prefix)}
                   raise UndefinedNamespaceException.new(prefix,@source,self)
@@ -427,10 +375,6 @@ module REXML
             if md[0].length == 0
               @source.match( /(\s+)/, true )
             end
-            #STDERR.puts "GOT #{md[1].inspect}" unless md[0].length == 0
-            #return [ :text, "" ] if md[0].length == 0
-            # unnormalized = Text::unnormalize( md[1], self )
-            # return PullEvent.new( :text, md[1], unnormalized )
             return [ :text, md[1] ]
           end
         rescue REXML::UndefinedNamespaceException
@@ -455,10 +399,8 @@ module REXML
         unnormalize( value, entities ) if value
       end
 
-      # Escapes all possible entities
       def normalize( input, entities=nil, entity_filter=nil )
         copy = input.clone
-        # Doing it like this rather than in a loop improves the speed
         copy.gsub!( EREFERENCE, '&amp;' )
         entities.each do |key, value|
           copy.gsub!( value, "&#{key};" ) unless entity_filter and
@@ -471,7 +413,6 @@ module REXML
         copy
       end
 
-      # Unescapes all possible entities
       def unnormalize( string, entities=nil, filter=nil )
         rv = string.clone
         rv.gsub!( /\r\n?/, "\n" )

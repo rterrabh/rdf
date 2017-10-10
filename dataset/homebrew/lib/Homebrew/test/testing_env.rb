@@ -4,11 +4,9 @@ $:.unshift File.expand_path("../lib", __FILE__)
 require "simplecov" if ENV["HOMEBREW_TESTS_COVERAGE"]
 require "global"
 
-# Test environment setup
 %w[ENV Formula].each { |d| HOMEBREW_LIBRARY.join(d).mkpath }
 %w[cache formula_cache cellar logs].each { |d| HOMEBREW_PREFIX.parent.join(d).mkpath }
 
-# Test fixtures and files can be found relative to this path
 TEST_DIRECTORY = File.dirname(File.expand_path(__FILE__))
 
 begin

@@ -26,7 +26,6 @@ class Gmp < Formula
       args << "ABI=32"
     end
 
-    # https://github.com/Homebrew/homebrew/issues/20693
     args << "--disable-assembly" if build.build_32_bit? || build.bottle?
 
     system "./configure", *args
@@ -38,7 +37,6 @@ class Gmp < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gmp.h>
 
       int main()
       {

@@ -1,7 +1,6 @@
 class Projects::GraphsController < Projects::ApplicationController
   include ExtractsPath
 
-  # Authorize
   before_action :require_non_empty_project
   before_action :assign_ref_vars
   before_action :authorize_download_code!

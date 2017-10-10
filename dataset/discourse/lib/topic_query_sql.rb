@@ -1,6 +1,3 @@
-#
-#  SQL fragments used when querying a list of topics.
-#
 module TopicQuerySQL
 
   class << self
@@ -13,7 +10,6 @@ module TopicQuerySQL
       "CASE WHEN categories.id = #{SiteSetting.uncategorized_category_id.to_i} THEN '' ELSE categories.name END #{dir}"
     end
 
-    # If you've clearned the pin, use bumped_at, otherwise put it at the top
     def order_with_pinned_sql
       "CASE
         WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}'))
@@ -22,7 +18,6 @@ module TopicQuerySQL
        END DESC"
     end
 
-    # If you've clearned the pin, use bumped_at, otherwise put it at the top
     def order_nocategory_with_pinned_sql
       "CASE
         WHEN topics.pinned_globally
@@ -45,7 +40,6 @@ module TopicQuerySQL
     end
 
     def order_top_with_pinned_category_for(score)
-      # display pinned topics first
       "CASE WHEN (COALESCE(topics.pinned_at, '#{lowest_date}') > COALESCE(tu.cleared_pinned_at, '#{lowest_date}')) THEN 0 ELSE 1 END,
        top_topics.#{score} DESC,
        topics.bumped_at DESC"

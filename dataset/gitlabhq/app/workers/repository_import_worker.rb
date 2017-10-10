@@ -7,7 +7,7 @@ class RepositoryImportWorker
   def perform(project_id)
     project = Project.find(project_id)
 
-    #nodyna <ID:send-123> <SD TRIVIAL (public methods)>
+    #nodyna <send-523> <SD TRIVIAL (public methods)>
     import_result = gitlab_shell.send(:import_repository,
                                project.path_with_namespace,
                                project.import_url)

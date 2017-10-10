@@ -16,7 +16,6 @@ class Oauth::AuthorizationsController < Doorkeeper::AuthorizationsController
     end
   end
 
-  # TODO: Handle raise invalid authorization
   def create
     redirect_or_render authorization.authorize
   end

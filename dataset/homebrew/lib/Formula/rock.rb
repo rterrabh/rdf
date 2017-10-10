@@ -16,14 +16,11 @@ class Rock < Formula
   depends_on "bdw-gc"
 
   def install
-    # make rock using provided bootstrap
     ENV["OOC_LIBS"] = prefix
     system "make", "rescue"
     bin.install "bin/rock"
     man1.install "docs/rock.1"
 
-    # install misc authorship files & rock binary in place
-    # copy the sdk, libs and docs
     prefix.install "rock.use", "sdk.use", "sdk-net.use", "sdk-dynlib.use", "pcre.use", "sdk", "README.md"
     doc.install Dir["docs/*"]
   end

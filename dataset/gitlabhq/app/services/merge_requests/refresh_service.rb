@@ -18,10 +18,6 @@ module MergeRequests
 
     private
 
-    # Collect open merge requests that target same branch we push into
-    # and close if push to master include last commit from merge request
-    # We need this to close(as merged) merge requests that were merged into
-    # target branch manually
     def close_merge_requests
       commit_ids = @commits.map(&:id)
       merge_requests = @project.merge_requests.opened.where(target_branch: @branch_name).to_a
@@ -43,8 +39,6 @@ module MergeRequests
       Gitlab::ForcePushCheck.force_push?(@project, @oldrev, @newrev)
     end
 
-    # Refresh merge request diff if we push to source or target branch of merge request
-    # Note: we should update merge requests from forks too
     def reload_merge_requests
       merge_requests = @project.merge_requests.opened.by_branch(@branch_name).to_a
       merge_requests += @fork_merge_requests.by_branch(@branch_name).to_a
@@ -70,7 +64,6 @@ module MergeRequests
       end
     end
 
-    # Add comment about pushing new commits to merge requests
     def comment_mr_with_commits
       merge_requests = @project.origin_merge_requests.opened.where(source_branch: @branch_name).to_a
       merge_requests += @fork_merge_requests.where(source_branch: @branch_name).to_a
@@ -89,7 +82,6 @@ module MergeRequests
       end
     end
 
-    # Call merge request webhook with update branches
     def execute_mr_web_hooks
       merge_requests = @project.origin_merge_requests.opened
         .where(source_branch: @branch_name)

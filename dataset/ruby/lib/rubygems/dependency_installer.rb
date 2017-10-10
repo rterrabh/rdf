@@ -7,8 +7,6 @@ require 'rubygems/user_interaction'
 require 'rubygems/source'
 require 'rubygems/available_set'
 
-##
-# Installs a gem along with all its dependencies from local and remote gems.
 
 class Gem::DependencyInstaller
 
@@ -29,45 +27,18 @@ class Gem::DependencyInstaller
     :install_as_default  => false
   }.freeze
 
-  ##
-  # Documentation types.  For use by the Gem.done_installing hook
 
   attr_reader :document
 
-  ##
-  # Errors from SpecFetcher while searching for remote specifications
 
   attr_reader :errors
 
-  ##
-  #--
-  # TODO remove, no longer used
 
   attr_reader :gems_to_install # :nodoc:
 
-  ##
-  # List of gems installed by #install in alphabetic order
 
   attr_reader :installed_gems
 
-  ##
-  # Creates a new installer instance.
-  #
-  # Options are:
-  # :cache_dir:: Alternate repository path to store .gem files in.
-  # :domain:: :local, :remote, or :both.  :local only searches gems in the
-  #           current directory.  :remote searches only gems in Gem::sources.
-  #           :both searches both.
-  # :env_shebang:: See Gem::Installer::new.
-  # :force:: See Gem::Installer#install.
-  # :format_executable:: See Gem::Installer#initialize.
-  # :ignore_dependencies:: Don't install any dependencies.
-  # :install_dir:: See Gem::Installer#install.
-  # :prerelease:: Allow prerelease versions.  See #install.
-  # :security_policy:: See Gem::Installer::new and Gem::Security.
-  # :user_install:: See Gem::Installer.new
-  # :wrappers:: See Gem::Installer::new
-  # :build_args:: See Gem::Installer::new
 
   def initialize options = {}
     @only_install_dir = !!options[:install_dir]
@@ -93,8 +64,6 @@ class Gem::DependencyInstaller
     @build_docs_in_background = options[:build_docs_in_background]
     @install_as_default  = options[:install_as_default]
 
-    # Indicates that we should not try to update any deps unless
-    # we absolutely must.
     @minimal_deps        = options[:minimal_deps]
 
     @available      = nil
@@ -106,9 +75,6 @@ class Gem::DependencyInstaller
     @errors = []
   end
 
-  ##
-  #--
-  # TODO remove, no longer used
 
   def add_found_dependencies to_do, dependency_list # :nodoc:
     seen = {}
@@ -117,7 +83,6 @@ class Gem::DependencyInstaller
     until to_do.empty? do
       spec = to_do.shift
 
-      # HACK why is spec nil?
       next if spec.nil? or seen[spec.name]
       seen[spec.name] = true
 
@@ -159,9 +124,6 @@ class Gem::DependencyInstaller
     dependency_list.remove_specs_unsatisfied_by dependencies
   end
 
-  ##
-  # Creates an AvailableSet to install from based on +dep_or_name+ and
-  # +version+
 
   def available_set_for dep_or_name, version # :nodoc:
     if String === dep_or_name then
@@ -175,27 +137,16 @@ class Gem::DependencyInstaller
     @available.pick_best!
   end
 
-  ##
-  # Indicated, based on the requested domain, if local
-  # gems should be considered.
 
   def consider_local?
     @domain == :both or @domain == :local
   end
 
-  ##
-  # Indicated, based on the requested domain, if remote
-  # gems should be considered.
 
   def consider_remote?
     @domain == :both or @domain == :remote
   end
 
-  ##
-  # Returns a list of pairs of gemspecs and source_uris that match
-  # Gem::Dependency +dep+ from both local (Dir.pwd) and remote (Gem.sources)
-  # sources.  Gems are sorted with newer gems preferred over older gems, and
-  # local gems preferred over remote gems.
 
   def find_gems_with_sources dep, best_only=false # :nodoc:
     set = Gem::AvailableSet.new
@@ -212,9 +163,6 @@ class Gem::DependencyInstaller
 
     if consider_remote?
       begin
-        # TODO this is pulled from #spec_for_dependency to allow
-        # us to filter tuples before fetching specs.
-        #
         tuples, errors = Gem::SpecFetcher.fetcher.search_for_dependency dep
 
         if best_only && !tuples.empty?
@@ -242,9 +190,6 @@ class Gem::DependencyInstaller
         set << specs
 
       rescue Gem::RemoteFetcher::FetchError => e
-        # FIX if there is a problem talking to the network, we either need to always tell
-        # the user (no really_verbose) or fail hard, not silently tell them that we just
-        # couldn't find their requested gem.
         verbose do
           "Error fetching remote data:\t\t#{e.message}\n" \
             "Falling back to local-only install"
@@ -256,10 +201,6 @@ class Gem::DependencyInstaller
     set
   end
 
-  ##
-  # Finds a spec and the source_uri it came from for gem +gem_name+ and
-  # +version+.  Returns an Array of specs and sources required for
-  # installation of the gem.
 
   def find_spec_by_name_and_version gem_name,
                                     version = Gem::Requirement.default,
@@ -302,16 +243,10 @@ class Gem::DependencyInstaller
     @available = set
   end
 
-  ##
-  # Gathers all dependencies necessary for the installation from local and
-  # remote sources unless the ignore_dependencies was given.
-  #--
-  # TODO remove at RubyGems 3
 
   def gather_dependencies # :nodoc:
     specs = @available.all_specs
 
-    # these gems were listed by the user, always install them
     keep_names = specs.map { |spec| spec.full_name }
 
     if @dev_shallow
@@ -323,8 +258,6 @@ class Gem::DependencyInstaller
     to_do = specs.dup
     add_found_dependencies to_do, dependency_list unless @ignore_dependencies
 
-    # REFACTOR maybe abstract away using Gem::Specification.include? so
-    # that this isn't dependent only on the currently installed gems
     dependency_list.specs.reject! { |spec|
       not keep_names.include?(spec.full_name) and
       Gem::Specification.include?(spec)
@@ -355,19 +288,6 @@ class Gem::DependencyInstaller
     yield unless fork_happened
   end
 
-  ##
-  # Installs the gem +dep_or_name+ and all its dependencies.  Returns an Array
-  # of installed gem specifications.
-  #
-  # If the +:prerelease+ option is set and there is a prerelease for
-  # +dep_or_name+ the prerelease version will be installed.
-  #
-  # Unless explicitly specified as a prerelease dependency, prerelease gems
-  # that +dep_or_name+ depend on will not be installed.
-  #
-  # If c-1.a depends on b-1 and a-1.a and there is a gem b-1.a available then
-  # c-1.a, b-1 and a-1.a will be installed.  b-1.a will need to be installed
-  # separately.
 
   def install dep_or_name, version = Gem::Requirement.default
     request_set = resolve_dependencies dep_or_name, version
@@ -397,9 +317,6 @@ class Gem::DependencyInstaller
 
     @installed_gems.sort!
 
-    # Since this is currently only called for docs, we can be lazy and just say
-    # it's documentation. Ideally the hook adder could decide whether to be in
-    # the background or not, and what to call it.
     in_background "Installing documentation" do
       Gem.done_installing_hooks.each do |hook|
         hook.call self, @installed_gems
@@ -443,7 +360,6 @@ class Gem::DependencyInstaller
           rescue Gem::Package::FormatError
           end
         end
-      # else This is a dependency. InstallerSet handles this case
       end
     end
 

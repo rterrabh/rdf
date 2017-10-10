@@ -1,6 +1,3 @@
-#
-#               tk/entry.rb - Tk entry classes
-#                       by Yukihiro Matsumoto <matz@caelum.co.jp>
 
 require 'tk'
 require 'tk/label'
@@ -15,10 +12,6 @@ class Tk::Entry<Tk::Label
   WidgetClassName = 'Entry'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  #def create_self(keys)
-  #  super(__conv_vcmd_on_hash_kv(keys))
-  #end
-  #private :create_self
 
   def __strval_optkeys
     super() + ['show', 'disabledbackground', 'readonlybackground']
@@ -34,7 +27,6 @@ class Tk::Entry<Tk::Label
   alias icursor cursor
   def cursor=(index)
     tk_send_without_enc('icursor', index)
-    #self
     index
   end
   alias icursor= cursor=
@@ -115,6 +107,4 @@ class Tk::Entry<Tk::Label
   end
 end
 
-#TkEntry = Tk::Entry unless Object.const_defined? :TkEntry
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Entry, :TkEntry)
 Tk.__set_loaded_toplevel_aliases__('tk/entry.rb', :Tk, Tk::Entry, :TkEntry)

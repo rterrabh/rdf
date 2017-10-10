@@ -28,7 +28,6 @@ class GdalGrass < Formula
     data stored using the GRASS vector and raster formats. In order to use the
     plugin, you will need to add the following path to the GDAL_DRIVER_PATH
     enviroment variable:
-      #{HOMEBREW_PREFIX}/lib/gdalplugins
     EOS
   end
 end

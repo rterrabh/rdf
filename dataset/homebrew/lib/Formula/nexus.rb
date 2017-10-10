@@ -14,7 +14,6 @@ class Nexus < Formula
 
   def install
     rm_f Dir["bin/*.bat"]
-    # Put the sonatype-work directory in the var directory, to persist across version updates
     inreplace "nexus-#{version}/conf/nexus.properties",
       "nexus-work=${bundleBasedir}/../sonatype-work/nexus",
       "nexus-work=#{var}/nexus"

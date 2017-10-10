@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 
 module ActiveRecord
   module NullRelation # :nodoc:
@@ -63,8 +62,6 @@ module ActiveRecord
     end
 
     def calculate(operation, _column_name, _options = {})
-      # TODO: Remove _options argument as soon we remove support to
-      # activerecord-deprecated_finders.
       if [:count, :sum, :size].include? operation
         group_values.any? ? Hash.new : 0
       elsif [:average, :minimum, :maximum].include?(operation) && group_values.any?

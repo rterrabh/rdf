@@ -93,7 +93,6 @@ module OpenGraphHelper
   end
   private
 
-  # This method compensates for hosting assets off of s3
   def default_image_url
     if image_path("branding/logos/asterisk.png").include?("http")
       image_path("branding/logos/asterisk.png")

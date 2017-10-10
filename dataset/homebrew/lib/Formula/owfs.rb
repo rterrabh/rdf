@@ -15,7 +15,6 @@ class Owfs < Formula
   depends_on "libusb-compat"
 
   def install
-    # Fix include of getline and strsep to avoid crash
     inreplace "configure", "-D_POSIX_C_SOURCE=200112L", ""
 
     system "./configure", "--disable-debug",

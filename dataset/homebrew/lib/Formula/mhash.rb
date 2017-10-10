@@ -19,7 +19,6 @@ class Mhash < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include "mhash.h"
       int main() {
         MHASH td;
         return 0;

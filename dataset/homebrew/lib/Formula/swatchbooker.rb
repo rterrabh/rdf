@@ -12,7 +12,6 @@ class Swatchbooker < Formula
   patch :DATA
 
   def install
-    # Tell launching shell scipts where the python library is
     inreplace %w[data/swatchbooker data/sbconvert data/sbconvertor] do |s|
       s.gsub! "/usr/lib", "#{HOMEBREW_PREFIX}/lib"
     end

@@ -26,7 +26,6 @@ I'm not indented
 
     undented = <<-EOS.undent
       hello
-      #{nest}
     EOS
 
     assert_equal "hello\ngoodbye\n\n", undented

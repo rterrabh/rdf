@@ -20,8 +20,6 @@ class Hayai < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <hayai/hayai.hpp>
-      #include <iostream>
       int main() {
         hayai::Benchmarker::RunAllTests();
         return 0;

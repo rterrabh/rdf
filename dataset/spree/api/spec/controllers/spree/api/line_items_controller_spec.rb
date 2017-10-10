@@ -1,6 +1,7 @@
 require 'spec_helper'
 
 module Spree
+  #nodyna <module_eval-2404> <not yet classified>
   PermittedAttributes.module_eval do
     mattr_writer :line_item_attributes
   end
@@ -9,7 +10,6 @@ module Spree
     PermittedAttributes.line_item_attributes += [:some_option]
   end
 
-  # This should go in an initializer
   Spree::Api::LineItemsController.line_item_options += [:some_option]
 
   describe Api::LineItemsController, :type => :controller do

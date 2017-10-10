@@ -1,21 +1,3 @@
-# IssuableFinder
-#
-# Used to filter Issues and MergeRequests collections by set of params
-#
-# Arguments:
-#   klass - actual class like Issue or MergeRequest
-#   current_user - which user use
-#   params:
-#     scope: 'created-by-me' or 'assigned-to-me' or 'all'
-#     state: 'open' or 'closed' or 'all'
-#     group_id: integer
-#     project_id: integer
-#     milestone_title: string
-#     assignee_id: integer
-#     search: string
-#     label_name: string
-#     sort: string
-#
 require_relative 'projects_finder'
 
 class IssuableFinder
@@ -120,7 +102,7 @@ class IssuableFinder
 
     if project
       if Ability.abilities.allowed?(current_user, :read_project, project)
-        #nodyna <ID:send-124> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-533> <SD COMPLEX (change-prone variables)>
         project.send(table_name)
       else
         []

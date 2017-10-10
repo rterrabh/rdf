@@ -1,7 +1,3 @@
-# this class is used to mirror unread and new status back to end users
-# in JavaScript there is a mirror class that is kept in-sync using the mssage bus
-# the allows end users to always know which topics have unread posts in them
-# and which topics are new
 
 class TopicTrackingState
 
@@ -55,9 +51,6 @@ class TopicTrackingState
   end
 
   def self.publish_unread(post)
-    # TODO at high scale we are going to have to defer this,
-    #   perhaps cut down to users that are around in the last 7 days as well
-    #
     group_ids = post.topic.category && post.topic.category.secure_group_ids
 
     TopicUser
@@ -116,15 +109,6 @@ class TopicTrackingState
 
   def self.report(user_id, topic_id = nil)
 
-    # Sam: this is a hairy report, in particular I need custom joins and fancy conditions
-    #  Dropping to sql_builder so I can make sense of it.
-    #
-    # Keep in mind, we need to be able to filter on a GROUP of users, and zero in on topic
-    #  all our existing scope work does not do this
-    #
-    # This code needs to be VERY efficient as it is triggered via the message bus and may steal
-    #  cycles from usual requests
-    #
 
     unread = TopicQuery.unread_filter(Topic).where_values.join(" AND ")
     new = TopicQuery.new_filter(Topic, "xxx").where_values.join(" AND ").gsub!("'xxx'", treat_as_new_topic_clause)

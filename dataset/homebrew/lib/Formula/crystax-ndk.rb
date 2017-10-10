@@ -27,10 +27,8 @@ class CrystaxNdk < Formula
 
     prefix.install Dir["crystax-ndk-#{version}/*"]
 
-    # Create a dummy script to launch the ndk apps
     ndk_exec = prefix+"ndk-exec.sh"
     ndk_exec.write <<-EOS.undent
-      #!/bin/sh
       BASENAME=`basename $0`
       EXEC="#{prefix}/$BASENAME"
       test -f "$EXEC" && exec "$EXEC" "$@"
@@ -52,7 +50,6 @@ class CrystaxNdk < Formula
     https://www.crystax.net/android/ndk#license
 
     For more documentation on CrystaX NDK, please check:
-    #{homepage}
     EOS
   end
 end

@@ -1,13 +1,9 @@
-#
-# tk/scrollable.rb : module for scrollable widget
-#
 require 'tk'
 
 module Tk
   module XScrollable
     def xscrollcommand(cmd=Proc.new)
       configure_cmd 'xscrollcommand', cmd
-      # Tk.update  # avoid scrollbar trouble
       self
     end
 
@@ -41,7 +37,6 @@ module Tk
   module YScrollable
     def yscrollcommand(cmd=Proc.new)
       configure_cmd 'yscrollcommand', cmd
-      # Tk.update  # avoid scrollbar trouble
       self
     end
 

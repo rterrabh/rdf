@@ -23,25 +23,19 @@ module Jobs
       raise Discourse::InvalidParameters.new(:identifier) if identifier.blank?
       raise Discourse::InvalidParameters.new(:chunks)     if chunks <= 0
 
-      # merge chunks, and get csv path
       csv_path = get_csv_path(filename, identifier, chunks)
 
-      # read csv file, and send out invitations
       read_csv_file(csv_path)
 
-      # send notification to user regarding progress
       notify_user
 
-      # since emails have already been sent out, delete the uploaded csv file
       FileUtils.rm_rf(csv_path) rescue nil
     end
 
     def get_csv_path(filename, identifier, chunks)
       csv_path = "#{Invite.base_directory}/#{filename}"
       tmp_csv_path = "#{csv_path}.tmp"
-      # path to tmp directory
       tmp_directory = File.dirname(Invite.chunk_path(identifier, filename, 0))
-      # merge all chunks
       HandleChunkUpload.merge_chunks(chunks, upload_path: csv_path, tmp_upload_path: tmp_csv_path, model: Invite, identifier: identifier, filename: filename, tmp_directory: tmp_directory)
 
       return csv_path
@@ -51,11 +45,9 @@ module Jobs
       CSV.foreach(csv_path) do |csv_info|
         if csv_info[0]
           if (EmailValidator.email_regex =~ csv_info[0])
-            # email is valid
             send_invite(csv_info, $INPUT_LINE_NUMBER)
             @sent += 1
           else
-            # invalid email
             log "Invalid Email '#{csv_info[0]}' at line number '#{$INPUT_LINE_NUMBER}'"
             @failed += 1
           end
@@ -70,10 +62,8 @@ module Jobs
         group_names.each { |group_name|
           group_detail = Group.find_by_name(group_name)
           if group_detail
-            # valid group
             group_ids.push(group_detail.id)
           else
-            # invalid group
             log "Invalid Group '#{group_name}' at line number '#{csv_line_number}'"
             @failed += 1
           end

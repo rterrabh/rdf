@@ -5,8 +5,6 @@ class Optipng < Formula
   url "https://downloads.sourceforge.net/project/optipng/OptiPNG/optipng-0.7.5/optipng-0.7.5.tar.gz"
   sha256 "74e54b798b012dff8993fb8d90185ca83f18cfa4935f4a93b0bcfc33c849619d"
 
-  # Fix compilation on 10.10
-  # http://sourceforge.net/p/optipng/bugs/47/
   patch :DATA
 
   def install

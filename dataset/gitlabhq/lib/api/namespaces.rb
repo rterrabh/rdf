@@ -1,13 +1,8 @@
 module API
-  # namespaces API
   class Namespaces < Grape::API
     before { authenticate! }
 
     resource :namespaces do
-      # Get a namespaces list
-      #
-      # Example Request:
-      #  GET /namespaces
       get do
         @namespaces = if current_user.admin
                         Namespace.all

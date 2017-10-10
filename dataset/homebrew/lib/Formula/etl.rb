@@ -12,7 +12,6 @@ class Etl < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <ETL/misc>
       int main(int argc, char *argv[])
       {
         int rv = etl::ceil_to_int(5.5);

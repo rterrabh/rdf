@@ -1,4 +1,5 @@
 class FlowTools < Formula
+  #nodyna <send-592> <not yet classified>
   desc "Collect, send, process, and generate NetFlow data reports"
   homepage "https://code.google.com/p/flow-tools/"
   url "https://flow-tools.googlecode.com/files/flow-tools-0.68.5.1.tar.bz2"
@@ -17,9 +18,7 @@ class FlowTools < Formula
   end
 
   test do
-    # Generate test flow data with 1000 flows
     data = shell_output("#{bin}/flow-gen")
-    # Test that the test flows work with some flow- programs
     pipe_output("#{bin}/flow-cat", data, 0)
     pipe_output("#{bin}/flow-print", data, 0)
     pipe_output("#{bin}/flow-stat", data, 0)

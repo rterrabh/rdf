@@ -6,7 +6,6 @@ class Riemann < Formula
 
   def shim_script
     <<-EOS.undent
-      #!/bin/bash
       if [ -z "$1" ]
       then
         config="#{etc}/riemann.config"
@@ -20,7 +19,6 @@ class Riemann < Formula
   def install
     etc.install "etc/riemann.config" => "riemann.config.guide"
 
-    # Install jars in libexec to avoid conflicts
     libexec.install Dir["*"]
 
     (bin+"riemann").write shim_script

@@ -1,10 +1,3 @@
-##
-# Joins the parts of an RDoc::Markup::Paragraph into a single String.
-#
-# This allows for easier maintenance and testing of Markdown support.
-#
-# This formatter only works on Paragraph instances.  Attempting to process
-# other markup syntax items will not work.
 
 class RDoc::Markup::ToJoinedParagraph < RDoc::Markup::Formatter
 
@@ -18,8 +11,6 @@ class RDoc::Markup::ToJoinedParagraph < RDoc::Markup::Formatter
   def end_accepting # :nodoc:
   end
 
-  ##
-  # Converts the parts of +paragraph+ to a single entry.
 
   def accept_paragraph paragraph
     parts = []
@@ -47,12 +38,6 @@ class RDoc::Markup::ToJoinedParagraph < RDoc::Markup::Formatter
       end
     end
 
-    # TODO use Enumerable#chunk when Ruby 1.8 support is dropped
-    #parts = paragraph.parts.chunk do |part|
-    #  String === part
-    #end.map do |string, chunk|
-    #  string ? chunk.join.rstrip : chunk
-    #end.flatten
 
     paragraph.parts.replace parts
   end

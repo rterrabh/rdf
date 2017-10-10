@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/calendar.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -36,18 +32,15 @@ class Tk::Iwidgets::Calendar
   end
   private :__font_optkeys
 
-  ####################################
 
   include Tk::ValidateConfigure
 
   class CalendarCommand < TkValidateCommand
-    #class CalCmdArgs < TkUtil::CallbackSubst
     class ValidateArgs < TkUtil::CallbackSubst
       KEY_TBL  = [ [?d, ?s, :date], nil ]
       PROC_TBL = [ [?s, TkComm.method(:string) ], nil ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -72,13 +65,9 @@ class Tk::Iwidgets::Calendar
     end
 
     def self._config_keys
-      # array of config-option key (string or symbol)
       ['command']
     end
 
-    #def initialize(cmd = Proc.new, *args)
-    #  _initialize_for_cb_class(CalCmdArgs, cmd, *args)
-    #end
   end
 
   def __validation_class_list
@@ -98,7 +87,6 @@ class Tk::Iwidgets::Calendar
   end
 =end
 
-  ####################################
 
   def get_string
     tk_call(@path, 'get', '-string')

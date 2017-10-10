@@ -163,7 +163,6 @@ describe Spree::OrderContents, :type => :model do
       subject.add(variant, 1)
       removed_line_item = subject.remove(variant, 1)
 
-      # Should reflect the change already in Order#line_item
       expect(order.line_items).to_not include(removed_line_item)
     end
 

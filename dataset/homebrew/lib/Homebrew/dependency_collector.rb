@@ -5,18 +5,8 @@ require "requirement"
 require "requirements"
 require "set"
 
-## A dependency is a formula that another formula needs to install.
-## A requirement is something other than a formula that another formula
-## needs to be present. This includes external language modules,
-## command-line tools in the path, or any arbitrary predicate.
-##
-## The `depends_on` method in the formula DSL is used to declare
-## dependencies and requirements.
 
-# This class is used by `depends_on` in the formula DSL to turn dependency
-# specifications into the proper kinds of dependencies and requirements.
 class DependencyCollector
-  # Define the languages that we can handle as external dependencies.
   LANGUAGE_MODULES = Set[
     :chicken, :jruby, :lua, :node, :ocaml, :perl, :python, :python3, :rbx, :ruby
   ].freeze
@@ -114,7 +104,6 @@ class DependencyCollector
     when :ant        then ant_dep(spec, tags)
     when :apr        then AprRequirement.new(tags)
     when :emacs      then EmacsRequirement.new(tags)
-    # Tiger's ld is too old to properly link some software
     when :ld64       then LD64Dependency.new if MacOS.version < :leopard
     when :clt # deprecated
     when :autoconf, :automake, :bsdmake, :libtool # deprecated
@@ -168,7 +157,6 @@ class DependencyCollector
     when strategy <= CVSDownloadStrategy
       Dependency.new("cvs", tags) if MacOS.version >= :mavericks || !MacOS::Xcode.provides_cvs?
     when strategy < AbstractDownloadStrategy
-      # allow unknown strategies to pass through
     else
       raise TypeError,
         "#{strategy.inspect} is not an AbstractDownloadStrategy subclass"

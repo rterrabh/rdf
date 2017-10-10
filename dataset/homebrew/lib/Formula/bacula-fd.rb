@@ -14,10 +14,6 @@ class BaculaFd < Formula
   depends_on "openssl"
 
   def install
-    # * sets --disable-conio in order to force the use of readline
-    #   (conio support not tested)
-    # * working directory in /var/lib/bacula, reasonable place that
-    #   matches Debian's location.
     readline = Formula["readline"].opt_prefix
     system "./configure", "--prefix=#{prefix}",
                           "--sbindir=#{bin}",
@@ -30,10 +26,8 @@ class BaculaFd < Formula
     system "make"
     system "make", "install"
 
-    # Ensure var/run exists:
     (var + "run").mkpath
 
-    # Create the working directory:
     (var + "lib/bacula").mkpath
   end
 end

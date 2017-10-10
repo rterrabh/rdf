@@ -8,7 +8,6 @@ class Scale2x < Formula
   depends_on "libpng"
 
   def install
-    # This function was renamed in current versions of libpng.
     inreplace "file.c", "png_set_gray_1_2_4_to_8", "png_set_expand_gray_1_2_4_to_8"
     system "./configure", "--prefix=#{prefix}"
     system "make", "install"

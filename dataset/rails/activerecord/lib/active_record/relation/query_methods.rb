@@ -8,38 +8,13 @@ module ActiveRecord
 
     include ActiveModel::ForbiddenAttributesProtection
 
-    # WhereChain objects act as placeholder for queries in which #where does not have any parameter.
-    # In this case, #where must be chained with #not to return a new relation.
     class WhereChain
       def initialize(scope)
         @scope = scope
       end
 
-      # Returns a new relation expressing WHERE + NOT condition according to
-      # the conditions in the arguments.
-      #
-      # +not+ accepts conditions as a string, array, or hash. See #where for
-      # more details on each format.
-      #
-      #    User.where.not("name = 'Jon'")
-      #    # SELECT * FROM users WHERE NOT (name = 'Jon')
-      #
-      #    User.where.not(["name = ?", "Jon"])
-      #    # SELECT * FROM users WHERE NOT (name = 'Jon')
-      #
-      #    User.where.not(name: "Jon")
-      #    # SELECT * FROM users WHERE name != 'Jon'
-      #
-      #    User.where.not(name: nil)
-      #    # SELECT * FROM users WHERE name IS NOT NULL
-      #
-      #    User.where.not(name: %w(Ko1 Nobu))
-      #    # SELECT * FROM users WHERE name NOT IN ('Ko1', 'Nobu')
-      #
-      #    User.where.not(name: "Jon", role: "admin")
-      #    # SELECT * FROM users WHERE name != 'Jon' AND role != 'admin'
       def not(opts, *rest)
-        #nodyna <ID:send-177> <SD EASY (private methods)>
+        #nodyna <send-812> <SD EASY (private methods)>
         where_value = @scope.send(:build_where, opts, rest).map do |rel|
           case rel
           when NilClass
@@ -62,11 +37,11 @@ module ActiveRecord
     end
 
     Relation::MULTI_VALUE_METHODS.each do |name|
+      #nodyna <class_eval-813> <not yet classified>
       class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}_values                   # def select_values
           @values[:#{name}] || []            #   @values[:select] || []
         end                                  # end
-                                             #
         def #{name}_values=(values)          # def select_values=(values)
           raise ImmutableRelation if @loaded #   raise ImmutableRelation if @loaded
           check_cached_relation
@@ -76,6 +51,7 @@ module ActiveRecord
     end
 
     (Relation::SINGLE_VALUE_METHODS - [:create_with]).each do |name|
+      #nodyna <class_eval-814> <not yet classified>
       class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}_value                    # def readonly_value
           @values[:#{name}]                  #   @values[:readonly]
@@ -84,6 +60,7 @@ module ActiveRecord
     end
 
     Relation::SINGLE_VALUE_METHODS.each do |name|
+      #nodyna <class_eval-815> <not yet classified>
       class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}_value=(value)            # def readonly_value=(value)
           raise ImmutableRelation if @loaded #   raise ImmutableRelation if @loaded
@@ -109,39 +86,6 @@ module ActiveRecord
 
     alias extensions extending_values
 
-    # Specify relationships to be included in the result set. For
-    # example:
-    #
-    #   users = User.includes(:address)
-    #   users.each do |user|
-    #     user.address.city
-    #   end
-    #
-    # allows you to access the +address+ attribute of the +User+ model without
-    # firing an additional query. This will often result in a
-    # performance improvement over a simple +join+.
-    #
-    # You can also specify multiple relationships, like this:
-    #
-    #   users = User.includes(:address, :friends)
-    #
-    # Loading nested relationships is possible using a Hash:
-    #
-    #   users = User.includes(:address, friends: [:address, :followers])
-    #
-    # === conditions
-    #
-    # If you want to add conditions to your included models you'll have
-    # to explicitly reference them. For example:
-    #
-    #   User.includes(:posts).where('posts.name = ?', 'example')
-    #
-    # Will throw an error, but this will work:
-    #
-    #   User.includes(:posts).where('posts.name = ?', 'example').references(:posts)
-    #
-    # Note that +includes+ works with association names while +references+ needs
-    # the actual table name.
     def includes(*args)
       check_if_method_has_arguments!(:includes, args)
       spawn.includes!(*args)
@@ -155,12 +99,6 @@ module ActiveRecord
       self
     end
 
-    # Forces eager loading by performing a LEFT OUTER JOIN on +args+:
-    #
-    #   User.eager_load(:posts)
-    #   => SELECT "users"."id" AS t0_r0, "users"."name" AS t0_r1, ...
-    #   FROM "users" LEFT OUTER JOIN "posts" ON "posts"."user_id" =
-    #   "users"."id"
     def eager_load(*args)
       check_if_method_has_arguments!(:eager_load, args)
       spawn.eager_load!(*args)
@@ -171,10 +109,6 @@ module ActiveRecord
       self
     end
 
-    # Allows preloading of +args+, in the same way that +includes+ does:
-    #
-    #   User.preload(:posts)
-    #   => SELECT "posts".* FROM "posts" WHERE "posts"."user_id" IN (1, 2, 3)
     def preload(*args)
       check_if_method_has_arguments!(:preload, args)
       spawn.preload!(*args)
@@ -185,16 +119,6 @@ module ActiveRecord
       self
     end
 
-    # Use to indicate that the given +table_names+ are referenced by an SQL string,
-    # and should therefore be JOINed in any query rather than loaded separately.
-    # This method only works in conjunction with +includes+.
-    # See #includes for more details.
-    #
-    #   User.includes(:posts).where("posts.name = 'foo'")
-    #   # => Doesn't JOIN the posts table, resulting in an error.
-    #
-    #   User.includes(:posts).where("posts.name = 'foo'").references(:posts)
-    #   # => Query now knows the string references posts, so adds a JOIN
     def references(*table_names)
       check_if_method_has_arguments!(:references, table_names)
       spawn.references!(*table_names)
@@ -208,45 +132,6 @@ module ActiveRecord
       self
     end
 
-    # Works in two unique ways.
-    #
-    # First: takes a block so it can be used just like Array#select.
-    #
-    #   Model.all.select { |m| m.field == value }
-    #
-    # This will build an array of objects from the database for the scope,
-    # converting them into an array and iterating through them using Array#select.
-    #
-    # Second: Modifies the SELECT statement for the query so that only certain
-    # fields are retrieved:
-    #
-    #   Model.select(:field)
-    #   # => [#<Model id: nil, field: "value">]
-    #
-    # Although in the above example it looks as though this method returns an
-    # array, it actually returns a relation object and can have other query
-    # methods appended to it, such as the other methods in ActiveRecord::QueryMethods.
-    #
-    # The argument to the method can also be an array of fields.
-    #
-    #   Model.select(:field, :other_field, :and_one_more)
-    #   # => [#<Model id: nil, field: "value", other_field: "value", and_one_more: "value">]
-    #
-    # You can also use one or more strings, which will be used unchanged as SELECT fields.
-    #
-    #   Model.select('field AS field_one', 'other_field AS field_two')
-    #   # => [#<Model id: nil, field: "value", other_field: "value">]
-    #
-    # If an alias was specified, it will be accessible from the resulting objects:
-    #
-    #   Model.select('field AS field_one').first.field_one
-    #   # => "value"
-    #
-    # Accessing attributes of an object that do not have fields retrieved by a select
-    # except +id+ will throw <tt>ActiveModel::MissingAttributeError</tt>:
-    #
-    #   Model.select(:field).first.other_field
-    #   # => ActiveModel::MissingAttributeError: missing attribute: other_field
     def select(*fields)
       if block_given?
         to_a.select { |*block_args| yield(*block_args) }
@@ -265,25 +150,6 @@ module ActiveRecord
       self
     end
 
-    # Allows to specify a group attribute:
-    #
-    #   User.group(:name)
-    #   => SELECT "users".* FROM "users" GROUP BY name
-    #
-    # Returns an array with distinct records based on the +group+ attribute:
-    #
-    #   User.select([:id, :name])
-    #   => [#<User id: 1, name: "Oscar">, #<User id: 2, name: "Oscar">, #<User id: 3, name: "Foo">
-    #
-    #   User.group(:name)
-    #   => [#<User id: 3, name: "Foo", ...>, #<User id: 2, name: "Oscar", ...>]
-    #
-    #   User.group('name AS grouped_name, age')
-    #   => [#<User id: 3, name: "Foo", age: 21, ...>, #<User id: 2, name: "Oscar", age: 21, ...>, #<User id: 5, name: "Foo", age: 23, ...>]
-    #
-    # Passing in an array of attributes to group by is also supported.
-    #   User.select([:id, :first_name]).group(:id, :first_name).first(3)
-    #   => [#<User id: 1, first_name: "Bill">, #<User id: 2, first_name: "Earl">, #<User id: 3, first_name: "Beto">]
     def group(*args)
       check_if_method_has_arguments!(:group, args)
       spawn.group!(*args)
@@ -296,25 +162,6 @@ module ActiveRecord
       self
     end
 
-    # Allows to specify an order attribute:
-    #
-    #   User.order(:name)
-    #   => SELECT "users".* FROM "users" ORDER BY "users"."name" ASC
-    #
-    #   User.order(email: :desc)
-    #   => SELECT "users".* FROM "users" ORDER BY "users"."email" DESC
-    #
-    #   User.order(:name, email: :desc)
-    #   => SELECT "users".* FROM "users" ORDER BY "users"."name" ASC, "users"."email" DESC
-    #
-    #   User.order('name')
-    #   => SELECT "users".* FROM "users" ORDER BY name
-    #
-    #   User.order('name DESC')
-    #   => SELECT "users".* FROM "users" ORDER BY name DESC
-    #
-    #   User.order('name DESC, email')
-    #   => SELECT "users".* FROM "users" ORDER BY name DESC, email
     def order(*args)
       check_if_method_has_arguments!(:order, args)
       spawn.order!(*args)
@@ -327,15 +174,6 @@ module ActiveRecord
       self
     end
 
-    # Replaces any existing order defined on the relation with the specified order.
-    #
-    #   User.order('email DESC').reorder('id ASC') # generated SQL has 'ORDER BY id ASC'
-    #
-    # Subsequent calls to order on the same relation will be appended. For example:
-    #
-    #   User.order('email DESC').reorder('id ASC').order('name ASC')
-    #
-    # generates a query with 'ORDER BY id ASC, name ASC'.
     def reorder(*args)
       check_if_method_has_arguments!(:reorder, args)
       spawn.reorder!(*args)
@@ -353,39 +191,6 @@ module ActiveRecord
                                      :limit, :offset, :joins, :includes, :from,
                                      :readonly, :having])
 
-    # Removes an unwanted relation that is already defined on a chain of relations.
-    # This is useful when passing around chains of relations and would like to
-    # modify the relations without reconstructing the entire chain.
-    #
-    #   User.order('email DESC').unscope(:order) == User.all
-    #
-    # The method arguments are symbols which correspond to the names of the methods
-    # which should be unscoped. The valid arguments are given in VALID_UNSCOPING_VALUES.
-    # The method can also be called with multiple arguments. For example:
-    #
-    #   User.order('email DESC').select('id').where(name: "John")
-    #       .unscope(:order, :select, :where) == User.all
-    #
-    # One can additionally pass a hash as an argument to unscope specific :where values.
-    # This is done by passing a hash with a single key-value pair. The key should be
-    # :where and the value should be the where value to unscope. For example:
-    #
-    #   User.where(name: "John", active: true).unscope(where: :name)
-    #       == User.where(active: true)
-    #
-    # This method is similar to <tt>except</tt>, but unlike
-    # <tt>except</tt>, it persists across merges:
-    #
-    #   User.order('email').merge(User.except(:order))
-    #       == User.order('email')
-    #
-    #   User.order('email').merge(User.unscope(:order))
-    #       == User.all
-    #
-    # This means it can be used in association definitions:
-    #
-    #   has_many :comments, -> { unscope where: :trashed }
-    #
     def unscope(*args)
       check_if_method_has_arguments!(:unscope, args)
       spawn.unscope!(*args)
@@ -417,15 +222,6 @@ module ActiveRecord
       self
     end
 
-    # Performs a joins on +args+:
-    #
-    #   User.joins(:posts)
-    #   => SELECT "users".* FROM "users" INNER JOIN "posts" ON "posts"."user_id" = "users"."id"
-    #
-    # You can use strings in order to customize your joins:
-    #
-    #   User.joins("LEFT JOIN bookmarks ON bookmarks.bookmarkable_type = 'Post' AND bookmarks.user_id = users.id")
-    #   => SELECT "users".* FROM "users" LEFT JOIN bookmarks ON bookmarks.bookmarkable_type = 'Post' AND bookmarks.user_id = users.id
     def joins(*args)
       check_if_method_has_arguments!(:joins, args)
       spawn.joins!(*args)
@@ -447,125 +243,6 @@ module ActiveRecord
       self
     end
 
-    # Returns a new relation, which is the result of filtering the current relation
-    # according to the conditions in the arguments.
-    #
-    # #where accepts conditions in one of several formats. In the examples below, the resulting
-    # SQL is given as an illustration; the actual query generated may be different depending
-    # on the database adapter.
-    #
-    # === string
-    #
-    # A single string, without additional arguments, is passed to the query
-    # constructor as an SQL fragment, and used in the where clause of the query.
-    #
-    #    Client.where("orders_count = '2'")
-    #    # SELECT * from clients where orders_count = '2';
-    #
-    # Note that building your own string from user input may expose your application
-    # to injection attacks if not done properly. As an alternative, it is recommended
-    # to use one of the following methods.
-    #
-    # === array
-    #
-    # If an array is passed, then the first element of the array is treated as a template, and
-    # the remaining elements are inserted into the template to generate the condition.
-    # Active Record takes care of building the query to avoid injection attacks, and will
-    # convert from the ruby type to the database type where needed. Elements are inserted
-    # into the string in the order in which they appear.
-    #
-    #   User.where(["name = ? and email = ?", "Joe", "joe@example.com"])
-    #   # SELECT * FROM users WHERE name = 'Joe' AND email = 'joe@example.com';
-    #
-    # Alternatively, you can use named placeholders in the template, and pass a hash as the
-    # second element of the array. The names in the template are replaced with the corresponding
-    # values from the hash.
-    #
-    #   User.where(["name = :name and email = :email", { name: "Joe", email: "joe@example.com" }])
-    #   # SELECT * FROM users WHERE name = 'Joe' AND email = 'joe@example.com';
-    #
-    # This can make for more readable code in complex queries.
-    #
-    # Lastly, you can use sprintf-style % escapes in the template. This works slightly differently
-    # than the previous methods; you are responsible for ensuring that the values in the template
-    # are properly quoted. The values are passed to the connector for quoting, but the caller
-    # is responsible for ensuring they are enclosed in quotes in the resulting SQL. After quoting,
-    # the values are inserted using the same escapes as the Ruby core method <tt>Kernel::sprintf</tt>.
-    #
-    #   User.where(["name = '%s' and email = '%s'", "Joe", "joe@example.com"])
-    #   # SELECT * FROM users WHERE name = 'Joe' AND email = 'joe@example.com';
-    #
-    # If #where is called with multiple arguments, these are treated as if they were passed as
-    # the elements of a single array.
-    #
-    #   User.where("name = :name and email = :email", { name: "Joe", email: "joe@example.com" })
-    #   # SELECT * FROM users WHERE name = 'Joe' AND email = 'joe@example.com';
-    #
-    # When using strings to specify conditions, you can use any operator available from
-    # the database. While this provides the most flexibility, you can also unintentionally introduce
-    # dependencies on the underlying database. If your code is intended for general consumption,
-    # test with multiple database backends.
-    #
-    # === hash
-    #
-    # #where will also accept a hash condition, in which the keys are fields and the values
-    # are values to be searched for.
-    #
-    # Fields can be symbols or strings. Values can be single values, arrays, or ranges.
-    #
-    #    User.where({ name: "Joe", email: "joe@example.com" })
-    #    # SELECT * FROM users WHERE name = 'Joe' AND email = 'joe@example.com'
-    #
-    #    User.where({ name: ["Alice", "Bob"]})
-    #    # SELECT * FROM users WHERE name IN ('Alice', 'Bob')
-    #
-    #    User.where({ created_at: (Time.now.midnight - 1.day)..Time.now.midnight })
-    #    # SELECT * FROM users WHERE (created_at BETWEEN '2012-06-09 07:00:00.000000' AND '2012-06-10 07:00:00.000000')
-    #
-    # In the case of a belongs_to relationship, an association key can be used
-    # to specify the model if an ActiveRecord object is used as the value.
-    #
-    #    author = Author.find(1)
-    #
-    #    # The following queries will be equivalent:
-    #    Post.where(author: author)
-    #    Post.where(author_id: author)
-    #
-    # This also works with polymorphic belongs_to relationships:
-    #
-    #    treasure = Treasure.create(name: 'gold coins')
-    #    treasure.price_estimates << PriceEstimate.create(price: 125)
-    #
-    #    # The following queries will be equivalent:
-    #    PriceEstimate.where(estimate_of: treasure)
-    #    PriceEstimate.where(estimate_of_type: 'Treasure', estimate_of_id: treasure)
-    #
-    # === Joins
-    #
-    # If the relation is the result of a join, you may create a condition which uses any of the
-    # tables in the join. For string and array conditions, use the table name in the condition.
-    #
-    #    User.joins(:posts).where("posts.created_at < ?", Time.now)
-    #
-    # For hash conditions, you can either use the table name in the key, or use a sub-hash.
-    #
-    #    User.joins(:posts).where({ "posts.published" => true })
-    #    User.joins(:posts).where({ posts: { published: true } })
-    #
-    # === no argument
-    #
-    # If no argument is passed, #where returns a new instance of WhereChain, that
-    # can be chained with #not to return a new relation that negates the where clause.
-    #
-    #    User.where.not(name: "Jon")
-    #    # SELECT * FROM users WHERE name != 'Jon'
-    #
-    # See WhereChain for more details on #not.
-    #
-    # === blank condition
-    #
-    # If the condition is any blank-ish object, then #where is a no-op and returns
-    # the current relation.
     def where(opts = :chain, *rest)
       if opts == :chain
         WhereChain.new(spawn)
@@ -586,22 +263,10 @@ module ActiveRecord
       self
     end
 
-    # Allows you to change a previously set where condition for a given attribute, instead of appending to that condition.
-    #
-    #   Post.where(trashed: true).where(trashed: false)                       # => WHERE `trashed` = 1 AND `trashed` = 0
-    #   Post.where(trashed: true).rewhere(trashed: false)                     # => WHERE `trashed` = 0
-    #   Post.where(active: true).where(trashed: true).rewhere(trashed: false) # => WHERE `active` = 1 AND `trashed` = 0
-    #
-    # This is short-hand for unscope(where: conditions.keys).where(conditions). Note that unlike reorder, we're only unscoping
-    # the named conditions -- not the entire where statement.
     def rewhere(conditions)
       unscope(where: conditions.keys).where(conditions)
     end
 
-    # Allows to specify a HAVING clause. Note that you can't use HAVING
-    # without also specifying a GROUP clause.
-    #
-    #   Order.having('SUM(price) > 30').group('user_id')
     def having(opts, *rest)
       opts.blank? ? self : spawn.having!(opts, *rest)
     end
@@ -613,11 +278,6 @@ module ActiveRecord
       self
     end
 
-    # Specifies a limit for the number of records to retrieve.
-    #
-    #   User.limit(10) # generated SQL has 'LIMIT 10'
-    #
-    #   User.limit(10).limit(20) # generated SQL has 'LIMIT 20'
     def limit(value)
       spawn.limit!(value)
     end
@@ -627,13 +287,6 @@ module ActiveRecord
       self
     end
 
-    # Specifies the number of rows to skip before returning rows.
-    #
-    #   User.offset(10) # generated SQL has "OFFSET 10"
-    #
-    # Should be used with order.
-    #
-    #   User.offset(10).order("name ASC")
     def offset(value)
       spawn.offset!(value)
     end
@@ -643,8 +296,6 @@ module ActiveRecord
       self
     end
 
-    # Specifies locking settings (default to +true+). For more information
-    # on locking, please see +ActiveRecord::Locking+.
     def lock(locks = true)
       spawn.lock!(locks)
     end
@@ -660,34 +311,6 @@ module ActiveRecord
       self
     end
 
-    # Returns a chainable relation with zero records.
-    #
-    # The returned relation implements the Null Object pattern. It is an
-    # object with defined null behavior and always returns an empty array of
-    # records without querying the database.
-    #
-    # Any subsequent condition chained to the returned relation will continue
-    # generating an empty relation and will not fire any query to the database.
-    #
-    # Used in cases where a method or scope could return zero records but the
-    # result needs to be chainable.
-    #
-    # For example:
-    #
-    #   @posts = current_user.visible_posts.where(name: params[:name])
-    #   # => the visible_posts method is expected to return a chainable Relation
-    #
-    #   def visible_posts
-    #     case role
-    #     when 'Country Manager'
-    #       Post.where(country: country)
-    #     when 'Reviewer'
-    #       Post.published
-    #     when 'Bad User'
-    #       Post.none # It can't be chained if [] is returned.
-    #     end
-    #   end
-    #
     def none
       where("1=0").extending!(NullRelation)
     end
@@ -696,12 +319,6 @@ module ActiveRecord
       where!("1=0").extending!(NullRelation)
     end
 
-    # Sets readonly attributes for the returned relation. If value is
-    # true (default), attempting to update a record will result in an error.
-    #
-    #   users = User.readonly
-    #   users.first.save
-    #   => ActiveRecord::ReadOnlyRecord: ActiveRecord::ReadOnlyRecord
     def readonly(value = true)
       spawn.readonly!(value)
     end
@@ -711,19 +328,6 @@ module ActiveRecord
       self
     end
 
-    # Sets attributes to be used when creating new records from a
-    # relation object.
-    #
-    #   users = User.where(name: 'Oscar')
-    #   users.new.name # => 'Oscar'
-    #
-    #   users = users.create_with(name: 'DHH')
-    #   users.new.name # => 'DHH'
-    #
-    # You can pass +nil+ to +create_with+ to reset attributes:
-    #
-    #   users = users.create_with(nil)
-    #   users.new.name # => 'Oscar'
     def create_with(value)
       spawn.create_with!(value)
     end
@@ -739,19 +343,6 @@ module ActiveRecord
       self
     end
 
-    # Specifies table from which the records will be fetched. For example:
-    #
-    #   Topic.select('title').from('posts')
-    #   # => SELECT title FROM posts
-    #
-    # Can accept other relation objects. For example:
-    #
-    #   Topic.select('title').from(Topic.approved)
-    #   # => SELECT title FROM (SELECT * FROM topics WHERE approved = 't') subquery
-    #
-    #   Topic.select('a.title').from(Topic.approved, :a)
-    #   # => SELECT a.title FROM (SELECT * FROM topics WHERE approved = 't') a
-    #
     def from(value, subquery_name = nil)
       spawn.from!(value, subquery_name)
     end
@@ -764,64 +355,17 @@ module ActiveRecord
       self
     end
 
-    # Specifies whether the records should be unique or not. For example:
-    #
-    #   User.select(:name)
-    #   # => Might return two records with the same name
-    #
-    #   User.select(:name).distinct
-    #   # => Returns 1 record per distinct name
-    #
-    #   User.select(:name).distinct.distinct(false)
-    #   # => You can also remove the uniqueness
     def distinct(value = true)
       spawn.distinct!(value)
     end
     alias uniq distinct
 
-    # Like #distinct, but modifies relation in place.
     def distinct!(value = true) # :nodoc:
       self.distinct_value = value
       self
     end
     alias uniq! distinct!
 
-    # Used to extend a scope with additional methods, either through
-    # a module or through a block provided.
-    #
-    # The object returned is a relation, which can be further extended.
-    #
-    # === Using a module
-    #
-    #   module Pagination
-    #     def page(number)
-    #       # pagination code goes here
-    #     end
-    #   end
-    #
-    #   scope = Model.all.extending(Pagination)
-    #   scope.page(params[:page])
-    #
-    # You can also pass a list of modules:
-    #
-    #   scope = Model.all.extending(Pagination, SomethingElse)
-    #
-    # === Using a block
-    #
-    #   scope = Model.all.extending do
-    #     def page(number)
-    #       # pagination code goes here
-    #     end
-    #   end
-    #   scope.page(params[:page])
-    #
-    # You can also use a block and a module list:
-    #
-    #   scope = Model.all.extending(Pagination) do
-    #     def per_page(number)
-    #       # pagination code goes here
-    #     end
-    #   end
     def extending(*modules, &block)
       if modules.any? || block
         spawn.extending!(*modules, &block)
@@ -840,9 +384,6 @@ module ActiveRecord
       self
     end
 
-    # Reverse the existing order clause on the relation.
-    #
-    #   User.order('name ASC').reverse_order # generated SQL has 'ORDER BY name DESC'
     def reverse_order
       spawn.reverse_order!
     end
@@ -854,7 +395,6 @@ module ActiveRecord
       self
     end
 
-    # Returns the Arel object associated with the relation.
     def arel # :nodoc:
       @arel ||= build_arel
     end
@@ -902,7 +442,7 @@ module ActiveRecord
         result = [] unless single_val_method
       end
 
-      #nodyna <ID:send-178> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-816> <SD COMPLEX (change-prone variables)>
       self.send(unscope_code, result)
     end
 
@@ -949,7 +489,7 @@ module ActiveRecord
     def build_where(opts, other = [])
       case opts
       when String, Array
-        #nodyna <ID:send-179> <SD EASY (private methods)>
+        #nodyna <send-817> <SD EASY (private methods)>
         [@klass.send(:sanitize_sql, other.empty? ? opts : ([opts] + other))]
       when Hash
         opts = PredicateBuilder.resolve_column_aliases(klass, opts)
@@ -957,7 +497,7 @@ module ActiveRecord
         tmp_opts, bind_values = create_binds(opts)
         self.bind_values += bind_values
 
-        #nodyna <ID:send-180> <SD EASY (private methods)>
+        #nodyna <send-818> <SD EASY (private methods)>
         attributes = @klass.send(:expand_hash_conditions_for_aggregates, tmp_opts)
         add_relations_to_bind_values(attributes)
 
@@ -989,9 +529,9 @@ module ActiveRecord
       end
 
       association_binds.each do |(column, value)|
-        #nodyna <ID:send-181> <SD EASY (private methods)>
+        #nodyna <send-819> <SD EASY (private methods)>
         association_relation = association_for_table(column).klass.send(:relation)
-        #nodyna <ID:send-182> <SD EASY (private methods)>
+        #nodyna <send-820> <SD EASY (private methods)>
         association_new_opts, association_bind = association_relation.send(:create_binds, value)
         new_opts[column] = association_new_opts
         binds += association_bind
@@ -1130,7 +670,6 @@ module ActiveRecord
       references.map! { |arg| arg =~ /^([a-zA-Z]\w*)\.(\w+)/ && $1 }.compact!
       references!(references) if references.any?
 
-      # if a symbol is given we prepend the quoted table name
       order_args.map! do |arg|
         case arg
         when Symbol
@@ -1139,7 +678,7 @@ module ActiveRecord
         when Hash
           arg.map { |field, dir|
             field = klass.attribute_alias(field) if klass.attribute_alias?(field)
-            #nodyna <ID:send-183> <SD COMPLEX (array)>
+            #nodyna <send-821> <SD COMPLEX (array)>
             table[field].send(dir.downcase)
           }
         else
@@ -1148,22 +687,6 @@ module ActiveRecord
       end.flatten!
     end
 
-    # Checks to make sure that the arguments are not blank. Note that if some
-    # blank-like object were initially passed into the query method, then this
-    # method will not raise an error.
-    #
-    # Example:
-    #
-    #    Post.references()   # => raises an error
-    #    Post.references([]) # => does not raise an error
-    #
-    # This particular method should be called with a method_name and the args
-    # passed into that method as an input. For example:
-    #
-    # def references(*args)
-    #   check_if_method_has_arguments!("references", args)
-    #   ...
-    # end
     def check_if_method_has_arguments!(method_name, args)
       if args.blank?
         raise ArgumentError, "The method .#{method_name}() must contain arguments."

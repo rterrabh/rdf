@@ -52,7 +52,6 @@ class Id3lib < Formula
     sha256 "a7881dc25665f284798934ba19092d1eb45ca515a34e5c473accd144aa1a215a"
   end
 
-  # fixes Unicode display problem in easytag: see Homebrew/homebrew-x11#123
   patch do
     url "https://git.gnome.org/browse/easytag/plain/src/tags/id3lib/patch_id3lib_3.8.3_UTF16_writing_bug.diff"
     sha256 "71c79002d9485965a3a93e87ecbd7fed8f89f64340433b7ccd263d21385ac969"

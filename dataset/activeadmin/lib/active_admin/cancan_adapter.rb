@@ -4,7 +4,6 @@ end
 
 require 'cancan'
 
-# Add a setting to the application to configure the ability
 ActiveAdmin::Application.inheritable_setting :cancan_ability_class, "Ability"
 
 module ActiveAdmin

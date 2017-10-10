@@ -10,7 +10,6 @@ class IrcdHybrid < Formula
     sha256 "e7753f62a75b4fa22603897487352132833b2602d790b1af1e0ab94415e751d2" => :mountain_lion
   end
 
-  # ircd-hybrid needs the .la files
   skip_clean :la
 
   depends_on "openssl"
@@ -35,7 +34,6 @@ class IrcdHybrid < Formula
 
   def caveats; <<-EOS.undent
     You'll more than likely need to edit the default settings in the config file:
-      #{etc}/ircd.conf
     EOS
   end
 

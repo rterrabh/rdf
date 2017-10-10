@@ -7,7 +7,6 @@ class Tclap < Formula
   def install
     system "./configure", "--prefix=#{prefix}"
     system "make"
-    # Installer scripts have problems with parallel make
     ENV.deparallelize
     system "make", "install"
   end

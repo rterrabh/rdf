@@ -23,14 +23,12 @@ class TopicLink < ActiveRecord::Base
 
   after_commit :crawl_link_title
 
-  # Make sure a topic can't link to itself
   def link_to_self
     errors.add(:base, "can't link to the same topic") if (topic_id == link_topic_id)
   end
 
   def self.topic_map(guardian, topic_id)
 
-    # Sam: complicated reports are really hard in AR
     builder = SqlBuilder.new("SELECT ftl.url,
                      COALESCE(ft.title, ftl.title) AS title,
                      ftl.link_topic_id,
@@ -59,8 +57,6 @@ class TopicLink < ActiveRecord::Base
   def self.counts_for(guardian,topic, posts)
     return {} if posts.blank?
 
-    # Sam: I don't know how to write this cleanly in AR,
-    #   in particular the securing logic is tricky and would fallback to SQL anyway
     builder = SqlBuilder.new("SELECT
                       l.post_id,
                       l.url,
@@ -78,7 +74,6 @@ class TopicLink < ActiveRecord::Base
     builder.where('t.deleted_at IS NULL')
     builder.where("COALESCE(t.archetype, 'regular') <> :archetype", archetype: Archetype.private_message)
 
-    # not certain if pluck is right, cause it may interfere with caching
     builder.where('l.post_id IN (:post_ids)', post_ids: posts.map(&:id))
     builder.secure_category(guardian.secure_category_ids)
 
@@ -92,7 +87,6 @@ class TopicLink < ActiveRecord::Base
     end
   end
 
-  # Extract any urls in body
   def self.extract_from(post)
     return unless post.present?
 
@@ -122,13 +116,11 @@ class TopicLink < ActiveRecord::Base
 
             route = Rails.application.routes.recognize_path(parsed.path)
 
-            # We aren't interested in tracking internal links to users
             next if route[:controller] == 'users'
 
             topic_id = route[:topic_id]
             post_number = route[:post_number] || 1
 
-            # Store the canonical URL
             topic = Topic.find_by(id: topic_id)
             topic_id = nil unless topic
 
@@ -139,7 +131,6 @@ class TopicLink < ActiveRecord::Base
 
           end
 
-          # Skip linking to ourselves
           next if topic_id == post.topic_id
 
           reflected_post = nil
@@ -162,7 +153,6 @@ class TopicLink < ActiveRecord::Base
                            quote: link.is_quote
                           )
 
-          # Create the reflection if we can
           if topic_id.present?
             topic = Topic.find_by(id: topic_id)
 
@@ -186,13 +176,10 @@ class TopicLink < ActiveRecord::Base
           end
 
         rescue URI::InvalidURIError
-          # if the URI is invalid, don't store it.
         rescue ActionController::RoutingError
-          # If we can't find the route, no big deal
         end
       end
 
-      # Remove links that aren't there anymore
       if added_urls.present?
         TopicLink.delete_all ["(url not in (:urls)) AND (post_id = :post_id AND NOT reflection)", urls: added_urls, post_id: post.id]
         TopicLink.delete_all ["(url not in (:urls)) AND (link_post_id = :post_id AND reflection)", urls: reflected_urls, post_id: post.id]
@@ -202,36 +189,8 @@ class TopicLink < ActiveRecord::Base
     end
   end
 
-  # Crawl a link's title after it's saved
   def crawl_link_title
     Jobs.enqueue(:crawl_topic_link, topic_link_id: id)
   end
 end
 
-# == Schema Information
-#
-# Table name: topic_links
-#
-#  id            :integer          not null, primary key
-#  topic_id      :integer          not null
-#  post_id       :integer
-#  user_id       :integer          not null
-#  url           :string(500)      not null
-#  domain        :string(100)      not null
-#  internal      :boolean          default(FALSE), not null
-#  link_topic_id :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  reflection    :boolean          default(FALSE)
-#  clicks        :integer          default(0), not null
-#  link_post_id  :integer
-#  title         :string(255)
-#  crawled_at    :datetime
-#  quote         :boolean          default(FALSE), not null
-#
-# Indexes
-#
-#  index_topic_links_on_post_id   (post_id)
-#  index_topic_links_on_topic_id  (topic_id)
-#  unique_post_links              (topic_id,post_id,url) UNIQUE
-#

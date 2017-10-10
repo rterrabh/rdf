@@ -44,8 +44,6 @@ describe Gitlab::Themes do
       described_class.each { |theme| ids << theme.id }
       expect(ids).not_to be_empty
 
-      # TODO (rspeicher): RSpec 3.x
-      # expect(described_class.each).to yield_with_arg(described_class::Theme)
     end
   end
 end

@@ -1,10 +1,3 @@
-# Installs a relatively minimalist version of the GPAC tools. The
-# most commonly used tool in this package is the MP4Box metadata
-# interleaver, which has relatively few dependencies.
-#
-# The challenge with building everything is that Gpac depends on
-# a much older version of FFMpeg and WxWidgets than the version
-# that Brew installs
 
 class Gpac < Formula
   desc "Multimedia framework for research and academic purposes"
@@ -41,12 +34,9 @@ class Gpac < Formula
             "--mandir=#{man}"]
 
     if build.with? "x11"
-      # gpac build system is barely functional
       args << "--extra-cflags=-I#{MacOS::X11.include}"
-      # Force detection of X libs on 64-bit kernel
       args << "--extra-ldflags=-L#{MacOS::X11.lib}"
     else
-      # https://github.com/gpac/gpac/issues/166
       inreplace "configure", "has_x11=\"yes\"", "has_x11=\"no\""
       args << "--disable-x11-shm" << "--disable-x11-xv"
     end

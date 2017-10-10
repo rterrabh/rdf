@@ -22,8 +22,6 @@ class Ffts < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <ffts/ffts.h>
-      #define align(x) __attribute__((aligned(x)))
       int main(void) {
           const size_t    n         = 8;
           float align(32) input[n]  = {0.0, };

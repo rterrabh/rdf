@@ -72,7 +72,6 @@ class Middleware::RequestTracker
     result = @app.call(env)
   ensure
 
-    # we got to skip this on error ... its just logging
     data = self.class.get_data(env,result) rescue nil
     host = RailsMultisite::ConnectionManagement.host(env)
 

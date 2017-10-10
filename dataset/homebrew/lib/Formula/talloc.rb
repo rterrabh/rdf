@@ -24,7 +24,6 @@ class Talloc < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <talloc.h>
       int main()
       {
         int ret;

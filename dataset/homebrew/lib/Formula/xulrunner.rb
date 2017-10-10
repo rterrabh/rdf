@@ -1,4 +1,3 @@
-# speed up head clone, see: https://developer.mozilla.org/en-US/docs/Developer_Guide/Source_Code/Mercurial/Bundles
 class HgBundleDownloadStrategy < CurlDownloadStrategy
   def stage
     mkdir "mozilla-central"
@@ -24,11 +23,9 @@ class Xulrunner < Formula
   homepage "https://developer.mozilla.org/docs/XULRunner"
 
   stable do
-    # Always use direct URLs (releases/<version>/) instead of releases/latest/
     url "https://ftp.mozilla.org/pub/mozilla.org/xulrunner/releases/33.0/source/xulrunner-33.0.source.tar.bz2"
     sha256 "99402cf84949e06bac72d8abbdecde57e8af465727001ed6849a34632f20bcdb"
 
-    # https://github.com/Homebrew/homebrew/issues/33558
     depends_on MaximumMacOSRequirement => :mavericks
   end
 
@@ -78,7 +75,6 @@ class Xulrunner < Formula
       ENV["AUTOCONF"] = buildpath/"ac213/bin/autoconf213"
     end
 
-    # build xulrunner to objdir and disable tests, updater.app and crashreporter.app, specify sdk path
     (buildpath/"mozconfig").write <<-EOS.undent
       . $topsrcdir/xulrunner/config/mozconfig
       mk_add_options MOZ_OBJDIR=objdir
@@ -89,7 +85,6 @@ class Xulrunner < Formula
       ac_add_options --with-nss-prefix=#{Formula["nss"].opt_prefix}
       ac_add_options --with-nspr-prefix=#{Formula["nspr"].opt_prefix}
     EOS
-    # fixed usage of bsdtar with unsupported parameters (replaced with gnu-tar)
     inreplace "toolkit/mozapps/installer/packager.mk", "$(TAR) -c --owner=0 --group=0 --numeric-owner",
               "#{Formula["gnu-tar"].opt_bin}/gtar -c --owner=0 --group=0 --numeric-owner"
 
@@ -98,18 +93,14 @@ class Xulrunner < Formula
 
     frameworks.mkpath
     if build.head?
-      # update HEAD version here with every version bump
       tar_path = "objdir/dist/xulrunner-33.0a1.en-US.mac64.tar.bz2"
     else
       tar_path = "objdir/dist/xulrunner-#{version.to_s[/\d+\.\d+(\.\d+)?/]}.en-US.mac64.tar.bz2"
     end
     system "tar", "-xvj", "-C", frameworks, "-f", tar_path
 
-    # symlink only xulrunner here will fail (assumes dylibs in same directory)
     bin.write_exec_script frameworks/"XUL.framework/Versions/Current/xulrunner"
 
-    # fix Trace/BPT trap: 5 error on OS X 10.9, see laurentj/slimerjs#135
-    # and https://bugzilla.mozilla.org/show_bug.cgi?id=922590#c4
     if MacOS.version >= :mavericks
       (frameworks/"XUL.framework/Versions/Current/Info.plist").write <<-EOS.undent
         <?xml version="1.0" encoding="UTF-8"?>

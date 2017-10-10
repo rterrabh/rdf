@@ -188,9 +188,6 @@ module SpreeCmd
         else
           cmd += " >/dev/null"
         end
-        # true if command executed succesfully
-        # false for non zero exit status
-        # nil if command execution fails
         system(cmd)
       end
   end

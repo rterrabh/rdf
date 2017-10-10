@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/dateentry.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * dateentry widget
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::dateentry', '0.91')
 TkPackage.require('widget::dateentry')
 
 module Tk::Tcllib

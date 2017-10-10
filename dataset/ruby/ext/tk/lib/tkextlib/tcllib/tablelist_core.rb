@@ -1,12 +1,3 @@
-#
-#  tkextlib/tcllib/tablelist_core.rb
-#
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * This file is required by 'tkextlib/tcllib/tablelist.rb' or
-#     'tkextlib/tcllib/tablelist_tile.rb'.
-#
 
 module Tk
   module Tcllib
@@ -164,7 +155,6 @@ class Tk::Tcllib::Tablelist
   end
   private :create_self
 
-  ##########################
 
   def __numval_optkeys
     super() + ['titlecolumns']
@@ -196,8 +186,6 @@ class Tk::Tcllib::Tablelist
   private :__tkvariable_optkeys
 
   def __val2ruby_optkeys  # { key=>proc, ... }
-    # The method is used to convert a opt-value to a ruby's object.
-    # When get the value of the option "key", "proc.call(value)" is called.
     super().update('stretch'=>proc{|v|
                      (v == 'all')? v: simplelist(v)
                    },
@@ -217,9 +205,6 @@ class Tk::Tcllib::Tablelist
   private :__val2ruby_optkeys
 
   def __ruby2val_optkeys  # { key=>proc, ... }
-    # The method is used to convert a ruby's object to a opt-value.
-    # When set the value of the option "key", "proc.call(value)" is called.
-    # That is, "-#{key} #{proc.call(value)}".
     super().update('stretch'=>proc{|v|
                      (v.kind_of?(Array))? v.collect{|e| _to_idx(e)}: v
                    },
@@ -243,7 +228,6 @@ class Tk::Tcllib::Tablelist
   end
   private :__font_optkeys
 
-  ##########################
 
   def __item_strval_optkeys(id)
     if id[0] == 'cell'
@@ -272,12 +256,10 @@ class Tk::Tcllib::Tablelist
   private :__item_listval_optkeys
 
   def __item_font_optkeys(id)
-    # maybe need to override
     super(id) + ['labelfont']
   end
   private :__item_font_optkeys
 
-  ##########################
 
   def activate(index)
     tk_send('activate', _to_idx(index))
@@ -840,11 +822,9 @@ class Tk::Tcllib::Tablelist
   end
 
 
-  # default of 'labelcommand' option
   DEFAULT_labelcommand_value =
     DEFAULT_sortByColumn_cmd = '::tablelist::sortByColumn'
 
-  # default of 'labelcommand2' option
   DEFAULT_labelcommand2_value =
     DEFAULT_addToSortColumns_cmd = '::tablelist::addToSortColumns'
 
@@ -881,7 +861,6 @@ class Tk::Tcllib::Tablelist
   end
 
   def sort_by_columnlist(idxlist, orderlist=None)
-    # orderlist :: list of 'increasing' or 'decreasing'
     tk_send('sortbycolumnlist', idxlist.map{|idx| _to_idx(idx)}, orderlist)
     self
   end
@@ -961,8 +940,6 @@ class Tk::Tcllib::Tablelist
 end
 
 class << Tk::Tcllib::Tablelist
-  ############################################################
-  # helper commands
   def getTablelistPath(descendant)
     window(Tk.tk_call('::tablelist::getTablelistPath', descendant))
   end
@@ -977,8 +954,6 @@ class << Tk::Tcllib::Tablelist
   end
 
 
-  ############################################################
-  # with the BWidget package
   def addBWidgetEntry(name=None)
     Tk.tk_call('::tablelist::addBWidgetEntry', name)
   end
@@ -992,14 +967,11 @@ class << Tk::Tcllib::Tablelist
   end
 
 
-  ############################################################
-  # with the Iwidgets ([incr Widgets]) package
   def addIncrEntryfield(name=None)
     Tk.tk_call('::tablelist::addIncrEntry', name)
   end
 
   def addIncrDateTimeWidget(type, seconds=false, name=None)
-    # type := 'datefield'|'dateentry'|timefield'|'timeentry'
     if seconds && seconds != None
       seconds = '-seconds'
     else
@@ -1021,14 +993,10 @@ class << Tk::Tcllib::Tablelist
   end
 
 
-  ############################################################
-  # with Bryan Oakley's combobox package
   def addOakleyCombobox(name=None)
     Tk.tk_call('::tablelist::addOakleyCombobox', name)
   end
 
-  ############################################################
-  # with the multi-entry package Mentry is a library extension
   def addDateMentry(format, separator, gmt=false, name=None)
     if gmt && gmt != None
       gmt = '-gmt'

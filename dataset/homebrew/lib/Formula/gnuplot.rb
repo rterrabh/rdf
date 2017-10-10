@@ -54,14 +54,10 @@ class Gnuplot < Formula
 
   def install
     if build.with? "aquaterm"
-      # Add "/Library/Frameworks" to the default framework search path, so that an
-      # installed AquaTerm framework can be found. Brew does not add this path
-      # when building against an SDK (Nov 2013).
       ENV.prepend "CPPFLAGS", "-F/Library/Frameworks"
       ENV.prepend "LDFLAGS", "-F/Library/Frameworks"
     end
 
-    # Help configure find libraries
     pdflib = Formula["pdflib-lite"].opt_prefix
     gd = Formula["gd"].opt_prefix
 

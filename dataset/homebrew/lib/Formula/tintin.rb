@@ -7,7 +7,6 @@ class Tintin < Formula
   depends_on "pcre"
 
   def install
-    # find Homebrew's libpcre
     ENV.append "LDFLAGS", "-L#{HOMEBREW_PREFIX}/lib"
 
     cd "src" do

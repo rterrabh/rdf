@@ -41,7 +41,6 @@ class Agda < Formula
   end
 
   def install
-    # install Agda core
     cabal_sandbox do
       cabal_install_tools "alex", "happy", "cpphs"
       cabal_install "--only-dependencies"
@@ -52,7 +51,6 @@ class Agda < Formula
     if build.with? "stdlib"
       resource("stdlib").stage prefix/"agda-stdlib"
 
-      # install the standard library's helper tools
       cd prefix/"agda-stdlib" do
         cabal_sandbox do
           cabal_install "--only-dependencies"
@@ -62,20 +60,17 @@ class Agda < Formula
         cabal_clean_lib
       end
 
-      # install the standard library's FFI bindings for the MAlonzo backend
       if build.with? "malonzo-ffi"
         cd prefix/"agda-stdlib"/"ffi" do
           cabal_install "--user"
         end
       end
 
-      # generate the standard library's documentation and vim highlighting files
       cd prefix/"agda-stdlib" do
         system bin/"agda", "-i", ".", "-i", "src", "--html", "--vim", "README.agda"
       end
     end
 
-    # byte-compile and install Agda's included emacs mode
     if build.with? "emacs"
       system bin/"agda-mode", "setup"
       system bin/"agda-mode", "compile"
@@ -83,10 +78,8 @@ class Agda < Formula
   end
 
   test do
-    # run Agda's built-in test suite
     system bin/"agda", "--test"
 
-    # typecheck and compile a simple module
     test_file_path = testpath/"simple-test.agda"
     test_file_path.write <<-EOS.undent
       {-# OPTIONS --without-K #-}
@@ -103,7 +96,6 @@ class Agda < Formula
     system bin/"agda", "-c", "--no-main", "--safe", test_file_path
     system bin/"agda", "--js", "--safe", test_file_path
 
-    # typecheck, compile, and run a program that uses the standard library
     if build.with?("stdlib") && build.with?("malonzo-ffi")
       test_file_path = testpath/"stdlib-test.agda"
       test_file_path.write <<-EOS.undent

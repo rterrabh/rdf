@@ -21,8 +21,6 @@ class Libpeas < Formula
   depends_on "gobject-introspection"
   depends_on "gtk+3"
 
-  # fixes a linking issue in the tests
-  # submitted upsteam as a PR: https://github.com/gregier/libpeas/pull/3
   patch :DATA
 
   def install
@@ -37,7 +35,6 @@ class Libpeas < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <libpeas/peas.h>
 
       int main(int argc, char *argv[]) {
         PeasObjectModule *mod = peas_object_module_new("test", "test", FALSE);

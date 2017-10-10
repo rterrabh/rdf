@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/labelframe.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/frame'
@@ -42,10 +38,10 @@ class Tk::BWidget::LabelFrame
     win = window(tk_send_without_enc('getframe'))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-5> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1619> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-106> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1620> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

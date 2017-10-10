@@ -22,8 +22,6 @@ class Gpgme < Formula
   end
 
   def install
-    # Check these inreplaces with each release.
-    # At some point GnuPG will pull the trigger on moving to GPG2 by default.
     inreplace "tests/gpg/Makefile.in", "GPG = gpg", "GPG = gpg2"
     inreplace "src/gpgme-config.in", "@GPG@", "#{Formula["gnupg2"].opt_prefix}/bin/gpg2"
     inreplace "src/gpgme-config.in", "@GPGSM@", "#{Formula["gnupg2"].opt_prefix}/bin/gpgsm"

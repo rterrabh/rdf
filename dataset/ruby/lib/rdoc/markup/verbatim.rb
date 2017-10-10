@@ -1,10 +1,6 @@
-##
-# A section of verbatim text
 
 class RDoc::Markup::Verbatim < RDoc::Markup::Raw
 
-  ##
-  # Format of this verbatim section
 
   attr_accessor :format
 
@@ -18,15 +14,11 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
     super and @format == other.format
   end
 
-  ##
-  # Calls #accept_verbatim on +visitor+
 
   def accept visitor
     visitor.accept_verbatim self
   end
 
-  ##
-  # Collapses 3+ newlines into two newlines
 
   def normalize
     parts = []
@@ -64,16 +56,12 @@ class RDoc::Markup::Verbatim < RDoc::Markup::Raw
     end
   end
 
-  ##
-  # Is this verbatim section Ruby code?
 
   def ruby?
     @format ||= nil # TODO for older ri data, switch the tree to marshal_dump
     @format == :ruby
   end
 
-  ##
-  # The text of the section
 
   def text
     @parts.join

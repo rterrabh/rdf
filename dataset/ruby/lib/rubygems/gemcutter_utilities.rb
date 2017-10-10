@@ -1,19 +1,14 @@
 require 'rubygems/remote_fetcher'
 
-##
-# Utility methods for using the RubyGems API.
 
 module Gem::GemcutterUtilities
 
-  # TODO: move to Gem::Command
   OptionParser.accept Symbol do |value|
     value.to_sym
   end
 
   attr_writer :host
 
-  ##
-  # Add the --key option
 
   def add_key_option
     add_option('-k', '--key KEYNAME', Symbol,
@@ -23,8 +18,6 @@ module Gem::GemcutterUtilities
     end
   end
 
-  ##
-  # The API key from the command options or from the user's configuration.
 
   def api_key
     if options[:key] then
@@ -36,9 +29,6 @@ module Gem::GemcutterUtilities
     end
   end
 
-  ##
-  # The host to connect to either from the RUBYGEMS_HOST environment variable
-  # or from the user's configuration
 
   def host
     configured_host = Gem.host unless
@@ -54,10 +44,6 @@ module Gem::GemcutterUtilities
       end
   end
 
-  ##
-  # Creates an RubyGems API to +host+ and +path+ with the given HTTP +method+.
-  #
-  # If +allowed_push_host+ metadata is present, then it will only allow that host.
 
   def rubygems_api_request(method, path, host = nil, allowed_push_host = nil, &block)
     require 'net/http'
@@ -75,15 +61,12 @@ module Gem::GemcutterUtilities
 
     uri = URI.parse "#{self.host}/#{path}"
 
-    #nodyna <ID:const_get-28> <CG MODERATE (change-prone variables)>
+    #nodyna <const_get-2249> <CG MODERATE (change-prone variables)>
     request_method = Net::HTTP.const_get method.to_s.capitalize
 
     Gem::RemoteFetcher.fetcher.request(uri, request_method, &block)
   end
 
-  ##
-  # Signs in with the RubyGems API at +sign_in_host+ and sets the rubygems API
-  # key.
 
   def sign_in sign_in_host = nil
     sign_in_host ||= self.host
@@ -114,9 +97,6 @@ module Gem::GemcutterUtilities
     end
   end
 
-  ##
-  # Retrieves the pre-configured API key +key+ or terminates interaction with
-  # an error.
 
   def verify_api_key(key)
     if Gem.configuration.api_keys.key? key then
@@ -127,12 +107,6 @@ module Gem::GemcutterUtilities
     end
   end
 
-  ##
-  # If +response+ is an HTTP Success (2XX) response, yields the response if a
-  # block was given or shows the response body to the user.
-  #
-  # If the response was not successful, shows an error to the user including
-  # the +error_prefix+ and the response body.
 
   def with_response response, error_prefix = nil
     case response

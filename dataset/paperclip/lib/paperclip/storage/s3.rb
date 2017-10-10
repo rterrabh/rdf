@@ -1,114 +1,5 @@
 module Paperclip
   module Storage
-    # Amazon's S3 file hosting service is a scalable, easy place to store files for
-    # distribution. You can find out more about it at http://aws.amazon.com/s3
-    #
-    # To use Paperclip with S3, include the +aws-sdk+ gem in your Gemfile:
-    #   gem 'aws-sdk', '~> 1.6'
-    # There are a few S3-specific options for has_attached_file:
-    # * +s3_credentials+: Takes a path, a File, a Hash or a Proc. The path (or File) must point
-    #   to a YAML file containing the +access_key_id+ and +secret_access_key+ that Amazon
-    #   gives you. You can 'environment-space' this just like you do to your
-    #   database.yml file, so different environments can use different accounts:
-    #     development:
-    #       access_key_id: 123...
-    #       secret_access_key: 123...
-    #     test:
-    #       access_key_id: abc...
-    #       secret_access_key: abc...
-    #     production:
-    #       access_key_id: 456...
-    #       secret_access_key: 456...
-    #   This is not required, however, and the file may simply look like this:
-    #     access_key_id: 456...
-    #     secret_access_key: 456...
-    #   In which case, those access keys will be used in all environments. You can also
-    #   put your bucket name in this file, instead of adding it to the code directly.
-    #   This is useful when you want the same account but a different bucket for
-    #   development versus production.
-    #   When using a Proc it provides a single parameter which is the attachment itself. A
-    #   method #instance is available on the attachment which will take you back to your
-    #   code. eg.
-    #     class User
-    #       has_attached_file :download,
-    #                         :storage => :s3,
-    #                         :s3_credentials => Proc.new{|a| a.instance.s3_credentials }
-    #
-    #       def s3_credentials
-    #         {:bucket => "xxx", :access_key_id => "xxx", :secret_access_key => "xxx"}
-    #       end
-    #     end
-    # * +s3_permissions+: This is a String that should be one of the "canned" access
-    #   policies that S3 provides (more information can be found here:
-    #   http://docs.aws.amazon.com/AmazonS3/latest/dev/ACLOverview.html)
-    #   The default for Paperclip is :public_read.
-    #
-    #   You can set permission on a per style bases by doing the following:
-    #     :s3_permissions => {
-    #       :original => :private
-    #     }
-    #   Or globally:
-    #     :s3_permissions => :private
-    #
-    # * +s3_protocol+: The protocol for the URLs generated to your S3 assets. Can be either
-    #   'http', 'https', or an empty string to generate protocol-relative URLs. Defaults to 'http'
-    #   when your :s3_permissions are :public_read (the default), and 'https' when your
-    #   :s3_permissions are anything else.
-    # * +s3_headers+: A hash of headers or a Proc. You may specify a hash such as
-    #   {'Expires' => 1.year.from_now.httpdate}. If you use a Proc, headers are determined at
-    #   runtime. Paperclip will call that Proc with attachment as the only argument.
-    #   Can be defined both globally and within a style-specific hash.
-    # * +bucket+: This is the name of the S3 bucket that will store your files. Remember
-    #   that the bucket must be unique across all of Amazon S3. If the bucket does not exist
-    #   Paperclip will attempt to create it. The bucket name will not be interpolated.
-    #   You can define the bucket as a Proc if you want to determine it's name at runtime.
-    #   Paperclip will call that Proc with attachment as the only argument.
-    # * +s3_host_alias+: The fully-qualified domain name (FQDN) that is the alias to the
-    #   S3 domain of your bucket. Used with the :s3_alias_url url interpolation. See the
-    #   link in the +url+ entry for more information about S3 domains and buckets.
-    # * +url+: There are four options for the S3 url. You can choose to have the bucket's name
-    #   placed domain-style (bucket.s3.amazonaws.com) or path-style (s3.amazonaws.com/bucket).
-    #   You can also specify a CNAME (which requires the CNAME to be specified as
-    #   :s3_alias_url. You can read more about CNAMEs and S3 at
-    #   http://docs.amazonwebservices.com/AmazonS3/latest/index.html?VirtualHosting.html
-    #   Normally, this won't matter in the slightest and you can leave the default (which is
-    #   path-style, or :s3_path_url). But in some cases paths don't work and you need to use
-    #   the domain-style (:s3_domain_url). Anything else here will be treated like path-style.
-    #
-    #   Notes:
-    #   * The value of this option is a string, not a symbol.
-    #     <b>right:</b> <tt>":s3_domain_url"</tt>
-    #     <b>wrong:</b> <tt>:s3_domain_url</tt>
-    #   * If you use a CNAME for use with CloudFront, you can NOT specify https as your
-    #     :s3_protocol;
-    #     This is *not supported* by S3/CloudFront. Finally, when using the host
-    #     alias, the :bucket parameter is ignored, as the hostname is used as the bucket name
-    #     by S3. The fourth option for the S3 url is :asset_host, which uses Rails' built-in
-    #     asset_host settings.
-    #   * To get the full url from a paperclip'd object, use the
-    #     image_path helper; this is what image_tag uses to generate the url for an img tag.
-    # * +path+: This is the key under the bucket in which the file will be stored. The
-    #   URL will be constructed from the bucket and the path. This is what you will want
-    #   to interpolate. Keys should be unique, like filenames, and despite the fact that
-    #   S3 (strictly speaking) does not support directories, you can still use a / to
-    #   separate parts of your file name.
-    # * +s3_host_name+: If you are using your bucket in Tokyo region etc, write host_name.
-    # * +s3_metadata+: These key/value pairs will be stored with the
-    #   object.  This option works by prefixing each key with
-    #   "x-amz-meta-" before sending it as a header on the object
-    #   upload request. Can be defined both globally and within a style-specific hash.
-    # * +s3_storage_class+: If this option is set to
-    #   <tt>:reduced_redundancy</tt>, the object will be stored using Reduced
-    #   Redundancy Storage.  RRS enables customers to reduce their
-    #   costs by storing non-critical, reproducible data at lower
-    #   levels of redundancy than Amazon S3's standard storage.
-    #
-    #   You can set storage class on a per style bases by doing the following:
-    #     :s3_storage_class => {
-    #       :thumb => :reduced_reduncancy
-    #     }
-    #   Or globally:
-    #     :s3_storage_class => :reduced_redundancy
 
     module S3
       def self.extended base
@@ -119,14 +10,15 @@ module Paperclip
           raise e
         end unless defined?(AWS::Core)
 
-        # Overriding log formatter to make sure it return a UTF-8 string
         if defined?(AWS::Core::LogFormatter)
+          #nodyna <class_eval-689> <not yet classified>
           AWS::Core::LogFormatter.class_eval do
             def summarize_hash(hash)
               hash.map { |key, value| ":#{key}=>#{summarize_value(value)}".force_encoding('UTF-8') }.sort.join(',')
             end
           end
         elsif defined?(AWS::Core::ClientLogging)
+          #nodyna <class_eval-690> <not yet classified>
           AWS::Core::ClientLogging.class_eval do
             def sanitize_hash(hash)
               hash.map { |key, value| "#{sanitize_value(key)}=>#{sanitize_value(value)}".force_encoding('UTF-8') }.sort.join(',')
@@ -134,7 +26,7 @@ module Paperclip
           end
         end
 
-        #nodyna <ID:instance_eval-2> <IEV COMPLEX (private access)>
+        #nodyna <instance_eval-691> <IEV COMPLEX (private access)>
         base.instance_eval do
           @s3_options     = @options[:s3_options]     || {}
           @s3_permissions = set_permissions(@options[:s3_permissions])
@@ -339,7 +231,6 @@ module Paperclip
               :acl => acl
             }
 
-            # add storage class for this style if defined
             storage_class = s3_storage_class(style)
             write_options.merge!(:storage_class => storage_class) if storage_class
 
@@ -385,7 +276,6 @@ module Paperclip
             log("deleting #{path}")
             s3_bucket.objects[path.sub(%r{\A/},'')].delete
           rescue AWS::Errors::Base => e
-            # Ignore this.
           end
         end
         @queued_for_delete = []

@@ -6,8 +6,6 @@ class Wavpack < Formula
     url "http://www.wavpack.com/wavpack-4.75.0.tar.bz2"
     sha256 "c63e5c2106749dc6b2fb4302f2260f4803a93dd6cadf337764920dc836e3af2e"
 
-    # All four patches can be removed with next stable release
-    # see https://github.com/dbry/WavPack/issues/3
     patch do
       url "https://github.com/dbry/WavPack/commit/c7a0de1e5c0a91e0c458edf72e7007c386b38491.diff"
       sha256 "dc2456471ebc0adbd735628d8af7b9214e84c93d01242b6c4b747549642a7d40"

@@ -24,23 +24,13 @@ class Yaz < Formula
   end
 
   test do
-    # This test converts between MARC8, an obscure mostly-obsolete library
-    # text encoding supported by yaz-iconv, and UTF8.
     marc8file = testpath/"marc8.txt"
     marc8file.write "$1!0-!L,i$3i$si$Ki$Ai$O!+=(B"
     result = `#{bin}/yaz-iconv -f marc8 -t utf8 #{marc8file}`
     result.force_encoding(Encoding::UTF_8) if result.respond_to?(:force_encoding)
     assert_equal "世界こんにちは！", result
 
-    # Test ICU support if building with ICU by running yaz-icu
-    # with the example icu_chain from its man page.
     if build.with? "icu4c"
-      # The input string should be transformed to be:
-      # * without control characters (tab)
-      # * split into tokens at word boundaries (including -)
-      # * without whitespace and Punctuation
-      # * xy transformed to z
-      # * lowercase
       configurationfile = testpath/"icu-chain.xml"
       configurationfile.write <<-EOS.undent
         <?xml version="1.0" encoding="UTF-8"?>

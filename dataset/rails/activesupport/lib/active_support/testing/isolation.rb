@@ -6,6 +6,7 @@ module ActiveSupport
       require 'thread'
 
       def self.included(klass) #:nodoc:
+        #nodyna <class_eval-1129> <not yet classified>
         klass.class_eval do
           parallelize_me!
         end
@@ -57,8 +58,6 @@ module ActiveSupport
       module Subprocess
         ORIG_ARGV = ARGV.dup unless defined?(ORIG_ARGV)
 
-        # Crazy H4X to get this working in windows / jruby with
-        # no forking.
         def run_in_isolation(&blk)
           require "tempfile"
 
@@ -80,7 +79,6 @@ module ActiveSupport
               test_opts = "-n#{self.class.name}##{self.name}"
               command = "#{Gem.ruby} #{load_paths} #{$0} #{orig_args} #{test_opts}"
 
-              # IO.popen lets us pass env in a cross-platform way
               child = IO.popen([env, command])
 
               begin

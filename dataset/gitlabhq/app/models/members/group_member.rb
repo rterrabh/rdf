@@ -1,28 +1,9 @@
-# == Schema Information
-#
-# Table name: members
-#
-#  id                 :integer          not null, primary key
-#  access_level       :integer          not null
-#  source_id          :integer          not null
-#  source_type        :string(255)      not null
-#  user_id            :integer
-#  notification_level :integer          not null
-#  type               :string(255)
-#  created_at         :datetime
-#  updated_at         :datetime
-#  created_by_id      :integer
-#  invite_email       :string(255)
-#  invite_token       :string(255)
-#  invite_accepted_at :datetime
-#
 
 class GroupMember < Member
   SOURCE_TYPE = 'Namespace'
 
   belongs_to :group, class_name: 'Group', foreign_key: 'source_id'
 
-  # Make sure group member points only to group as it source
   default_value_for :source_type, SOURCE_TYPE
   default_value_for :notification_level, Notification::N_GLOBAL
   validates_format_of :source_type, with: /\ANamespace\z/

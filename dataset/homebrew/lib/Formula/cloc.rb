@@ -17,7 +17,6 @@ class Cloc < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
       int main(void) {
         return 0;
       }

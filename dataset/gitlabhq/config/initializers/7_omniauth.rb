@@ -2,10 +2,11 @@ if Gitlab::LDAP::Config.enabled?
   module OmniAuth::Strategies
     server = Gitlab.config.ldap.servers.values.first
     klass = server['provider_class']
-    #nodyna <ID:const_set-1> <CS COMPLEX (change-prone variable)>
+    #nodyna <const_set-547> <CS COMPLEX (change-prone variable)>
     const_set(klass, Class.new(LDAP)) unless klass == 'LDAP'
   end
 
+  #nodyna <class_eval-548> <not yet classified>
   OmniauthCallbacksController.class_eval do
     server = Gitlab.config.ldap.servers.values.first
     alias_method server['provider_name'], :ldap
@@ -14,7 +15,6 @@ end
 
 OmniAuth.config.full_host = Settings.gitlab['base_url']
 OmniAuth.config.allowed_request_methods = [:post]
-#In case of auto sign-in, the GET method is used (users don't get to click on a button)
 OmniAuth.config.allowed_request_methods << :get if Gitlab.config.omniauth.auto_sign_in_with_provider.present?
 OmniAuth.config.before_request_phase do |env|
   OmniAuth::RequestForgeryProtection.new(env).call

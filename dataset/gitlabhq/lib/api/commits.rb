@@ -1,19 +1,11 @@
 require 'mime/types'
 
 module API
-  # Projects commits API
   class Commits < Grape::API
     before { authenticate! }
     before { authorize! :download_code, user_project }
 
     resource :projects do
-      # Get a project repository commits
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   ref_name (optional) - The name of a repository branch or tag, if not given the default branch is used
-      # Example Request:
-      #   GET /projects/:id/repository/commits
       get ":id/repository/commits" do
         page = (params[:page] || 0).to_i
         per_page = (params[:per_page] || 20).to_i
@@ -23,13 +15,6 @@ module API
         present commits, with: Entities::RepoCommit
       end
 
-      # Get a specific commit of a project
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   sha (required) - The commit hash or name of a repository branch or tag
-      # Example Request:
-      #   GET /projects/:id/repository/commits/:sha
       get ":id/repository/commits/:sha" do
         sha = params[:sha]
         commit = user_project.commit(sha)
@@ -37,13 +22,6 @@ module API
         present commit, with: Entities::RepoCommitDetail
       end
 
-      # Get the diff for a specific commit of a project
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   sha (required) - The commit or branch name
-      # Example Request:
-      #   GET /projects/:id/repository/commits/:sha/diff
       get ":id/repository/commits/:sha/diff" do
         sha = params[:sha]
         commit = user_project.commit(sha)
@@ -51,13 +29,6 @@ module API
         commit.diffs
       end
 
-      # Get a commit's comments
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   sha (required) - The commit hash
-      # Examples:
-      #   GET /projects/:id/repository/commits/:sha/comments
       get ':id/repository/commits/:sha/comments' do
         sha = params[:sha]
         commit = user_project.commit(sha)
@@ -66,17 +37,6 @@ module API
         present paginate(notes), with: Entities::CommitNote
       end
 
-      # Post comment to commit
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      #   sha (required) - The commit hash
-      #   note (required) - Text of comment
-      #   path (optional) - The file path
-      #   line (optional) - The line number
-      #   line_type (optional) - The type of line (new or old)
-      # Examples:
-      #   POST /projects/:id/repository/commits/:sha/comments
       post ':id/repository/commits/:sha/comments' do
         required_attributes! [:note]
 

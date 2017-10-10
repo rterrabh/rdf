@@ -17,10 +17,6 @@ class Libqglviewer < Formula
 
   depends_on "qt"
 
-  # This patches makes the package install QGLViewer.framework under
-  # #{lib}, where it will be picked by homebrew.
-  # Patch has been submitted to the developer, check with versions
-  # newer than 2.6.1 if this is still required.
   patch :DATA
 
   def install
@@ -72,5 +68,4 @@ index d805aa0..736a58f 100644
 +            DESTDIR = $${PREFIX}/lib
 +        }
 
-	# Framework already installed, with includes
 	INSTALLS -= include target

@@ -8,8 +8,6 @@ class Polygen < Formula
 
   def install
     cd "src" do
-      # BSD echo doesn't grok -e, which the makefile tries to use,
-      # with weird results; see https://github.com/Homebrew/homebrew/pull/21344
       inreplace "Makefile", '-e "open Absyn\n"', '"open Absyn"'
       system "make"
       bin.install "polygen"

@@ -15,9 +15,6 @@ class Mongoose < Formula
   depends_on "openssl" => :recommended
 
   def install
-    # No Makefile but is an expectation upstream of binary creation
-    # https://github.com/cesanta/mongoose/blob/master/docs/Usage.md
-    # https://github.com/cesanta/mongoose/issues/326
     cd "examples/web_server" do
       args = []
       args << "openssl" if build.with? "openssl"

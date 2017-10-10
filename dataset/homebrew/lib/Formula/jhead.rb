@@ -11,9 +11,6 @@ class Jhead < Formula
     sha1 "af148787c63b3fc3c4dc107f98ca72e54dececa0" => :mountain_lion
   end
 
-  # Patch to provide a proper install target to the Makefile. The patch has
-  # been submitted upstream through email. We need to carry this patch until
-  # upstream decides to incorporate it.
   patch :DATA
 
   def install
@@ -29,9 +26,6 @@ __END__
 --- a/makefile	2015-02-02 23:24:06.000000000 +0100
 +++ b/makefile	2015-02-25 16:31:21.000000000 +0100
 @@ -1,12 +1,18 @@
- #--------------------------------
- # jhead makefile for Unix
- #--------------------------------
 +PREFIX=$(DESTDIR)/usr/local
 +BINDIR=$(PREFIX)/bin
 +DOCDIR=$(PREFIX)/share/doc/jhead

@@ -6,7 +6,7 @@ module Spree
           block ||= proc{ |u| can :manage, :all }
           Class.new do
             include CanCan::Ability
-            #nodyna <ID:define_method-1> <DM COMPLEX (events)>
+            #nodyna <define_method-2555> <DM COMPLEX (events)>
             define_method(:initialize, block)
           end
         end

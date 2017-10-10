@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/tree.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/canvas'
@@ -52,7 +48,6 @@ class Tk::BWidget::Tree
     if tag.kind_of?(Tk::BWidget::Tree::Node)
       tag.id
     else
-      # tag
       _get_eval_string(tag)
     end
   end
@@ -88,12 +83,7 @@ class Tk::BWidget::Tree
     _bindinfo_for_event_class(Event_for_Items, [path, 'bindArea'], *args)
   end
 
-  #def imagebind(*args)
-  #  _bind_for_event_class(Event_for_Items, [path, 'bindImage'], *args)
-  #  self
-  #end
   def imagebind(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -104,12 +94,7 @@ class Tk::BWidget::Tree
     self
   end
 
-  #def imagebind_append(*args)
-  #  _bind_append_for_event_class(Event_for_Items, [path, 'bindImage'], *args)
-  #  self
-  #end
   def imagebind_append(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -129,12 +114,7 @@ class Tk::BWidget::Tree
     _bindinfo_for_event_class(Event_for_Items, [path, 'bindImage'], *args)
   end
 
-  #def textbind(*args)
-  #  _bind_for_event_class(Event_for_Items, [path, 'bindText'], *args)
-  #  self
-  #end
   def textbind(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -145,12 +125,7 @@ class Tk::BWidget::Tree
     self
   end
 
-  #def textbind_append(*args)
-  #  _bind_append_for_event_class(Event_for_Items, [path, 'bindText'], *args)
-  #  self
-  #end
   def textbind_append(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -309,7 +284,7 @@ class Tk::BWidget::Tree::Node
 
   TreeNode_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-122> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1612> <IEV MODERATE (method definition)>
   (TreeNode_ID = ['bw:node'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end

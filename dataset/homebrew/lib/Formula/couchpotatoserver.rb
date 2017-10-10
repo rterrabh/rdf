@@ -44,7 +44,6 @@ class Couchpotatoserver < Formula
   end
 
   def startup_script; <<-EOS.undent
-    #!/bin/bash
     python "#{libexec}/CouchPotato.py"\
            "--pid_file=#{var}/run/couchpotatoserver.pid"\
            "--data_dir=#{etc}/couchpotatoserver"\

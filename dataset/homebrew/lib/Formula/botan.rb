@@ -5,7 +5,6 @@ class Botan < Formula
   stable do
     url "http://botan.randombit.net/releases/Botan-1.10.10.tgz"
     sha256 "6b67b14746410461fe4a8ce6a625e7eef789243454fe30eab7329d5984be4163"
-    # upstream ticket: https://bugs.randombit.net/show_bug.cgi?id=267
     patch :DATA
   end
 
@@ -47,13 +46,10 @@ class Botan < Formula
     args << "--enable-debug" if build.with? "debug"
 
     system "./configure.py", *args
-    # A hack to force them use our CFLAGS. MACH_OPT is empty in the Makefile
-    # but used for each call to cc/ld.
     system "make", "install", "MACH_OPT=#{ENV.cflags}"
   end
 
   test do
-    # stable version doesn't have `botan` executable
     if !File.exist? bin/"botan"
       assert_match "lcrypto", shell_output("#{bin}/botan-config-1.10 --libs")
     else

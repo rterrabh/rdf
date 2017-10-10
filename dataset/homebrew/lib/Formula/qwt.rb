@@ -15,8 +15,6 @@ class Qwt < Formula
 
   depends_on "qt"
 
-  # Update designer plugin linking back to qwt framework/lib after install
-  # See: https://sourceforge.net/p/qwt/patches/45/
   patch :DATA
 
   def install
@@ -26,7 +24,6 @@ class Qwt < Formula
     end
 
     args = ["-config", "release", "-spec"]
-    # On Mavericks we want to target libc++, this requires a unsupported/macx-clang-libc++ flag
     if ENV.compiler == :clang && MacOS.version >= :mavericks
       args << "unsupported/macx-clang-libc++"
     else
@@ -42,7 +39,6 @@ class Qwt < Formula
     system "make"
     system "make", "install"
 
-    # symlink Qt Designer plugin (note: not removed on qwt formula uninstall)
     ln_sf prefix/"plugins/designer/libqwt_designer_plugin.dylib",
           Formula["qt"].opt_prefix/"plugins/designer/" if build.with? "plugin"
   end
@@ -51,7 +47,6 @@ class Qwt < Formula
     if build.with? "qwtmathml"; <<-EOS.undent
         The qwtmathml library contains code of the MML Widget from the Qt solutions package.
         Beside the Qwt license you also have to take care of its license:
-        #{opt_prefix}/qtmmlwidget-license
       EOS
     end
   end

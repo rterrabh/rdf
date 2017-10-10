@@ -1,13 +1,8 @@
 require 'stringio'
 require 'rubygems/user_interaction'
 
-##
-# This Gem::StreamUI subclass records input and output to StringIO for
-# retrieval during tests.
 
 class Gem::MockGemUi < Gem::StreamUI
-  ##
-  # Raised when you haven't provided enough input to your MockGemUi
 
   class InputEOFError < RuntimeError
 

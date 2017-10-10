@@ -8,7 +8,6 @@ class Jbig2enc < Formula
     sha256 "83e71ce2d27ba845058b9f9fefc6c5586c7731fdac8709611e4f49f271a580f1"
     version "0.28"
 
-    # Patch data from https://github.com/agl/jbig2enc/commit/53ce5fe7e73d7ed95c9e12b52dd4984723f865fa
     patch :DATA
   end
 
@@ -39,9 +38,7 @@ index fe37c22..753a607 100644
  			exit -1
  			])
 +AC_CHECK_FUNCS(expandBinaryPower2Low,,)
- # test for function - it should detect leptonica dependecies
  
- # Check for possible dependancies of leptonica.
 diff --git a/src/jbig2.cc b/src/jbig2.cc
 index e10f042..515c1ef 100644
 --- a/src/jbig2.cc

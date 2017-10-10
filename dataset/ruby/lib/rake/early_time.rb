@@ -1,12 +1,9 @@
 module Rake
 
-  # EarlyTime is a fake timestamp that occurs _before_ any other time value.
   class EarlyTime
     include Comparable
     include Singleton
 
-    ##
-    # The EarlyTime always comes before +other+!
 
     def <=>(other)
       -1

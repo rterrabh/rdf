@@ -2,9 +2,6 @@ require "download_strategy"
 require "checksum"
 require "version"
 
-# Resource is the fundamental representation of an external resource. The
-# primary formula download, along with other declared resources, are instances
-# of this class.
 class Resource
   include FileUtils
 
@@ -12,8 +9,6 @@ class Resource
   attr_writer :version
   attr_accessor :download_strategy, :checksum
 
-  # Formula name must be set after the DSL, as we have no access to the
-  # formula name before initialization of the formula
   attr_accessor :name, :owner
 
   class Download
@@ -46,7 +41,7 @@ class Resource
     @specs = {}
     @checksum = nil
     @using = nil
-    #nodyna <ID:instance_eval-1> <IEV COMPLEX (block execution)>
+    #nodyna <instance_eval-643> <IEV COMPLEX (block execution)>
     instance_eval(&block) if block_given?
   end
 
@@ -54,9 +49,6 @@ class Resource
     download_strategy.new(download_name, Download.new(self))
   end
 
-  # Removes /s from resource names; this allows go package names
-  # to be used as resource names without confusing software that
-  # interacts with download_name, e.g. github.com/foo/bar
   def escaped_name
     name.tr("/", "-")
   end
@@ -82,9 +74,6 @@ class Resource
     unpack(target, &block)
   end
 
-  # If a target is given, unpack there; else unpack to a temp folder
-  # If block is given, yield to that block
-  # A target or a block must be given, but not both
   def unpack(target = nil)
     mktemp(download_name) do
       downloader.stage
@@ -127,7 +116,7 @@ class Resource
   end
 
   Checksum::TYPES.each do |type|
-    #nodyna <ID:define_method-2> <DM MODERATE (array)>
+    #nodyna <define_method-644> <DM MODERATE (array)>
     define_method(type) { |val| @checksum = Checksum.new(type, val) }
   end
 

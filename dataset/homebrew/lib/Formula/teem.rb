@@ -26,8 +26,6 @@ class Teem < Formula
     args << "-DBUILD_EXPERIMENTAL_APPS:BOOL=ON" if build.with? "experimental-apps"
     args << "-DBUILD_EXPERIMENTAL_LIBS:BOOL=ON" if build.with? "experimental-libs"
 
-    # Installs CMake archive files directly into lib, which we discourage.
-    # Workaround by adding version to libdir & then symlink into expected structure.
     args << "-DTeem_USE_LIB_INSTALL_SUBDIR:BOOL=ON"
 
     system "cmake", *args

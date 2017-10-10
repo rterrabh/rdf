@@ -33,9 +33,7 @@ class Trafficserver < Formula
 
   def install
     ENV.cxx11
-    # Needed for correct ./configure detections.
     ENV.enable_warnings
-    # Needed for OpenSSL headers on Lion.
     ENV.append_to_cflags "-Wno-deprecated-declarations"
     system "autoreconf", "-fvi" if build.head?
     args = [
@@ -48,11 +46,8 @@ class Trafficserver < Formula
     args << "--enable-spdy" if build.with? "spdy"
     args << "--enable-experimental-plugins" if build.with? "experimental-plugins"
     system "./configure", *args
-    # Fix wrong username in the generated startup script for bottles.
     inreplace "rc/trafficserver.in", "@pkgsysuser@", "$USER"
     if build.with? "experimental-plugins"
-      # Disable mysql_remap plugin due to missing symbol compile error:
-      # https://issues.apache.org/jira/browse/TS-3490
       inreplace "plugins/experimental/Makefile", " mysql_remap", ""
     end
     system "make" if build.head?

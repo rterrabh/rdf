@@ -93,7 +93,6 @@ module Spree
     accepts_nested_attributes_for :payments
     accepts_nested_attributes_for :shipments
 
-    # Needs to happen before save_permalink is called
     before_validation :set_currency
     before_validation :clone_billing_address, if: :use_billing?
     attr_accessor :use_billing
@@ -118,7 +117,6 @@ module Spree
     scope :created_between, ->(start_date, end_date) { where(created_at: start_date..end_date) }
     scope :completed_between, ->(start_date, end_date) { where(completed_at: start_date..end_date) }
 
-    # shows completed orders first, by their completed_at date, then uncompleted orders by their created_at
     scope :reverse_chronological, -> { order('spree_orders.completed_at IS NULL', completed_at: :desc, created_at: :desc) }
 
     def self.complete
@@ -129,24 +127,18 @@ module Spree
       where(completed_at: nil)
     end
 
-    # Use this method in other gems that wish to register their own custom logic
-    # that should be called after Order#update
     def self.register_update_hook(hook)
       self.update_hooks.add(hook)
     end
 
-    # Use this method in other gems that wish to register their own custom logic
-    # that should be called when determining if two line items are equal.
     def self.register_line_item_comparison_hook(hook)
       self.line_item_comparison_hooks.add(hook)
     end
 
-    # For compatiblity with Calculator::PriceSack
     def amount
       line_items.inject(0.0) { |sum, li| sum + li.amount }
     end
 
-    # Sum of all line item amounts pre-tax
     def pre_tax_item_amount
       line_items.to_a.sum(&:pre_tax_amount)
     end
@@ -163,26 +155,17 @@ module Spree
       completed_at.present?
     end
 
-    # Indicates whether or not the user is allowed to proceed to checkout.
-    # Currently this is implemented as a check for whether or not there is at
-    # least one LineItem in the Order.  Feel free to override this logic in your
-    # own application if you require additional steps before allowing a checkout.
     def checkout_allowed?
       line_items.count > 0
     end
 
-    # Is this a free order in which case the payment step should be skipped
     def payment_required?
       total.to_f > 0.0
     end
 
-    # If true, causes the confirmation step to happen during the checkout process
     def confirmation_required?
       Spree::Config[:always_include_confirm_step] ||
         payments.valid.map(&:payment_method).compact.any?(&:payment_profiles_supported?) ||
-        # Little hacky fix for #4117
-        # If this wasn't here, order would transition to address state on confirm failure
-        # because there would be no valid payments any more.
         state == 'confirm'
     end
 
@@ -190,13 +173,10 @@ module Spree
       shipments.any?(&:backordered?)
     end
 
-    # Returns the relevant zone (if any) to be used for taxation purposes.
-    # Uses default tax zone unless there is a specific match
     def tax_zone
       @tax_zone ||= Zone.match(tax_address) || Zone.default_tax
     end
 
-    # Returns the address for taxation based on configuration
     def tax_address
       Spree::Config[:tax_using_ship_address] ? ship_address : bill_address
     end
@@ -235,7 +215,6 @@ module Spree
       @contents ||= Spree::OrderContents.new(self)
     end
 
-    # Associates the specified user with the order.
     def associate_user!(user, override_email = true)
       self.user           = user
       self.email          = user.email if override_email
@@ -245,8 +224,6 @@ module Spree
 
       changes = slice(:user_id, :email, :created_by_id, :bill_address_id, :ship_address_id)
 
-      # immediately persist the changes we just made, but don't use save
-      # since we might have an invalid address associated
       self.class.unscoped.where(id: self).update_all(changes)
     end
 
@@ -262,26 +239,15 @@ module Spree
                   }
     end
 
-    # This method enables extensions to participate in the
-    # "Are these line items equal" decision.
-    #
-    # When adding to cart, an extension would send something like:
-    # params[:product_customizations]={...}
-    #
-    # and would provide:
-    #
-    # def product_customizations_match
     def line_item_options_match(line_item, options)
       return true unless options
 
       self.line_item_comparison_hooks.all? { |hook|
-        #nodyna <ID:send-108> <SD COMPLEX (array)>
+        #nodyna <send-2520> <SD COMPLEX (array)>
         self.send(hook, line_item, options)
       }
     end
 
-    # Creates new tax charges if there are any applicable rates. If prices already
-    # include taxes then price adjustments are created instead.
     def create_tax_charge!
       Spree::TaxRate.adjust(self, line_items)
       Spree::TaxRate.adjust(self, shipments) if shipments.any?
@@ -294,8 +260,6 @@ module Spree
         reimbursed = reimbursements.includes(:refunds).inject(0) do |sum, reimbursement|
           sum + reimbursement.refunds.sum(:amount)
         end
-        # If reimbursement has happened add it back to total to prevent balance_due payment state
-        # See: https://github.com/spree/spree/issues/6229
         total - (payment_total + reimbursed)
       else
         total - payment_total
@@ -326,13 +290,9 @@ module Spree
       CreditCard.where(id: credit_card_ids)
     end
 
-    # Finalizes an in progress order after checkout is complete.
-    # Called after transition to complete state when payments will have been processed
     def finalize!
-      # lock all adjustments (coupon promotions, etc.)
       all_adjustments.each{|a| a.close}
 
-      # update payment and shipment(s) states, and save
       updater.update_payment_state
       shipments.each do |shipment|
         shipment.update!(self)
@@ -361,7 +321,6 @@ module Spree
       update_column(:confirmation_delivered, true)
     end
 
-    # Helper methods for checkout steps
     def paid?
       payment_state == 'paid' || payment_state == 'credit_owed'
     end
@@ -382,9 +341,6 @@ module Spree
       line_items.select(&:insufficient_stock?)
     end
 
-    ##
-    # Check to see if any line item variants are soft deleted.
-    # If so add error and restart checkout.
     def ensure_line_item_variants_are_not_deleted
       if line_items.any?{ |li| !li.variant || li.variant.paranoia_destroyed? }
         errors.add(:base, Spree.t(:deleted_variants_present))
@@ -423,9 +379,9 @@ module Spree
     def state_changed(name)
       state = "#{name}_state"
       if persisted?
-        #nodyna <ID:send-109> <SD MODERATE (change-prone variables)>
+        #nodyna <send-2521> <SD MODERATE (change-prone variables)>
         old_state = self.send("#{state}_was")
-        #nodyna <ID:send-110> <SD MODERATE (change-prone variables)>
+        #nodyna <send-2522> <SD MODERATE (change-prone variables)>
         new_state = self.send(state)
         unless old_state == new_state
           self.state_changes.create(
@@ -464,11 +420,6 @@ module Spree
       persist_totals
     end
 
-    # Clean shipments and make order back to address state
-    #
-    # At some point the might need to force the order to transition from address
-    # to delivery again so that proper updated shipments are created.
-    # e.g. customer goes back from payment step and changes order items
     def ensure_updated_shipments
       if shipments.any? && !self.completed?
         self.shipments.destroy_all
@@ -563,11 +514,6 @@ module Spree
         payments.offset_payment.exists? # how old versions of spree stored refunds
     end
 
-    # determines whether the inventory is fully discounted
-    #
-    # Returns
-    # - true if inventory amount is the exact negative of inventory related adjustments
-    # - false otherwise
     def fully_discounted?
       adjustment_total + line_items.map(&:final_amount).sum == 0.0
     end
@@ -579,7 +525,6 @@ module Spree
       self.email = user.email if self.user
     end
 
-    # Determine if email is required (we don't want validation errors before we hit the checkout)
     def require_email
       true unless new_record? or ['cart', 'address'].include?(state)
     end
@@ -594,13 +539,10 @@ module Spree
       return unless has_step?("delivery")
       return unless has_step?(:address) && address?
       return unless ship_address && ship_address.valid?
-      # errors.add(:base, :no_shipping_methods_available) if available_shipping_methods.empty?
     end
 
     def ensure_available_shipping_rates
       if shipments.empty? || shipments.any? { |shipment| shipment.shipping_rates.blank? }
-        # After this point, order redirects back to 'address' state and asks user to pick a proper address
-        # Therefore, shipments are not necessary at this point.
         shipments.destroy_all
         errors.add(:base, Spree.t(:items_cannot_be_shipped)) and return false
       end

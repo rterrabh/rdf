@@ -3,8 +3,6 @@ module ActiveAdmin
 
     module Menu
 
-      # Set the menu options.
-      # To disable this menu item, call `menu(false)` from the DSL
       def menu_item_options=(options)
         if options == false
           @include_in_menu   = false
@@ -20,7 +18,6 @@ module ActiveAdmin
       end
 
       def default_menu_options
-        # These local variables are accessible to the procs.
         menu_resource_class = respond_to?(:resource_class) ? resource_class : self
         resource = self
         {
@@ -36,7 +33,7 @@ module ActiveAdmin
       def navigation_menu_name
         case @navigation_menu_name ||= DEFAULT_MENU
         when Proc
-          #nodyna <ID:instance_exec-14> <IEX COMPLEX (block without parameters)>
+          #nodyna <instance_exec-109> <IEX COMPLEX (block without parameters)>
           controller.instance_exec(&@navigation_menu_name).to_sym
         else
           @navigation_menu_name
@@ -55,7 +52,6 @@ module ActiveAdmin
 
       attr_reader :menu_item
 
-      # Should this resource be added to the menu system?
       def include_in_menu?
         @include_in_menu != false
       end

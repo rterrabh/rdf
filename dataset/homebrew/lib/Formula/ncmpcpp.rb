@@ -54,7 +54,6 @@ class Ncmpcpp < Formula
     args << "--enable-clock" if build.include? "clock"
 
     if build.head?
-      # Also runs configure
       system "./autogen.sh", *args
     else
       system "./configure", *args

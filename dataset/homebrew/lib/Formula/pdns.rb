@@ -30,25 +30,21 @@ class Pdns < Formula
   depends_on :postgresql if build.with? "pgsql"
 
   def install
-    # https://github.com/Homebrew/homebrew/pull/33739
     ENV.deparallelize
 
     args = ["--prefix=#{prefix}",
             "--with-lua",
             "--with-sqlite3"]
 
-    # Include the PostgreSQL backend if requested
     if build.with? "pgsql"
       args << "--with-modules=gsqlite3 gpgsql"
     else
-      # SQLite3 backend only is the default
       args << "--with-modules=gsqlite3"
     end
 
     system "./bootstrap" if build.head?
     system "./configure", *args
 
-    # Compilation fails at polarssl if we skip straight to make install
     system "make"
     system "make", "install"
   end

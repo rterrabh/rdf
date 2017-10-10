@@ -1,18 +1,3 @@
-# == Schema Information
-#
-# Table name: events
-#
-#  id          :integer          not null, primary key
-#  target_type :string(255)
-#  target_id   :integer
-#  title       :string(255)
-#  data        :text
-#  project_id  :integer
-#  created_at  :datetime
-#  updated_at  :datetime
-#  action      :integer
-#  author_id   :integer
-#
 
 class Event < ActiveRecord::Base
   include Sortable
@@ -37,13 +22,10 @@ class Event < ActiveRecord::Base
   belongs_to :project
   belongs_to :target, polymorphic: true
 
-  # For Hash only
   serialize :data
 
-  # Callbacks
   after_create :reset_project_activity
 
-  # Scopes
   scope :recent, -> { order(created_at: :desc) }
   scope :code_push, -> { where(action: PUSHED) }
   scope :in_projects, ->(project_ids) { where(project_id: project_ids).recent }
@@ -243,7 +225,6 @@ class Event < ActiveRecord::Base
     @tag_name ||= Gitlab::Git.ref_name(data[:ref])
   end
 
-  # Max 20 commits from push DESC
   def commits
     @commits ||= (data[:commits] || []).reverse
   end

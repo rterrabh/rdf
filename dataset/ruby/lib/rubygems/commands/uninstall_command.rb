@@ -3,10 +3,6 @@ require 'rubygems/version_option'
 require 'rubygems/uninstaller'
 require 'fileutils'
 
-##
-# Gem uninstaller command line tool
-#
-# See `gem help uninstall`
 
 class Gem::Commands::UninstallCommand < Gem::Command
 

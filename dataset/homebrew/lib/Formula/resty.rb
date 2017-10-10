@@ -6,7 +6,6 @@ class Resty < Formula
 
   head "https://github.com/micha/resty.git"
 
-  # Don't take +x off these files
   skip_clean "bin"
 
   def install

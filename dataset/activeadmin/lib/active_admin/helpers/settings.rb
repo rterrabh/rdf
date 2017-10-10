@@ -1,20 +1,5 @@
 module ActiveAdmin
 
-  # Adds a class method to a class to create settings with default values.
-  #
-  # Example:
-  #
-  #   class Configuration
-  #     include ActiveAdmin::Settings
-  #
-  #     setting :site_title, "Default Site Title"
-  #   end
-  #
-  #   conf = Configuration.new
-  #   conf.site_title #=> "Default Site Title"
-  #   conf.site_title = "Override Default"
-  #   conf.site_title #=> "Override Default"
-  #
   module Settings
 
     def self.included(base)
@@ -37,19 +22,19 @@ module ActiveAdmin
         default_settings[name] = default
         attr_writer name
 
-        # Create an accessor that looks up the default value if none is set.
-        #nodyna <ID:define_method-10> <DM COMPLEX (events)>
+        #nodyna <define_method-86> <DM COMPLEX (events)>
         define_method name do
           if instance_variable_defined? "@#{name}"
+            #nodyna <instance_variable_get-87> <not yet classified>
             instance_variable_get "@#{name}"
           else
             read_default_setting name.to_sym
           end
         end
 
-        #nodyna <ID:define_method-11> <DM COMPLEX (events)>
+        #nodyna <define_method-88> <DM COMPLEX (events)>
         define_method "#{name}?" do
-          #nodyna <ID:send-53> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-89> <SD COMPLEX (change-prone variables)>
           value = public_send(name)
           if value.is_a? Array
             value.any?
@@ -74,20 +59,6 @@ module ActiveAdmin
     end
 
 
-    # Allows you to define child classes that should receive the same
-    # settings, as well as the same default values.
-    #
-    # Example from the codebase:
-    #
-    #   class Application
-    #     include Settings
-    #     include Settings::Inheritance
-    #
-    #     settings_inherited_by :Namespace
-    #
-    #     inheritable_setting :root_to, 'dashboard#index'
-    #   end
-    #
     module Inheritance
 
       def self.included(base)
@@ -98,7 +69,7 @@ module ActiveAdmin
 
         def settings_inherited_by(heir)
           (@setting_heirs ||= []) << heir
-          #nodyna <ID:send-54> <SD TRIVIAL (public methods)>
+          #nodyna <send-90> <SD TRIVIAL (public methods)>
           heir.send :include, ActiveAdmin::Settings
         end
 

@@ -12,8 +12,6 @@ class Fits < Formula
     sha256 "be677363eb1d07b255dd6d931b372411011576d97269f75c52dbb72a716ea919" => :mountain_lion
   end
 
-  # provided jars may not be compatible with installed java,
-  # but works when built from source
   depends_on "ant" => :build
   depends_on :java => "1.7+"
 
@@ -29,8 +27,6 @@ class Fits < Formula
     prefix.install Dir["*.txt"]
     libexec.install Dir["lib/*"]
 
-    # fits-env.sh is a helper script that sets up environment
-    # variables, so we want to tuck this away in libexec
     libexec.install "fits-env.sh"
     inreplace %w[fits.sh fits-ngserver.sh],
       '"$(dirname $BASH_SOURCE)/fits-env.sh"', "'#{libexec}/fits-env.sh'"

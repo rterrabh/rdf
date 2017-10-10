@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/dragdrop.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/itemconfig'
@@ -28,7 +24,6 @@ module Tk::BLT
       end
     end
 
-    ###################################
 
     extend TkItemConfigMethod
     extend Tk::ValidateConfigure
@@ -45,6 +40,7 @@ module Tk::BLT
       private :__item_boolval_optkeys
 
       def __item_listval_optkeys(id)
+        #nodyna <send-1552> <not yet classified>
         super(id) << 'send'
       end
       private :__item_listval_optkeys
@@ -83,7 +79,6 @@ module Tk::BLT
         ]
 
 =begin
-        # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
         KEY_TBL.map!{|inf|
           if inf.kind_of?(Array)
             inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -127,7 +122,6 @@ module Tk::BLT
         ]
 
 =begin
-        # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
         KEY_TBL.map!{|inf|
           if inf.kind_of?(Array)
             inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -165,7 +159,6 @@ module Tk::BLT
       Tk::ValidateConfigure.__def_validcmd(binding, SiteCommand)
     end
 
-    ###################################
 
     class DnD_Handle < TkUtil::CallbackSubst
       KEY_TBL = [
@@ -183,7 +176,6 @@ module Tk::BLT
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -215,7 +207,6 @@ module Tk::BLT
                             cmd, *args)
     end
 
-    ###################################
 
     def self.init_source(win)
       tk_call('::blt::drag&drop', 'source', win)

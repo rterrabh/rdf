@@ -6,7 +6,6 @@ require 'action_view'
 require 'rails-dom-testing'
 
 module ActionView
-  # = Action View Test Case
   class TestCase < ActiveSupport::TestCase
     class TestController < ActionController::Base
       include ActionDispatch::TestProcess
@@ -69,10 +68,11 @@ module ActionView
         end
 
         def helper_method(*methods)
-          # Almost a duplicate from ActionController::Helpers
           methods.flatten.each do |method|
+            #nodyna <module_eval-1201> <not yet classified>
             _helpers.module_eval <<-end_eval
               def #{method}(*args, &block)                    # def current_user(*args, &block)
+                #nodyna <send-1202> <not yet classified>
                 _test_case.send(%(#{method}), *args, &block)  #   _test_case.send(%(current_user), *args, &block)
               end                                             # end
             end_eval
@@ -102,8 +102,6 @@ module ActionView
       def setup_with_controller
         @controller = ActionView::TestCase::TestController.new
         @request = @controller.request
-        # empty string ensures buffer has UTF-8 encoding as
-        # new without arguments returns ASCII-8BIT encoded buffer like String#new
         @output_buffer = ActiveSupport::SafeBuffer.new ''
         @rendered = ''
 
@@ -125,7 +123,6 @@ module ActionView
         @_rendered_views ||= RenderedViewsCollection.new
       end
 
-      # Need to experiment if this priority is the best one: rendered => output_buffer
       class RenderedViewsCollection
         def initialize
           @rendered_views ||= Hash.new { |hash, key| hash[key] = [] }
@@ -157,12 +154,12 @@ module ActionView
 
     private
 
-      # Need to experiment if this priority is the best one: rendered => output_buffer
       def document_root_element
         Nokogiri::HTML::Document.parse(@rendered.blank? ? @output_buffer : @rendered).root
       end
 
       def say_no_to_protect_against_forgery!
+        #nodyna <module_eval-1203> <not yet classified>
         _helpers.module_eval do
           remove_possible_method :protect_against_forgery?
           def protect_against_forgery?
@@ -173,9 +170,10 @@ module ActionView
 
       def make_test_case_available_to_view!
         test_case_instance = self
+        #nodyna <module_eval-1204> <not yet classified>
         _helpers.module_eval do
           unless private_method_defined?(:_test_case)
-            #nodyna <ID:define_method-3> <DM MODERATE (events)>
+            #nodyna <define_method-1205> <DM MODERATE (events)>
             define_method(:_test_case) { test_case_instance }
             private :_test_case
           end
@@ -201,11 +199,10 @@ module ActionView
         end
       end
 
-      # The instance of ActionView::Base that is used by +render+.
       def view
         @view ||= begin
           view = @controller.view_context
-          #nodyna <ID:send-43> <SD TRIVIAL (public methods)>
+          #nodyna <send-1206> <SD TRIVIAL (public methods)>
           view.singleton_class.send :include, _helpers
           view.extend(Locals)
           view.rendered_views = self.rendered_views
@@ -251,12 +248,9 @@ module ActionView
         instance_variables - INTERNAL_IVARS
       end
 
-      # Returns a Hash of instance variables and their values, as defined by
-      # the user in the test case, which are then assigned to the view being
-      # rendered. This is generally intended for internal use and extension
-      # frameworks.
       def view_assigns
         Hash[_user_defined_ivars.map do |ivar|
+          #nodyna <instance_variable_get-1207> <not yet classified>
           [ivar[1..-1].to_sym, instance_variable_get(ivar)]
         end]
       end

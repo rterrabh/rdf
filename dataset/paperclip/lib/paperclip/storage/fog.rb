@@ -1,38 +1,5 @@
 module Paperclip
   module Storage
-    # fog is a modern and versatile cloud computing library for Ruby.
-    # Among others, it supports Amazon S3 to store your files. In
-    # contrast to the outdated AWS-S3 gem it is actively maintained and
-    # supports multiple locations.
-    # Amazon's S3 file hosting service is a scalable, easy place to
-    # store files for distribution. You can find out more about it at
-    # http://aws.amazon.com/s3 There are a few fog-specific options for
-    # has_attached_file, which will be explained using S3 as an example:
-    # * +fog_credentials+: Takes a Hash with your credentials. For S3,
-    #   you can use the following format:
-    #     aws_access_key_id: '<your aws_access_key_id>'
-    #     aws_secret_access_key: '<your aws_secret_access_key>'
-    #     provider: 'AWS'
-    #     region: 'eu-west-1'
-    #     scheme: 'https'
-    # * +fog_directory+: This is the name of the S3 bucket that will
-    #   store your files.  Remember that the bucket must be unique across
-    #   all of Amazon S3. If the bucket does not exist, Paperclip will
-    #   attempt to create it.
-    # * +fog_file*: This can be hash or lambda returning hash. The
-    #   value is used as base properties for new uploaded file.
-    # * +path+: This is the key under the bucket in which the file will
-    #   be stored. The URL will be constructed from the bucket and the
-    #   path. This is what you will want to interpolate. Keys should be
-    #   unique, like filenames, and despite the fact that S3 (strictly
-    #   speaking) does not support directories, you can still use a / to
-    #   separate parts of your file name.
-    # * +fog_public+: (optional, defaults to true) Should the uploaded
-    #   files be public or not? (true/false)
-    # * +fog_host+: (optional) The fully-qualified domain name (FQDN)
-    #   that is the alias to the S3 domain of your bucket, e.g.
-    #   'http://images.example.com'. This can also be used in
-    #   conjunction with Cloudfront (http://aws.amazon.com/cloudfront)
 
     module Fog
       def self.extended base
@@ -43,7 +10,7 @@ module Paperclip
           raise e
         end unless defined?(Fog)
 
-        #nodyna <ID:instance_eval-1> <IEV COMPLEX (private access)>
+        #nodyna <instance_eval-692> <IEV COMPLEX (private access)>
         base.instance_eval do
           unless @options[:url].to_s.match(/\A:fog.*url\Z/)
             @options[:path]  = @options[:path].gsub(/:url/, @options[:url]).gsub(/\A:rails_root\/public\/system\//, '')
@@ -144,7 +111,7 @@ module Paperclip
         time = convert_time(time)
         http_url_method = "get_#{scheme}_url"
         if path(style_name) && directory.files.respond_to?(http_url_method)
-          #nodyna <ID:send-1> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-693> <SD COMPLEX (change-prone variables)>
           expiring_url = directory.files.public_send(http_url_method, path(style_name), time)
 
           if @options[:fog_host]

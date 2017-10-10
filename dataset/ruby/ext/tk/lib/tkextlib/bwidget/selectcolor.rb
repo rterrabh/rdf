@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/selectcolor.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/bwidget.rb'

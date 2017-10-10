@@ -11,7 +11,6 @@ class UtilTests < Homebrew::TestCase
   end
 
   def test_put_columns_empty
-    # Issue #217 put columns with new results fails.
     assert_silent { puts_columns [] }
   end
 
@@ -30,14 +29,10 @@ class UtilTests < Homebrew::TestCase
   end
 
   def test_which_skip_malformed_path
-    # 'which' should not fail if a path is malformed
-    # see https://github.com/Homebrew/homebrew/issues/32789 for an example
     cmd = @dir/"foo"
     FileUtils.touch cmd
     cmd.chmod 0744
 
-    # ~~ will fail because ~foo resolves to foo's home and there is no '~' user
-    # here
     assert_equal Pathname.new(cmd),
       which(File.basename(cmd), "~~#{File::PATH_SEPARATOR}#{File.dirname(cmd)}")
   end

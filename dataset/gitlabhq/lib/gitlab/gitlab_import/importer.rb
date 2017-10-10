@@ -12,7 +12,6 @@ module Gitlab
       def execute
         project_identifier = URI.encode(project.import_source, '/')
 
-        #Issues && Comments
         issues = client.issues(project_identifier)
         
         issues.each do |issue|

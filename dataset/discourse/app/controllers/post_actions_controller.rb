@@ -20,7 +20,6 @@ class PostActionsController < ApplicationController
     if post_action.blank? || post_action.errors.present?
       render_json_error(post_action)
     else
-      # We need to reload or otherwise we are showing the old values on the front end
       @post.reload
       render_post_json(@post, _add_raw = false)
     end
@@ -76,7 +75,6 @@ class PostActionsController < ApplicationController
 
       finder = Post.where(id: post_id)
 
-      # Include deleted posts if the user is a staff
       finder = finder.with_deleted if guardian.is_staff?
 
       @post = finder.first

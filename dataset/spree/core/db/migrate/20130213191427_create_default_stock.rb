@@ -12,10 +12,8 @@ class CreateDefaultStock < ActiveRecord::Migration
 
     Spree::Variant.find_each do |variant|
       stock_item = Spree::StockItem.unscoped.build(stock_location: location, variant: variant)
-      #nodyna <ID:send-21> <SD TRIVIAL (public methods)>
+      #nodyna <send-2546> <SD TRIVIAL (public methods)>
       stock_item.send(:count_on_hand=, variant.count_on_hand)
-      # Avoid running default_scope defined by acts_as_paranoid, related to #3805,
-      # validations would run a query with a delete_at column that might not be present yet
       stock_item.save! validate: false
     end
 

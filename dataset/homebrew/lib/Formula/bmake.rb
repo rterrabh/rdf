@@ -12,11 +12,9 @@ class Bmake < Formula
   end
 
   def install
-    # The first, an oversight upstream; the second, don't pre-roff cat pages.
     inreplace "bmake.1", ".Dt MAKE", ".Dt BMAKE"
     inreplace "mk/man.mk", "MANTARGET?", "MANTARGET"
 
-    # -DWITHOUT_PROG_LINK means "don't symlink as bmake-VERSION."
     args = ["--prefix=#{prefix}", "-DWITHOUT_PROG_LINK", "--install"]
 
     system "sh", "boot-strap", *args

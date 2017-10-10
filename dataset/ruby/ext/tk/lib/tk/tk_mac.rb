@@ -1,10 +1,3 @@
-#
-# tk/tk_mac.rb : Access Mac-Specific functionality on OS X from Tk
-#                (supported by Tk8.6 or later)
-#
-#     ATTENTION !!
-#         This is NOT TESTED. Because I have no test-environment.
-#
 require 'tk'
 
 module Tk
@@ -15,7 +8,6 @@ end
 module Tk::Mac
   extend TkCore
 
-  # event handler callbacks
   def self.def_ShowPreferences(cmd=Proc.new)
     ip_eval("proc ::tk::mac::ShowPreferences {} { #{install_cmd(cmd)} }")
     nil
@@ -32,13 +24,13 @@ module Tk::Mac
   end
 
   def self.def_OpenDocument(cmd=Proc.new)
-    #nodyna <ID:eval-54> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1770> <EV COMPLEX (change-prone variables)>
     ip_eval("proc ::tk::mac::OpenDocument {args} { eval #{install_cmd(cmd)} $args }")
     nil
   end
 
   def self.def_PrintDocument(cmd=Proc.new)
-    #nodyna <ID:eval-55> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1771> <EV COMPLEX (change-prone variables)>
     ip_eval("proc ::tk::mac::PrintDocument {args} { eval #{install_cmd(cmd)} $args }")
     nil
   end
@@ -64,14 +56,12 @@ module Tk::Mac
   end
 
 
-  # additional dialogs
   def self.standardAboutPanel
     tk_call('::tk::mac::standardAboutPanel')
     nil
   end
 
 
-  # system configuration
   def self.useCompatibilityMetrics(mode)
     tk_call('::tk::mac::useCompatibilityMetrics', mode)
     nil
@@ -120,7 +110,7 @@ class Tk::Mac::IconBitmap < TkImage
             keys = _symbolkey2str(keys)
             keys.delete('imagename')
             keys.delete('without_creating')
-            #nodyna <ID:instance_eval-54> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1772> <IEV MODERATE (private access)>
             obj.instance_eval{
               tk_call_without_enc('::tk::mac::iconBitmap',
                                   @path, width, height, *hash_kv(keys, true))
@@ -130,7 +120,7 @@ class Tk::Mac::IconBitmap < TkImage
         end
       end
     end
-    #nodyna <ID:instance_eval-55> <IEV MODERATE (private access)>
+    #nodyna <instance_eval-1773> <IEV MODERATE (private access)>
     (obj = self.allocate).instance_eval{
       Tk_IMGTBL.mutex.synchronize{
         initialize(width, height, keys)

@@ -61,7 +61,7 @@ class Admin::EmailController < Admin::AdminController
   end
 
   def action_mailer_settings
-    #nodyna <ID:send-89> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-447> <SD COMPLEX (change-prone variables)>
     ActionMailer::Base.public_send "#{delivery_method}_settings"
   end
 end

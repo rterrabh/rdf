@@ -27,7 +27,6 @@ class Snappy < Formula
     ENV.j1 if build.stable?
 
     if build.head?
-      # https://github.com/google/snappy/pull/4
       inreplace "autogen.sh", "libtoolize", "glibtoolize"
       system "./autogen.sh"
     end
@@ -38,9 +37,6 @@ class Snappy < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <assert.h>
-      #include <snappy.h>
-      #include <string>
       using namespace std;
       using namespace snappy;
 

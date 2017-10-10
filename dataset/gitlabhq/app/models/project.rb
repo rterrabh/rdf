@@ -1,34 +1,3 @@
-# == Schema Information
-#
-# Table name: projects
-#
-#  id                     :integer          not null, primary key
-#  name                   :string(255)
-#  path                   :string(255)
-#  description            :text
-#  created_at             :datetime
-#  updated_at             :datetime
-#  creator_id             :integer
-#  issues_enabled         :boolean          default(TRUE), not null
-#  wall_enabled           :boolean          default(TRUE), not null
-#  merge_requests_enabled :boolean          default(TRUE), not null
-#  wiki_enabled           :boolean          default(TRUE), not null
-#  namespace_id           :integer
-#  issues_tracker         :string(255)      default("gitlab"), not null
-#  issues_tracker_id      :string(255)
-#  snippets_enabled       :boolean          default(TRUE), not null
-#  last_activity_at       :datetime
-#  import_url             :string(255)
-#  visibility_level       :integer          default(0), not null
-#  archived               :boolean          default(FALSE), not null
-#  avatar                 :string(255)
-#  import_status          :string(255)
-#  repository_size        :float            default(0.0)
-#  star_count             :integer          default(0), not null
-#  import_type            :string(255)
-#  import_source          :string(255)
-#  commit_count           :integer          default(0)
-#
 
 require 'carrierwave/orm/activerecord'
 require 'file_size_validator'
@@ -51,7 +20,6 @@ class Project < ActiveRecord::Base
   default_value_for :wall_enabled, false
   default_value_for :snippets_enabled, gitlab_config_features.snippets
 
-  # set last_activity_at to the same as created_at
   after_create :set_last_activity_at
   def set_last_activity_at
     update_column(:last_activity_at, self.created_at)
@@ -62,14 +30,12 @@ class Project < ActiveRecord::Base
 
   attr_accessor :new_default_branch
 
-  # Relations
   belongs_to :creator, foreign_key: 'creator_id', class_name: 'User'
   belongs_to :group, -> { where(type: Group) }, foreign_key: 'namespace_id'
   belongs_to :namespace
 
   has_one :last_event, -> {order 'events.created_at DESC'}, class_name: 'Event', foreign_key: 'project_id'
 
-  # Project services
   has_many :services
   has_one :gitlab_ci_service, dependent: :destroy
   has_one :campfire_service, dependent: :destroy
@@ -95,9 +61,7 @@ class Project < ActiveRecord::Base
   has_one :forked_project_link, dependent: :destroy, foreign_key: "forked_to_project_id"
 
   has_one :forked_from_project, through: :forked_project_link
-  # Merge Requests for target project should be removed with it
   has_many :merge_requests,     dependent: :destroy, foreign_key: 'target_project_id'
-  # Merge requests from source project should be kept when source project was removed
   has_many :fork_merge_requests, foreign_key: 'source_project_id', class_name: MergeRequest
   has_many :issues,             dependent: :destroy
   has_many :labels,             dependent: :destroy
@@ -120,7 +84,6 @@ class Project < ActiveRecord::Base
   delegate :name, to: :owner, allow_nil: true, prefix: true
   delegate :members, to: :team, prefix: true
 
-  # Validations
   validates :creator, presence: true, on: :create
   validates :description, length: { maximum: 2000 }, allow_blank: true
   validates :name,
@@ -150,7 +113,6 @@ class Project < ActiveRecord::Base
 
   mount_uploader :avatar, AvatarUploader
 
-  # Scopes
   scope :sorted_by_activity, -> { reorder(last_activity_at: :desc) }
   scope :sorted_by_stars, -> { reorder('projects.star_count DESC') }
   scope :sorted_by_names, -> { joins(:namespace).reorder('namespaces.name ASC, projects.name ASC') }
@@ -385,14 +347,11 @@ class Project < ActiveRecord::Base
     Service.available_services_names.each do |service_name|
       service = find_service(services, service_name)
 
-      # If service is available but missing in db
       if service.nil?
-        # We should check if template for the service exists
         template = find_service(services_templates, service_name)
 
         if template.nil?
-          # If no template, we should create an instance. Ex `create_gitlab_ci_service`
-          #nodyna <ID:send-95> <SD MODERATE (change-prone variables)>
+          #nodyna <send-509> <SD MODERATE (change-prone variables)>
           service = self.send :"create_#{service_name}_service"
         else
           Service.create_from_template(self.id, template)
@@ -438,7 +397,6 @@ class Project < ActiveRecord::Base
     end
   end
 
-  # For compatibility with old code
   def code
     path
   end
@@ -469,7 +427,6 @@ class Project < ActiveRecord::Base
     project_members.where(user: user) if user
   end
 
-  # Get Team Member record by user id
   def project_member_by_id(user_id)
     project_members.find_by(user_id: user_id)
   end
@@ -493,15 +450,14 @@ class Project < ActiveRecord::Base
   end
 
   def execute_hooks(data, hooks_scope = :push_hooks)
-    #nodyna <ID:send-97> <SD MODERATE (change-prone variables)>
+    #nodyna <send-510> <SD MODERATE (change-prone variables)>
     hooks.send(hooks_scope).each do |hook|
       hook.async_execute(data, hooks_scope.to_s)
     end
   end
 
   def execute_services(data, hooks_scope = :push_hooks)
-    # Call only service hooks that are active for this scope
-    #nodyna <ID:send-98> <SD MODERATE (change-prone variables)>
+    #nodyna <send-511> <SD MODERATE (change-prone variables)>
     services.send(hooks_scope).each do |service|
       service.async_execute(data)
     end
@@ -577,7 +533,6 @@ class Project < ActiveRecord::Base
     "#{web_url}.git"
   end
 
-  # Check if current branch name is marked as protected in the system
   def protected_branch?(branch_name)
     protected_branches_names.include?(branch_name)
   end
@@ -600,10 +555,6 @@ class Project < ActiveRecord::Base
     new_path_with_namespace = File.join(namespace_dir, path)
 
     if gitlab_shell.mv_repository(old_path_with_namespace, new_path_with_namespace)
-      # If repository moved successfully we need to remove old satellite
-      # and send update instructions to users.
-      # However we cannot allow rollback since we moved repository
-      # So we basically we mute exceptions in next actions
       begin
         gitlab_shell.mv_repository("#{old_path_with_namespace}.wiki", "#{new_path_with_namespace}.wiki")
         gitlab_shell.rm_satellites(old_path_with_namespace)
@@ -611,13 +562,9 @@ class Project < ActiveRecord::Base
         send_move_instructions
         reset_events_cache
       rescue
-        # Returning false does not rollback after_* transaction but gives
-        # us information about failing some of tasks
         false
       end
     else
-      # if we cannot move namespace directory we should rollback
-      # db changes in order to prevent out of sync between db and fs
       raise Exception.new('repository cannot be renamed')
     end
   end
@@ -632,16 +579,6 @@ class Project < ActiveRecord::Base
     }
   end
 
-  # Reset events cache related to this project
-  #
-  # Since we do cache @event we need to reset cache in special cases:
-  # * when project was moved
-  # * when project was renamed
-  # * when the project avatar changes
-  # Events cache stored like  events/23-20130109142513.
-  # The cache key includes updated_at timestamp.
-  # Thus it will automatically generate a new fragment
-  # when the event is updated because the key changes.
   def reset_events_cache
     Event.where(project_id: self.id).
       order('id DESC').limit(100).

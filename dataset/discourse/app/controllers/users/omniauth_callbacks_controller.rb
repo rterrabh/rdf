@@ -1,4 +1,3 @@
-# -*- encoding : utf-8 -*-
 require_dependency 'email'
 require_dependency 'enum'
 require_dependency 'user_name_suggester'
@@ -21,11 +20,8 @@ class Users::OmniauthCallbacksController < ApplicationController
     @types ||= Enum.new(:facebook, :twitter, :google, :yahoo, :github, :persona, :cas)
   end
 
-  # need to be able to call this
   skip_before_filter :check_xhr
 
-  # this is the only spot where we allow CSRF, our openid / oauth redirect
-  # will not have a CSRF token, however the payload is all validated so its safe
   skip_before_filter :verify_authenticity_token, only: :complete
 
   def complete
@@ -58,7 +54,7 @@ class Users::OmniauthCallbacksController < ApplicationController
   def self.find_authenticator(name)
     BUILTIN_AUTH.each do |authenticator|
       if authenticator.name == name
-        #nodyna <ID:send-71> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-455> <SD COMPLEX (change-prone variables)>
         raise Discourse::InvalidAccess.new("provider is not enabled") unless SiteSetting.send("enable_#{name}_logins?")
         return authenticator
       end
@@ -84,7 +80,6 @@ class Users::OmniauthCallbacksController < ApplicationController
   end
 
   def user_found(user)
-    # automatically activate any account if a provider marked the email valid
     if !user.active && @auth_result.email_valid
       user.toggle(:active).save
     end

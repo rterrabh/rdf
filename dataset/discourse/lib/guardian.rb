@@ -6,7 +6,6 @@ require_dependency 'guardian/user_guardian'
 require_dependency 'guardian/post_revision_guardian'
 require_dependency 'guardian/group_guardian'
 
-# The guardian is responsible for confirming access to various site resources and operations
 class Guardian
   include EnsureMagic
   include CategoryGuardian
@@ -70,11 +69,10 @@ class Guardian
     )
   end
 
-  # Can the user see the object?
   def can_see?(obj)
     if obj
       see_method = method_name_for :see, obj
-      #nodyna <ID:send-42> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-249> <SD COMPLEX (change-prone variables)>
       return (see_method ? send(see_method, obj) : true)
     end
   end
@@ -82,11 +80,6 @@ class Guardian
   def can_create?(klass, parent=nil)
     return false unless authenticated? && klass
 
-    # If no parent is provided, we look for a can_create_klass?
-    # custom method.
-    #
-    # If a parent is provided, we look for a method called
-    # can_create_klass_on_parent?
     target = klass.name.underscore
     if parent.present?
       return false unless can_see?(parent)
@@ -94,18 +87,16 @@ class Guardian
     end
     create_method = :"can_create_#{target}?"
 
-    #nodyna <ID:send-43> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-250> <SD COMPLEX (change-prone variables)>
     return send(create_method, parent) if respond_to?(create_method)
 
     true
   end
 
-  # Can the user edit the obj
   def can_edit?(obj)
     can_do?(:edit, obj)
   end
 
-  # Can we delete the object
   def can_delete?(obj)
     can_do?(:delete, obj)
   end
@@ -128,22 +119,15 @@ class Guardian
 
 
 
-  # Can we impersonate this user?
   def can_impersonate?(target)
     target &&
 
-    # You must be an admin to impersonate
     is_admin? &&
 
-    # You may not impersonate other admins unless you are a dev
     (!target.admin? || is_developer?)
 
-    # Additionally, you may not impersonate yourself;
-    # but the two tests for different admin statuses
-    # make it impossible to be the same user.
   end
 
-  # Can we approve it?
   def can_approve?(target)
     is_staff? && target && not(target.approved?)
   end
@@ -185,12 +169,10 @@ class Guardian
     user && is_staff?
   end
 
-  # Support sites that have to approve users
   def can_access_forum?
     return true unless SiteSetting.must_approve_users?
     return false unless @user
 
-    # Staff can't lock themselves out of a site
     return true if is_staff?
 
     @user.approved?
@@ -247,17 +229,12 @@ class Guardian
 
   def can_send_private_message?(target)
     (target.is_a?(Group) || target.is_a?(User)) &&
-    # User is authenticated
     authenticated? &&
-    # Can't send message to yourself
     is_not_me?(target) &&
-    # Have to be a basic level at least
     @user.has_trust_level?(TrustLevel[1]) &&
-    # PMs are enabled
     (SiteSetting.enable_private_messages ||
       @user.username == SiteSetting.site_contact_username ||
       @user == Discourse.system_user) &&
-    # Can't send PMs to suspended users
     (is_staff? || target.is_a?(Group) || !target.suspended?)
   end
 
@@ -307,7 +284,7 @@ class Guardian
   def can_do?(action, obj)
     if obj && authenticated?
       action_method = method_name_for action, obj
-      #nodyna <ID:send-47> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-251> <SD COMPLEX (change-prone variables)>
       return (action_method ? send(action_method, obj) : true)
     else
       false

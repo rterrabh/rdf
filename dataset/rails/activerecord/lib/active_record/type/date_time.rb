@@ -13,7 +13,7 @@ module ActiveRecord
         zone_conversion_method = ActiveRecord::Base.default_timezone == :utc ? :getutc : :getlocal
 
         if value.respond_to?(zone_conversion_method)
-          #nodyna <ID:send-207> <SD MODERATE (change-prone variables)>
+          #nodyna <send-862> <SD MODERATE (change-prone variables)>
           value = value.send(zone_conversion_method)
         end
 
@@ -38,8 +38,6 @@ module ActiveRecord
         fast_string_to_time(string) || fallback_string_to_time(string)
       end
 
-      # '0.123456' -> 123456
-      # '1.123456' -> 123456
       def microseconds(time)
         time[:sec_fraction] ? (time[:sec_fraction] * 1_000_000).to_i : 0
       end

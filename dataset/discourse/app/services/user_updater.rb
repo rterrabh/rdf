@@ -57,7 +57,7 @@ class UserUpdater
 
     USER_ATTR.each do |attribute|
       if attributes[attribute].present?
-        #nodyna <ID:send-221> <SD MODERATE (array)>
+        #nodyna <send-458> <SD MODERATE (array)>
         user.send("#{attribute}=", attributes[attribute] == 'true')
       end
     end
@@ -84,7 +84,6 @@ class UserUpdater
     else
       MutedUser.where('user_id = ? AND muted_user_id not in (?)', user.id, desired_ids).destroy_all
 
-      # SQL is easier here than figuring out how to do the same in AR
       MutedUser.exec_sql("INSERT into muted_users(user_id, muted_user_id, created_at, updated_at)
                           SELECT :user_id, id, :now, :now
                           FROM users

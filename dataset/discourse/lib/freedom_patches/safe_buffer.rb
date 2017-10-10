@@ -1,7 +1,3 @@
-# For some reason safe buffer is getting invalid encoding in some cases
-# we work around the issue and log the problems
-#
-# The alternative is a broken website when this happens
 
 class ActiveSupport::SafeBuffer
   def concat(value, raise_encoding_err=false)

@@ -13,13 +13,11 @@ class Proj < Formula
     sha256 "6e7a4cd42928b468bf304eb656d94fcf57a9a4647e5a28d7d9a0eb215891b128" => :mountain_lion
   end
 
-  # The datum grid files are required to support datum shifting
   resource "datumgrid" do
     url "http://download.osgeo.org/proj/proj-datumgrid-1.5.zip"
     sha256 "723c4017d95d7a8abdf3bda4e18d3c15d79b00f9326d453da5fdf13f96c287db"
   end
 
-  # Vertical datum files
   resource "usa_geoid2012" do
     url "http://download.osgeo.org/proj/vdatum/usa_geoid2012.zip"
     sha256 "afe49dc2c405d19a467ec756483944a3c9148e8c1460cb7e82dc8d4a64c4c472"

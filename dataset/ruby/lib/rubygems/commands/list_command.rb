@@ -1,9 +1,6 @@
 require 'rubygems/command'
 require 'rubygems/commands/query_command'
 
-##
-# An alternate to Gem::Commands::QueryCommand that searches for gems starting
-# with the the supplied argument.
 
 class Gem::Commands::ListCommand < Gem::Commands::QueryCommand
 

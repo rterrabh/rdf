@@ -25,8 +25,6 @@ class SimpleAmqpClient < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <SimpleAmqpClient/SimpleAmqpClient.h>
-      #include <string>
       int main() {
         const std::string expected = "test body";
         AmqpClient::BasicMessage::ptr_t msg = AmqpClient::BasicMessage::Create(expected);

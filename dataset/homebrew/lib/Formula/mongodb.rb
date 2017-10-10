@@ -47,12 +47,9 @@ class Mongodb < Formula
     ENV.cxx11 if MacOS.version < :mavericks
     ENV.libcxx if build.devel?
 
-    # New Go tools have their own build script but the server scons "install" target is still
-    # responsible for installing them.
     Language::Go.stage_deps resources, buildpath/"src"
 
     cd "src/github.com/mongodb/mongo-tools" do
-      # https://github.com/Homebrew/homebrew/issues/40136
       inreplace "build.sh", '-ldflags "-X github.com/mongodb/mongo-tools/common/options.Gitspec `git rev-parse HEAD`"', ""
 
       args = %W[]

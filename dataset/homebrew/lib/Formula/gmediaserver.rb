@@ -10,8 +10,6 @@ class Gmediaserver < Formula
   depends_on "id3lib" => :optional
   depends_on "taglib" => :optional
 
-  # patching gmediaserver because sigwaitinfo is not available on
-  # mac os x snow leopard, using sigwait instead
   patch :DATA
 
   def install

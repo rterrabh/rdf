@@ -7,8 +7,6 @@ class PostTiming < ActiveRecord::Base
 
 
   def self.pretend_read(topic_id, actual_read_post_number, pretend_read_post_number)
-    # This is done in SQL cause the logic is quite tricky and we want to do this in one db hit
-    #
     exec_sql("INSERT INTO post_timings(topic_id, user_id, post_number, msecs)
               SELECT :topic_id, user_id, :pretend_read_post_number, 1
               FROM post_timings pt
@@ -39,8 +37,6 @@ class PostTiming < ActiveRecord::Base
                                   AND post_number = :post_number)",
              args)
     rescue PG::UniqueViolation
-       # concurrency is hard, we are not running serialized so this can possibly
-       # still happen, if it happens we just don't care, its an invalid record anyway
        return
     end
 
@@ -48,7 +44,6 @@ class PostTiming < ActiveRecord::Base
     UserStat.where(user_id: args[:user_id]).update_all 'posts_read_count = posts_read_count + 1'
   end
 
-  # Increases a timer if a row exists, otherwise create it
   def self.record_timing(args)
     rows = exec_sql_row_count("UPDATE post_timings
                                SET msecs = msecs + :msecs
@@ -90,7 +85,6 @@ class PostTiming < ActiveRecord::Base
     timings.each_with_index do |(post_number, time), index|
 
         join_table << "SELECT #{topic_id.to_i} topic_id, #{post_number.to_i} post_number,
-                       #{current_user.id.to_i} user_id, #{time.to_i} msecs, #{index} idx"
 
 
         highest_seen = post_number.to_i > highest_seen ?
@@ -139,18 +133,3 @@ SQL
   end
 end
 
-# == Schema Information
-#
-# Table name: post_timings
-#
-#  topic_id    :integer          not null
-#  post_number :integer          not null
-#  user_id     :integer          not null
-#  msecs       :integer          not null
-#
-# Indexes
-#
-#  index_post_timings_on_user_id  (user_id)
-#  post_timings_summary           (topic_id,post_number)
-#  post_timings_unique            (topic_id,post_number,user_id) UNIQUE
-#

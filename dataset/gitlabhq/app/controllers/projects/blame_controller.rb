@@ -1,4 +1,3 @@
-# Controller for viewing a file's blame
 class Projects::BlameController < Projects::ApplicationController
   include ExtractsPath
 

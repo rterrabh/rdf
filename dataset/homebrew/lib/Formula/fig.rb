@@ -13,8 +13,6 @@ class Fig < Formula
   depends_on :python if MacOS.version <= :snow_leopard
   depends_on "libyaml"
 
-  # It's possible that the user wants to manually install Docker and Machine,
-  # for example, they want to compile Docker manually
   depends_on "docker" => :recommended
   depends_on "docker-machine" => :recommended
 

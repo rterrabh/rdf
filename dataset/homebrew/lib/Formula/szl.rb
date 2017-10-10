@@ -20,11 +20,6 @@ class Szl < Formula
   depends_on "pcre"
   depends_on "openssl"
 
-  # 10.9 and clang fixes
-  # Include reported upstream in:
-  # https://code.google.com/p/szl/issues/detail?id=28
-  # Clang issue reported upstream in:
-  # https://code.google.com/p/szl/issues/detail?id=34
   patch :DATA
 
   def install
@@ -45,25 +40,15 @@ index 1d64521..e488321 100644
 --- a/src/utilities/random_base.cc
 +++ b/src/utilities/random_base.cc
 @@ -18,6 +18,7 @@
- #include <string>
- #include <memory.h>
- #include <assert.h>
 +#include <unistd.h>
 
- #include "public/porting.h"
- #include "public/logging.h"
 diff --git a/src/engine/code.cc b/src/engine/code.cc
 index d149f9a..75ab84b 100644
 --- a/src/engine/code.cc
 +++ b/src/engine/code.cc
 @@ -18,6 +18,7 @@
- #include <string>
- #include <errno.h>
- #include <sys/mman.h>
 +#include <unistd.h>
 
- #include "engine/globals.h"
- #include "public/logging.h"
 diff --git a/src/engine/symboltable.cc b/src/engine/symboltable.cc
 index 6d84592..71965f3 100644
 --- a/src/engine/symboltable.cc

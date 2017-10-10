@@ -6,31 +6,6 @@ end unless defined?(RDoc)
 
 require 'rdoc/task'
 
-##
-# RDoc::RI::Task creates ri data in <code>./.rdoc</code> for your project.
-#
-# It contains the following tasks:
-#
-# [ri]
-#   Build ri data
-#
-# [clobber_ri]
-#   Delete ri data files.  This target is automatically added to the main
-#   clobber target.
-#
-# [reri]
-#   Rebuild the ri data from scratch even if they are not out of date.
-#
-# Simple example:
-#
-#   require 'rdoc/ri/task'
-#
-#   RDoc::RI::Task.new do |ri|
-#     ri.main = 'README.rdoc'
-#     ri.rdoc_files.include 'README.rdoc', 'lib/**/*.rb'
-#   end
-#
-# For further configuration details see RDoc::Task.
 
 class RDoc::RI::Task < RDoc::Task
 
@@ -40,9 +15,6 @@ class RDoc::RI::Task < RDoc::Task
     :rerdoc       => :reri,
   }
 
-  ##
-  # Create an ri task with the given name. See RDoc::Task for documentation on
-  # setting names.
 
   def initialize name = DEFAULT_NAMES # :yield: self
     super
@@ -52,8 +24,6 @@ class RDoc::RI::Task < RDoc::Task
     "Remove RI data files"
   end
 
-  ##
-  # Sets default task values
 
   def defaults
     super

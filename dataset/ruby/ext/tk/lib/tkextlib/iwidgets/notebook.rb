@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/notebook.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -18,7 +14,6 @@ class Tk::Iwidgets::Notebook
   WidgetClassName = 'Notebook'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ####################################
 
   include TkItemConfigMethod
 
@@ -36,7 +31,6 @@ class Tk::Iwidgets::Notebook
     if tagOrId.kind_of?(Tk::Itk::Component)
       tagOrId.name
     else
-      #_get_eval_string(tagOrId)
       tagOrId
     end
   end
@@ -51,7 +45,6 @@ class Tk::Iwidgets::Notebook
   private :itemcget_tkstring, :itemcget, :itemcget_strict
   private :itemconfigure, :itemconfiginfo, :current_itemconfiginfo
 
-  ####################################
 
   def __boolval_optkeys
     super() << 'auto'

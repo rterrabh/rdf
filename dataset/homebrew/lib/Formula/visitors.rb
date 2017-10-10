@@ -14,7 +14,6 @@ class Visitors < Formula
   def install
     system "make"
 
-    # There is no "make install", so do it manually
     bin.install "visitors"
     man1.install "visitors.1"
   end

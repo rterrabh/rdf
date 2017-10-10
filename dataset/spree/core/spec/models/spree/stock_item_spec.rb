@@ -77,7 +77,6 @@ describe Spree::StockItem, :type => :model do
         subject.update_column(:count_on_hand, -2)
       end
 
-      # Regression test for #3755
       it "processes existing backorders, even with negative stock" do
         expect(inventory_unit).to receive(:fill_backorder)
         expect(inventory_unit_2).not_to receive(:fill_backorder)
@@ -85,7 +84,6 @@ describe Spree::StockItem, :type => :model do
         expect(subject.count_on_hand).to eq(-1)
       end
 
-      # Test for #3755
       it "does not process backorders when stock is adjusted negatively" do
         expect(inventory_unit).not_to receive(:fill_backorder)
         expect(inventory_unit_2).not_to receive(:fill_backorder)
@@ -230,7 +228,6 @@ describe Spree::StockItem, :type => :model do
     end
   end
 
-  # Regression test for #4651
   context "variant" do
     it "can be found even if the variant is deleted" do
       subject.variant.destroy
@@ -286,7 +283,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is greater than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, 3)
-                #nodyna <ID:send-38> <SD EASY (private methods)>
+                #nodyna <send-2445> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand + 3)
               end
               it_should_behave_like 'valid count_on_hand'
@@ -295,7 +292,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is smaller than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, 3)
-                #nodyna <ID:send-39> <SD EASY (private methods)>
+                #nodyna <send-2446> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand - 2)
               end
 
@@ -307,7 +304,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is greater than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, -3)
-                #nodyna <ID:send-40> <SD EASY (private methods)>
+                #nodyna <send-2447> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand + 2)
               end
               it_should_behave_like 'valid count_on_hand'
@@ -316,7 +313,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is smaller than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, 3)
-                #nodyna <ID:send-41> <SD EASY (private methods)>
+                #nodyna <send-2448> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand - 3)
               end
 
@@ -328,7 +325,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is greater than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, -3)
-                #nodyna <ID:send-42> <SD EASY (private methods)>
+                #nodyna <send-2449> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand + 6)
               end
               it_should_behave_like 'valid count_on_hand'
@@ -339,7 +336,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is greater than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, 3)
-                #nodyna <ID:send-43> <SD EASY (private methods)>
+                #nodyna <send-2450> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand - 6)
               end
               it_should_behave_like 'valid count_on_hand'
@@ -356,7 +353,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is greater than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, 3)
-                #nodyna <ID:send-44> <SD EASY (private methods)>
+                #nodyna <send-2451> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand + 3)
               end
               it_should_behave_like 'valid count_on_hand'
@@ -365,7 +362,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is smaller than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, 3)
-                #nodyna <ID:send-45> <SD EASY (private methods)>
+                #nodyna <send-2452> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand - 2)
               end
 
@@ -377,7 +374,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is greater than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, -3)
-                #nodyna <ID:send-46> <SD EASY (private methods)>
+                #nodyna <send-2453> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand + 2)
               end
               it_should_behave_like 'valid count_on_hand'
@@ -386,7 +383,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is smaller than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, -3)
-                #nodyna <ID:send-47> <SD EASY (private methods)>
+                #nodyna <send-2454> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand - 3)
               end
 
@@ -398,7 +395,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is greater than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, -3)
-                #nodyna <ID:send-48> <SD EASY (private methods)>
+                #nodyna <send-2455> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand + 6)
               end
               it_should_behave_like 'valid count_on_hand'
@@ -409,7 +406,7 @@ describe Spree::StockItem, :type => :model do
             context 'when count_on_hand is greater than count_on_hand_was' do
               before(:each) do
                 subject.update_column(:count_on_hand, 3)
-                #nodyna <ID:send-49> <SD EASY (private methods)>
+                #nodyna <send-2456> <SD EASY (private methods)>
                 subject.send(:count_on_hand=, subject.count_on_hand - 6)
               end
               it_should_behave_like 'not valid count_on_hand'

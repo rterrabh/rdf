@@ -3,10 +3,6 @@ require 'rexml/xmltokens'
 
 module REXML
   module Parsers
-    # You don't want to use this class.  Really.  Use XPath, which is a wrapper
-    # for this class.  Believe me.  You don't want to poke around in here.
-    # There is strange, dark magic at work in this code.  Beware.  Go back!  Go
-    # back while you still can!
     class XPathParser
       include XMLTokens
       LITERAL    = /^'([^']*)'|^"([^"]*)"/u
@@ -179,10 +175,6 @@ module REXML
       end
 
       private
-      #LocationPath
-      #  | RelativeLocationPath
-      #  | '/' RelativeLocationPath?
-      #  | '//' RelativeLocationPath
       def LocationPath path, parsed
         path = path.strip
         if path[0] == ?/
@@ -198,20 +190,9 @@ module REXML
         return RelativeLocationPath( path, parsed ) if path.size > 0
       end
 
-      #RelativeLocationPath
-      #  |                                                    Step
-      #    | (AXIS_NAME '::' | '@' | '')                     AxisSpecifier
-      #      NodeTest
-      #        Predicate
-      #    | '.' | '..'                                      AbbreviatedStep
-      #  |  RelativeLocationPath '/' Step
-      #  | RelativeLocationPath '//' Step
       AXIS = /^(ancestor|ancestor-or-self|attribute|child|descendant|descendant-or-self|following|following-sibling|namespace|parent|preceding|preceding-sibling|self)::/
       def RelativeLocationPath path, parsed
         while path.size > 0
-          # (axis or @ or <child::>) nodetest predicate  >
-          # OR                                          >  / Step
-          # (. or ..)                                    >
           if path[0] == ?.
             if path[1] == ?.
               parsed << :parent
@@ -226,11 +207,9 @@ module REXML
             if path[0] == ?@
               parsed << :attribute
               path = path[1..-1]
-              # Goto Nodetest
             elsif path =~ AXIS
               parsed << $1.tr('-','_').intern
               path = $'
-              # Goto Nodetest
             else
               parsed << :child
             end
@@ -262,15 +241,6 @@ module REXML
         return path
       end
 
-      # Returns a 1-1 map of the nodeset
-      # The contents of the resulting array are either:
-      #   true/false, if a positive match
-      #   String, if a name match
-      #NodeTest
-      #  | ('*' | NCNAME ':' '*' | QNAME)                NameTest
-      #  | NODE_TYPE '(' ')'                              NodeType
-      #  | PI '(' LITERAL ')'                            PI
-      #    | '[' expr ']'                                Predicate
       NCNAMETEST= /^(#{NCNAME_STR}):\*/u
       QNAME     = Namespace::NAMESPLIT
       NODE_TYPE  = /^(comment|text|node)\(\s*\)/m
@@ -313,7 +283,6 @@ module REXML
         return path
       end
 
-      # Filters the supplied nodeset on the predicate(s)
       def Predicate path, parsed
         return nil unless path[0] == ?[
         predicates = []
@@ -330,12 +299,7 @@ module REXML
         path
       end
 
-      # The following return arrays of true/false, a 1-1 mapping of the
-      # supplied nodeset, except for axe(), which returns a filtered
-      # nodeset
 
-      #| OrExpr S 'or' S AndExpr
-      #| AndExpr
       def OrExpr path, parsed
         n = []
         rest = AndExpr( path, n )
@@ -353,8 +317,6 @@ module REXML
         rest
       end
 
-      #| AndExpr S 'and' S EqualityExpr
-      #| EqualityExpr
       def AndExpr path, parsed
         n = []
         rest = EqualityExpr( path, n )
@@ -372,8 +334,6 @@ module REXML
         rest
       end
 
-      #| EqualityExpr ('=' | '!=')  RelationalExpr
-      #| RelationalExpr
       def EqualityExpr path, parsed
         n = []
         rest = RelationalExpr( path, n )
@@ -395,8 +355,6 @@ module REXML
         rest
       end
 
-      #| RelationalExpr ('<' | '>' | '<=' | '>=') AdditiveExpr
-      #| AdditiveExpr
       def RelationalExpr path, parsed
         n = []
         rest = AdditiveExpr( path, n )
@@ -420,8 +378,6 @@ module REXML
         rest
       end
 
-      #| AdditiveExpr ('+' | S '-') MultiplicativeExpr
-      #| MultiplicativeExpr
       def AdditiveExpr path, parsed
         n = []
         rest = MultiplicativeExpr( path, n )
@@ -443,8 +399,6 @@ module REXML
         rest
       end
 
-      #| MultiplicativeExpr ('*' | S ('div' | 'mod') S) UnaryExpr
-      #| UnaryExpr
       def MultiplicativeExpr path, parsed
         n = []
         rest = UnaryExpr( path, n )
@@ -468,8 +422,6 @@ module REXML
         rest
       end
 
-      #| '-' UnaryExpr
-      #| UnionExpr
       def UnaryExpr path, parsed
         path =~ /^(\-*)/
         path = $'
@@ -486,8 +438,6 @@ module REXML
         path
       end
 
-      #| UnionExpr '|' PathExpr
-      #| PathExpr
       def UnionExpr path, parsed
         n = []
         rest = PathExpr( path, n )
@@ -505,8 +455,6 @@ module REXML
         rest
       end
 
-      #| LocationPath
-      #| FilterExpr ('/' | '//') RelativeLocationPath
       def PathExpr path, parsed
         path =~ /^\s*/
         path = $'
@@ -522,8 +470,6 @@ module REXML
         return rest
       end
 
-      #| FilterExpr Predicate
-      #| PrimaryExpr
       def FilterExpr path, parsed
         n = []
         path = PrimaryExpr( path, n )
@@ -532,11 +478,6 @@ module REXML
         path
       end
 
-      #| VARIABLE_REFERENCE
-      #| '(' expr ')'
-      #| LITERAL
-      #| NUMBER
-      #| FunctionCall
       VARIABLE_REFERENCE  = /^\$(#{NAME_STR})/u
       NUMBER              = /^(\d*\.?\d+)/
       NT        = /^comment|text|processing-instruction|node$/
@@ -547,7 +488,6 @@ module REXML
           path = $'
           parsed << :variable
           parsed << varname
-          #arry << @variables[ varname ]
         when /^(\w[-\w]*)(?:\()/
           fname = $1
           tmp = $'
@@ -576,7 +516,6 @@ module REXML
         path
       end
 
-      #| FUNCTION_NAME '(' ( expr ( ',' expr )* )? ')'
       def FunctionCall rest, parsed
         path, arguments = parse_args(rest)
         argset = []
@@ -589,7 +528,6 @@ module REXML
         path
       end
 
-      # get_group( '[foo]bar' ) -> ['bar', '[foo]']
       def get_group string
         ind = 0
         depth = 0

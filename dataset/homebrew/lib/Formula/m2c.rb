@@ -11,14 +11,10 @@ class M2c < Formula
     sha256 "6db02ad1e1a355edfd1770d29952812baac666d6d2a7d3a599357f796eb7d891" => :mountain_lion
   end
 
-  # Hacks purely for this 0.7 release. Git head already fixes installation glitches.
-  # Will remove hacks on release of next version.
   def install
-    # The config for "gcc" works for clang also.
     cp "config/generic-gcc.h", "config/generic-clang.h"
     system "./configure", "+cc=#{ENV.cc}"
 
-    # Makefile is buggy!
     inreplace "Makefile", "install: all uninstall", "install: all"
     inreplace "Makefile", "mkdir", "mkdir -p"
     include.mkpath

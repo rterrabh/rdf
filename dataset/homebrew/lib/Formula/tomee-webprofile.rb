@@ -6,12 +6,10 @@ class TomeeWebprofile < Formula
   sha256 "9802fef834a3d2944fc325440e1aadbd3b00956e5ef43f5ef9eea8b91a12d230"
 
   def install
-    # Remove Windows scripts
     rm_rf Dir["bin/*.bat"]
     rm_rf Dir["bin/*.bat.original"]
     rm_rf Dir["bin/*.exe"]
 
-    # Install files
     prefix.install %w[NOTICE LICENSE RELEASE-NOTES RUNNING.txt]
     libexec.install Dir["*"]
     bin.install_symlink "#{libexec}/bin/startup.sh" => "tomee-webprofile-startup"
@@ -19,9 +17,7 @@ class TomeeWebprofile < Formula
 
   def caveats; <<-EOS.undent
     The home of Apache TomEE Web is:
-      #{opt_libexec}
     To run Apache TomEE:
-      #{opt_libexec}/bin/tomee-webprofile-startup
     EOS
   end
 

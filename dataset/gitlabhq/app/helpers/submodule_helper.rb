@@ -1,7 +1,6 @@
 module SubmoduleHelper
   include Gitlab::ShellAdapter
 
-  # links to files listing for submodule if submodule is a project on this server
   def submodule_links(submodule_item, ref = nil, repository = @repository)
     url = repository.submodule_url_for(ref, submodule_item.path)
 
@@ -43,7 +42,6 @@ module SubmoduleHelper
   end
 
   def relative_self_url?(url)
-    # (./)?(../repo.git) || (./)?(../../project/repo.git) )
     url =~ /\A((\.\/)?(\.\.\/))(?!(\.\.)|(.*\/)).*\.git\z/ || url =~ /\A((\.\/)?(\.\.\/){2})(?!(\.\.))([^\/]*)\/(?!(\.\.)|(.*\/)).*\.git\z/
   end
 
@@ -53,11 +51,6 @@ module SubmoduleHelper
   end
 
   def relative_self_links(url, commit)
-    # Map relative links to a namespace and project
-    # For example:
-    # ../bar.git -> same namespace, repo bar
-    # ../foo/bar.git -> namespace foo, repo bar
-    # ../../foo/bar/baz.git -> namespace bar, repo baz
     components = url.split('/')
     base = components.pop.gsub(/.git$/, '')
     namespace = components.pop.gsub(/^\.\.$/, '')

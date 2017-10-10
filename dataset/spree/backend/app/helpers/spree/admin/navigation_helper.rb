@@ -1,15 +1,9 @@
 module Spree
   module Admin
     module NavigationHelper
-      # Make an admin tab that coveres one or more resources supplied by symbols
-      # Option hash may follow. Valid options are
-      #   * :label to override link text, otherwise based on the first resource name (translated)
-      #   * :route to override automatically determining the default route
-      #   * :match_path as an alternative way to control when the tab is active, /products would match /admin/products, /admin/products/5/variants etc.
       def tab(*args)
         options = { label: args.first.to_s }
 
-        # Return if resource is found and user is not allowed to :admin
         return '' if klass = klass_for(options[:label]) and cannot?(:admin, klass)
 
         if args.last.is_a?(Hash)
@@ -17,7 +11,7 @@ module Spree
         end
         options[:route] ||=  "admin_#{args.first}"
 
-        #nodyna <ID:send-36> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2426> <SD COMPLEX (change-prone variables)>
         destination_url = options[:url] || spree.send("#{options[:route]}_path")
         titleized_label = Spree.t(options[:label], default: options[:label], scope: [:admin, :tab]).titleize
 
@@ -44,7 +38,6 @@ module Spree
         content_tag('li', link, class: css_classes.join(' '))
       end
 
-      # Single main menu item
       def main_menu_item text, url: nil, icon: nil
         link_to url, :'data-toggle' => "collapse", :'data-parent' => '#sidebar' do
           content_tag(:span, nil, class: "icon icon-#{icon}") +
@@ -53,7 +46,6 @@ module Spree
         end
       end
 
-      # Main menu tree menu
       def main_menu_tree text, icon: nil, sub_menu: nil, url: '#'
         content_tag :li, class: 'sidebar-menu-item' do
           main_menu_item(text, url: url, icon: icon) +
@@ -61,8 +53,6 @@ module Spree
         end
       end
 
-      # sidebar are used on order edit, product edit, user overview etc.
-      # this link is shown so a user can collapse the sidebar
       def collapse_sidebar_link
         content_tag :div, class: "collapse-sidebar" do
           link_to "javascript:;", class: "js-collapse-sidebar" do
@@ -72,10 +62,7 @@ module Spree
         end
       end
 
-      # the per_page_dropdown is used on index pages like orders, products, promotions etc.
-      # this method generates the select_tag
       def per_page_dropdown
-        # there is a config setting for admin_products_per_page, only for the orders page
         if @products && per_page_default = Spree::Config.admin_products_per_page
           per_page_options = []
           5.times do |amount|
@@ -91,14 +78,6 @@ module Spree
           { id: "js-per-page-select", class: "form-control pull-right" })
       end
 
-      # finds class for a given symbol / string
-      #
-      # Example :
-      # :products returns Spree::Product
-      # :my_products returns MyProduct if MyProduct is defined
-      # :my_products returns My::Product if My::Product is defined
-      # if cannot constantize it returns nil
-      # This will allow us to use cancan abilities on tab
       def klass_for(name)
         model_name = name.to_s
 

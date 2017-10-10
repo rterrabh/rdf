@@ -2,16 +2,12 @@ class Projects::SnippetsController < Projects::ApplicationController
   before_action :module_enabled
   before_action :snippet, only: [:show, :edit, :destroy, :update, :raw]
 
-  # Allow read any snippet
   before_action :authorize_read_project_snippet!
 
-  # Allow write(create) snippet
   before_action :authorize_create_project_snippet!, only: [:new, :create]
 
-  # Allow modify snippet
   before_action :authorize_update_project_snippet!, only: [:edit, :update]
 
-  # Allow destroy snippet
   before_action :authorize_admin_project_snippet!, only: [:destroy]
 
   respond_to :html

@@ -8,16 +8,13 @@ class Colormake < Formula
   def install
     inreplace "colormake", "colormake.pl", "#{libexec}/colormake.pl"
 
-    # Prefers symlinks than the original duplicate files
     File.unlink "colormake-short", "clmake", "clmake-short"
     File.symlink "colormake", "colormake-short"
     File.symlink "colormake", "clmake"
     File.symlink "colormake", "clmake-short"
 
-    # Adds missing clmake.1 referenced in colormake.1 itself
     File.symlink "colormake.1", "clmake.1"
 
-    # Installs auxiliary script, commands and mans
     libexec.install "colormake.pl"
     bin.install "colormake", "clmake", "colormake-short", "clmake-short"
     man1.install "colormake.1", "clmake.1"

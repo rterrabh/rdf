@@ -7,7 +7,6 @@ class Ddclient < Formula
   head "https://github.com/wimpunk/ddclient.git"
 
   def install
-    # Adjust default paths in script
     inreplace "ddclient" do |s|
       s.gsub! "/etc/ddclient", "#{etc}/ddclient"
       s.gsub! "/var/cache/ddclient", "#{var}/run/ddclient"
@@ -15,7 +14,6 @@ class Ddclient < Formula
 
     sbin.install "ddclient"
 
-    # Install sample files
     inreplace "sample-ddclient-wrapper.sh",
       "/etc/ddclient", "#{etc}/ddclient"
 
@@ -31,7 +29,6 @@ class Ddclient < Formula
       sample-etc_ddclient.conf
     ]
 
-    # Create etc & var paths
     (etc+"ddclient").mkpath
     (var+"run/ddclient").mkpath
   end
@@ -39,7 +36,6 @@ class Ddclient < Formula
   def caveats; <<-EOS.undent
     For ddclient to work, you will need to create a configuration file
     in #{etc}/ddclient, a sample configuration can be found in
-    #{opt_share}/doc/ddclient.
 
     Note: don't enable daemon mode in the configuration file; see
     additional information below.

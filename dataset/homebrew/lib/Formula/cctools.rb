@@ -6,7 +6,6 @@ class Cctools < Formula
     url "https://opensource.apple.com/tarballs/cctools/cctools-855.tar.gz"
     sha256 "751748ddf32c8ea84c175f32792721fa44424dad6acbf163f84f41e9617dbc58"
   else
-    # 806 (from Xcode 4.1) is the latest version that supports Tiger or PowerPC
     url "https://opensource.apple.com/tarballs/cctools/cctools-806.tar.gz"
     sha256 "6116c06920112c634f6df2fa8b2f171ee3b90ff2176137da5856336695a6a676"
   end
@@ -29,7 +28,6 @@ class Cctools < Formula
     option "with-llvm", "Build with LTO support"
     depends_on "llvm" => :optional
 
-    # These patches apply to cctools 855, for newer OSes
     patch :p0 do
       url "https://trac.macports.org/export/129741/trunk/dports/devel/cctools/files/cctools-829-lto.patch"
       sha256 "8ed90e0eef2a3afc810b375f9d3873d1376e16b17f603466508793647939a868"
@@ -45,13 +43,11 @@ class Cctools < Formula
       sha256 "f49162b5c5d2753cf19923ff09e90949f01379f8de5604e86c59f67441a1214c"
     end
 
-    # Fix building libtool with LTO disabled
     patch do
       url "https://gist.githubusercontent.com/mistydemeo/9fc5589d568d2fc45fb5/raw/c752d5c4567809c10b14d623b6c2d7416211b33a/libtool-no-lto.diff"
       sha256 "3b687f2b9388ac6c4acac2b7ba28d9fd07f2a16e7d2dad09aa2255d98ec1632b"
     end
 
-    # strnlen patch only needed on Snow Leopard
     if MacOS.version == :snow_leopard
       patch :p0 do
         url "https://trac.macports.org/export/129741/trunk/dports/devel/cctools/files/snowleopard-strnlen.patch"
@@ -61,7 +57,6 @@ class Cctools < Formula
   else
     depends_on "cctools-headers" => :build
 
-    # This set of patches only applies to cctools 806, for older OSes
     patch :p0 do
       url "https://trac.macports.org/export/103959/trunk/dports/devel/cctools/files/cctools-806-lto.patch"
       sha1 "f8a2059a4730119687d2ba6a5d9e7b49b66840e8"
@@ -77,7 +72,6 @@ class Cctools < Formula
       sha1 "65b8e2f7a877716fec82fcd2cd0c6c34adfdece3"
     end
 
-    # Despite the patch name this is needed on 806 too
     patch :p0 do
       url "https://trac.macports.org/export/103985/trunk/dports/devel/cctools/files/cctools-822-no-lto.patch"
       sha1 "e58ee836dde4693e90a39579c20df45f067d75a1"
@@ -114,7 +108,6 @@ class Cctools < Formula
       DSTROOT=#{prefix}
     ]
 
-    # Fixes build with gcc-4.2: https://trac.macports.org/ticket/43745
     args << "SDK=-std=gnu99"
 
     if Hardware::CPU.intel?
@@ -126,9 +119,6 @@ class Cctools < Formula
 
     system "make", "install_tools", *args
 
-    # cctools installs into a /-style prefix in the supplied DSTROOT,
-    # so need to move the files into the standard paths.
-    # Also merge the /usr and /usr/local trees.
     man.install Dir["#{prefix}/usr/local/man/*"]
     prefix.install Dir["#{prefix}/usr/local/*"]
     bin.install Dir["#{prefix}/usr/bin/*"]
@@ -137,7 +127,6 @@ class Cctools < Formula
     man3.install Dir["#{prefix}/usr/share/man/man3/*"]
     man5.install Dir["#{prefix}/usr/share/man/man5/*"]
 
-    # These install locations changed between 806 and 855
     if MacOS.version >= :snow_leopard
       (libexec/"as").install Dir["#{prefix}/usr/libexec/as/*"]
     else

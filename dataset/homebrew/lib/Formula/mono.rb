@@ -4,8 +4,6 @@ class Mono < Formula
   url "http://download.mono-project.com/sources/mono/mono-4.2.0.179.tar.bz2"
   sha256 "fc53c825b8f1e83eaa52a681410261a5b0ac47d36ffd2b58581c476c2690933f"
 
-  # xbuild requires the .exe files inside the runtime directories to
-  # be executable
   skip_clean "lib/mono"
 
   bottle do
@@ -20,8 +18,6 @@ class Mono < Formula
   end
 
   def install
-    # a working mono is required for the the build - monolite is enough
-    # for the job
     (buildpath+"mcs/class/lib/monolite").install resource("monolite")
 
     args = %W[
@@ -36,8 +32,6 @@ class Mono < Formula
     system "./configure", *args
     system "make"
     system "make", "install"
-    # mono-gdb.py and mono-sgen-gdb.py are meant to be loaded by gdb, not to be
-    # run directly, so we move them out of bin
     libexec.install bin/"mono-gdb.py", bin/"mono-sgen-gdb.py"
   end
 
@@ -57,7 +51,6 @@ class Mono < Formula
     output = shell_output "#{bin}/mono hello.exe"
     assert_match test_str, output.strip
 
-    # Tests that xbuild is able to execute lib/mono/*/mcs.exe
     (testpath/"test.csproj").write <<-EOS.undent
       <?xml version="1.0" encoding="utf-8"?>
       <Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">

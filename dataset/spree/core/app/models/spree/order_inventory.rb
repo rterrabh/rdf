@@ -8,13 +8,6 @@ module Spree
       @variant = line_item.variant
     end
 
-    # Only verify inventory for completed orders (as orders in frontend checkout
-    # have inventory assigned via +order.create_proposed_shipment+) or when
-    # shipment is explicitly passed
-    #
-    # In case shipment is passed the stock location should only unstock or
-    # restock items if the order is completed. That is so because stock items
-    # are always unstocked when the order is completed through +shipment.finalize+
     def verify(shipment = nil)
       if order.completed? || shipment.present?
 
@@ -47,10 +40,6 @@ module Spree
         end
       end
 
-      # Returns either one of the shipment:
-      #
-      # first unshipped that already includes this variant
-      # first unshipped that's leaving from a stock_location that stocks this variant
       def determine_target_shipment
         shipment = order.shipments.detect do |shipment|
           shipment.ready_or_pending? && shipment.include?(variant)
@@ -71,7 +60,6 @@ module Spree
           quantity.times { shipment.set_up_inventory('on_hand', variant, order, line_item) }
         end
 
-        # adding to this shipment, and removing from stock_location
         if order.completed?
           shipment.stock_location.unstock(variant, quantity, shipment)
         end
@@ -96,7 +84,6 @@ module Spree
 
         shipment.destroy if shipment.inventory_units.count == 0
 
-        # removing this from shipment, and adding to stock_location
         if order.completed?
           shipment.stock_location.restock variant, removed_quantity, shipment
         end

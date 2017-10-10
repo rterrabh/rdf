@@ -1,13 +1,8 @@
 require 'rubygems'
 
-##
-# A collection of text-wrangling methods
 
 module Gem::Text
 
-  ##
-  # Wraps +text+ to +wrap+ characters and optionally indents by +indent+
-  # characters
 
   def format_text(text, wrap, indent=0)
     result = []
@@ -36,8 +31,6 @@ module Gem::Text
     end
   end
 
-  # This code is based directly on the Text gem implementation
-  # Returns a value representing the "cost" of transforming str1 into str2
   def levenshtein_distance str1, str2
     s = str1
     t = str2

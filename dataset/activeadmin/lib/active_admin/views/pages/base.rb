@@ -97,12 +97,10 @@ module ActiveAdmin
           self.class.name
         end
 
-        # Set's the page title for the layout to render
         def set_page_title
           set_ivar_on_view "@page_title", title
         end
 
-        # Returns the sidebar sections to render for the current action
         def sidebar_sections_for_action
           if active_admin_config && active_admin_config.sidebar_sections?
             active_admin_config.sidebar_sections_for(params[:action], self)
@@ -119,7 +117,6 @@ module ActiveAdmin
           end
         end
 
-        # Renders the sidebar
         def build_sidebar
           div id: "sidebar" do
             sidebar_sections_for_action.collect do |section|
@@ -132,7 +129,6 @@ module ActiveAdmin
           sidebar_sections_for_action.empty? || assigns[:skip_sidebar] == true
         end
 
-        # Renders the content for the footer
         def build_footer
           insert_tag view_factory.footer
         end

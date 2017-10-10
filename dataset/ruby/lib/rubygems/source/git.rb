@@ -1,54 +1,27 @@
 require 'digest'
 require 'rubygems/util'
 
-##
-# A git gem for use in a gem dependencies file.
-#
-# Example:
-#
-#   source =
-#     Gem::Source::Git.new 'rake', 'git@example:rake.git', 'rake-10.1.0', false
-#
-#   source.specs
 
 class Gem::Source::Git < Gem::Source
 
-  ##
-  # The name of the gem created by this git gem.
 
   attr_reader :name
 
-  ##
-  # The commit reference used for checking out this git gem.
 
   attr_reader :reference
 
-  ##
-  # When false the cache for this repository will not be updated.
 
   attr_accessor :remote
 
-  ##
-  # The git repository this gem is sourced from.
 
   attr_reader :repository
 
-  ##
-  # The directory for cache and git gem installation
 
   attr_accessor :root_dir
 
-  ##
-  # Does this repository need submodules checked out too?
 
   attr_reader :need_submodules
 
-  ##
-  # Creates a new git gem source for a gems from loaded from +repository+ at
-  # the given +reference+.  The +name+ is only used to track the repository
-  # back to a gem dependencies file, it has no real significance as a git
-  # repository may contain multiple gems.  If +submodules+ is true, submodules
-  # will be checked out when the gem is installed.
 
   def initialize name, repository, reference, submodules = false
     super repository
@@ -85,8 +58,6 @@ class Gem::Source::Git < Gem::Source
       @need_submodules == other.need_submodules
   end
 
-  ##
-  # Checks out the files for the repository into the install_dir.
 
   def checkout # :nodoc:
     cache
@@ -111,8 +82,6 @@ class Gem::Source::Git < Gem::Source
     end
   end
 
-  ##
-  # Creates a local cache repository for the git gem.
 
   def cache # :nodoc:
     return unless @remote
@@ -128,28 +97,20 @@ class Gem::Source::Git < Gem::Source
     end
   end
 
-  ##
-  # Directory where git gems get unpacked and so-forth.
 
   def base_dir # :nodoc:
     File.join @root_dir, 'bundler'
   end
 
-  ##
-  # A short reference for use in git gem directories
 
   def dir_shortref # :nodoc:
     rev_parse[0..11]
   end
 
-  ##
-  # Nothing to download for git gems
 
   def download full_spec, path # :nodoc:
   end
 
-  ##
-  # The directory where the git gem will be installed.
 
   def install_dir # :nodoc:
     return unless File.exist? repo_cache_dir
@@ -167,15 +128,11 @@ class Gem::Source::Git < Gem::Source
     end
   end
 
-  ##
-  # The directory where the git gem's repository will be cached.
 
   def repo_cache_dir # :nodoc:
     File.join @root_dir, 'cache', 'bundler', 'git', "#{@name}-#{uri_hash}"
   end
 
-  ##
-  # Converts the git reference for the repository into a commit hash.
 
   def rev_parse # :nodoc:
     hash = nil
@@ -191,8 +148,6 @@ class Gem::Source::Git < Gem::Source
     hash
   end
 
-  ##
-  # Loads all gemspecs in the repository
 
   def specs
     checkout
@@ -221,8 +176,6 @@ class Gem::Source::Git < Gem::Source
     end
   end
 
-  ##
-  # A hash for the git gem based on the git repository URI.
 
   def uri_hash # :nodoc:
     normalized =

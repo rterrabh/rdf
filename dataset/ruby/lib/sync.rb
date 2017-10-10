@@ -1,56 +1,14 @@
-#
-#   sync.rb - 2 phase lock with counter
-#       $Release Version: 1.0$
-#       $Revision$
-#       by Keiju ISHITSUKA(keiju@ishitsuka.com)
-#
-# --
-#  Sync_m, Synchronizer_m
-#  Usage:
-#   obj.extend(Sync_m)
-#   or
-#   class Foo
-#       include Sync_m
-#       :
-#   end
-#
-#   Sync_m#sync_mode
-#   Sync_m#sync_locked?, locked?
-#   Sync_m#sync_shared?, shared?
-#   Sync_m#sync_exclusive?, sync_exclusive?
-#   Sync_m#sync_try_lock, try_lock
-#   Sync_m#sync_lock, lock
-#   Sync_m#sync_unlock, unlock
-#
-#  Sync, Synchronizer:
-#  Usage:
-#   sync = Sync.new
-#
-#   Sync#mode
-#   Sync#locked?
-#   Sync#shared?
-#   Sync#exclusive?
-#   Sync#try_lock(mode) -- mode = :EX, :SH, :UN
-#   Sync#lock(mode)     -- mode = :EX, :SH, :UN
-#   Sync#unlock
-#   Sync#synchronize(mode) {...}
-#
-#
 
 unless defined? Thread
   raise "Thread not available for this ruby interpreter"
 end
 
-##
-# A module that provides a two-phase lock with a counter.
 
 module Sync_m
-  # lock mode
   UN = :UN
   SH = :SH
   EX = :EX
 
-  # exceptions
   class Err < StandardError
     def Err.Fail(*opt)
       fail self, sprintf(self::Message, *opt)
@@ -75,6 +33,7 @@ module Sync_m
   end
 
   def Sync_m.define_aliases(cl)
+    #nodyna <module_eval-2221> <not yet classified>
     cl.module_eval %q{
       alias locked? sync_locked?
       alias shared? sync_shared?
@@ -88,8 +47,6 @@ module Sync_m
 
   def Sync_m.append_features(cl)
     super
-    # do nothing for Modules
-    # make aliases for Classes.
     define_aliases(cl) unless cl.instance_of?(Module)
     self
   end
@@ -112,7 +69,6 @@ module Sync_m
     sync_initialize
   end
 
-  # accessing
   def sync_locked?
     sync_mode != UN
   end
@@ -125,7 +81,6 @@ module Sync_m
     sync_mode == EX
   end
 
-  # locking methods.
   def sync_try_lock(mode = EX)
     return unlock if mode == UN
     @sync_mutex.synchronize do
@@ -246,7 +201,7 @@ module Sync_m
   attr_accessor :sync_ex_count
 
   def sync_inspect
-    #nodyna <ID:instance_eval-145> <IEV COMPLEX (private access)>
+    #nodyna <instance_eval-2222> <IEV COMPLEX (private access)>
     sync_iv = instance_variables.select{|iv| /^@sync_/ =~ iv.id2name}.collect{|iv| iv.id2name + '=' + instance_eval(iv.id2name).inspect}.join(",")
     print "<#{self.class}.extend Sync_m: #{inspect}, <Sync_m: #{sync_iv}>"
   end
@@ -282,7 +237,6 @@ module Sync_m
         sync_sh_locker[Thread.current] = count + 1
         ret = true
       when EX
-        # in EX mode, lock will upgrade to EX lock
         if sync_ex_locker == Thread.current
           self.sync_ex_count = sync_ex_count + 1
           ret = true
@@ -310,20 +264,13 @@ module Sync_m
   end
 end
 
-##
-# An alias for Sync_m from sync.rb
 
 Synchronizer_m = Sync_m
 
-##
-# A class that provides two-phase lock with a counter.  See Sync_m for
-# details.
 
 class Sync
   include Sync_m
 end
 
-##
-# An alias for Sync from sync.rb.  See Sync_m for details.
 
 Synchronizer = Sync

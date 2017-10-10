@@ -2,18 +2,9 @@ require 'stringio'
 require 'active_support/core_ext/big_decimal'
 
 module ActiveRecord
-  # = Active Record Schema Dumper
-  #
-  # This class is used to dump the database schema for some connection to some
-  # output format (i.e., ActiveRecord::Schema).
   class SchemaDumper #:nodoc:
     private_class_method :new
 
-    ##
-    # :singleton-method:
-    # A list of tables which should not be dumped to the schema.
-    # Acceptable values are strings as well as regexp.
-    # This setting is only used if ActiveRecord::Base.schema_format == :ruby
     cattr_accessor :ignore_tables
     @@ignore_tables = []
 
@@ -57,17 +48,6 @@ module ActiveRecord
         end
 
         stream.puts <<HEADER
-# This file is auto-generated from the current state of the database. Instead
-# of editing this file, please use the migrations feature of Active Record to
-# incrementally modify your database, and then regenerate this schema definition.
-#
-# Note that this schema.rb definition is the authoritative source for your
-# database schema. If you need to create the application database on another
-# system, you should be using db:schema:load, not running all the migrations
-# from scratch. The latter is a flawed and unsustainable approach (the more migrations
-# you'll amass, the slower it'll run and the greater likelihood for issues).
-#
-# It's strongly recommended that you check this file into your version control system.
 
 ActiveRecord::Schema.define(#{define_params}) do
 
@@ -97,7 +77,6 @@ HEADER
           table(table_name, stream) unless ignored?(table_name)
         end
 
-        # dump foreign keys at the end to make sure all dependent tables exist.
         if @connection.supports_foreign_keys?
           sorted_tables.each do |tbl|
             foreign_keys(tbl, stream) unless ignored?(tbl)
@@ -110,7 +89,6 @@ HEADER
         begin
           tbl = StringIO.new
 
-          # first dump primary key column
           pk = @connection.primary_key(table)
 
           tbl.print "  create_table #{remove_prefix_and_suffix(table).inspect}"
@@ -130,30 +108,24 @@ HEADER
           tbl.print ", force: :cascade"
           tbl.puts " do |t|"
 
-          # then dump all non-primary key columns
           column_specs = columns.map do |column|
             raise StandardError, "Unknown type '#{column.sql_type}' for column '#{column.name}'" unless @connection.valid_type?(column.type)
             next if column.name == pk
             @connection.column_spec(column, @types)
           end.compact
 
-          # find all migration keys used in this table
           keys = @connection.migration_keys
 
-          # figure out the lengths for each column based on above keys
           lengths = keys.map { |key|
             column_specs.map { |spec|
               spec[key] ? spec[key].length + 2 : 0
             }.max
           }
 
-          # the string we're going to sprintf our values against, with standardized column widths
           format_string = lengths.map{ |len| "%-#{len}s" }
 
-          # find the max length for the 'type' column, which is special
           type_length = column_specs.map{ |column| column[:type].length }.max
 
-          # add column type definition to our format string
           format_string.unshift "    t.%-#{type_length}s "
 
           format_string *= ''

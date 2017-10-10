@@ -29,7 +29,6 @@ class Exim < Formula
       s.gsub! "/usr/exim/configure", etc/"exim.conf"
       s.gsub! "/usr/exim", prefix
       s.gsub! "/var/spool/exim", var/"spool/exim"
-      # http://trac.macports.org/ticket/38654
       s.gsub! 'TMPDIR="/tmp"', "TMPDIR=/tmp"
       s << "SUPPORT_MAILDIR=yes\n" if build.include? "support-maildir"
       s << "AUTH_PLAINTEXT=yes\n"
@@ -37,7 +36,6 @@ class Exim < Formula
       s << "TLS_LIBS=-lssl -lcrypto\n"
       s << "TRANSPORT_LMTP=yes\n"
 
-      # For non-/usr/local HOMEBREW_PREFIX
       s << "LOOKUP_INCLUDE=-I#{HOMEBREW_PREFIX}/include\n"
       s << "LOOKUP_LIBS=-L#{HOMEBREW_PREFIX}/lib\n"
     end
@@ -46,12 +44,10 @@ class Exim < Formula
 
     inreplace "OS/Makefile-Darwin" do |s|
       s.remove_make_var! %w[CC CFLAGS]
-      # Add include and lib paths for BDB 4
       s.gsub! "# Exim: OS-specific make file for Darwin (Mac OS X).", "INCLUDE=-I#{bdb4.include}"
       s.gsub! "DBMLIB =", "DBMLIB=#{bdb4.lib}/libdb-4.dylib"
     end
 
-    # The compile script ignores CPPFLAGS
     ENV.append "CFLAGS", ENV.cppflags
 
     ENV.j1 # See: https://lists.exim.org/lurker/thread/20111109.083524.87c96d9b.en.html
@@ -61,14 +57,11 @@ class Exim < Formula
     (bin+"exim_ctl").write startup_script
   end
 
-  # Inspired by MacPorts startup script. Fixes restart issue due to missing setuid.
   def startup_script; <<-EOS.undent
-    #!/bin/sh
     PID=#{var}/spool/exim/exim-daemon.pid
     case "$1" in
     start)
       echo "starting exim mail transfer agent"
-      #{bin}/exim -bd -q30m
       ;;
     restart)
       echo "restarting exim mail transfer agent"

@@ -1,22 +1,3 @@
-# == Schema Information
-#
-# Table name: services
-#
-#  id                    :integer          not null, primary key
-#  type                  :string(255)
-#  title                 :string(255)
-#  project_id            :integer
-#  created_at            :datetime
-#  updated_at            :datetime
-#  active                :boolean          default(FALSE), not null
-#  properties            :text
-#  template              :boolean          default(FALSE)
-#  push_events           :boolean          default(TRUE)
-#  issues_events         :boolean          default(TRUE)
-#  merge_requests_events :boolean          default(TRUE)
-#  tag_push_events       :boolean          default(TRUE)
-#  note_events           :boolean          default(TRUE), not null
-#
 require 'asana'
 
 class AsanaService < Service
@@ -81,7 +62,6 @@ automatically inspected. Leave blank to include all branches.'
 
     branch_restriction = restrict_to_branch.to_s
 
-    # check the branch restriction is poplulated and branch is not included
     if branch_restriction.length > 0 && branch_restriction.index(branch).nil?
       return
     end
@@ -99,14 +79,11 @@ automatically inspected. Leave blank to include all branches.'
     close_list = []
 
     message.split("\n").each do |line|
-      # look for a task ID or a full Asana url
       task_list.concat(line.scan(/#(\d+)/))
       task_list.concat(line.scan(/https:\/\/app\.asana\.com\/\d+\/\d+\/(\d+)/))
-      # look for a word starting with 'fix' followed by a task ID
       close_list.concat(line.scan(/(fix\w*)\W*#(\d+)/i))
     end
 
-    # post commit to every taskid found
     task_list.each do |taskid|
       task = Asana::Task.find(taskid[0])
 
@@ -115,7 +92,6 @@ automatically inspected. Leave blank to include all branches.'
       end
     end
 
-    # close all tasks that had 'fix(ed/es/ing) #:id' in them
     close_list.each do |taskid|
       task = Asana::Task.find(taskid.last)
 

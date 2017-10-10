@@ -17,8 +17,6 @@ class Onetime < Formula
     sha256 "a2b851f125427bb711f093d0c5f66e604a3e3f0c56443029f85d67581730bb12"
   end
 
-  # Fixes the Makefile to permit destination specification
-  # https://github.com/kfogel/OneTime/pull/12
   patch do
     url "https://github.com/kfogel/OneTime/pull/12.diff"
     sha256 "9901ec7ed24b8db30f5d1a6fd40e1f882a0915f2d590830c554abed26369f8df"

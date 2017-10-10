@@ -3,7 +3,6 @@ module EvilQuery
     include Diaspora::Logging
 
     def fetch_ids!(relation, id_column)
-      #the relation should be ordered and limited by here
       @class.connection.select_values(id_sql(relation, id_column))
     end
 
@@ -93,7 +92,6 @@ module EvilQuery
     end
 
     def post!
-      #small optimization - is this optimal order??
       querent_is_contact.first || querent_is_author.first || public_post.first
     end
 
@@ -122,9 +120,6 @@ module EvilQuery
     def make_relation!
       return querents_posts if @person == @querent.person
 
-      # persons_private_visibilities and persons_public_posts have no limit which is making shareable_ids gigantic.
-      # perhaps they should the arrays should be merged and sorted
-      # then the query at the bottom of this method can be paginated or something?
 
       shareable_ids = contact.present? ? fetch_ids!(persons_private_visibilities, "share_visibilities.shareable_id") : []
       shareable_ids += fetch_ids!(persons_public_posts, table_name + ".id")
@@ -145,7 +140,7 @@ module EvilQuery
     end
 
     def querents_posts
-      #nodyna <ID:send-83> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-202> <SD COMPLEX (change-prone variables)>
       @querent.person.send(table_name).where(:pending => false).order("#{table_name}.created_at DESC")
     end
 
@@ -154,7 +149,7 @@ module EvilQuery
     end
 
     def persons_public_posts
-      #nodyna <ID:send-84> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-203> <SD COMPLEX (change-prone variables)>
       @person.send(table_name).where(:public => true).select(table_name+'.id')
     end
   end

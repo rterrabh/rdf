@@ -16,8 +16,6 @@ class Opam < Formula
   depends_on "objective-caml"
   depends_on "camlp4" => :recommended
 
-  # aspcud has a fairly large buildtime dep tree, and uses gringo,
-  # which requires C++11 and is inconvenient to install pre-10.8
   if MacOS.version > 10.7
     depends_on "aspcud" => :recommended
   else
@@ -71,9 +69,6 @@ class Opam < Formula
   def install
     ENV.deparallelize
 
-    # We put the compressed external libraries where the build
-    # expects to find them, thus tricking it into believing that it
-    # already downloaded the necessary files.
     resources.each do |r|
       r.verify_download_integrity(r.fetch)
       original_name = r.cached_download.basename.sub(/^#{Regexp.escape(name)}--/, "")
@@ -102,6 +97,7 @@ class Opam < Formula
 
     Run the following to initialize your environment variables:
 
+    #nodyna <eval-557> <not yet classified>
     $  eval `opam config env`
 
     To export the needed variables every time, add them to your dotfiles.

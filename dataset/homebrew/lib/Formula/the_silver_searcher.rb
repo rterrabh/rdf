@@ -19,18 +19,12 @@ class TheSilverSearcher < Formula
   depends_on "pcre"
   depends_on "xz"
 
-  # Edit bash completion script to not require bash-completion
-  # The `have ag` test is redundant in any case, since the script will only
-  # be installed if Ag itself is installed. See:
-  # https://github.com/ggreer/the_silver_searcher/issues/208
-  # https://github.com/Homebrew/homebrew/issues/27418
   patch do
     url "https://github.com/thomasf/the_silver_searcher/commit/867dff8631bc80d760268f653265e4d3caf44f16.diff"
     sha1 "09502c60a11658d9a08a6825e78defad96318bd9"
   end
 
   def install
-    # Stable tarball does not include pre-generated configure script
     system "aclocal", "-I #{HOMEBREW_PREFIX}/share/aclocal"
     system "autoconf"
     system "autoheader"

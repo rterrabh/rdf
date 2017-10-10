@@ -7,8 +7,6 @@ class Libmatroska < Formula
     mirror "https://www.bunkus.org/videotools/mkvtoolnix/sources/libmatroska-1.4.2.tar.bz2"
     sha256 "bea10320f1f1fd121bbd7db9ffc77b2518e8269f00903549c5425478bbf8393f"
 
-    # Apply upstream patch to link against libEBML
-    # https://github.com/Matroska-Org/libmatroska/commit/9466bf5f2b
     patch :DATA
   end
 

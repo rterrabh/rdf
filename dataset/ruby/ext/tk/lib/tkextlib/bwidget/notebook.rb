@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/notebook.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/frame'
@@ -36,22 +32,15 @@ class Tk::BWidget::NoteBook
 
   def tagid(id)
     if id.kind_of?(TkWindow)
-      #id.path
       id.epath
     elsif id.kind_of?(TkObject)
       id.to_eval
     else
-      # id.to_s
       _get_eval_string(id)
     end
   end
 
-  #def tabbind(*args)
-  #  _bind_for_event_class(Event_for_Tabs, [path, 'bindtabs'], *args)
-  #  self
-  #end
   def tabbind(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -62,12 +51,7 @@ class Tk::BWidget::NoteBook
     self
   end
 
-  #def tabbind_append(*args)
-  #  _bind_append_for_event_class(Event_for_Tabs, [path, 'bindtabs'], *args)
-  #  self
-  #end
   def tabbind_append(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -91,10 +75,10 @@ class Tk::BWidget::NoteBook
     win = window(tk_send('add', tagid(page)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-16> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1613> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-117> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1614> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -115,10 +99,10 @@ class Tk::BWidget::NoteBook
     win = window(tk_send('getframe', tagid(page)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-17> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1615> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-118> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1616> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -133,10 +117,10 @@ class Tk::BWidget::NoteBook
     win = window(tk_send('insert', index, tagid(page), *hash_kv(keys)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-18> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1617> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-119> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1618> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

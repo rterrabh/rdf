@@ -6,16 +6,11 @@ module ActiveAdmin
     class BatchActionSelector < ActiveAdmin::Component
       builder_method :batch_action_selector
 
-      # Build a new batch actions selector
-      #
-      # @param [Array] batch_actions An array of batch actions
       def build(batch_actions)
         @batch_actions = Array(batch_actions)
         @drop_down = build_drop_down
       end
 
-      # We don't want to wrap the action list (or any other children) in
-      # an unecessary div, so instead we just return the children
       def to_s
         children.to_s
       end
@@ -45,7 +40,6 @@ module ActiveAdmin
         end
       end
 
-      # Return the set of batch actions that should be displayed
       def batch_actions_to_display
         @batch_actions.select do |batch_action|
           call_method_or_proc_on(self, batch_action.display_if_block)

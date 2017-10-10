@@ -1,4 +1,3 @@
-# Helps create links using markdown (where references are at the bottom)
 class MarkdownLinker
 
   def initialize(base_url)

@@ -23,7 +23,6 @@ class Haxe < Formula
   depends_on "neko" => :optional
 
   def install
-    # Build requires targets to be built in specific order
     ENV.deparallelize
     args = ["OCAMLOPT=ocamlopt.opt"]
     args << "ADD_REVISION=1" if build.head?
@@ -31,8 +30,6 @@ class Haxe < Formula
     bin.mkpath
     system "make", "install", "INSTALL_BIN_DIR=#{bin}", "INSTALL_LIB_DIR=#{lib}/haxe"
 
-    # Replace the absolute symlink by a relative one,
-    # such that binary package created by homebrew will work in non-/usr/local locations.
     rm bin/"haxe"
     bin.install_symlink lib/"haxe/haxe"
   end

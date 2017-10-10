@@ -12,7 +12,6 @@ class Getmail < Formula
     sha256 "3549cc78fb6723551dd3c69bff5ccc8f8830bb2fa5d6261a8218fb24435dbcaf" => :mountain_lion
   end
 
-  # See: https://github.com/Homebrew/homebrew/pull/28739
   patch do
     url "https://gist.githubusercontent.com/sigma/11295734/raw/5a7f39d600fc20d7605d3c9e438257285700b32b/ssl_timeout.patch"
     sha256 "cd5efe16c848c14b8db91780bf4e08a5920f6576cc68628b0941aa81857f4e2f"

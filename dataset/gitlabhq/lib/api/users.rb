@@ -1,13 +1,8 @@
 module API
-  # Users API
   class Users < Grape::API
     before { authenticate! }
 
     resource :users do
-      # Get a users list
-      #
-      # Example Request:
-      #  GET /users
       get do
         @users = User.all
         @users = @users.active if params[:active].present?
@@ -21,12 +16,6 @@ module API
         end
       end
 
-      # Get a single user
-      #
-      # Parameters:
-      #   id (required) - The ID of a user
-      # Example Request:
-      #   GET /users/:id
       get ":id" do
         @user = User.find(params[:id])
 
@@ -37,26 +26,6 @@ module API
         end
       end
 
-      # Create user. Available only for admin
-      #
-      # Parameters:
-      #   email (required)                  - Email
-      #   password (required)               - Password
-      #   name (required)                   - Name
-      #   username (required)               - Name
-      #   skype                             - Skype ID
-      #   linkedin                          - Linkedin
-      #   twitter                           - Twitter account
-      #   website_url                       - Website url
-      #   projects_limit                    - Number of projects user can create
-      #   extern_uid                        - External authentication provider UID
-      #   provider                          - External provider
-      #   bio                               - Bio
-      #   admin                             - User is admin - true or false (default)
-      #   can_create_group                  - User can create groups - true or false
-      #   confirm                           - Require user confirmation - true (default) or false
-      # Example Request:
-      #   POST /users
       post do
         authenticated_as_admin!
         required_attributes! [:email, :password, :name, :username]
@@ -87,22 +56,6 @@ module API
         end
       end
 
-      # Update user. Available only for admin
-      #
-      # Parameters:
-      #   email                             - Email
-      #   name                              - Name
-      #   password                          - Password
-      #   skype                             - Skype ID
-      #   linkedin                          - Linkedin
-      #   twitter                           - Twitter account
-      #   website_url                       - Website url
-      #   projects_limit                    - Limit projects each user can create
-      #   bio                               - Bio
-      #   admin                             - User is admin - true or false (default)
-      #   can_create_group                  - User can create groups - true or false
-      # Example Request:
-      #   PUT /users/:id
       put ":id" do
         authenticated_as_admin!
 
@@ -128,14 +81,6 @@ module API
         end
       end
 
-      # Add ssh key to a specified user. Only available to admin users.
-      #
-      # Parameters:
-      #   id (required) - The ID of a user
-      #   key (required) - New SSH Key
-      #   title (required) - New SSH Key's title
-      # Example Request:
-      #   POST /users/:id/keys
       post ":id/keys" do
         authenticated_as_admin!
         required_attributes! [:title, :key]
@@ -150,12 +95,6 @@ module API
         end
       end
 
-      # Get ssh keys of a specified user. Only available to admin users.
-      #
-      # Parameters:
-      #   uid (required) - The ID of a user
-      # Example Request:
-      #   GET /users/:uid/keys
       get ':uid/keys' do
         authenticated_as_admin!
         user = User.find_by(id: params[:uid])
@@ -164,14 +103,6 @@ module API
         present user.keys, with: Entities::SSHKey
       end
 
-      # Delete existing ssh key of a specified user. Only available to admin
-      # users.
-      #
-      # Parameters:
-      #   uid (required) - The ID of a user
-      #   id (required) - SSH Key ID
-      # Example Request:
-      #   DELETE /users/:uid/keys/:id
       delete ':uid/keys/:id' do
         authenticated_as_admin!
         user = User.find_by(id: params[:uid])
@@ -185,13 +116,6 @@ module API
         end
       end
 
-      # Add email to a specified user. Only available to admin users.
-      #
-      # Parameters:
-      #   id (required) - The ID of a user
-      #   email (required) - Email address
-      # Example Request:
-      #   POST /users/:id/emails
       post ":id/emails" do
         authenticated_as_admin!
         required_attributes! [:email]
@@ -207,12 +131,6 @@ module API
         end
       end
 
-      # Get emails of a specified user. Only available to admin users.
-      #
-      # Parameters:
-      #   uid (required) - The ID of a user
-      # Example Request:
-      #   GET /users/:uid/emails
       get ':uid/emails' do
         authenticated_as_admin!
         user = User.find_by(id: params[:uid])
@@ -221,14 +139,6 @@ module API
         present user.emails, with: Entities::Email
       end
 
-      # Delete existing email of a specified user. Only available to admin
-      # users.
-      #
-      # Parameters:
-      #   uid (required) - The ID of a user
-      #   id (required) - Email ID
-      # Example Request:
-      #   DELETE /users/:uid/emails/:id
       delete ':uid/emails/:id' do
         authenticated_as_admin!
         user = User.find_by(id: params[:uid])
@@ -244,10 +154,6 @@ module API
         end
       end
 
-      # Delete user. Available only for admin
-      #
-      # Example Request:
-      #   DELETE /users/:id
       delete ":id" do
         authenticated_as_admin!
         user = User.find_by(id: params[:id])
@@ -259,10 +165,6 @@ module API
         end
       end
 
-      # Block user. Available only for admin
-      #
-      # Example Request:
-      #   PUT /users/:id/block
       put ':id/block' do
         authenticated_as_admin!
         user = User.find_by(id: params[:id])
@@ -274,10 +176,6 @@ module API
         end
       end
 
-      # Unblock user. Available only for admin
-      #
-      # Example Request:
-      #   PUT /users/:id/unblock
       put ':id/unblock' do
         authenticated_as_admin!
         user = User.find_by(id: params[:id])
@@ -291,38 +189,19 @@ module API
     end
 
     resource :user do
-      # Get currently authenticated user
-      #
-      # Example Request:
-      #   GET /user
       get do
         present @current_user, with: Entities::UserLogin
       end
 
-      # Get currently authenticated user's keys
-      #
-      # Example Request:
-      #   GET /user/keys
       get "keys" do
         present current_user.keys, with: Entities::SSHKey
       end
 
-      # Get single key owned by currently authenticated user
-      #
-      # Example Request:
-      #   GET /user/keys/:id
       get "keys/:id" do
         key = current_user.keys.find params[:id]
         present key, with: Entities::SSHKey
       end
 
-      # Add new ssh key to currently authenticated user
-      #
-      # Parameters:
-      #   key (required) - New SSH Key
-      #   title (required) - New SSH Key's title
-      # Example Request:
-      #   POST /user/keys
       post "keys" do
         required_attributes! [:title, :key]
 
@@ -335,12 +214,6 @@ module API
         end
       end
 
-      # Delete existing ssh key of currently authenticated user
-      #
-      # Parameters:
-      #   id (required) - SSH Key ID
-      # Example Request:
-      #   DELETE /user/keys/:id
       delete "keys/:id" do
         begin
           key = current_user.keys.find params[:id]
@@ -349,29 +222,15 @@ module API
         end
       end
 
-      # Get currently authenticated user's emails
-      #
-      # Example Request:
-      #   GET /user/emails
       get "emails" do
         present current_user.emails, with: Entities::Email
       end
 
-      # Get single email owned by currently authenticated user
-      #
-      # Example Request:
-      #   GET /user/emails/:id
       get "emails/:id" do
         email = current_user.emails.find params[:id]
         present email, with: Entities::Email
       end
 
-      # Add new email to currently authenticated user
-      #
-      # Parameters:
-      #   email (required) - Email address
-      # Example Request:
-      #   POST /user/emails
       post "emails" do
         required_attributes! [:email]
 
@@ -385,12 +244,6 @@ module API
         end
       end
 
-      # Delete existing email of currently authenticated user
-      #
-      # Parameters:
-      #   id (required) - EMail ID
-      # Example Request:
-      #   DELETE /user/emails/:id
       delete "emails/:id" do
         begin
           email = current_user.emails.find params[:id]

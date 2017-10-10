@@ -24,8 +24,6 @@ module Spree
           authorize! action, record
         end
 
-        # Need to generate an API key for a user due to some backend actions
-        # requiring authentication to the Spree API
         def generate_admin_api_key
           if (user = try_spree_current_user) && user.spree_api_key.blank?
             user.generate_spree_api_key!
@@ -60,7 +58,6 @@ module Spree
           render :partial => '/spree/admin/shared/destroy'
         end
 
-        # Index request for JSON needs to pass a CSRF token in order to prevent JSON Hijacking
         def check_json_authenticity
           return unless request.format.js? or request.format.json?
           return unless protect_against_forgery?
@@ -73,7 +70,6 @@ module Spree
         def filter_dismissed_alerts
           return unless session[:alerts]
           dismissed = (Spree::Config[:dismissed_spree_alerts] || '').split(',')
-          # If it's a string, something has gone wrong with the alerts service. Ignore it.
           if session[:alerts].is_a?(String)
             session[:alerts] = nil
           else

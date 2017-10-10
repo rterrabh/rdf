@@ -1,25 +1,12 @@
-##
-# An attribute created by \#attr, \#attr_reader, \#attr_writer or
-# \#attr_accessor
 
 class RDoc::Attr < RDoc::MethodAttr
 
-  ##
-  # 3::
-  #   RDoc 4
-  #    Added parent name and class
-  #    Added section title
 
   MARSHAL_VERSION = 3 # :nodoc:
 
-  ##
-  # Is the attribute readable ('R'), writable ('W') or both ('RW')?
 
   attr_accessor :rw
 
-  ##
-  # Creates a new Attr with body +text+, +name+, read/write status +rw+ and
-  # +comment+.  +singleton+ marks this as a class attribute.
 
   def initialize(text, name, rw, comment, singleton = false)
     super text, name
@@ -29,8 +16,6 @@ class RDoc::Attr < RDoc::MethodAttr
     self.comment = comment
   end
 
-  ##
-  # Attributes are equal when their names, singleton and rw are identical
 
   def == other
     self.class == other.class and
@@ -39,8 +24,6 @@ class RDoc::Attr < RDoc::MethodAttr
       self.singleton == other.singleton
   end
 
-  ##
-  # Add +an_alias+ as an attribute in +context+.
 
   def add_alias(an_alias, context)
     new_attr = self.class.new(self.text, an_alias.new_name, self.rw,
@@ -54,25 +37,16 @@ class RDoc::Attr < RDoc::MethodAttr
     new_attr
   end
 
-  ##
-  # The #aref prefix for attributes
 
   def aref_prefix
     'attribute'
   end
 
-  ##
-  # Attributes never call super.  See RDoc::AnyMethod#calls_super
-  #
-  # An RDoc::Attr can show up in the method list in some situations (see
-  # Gem::ConfigFile)
 
   def calls_super # :nodoc:
     false
   end
 
-  ##
-  # Returns attr_reader, attr_writer or attr_accessor as appropriate.
 
   def definition
     case @rw
@@ -95,8 +69,6 @@ class RDoc::Attr < RDoc::MethodAttr
     ]
   end
 
-  ##
-  # Dumps this Attr for use by ri.  See also #marshal_load
 
   def marshal_dump
     [ MARSHAL_VERSION,
@@ -113,12 +85,6 @@ class RDoc::Attr < RDoc::MethodAttr
     ]
   end
 
-  ##
-  # Loads this Attr from +array+.  For a loaded Attr the following
-  # methods will return cached values:
-  #
-  # * #full_name
-  # * #parent_name
 
   def marshal_load array
     initialize_visibility
@@ -137,7 +103,6 @@ class RDoc::Attr < RDoc::MethodAttr
     @visibility    = array[4]
     @comment       = array[5]
     @singleton     = array[6] || false # MARSHAL_VERSION == 0
-    #                      7 handled below
     @parent_name   = array[8]
     @parent_class  = array[9]
     @section_title = array[10]
@@ -162,11 +127,6 @@ class RDoc::Attr < RDoc::MethodAttr
     "#{definition} #{name} in: #{parent}"
   end
 
-  ##
-  # Attributes do not have token streams.
-  #
-  # An RDoc::Attr can show up in the method list in some situations (see
-  # Gem::ConfigFile)
 
   def token_stream # :nodoc:
   end

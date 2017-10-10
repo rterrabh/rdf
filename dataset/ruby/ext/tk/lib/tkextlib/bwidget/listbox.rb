@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/listbox.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/canvas'
@@ -10,8 +6,6 @@ require 'tkextlib/bwidget.rb'
 module Tk
   module BWidget
     class ListBox < TkWindow
-      # is NOT a subclass of a listbox widget class.
-      # because it constructed on a canvas widget.
 
       class Item < TkObject
       end
@@ -44,17 +38,11 @@ class Tk::BWidget::ListBox
     if tag.kind_of?(Tk::BWidget::ListBox::Item)
       tag.id
     else
-      # tag
       _get_eval_string(tag)
     end
   end
 
-  #def imagebind(*args)
-  #  _bind_for_event_class(Event_for_Items, [path, 'bindImage'], *args)
-  #  self
-  #end
   def imagebind(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -65,12 +53,7 @@ class Tk::BWidget::ListBox
     self
   end
 
-  #def imagebind_append(*args)
-  #  _bind_append_for_event_class(Event_for_Items, [path, 'bindImage'], *args)
-  #  self
-  #end
   def imagebind_append(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -90,12 +73,7 @@ class Tk::BWidget::ListBox
     _bindinfo_for_event_class(Event_for_Items, [path, 'bindImage'], *args)
   end
 
-  #def textbind(*args)
-  #  _bind_for_event_class(Event_for_Items, [path, 'bindText'], *args)
-  #  self
-  #end
   def textbind(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -106,12 +84,7 @@ class Tk::BWidget::ListBox
     self
   end
 
-  #def textbind_append(*args)
-  #  _bind_append_for_event_class(Event_for_Items, [path, 'bindText'], *args)
-  #  self
-  #end
   def textbind_append(context, *args)
-    #if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -212,7 +185,7 @@ class Tk::BWidget::ListBox::Item
 
   ListItem_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-121> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1587> <IEV MODERATE (method definition)>
   (ListItem_ID = ['bw:item'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end

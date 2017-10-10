@@ -3,11 +3,6 @@ require 'rubygems/user_interaction'
 require 'fileutils'
 require 'rdoc'
 
-##
-# Gem::RDoc provides methods to generate RDoc and ri data for installed gems
-# upon gem installation.
-#
-# This file is automatically required by RubyGems 1.9 and newer.
 
 class RDoc::RubygemsHook
 
@@ -17,33 +12,22 @@ class RDoc::RubygemsHook
   @rdoc_version = nil
   @specs = []
 
-  ##
-  # Force installation of documentation?
 
   attr_accessor :force
 
-  ##
-  # Generate rdoc?
 
   attr_accessor :generate_rdoc
 
-  ##
-  # Generate ri data?
 
   attr_accessor :generate_ri
 
   class << self
 
-    ##
-    # Loaded version of RDoc.  Set by ::load_rdoc
 
     attr_reader :rdoc_version
 
   end
 
-  ##
-  # Post installs hook that generates documentation for each specification in
-  # +specs+
 
   def self.generation_hook installer, specs
     start = Time.now
@@ -64,8 +48,6 @@ class RDoc::RubygemsHook
     say "Done installing documentation for #{names} after #{duration} seconds"
   end
 
-  ##
-  # Loads the RDoc generator
 
   def self.load_rdoc
     return if @rdoc_version
@@ -75,12 +57,6 @@ class RDoc::RubygemsHook
     @rdoc_version = Gem::Version.new ::RDoc::VERSION
   end
 
-  ##
-  # Creates a new documentation generator for +spec+.  RDoc and ri data
-  # generation can be enabled or disabled through +generate_rdoc+ and
-  # +generate_ri+ respectively.
-  #
-  # Only +generate_ri+ is enabled by default.
 
   def initialize spec, generate_rdoc = false, generate_ri = true
     @doc_dir   = spec.doc_dir
@@ -95,10 +71,6 @@ class RDoc::RubygemsHook
     @ri_dir   = spec.doc_dir 'ri'
   end
 
-  ##
-  # Removes legacy rdoc arguments from +args+
-  #--
-  # TODO move to RDoc::Options
 
   def delete_legacy_args args
     args.delete '--inline-source'
@@ -107,11 +79,6 @@ class RDoc::RubygemsHook
     args.delete '--one-file'
   end
 
-  ##
-  # Generates documentation using the named +generator+ ("darkfish" or "ri")
-  # and following the given +options+.
-  #
-  # Documentation will be generated into +destination+
 
   def document generator, options, destination
     generator_name = generator
@@ -141,8 +108,6 @@ class RDoc::RubygemsHook
     end
   end
 
-  ##
-  # Generates RDoc and ri data
 
   def generate
     return if @spec.default_gem?
@@ -203,23 +168,16 @@ class RDoc::RubygemsHook
       @generate_rdoc and (@force or not File.exist? @rdoc_dir)
   end
 
-  ##
-  # #new_rdoc creates a new RDoc instance.  This method is provided only to
-  # make testing easier.
 
   def new_rdoc # :nodoc:
     ::RDoc::RDoc.new
   end
 
-  ##
-  # Is rdoc documentation installed?
 
   def rdoc_installed?
     File.exist? @rdoc_dir
   end
 
-  ##
-  # Removes generated RDoc and ri data
 
   def remove
     base_dir = @spec.base_dir
@@ -230,15 +188,11 @@ class RDoc::RubygemsHook
     FileUtils.rm_rf @ri_dir
   end
 
-  ##
-  # Is ri data installed?
 
   def ri_installed?
     File.exist? @ri_dir
   end
 
-  ##
-  # Prepares the spec for documentation generation
 
   def setup
     self.class.load_rdoc

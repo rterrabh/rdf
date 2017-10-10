@@ -1,10 +1,3 @@
-#
-#   irb/completor.rb -
-#   	$Release Version: 0.9$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ishitsuka.com)
-#       From Original Idea of shugo@ruby-lang.org
-#
 
 require "readline"
 
@@ -12,8 +5,6 @@ module IRB
   module InputCompletor # :nodoc:
 
 
-    # Set of reserved words used by Ruby, you should not use these for
-    # constants or variables
     ReservedWords = %w[
       BEGIN END
       alias and
@@ -39,7 +30,6 @@ module IRB
 
       case input
       when /^((["'`]).*\2)\.([^.]*)$/
-        # String
         receiver = $1
         message = Regexp.quote($3)
 
@@ -47,7 +37,6 @@ module IRB
         select_message(receiver, message, candidates)
 
       when /^(\/[^\/]*\/)\.([^.]*)$/
-        # Regexp
         receiver = $1
         message = Regexp.quote($2)
 
@@ -55,7 +44,6 @@ module IRB
         select_message(receiver, message, candidates)
 
       when /^([^\]]*\])\.([^.]*)$/
-        # Array
         receiver = $1
         message = Regexp.quote($2)
 
@@ -63,7 +51,6 @@ module IRB
         select_message(receiver, message, candidates)
 
       when /^([^\}]*\})\.([^.]*)$/
-        # Proc or Hash
         receiver = $1
         message = Regexp.quote($2)
 
@@ -72,7 +59,6 @@ module IRB
         select_message(receiver, message, candidates)
 
       when /^(:[^:.]*)$/
-        # Symbol
         if Symbol.respond_to?(:all_symbols)
           sym = $1
           candidates = Symbol.all_symbols.collect{|s| ":" + s.id2name}
@@ -82,19 +68,17 @@ module IRB
         end
 
       when /^::([A-Z][^:\.\(]*)$/
-        # Absolute Constant or class methods
         receiver = $1
         candidates = Object.constants.collect{|m| m.to_s}
         candidates.grep(/^#{receiver}/).collect{|e| "::" + e}
 
       when /^([A-Z].*)::([^:.]*)$/
-        # Constant or class methods
         receiver = $1
         message = Regexp.quote($2)
         begin
-          #nodyna <ID:eval-113> <EV COMPLEX (scope)>
+          #nodyna <eval-2195> <EV COMPLEX (scope)>
           candidates = eval("#{receiver}.constants.collect{|m| m.to_s}", bind)
-          #nodyna <ID:eval-114> <EV COMPLEX (scope)>
+          #nodyna <eval-2196> <EV COMPLEX (scope)>
           candidates |= eval("#{receiver}.methods.collect{|m| m.to_s}", bind)
         rescue Exception
           candidates = []
@@ -102,7 +86,6 @@ module IRB
         select_message(receiver, message, candidates, "::")
 
       when /^(:[^:.]+)(\.|::)([^.]*)$/
-        # Symbol
         receiver = $1
         sep = $2
         message = Regexp.quote($3)
@@ -111,13 +94,12 @@ module IRB
         select_message(receiver, message, candidates, sep)
 
       when /^(-?(0[dbo])?[0-9_]+(\.[0-9_]+)?([eE]-?[0-9]+)?)(\.|::)([^.]*)$/
-        # Numeric
         receiver = $1
         sep = $5
         message = Regexp.quote($6)
 
         begin
-          #nodyna <ID:eval-115> <EV COMPLEX (scope)>
+          #nodyna <eval-2197> <EV COMPLEX (scope)>
           candidates = eval(receiver, bind).methods.collect{|m| m.to_s}
         rescue Exception
           candidates = []
@@ -125,13 +107,12 @@ module IRB
         select_message(receiver, message, candidates, sep)
 
       when /^(-?0x[0-9a-fA-F_]+)(\.|::)([^.]*)$/
-        # Numeric(0xFFFF)
         receiver = $1
         sep = $2
         message = Regexp.quote($3)
 
         begin
-          #nodyna <ID:eval-116> <EV COMPLEX (scope)>
+          #nodyna <eval-2198> <EV COMPLEX (scope)>
           candidates = eval(receiver, bind).methods.collect{|m| m.to_s}
         rescue Exception
           candidates = []
@@ -139,33 +120,27 @@ module IRB
         select_message(receiver, message, candidates, sep)
 
       when /^(\$[^.]*)$/
-        # global var
         regmessage = Regexp.new(Regexp.quote($1))
         candidates = global_variables.collect{|m| m.to_s}.grep(regmessage)
 
       when /^([^."].*)(\.|::)([^.]*)$/
-        # variable.func or func.func
         receiver = $1
         sep = $2
         message = Regexp.quote($3)
 
-        #nodyna <ID:eval-117> <EV COMPLEX (private methods)>
+        #nodyna <eval-2199> <EV COMPLEX (private methods)>
         gv = eval("global_variables", bind).collect{|m| m.to_s}
-        #nodyna <ID:eval-118> <EV COMPLEX (private methods)>
+        #nodyna <eval-2200> <EV COMPLEX (private methods)>
         lv = eval("local_variables", bind).collect{|m| m.to_s}
-        #nodyna <ID:eval-119> <EV COMPLEX (private methods)>
+        #nodyna <eval-2201> <EV COMPLEX (private methods)>
         iv = eval("instance_variables", bind).collect{|m| m.to_s}
-        #nodyna <ID:eval-120> <EV COMPLEX (private methods)>
+        #nodyna <eval-2202> <EV COMPLEX (private methods)>
         cv = eval("self.class.constants", bind).collect{|m| m.to_s}
 
         if (gv | lv | iv | cv).include?(receiver) or /^[A-Z]/ =~ receiver && /\./ !~ receiver
-          # foo.func and foo is var. OR
-          # foo::func and foo is var. OR
-          # foo::Const and foo is var. OR
-          # Foo::Bar.func
           begin
             candidates = []
-            #nodyna <ID:eval-121> <EV COMPLEX (change-prone variables)>
+            #nodyna <eval-2203> <EV COMPLEX (change-prone variables)>
             rec = eval(receiver, bind)
             if sep == "::" and rec.kind_of?(Module)
               candidates = rec.constants.collect{|m| m.to_s}
@@ -175,7 +150,6 @@ module IRB
             candidates = []
           end
         else
-          # func1.func2
           candidates = []
           ObjectSpace.each_object(Module){|m|
             begin
@@ -197,7 +171,6 @@ module IRB
         select_message(receiver, message, candidates, sep)
 
       when /^\.([^.]*)$/
-        # unknown(maybe String)
 
         receiver = ""
         message = Regexp.quote($1)
@@ -206,14 +179,13 @@ module IRB
         select_message(receiver, message, candidates)
 
       else
-        #nodyna <ID:eval-122> <EV COMPLEX (private methods)>
+        #nodyna <eval-2204> <EV COMPLEX (private methods)>
         candidates = eval("methods | private_methods | local_variables | instance_variables | self.class.constants", bind).collect{|m| m.to_s}
 
         (candidates|ReservedWords).grep(/^#{Regexp.quote(input)}/)
       end
     }
 
-    # Set of available operators in Ruby
     Operators = %w[% & * ** + - / < << <= <=> == === =~ > >= >> [] []= ^ ! != !~]
 
     def self.select_message(receiver, message, candidates, sep = ".")
@@ -223,7 +195,6 @@ module IRB
           receiver + sep + e
         when /^[0-9]/
         when *Operators
-          #receiver + " " + e
         end
       end
     end

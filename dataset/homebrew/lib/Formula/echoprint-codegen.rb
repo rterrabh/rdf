@@ -19,7 +19,6 @@ class EchoprintCodegen < Formula
   depends_on "taglib"
   depends_on "boost"
 
-  # Removes unnecessary -framework vecLib; can be removed in the next release
   patch do
     url "https://github.com/echonest/echoprint-codegen/commit/5ac72c40ae920f507f3f4da8b8875533bccf5e02.diff"
     sha256 "0ab8e1ffafeeb44195246a78923d0d943d583279442b404c0af65ac1c5cbe74c"

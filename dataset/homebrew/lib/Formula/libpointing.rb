@@ -19,8 +19,6 @@ class Libpointing < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <pointing/pointing.h>
-      #include <iostream>
       int main() {
         std::cout << LIBPOINTING_VER_STRING << " |" ;
         std::list<std::string> schemes = pointing::TransferFunction::schemes() ;

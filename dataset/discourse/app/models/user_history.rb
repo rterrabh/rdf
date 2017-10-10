@@ -1,6 +1,3 @@
-# UserHistory stores information about actions that users have taken,
-# like deleting users, changing site settings, dimissing notifications, etc.
-# Use other classes, like StaffActionLogger, to log records to this table.
 class UserHistory < ActiveRecord::Base
   belongs_to :acting_user, class_name: 'User'
   belongs_to :target_user, class_name: 'User'
@@ -42,7 +39,6 @@ class UserHistory < ActiveRecord::Base
                           :reviewed_post)
   end
 
-  # Staff actions is a subset of all actions, used to audit actions taken by staff users.
   def self.staff_actions
     @staff_actions ||= [:delete_user,
                         :change_trust_level,
@@ -123,31 +119,3 @@ class UserHistory < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: user_histories
-#
-#  id             :integer          not null, primary key
-#  action         :integer          not null
-#  acting_user_id :integer
-#  target_user_id :integer
-#  details        :text
-#  created_at     :datetime         not null
-#  updated_at     :datetime         not null
-#  context        :string(255)
-#  ip_address     :string(255)
-#  email          :string(255)
-#  subject        :text
-#  previous_value :text
-#  new_value      :text
-#  topic_id       :integer
-#  admin_only     :boolean          default(FALSE)
-#  post_id        :integer
-#
-# Indexes
-#
-#  index_user_histories_on_acting_user_id_and_action_and_id  (acting_user_id,action,id)
-#  index_user_histories_on_action_and_id                     (action,id)
-#  index_user_histories_on_subject_and_id                    (subject,id)
-#  index_user_histories_on_target_user_id_and_id             (target_user_id,id)
-#

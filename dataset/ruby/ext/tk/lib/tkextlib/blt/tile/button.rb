@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/tile/button.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/button'

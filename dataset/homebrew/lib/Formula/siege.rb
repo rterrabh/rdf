@@ -13,7 +13,6 @@ class Siege < Formula
   depends_on "openssl"
 
   def install
-    # To avoid unnecessary warning due to hardcoded path, create the folder first
     (prefix/"etc").mkdir
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
@@ -30,10 +29,8 @@ class Siege < Formula
 
     You can check whether this is a problem with netstat:
 
-        # sysctl net.inet.tcp.msl
         net.inet.tcp.msl: 15000
 
-        # sudo sysctl -w net.inet.tcp.msl=1000
         net.inet.tcp.msl: 15000 -> 1000
 
     Run siege.config to create the ~/.siegerc config file.

@@ -1,23 +1,10 @@
 module REXML
   module Formatters
     class Default
-      # Prints out the XML document with no formatting -- except if id_hack is
-      # set.
-      #
-      # ie_hack::
-      #   If set to true, then inserts whitespace before the close of an empty
-      #   tag, so that IE's bad XML parser doesn't choke.
       def initialize( ie_hack=false )
         @ie_hack = ie_hack
       end
 
-      # Writes the node to some output.
-      #
-      # node::
-      #   The node to write
-      # output::
-      #   A class implementing <TT>&lt;&lt;</TT>.  Pass in an Output object to
-      #   change the output encoding.
       def write( node, output )
         case node
 

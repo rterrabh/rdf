@@ -17,8 +17,6 @@ class YleDl < Formula
   depends_on :python if MacOS.version <= :snow_leopard
 
   resource "AdobeHDS.php" do
-    # NOTE: yle-dl always installs the HEAD version of AdobeHDS.php. We use a specific commit.
-    # Check if there are bugfixes at https://github.com/K-S-V/Scripts/commits/master/AdobeHDS.php
     url "https://raw.githubusercontent.com/K-S-V/Scripts/460814d210e8e19a98bddd12c178fc3b5f43b0bb/AdobeHDS.php"
     sha256 "7087e3857ef7335717e142996e27c5546806b0babd92cd540d783ae4ce2bcf3f"
   end
@@ -37,7 +35,6 @@ class YleDl < Formula
     resource("AdobeHDS.php").stage(share/"yle-dl")
     system "make", "install", "SYS=darwin", "prefix=#{prefix}", "mandir=#{man}"
 
-    # change shebang to plain python (python2 is not guaranteed to exist)
     inreplace bin/"yle-dl", "#!/usr/bin/env python2", "#!/usr/bin/env python"
 
     bin.env_script_all_files(libexec/"bin", :PYTHONPATH => ENV["PYTHONPATH"])

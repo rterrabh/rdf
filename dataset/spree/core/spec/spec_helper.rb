@@ -1,5 +1,4 @@
 if ENV["COVERAGE"]
-  # Run Coverage report
   require 'simplecov'
   SimpleCov.start do
     add_group 'Controllers', 'app/controllers'
@@ -12,8 +11,6 @@ if ENV["COVERAGE"]
   end
 end
 
-# This file is copied to ~/spec when you run 'ruby script/generate rspec'
-# from the project root directory.
 ENV["RAILS_ENV"] ||= 'test'
 
 begin
@@ -43,9 +40,6 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.raise_errors_for_deprecations!
 
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, comment the following line or assign false
-  # instead of true.
   config.use_transactional_fixtures = true
 
   config.before :each do
@@ -56,13 +50,11 @@ RSpec.configure do |config|
   config.include FactoryGirl::Syntax::Methods
   config.include Spree::TestingSupport::Preferences
 
-  # Clean out the database state before the tests run
   config.before(:suite) do
     DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.strategy = :transaction
   end
 
-  # Wrap all db isolated tests in a transaction
   config.around(db: :isolate) do |example|
     DatabaseCleaner.cleaning(&example)
   end

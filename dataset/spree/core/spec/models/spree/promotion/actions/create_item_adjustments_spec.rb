@@ -18,7 +18,6 @@ module Spree
         it_behaves_like 'an adjustment source'
 
         context "#perform" do
-          # Regression test for #3966
           context "when calculator computes 0" do
             before do
               allow(action).to receive_messages :compute_amount => 0

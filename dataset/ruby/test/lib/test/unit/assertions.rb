@@ -12,18 +12,6 @@ module Test
 
       MINI_DIR = File.join(File.dirname(File.dirname(File.expand_path(__FILE__))), "minitest") #:nodoc:
 
-      # :call-seq:
-      #   assert(test, [failure_message])
-      #
-      #Tests if +test+ is true.
-      #
-      #+msg+ may be a String or a Proc. If +msg+ is a String, it will be used
-      #as the failure message. Otherwise, the result of calling +msg+ will be
-      #used as the message if the assertion fails.
-      #
-      #If no +msg+ is given, a default message will be used.
-      #
-      #    assert(false, "This was expected to be true")
       def assert(test, *msgs)
         case msg = msgs.first
         when String, Proc
@@ -36,33 +24,10 @@ module Test
         super
       end
 
-      # :call-seq:
-      #   assert_block( failure_message = nil )
-      #
-      #Tests the result of the given block. If the block does not return true,
-      #the assertion will fail. The optional +failure_message+ argument is the same as in
-      #Assertions#assert.
-      #
-      #    assert_block do
-      #      [1, 2, 3].any? { |num| num < 1 }
-      #    end
       def assert_block(*msgs)
         assert yield, *msgs
       end
 
-      # :call-seq:
-      #   assert_raise( *args, &block )
-      #
-      #Tests if the given block raises an exception. Acceptable exception
-      #types may be given as optional arguments. If the last argument is a
-      #String, it will be used as the error message.
-      #
-      #    assert_raise do #Fails, no Exceptions are raised
-      #    end
-      #
-      #    assert_raise NameError do
-      #      puts x  #Raises NameError, so assertion succeeds
-      #    end
       def assert_raise(*exp, &b)
         case exp.last
         when String, Proc
@@ -95,27 +60,6 @@ module Test
         flunk(message(msg) {"#{mu_pp(exp)} expected but nothing was raised"})
       end
 
-      # :call-seq:
-      #   assert_raise_with_message(exception, expected, msg = nil, &block)
-      #
-      #Tests if the given block raises an exception with the expected
-      #message.
-      #
-      #    assert_raise_with_message(RuntimeError, "foo") do
-      #      nil #Fails, no Exceptions are raised
-      #    end
-      #
-      #    assert_raise_with_message(RuntimeError, "foo") do
-      #      raise ArgumentError, "foo" #Fails, different Exception is raised
-      #    end
-      #
-      #    assert_raise_with_message(RuntimeError, "foo") do
-      #      raise "bar" #Fails, RuntimeError is raised but the message differs
-      #    end
-      #
-      #    assert_raise_with_message(RuntimeError, "foo") do
-      #      raise "foo" #Raises RuntimeError with the message, so assertion succeeds
-      #    end
       def assert_raise_with_message(exception, expected, msg = nil, &block)
         case expected
         when String
@@ -134,28 +78,12 @@ module Test
         else
           msg = message(msg) { "Expected #{mu_pp expected} to match #{mu_pp ex.message}" }
           assert expected =~ ex.message, msg
-          #nodyna <ID:eval-126> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-1431> <EV COMPLEX (change-prone variables)>
           block.binding.eval("proc{|_|$~=_}").call($~)
         end
         ex
       end
 
-      # :call-seq:
-      #   assert_nothing_raised( *args, &block )
-      #
-      #If any exceptions are given as arguments, the assertion will
-      #fail if one of those exceptions are raised. Otherwise, the test fails
-      #if any exceptions are raised.
-      #
-      #The final argument may be a failure message.
-      #
-      #    assert_nothing_raised RuntimeError do
-      #      raise Exception #Assertion passes, Exception is not a RuntimeError
-      #    end
-      #
-      #    assert_nothing_raised do
-      #      raise Exception #Assertion fails
-      #    end
       def assert_nothing_raised(*args)
         self._assertions += 1
         if Module === args.last
@@ -185,17 +113,6 @@ module Test
         nil
       end
 
-      # :call-seq:
-      #   assert_nothing_thrown( failure_message = nil, &block )
-      #
-      #Fails if the given block uses a call to Kernel#throw, and
-      #returns the result of the block otherwise.
-      #
-      #An optional failure message may be provided as the final argument.
-      #
-      #    assert_nothing_thrown "Something was thrown!" do
-      #      throw :problem?
-      #    end
       def assert_nothing_thrown(msg=nil)
         begin
           ret = yield
@@ -208,18 +125,6 @@ module Test
         ret
       end
 
-      # :call-seq:
-      #   assert_throw( tag, failure_message = nil, &block )
-      #
-      #Fails unless the given block throws +tag+, returns the caught
-      #value otherwise.
-      #
-      #An optional failure message may be provided as the final argument.
-      #
-      #    tag = Object.new
-      #    assert_throw(tag, "#{tag} was not thrown!") do
-      #      throw tag
-      #    end
       def assert_throw(tag, msg = nil)
         ret = catch(tag) do
           begin
@@ -237,12 +142,6 @@ module Test
         ret
       end
 
-      # :call-seq:
-      #   assert_equal( expected, actual, failure_message = nil )
-      #
-      #Tests if +expected+ is equal to +actual+.
-      #
-      #An optional failure message may be provided as the final argument.
       def assert_equal(exp, act, msg = nil)
         msg = message(msg) {
           exp_str = mu_pp(exp)
@@ -269,7 +168,6 @@ module Test
                 act_comment = " (subsec=#{act.subsec})"
               end
             elsif exp.class != act.class
-              # a subclass of Range, for example.
               exp_comment = " (#{exp.class})"
               act_comment = " (#{act.class})"
             end
@@ -289,34 +187,16 @@ module Test
         assert(exp == act, msg)
       end
 
-      # :call-seq:
-      #   assert_not_nil( expression, failure_message = nil )
-      #
-      #Tests if +expression+ is not nil.
-      #
-      #An optional failure message may be provided as the final argument.
       def assert_not_nil(exp, msg=nil)
         msg = message(msg) { "<#{mu_pp(exp)}> expected to not be nil" }
         assert(!exp.nil?, msg)
       end
 
-      # :call-seq:
-      #   assert_not_equal( expected, actual, failure_message = nil )
-      #
-      #Tests if +expected+ is not equal to +actual+.
-      #
-      #An optional failure message may be provided as the final argument.
       def assert_not_equal(exp, act, msg=nil)
         msg = message(msg) { "<#{mu_pp(exp)}> expected to be != to\n<#{mu_pp(act)}>" }
         assert(exp != act, msg)
       end
 
-      # :call-seq:
-      #   assert_no_match( regexp, string, failure_message = nil )
-      #
-      #Tests if the given Regexp does not match a given String.
-      #
-      #An optional failure message may be provided as the final argument.
       def assert_no_match(regexp, string, msg=nil)
         assert_instance_of(Regexp, regexp, "The first argument to assert_no_match should be a Regexp.")
         self._assertions -= 1
@@ -324,15 +204,6 @@ module Test
         assert(regexp !~ string, msg)
       end
 
-      # :call-seq:
-      #   assert_not_same( expected, actual, failure_message = nil )
-      #
-      #Tests if +expected+ is not the same object as +actual+.
-      #This test uses Object#equal? to test equality.
-      #
-      #An optional failure message may be provided as the final argument.
-      #
-      #    assert_not_same("x", "x") #Succeeds
       def assert_not_same(expected, actual, message="")
         msg = message(msg) { build_message(message, <<EOT, expected, expected.__id__, actual, actual.__id__) }
 <?>
@@ -343,15 +214,6 @@ EOT
         assert(!actual.equal?(expected), msg)
       end
 
-      # :call-seq:
-      #   assert_respond_to( object, method, failure_message = nil )
-      #
-      #Tests if the given Object responds to +method+.
-      #
-      #An optional failure message may be provided as the final argument.
-      #
-      #    assert_respond_to("hello", :reverse)  #Succeeds
-      #    assert_respond_to("hello", :does_not_exist)  #Fails
       def assert_respond_to obj, (meth, priv), msg = nil
         if priv
           msg = message(msg) {
@@ -359,23 +221,9 @@ EOT
           }
           return assert obj.respond_to?(meth, priv), msg
         end
-        #get rid of overcounting
         super if !caller[0].rindex(MINI_DIR, 0) || !obj.respond_to?(meth)
       end
 
-      # :call-seq:
-      #   assert_send( +send_array+, failure_message = nil )
-      #
-      # Passes if the method send returns a true value.
-      #
-      # +send_array+ is composed of:
-      # * A receiver
-      # * A method
-      # * Arguments to the method
-      #
-      # Example:
-      #   assert_send(["Hello world", :include?, "Hello"])    # -> pass
-      #   assert_send(["Hello world", :include?, "Goodbye"])  # -> fail
       def assert_send send_ary, m = nil
         recv, msg, *args = send_ary
         m = message(m) {
@@ -389,19 +237,6 @@ EOT
         assert recv.__send__(msg, *args), m
       end
 
-      # :call-seq:
-      #   assert_not_send( +send_array+, failure_message = nil )
-      #
-      # Passes if the method send doesn't return a true value.
-      #
-      # +send_array+ is composed of:
-      # * A receiver
-      # * A method
-      # * Arguments to the method
-      #
-      # Example:
-      #   assert_not_send([[1, 2], :member?, 1]) # -> fail
-      #   assert_not_send([[1, 2], :member?, 4]) # -> pass
       def assert_not_send send_ary, m = nil
         recv, msg, *args = send_ary
         m = message(m) {

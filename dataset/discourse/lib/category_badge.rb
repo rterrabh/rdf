@@ -21,17 +21,14 @@ module CategoryBadge
   def self.html_for(category, opts = nil)
     opts = opts || {}
 
-    # If there is no category, bail
     return "" if category.blank?
 
-    # By default hide uncategorized
     return "" if category.uncategorized? && !opts[:show_uncategorized]
 
     extra_classes = "#{opts[:extra_classes]} #{SiteSetting.category_style}"
 
     result = ''
 
-    # parent span
     unless category.parent_category_id.nil? || opts[:hide_parent]
       parent_category = Category.find_by(id: category.parent_category_id)
       result << if opts[:inline_style]
@@ -45,7 +42,6 @@ module CategoryBadge
       end
     end
 
-    # sub parent or main category span
     result << if opts[:inline_style]
       case (SiteSetting.category_style || :box).to_sym
       when :bar then inline_category_stripe(category.color, 'display: inline-block; padding: 1px;', true)
@@ -56,7 +52,6 @@ module CategoryBadge
       category_stripe(category.color, 'badge-category-bg')
     end
 
-    # category name
     class_names = 'badge-category clear-badge'
     text_color = "##{category.text_color}"
     description = category.description_text ? "title='#{category.description_text.html_safe}'" : ''
@@ -72,7 +67,6 @@ module CategoryBadge
         ''
       end
     result << "<span style='color: #{text_color};#{extra_span_classes}' data-drop-close='true' class='#{class_names}'
-                 #{description}>"
 
     result << category.name.html_safe << '</span>'
     "<a class='badge-wrapper #{extra_classes}' href='#{category_url}'" + (opts[:inline_style] ? inline_badge_wrapper_style : '') + ">#{result}</a>"

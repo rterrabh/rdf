@@ -1,6 +1,3 @@
-##
-# Parse a non-source file. We basically take the whole thing as one big
-# comment.
 
 class RDoc::Parser::Simple < RDoc::Parser
 
@@ -10,8 +7,6 @@ class RDoc::Parser::Simple < RDoc::Parser
 
   attr_reader :content # :nodoc:
 
-  ##
-  # Prepare to parse a plain file
 
   def initialize(top_level, file_name, content, options, stats)
     super
@@ -21,8 +16,6 @@ class RDoc::Parser::Simple < RDoc::Parser
     preprocess.handle @content, @top_level
   end
 
-  ##
-  # Extract the file contents and attach them to the TopLevel as a comment
 
   def scan
     comment = remove_coding_comment @content
@@ -34,22 +27,13 @@ class RDoc::Parser::Simple < RDoc::Parser
     @top_level
   end
 
-  ##
-  # Removes the encoding magic comment from +text+
 
   def remove_coding_comment text
     text.sub(/\A# .*coding[=:].*$/, '')
   end
 
-  ##
-  # Removes private comments.
-  #
-  # Unlike RDoc::Comment#remove_private this implementation only looks for two
-  # dashes at the beginning of the line.  Three or more dashes are considered
-  # to be a rule and ignored.
 
   def remove_private_comment comment
-    # Workaround for gsub encoding for Ruby 1.9.2 and earlier
     empty = ''
     empty.force_encoding comment.encoding if Object.const_defined? :Encoding
 

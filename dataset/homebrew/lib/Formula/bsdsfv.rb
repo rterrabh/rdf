@@ -4,9 +4,6 @@ class Bsdsfv < Formula
   url "https://downloads.sourceforge.net/project/bsdsfv/bsdsfv/1.18/bsdsfv-1.18.tar.gz"
   sha256 "577245da123d1ea95266c1628e66a6cf87b8046e1a902ddd408671baecf88495"
 
-  # bug report:
-  # http://sourceforge.net/tracker/?func=detail&aid=2887842&group_id=7211&atid=107211
-  # Patch from MacPorts
   patch :DATA
 
   def install

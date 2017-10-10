@@ -9,7 +9,7 @@ module Paperclip
       else
         name = name.to_s.camelize
         load_processor(name) unless Paperclip.const_defined?(name)
-        #nodyna <ID:const_get-2> <CG COMPLEX (change-prone variable)>
+        #nodyna <const_get-743> <CG COMPLEX (change-prone variable)>
         processor = Paperclip.const_get(name)
         @known_processors[name.to_s] = processor
       end
@@ -35,14 +35,6 @@ module Paperclip
       @known_processors.try(:clear)
     end
 
-    # You can add your own processor via the Paperclip configuration. Normally
-    # Paperclip will load all processors from the
-    # Rails.root/lib/paperclip_processors directory, but here you can add any
-    # existing class using this mechanism.
-    #
-    #   Paperclip.configure do |c|
-    #     c.register_processor :watermarker, WatermarkingProcessor.new
-    #   end
     def register_processor(name, processor)
       @known_processors ||= {}
       @known_processors[name.to_s] = processor

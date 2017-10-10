@@ -1,12 +1,10 @@
 class X264 < Formula
   desc "H.264/AVC encoder"
   homepage "https://www.videolan.org/developers/x264.html"
-  # the latest commit on the stable branch
   url "https://git.videolan.org/git/x264.git", :revision => "0c21480fa2fdee345a3049e2169624dc6fc2acfc"
   version "r2555"
 
   devel do
-    # the latest commit on the master branch
     url "https://git.videolan.org/git/x264.git", :revision => "73ae2d11d472d0eb3b7c218dc1659db32f649b14"
     version "r2579"
   end
@@ -52,8 +50,6 @@ class X264 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdint.h>
-      #include <x264.h>
 
       int main()
       {

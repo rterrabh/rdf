@@ -18,7 +18,6 @@ class Scriptcs < Formula
     system "./build.sh"
     libexec.install Dir["src/ScriptCs/bin/Release/*"]
     (libexec/script_file).write <<-EOS.undent
-      #!/bin/bash
       mono #{libexec}/scriptcs.exe $@
     EOS
     (libexec/script_file).chmod 0755

@@ -55,7 +55,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
           return include_tag(name, attributes)
         end
 
-        # If include_images is set, include the image in markdown
         characters("!") if @markdown_images
 
         if attributes["alt"]
@@ -83,7 +82,6 @@ class ExcerptParser < Nokogiri::XML::SAX::Document
           @current_length = 0
           @start_excerpt = true
         end
-        # Preserve spoilers
         if attributes.include?(["class", "spoiler"])
           include_tag("span", attributes)
           @in_spoiler = true

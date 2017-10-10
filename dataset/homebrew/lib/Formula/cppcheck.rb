@@ -28,9 +28,7 @@ class Cppcheck < Formula
   def install
     ENV.cxx11
 
-    # Man pages aren't installed as they require docbook schemas.
 
-    # Pass to make variables.
     if build.with? "rules"
       system "make", "HAVE_RULES=yes", "CFGDIR=#{prefix}/cfg"
     else
@@ -39,7 +37,6 @@ class Cppcheck < Formula
 
     system "make", "DESTDIR=#{prefix}", "BIN=#{bin}", "CFGDIR=#{prefix}/cfg", "install"
 
-    # make sure cppcheck can find its configure directory, #26194
     prefix.install "cfg"
 
     if build.with? "gui"
@@ -58,7 +55,6 @@ class Cppcheck < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
       using namespace std;
 
       int main()

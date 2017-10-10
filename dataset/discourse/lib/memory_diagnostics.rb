@@ -33,7 +33,6 @@ module MemoryDiagnostics
         summary[obj.class] ||= 0
         summary[obj.class] += 1
       rescue
-        # don't care
       end
     end
 
@@ -78,7 +77,6 @@ module MemoryDiagnostics
       begin
         object_ids << o.object_id
       rescue
-        # skip
       end
     end
 
@@ -87,7 +85,6 @@ module MemoryDiagnostics
 
   def self.memory_report(opts={})
     begin
-      # ruby 2.1
       GC.start(full_mark: true)
     rescue
       GC.start
@@ -107,7 +104,6 @@ module MemoryDiagnostics
             large_objects << [size, o]
           end
         rescue
-          # all sorts of stuff can happen here BasicObject etc.
           classes[:unknown] ||= 0
           classes[:unknown] += 1
         end
@@ -130,19 +126,14 @@ module MemoryDiagnostics
 
 
     <<TEXT
-#{`hostname`.strip} pid:#{Process.pid} #{`cat /proc/#{Process.pid}/cmdline`.strip.gsub(/[^a-z1-9\/]/i, ' ')}
 
 GC STATS:
-#{stats.join("\n")}
 
 Objects:
-#{counts.join("\n")}
 
 Process Info:
-#{`cat /proc/#{Process.pid}/status`}
 
 Classes:
-#{classes.length > 0 ? classes.join("\n") : "Class report omitted use ?full=1 to include it"}
 
 TEXT
 
@@ -150,7 +141,6 @@ TEXT
 
 
   def self.full_gc
-    # gc start may not collect everything
     GC.start while new_count = decreased_count(new_count)
   end
 

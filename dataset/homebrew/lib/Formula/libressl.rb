@@ -29,7 +29,6 @@ class Libressl < Formula
       --sysconfdir=#{etc}/libressl
     ]
 
-    # https://github.com/libressl-portable/portable/issues/121
     args << "--disable-asm" if MacOS.version <= :snow_leopard
 
     system "./autogen.sh" if build.head?
@@ -59,7 +58,6 @@ class Libressl < Formula
       $?.success?
     end
 
-    # LibreSSL install a default pem - We prefer to use OS X for consistency.
     rm_f etc/"libressl/cert.pem"
     (etc/"libressl/cert.pem").atomic_write(valid_certs.join("\n"))
   end
@@ -67,19 +65,15 @@ class Libressl < Formula
   def caveats; <<-EOS.undent
     A CA file has been bootstrapped using certificates from the system
     keychain. To add additional certificates, place .pem files in
-      #{etc}/libressl/certs
 
     and run
-      #{opt_bin}/openssl certhash #{etc}/libressl/certs
     EOS
   end
 
   test do
-    # Make sure the necessary .cnf file exists, otherwise LibreSSL gets moody.
     assert (HOMEBREW_PREFIX/"etc/libressl/openssl.cnf").exist?,
             "LibreSSL requires the .cnf file for some functionality"
 
-    # Check LibreSSL itself functions as expected.
     (testpath/"testfile.txt").write("This is a test file")
     expected_checksum = "e2d0fe1585a63ec6009c8016ff8dda8b17719a637405a4e23c0ff81339148249"
     system "#{bin}/openssl", "dgst", "-sha256", "-out", "checksum.txt", "testfile.txt"

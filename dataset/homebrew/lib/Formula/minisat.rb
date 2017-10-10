@@ -4,8 +4,6 @@ class Minisat < Formula
   url "https://github.com/niklasso/minisat/archive/releases/2.2.0.tar.gz"
   sha256 "3ed44da999744c0a1be269df23c3ed8731cdb83c44a4f3aa29b3d6859bb2a4da"
 
-  # Fix some declaration errors; see:
-  # http://groups.google.com/group/minisat/browse_thread/thread/f5b6a180cadbb214
   patch :DATA
 
   fails_with :clang do
@@ -32,8 +30,6 @@ index a7cf53f..feeaf3c 100644
 +double Minisat::memUsedPeak(void) { return memUsed(); }
  
  
- #elif defined(__APPLE__)
- #include <malloc/malloc.h>
  
 -double Minisat::memUsed(void) {
 +double Minisat::memUsed() {
@@ -42,5 +38,4 @@ index a7cf53f..feeaf3c 100644
      return (double)t.max_size_in_use / (1024*1024); }
 +double Minisat::memUsedPeak() { return memUsed(); }
  
- #else
  double Minisat::memUsed() { 

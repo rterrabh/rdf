@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Profile < ActiveRecord::Base
   self.include_root_in_json = false
@@ -64,7 +61,6 @@ class Profile < ActiveRecord::Base
   end
 
   def diaspora_handle
-    #get the parent diaspora handle, unless we want to access a profile without a person
     (self.person) ? self.person.diaspora_handle : self[:diaspora_handle]
   end
 
@@ -146,8 +142,6 @@ class Profile < ActiveRecord::Base
     end
   end
 
-  # Constructs a full name by joining #first_name and #last_name
-  # @return [String] A full name
   def construct_full_name
     self.full_name = [self.first_name, self.last_name].join(' ').downcase.strip
     self.full_name

@@ -3,19 +3,12 @@ require 'active_support/core_ext/module/delegation'
 require 'json'
 
 module ActiveSupport
-  # Look for and parse json strings that look like ISO 8601 times.
   mattr_accessor :parse_json_times
 
   module JSON
-    # matches YAML-formatted dates
     DATE_REGEX = /^(?:\d{4}-\d{2}-\d{2}|\d{4}-\d{1,2}-\d{1,2}[T \t]+\d{1,2}:\d{2}:\d{2}(\.[0-9]*)?(([ \t]*)Z|[-+]\d{2}?(:\d{2})?))$/
     
     class << self
-      # Parses a JSON string (JavaScript Object Notation) into a hash.
-      # See http://www.json.org for more info.
-      #
-      #   ActiveSupport::JSON.decode("{\"team\":\"rails\",\"players\":\"36\"}")
-      #   => {"team" => "rails", "players" => "36"}
       def decode(json, options = {})
         if options.present?
           raise ArgumentError, "In Rails 4.1, ActiveSupport::JSON.decode no longer " \
@@ -32,16 +25,6 @@ module ActiveSupport
         end
       end
 
-      # Returns the class of the error that will be raised when there is an
-      # error in decoding JSON. Using this method means you won't directly
-      # depend on the ActiveSupport's JSON implementation, in case it changes
-      # in the future.
-      #
-      #   begin
-      #     obj = ActiveSupport::JSON.decode(some_string)
-      #   rescue ActiveSupport::JSON.parse_error
-      #     Rails.logger.warn("Attempted to decode invalid JSON: #{some_string}")
-      #   end
       def parse_error
         ::JSON::ParserError
       end

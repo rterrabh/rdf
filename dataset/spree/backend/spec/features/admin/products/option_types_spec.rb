@@ -53,7 +53,6 @@ describe "Option Types", type: :feature, js: true do
     end
   end
 
-  # Regression test for #2277
   it "can remove an option value from an option type" do
     create(:option_value)
     click_link "Option Types"
@@ -63,19 +62,13 @@ describe "Option Types", type: :feature, js: true do
     within("tbody#option_values") do
       find('.spree_remove_fields').click
     end
-    # Assert that the field is hidden automatically
     expect(all("tbody#option_values tr").select(&:visible?).count).to eq(0)
 
-    # Then assert that on a page refresh that it's still not visible
     visit page.current_url
-    # What *is* visible is a new option value field, with blank values
-    # Sometimes the page doesn't load before the all check is done
-    # lazily finding the element gives the page 10 seconds
     expect(page).to have_css("tbody#option_values")
     all("tbody#option_values tr input").all? { |input| input.value.blank? }
   end
 
-  # Regression test for #3204
   it "can remove a non-persisted option value from an option type" do
     create(:option_type)
     click_link "Option Types"
@@ -86,26 +79,19 @@ describe "Option Types", type: :feature, js: true do
 
     expect(all("tbody#option_values tr").select(&:visible?).count).to eq(1)
 
-    # Add a new option type
     click_link "Add Option Value"
     expect(all("tbody#option_values tr").select(&:visible?).count).to eq(2)
 
-    # Remove default option type
     within("tbody#option_values") do
       click_icon :delete
     end
-    # Check that there was no HTTP request
     expect(all("div#progress[style]").count).to eq(0)
-    # Assert that the field is hidden automatically
     expect(all("tbody#option_values tr").select(&:visible?).count).to eq(1)
 
-    # Remove added option type
     within("tbody#option_values") do
       click_icon :delete
     end
-    # Check that there was no HTTP request
     expect(all("div#progress[style]").count).to eq(0)
-    # Assert that the field is hidden automatically
     expect(all("tbody#option_values tr").select(&:visible?).count).to eq(0)
 
   end

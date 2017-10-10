@@ -22,6 +22,7 @@ class Uru < Formula
 
   def caveats; <<-EOS.undent
     Append to ~/.profile on Ubuntu, or to ~/.zshrc on Zsh
+    #nodyna <eval-577> <not yet classified>
     $ echo 'eval "$(uru_rt admin install)"' >> ~/.bash_profile
     EOS
   end

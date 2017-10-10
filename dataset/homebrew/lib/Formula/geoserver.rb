@@ -7,7 +7,6 @@ class Geoserver < Formula
   def install
     libexec.install Dir["*"]
     (bin/"geoserver").write <<-EOS.undent
-      #!/bin/sh
       if [ -z "$1" ]; then
         echo "Usage: $ geoserver path/to/data/dir"
       else

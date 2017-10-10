@@ -1,14 +1,7 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
 require 'rubygems/package'
 require 'rubygems/installer'
 
-##
-# Validator performs various gem file and gem database validation
 
 class Gem::Validator
 
@@ -18,19 +11,10 @@ class Gem::Validator
     require 'find'
   end
 
-  ##
-  # Given a gem file's contents, validates against its own MD5 checksum
-  # gem_data:: [String] Contents of the gem file
 
   def verify_gem(gem_data)
-    # TODO remove me? The code here only validate an MD5SUM that was
-    # in some old formatted gems, but hasn't been for a long time.
   end
 
-  ##
-  # Given the path to a gem file, validates against its own MD5 checksum
-  #
-  # gem_path:: [String] Path to gem file
 
   def verify_gem_file(gem_path)
     open gem_path, Gem.binary_mode do |file|
@@ -57,8 +41,6 @@ class Gem::Validator
 
   public
 
-  ##
-  # Describes a problem with a file in a gem.
 
   ErrorData = Struct.new :path, :problem do
     def <=> other # :nodoc:
@@ -68,18 +50,6 @@ class Gem::Validator
     end
   end
 
-  ##
-  # Checks the gem directory for the following potential
-  # inconsistencies/problems:
-  #
-  # * Checksum gem itself
-  # * For each file in each gem, check consistency of installed versions
-  # * Check for files that aren't part of the gem but are in the gems directory
-  # * 1 cache - 1 spec - 1 directory.
-  #
-  # returns a hash of ErrorData objects, keyed on the problem gem's name.
-  #--
-  # TODO needs further cleanup
 
   def alien(gems=[])
     errors = Hash.new { |h,k| h[k] = {} }

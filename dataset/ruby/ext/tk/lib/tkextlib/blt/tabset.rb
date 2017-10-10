@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/tabset.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -13,7 +9,7 @@ module Tk::BLT
 
       TabID_TBL = TkCore::INTERP.create_table
 
-      #nodyna <ID:instance_eval-102> <IEV MODERATE (method definition)>
+      #nodyna <instance_eval-1549> <IEV MODERATE (method definition)>
       (TabsetTab_ID = ['blt_tabset_tab'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -58,7 +54,7 @@ module Tk::BLT
             end
             obj.configure if keys && ! keys.empty?
           else
-            #nodyna <ID:instance_eval-103> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1550> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               initialize(parent, pos, name, keys)
               TabID_TBL[@tpath] = {} unless TabID_TBL[@tpath]
@@ -98,12 +94,7 @@ module Tk::BLT
         end
       end
 
-      #def bind(context, cmd=Proc.new, *args)
-      #  @t.tab_bind(@id, context, cmd, *args)
-      #  self
-      #end
       def bind(context, *args)
-        # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
         if TkComm._callback_entry?(args[0]) || !block_given?
           cmd = args.shift
         else
@@ -112,12 +103,7 @@ module Tk::BLT
         @t.tab_bind(@id, context, cmd, *args)
         self
       end
-      #def bind_append(context, cmd=Proc.new, *args)
-      #  @t.tab_bind_append(@id, context, cmd, *args)
-      #  self
-      #end
       def bind_append(context, *args)
-        # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
         if TkComm._callback_entry?(args[0]) || !block_given?
           cmd = args.shift
         else
@@ -200,7 +186,6 @@ module Tk::BLT
       end
     end
 
-    ########################################
 
     class NamedTab < Tab
       def self.new(parent, name)
@@ -208,7 +193,6 @@ module Tk::BLT
       end
     end
 
-    ########################################
 
     include X_Scrollable
     include TkItemConfigMethod
@@ -223,7 +207,6 @@ module Tk::BLT
       }
     end
 
-    ########################################
 
     def __boolval_optkeys
       super() << 'samewidth' << 'tearoff'
@@ -282,7 +265,6 @@ module Tk::BLT
       end
     end
 
-    ########################################
 
     def activate(index)
       tk_send('activate', tagindex(index))
@@ -290,12 +272,7 @@ module Tk::BLT
     end
     alias highlight activate
 
-    #def tabbind(tag, context, cmd=Proc.new, *args)
-    #  _bind([path, "bind", tagid(tag)], context, cmd, *args)
-    #  self
-    #end
     def tabbind(tag, context, *args)
-      # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
       if TkComm._callback_entry?(args[0]) || !block_given?
         cmd = args.shift
       else
@@ -304,12 +281,7 @@ module Tk::BLT
       _bind([path, "bind", tagid(tag)], context, cmd, *args)
       self
     end
-    #def tabbind_append(tag, context, cmd=Proc.new, *args)
-    #  _bind_append([path, "bind", tagid(tag)], context, cmd, *args)
-    #  self
-    #end
     def tabbind_append(tag, context, *args)
-      # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
       if TkComm._callback_entry?(args[0]) || !block_given?
         cmd = args.shift
       else
@@ -333,7 +305,6 @@ module Tk::BLT
           TabID_TBL[@path].delete(first.id)
         }
       end
-      # middle tabs of the range are unknown
       if last.kind_of?(Tk::BLT::Tabset::Tab)
         TabID_TBL.mutex.synchronize{
           TabID_TBL[@path].delete(last.id)
@@ -409,10 +380,8 @@ module Tk::BLT
     end
     def perforation_highlight(index, *args)
       if args.empty?
-        # index --> mode
         tk_send('perforation', 'highlight', index)
       elsif args.size == 1
-        # args[0] --> mode
         tk_send('perforation', 'highlight', tagindex(index), args[0])
       else # Error: call to get Tcl's error message
         tk_send('perforation', 'highlight', tagindex(index), *args)

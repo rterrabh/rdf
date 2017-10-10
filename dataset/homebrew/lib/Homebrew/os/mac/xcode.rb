@@ -17,7 +17,6 @@ module OS
         when "10.10" then "6.4"
         when "10.11" then "7.0"
         else
-          # Default to newest known version of Xcode for unreleased OSX versions.
           if MacOS.version > "10.11"
             "7.0"
           else
@@ -52,9 +51,6 @@ module OS
         Pathname.new("#{prefix}/Toolchains/XcodeDefault.xctoolchain") if installed? && version >= "4.3"
       end
 
-      # Ask Spotlight where Xcode is. If the user didn't install the
-      # helper tools and installed Xcode in a non-conventional place, this
-      # is our only option. See: https://superuser.com/questions/390757
       def bundle_path
         MacOS.app_with_bundle_id(V4_BUNDLE_ID, V3_BUNDLE_ID)
       end
@@ -64,15 +60,10 @@ module OS
       end
 
       def version
-        # may return a version string
-        # that is guessed based on the compiler, so do not
-        # use it in order to check if Xcode is installed.
         @version ||= uncached_version
       end
 
       def uncached_version
-        # This is a separate function as you can't cache the value out of a block
-        # if return is used in the middle, which we do many times in here.
 
         return "0" unless OS.mac?
 
@@ -85,24 +76,15 @@ module OS
           end
         end
 
-        # The remaining logic provides a fake Xcode version for CLT-only
-        # systems. This behavior only exists because Homebrew used to assume
-        # Xcode.version would always be non-nil. This is deprecated, and will
-        # be removed in a future version. To remain compatible, guard usage of
-        # Xcode.version with an Xcode.installed? check.
         case MacOS.llvm_build_version.to_i
         when 1..2063 then "3.1.0"
         when 2064..2065 then "3.1.4"
         when 2366..2325
-          # we have no data for this range so we are guessing
           "3.2.0"
         when 2326
-          # also applies to "3.2.3"
           "3.2.4"
         when 2327..2333 then "3.2.5"
         when 2335
-          # this build number applies to 3.2.6, 4.0 and 4.1
-          # https://github.com/Homebrew/homebrew/blob/master/share/doc/homebrew/Xcode.md
           "4.0"
         else
           case (MacOS.clang_version.to_f * 10).to_i
@@ -157,8 +139,6 @@ module OS
       MAVERICKS_NEW_PKG_ID = "com.apple.pkg.CLTools_Base" # obsolete
       MAVERICKS_PKG_PATH = "/Library/Developer/CommandLineTools"
 
-      # Returns true even if outdated tools are installed, e.g.
-      # tools from Xcode 4.x on 10.9
       def installed?
         !!detect_version
       end
@@ -184,9 +164,6 @@ module OS
         version < latest_version
       end
 
-      # Version string (a pretty long one) of the CLT package.
-      # Note, that different ways to install the CLTs lead to different
-      # version numbers.
       def version
         @version ||= detect_version
       end

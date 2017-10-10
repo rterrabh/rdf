@@ -1,10 +1,8 @@
 class CopyProductSlugsToSlugHistory < ActiveRecord::Migration
   def change
 
-	# do what sql does best: copy all slugs into history table in a single query
-	# rather than load potentially millions of products into memory
 	Spree::Product.connection.execute <<-SQL
-#nodyna <ID:send-20> <SD COMPLEX (private methods)>
+#nodyna <send-2542> <SD COMPLEX (private methods)>
 INSERT INTO #{FriendlyId::Slug.table_name} (slug, sluggable_id, sluggable_type, created_at)
   SELECT slug, id, '#{Spree::Product.to_s}', #{ActiveRecord::Base.send(:sanitize_sql_array, ['?', Time.current])} 
   FROM #{Spree::Product.table_name}

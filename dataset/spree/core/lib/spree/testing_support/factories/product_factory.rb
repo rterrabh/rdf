@@ -9,7 +9,6 @@ FactoryGirl.define do
     deleted_at nil
     shipping_category { |r| Spree::ShippingCategory.first || r.association(:shipping_category) }
 
-    # ensure stock item will be created for this products master
     before(:create) { create(:stock_location) if Spree::StockLocation.count == 0 }
 
     factory :custom_product do

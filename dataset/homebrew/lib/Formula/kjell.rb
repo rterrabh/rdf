@@ -1,7 +1,6 @@
 class Kjell < Formula
   desc "Erlang shell"
   homepage "https://karlll.github.io/kjell/"
-  # clone repository in order to get extensions submodule
   url "https://github.com/karlll/kjell.git",
       :tag => "0.2.6",
       :revision => "0848ad2d2ddefc74774f0d793f4aebd260efb052"

@@ -25,7 +25,6 @@ class Passenger < Formula
 
     (libexec/"download_cache").mkpath
 
-    # Fixes https://github.com/phusion/passenger/issues/1288
     rm_rf "buildout/libev"
     rm_rf "buildout/libeio"
     rm_rf "buildout/cache"
@@ -37,11 +36,8 @@ class Passenger < Formula
     libexec.mkpath
     cp_r necessary_files, libexec, :preserve => true
 
-    # Allow Homebrew to create symlinks for the Phusion Passenger commands.
     bin.install_symlink Dir["#{libexec}/bin/*"]
 
-    # Ensure that the Phusion Passenger commands can always find their library
-    # files.
     locations_ini = `/usr/bin/ruby ./bin/passenger-config --make-locations-ini --for-native-packaging-method=homebrew`
     locations_ini.gsub!(/=#{Regexp.escape Dir.pwd}/, "=#{libexec}")
     (libexec/"lib/phusion_passenger/locations.ini").write(locations_ini)

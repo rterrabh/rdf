@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/spinner.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -18,12 +14,10 @@ class Tk::Iwidgets::Spinner
   WidgetClassName = 'Spinner'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ####################################
 
   include Tk::ValidateConfigure
 
   class EntryfieldValidate < TkValidateCommand
-    #class CalCmdArgs < TkUtil::CallbackSubst
     class ValidateArgs < TkUtil::CallbackSubst
       KEY_TBL  = [
         [ ?c, ?s, :char ],
@@ -39,7 +33,6 @@ class Tk::Iwidgets::Spinner
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -70,7 +63,6 @@ class Tk::Iwidgets::Spinner
 
   Tk::ValidateConfigure.__def_validcmd(binding, EntryfieldValidate)
 
-  ####################################
 
   def up
     tk_call_without_enc(@path, 'up')
@@ -105,7 +97,6 @@ class Tk::Iwidgets::Spinner
 
   def cursor=(index)
     tk_send_without_enc('icursor', index)
-    #self
     index
   end
   alias icursor cursor=
@@ -151,7 +142,6 @@ class Tk::Iwidgets::Spinner
     self
   end
 
-  # based on tk/scrollable.rb
   def xview(*index)
     if index.size == 0
       list(tk_send_without_enc('xview'))

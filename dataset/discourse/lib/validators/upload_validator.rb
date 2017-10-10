@@ -78,7 +78,7 @@ class Validators::UploadValidator < ActiveModel::Validator
   end
 
   def maximum_file_size(upload, type)
-    #nodyna <ID:send-66> <SD MODERATE (change-prone variables)>
+    #nodyna <send-316> <SD MODERATE (change-prone variables)>
     max_size_kb = SiteSetting.send("max_#{type}_size_kb")
     max_size_bytes = max_size_kb.kilobytes
 

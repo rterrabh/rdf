@@ -17,7 +17,6 @@ module Scheduler::Schedule
     @every
   end
 
-  # schedule job indepndently on each host (looking at hostname)
   def per_host
     @per_host = true
   end

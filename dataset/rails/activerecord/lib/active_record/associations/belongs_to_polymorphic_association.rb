@@ -1,5 +1,4 @@
 module ActiveRecord
-  # = Active Record Belongs To Polymorphic Association
   module Associations
     class BelongsToPolymorphicAssociation < BelongsToAssociation #:nodoc:
       def klass
@@ -28,7 +27,6 @@ module ActiveRecord
         end
 
         def raise_on_type_mismatch!(record)
-          # A polymorphic association cannot have a type mismatch, by definition
         end
 
         def stale_state

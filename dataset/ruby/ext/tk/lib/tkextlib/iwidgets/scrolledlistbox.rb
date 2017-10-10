@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/scrolledlistbox.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/listbox'
@@ -34,7 +30,6 @@ class Tk::Iwidgets::Scrolledlistbox
   end
   private :__font_optkeys
 
-  ################################
 
   def initialize(*args)
     super(*args)
@@ -49,7 +44,6 @@ class Tk::Iwidgets::Scrolledlistbox
     end
   end
 
-  ################################
 
   def clear
     tk_call(@path, 'clear')
@@ -70,7 +64,6 @@ class Tk::Iwidgets::Scrolledlistbox
   end
 
   def sort(*params, &b)
-    # see 'lsort' man page about params
     if b
       tk_call(@path, 'sort', '-command', proc(&b), *params)
     else
@@ -87,7 +80,6 @@ class Tk::Iwidgets::Scrolledlistbox
     self
   end
 
-  #####################################
 
   def bbox(index)
     list(tk_send_without_enc('bbox', index))
@@ -116,7 +108,6 @@ class Tk::Iwidgets::Scrolledlistbox
     self
   end
 
-  #####################################
 
   include TkListItemConfig
 
@@ -129,7 +120,6 @@ class Tk::Iwidgets::Scrolledlistbox
   end
   private :tagid
 
-  #####################################
 
   def activate(y)
     tk_send_without_enc('activate', y)
@@ -140,7 +130,6 @@ class Tk::Iwidgets::Scrolledlistbox
   end
   def get(first, last=nil)
     if last
-      # tk_split_simplelist(_fromUTF8(tk_send_without_enc('get', first, last)))
       tk_split_simplelist(tk_send_without_enc('get', first, last),
                           false, true)
     else
@@ -173,7 +162,6 @@ class Tk::Iwidgets::Scrolledlistbox
     tk_send_without_enc('index', idx).to_i
   end
 
-  #####################################
 
   def xview(*index)
     if index.size == 0

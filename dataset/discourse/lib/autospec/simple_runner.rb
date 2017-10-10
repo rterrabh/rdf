@@ -6,12 +6,9 @@ module Autospec
 
     def run(specs)
       puts "Running Rspec: " << specs
-      # kill previous rspec instance
       abort
-      # we use our custom rspec formatter
       args = ["-r", "#{File.dirname(__FILE__)}/formatter.rb",
               "-f", "Autospec::Formatter", specs.split].flatten.join(" ")
-      # launch rspec
       @pid = Process.spawn({"RAILS_ENV" => "test"}, "bundle exec rspec #{args}")
       _, status = Process.wait2(@pid)
       status.exitstatus

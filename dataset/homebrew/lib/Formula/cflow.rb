@@ -13,10 +13,6 @@ class Cflow < Formula
 
   test do
     (testpath/"whoami.c").write <<-EOS.undent
-     #include <pwd.h>
-     #include <sys/types.h>
-     #include <stdio.h>
-     #include <stdlib.h>
 
      int
      who_am_i (void)

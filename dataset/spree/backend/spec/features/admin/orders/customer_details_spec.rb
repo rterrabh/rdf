@@ -9,16 +9,11 @@ describe "Customer Details", type: :feature, js: true do
   let!(:order) { create(:order, state: 'complete', completed_at: "2011-02-01 12:36:15") }
   let!(:product) { create(:product_in_stock) }
 
-  # We need a unique name that will appear for the customer dropdown
   let!(:ship_address) { create(:address, country: country, state: state, first_name: "Rumpelstiltskin") }
   let!(:bill_address) { create(:address, country: country, state: state, first_name: "Rumpelstiltskin") }
 
   let!(:user) { create(:user, email: 'foobar@example.com', ship_address: ship_address, bill_address: bill_address) }
 
-  # "Intelligiently" wait on condition
-  #
-  # Much better than a random sleep "here and there"
-  # it will not cause any delay in case the condition is fullfilled on first cycle.
   def wait_for_condition
     time = Capybara.default_wait_time
     step = 0.1
@@ -30,9 +25,6 @@ describe "Customer Details", type: :feature, js: true do
     fail "Could archieve condition within #{Capybara.default_wait_time} seconds"
   end
 
-  # Value attribute is dynamically set via JS, so not observable via a CSS/XPath selector
-  # As the browser might take time to make the values visible in the dom we need to
-  # "intelligiently" wait for that event o prevent a race.
   def expect_form_value(id, value)
     node = page.find(id)
     wait_for_condition { node.value.eql?(value) }
@@ -42,7 +34,6 @@ describe "Customer Details", type: :feature, js: true do
     before do
       visit spree.new_admin_order_path
     end
-    # Regression test for #3335 & #5317
     it "associates a user when not using guest checkout" do
       select2_search product.name, from: Spree.t(:name_or_sku)
       within("table.stock-levels") do
@@ -52,7 +43,6 @@ describe "Customer Details", type: :feature, js: true do
       wait_for_ajax
       click_link "Customer"
       targetted_select2 "foobar@example.com", from: "#s2id_customer_search"
-      # 5317 - Address prefills using user's default.
       expect_form_value('#order_bill_address_attributes_firstname', user.bill_address.firstname)
       expect_form_value('#order_bill_address_attributes_lastname', user.bill_address.lastname)
       expect_form_value('#order_bill_address_attributes_address1', user.bill_address.address1)
@@ -105,8 +95,6 @@ describe "Customer Details", type: :feature, js: true do
       click_button "Update"
       click_link "Customer"
 
-      # Regression test for #2950 + #2433
-      # This act should transition the state of the order as far as it will go too
       within("#order_tab_summary") do
         expect(find(".state").text).to eq("complete")
       end
@@ -144,7 +132,6 @@ describe "Customer Details", type: :feature, js: true do
       end
     end
 
-    # Regression test for #942
     context "errors when no shipping methods are available" do
       before do
         Spree::ShippingMethod.delete_all
@@ -152,7 +139,6 @@ describe "Customer Details", type: :feature, js: true do
 
       specify do
         click_link "Customer"
-        # Need to fill in valid information so it passes validations
         fill_in "order_ship_address_attributes_firstname",  with: "John 99"
         fill_in "order_ship_address_attributes_lastname",   with: "Doe"
         fill_in "order_ship_address_attributes_lastname",   with: "Company"

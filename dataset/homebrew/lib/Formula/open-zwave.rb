@@ -10,9 +10,6 @@ class OpenZwave < Formula
     sha1 "ab857cbb029a40ede770184e6262344db82f9832" => :mountain_lion
   end
 
-  # Patch to build a .dylib instead of a .so
-  # This patch has been merged upstream and can be removed after the next release:
-  # https://code.google.com/p/open-zwave/source/detail?r=954
   patch :DATA
 
   def install
@@ -24,8 +21,6 @@ class OpenZwave < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
-      #include "Options.h"
       int main() {
         OpenZWave::Options::Create("", "", "");
         return 0;
@@ -54,7 +49,6 @@ index 24df4f5..b064029 100644
 +SHARED_LIB_UNVERSIONED=libopenzwave.so
 +endif
  
- #if we are on a Mac, add these flags and libs to the compile and link phases 
  ifeq ($(UNAME),Darwin)
  CFLAGS	+= -c -DDARWIN -arch i386 -arch x86_64
 -LDFLAGS += -arch i386 -arch x86_64

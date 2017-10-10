@@ -14,7 +14,6 @@ module ActiveAdmin
           "#{object_name}[#{input_name}]" # was "#{object_name}[#{association_primary_key}]"
         end
 
-        # Provide the AA translation to the blank input field.
         def include_blank
           I18n.t 'active_admin.any' if super
         end

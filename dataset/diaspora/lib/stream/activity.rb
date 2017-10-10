@@ -11,7 +11,6 @@ class Stream::Activity < Stream::Base
     I18n.translate("streams.activity.title")
   end
 
-  # @return [ActiveRecord::Association<Post>] AR association of posts
   def posts
     @posts ||= EvilQuery::Participation.new(user).posts
   end

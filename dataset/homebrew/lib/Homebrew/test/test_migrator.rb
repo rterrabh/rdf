@@ -91,7 +91,6 @@ class MigratorTests < Homebrew::TestCase
 
     rmtree HOMEBREW_PREFIX/"bin"
     rmtree HOMEBREW_PREFIX/"opt" if (HOMEBREW_PREFIX/"opt").directory?
-    # What to do with pin?
     @new_f.unpin
 
     FormulaLock::LOCKDIR.children.each(&:unlink)
@@ -230,8 +229,6 @@ class MigratorTests < Homebrew::TestCase
     assert_equal "/should/be/the/same", Tab.for_keg(@old_keg_record).source["path"]
   end
 
-  # Backup tests are divided into three groups: when oldname Cellar is deleted
-  # and when it still exists and when it's a symlink
 
   def check_after_backup
     assert_predicate @old_keg_record.parent, :directory?

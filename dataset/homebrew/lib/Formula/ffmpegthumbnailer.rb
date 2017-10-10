@@ -11,7 +11,6 @@ class Ffmpegthumbnailer < Formula
     sha256 "35fb2908a936f82fef0d09985648f977b35a47768d989093b5acede20e590556" => :mountain_lion
   end
 
-  # Look for upstream to replace the GNU build process with CMake in the future
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "libtool" => :build

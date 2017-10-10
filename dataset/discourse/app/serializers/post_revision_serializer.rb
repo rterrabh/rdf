@@ -2,41 +2,34 @@ class PostRevisionSerializer < ApplicationSerializer
 
   attributes :created_at,
              :post_id,
-             # which revision is hidden
              :previous_hidden,
              :current_hidden,
-             # dynamic & based on the current scope
              :first_revision,
              :previous_revision,
              :current_revision,
              :next_revision,
              :last_revision,
-             # used for display
              :current_version,
              :version_count,
-             # from the user
              :username,
              :display_username,
              :avatar_template,
-             # all the changes
              :edit_reason,
              :body_changes,
              :title_changes,
              :user_changes
 
 
-  # Creates a field called field_name_changes with previous and
-  # current members if a field has changed in this revision
   def self.add_compared_field(field)
     changes_name = "#{field}_changes".to_sym
 
     self.attributes changes_name
-    #nodyna <ID:define_method-29> <DM MODERATE (events)>
+    #nodyna <define_method-459> <DM MODERATE (events)>
     define_method(changes_name) do
       { previous: previous[field], current: current[field] }
     end
 
-    #nodyna <ID:define_method-30> <DM MODERATE (events)>
+    #nodyna <define_method-460> <DM MODERATE (events)>
     define_method("include_#{changes_name}?") do
       previous[field] != current[field]
     end
@@ -97,7 +90,6 @@ class PostRevisionSerializer < ApplicationSerializer
   end
 
   def edit_reason
-    # only show 'edit_reason' when revisions are consecutive
     current["edit_reason"] if scope.can_view_hidden_post_revisions? ||
                               current["revision"] == previous["revision"] + 1
   end
@@ -117,7 +109,6 @@ class PostRevisionSerializer < ApplicationSerializer
     prev = "<div>#{previous["title"] && CGI::escapeHTML(previous["title"])}</div>"
     cur = "<div>#{current["title"] && CGI::escapeHTML(current["title"])}</div>"
 
-    # always show the title for post_number == 1
     return if object.post.post_number > 1 && prev == cur
 
     diff = DiscourseDiff.new(prev, cur)
@@ -133,7 +124,6 @@ class PostRevisionSerializer < ApplicationSerializer
     cur = current["user_id"]
     return if prev == cur
 
-    # if stuff is messed up, default to system
     previous = User.find_by(id: prev) || Discourse.system_user
     current = User.find_by(id: cur) || Discourse.system_user
 
@@ -179,10 +169,9 @@ class PostRevisionSerializer < ApplicationSerializer
         "user_id" => [post.user_id]
       }
 
-      # Retrieve any `tracked_topic_fields`
       PostRevisor.tracked_topic_fields.each_key do |field|
         if topic.respond_to?(field)
-          #nodyna <ID:send-140> <SD MODERATE (array)>
+          #nodyna <send-461> <SD MODERATE (array)>
           latest_modifications[field.to_s] = [topic.send(field)]
         end
       end
@@ -195,7 +184,6 @@ class PostRevisionSerializer < ApplicationSerializer
 
       @all_revisions = []
 
-      # backtrack
       post_revisions.each do |pr|
         revision = HashWithIndifferentAccess.new
         revision[:revision] = pr.number
@@ -208,7 +196,6 @@ class PostRevisionSerializer < ApplicationSerializer
         @all_revisions << revision
       end
 
-      # waterfall
       (@all_revisions.count - 1).downto(1).each do |r|
         cur = @all_revisions[r]
         prev = @all_revisions[r - 1]
@@ -230,7 +217,6 @@ class PostRevisionSerializer < ApplicationSerializer
     end
 
     def user
-      # if stuff goes pear shape attribute to system
       object.user || Discourse.system_user
     end
 

@@ -1,6 +1,4 @@
 module ActiveSupport
-  # This module provides an internal implementation to track descendants
-  # which is faster than iterating through ObjectSpace.
   module DescendantsTracker
     @@direct_descendants = {}
 
@@ -29,8 +27,6 @@ module ActiveSupport
         end
       end
 
-      # This is the only method that is not thread safe, but is only ever called
-      # during the eager loading phase.
       def store_inherited(klass, descendant)
         (@@direct_descendants[klass] ||= []) << descendant
       end

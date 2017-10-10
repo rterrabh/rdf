@@ -25,7 +25,6 @@ class AppscaleTools < Formula
     sha256 "e70845906bb625144ae6a8df4534d66d84431ff8e21835d7b401ec6d8eb447a5"
   end
 
-  # dependencies for soappy
   resource "wstools" do
     url "https://pypi.python.org/packages/source/w/wstools/wstools-0.4.3.tar.gz"
     sha256 "578b53e98bc8dadf5a55dfd1f559fd9b37a594609f1883f23e8646d2d30336f8"
@@ -55,7 +54,6 @@ class AppscaleTools < Formula
     sha256 "695c046789540db5ce4deefe3836e78a2cc002d5e10a41b936c6907f4ec9c96c"
   end
 
-  # dependencies for google-api-python-client
   resource "oauth2client" do
     url "https://pypi.python.org/packages/source/o/oauth2client/oauth2client-1.4.7.tar.gz"
     sha256 "b63550a242ea25ec027a261c2f5667d52de268f52c3f0c6ce60850ad45492031"

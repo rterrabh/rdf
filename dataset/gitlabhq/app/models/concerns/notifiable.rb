@@ -1,7 +1,3 @@
-# == Notifiable concern
-#
-# Contains notification functionality
-#
 module Notifiable
   extend ActiveSupport::Concern
 

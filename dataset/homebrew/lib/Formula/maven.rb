@@ -8,17 +8,13 @@ class Maven < Formula
   depends_on :java
 
   def install
-    # Remove windows files
     rm_f Dir["bin/*.bat"]
 
-    # Fix the permissions on the global settings file.
     chmod 0644, "conf/settings.xml"
 
     prefix.install_metafiles
     libexec.install Dir["*"]
 
-    # Leave conf file in libexec. The mvn symlink will be resolved and the conf
-    # file will be found relative to it
     Pathname.glob("#{libexec}/bin/*") do |file|
       next if file.directory?
       basename = file.basename

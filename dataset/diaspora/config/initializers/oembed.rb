@@ -1,11 +1,6 @@
 require 'oembed'
 require 'uri'
 
-#
-# SECURITY NOTICE! CROSS-SITE SCRIPTING!
-# these endpoints may inject html code into our page
-# note that 'trusted_endpoint_url' is the only information
-# in OEmbed that we can trust. anything else may be spoofed!
 
 oembed_provider_list = [
   OEmbed::Providers::Youtube,

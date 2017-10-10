@@ -46,7 +46,7 @@ module Spree
     LOCALIZED_NUMBERS = %w(cost_price weight depth width height)
 
     LOCALIZED_NUMBERS.each do |m|
-      #nodyna <ID:define_method-10> <DM MODERATE (array)>
+      #nodyna <define_method-2531> <DM MODERATE (array)>
       define_method("#{m}=") do |argument|
         self[m] = Spree::LocalizedNumber.parse(argument) if argument.present?
       end
@@ -71,7 +71,6 @@ module Spree
       end
     end
 
-    # returns number of units currently on backorder for this variant.
     def on_backorder
       inventory_units.with_state('backordered').size
     end
@@ -92,7 +91,6 @@ module Spree
       values.to_sentence({ words_connector: ", ", two_words_connector: ", " })
     end
 
-    # Default to master name
     def exchange_name
       is_master? ? name : options_text
     end
@@ -101,16 +99,10 @@ module Spree
       is_master? ? name + ' - Master' : name + ' - ' + options_text
     end
 
-    # use deleted? rather than checking the attribute directly. this
-    # allows extensions to override deleted? if they want to provide
-    # their own definition.
     def deleted?
       !!deleted_at
     end
 
-    # Product may be created with deleted_at already set,
-    # which would make AR's default finder return nil.
-    # This is a stopgap for that little problem.
     def product
       Spree::Product.unscoped { super }
     end
@@ -122,7 +114,6 @@ module Spree
     end
 
     def set_option_value(opt_name, opt_value)
-      # no option values on master
       return if self.is_master
 
       option_type = Spree::OptionType.where(name: opt_name).first_or_initialize do |o|
@@ -136,7 +127,6 @@ module Spree
         return if current_value.name == opt_value
         self.option_values.delete(current_value)
       else
-        # then we have to check to make sure that the product has the option type
         unless self.product.option_types.include? option_type
           self.product.option_types << option_type
         end
@@ -169,7 +159,7 @@ module Spree
       options.keys.map { |key|
         m = "#{key}_price_modifier_amount_in".to_sym
         if self.respond_to? m
-          #nodyna <ID:send-101> <SD COMPLEX (array)>
+          #nodyna <send-2532> <SD COMPLEX (array)>
           self.send(m, currency, options[key])
         else
           0
@@ -183,7 +173,7 @@ module Spree
       options.keys.map { |key|
         m = "#{key}_price_modifier_amount".to_sym
         if self.respond_to? m
-          #nodyna <ID:send-102> <SD COMPLEX (array)>
+          #nodyna <send-2533> <SD COMPLEX (array)>
           self.send(m, options[key])
         else
           0
@@ -213,8 +203,6 @@ module Spree
       Spree::Stock::Quantifier.new(self).total_on_hand
     end
 
-    # Shortcut method to determine if inventory tracking is enabled for this variant
-    # This considers both variant tracking flag and site-wide inventory tracking settings
     def should_track_inventory?
       self.track_inventory? && Spree::Config.track_inventory_levels
     end
@@ -236,7 +224,6 @@ module Spree
         end
       end
 
-      # Ensures a new variant takes the product master price when price is not supplied
       def check_price
         if price.nil? && Spree::Config[:require_master_price]
           raise 'No master variant found to infer price' unless (product && product.master)

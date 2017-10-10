@@ -21,7 +21,6 @@ module Spree
         .backordered.order("spree_orders.completed_at ASC")
     end
 
-    # state machine (see http://github.com/pluginaweek/state_machine/tree/master for details)
     state_machine initial: :on_hand do
       event :fill_backorder do
         transition to: :on_hand, from: :backordered
@@ -37,12 +36,6 @@ module Spree
       end
     end
 
-    # This was refactored from a simpler query because the previous implementation
-    # led to issues once users tried to modify the objects returned. That's due
-    # to ActiveRecord `joins(shipment: :stock_location)` only returning readonly
-    # objects
-    #
-    # Returns an array of backordered inventory units as per a given stock item
     def self.backordered_for_stock_item(stock_item)
       backordered_per_variant(stock_item).select do |unit|
         unit.shipment.stock_location == stock_item.stock_location
@@ -63,7 +56,6 @@ module Spree
         variant_id: variant_id).first
     end
 
-    # Remove variant default_scope `deleted_at: nil`
     def variant
       Spree::Variant.unscoped { super }
     end

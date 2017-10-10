@@ -9,12 +9,12 @@ class Plenv < Formula
   def install
     prefix.install "bin", "plenv.d", "completions", "libexec"
 
-    # Run rehash after installing.
     system "#{bin}/plenv", "rehash"
   end
 
   def caveats; <<-EOS.undent
     To enable shims add to your profile:
+      #nodyna <eval-552> <not yet classified>
       if which plenv > /dev/null; then eval "$(plenv init -)"; fi
     EOS
   end

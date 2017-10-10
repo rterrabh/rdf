@@ -47,8 +47,6 @@ module HasCustomFields
 
     attr_accessor :preloaded_custom_fields
 
-    # To avoid n+1 queries, use this function to retrieve lots of custom fields in one go
-    # and create a "sideloaded" version for easy querying by id.
     def self.custom_fields_for_ids(ids, whitelisted_fields)
       klass = "#{name}CustomField".constantize
       foreign_key = "#{name.underscore}_id".to_sym
@@ -133,7 +131,6 @@ module HasCustomFields
       if @preloaded.key?(key)
         @preloaded[key]
       else
-        # for now you can not mix preload an non preload, it better just to fail
         raise StandardError, "Attempting to access a non preloaded custom field, this is disallowed to prevent N+1 queries."
       end
     end
@@ -153,7 +150,6 @@ module HasCustomFields
   end
 
   def custom_fields_clean?
-    # Check whether the cached version has been changed on this model
     !@custom_fields || @custom_fields_orig == @custom_fields
   end
 
@@ -165,7 +161,6 @@ module HasCustomFields
 
       _custom_fields.each do |f|
         if dup[f.name].is_a? Array
-          # we need to collect Arrays fully before we can compare them
           if !array_fields.has_key?(f.name)
             array_fields[f.name] = [f]
           else
@@ -186,7 +181,6 @@ module HasCustomFields
         end
       end
 
-      # let's iterate through our arrays and compare them
       array_fields.each do |field_name, fields|
         if fields.length == dup[field_name].length && fields.map(&:value) == dup[field_name]
           dup.delete(field_name)

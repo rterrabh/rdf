@@ -3,8 +3,6 @@ require 'active_record/explain_registry'
 
 module ActiveRecord
   module Explain
-    # Executes the block with the collect flag enabled. Queries are collected
-    # asynchronously by the subscriber and returned.
     def collecting_queries_for_explain # :nodoc:
       ExplainRegistry.collect = true
       yield
@@ -13,8 +11,6 @@ module ActiveRecord
       ExplainRegistry.reset
     end
 
-    # Makes the adapter execute EXPLAIN for the tuples of queries and bindings.
-    # Returns a formatted string ready to be logged.
     def exec_explain(queries) # :nodoc:
       str = queries.map do |sql, bind|
         [].tap do |msg|
@@ -27,7 +23,6 @@ module ActiveRecord
         end.join("\n")
       end.join("\n")
 
-      # Overriding inspect to be more human readable, especially in the console.
       def str.inspect
         self
       end

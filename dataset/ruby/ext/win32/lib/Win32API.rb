@@ -1,5 +1,3 @@
-# -*- ruby -*-
-# for backward compatibility
 warn "Warning:#{caller[0].sub(/:in `.*'\z/, '')}: Win32API is deprecated after Ruby 1.9.1; use fiddle directly instead" if $VERBOSE
 
 require 'fiddle/import'
@@ -17,7 +15,7 @@ class Win32API
       handle[func],
       @proto.chars.map { |win_type| TYPEMAP[win_type.tr("VPpNnLlIi", "0SSI")] },
       TYPEMAP[export.tr("VPpNnLlIi", "0SSI")],
-      #nodyna <ID:const_get-19> <CG TRIVIAL (static values)>
+      #nodyna <const_get-1518> <CG TRIVIAL (static values)>
       Fiddle::Importer.const_get(:CALL_TYPE_TO_ABI)[calltype]
     )
   rescue Fiddle::DLError => e

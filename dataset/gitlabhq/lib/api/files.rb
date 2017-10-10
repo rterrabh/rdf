@@ -1,31 +1,8 @@
 module API
-  # Projects API
   class Files < Grape::API
     before { authenticate! }
 
     resource :projects do
-      # Get file from repository
-      # File content is Base64 encoded
-      #
-      # Parameters:
-      #   file_path (required) - The path to the file. Ex. lib/class.rb
-      #   ref (required) - The name of branch, tag or commit
-      #
-      # Example Request:
-      #   GET /projects/:id/repository/files
-      #
-      # Example response:
-      # {
-      #   "file_name": "key.rb",
-      #   "file_path": "app/models/key.rb",
-      #   "size": 1476,
-      #   "encoding": "base64",
-      #   "content": "IyA9PSBTY2hlbWEgSW5mb3...",
-      #   "ref": "master",
-      #   "blob_id": "79f7bbd25901e8334750839545a9bd021f0e4c83",
-      #   "commit_id": "d5a3ff139356ce33e37e73add446f16869741b50"
-      # }
-      #
       get ":id/repository/files" do
         authorize! :download_code, user_project
 
@@ -57,17 +34,6 @@ module API
         end
       end
 
-      # Create new file in repository
-      #
-      # Parameters:
-      #   file_path (required) - The path to new file. Ex. lib/class.rb
-      #   branch_name (required) - The name of branch
-      #   content (required) - File content
-      #   commit_message (required) - Commit message
-      #
-      # Example Request:
-      #   POST /projects/:id/repository/files
-      #
       post ":id/repository/files" do
         authorize! :push_code, user_project
 
@@ -89,17 +55,6 @@ module API
         end
       end
 
-      # Update existing file in repository
-      #
-      # Parameters:
-      #   file_path (optional) - The path to file. Ex. lib/class.rb
-      #   branch_name (required) - The name of branch
-      #   content (required) - File content
-      #   commit_message (required) - Commit message
-      #
-      # Example Request:
-      #   PUT /projects/:id/repository/files
-      #
       put ":id/repository/files" do
         authorize! :push_code, user_project
 
@@ -122,17 +77,6 @@ module API
         end
       end
 
-      # Delete existing file in repository
-      #
-      # Parameters:
-      #   file_path (optional) - The path to file. Ex. lib/class.rb
-      #   branch_name (required) - The name of branch
-      #   content (required) - File content
-      #   commit_message (required) - Commit message
-      #
-      # Example Request:
-      #   DELETE /projects/:id/repository/files
-      #
       delete ":id/repository/files" do
         authorize! :push_code, user_project
 

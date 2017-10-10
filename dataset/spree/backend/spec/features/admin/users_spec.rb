@@ -229,9 +229,9 @@ describe 'Users', type: :feature do
     [:number, :state, :total].each do |attr|
       context attr do
         it_behaves_like "a sortable attribute" do
-          #nodyna <ID:send-17> <SD MODERATE (array)>
+          #nodyna <send-2412> <SD MODERATE (array)>
           let(:text_match_1) { order.send(attr).to_s }
-          #nodyna <ID:send-18> <SD MODERATE (array)>
+          #nodyna <send-2413> <SD MODERATE (array)>
           let(:text_match_2) { order_2.send(attr).to_s }
           let(:table_id) { "listing_orders" }
           let(:sort_link) { "orders_#{attr}_title" }
@@ -262,9 +262,9 @@ describe 'Users', type: :feature do
     [:number, :state].each do |attr|
       context attr do
         it_behaves_like "a sortable attribute" do
-          #nodyna <ID:send-19> <SD MODERATE (private methods)>
+          #nodyna <send-2414> <SD MODERATE (private methods)>
           let(:text_match_1) { order.send(attr).to_s }
-          #nodyna <ID:send-20> <SD MODERATE (private methods)>
+          #nodyna <send-2415> <SD MODERATE (private methods)>
           let(:text_match_2) { order_2.send(attr).to_s }
           let(:table_id) { "listing_items" }
           let(:sort_link) { "orders_#{attr}_title" }

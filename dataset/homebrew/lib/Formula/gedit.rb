@@ -24,8 +24,6 @@ class Gedit < Formula
   depends_on "gsettings-desktop-schemas"
   depends_on "gnome-icon-theme"
 
-  # ensures that gtk-mac-integration has been linked against gtk+3
-  # filed upstream as https://bugzilla.gnome.org/show_bug.cgi?id=751431
   patch :DATA
 
   def install
@@ -43,11 +41,8 @@ class Gedit < Formula
   end
 
   test do
-    # main executable test
     system "gedit", "--version"
-    # API test
     (testpath/"test.c").write <<-EOS.undent
-      #include <gedit/gedit-utils.h>
 
       int main(int argc, char *argv[]) {
         gchar *text = gedit_utils_make_valid_utf8("test text");
@@ -176,7 +171,6 @@ index 2a16d57..9ad2e56 100755
 -	        GTK_MAC_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gtk-mac-integration" 2>&1`
 +	        GTK_MAC_PKG_ERRORS=`$PKG_CONFIG --print-errors --cflags --libs "gtk-mac-integration-gtk3" 2>&1`
          fi
-	# Put the nasty error message in config.log where it belongs
 	echo "$GTK_MAC_PKG_ERRORS" >&5
 
 -	as_fn_error $? "Package requirements (gtk-mac-integration) were not met:

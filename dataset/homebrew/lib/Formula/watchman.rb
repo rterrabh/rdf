@@ -28,8 +28,6 @@ class Watchman < Formula
   end
 
   test do
-    # Currently fails under HOMEBREW_SANDBOX: Operation not permitted
-    # "Failed to open /path/to/LaunchAgents/plist for write"
     system "#{bin}/watchman", "shutdown-server"
     system "#{bin}/watchman", "watch", testpath
 

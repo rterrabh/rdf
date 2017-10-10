@@ -1,11 +1,6 @@
-# Discourse specific cache, enforces 1 day expiry
 
 class Cache < ActiveSupport::Cache::Store
 
-  # nothing is cached for longer than 1 day EVER
-  # there is no reason to have data older than this clogging redis
-  # it is dangerous cause if we rename keys we will be stuck with
-  # pointless data
   MAX_CACHE_AGE = 1.day unless defined? MAX_CACHE_AGE
 
   def initialize(opts = {})
@@ -39,7 +34,6 @@ class Cache < ActiveSupport::Cache::Store
       ActiveSupport::Cache::Entry.new data
     end
   rescue
-    # corrupt cache, fail silently for now, remove rescue later
   end
 
   def write_entry(key, entry, options)

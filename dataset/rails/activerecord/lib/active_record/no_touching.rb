@@ -1,23 +1,8 @@
 module ActiveRecord
-  # = Active Record No Touching
   module NoTouching
     extend ActiveSupport::Concern
 
     module ClassMethods
-      # Lets you selectively disable calls to `touch` for the
-      # duration of a block.
-      #
-      # ==== Examples
-      #   ActiveRecord::Base.no_touching do
-      #     Project.first.touch  # does nothing
-      #     Message.first.touch  # does nothing
-      #   end
-      #
-      #   Project.no_touching do
-      #     Project.first.touch  # does nothing
-      #     Message.first.touch  # works, but does not touch the associated project
-      #   end
-      #
       def no_touching(&block)
         NoTouching.apply_to(self, &block)
       end

@@ -1,16 +1,5 @@
-#--
-#   irb/ruby-token.rb - ruby tokens
-#   	$Release Version: 0.9.5$
-#   	$Revision: 11708 $
-#   	$Date: 2007-02-12 15:01:19 -0800 (Mon, 12 Feb 2007) $
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#++
-# Definitions of all tokens involved in the lexical analysis.
-#
-# This class is not documented because it is so deep in the internals.
 
 module RDoc::RubyToken
-  # :stopdoc:
 
   EXPR_BEG = :EXPR_BEG
   EXPR_MID = :EXPR_MID
@@ -20,7 +9,6 @@ module RDoc::RubyToken
   EXPR_DOT = :EXPR_DOT
   EXPR_CLASS = :EXPR_CLASS
 
-  # for ruby 1.4X
   if !defined?(Symbol)
     Symbol = Integer
   end
@@ -51,9 +39,6 @@ module RDoc::RubyToken
       other.text == @text
     end
 
-    ##
-    # Because we're used in contexts that expect to return a token, we set the
-    # text string and then return ourselves
 
     def set_text(text)
       @text = text
@@ -364,7 +349,6 @@ module RDoc::RubyToken
     [:TkRSHFT,      TkOp,   ">>"],
     [:TkCOLON2,     TkOp,   '::'],
     [:TkCOLON3,     TkOp,   '::'],
-    #[:OPASGN,       TkOp],               # +=, -=  etc. #
     [:TkASSOC,      TkOp,   "=>"],
     [:TkQUESTION,   TkOp,   "?"], #?
     [:TkCOLON,      TkOp,   ":"],        #:
@@ -412,8 +396,6 @@ module RDoc::RubyToken
     [:TkDOLLAR,     TkUnknownChar,  "$"],
   ]
 
-  # {reading => token_class}
-  # {reading => [token_class, *opt]}
   TkReading2Token = {}
   TkToken2Reading = {}
   TkSymbol2Token = {}
@@ -423,7 +405,7 @@ module RDoc::RubyToken
     if const_defined?(token_n)
       IRB.fail AlreadyDefinedToken, token_n
     end
-    #nodyna <ID:eval-71> <EV MODERATE (class definition)>
+    #nodyna <eval-2030> <EV MODERATE (class definition)>
     token_c = eval("class #{token_n} < #{super_token}; end; #{token_n}")
 
     if reading
@@ -456,6 +438,5 @@ module RDoc::RubyToken
 
   end
 
-  # :startdoc:
 end
 

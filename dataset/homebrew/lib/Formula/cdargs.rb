@@ -9,8 +9,6 @@ class Cdargs < Formula
     cause "Bus error in ld on SL 10.6.4"
   end
 
-  # fixes zsh usage using the patch provided at the cdargs homepage
-  # (See http://www.skamphausen.de/cgi-bin/ska/CDargs)
   patch :DATA
 
   def install
@@ -25,7 +23,6 @@ class Cdargs < Formula
 
   def caveats; <<-EOS.undent
       Support files for bash, tcsh, and emacs have been installed to:
-        #{prefix}/contrib
     EOS
   end
 end
@@ -46,13 +43,9 @@ index 8a197ef..f3da067 100644
 +	bashcompinit
 +fi
 +
- # --------------------------------------------- #
- # Run the cdargs program to get the target      #
- # directory to be used in the various context   #
 @@ -166,7 +172,7 @@ function mark ()
      local tmpfile
  
-     # first clear any bookmarks with this same alias, if file exists
 -    if [[ "$CDARGS_NODUPS" && -e "$HOME/.cdargs" ]]; then
 +    if [ "$CDARGS_NODUPS" ] && [ -e "$HOME/.cdargs" ]; then
          tmpfile=`echo ${TEMP:-${TMPDIR:-/tmp}} | sed -e "s/\\/$//"`

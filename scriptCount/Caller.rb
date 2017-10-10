@@ -16,7 +16,7 @@ class Caller < SexpInterpreter
   def find(files, methodName)
     @methodName = methodName.to_sym()
     files.each do |file|
-      @currentFile = file
+      @currentFile = File.absolute_path(file)
       begin
         ast = RubyParser.new().parse(File.open(file).read)
         process(ast)
@@ -30,6 +30,20 @@ class Caller < SexpInterpreter
     exp.map {|subtree| process(subtree) if subtree.class == Sexp}
   end
 
+  def process_defn(exp)
+    if(exp[1] == @methodName)
+      puts "#{@currentFile}.#{exp.line}"
+    end
+    default_process(exp)
+  end
+
+  def process_sdefn(exp)
+    if(exp[1] == @methodName)
+      puts "#{@currentFile}.#{exp.line}"
+    end
+    default_process(exp)
+  end
+
   def process_call(exp)
     if(exp[2] == @methodName)
       puts "#{@currentFile}.#{exp.line}"
@@ -39,6 +53,6 @@ class Caller < SexpInterpreter
 end
 
 if(ARGV.size >= 0)
-  files_to_research = ["../tool/target.rb"]
+  files_to_research = ["../dataset/vagrant/**/lib/**/*.rb"]
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

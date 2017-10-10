@@ -1,6 +1,3 @@
-# Copyright (C) 2000  Network Applied Communication Laboratory, Inc.
-# Copyright (C) 2000  Information-technology Promotion Agency, Japan
-# Copyright (C) 2000-2003  NAKAMURA, Hiroshi  <nahi@ruby-lang.org>
 
 require 'continuation'
 
@@ -20,165 +17,6 @@ end
 
 SCRIPT_LINES__ = {} unless defined? SCRIPT_LINES__ # :nodoc:
 
-##
-# This library provides debugging functionality to Ruby.
-#
-# To add a debugger to your code, start by requiring +debug+ in your
-# program:
-#
-#   def say(word)
-#     require 'debug'
-#     puts word
-#   end
-#
-# This will cause Ruby to interrupt execution and show a prompt when the +say+
-# method is run.
-#
-# Once you're inside the prompt, you can start debugging your program.
-#
-#   (rdb:1) p word
-#   "hello"
-#
-# == Getting help
-#
-# You can get help at any time by pressing +h+.
-#
-#   (rdb:1) h
-#   Debugger help v.-0.002b
-#   Commands
-#     b[reak] [file:|class:]<line|method>
-#     b[reak] [class.]<line|method>
-#                                set breakpoint to some position
-#     wat[ch] <expression>       set watchpoint to some expression
-#     cat[ch] (<exception>|off)  set catchpoint to an exception
-#     b[reak]                    list breakpoints
-#     cat[ch]                    show catchpoint
-#     del[ete][ nnn]             delete some or all breakpoints
-#     disp[lay] <expression>     add expression into display expression list
-#     undisp[lay][ nnn]          delete one particular or all display expressions
-#     c[ont]                     run until program ends or hit breakpoint
-#     s[tep][ nnn]               step (into methods) one line or till line nnn
-#     n[ext][ nnn]               go over one line or till line nnn
-#     w[here]                    display frames
-#     f[rame]                    alias for where
-#     l[ist][ (-|nn-mm)]         list program, - lists backwards
-#                                nn-mm lists given lines
-#     up[ nn]                    move to higher frame
-#     down[ nn]                  move to lower frame
-#     fin[ish]                   return to outer frame
-#     tr[ace] (on|off)           set trace mode of current thread
-#     tr[ace] (on|off) all       set trace mode of all threads
-#     q[uit]                     exit from debugger
-#     v[ar] g[lobal]             show global variables
-#     v[ar] l[ocal]              show local variables
-#     v[ar] i[nstance] <object>  show instance variables of object
-#     v[ar] c[onst] <object>     show constants of object
-#     m[ethod] i[nstance] <obj>  show methods of object
-#     m[ethod] <class|module>    show instance methods of class or module
-#     th[read] l[ist]            list all threads
-#     th[read] c[ur[rent]]       show current thread
-#     th[read] [sw[itch]] <nnn>  switch thread context to nnn
-#     th[read] stop <nnn>        stop thread nnn
-#     th[read] resume <nnn>      resume thread nnn
-#     p expression               evaluate expression and print its value
-#     h[elp]                     print this help
-#     <everything else>          evaluate
-#
-# == Usage
-#
-# The following is a list of common functionalities that the debugger
-# provides.
-#
-# === Navigating through your code
-#
-# In general, a debugger is used to find bugs in your program, which
-# often means pausing execution and inspecting variables at some point
-# in time.
-#
-# Let's look at an example:
-#
-#   def my_method(foo)
-#     require 'debug'
-#     foo = get_foo if foo.nil?
-#     raise if foo.nil?
-#   end
-#
-# When you run this program, the debugger will kick in just before the
-# +foo+ assignment.
-#
-#   (rdb:1) p foo
-#   nil
-#
-# In this example, it'd be interesting to move to the next line and
-# inspect the value of +foo+ again. You can do that by pressing +n+:
-#
-#   (rdb:1) n # goes to next line
-#   (rdb:1) p foo
-#   nil
-#
-# You now know that the original value of +foo+ was nil, and that it
-# still was nil after calling +get_foo+.
-#
-# Other useful commands for navigating through your code are:
-#
-# +c+::
-#   Runs the program until it either exists or encounters another breakpoint.
-#   You usually press +c+ when you are finished debugging your program and
-#   want to resume its execution.
-# +s+::
-#   Steps into method definition. In the previous example, +s+ would take you
-#   inside the method definition of +get_foo+.
-# +r+::
-#   Restart the program.
-# +q+::
-#   Quit the program.
-#
-# === Inspecting variables
-#
-# You can use the debugger to easily inspect both local and global variables.
-# We've seen how to inspect local variables before:
-#
-#   (rdb:1) p my_arg
-#   42
-#
-# You can also pretty print the result of variables or expressions:
-#
-#   (rdb:1) pp %w{a very long long array containing many words}
-#   ["a",
-#    "very",
-#    "long",
-#    ...
-#   ]
-#
-# You can list all local variables with +v l+:
-#
-#   (rdb:1) v l
-#     foo => "hello"
-#
-# Similarly, you can show all global variables with +v g+:
-#
-#   (rdb:1) v g
-#     all global variables
-#
-# Finally, you can omit +p+ if you simply want to evaluate a variable or
-# expression
-#
-#   (rdb:1) 5**2
-#   25
-#
-# === Going beyond basics
-#
-# Ruby Debug provides more advanced functionalities like switching
-# between threads, setting breakpoints and watch expressions, and more.
-# The full list of commands is available at any time by pressing +h+.
-#
-# == Staying out of trouble
-#
-# Make sure you remove every instance of +require 'debug'+ before
-# shipping your code. Failing to do so may result in your program
-# hanging unpredictably.
-#
-# Debug is not available in safe mode.
 
 class DEBUGGER__
   MUTEX = Mutex.new # :nodoc:
@@ -285,12 +123,12 @@ class DEBUGGER__
 
     def debug_eval(str, binding)
       begin
-        #nodyna <ID:eval-75> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-2340> <EV COMPLEX (change-prone variables)>
         eval(str, binding)
       rescue StandardError, ScriptError => e
-        #nodyna <ID:eval-76> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-2341> <EV COMPLEX (change-prone variables)>
         at = eval("caller(1)", binding)
-        #nodyna <ID:eval-77> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-2342> <EV COMPLEX (change-prone variables)>
         stdout.printf "%s:%s\n", at.shift, e.to_s.sub(/\(eval\):1:(in `.*?':)?/, '')
         for i in at
           stdout.printf "\tfrom %s\n", i
@@ -301,7 +139,7 @@ class DEBUGGER__
 
     def debug_silent_eval(str, binding)
       begin
-        #nodyna <ID:eval-78> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-2343> <EV COMPLEX (change-prone variables)>
         eval(str, binding)
       rescue StandardError, ScriptError
         nil
@@ -311,7 +149,7 @@ class DEBUGGER__
     def var_list(ary, binding)
       ary.sort!
       for v in ary
-        #nodyna <ID:eval-79> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-2344> <EV COMPLEX (change-prone variables)>
         stdout.printf "  %s => %s\n", v, eval(v.to_s, binding).inspect
       end
     end
@@ -322,12 +160,12 @@ class DEBUGGER__
         var_list(global_variables, binding)
 
       when /^\s*l(?:ocal)?\s*$/
-        #nodyna <ID:eval-80> <EV COMPLEX (private methods)>
+        #nodyna <eval-2345> <EV COMPLEX (private methods)>
         var_list(eval("local_variables", binding), binding)
 
       when /^\s*i(?:nstance)?\s+/
         obj = debug_eval($', binding)
-        #nodyna <ID:instance_eval-146> <IEV COMPLEX (private access)>
+        #nodyna <instance_eval-2346> <IEV COMPLEX (private access)>
         var_list(obj.instance_variables, obj.instance_eval{binding()})
 
       when /^\s*c(?:onst(?:ant)?)?\s+/
@@ -335,6 +173,7 @@ class DEBUGGER__
         unless obj.kind_of? Module
           stdout.print "Should be Class/Module: ", $', "\n"
         else
+          #nodyna <module_eval-2347> <not yet classified>
           var_list(obj.constants, obj.module_eval{binding()})
         end
       end
@@ -376,11 +215,11 @@ class DEBUGGER__
     end
 
     def thnum
-      #nodyna <ID:instance_eval-147> <IEV MODERATE (private access)>
+      #nodyna <instance_eval-2348> <IEV MODERATE (private access)>
       num = DEBUGGER__.instance_eval{@thread_list[Thread.current]}
       unless num
         DEBUGGER__.make_thread_list
-        #nodyna <ID:instance_eval-148> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-2349> <IEV MODERATE (private access)>
         num = DEBUGGER__.instance_eval{@thread_list[Thread.current]}
       end
       num
@@ -860,7 +699,6 @@ EOHELP
         elsif @frames.size < @no_step
           @stop_next = 0          # break here before leaving...
         else
-          # nothing to do. skipped.
         end
         if @stop_next == 0 or check_break_points(file, nil, line, binding, id)
           @no_step = nil
@@ -906,34 +744,22 @@ EOHELP
   @stdout = STDOUT
 
   class << DEBUGGER__
-    # Returns the IO used as stdout. Defaults to STDOUT
     def stdout
       @stdout
     end
 
-    # Sets the IO used as stdout. Defaults to STDOUT
     def stdout=(s)
       @stdout = s
     end
 
-    # Returns the display expression list
-    #
-    # See DEBUGGER__ for more usage
     def display
       @display
     end
 
-    # Returns the list of break points where execution will be stopped.
-    #
-    # See DEBUGGER__ for more usage
     def break_points
       @break_points
     end
 
-    # Returns the list of waiting threads.
-    #
-    # When stepping through the traces of a function, thread gets suspended, to
-    # be resumed later.
     def waiting
       @waiting
     end
@@ -960,7 +786,6 @@ EOHELP
           context(th).set_suspend
         end
       end
-      # Schedule other threads to suspend as soon as possible.
       Thread.pass
     end
 
@@ -976,7 +801,6 @@ EOHELP
         end
         waiting.clear
       end
-      # Schedule other threads to restart as soon as possible.
       Thread.pass
     end
 
@@ -1010,10 +834,10 @@ EOHELP
       end
       @stdout.printf "%d ", num
       @stdout.print th.inspect, "\t"
-      #nodyna <ID:instance_eval-149> <IEV COMPLEX (private access)>
+      #nodyna <instance_eval-2350> <IEV COMPLEX (private access)>
       file = context(th).instance_eval{@file}
       if file
-        #nodyna <ID:instance_eval-150> <IEV COMPLEX (private access)>
+        #nodyna <instance_eval-2351> <IEV COMPLEX (private access)>
         @stdout.print file,":",context(th).instance_eval{@line}
       end
       @stdout.print "\n"

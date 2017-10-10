@@ -10,7 +10,7 @@ class Admin::EmbeddingController < Admin::AdminController
 
   def update
     Embedding.settings.each do |s|
-      #nodyna <ID:send-91> <SD MODERATE (array)>
+      #nodyna <send-446> <SD MODERATE (array)>
       @embedding.send("#{s}=", params[:embedding][s])
     end
 

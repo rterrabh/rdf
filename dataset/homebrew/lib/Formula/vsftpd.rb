@@ -14,8 +14,6 @@ class Vsftpd < Formula
 
   depends_on "openssl" => :optional
 
-  # Patch to remove UTMPX dependency, locate OS X's PAM library, and
-  #   remove incompatible LDFLAGS. (reported to developer via email)
   patch :DATA
 
   def install
@@ -28,7 +26,6 @@ class Vsftpd < Formula
     inreplace "tunables.c", "/var", var
     system "make"
 
-    # make install has all the paths hardcoded; this is easier:
     sbin.install "vsftpd"
     etc.install "vsftpd.conf"
     man5.install "vsftpd.conf.5"
@@ -51,23 +48,18 @@ index 9dc8a5e..66dbe30 100644
 --- a/sysdeputil.c
 +++ b/sysdeputil.c
 @@ -64,6 +64,10 @@
- #include <utmpx.h>
  
  /* BEGIN config */
 +#if defined(__APPLE__)
 +  #undef VSF_SYSDEP_HAVE_UTMPX
 +#endif
 +
- #if defined(__linux__)
-   #include <errno.h>
-   #include <syscall.h>
 diff --git a/vsf_findlibs.sh b/vsf_findlibs.sh
 index b988be6..68d4a34 100755
 --- a/vsf_findlibs.sh
 +++ b/vsf_findlibs.sh
 @@ -20,6 +20,8 @@ if find_func pam_start sysdeputil.o; then
    locate_library /usr/lib/libpam.sl && echo "-lpam";
-   # AIX ends shared libraries with .a
    locate_library /usr/lib/libpam.a && echo "-lpam";
 +  # Mac OS X / Darwin shared libraries with .dylib
 +  locate_library /usr/lib/libpam.dylib && echo "-lpam";

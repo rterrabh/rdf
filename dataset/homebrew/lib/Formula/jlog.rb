@@ -23,8 +23,6 @@ class Jlog < Formula
 
   test do
     (testpath/"jlogtest.c").write <<-EOF.undent
-      #include <stdio.h>
-      #include <jlog.h>
       int main() {
         jlog_ctx *ctx;
         const char *path = "#{testpath}/jlogexample";

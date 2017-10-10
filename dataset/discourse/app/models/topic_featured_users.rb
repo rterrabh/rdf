@@ -9,7 +9,6 @@ class TopicFeaturedUsers
     4
   end
 
-  # Chooses which topic users to feature
   def choose(args={})
     self.class.ensure_consistency!(topic.id.to_i)
     update_participant_count
@@ -40,7 +39,6 @@ WITH cte as (
           NOT p.hidden AND
           p.user_id <> t.user_id AND
           p.user_id <> t.last_post_user_id
-          #{filter}
     GROUP BY t.id, p.user_id
 ),
 

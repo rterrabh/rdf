@@ -1,35 +1,20 @@
-# -*- coding: utf-8 -*-
-#--
-# Copyright (C) 2004 Mauricio Julio Fernández Pradier
-# See LICENSE.txt for additional licensing information.
-#++
 
 require 'digest'
 
-##
-# Allows writing of tar files
 
 class Gem::Package::TarWriter
 
   class FileOverflow < StandardError; end
 
-  ##
-  # IO wrapper that allows writing a limited amount of data
 
   class BoundedStream
 
-    ##
-    # Maximum number of bytes that can be written
 
     attr_reader :limit
 
-    ##
-    # Number of bytes written
 
     attr_reader :written
 
-    ##
-    # Wraps +io+ and allows up to +limit+ bytes to be written
 
     def initialize(io, limit)
       @io = io
@@ -37,9 +22,6 @@ class Gem::Package::TarWriter
       @written = 0
     end
 
-    ##
-    # Writes +data+ onto the IO, raising a FileOverflow exception if the
-    # number of bytes will be more than #limit
 
     def write(data)
       if data.bytesize + @written > @limit
@@ -52,20 +34,14 @@ class Gem::Package::TarWriter
 
   end
 
-  ##
-  # IO wrapper that provides only #write
 
   class RestrictedStream
 
-    ##
-    # Creates a new RestrictedStream wrapping +io+
 
     def initialize(io)
       @io = io
     end
 
-    ##
-    # Writes +data+ onto the IO
 
     def write(data)
       @io.write data
@@ -73,8 +49,6 @@ class Gem::Package::TarWriter
 
   end
 
-  ##
-  # Creates a new TarWriter, yielding it if a block is given
 
   def self.new(io)
     writer = super
@@ -90,17 +64,12 @@ class Gem::Package::TarWriter
     nil
   end
 
-  ##
-  # Creates a new TarWriter that will write to +io+
 
   def initialize(io)
     @io = io
     @closed = false
   end
 
-  ##
-  # Adds file +name+ with permissions +mode+, and yields an IO for writing the
-  # file to
 
   def add_file(name, mode) # :yields: io
     check_closed
@@ -132,13 +101,6 @@ class Gem::Package::TarWriter
     self
   end
 
-  ##
-  # Adds +name+ with permissions +mode+ to the tar, yielding +io+ for writing
-  # the file.  The +digest_algorithm+ is written to a read-only +name+.sum
-  # file following the given file contents containing the digest name and
-  # hexdigest separated by a tab.
-  #
-  # The created digest object is returned.
 
   def add_file_digest name, mode, digest_algorithms # :yields: io
     digests = digest_algorithms.map do |digest_algorithm|
@@ -165,13 +127,6 @@ class Gem::Package::TarWriter
     digests
   end
 
-  ##
-  # Adds +name+ with permissions +mode+ to the tar, yielding +io+ for writing
-  # the file.  The +signer+ is used to add a digest file using its
-  # digest_algorithm per add_file_digest and a cryptographic signature in
-  # +name+.sig.  If the signer has no key only the checksum file is added.
-  #
-  # Returns the digest.
 
   def add_file_signed name, mode, signer
     digest_algorithms = [
@@ -206,9 +161,6 @@ class Gem::Package::TarWriter
     digests
   end
 
-  ##
-  # Add file +name+ with permissions +mode+ +size+ bytes long.  Yields an IO
-  # to write the file to.
 
   def add_file_simple(name, mode, size) # :yields: io
     check_closed
@@ -233,15 +185,11 @@ class Gem::Package::TarWriter
     self
   end
 
-  ##
-  # Raises IOError if the TarWriter is closed
 
   def check_closed
     raise IOError, "closed #{self.class}" if closed?
   end
 
-  ##
-  # Closes the TarWriter
 
   def close
     check_closed
@@ -252,15 +200,11 @@ class Gem::Package::TarWriter
     @closed = true
   end
 
-  ##
-  # Is the TarWriter closed?
 
   def closed?
     @closed
   end
 
-  ##
-  # Flushes the TarWriter's IO
 
   def flush
     check_closed
@@ -268,8 +212,6 @@ class Gem::Package::TarWriter
     @io.flush if @io.respond_to? :flush
   end
 
-  ##
-  # Creates a new directory in the tar file +name+ with +mode+
 
   def mkdir(name, mode)
     check_closed
@@ -286,8 +228,6 @@ class Gem::Package::TarWriter
     self
   end
 
-  ##
-  # Splits +name+ into a name and prefix that can fit in the TarHeader
 
   def split_name(name) # :nodoc:
     if name.bytesize > 256

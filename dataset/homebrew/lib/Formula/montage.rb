@@ -9,7 +9,6 @@ class Montage < Formula
     bin.install Dir["bin/m*"]
   end
 
-  # fix function not being declared void
   patch :DATA
 
   def caveats; <<-EOS.undent

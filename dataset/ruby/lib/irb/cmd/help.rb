@@ -1,18 +1,8 @@
-#
-#   help.rb - helper using ri
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#
-# --
-#
-#
-#
 
 require 'rdoc/ri/driver'
 
 require "irb/cmd/nop.rb"
 
-# :stopdoc:
 module IRB
   module ExtendCommand
     class Help<Nop
@@ -38,4 +28,3 @@ module IRB
     end
   end
 end
-# :startdoc:

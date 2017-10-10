@@ -1,10 +1,4 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 class ServicesController < ApplicationController
-  # We need to take a raw POST from an omniauth provider with no authenticity token.
-  # See https://github.com/intridea/omniauth/issues/203
-  # See also http://www.communityguides.eu/articles/16
   skip_before_action :verify_authenticity_token, :only => :create
   before_action :authenticate_user!
   before_action :abort_if_already_authorized, :abort_if_read_only_access, :only => :create
@@ -90,8 +84,6 @@ class ServicesController < ApplicationController
     omniauth_hash['extra']['access_token']
   end
 
-  #https://github.com/intridea/omniauth/wiki/Auth-Hash-Schema #=> normalized hash
-  #https://gist.github.com/oliverbarnes/6096959 #=> hash with twitter specific extra
   def twitter_access_level
     twitter_access_token.response.header['x-access-level']
   end

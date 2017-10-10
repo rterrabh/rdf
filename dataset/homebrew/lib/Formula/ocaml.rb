@@ -1,16 +1,3 @@
-# OCaml does not preserve binary compatibility across compiler releases,
-# so when updating it you should ensure that all dependent packages are
-# also updated by incrementing their revisions.
-#
-# Specific packages to pay attention to include:
-# - camlp4
-# - opam
-#
-# Applications that really shouldn't break on a compiler update are:
-# - mldonkey
-# - coq
-# - coccinelle
-# - unison
 class Ocaml < Formula
   desc "General purpose programming language in the ML family"
   homepage "https://ocaml.org/"
@@ -35,7 +22,6 @@ class Ocaml < Formula
   def install
     ENV.deparallelize # Builds are not parallel-safe, esp. with many cores
 
-    # the ./configure in this package is NOT a GNU autoconf script!
     args = ["-prefix", "#{HOMEBREW_PREFIX}", "-with-debug-runtime", "-mandir", man]
     args << "-no-graph" if build.without? "x11"
     system "./configure", *args

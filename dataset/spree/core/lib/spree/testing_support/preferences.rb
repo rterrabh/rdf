@@ -1,13 +1,6 @@
 module Spree
   module TestingSupport
     module Preferences
-      # Resets all preferences to default values, you can
-      # pass a block to override the defaults with a block
-      #
-      # reset_spree_preferences do |config|
-      #   config.track_inventory_levels = false
-      # end
-      #
       def reset_spree_preferences(&config_block)
         Spree::Preferences::Store.instance.persistence = false
         Spree::Preferences::Store.instance.clear_cache

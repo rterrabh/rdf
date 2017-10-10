@@ -29,7 +29,7 @@ module HomebrewArgvExtension
         f = Formulary.factory(name, spec)
         if spec(default=nil).nil? && f.any_version_installed?
           installed_spec = Tab.for_formula(f).spec
-          #nodyna <ID:send-6> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-669> <SD COMPLEX (change-prone variables)>
           f.set_active_spec(installed_spec) if f.send(installed_spec)
         end
         f
@@ -79,7 +79,6 @@ module HomebrewArgvExtension
     end
   end
 
-  # self documenting perhaps?
   def include?(arg)
     @n=index arg
   end
@@ -161,9 +160,6 @@ module HomebrewArgvExtension
     include? "--universal"
   end
 
-  # Request a 32-bit only build.
-  # This is needed for some use-cases though we prefer to build Universal
-  # when a 32-bit version is needed.
   def build_32_bit?
     include? "--32-bit"
   end
@@ -189,7 +185,6 @@ module HomebrewArgvExtension
     include? "--force-bottle"
   end
 
-  # eg. `foo -ns -i --bar` has three switches, n, s and i
   def switch?(char)
     return false if char.length > 1
     options_only.any? { |arg| arg[1, 1] != "-" && arg.include?(char) }
@@ -208,8 +203,6 @@ module HomebrewArgvExtension
     value "env"
   end
 
-  # If the user passes any flags that trigger building over installing from
-  # a bottle, they are collected here and returned as an Array for checking.
   def collect_build_flags
     build_flags = []
 
@@ -235,7 +228,6 @@ module HomebrewArgvExtension
   end
 
   def downcased_unique_named
-    # Only lowercase names, not paths, bottle filenames or URLs
     @downcased_unique_named ||= named.map do |arg|
       if arg.include?("/") || arg.end_with?(".tar.gz")
         arg

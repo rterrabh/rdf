@@ -105,7 +105,6 @@ class Topic < ActiveRecord::Base
 
   has_one :first_post, -> {where post_number: 1}, class_name: Post
 
-  # When we want to temporarily attach some data to a forum topic (usually before serialization)
   attr_accessor :user_data
 
   attr_accessor :posters  # TODO: can replace with posters_summary once we remove old list code
@@ -115,10 +114,8 @@ class Topic < ActiveRecord::Base
   attr_accessor :include_last_poster
   attr_accessor :import_mode # set to true to optimize creation and save for imports
 
-  # The regular order
   scope :topic_list_order, -> { order('topics.bumped_at desc') }
 
-  # Return private message topics
   scope :private_messages, -> { where(archetype: Archetype.private_message) }
 
   scope :listable_topics, -> { where('topics.archetype <> ?', [Archetype.private_message]) }
@@ -132,7 +129,6 @@ class Topic < ActiveRecord::Base
   scope :secured, lambda { |guardian=nil|
     ids = guardian.secure_category_ids if guardian
 
-    # Query conditions
     condition = if ids.present?
       ["NOT c.read_restricted or c.id in (:cats)", cats: ids]
     else
@@ -240,16 +236,13 @@ class Topic < ActiveRecord::Base
              .exists?
   end
 
-  # all users (in groups or directly targetted) that are going to get the pm
   def all_allowed_users
-    # TODO we should probably change this to 1 query
     allowed_user_ids = allowed_users.select('users.id').to_a
     allowed_group_user_ids = allowed_group_users.select('users.id').to_a
     allowed_staff_ids = private_message? && has_flags? ? User.where(moderator: true).pluck(:id).to_a : []
     User.where('id IN (?)', allowed_user_ids + allowed_group_user_ids + allowed_staff_ids)
   end
 
-  # Additional rate limits on topics: per day and private messages per day
   def limit_topics_per_day
     apply_per_day_rate_limit_for("topics", :max_topics_per_day)
     limit_first_day_topics_per_day if user.first_day_user?
@@ -266,8 +259,6 @@ class Topic < ActiveRecord::Base
     return unless sanitized_title
     return sanitized_title unless SiteSetting.title_fancy_entities?
 
-    # We don't always have to require this, if fancy is disabled
-    # see: http://meta.discourse.org/t/pattern-for-defer-loading-gems-and-profiling-with-perftools-rb/4629
     require 'redcarpet' unless defined? Redcarpet
 
     Redcarpet::Render::SmartyPants.render(sanitized_title)
@@ -277,7 +268,6 @@ class Topic < ActiveRecord::Base
     queued_posts.new_count
   end
 
-  # Returns hot topics since a date for display in email digest.
   def self.for_digest(user, since, opts=nil)
     opts = opts || {}
     score = "#{ListController.best_period_for(since)}_score"
@@ -303,13 +293,11 @@ class Topic < ActiveRecord::Base
       topics = topics.limit(opts[:limit])
     end
 
-    # Remove category topics
     category_topic_ids = Category.pluck(:topic_id).compact!
     if category_topic_ids.present?
       topics = topics.where("topics.id NOT IN (?)", category_topic_ids)
     end
 
-    # Remove muted categories
     muted_category_ids = CategoryUser.where(user_id: user.id, notification_level: CategoryUser.notification_levels[:muted]).pluck(:category_id)
     if muted_category_ids.present?
       topics = topics.where("topics.category_id NOT IN (?)", muted_category_ids)
@@ -318,7 +306,6 @@ class Topic < ActiveRecord::Base
     topics
   end
 
-  # Using the digest query, figure out what's  new for a user since last seen
   def self.new_since_last_seen(user, since, featured_topic_ids)
     topics = Topic.for_digest(user, since)
     topics.where("topics.id NOT IN (?)", featured_topic_ids)
@@ -369,7 +356,6 @@ class Topic < ActiveRecord::Base
   end
 
   MAX_SIMILAR_BODY_LENGTH = 200
-  # Search for similar topics
   def self.similar_to(title, raw, user=nil)
     return [] unless title.present?
     return [] unless raw.present?
@@ -377,7 +363,6 @@ class Topic < ActiveRecord::Base
     filter_words = Search.prepare_data(title + " " + raw[0...MAX_SIMILAR_BODY_LENGTH]);
     ts_query = Search.ts_query(filter_words, nil, "|")
 
-    # Exclude category definitions from similar topic suggestions
 
     candidates = Topic.visible
        .secured(Guardian.new(user))
@@ -410,7 +395,6 @@ class Topic < ActiveRecord::Base
     TopicStatusUpdate.new(self, user).update!(status, enabled, opts)
   end
 
-  # Atomically creates the next post number
   def self.next_post_number(topic_id, reply = false)
     highest = exec_sql("select coalesce(max(post_number),0) as max from posts where topic_id = ?", topic_id).first['max'].to_i
 
@@ -420,7 +404,6 @@ class Topic < ActiveRecord::Base
     result.first['highest_post_number'].to_i
   end
 
-  # If a post is deleted we have to update our highest post counters
   def self.reset_highest(topic_id)
     result = exec_sql "UPDATE topics
                         SET highest_post_number = (SELECT COALESCE(MAX(post_number), 0) FROM posts WHERE topic_id = :topic_id AND deleted_at IS NULL),
@@ -430,7 +413,6 @@ class Topic < ActiveRecord::Base
                         RETURNING highest_post_number", topic_id: topic_id
     highest_post_number = result.first['highest_post_number'].to_i
 
-    # Update the forum topic user records
     exec_sql "UPDATE topic_users
               SET last_read_post_number = CASE
                                           WHEN last_read_post_number > :highest THEN :highest
@@ -445,7 +427,6 @@ class Topic < ActiveRecord::Base
               topic_id: topic_id
   end
 
-  # This calculates the geometric mean of the posts and stores it with the topic
   def self.calculate_avg_time(min_topic_age=nil)
     builder = SqlBuilder.new("UPDATE topics
               SET avg_time = x.gmean
@@ -506,11 +487,8 @@ class Topic < ActiveRecord::Base
     end
 
     if new_post.present?
-      # If we are moving posts, we want to insert the moderator post where the previous posts were
-      # in the stream, not at the end.
       new_post.update_attributes(post_number: opts[:post_number], sort_order: opts[:post_number]) if opts[:post_number].present?
 
-      # Grab any links that are present
       TopicLink.extract_from(new_post)
       QuotedPost.extract_from(new_post)
     end
@@ -522,7 +500,6 @@ class Topic < ActiveRecord::Base
     return false if private_message?
 
     new_category_id = category_id.to_i
-    # if the category name is blank, reset the attribute
     new_category_id = SiteSetting.uncategorized_category_id if new_category_id == 0
 
     return true if self.category_id == new_category_id
@@ -545,14 +522,11 @@ class Topic < ActiveRecord::Base
     false
   end
 
-  # Invite a user to the topic by username or email. Returns success/failure
   def invite(invited_by, username_or_email, group_ids=nil)
     if private_message?
-      # If the user exists, add them to the message.
       user = User.find_by_username_or_email(username_or_email)
       if user && topic_allowed_users.create!(user_id: user.id)
 
-        # Notify the user they've been invited
         user.notifications.create(notification_type: Notification.types[:invited_to_private_message],
                                   topic_id: id,
                                   post_number: 1,
@@ -563,19 +537,14 @@ class Topic < ActiveRecord::Base
     end
 
     if username_or_email =~ /^.+@.+$/ && !SiteSetting.enable_sso
-      # rate limit topic invite
       RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
-      # NOTE callers expect an invite object if an invite was sent via email
       invite_by_email(invited_by, username_or_email, group_ids)
     else
-      # invite existing member to a topic
       user = User.find_by_username(username_or_email)
       if user && topic_allowed_users.create!(user_id: user.id)
-        # rate limit topic invite
         RateLimiter.new(invited_by, "topic-invitations-per-day", SiteSetting.max_topic_invitations_per_day, 1.day.to_i).performed!
 
-        # Notify the user they've been invited
         user.notifications.create(notification_type: Notification.types[:invited_to_topic],
                                   topic_id: id,
                                   post_number: 1,
@@ -615,9 +584,6 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  # Updates the denormalized statistics of a topic including featured posters. They shouldn't
-  # go out of sync unless you do something drastic live move posts from one topic to another.
-  # this recalculates everything.
   def update_statistics
     feature_topic_users
     update_action_counts
@@ -644,7 +610,6 @@ class Topic < ActiveRecord::Base
   end
 
   def make_banner!(user)
-    # only one banner at the same time
     previous_banner = Topic.where(archetype: Archetype.banner).first
     previous_banner.remove_banner!(user) if previous_banner.present?
 
@@ -673,7 +638,6 @@ class Topic < ActiveRecord::Base
     }
   end
 
-  # Even if the slug column in the database is null, topic.slug will return something:
   def slug
     unless slug = read_attribute(:slug)
       return '' unless title.present?
@@ -694,8 +658,6 @@ class Topic < ActiveRecord::Base
     write_attribute(:title,t)
   end
 
-  # NOTE: These are probably better off somewhere else.
-  #       Having a model know about URLs seems a bit strange.
   def last_post_url
     "#{Discourse.base_uri}/t/#{slug}/#{id}/#{posts_count}"
   end
@@ -758,7 +720,6 @@ class Topic < ActiveRecord::Base
   end
 
   def self.ensure_consistency!
-    # unpin topics that might have been missed
     Topic.where("pinned_until < now()").update_all(pinned_at: nil, pinned_globally: false, pinned_until: nil)
   end
 
@@ -777,16 +738,6 @@ class Topic < ActiveRecord::Base
     end
   end
 
-  # Valid arguments for the auto close time:
-  #  * An integer, which is the number of hours from now to close the topic.
-  #  * A time, like "12:00", which is the time at which the topic will close in the current day
-  #    or the next day if that time has already passed today.
-  #  * A timestamp, like "2013-11-25 13:00", when the topic should close.
-  #  * A timestamp with timezone in JSON format. (e.g., "2013-11-26T21:00:00.000Z")
-  #  * nil, to prevent the topic from automatically closing.
-  # Options:
-  #  * by_user: User who is setting the auto close time
-  #  * timezone_offset: (Integer) offset from UTC in minutes of the given argument. Default 0.
   def set_auto_close(arg, opts={})
     self.auto_close_hours = nil
     by_user = opts[:by_user]
@@ -804,13 +755,11 @@ class Topic < ActiveRecord::Base
     else
       utc = Time.find_zone("UTC")
       if arg.is_a?(String) && m = /^(\d{1,2}):(\d{2})(?:\s*[AP]M)?$/i.match(arg.strip)
-        # a time of day in client's time zone, like "15:00"
         now = utc.now
         self.auto_close_at = utc.local(now.year, now.month, now.day, m[1].to_i, m[2].to_i)
         self.auto_close_at += offset_minutes * 60 if offset_minutes
         self.auto_close_at += 1.day if self.auto_close_at < now
       elsif arg.is_a?(String) && arg.include?("-") && timestamp = utc.parse(arg)
-        # a timestamp in client's time zone, like "2015-5-27 12:00"
         self.auto_close_at = timestamp
         self.auto_close_at += offset_minutes * 60 if offset_minutes
         self.errors.add(:auto_close_at, :invalid) if timestamp < Time.zone.now
@@ -974,73 +923,10 @@ class Topic < ActiveRecord::Base
   end
 
   def apply_per_day_rate_limit_for(key, method_name)
-    #nodyna <ID:send-194> <SD EASY (change-prone variables)>
+    #nodyna <send-375> <SD EASY (change-prone variables)>
     RateLimiter.new(user, "#{key}-per-day", SiteSetting.send(method_name), 1.day.to_i)
   end
 
 end
 
 
-# == Schema Information
-#
-# Table name: topics
-#
-#  id                            :integer          not null, primary key
-#  title                         :string(255)      not null
-#  last_posted_at                :datetime
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  views                         :integer          default(0), not null
-#  posts_count                   :integer          default(0), not null
-#  user_id                       :integer
-#  last_post_user_id             :integer          not null
-#  reply_count                   :integer          default(0), not null
-#  featured_user1_id             :integer
-#  featured_user2_id             :integer
-#  featured_user3_id             :integer
-#  avg_time                      :integer
-#  deleted_at                    :datetime
-#  highest_post_number           :integer          default(0), not null
-#  image_url                     :string(255)
-#  off_topic_count               :integer          default(0), not null
-#  like_count                    :integer          default(0), not null
-#  incoming_link_count           :integer          default(0), not null
-#  bookmark_count                :integer          default(0), not null
-#  category_id                   :integer
-#  visible                       :boolean          default(TRUE), not null
-#  moderator_posts_count         :integer          default(0), not null
-#  closed                        :boolean          default(FALSE), not null
-#  archived                      :boolean          default(FALSE), not null
-#  bumped_at                     :datetime         not null
-#  has_summary                   :boolean          default(FALSE), not null
-#  vote_count                    :integer          default(0), not null
-#  archetype                     :string(255)      default("regular"), not null
-#  featured_user4_id             :integer
-#  notify_moderators_count       :integer          default(0), not null
-#  spam_count                    :integer          default(0), not null
-#  illegal_count                 :integer          default(0), not null
-#  inappropriate_count           :integer          default(0), not null
-#  pinned_at                     :datetime
-#  score                         :float
-#  percent_rank                  :float            default(1.0), not null
-#  notify_user_count             :integer          default(0), not null
-#  subtype                       :string(255)
-#  slug                          :string(255)
-#  auto_close_at                 :datetime
-#  auto_close_user_id            :integer
-#  auto_close_started_at         :datetime
-#  deleted_by_id                 :integer
-#  participant_count             :integer          default(1)
-#  word_count                    :integer
-#  excerpt                       :string(1000)
-#  pinned_globally               :boolean          default(FALSE), not null
-#  auto_close_based_on_last_post :boolean          default(FALSE)
-#  auto_close_hours              :float
-#
-# Indexes
-#
-#  idx_topics_front_page              (deleted_at,visible,archetype,category_id,id)
-#  idx_topics_user_id_deleted_at      (user_id)
-#  index_topics_on_bumped_at          (bumped_at)
-#  index_topics_on_id_and_deleted_at  (id,deleted_at)
-#

@@ -52,7 +52,6 @@ class DiscourseSingleSignOn < SingleSignOn
       sso_record = user.single_sign_on_record
     end
 
-    # if the user isn't new or it's attached to the SSO record we might be overriding username or email
     unless user.new_record?
       change_external_attributes_and_override(sso_record, user)
     end
@@ -71,7 +70,6 @@ class DiscourseSingleSignOn < SingleSignOn
     user.admin = admin unless admin.nil?
     user.moderator = moderator unless moderator.nil?
 
-    # optionally save the user and sso_record if they have changed
     user.save!
     sso_record.save!
 
@@ -129,7 +127,6 @@ class DiscourseSingleSignOn < SingleSignOn
       UserAvatar.import_url_for_user(avatar_url, user)
     end
 
-    # change external attributes for sso record
     sso_record.external_username = username
     sso_record.external_email = email
     sso_record.external_name = name

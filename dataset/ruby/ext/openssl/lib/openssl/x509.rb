@@ -1,22 +1,3 @@
-#--
-#
-# $RCSfile$
-#
-# = Ruby-space definitions that completes C-space funcs for X509 and subclasses
-#
-# = Info
-# 'OpenSSL for Ruby 2' project
-# Copyright (C) 2002  Michal Rokos <m.rokos@sh.cvut.cz>
-# All rights reserved.
-#
-# = Licence
-# This program is licenced under the same licence as Ruby.
-# (See the file 'LICENCE'.)
-#
-# = Version
-# $Id$
-#
-#++
 
 module OpenSSL
   module X509
@@ -25,7 +6,7 @@ module OpenSSL
         if arg.size > 1
           create_ext(*arg)
         else
-          #nodyna <ID:send-1> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1508> <SD COMPLEX (change-prone variables)>
           send("create_ext_from_"+arg[0].class.name.downcase, arg[0])
         end
       end

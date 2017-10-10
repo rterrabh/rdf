@@ -15,7 +15,6 @@ module Spree
       end
 
       def load_order
-        # the spree/admin/shared/order_tabs partial expects the @order instance variable to be set
         @order = @payment.order if @payment
       end
 

@@ -8,7 +8,6 @@ class Keg
         change_dylib_id(dylib_id_for(file, options), file) if file.dylib?
 
         each_install_name_for(file) do |bad_name|
-          # Don't fix absolute paths unless they are rooted in the build directory
           next if bad_name.start_with?("/") && !bad_name.start_with?(HOMEBREW_TEMP.to_s)
 
           new_name = fixed_name(file, bad_name)
@@ -67,10 +66,6 @@ class Keg
     install_name_tool("-change", old, new, file)
   end
 
-  # Detects the C++ dynamic libraries in place, scanning the dynamic links
-  # of the files within the keg.
-  # Note that this doesn't attempt to distinguish between libstdc++ versions,
-  # for instance between Apple libstdc++ and GNU libstdc++
   def detect_cxx_stdlibs(options = {})
     skip_executables = options.fetch(:skip_executables, false)
     results = Set.new
@@ -102,9 +97,6 @@ class Keg
     system(tool, *args) || raise(ErrorDuringExecution.new(tool, args))
   end
 
-  # If file is a dylib or bundle itself, look for the dylib named by
-  # bad_name relative to the lib directory, so that we can skip the more
-  # expensive recursive search if possible.
   def fixed_name(file, bad_name)
     if bad_name.start_with? PREFIX_PLACEHOLDER
       bad_name.sub(PREFIX_PLACEHOLDER, HOMEBREW_PREFIX.to_s)
@@ -133,8 +125,6 @@ class Keg
   end
 
   def dylib_id_for(file, options)
-    # The new dylib ID should have the same basename as the old dylib ID, not
-    # the basename of the file itself.
     basename = File.basename(file.dylib_id)
     relative_dirname = file.dirname.relative_path_from(path)
     shortpath = HOMEBREW_PREFIX.join(relative_dirname, basename)
@@ -177,7 +167,6 @@ class Keg
   def libtool_files
     libtool_files = []
 
-    # find .la files, which are stored in lib/
     lib.find do |pn|
       next if pn.symlink? || pn.directory? || pn.extname != ".la"
       libtool_files << pn

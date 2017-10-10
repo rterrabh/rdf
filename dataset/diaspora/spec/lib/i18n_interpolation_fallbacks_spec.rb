@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 require 'spec_helper'
 
@@ -15,7 +12,6 @@ describe "i18n interpolation fallbacks" do
   end
   describe "when string requires interpolation arguments" do
     context "current locale has no fallbacks" do
-      # ago: "%{time} ago" (in en.yml)
       it "returns the translation when all arguments are provided" do
         expect(I18n.t('ago', :time => "2 months")).to eq("2 months ago")
       end

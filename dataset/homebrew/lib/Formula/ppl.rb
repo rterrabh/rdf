@@ -22,10 +22,6 @@ class Ppl < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <ppl_c.h>
-      #ifndef PPL_VERSION_MAJOR
-      #error "No PPL header"
-      #endif
       int main() {
         ppl_initialize();
         return ppl_finalize();

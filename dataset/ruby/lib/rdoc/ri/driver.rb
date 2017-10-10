@@ -13,41 +13,18 @@ end
 
 require 'rdoc'
 
-##
-# For RubyGems backwards compatibility
 
 require 'rdoc/ri/formatter'
 
-##
-# The RI driver implements the command-line ri tool.
-#
-# The driver supports:
-# * loading RI data from:
-#   * Ruby's standard library
-#   * RubyGems
-#   * ~/.rdoc
-#   * A user-supplied directory
-# * Paging output (uses RI_PAGER environment variable, PAGER environment
-#   variable or the less, more and pager programs)
-# * Interactive mode with tab-completion
-# * Abbreviated names (ri Zl shows Zlib documentation)
-# * Colorized output
-# * Merging output from multiple RI data sources
 
 class RDoc::RI::Driver
 
-  ##
-  # Base Driver error class
 
   class Error < RDoc::RI::Error; end
 
-  ##
-  # Raised when a name isn't found in the ri data stores
 
   class NotFoundError < Error
 
-    ##
-    # Name that wasn't found
 
     alias name message
 
@@ -56,23 +33,15 @@ class RDoc::RI::Driver
     end
   end
 
-  ##
-  # Show all method documentation following a class or module
 
   attr_accessor :show_all
 
-  ##
-  # An RDoc::RI::Store for each entry in the RI path
 
   attr_accessor :stores
 
-  ##
-  # Controls the user of the pager vs $stdout
 
   attr_accessor :use_stdout
 
-  ##
-  # Default options for ri
 
   def self.default_options
     options = {}
@@ -83,7 +52,6 @@ class RDoc::RI::Driver
     options[:use_stdout]  = !$stdout.tty?
     options[:width]       = 72
 
-    # By default all standard paths are used.
     options[:use_system]     = true
     options[:use_site]       = true
     options[:use_home]       = true
@@ -93,8 +61,6 @@ class RDoc::RI::Driver
     return options
   end
 
-  ##
-  # Dump +data_path+ using pp
 
   def self.dump data_path
     require 'pp'
@@ -104,8 +70,6 @@ class RDoc::RI::Driver
     end
   end
 
-  ##
-  # Parses +argv+ and returns a Hash of options
 
   def self.process_args argv
     options = default_options
@@ -144,21 +108,13 @@ unambiguous.
 
 For example:
 
-    #{opt.program_name} Fil
-    #{opt.program_name} File
-    #{opt.program_name} File.new
-    #{opt.program_name} zip
-    #{opt.program_name} rdoc:README
 
 Note that shell quoting or escaping may be required for method names containing
 punctuation:
 
-    #{opt.program_name} 'Array.[]'
-    #{opt.program_name} compact\\!
 
 To see the default directories ri will search, run:
 
-    #{opt.program_name} --list-doc-dirs
 
 Specifying the --system, --site, --home, --gems or --doc-dir options will
 limit ri to searching only the specified directories.
@@ -238,7 +194,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
              "formatter is bs for paged output and ansi",
              "otherwise. Valid formatters are:",
              formatters.join(' '), formatters) do |value|
-        #nodyna <ID:const_get-23> <CG MODERATE (array)>
+        #nodyna <const_get-2031> <CG MODERATE (array)>
         options[:formatter] = RDoc::Markup.const_get "To#{value.capitalize}"
       end
 
@@ -349,8 +305,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     exit 1
   end
 
-  ##
-  # Runs the ri command line executable using +argv+
 
   def self.run argv = ARGV
     options = process_args argv
@@ -364,8 +318,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     ri.run
   end
 
-  ##
-  # Creates a new driver using +initial_options+ from ::process_args
 
   def initialize initial_options = {}
     @paging = false
@@ -400,12 +352,9 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     @use_stdout  = options[:use_stdout]
     @show_all    = options[:show_all]
 
-    # pager process for jruby
     @jruby_pager_process = nil
   end
 
-  ##
-  # Adds paths for undocumented classes +also_in+ to +out+
 
   def add_also_in out, also_in
     return if also_in.empty?
@@ -420,9 +369,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     out << paths
   end
 
-  ##
-  # Adds a class header to +out+ for class +name+ which is described in
-  # +classes+.
 
   def add_class out, name, classes
     heading = if classes.all? { |klass| klass.module? } then
@@ -441,23 +387,16 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     out << RDoc::Markup::BlankLine.new
   end
 
-  ##
-  # Adds "(from ...)" to +out+ for +store+
 
   def add_from out, store
     out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
   end
 
-  ##
-  # Adds +extends+ to +out+
 
   def add_extends out, extends
     add_extension_modules out, 'Extended by', extends
   end
 
-  ##
-  # Adds a list of +extensions+ to this module of the given +type+ to +out+.
-  # add_includes and add_extends call this, so you should use those directly.
 
   def add_extension_modules out, type, extensions
     return if extensions.empty?
@@ -474,8 +413,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Renders multiple included +modules+ from +store+ to +out+.
 
   def add_extension_modules_multiple out, store, modules # :nodoc:
     out << RDoc::Markup::Paragraph.new("(from #{store.friendly_path})")
@@ -501,8 +438,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Adds a single extension module +include+ from +store+ to +out+
 
   def add_extension_modules_single out, store, include # :nodoc:
     name = include.name
@@ -515,15 +450,11 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Adds +includes+ to +out+
 
   def add_includes out, includes
     add_extension_modules out, 'Includes', includes
   end
 
-  ##
-  # Looks up the method +name+ and adds it to +out+
 
   def add_method out, name
     filtered   = lookup_method name
@@ -533,8 +464,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     out.concat method_out.parts
   end
 
-  ##
-  # Adds documentation for all methods in +klass+ to +out+
 
   def add_method_documentation out, klass
     klass.method_list.each do |method|
@@ -546,8 +475,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Adds a list of +methods+ to +out+ with a heading of +name+
 
   def add_method_list out, methods, name
     return if methods.empty?
@@ -566,8 +493,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     out << RDoc::Markup::BlankLine.new
   end
 
-  ##
-  # Returns ancestor classes of +klass+
 
   def ancestors_of klass
     ancestors = []
@@ -597,14 +522,10 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     ancestors.reverse
   end
 
-  ##
-  # For RubyGems backwards compatibility
 
   def class_cache # :nodoc:
   end
 
-  ##
-  # Builds a RDoc::Markup::Document from +found+, +klasess+ and +includes+
 
   def class_document name, found, klasses, includes, extends
     also_in = []
@@ -625,8 +546,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     out
   end
 
-  ##
-  # Adds the class +comment+ to +out+.
 
   def class_document_comment out, comment # :nodoc:
     unless comment.empty? then
@@ -645,8 +564,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Adds the constants from +klass+ to the Document +out+.
 
   def class_document_constants out, klass # :nodoc:
     return if klass.constants.empty?
@@ -669,8 +586,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     out << RDoc::Markup::BlankLine.new
   end
 
-  ##
-  # Hash mapping a known class or module to the stores it can be loaded from
 
   def classes
     return @classes if @classes
@@ -679,7 +594,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
     @stores.each do |store|
       store.cache[:modules].each do |mod|
-        # using default block causes searched-for modules to be added
         @classes[mod] ||= []
         @classes[mod] << store
       end
@@ -688,9 +602,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     @classes
   end
 
-  ##
-  # Returns the stores wherein +name+ is found along with the classes,
-  # extends and includes that match it
 
   def classes_and_includes_and_extends_for name
     klasses = []
@@ -714,8 +625,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     [found, klasses, includes, extends]
   end
 
-  ##
-  # Completes +name+ based on the caches.  For Readline
 
   def complete name
     completions = []
@@ -731,7 +640,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
   def complete_klass name, klass, selector, method, completions # :nodoc:
     klasses = classes.keys
 
-    # may need to include Foo when given Foo::
     klass_name = method ? name : klass
 
     if name !~ /#|\./ then
@@ -752,10 +660,8 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
       methods = list_methods_matching name
 
       if not methods.empty? then
-        # remove Foo if given Foo:: and a method was found
         completions.delete klass
       elsif selector then
-        # replace Foo with Foo:: as given
         completions.delete klass
         completions << "#{klass}#{selector}"
       end
@@ -764,8 +670,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Converts +document+ to text and writes it to the pager
 
   def display document
     page do |io|
@@ -775,8 +679,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Outputs formatted RI data for class +name+.  Groups undocumented classes
 
   def display_class name
     return if name =~ /#|\./
@@ -791,8 +693,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     display out
   end
 
-  ##
-  # Outputs formatted RI data for method +name+
 
   def display_method name
     out = RDoc::Markup::Document.new
@@ -802,11 +702,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     display out
   end
 
-  ##
-  # Outputs formatted RI data for the class or method +name+.
-  #
-  # Returns true if +name+ was found, false if it was not an alternative could
-  # be guessed, raises an error if +name+ couldn't be guessed.
 
   def display_name name
     if name =~ /\w:(\w|$)/ then
@@ -834,8 +729,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     false
   end
 
-  ##
-  # Displays each name in +name+
 
   def display_names names
     names.each do |name|
@@ -845,8 +738,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Outputs formatted RI data for page +name+.
 
   def display_page name
     store_name, page_name = name.split ':', 2
@@ -876,8 +767,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     display page.comment
   end
 
-  ##
-  # Outputs a formatted RI page list for the pages in +store+.
 
   def display_page_list store, pages = store.cache[:pages], search = nil
     out = RDoc::Markup::Document.new
@@ -902,9 +791,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     display out
   end
 
-  ##
-  # Expands abbreviated klass +klass+ into a fully-qualified class.  "Zl::Da"
-  # will be expanded to Zlib::DataError.
 
   def expand_class klass
     klass.split('::').inject '' do |expanded, klass_part|
@@ -925,9 +811,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Expands the class portion of +name+ into a fully-qualified class.  See
-  # #expand_class.
 
   def expand_name name
     klass, selector, method = parse_name name
@@ -942,8 +825,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end.join
   end
 
-  ##
-  # Filters the methods in +found+ trying to find a match for +name+.
 
   def filter_methods found, name
     regexp = name_regexp name
@@ -957,11 +838,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     found
   end
 
-  ##
-  # Yields items matching +name+ including the store they were found in, the
-  # class being searched for, the class they were found in (an ancestor) the
-  # types of methods to look up (from #method_type), and the method name being
-  # searched for
 
   def find_methods name
     klass, selector, method = parse_name name
@@ -1003,13 +879,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     self
   end
 
-  ##
-  # Finds the given +pager+ for jruby.  Returns an IO if +pager+ was found.
-  #
-  # Returns false if +pager+ does not exist.
-  #
-  # Returns nil if the jruby JVM doesn't support ProcessBuilder redirection
-  # (1.6 and older).
 
   def find_pager_jruby pager
     require 'java'
@@ -1033,11 +902,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     false
   end
 
-  ##
-  # Finds a store that matches +name+ which can be the name of a gem, "ruby",
-  # "home" or "site".
-  #
-  # See also RDoc::Store#source
 
   def find_store name
     @stores.each do |store|
@@ -1052,9 +916,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     raise RDoc::RI::Driver::NotFoundError, name
   end
 
-  ##
-  # Creates a new RDoc::Markup::Formatter.  If a formatter is given with -f,
-  # use it.  If we're outputting to a pager, use bs, otherwise ansi.
 
   def formatter(io)
     if @formatter_klass then
@@ -1066,8 +927,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Runs ri interactively using Readline if it is available.
 
   def interactive
     puts "\nEnter the method name you want to look up."
@@ -1102,8 +961,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     exit
   end
 
-  ##
-  # Is +file+ in ENV['PATH']?
 
   def in_path? file
     return true if file =~ %r%\A/% and File.exist? file
@@ -1113,9 +970,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Lists classes known to ri starting with +names+.  If +names+ is empty all
-  # known classes are shown.
 
   def list_known_classes names = []
     classes = []
@@ -1146,8 +1000,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Returns an Array of methods matching +name+
 
   def list_methods_matching name
     found = []
@@ -1184,11 +1036,9 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     found.uniq
   end
 
-  ##
-  # Loads RI data for method +name+ on +klass+ from +store+.  +type+ and
-  # +cache+ indicate if it is a class or instance method.
 
   def load_method store, cache, klass, type, name
+    #nodyna <send-2032> <not yet classified>
     methods = store.send(cache)[klass]
 
     return unless methods
@@ -1208,8 +1058,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     method
   end
 
-  ##
-  # Returns an Array of RI data for methods matching +name+
 
   def load_methods_matching name
     found = []
@@ -1229,8 +1077,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     found.reject do |path, methods| methods.empty? end
   end
 
-  ##
-  # Returns a filtered list of methods matching +name+
 
   def lookup_method name
     found = load_methods_matching name
@@ -1240,8 +1086,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     filter_methods found, name
   end
 
-  ##
-  # Builds a RDoc::Markup::Document from +found+, +klasses+ and +includes+
 
   def method_document name, filtered
     out = RDoc::Markup::Document.new
@@ -1258,8 +1102,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     out
   end
 
-  ##
-  # Returns the type of method (:both, :instance, :class) for +selector+
 
   def method_type selector
     case selector
@@ -1269,9 +1111,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Returns a regular expression for +name+ that will match an
-  # RDoc::AnyMethod's name.
 
   def name_regexp name
     klass, type, name = parse_name name
@@ -1284,8 +1123,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     end
   end
 
-  ##
-  # Paginates output through a pager program.
 
   def page
     if pager = setup_pager then
@@ -1303,19 +1140,11 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     @paging = false
   end
 
-  ##
-  # Are we using a pager?
 
   def paging?
     @paging
   end
 
-  ##
-  # Extracts the class, selector and method name parts from +name+ like
-  # Foo::Bar#baz.
-  #
-  # NOTE: Given Foo::Bar, Bar is considered a class even though it may be a
-  # method
 
   def parse_name name
     parts = name.split(/(::?|#|\.)/)
@@ -1345,13 +1174,9 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     [klass, type, meth]
   end
 
-  ##
-  # Renders the +klass+ from +store+ to +out+.  If the klass has no
-  # documentable items the class is added to +also_in+ instead.
 
   def render_class out, store, klass, also_in # :nodoc:
     comment = klass.comment
-    # TODO the store's cache should always return an empty Array
     class_methods    = store.class_methods[klass.full_name]    || []
     instance_methods = store.instance_methods[klass.full_name] || []
     attributes       = store.attributes[klass.full_name]       || []
@@ -1417,8 +1242,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     out << RDoc::Markup::Rule.new(1)
   end
 
-  ##
-  # Looks up and displays ri data according to the options given.
 
   def run
     if @list_doc_dirs then
@@ -1436,9 +1259,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     abort e.message
   end
 
-  ##
-  # Sets up a pager program to pass output through.  Tries the RI_PAGER and
-  # PAGER environment variables followed by pager, less then more.
 
   def setup_pager
     return if @use_stdout
@@ -1476,8 +1296,6 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
     nil
   end
 
-  ##
-  # Starts a WEBrick server for ri.
 
   def start_server
     require 'webrick'

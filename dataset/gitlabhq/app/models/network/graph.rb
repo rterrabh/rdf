@@ -28,20 +28,12 @@ module Network
       h
     end
 
-    # Get commits from repository
-    #
     def collect_commits
       find_commits(count_to_display_commit_in_center).map do |commit|
-        # Decorate with app/model/network/commit.rb
         Network::Commit.new(commit)
       end
     end
 
-    # Method is adding time and space on the
-    # list of commits. As well as returns date list
-    # correlated with time set on commits.
-    #
-    # @return [Array<TimeDate>] list of commit dates correlated with time on commits
     def index_commits
       days = []
       @map = {}
@@ -58,7 +50,6 @@ module Network
         place_chain(commit)
       end
 
-      # find parent spaces for not overlap lines
       @commits.each do |c|
         c.parent_spaces.concat(find_free_parent_spaces(c))
       end
@@ -66,7 +57,6 @@ module Network
       days
     end
 
-    # Skip count that the target commit is displayed in center.
     def count_to_display_commit_in_center
       offset = -1
       skip = 0
@@ -78,19 +68,16 @@ module Network
           end
 
           if index
-            # Find the target commit
             offset = index + skip
           else
             skip += self.class.max_count
           end
         else
-          # Can't find the target commit in the repo.
           offset = 0
         end
       end
 
       if self.class.max_count / 2 < offset then
-        # get max index that commit is displayed in the center.
         offset - self.class.max_count / 2
       else
         0
@@ -164,9 +151,6 @@ module Network
       false
     end
 
-    # Add space mark on commit and its parents
-    #
-    # @param [::Commit] the commit object.
     def place_chain(commit, parent_time = nil)
       leaves = take_left_leaves(commit)
       if leaves.empty?
@@ -180,7 +164,6 @@ module Network
         l.spaces << space
       end
 
-      # and mark it as reserved
       if parent_time.nil?
         min_time = leaves.first.time
       else
@@ -195,7 +178,6 @@ module Network
       end
       mark_reserved(min_time..max_time, space)
 
-      # Visit branching chains
       leaves.each do |l|
         parents = l.parents(@map).select{|p| p.space.zero?}
         for p in parents
@@ -242,12 +224,6 @@ module Network
       space
     end
 
-    # Takes most left subtree branch of commits
-    # which don't have space mark yet.
-    #
-    # @param [::Commit] the commit object.
-    #
-    # @return [Array<Network::Commit>] list of branch commits
     def take_left_leaves(raw_commit)
       commit = @map[raw_commit.id]
       leaves = []

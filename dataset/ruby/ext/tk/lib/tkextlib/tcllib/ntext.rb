@@ -1,25 +1,15 @@
-#
-#  tkextlib/tcllib/ntext.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Ntext bindtag
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('ntext', '0.81')
 TkPackage.require('ntext')
 
 module Tk::Tcllib
   Ntext = TkBindTag.new_by_name('Ntext')
 end
 
-# variables
-#nodyna <ID:instance_eval-142> <IEV EASY (private access)>
+#nodyna <instance_eval-1545> <IEV EASY (private access)>
 Tk::Tcllib::Ntext.instance_eval{
-  # boolean
   @classicAnchor = TkVarAccess.new('::ntext::classicAnchor')
   @classicExtras  = TkVarAccess.new('::ntext::classicExtras')
   @classicMouseSelect = TkVarAccess.new('::ntext::classicMouseSelect')
@@ -27,10 +17,8 @@ Tk::Tcllib::Ntext.instance_eval{
   @classicWrap = TkVarAccess.new('::ntext::classicWrap')
   @overwrite = TkVarAccess.new('::ntext::overwrite')
 
-  # regexp
   @newWrapRegexp = TkVarAccess.new('::ntext::newWrapRegexp')
 
-  # variables (advanced use)
   @tcl_match_wordBreakAfter = TkVarAccess.new('::ntext::tcl_match_wordBreakAfter')
   @tcl_match_wordBreakBefore = TkVarAccess.new('::ntext::tcl_match_wordBreakBefore')
   @tcl_match_endOfWord = TkVarAccess.new('::ntext::tcl_match_endOfWord')
@@ -53,14 +41,7 @@ class << Tk::Tcllib::Ntext
     self
   end
 
-  # functions (advanced use)
-  #ntext::new_wordBreakAfter
-  #ntext::new_wordBreakBefore
-  #ntext::new_endOfWord
-  #ntext::new_startOfNextWord
-  #ntext::new_startOfPreviousWord
 
-  # accessor
   def classicAnchor
     @classicAnchor.bool
   end

@@ -11,11 +11,6 @@ class Vavrdiasm < Formula
     sha1 "5ce2eed553cbe8e522b29106eda55b559ce55ac5" => :mountain_lion
   end
 
-  # Patch:
-  # - BSD `install(1)' does not have a GNU-compatible `-D' (create intermediate
-  #   directories) flag. Switch to using `mkdir -p'.
-  # - Make `PREFIX' overridable
-  #   https://github.com/vsergeev/vavrdisasm/pull/2
   patch :DATA
 
   def install
@@ -25,14 +20,6 @@ class Vavrdiasm < Formula
   end
 
   test do
-    # Code to generate `file.hex':
-    ## .device ATmega88
-    ##
-    ## LDI     R16, 0xfe
-    ## SER     R17
-    #
-    # Compiled with avra:
-    ## avra file.S && mv file.S.hex file.hex
 
     (testpath/"file.hex").write <<-EOS.undent
       :020000020000FC
@@ -58,7 +45,6 @@ index 3b61942..f1c94fc 100644
 +PREFIX ?= /usr
  BINDIR = $(PREFIX)/bin
 
- ################################################################################
 @@ -35,7 +35,8 @@ test: $(PROGNAME)
  	python2 crazy_test.py
 

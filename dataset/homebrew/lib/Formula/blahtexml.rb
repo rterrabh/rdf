@@ -8,7 +8,6 @@ class Blahtexml < Formula
 
   depends_on "xerces-c" unless build.include? "blahtex-only"
 
-  # Add missing unistd.h includes, taken from MacPorts
   patch :p0 do
     url "https://trac.macports.org/export/119768/trunk/dports/tex/blahtexml/files/patch-mainPng.cpp.diff"
     sha256 "7d4bce5630881099b71beedbbc09b64c61849513b4ac00197b349aab2eba1687"

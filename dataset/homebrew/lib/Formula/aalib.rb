@@ -12,8 +12,6 @@ class Aalib < Formula
     sha1 "7df0f5feb8621497d06c64a67a4b0d0350e6ecb1" => :mountain_lion
   end
 
-  # Fix malloc/stdlib issue on OS X
-  # Fix underquoted definition of AM_PATH_AALIB in aalib.m4
   patch :DATA
 
   def install
@@ -40,12 +38,8 @@ index 09534d2..2ea52f9 100644
 --- a/src/aaedit.c
 +++ b/src/aaedit.c
 @@ -1,6 +1,6 @@
- #include <string.h>
- #include <ctype.h>
 -#include <malloc.h>
 +#include <stdlib.h>
- #include "aalib.h"
- #include "aaint.h"
  static void aa_editdisplay(struct aa_edit *e)
  
 diff --git a/src/aakbdreg.c b/src/aakbdreg.c
@@ -55,20 +49,13 @@ index def65fe..f4f8efb 100644
 @@ -1,4 +1,4 @@
 -#include <malloc.h>
 +#include <stdlib.h>
- #include "config.h"
- #include "aalib.h"
- #include "aaint.h"
 diff --git a/src/aalib.c b/src/aalib.c
 index 11fecc8..e3063b4 100644
 --- a/src/aalib.c
 +++ b/src/aalib.c
 @@ -1,6 +1,6 @@
- #include <stdio.h>
- #include <string.h>
 -#include <malloc.h>
 +#include <stdlib.h>
- #include "aalib.h"
- #include "aaint.h"
  
 diff --git a/src/aamoureg.c b/src/aamoureg.c
 index 0380828..bb55fe3 100644
@@ -77,19 +64,13 @@ index 0380828..bb55fe3 100644
 @@ -1,4 +1,4 @@
 -#include <malloc.h>
 +#include <stdlib.h>
- #include "config.h"
- #include "aalib.h"
- #include "aaint.h"
 diff --git a/src/aarec.c b/src/aarec.c
 index 70f4ebc..ee43e8a 100644
 --- a/src/aarec.c
 +++ b/src/aarec.c
 @@ -1,5 +1,5 @@
- #include <string.h>
 -#include <malloc.h>
 +#include <stdlib.h>
- #include "aalib.h"
- #include "aaint.h"
  aa_linkedlist *aa_kbdrecommended = NULL, *aa_mouserecommended = NULL,
 diff --git a/src/aaregist.c b/src/aaregist.c
 index 54abec0..765155e 100644
@@ -98,36 +79,24 @@ index 54abec0..765155e 100644
 @@ -1,4 +1,4 @@
 -#include <malloc.h>
 +#include <stdlib.h>
- #include "config.h"
- #include "aalib.h"
- #include "aaint.h"
 diff --git a/src/aax.c b/src/aax.c
 index adcbd82..36e3294 100644
 --- a/src/aax.c
 +++ b/src/aax.c
 @@ -1,4 +1,3 @@
 -#include <malloc.h>
- #include <stdlib.h>
- #include <string.h>
- #include <stdio.h>
 diff --git a/src/aaxkbd.c b/src/aaxkbd.c
 index 30d5903..da2248d 100644
 --- a/src/aaxkbd.c
 +++ b/src/aaxkbd.c
 @@ -1,4 +1,3 @@
 -#include <malloc.h>
- #include <stdlib.h>
- #include <string.h>
- #include <stdio.h>
 diff --git a/src/aaxmouse.c b/src/aaxmouse.c
 index 9935b03..7e725ad 100644
 --- a/src/aaxmouse.c
 +++ b/src/aaxmouse.c
 @@ -1,4 +1,3 @@
 -#include <malloc.h>
- #include <stdlib.h>
- #include <string.h>
- #include <stdio.h>
 diff --git a/aalib.m4 b/aalib.m4
 index c40b8db..991fbda 100644
 --- a/aalib.m4

@@ -1,7 +1,6 @@
 class Projects::DeployKeysController < Projects::ApplicationController
   respond_to :html
 
-  # Authorize
   before_action :authorize_admin_project!
 
   layout "project_settings"
@@ -13,8 +12,6 @@ class Projects::DeployKeysController < Projects::ApplicationController
     @available_project_keys = current_user.project_deploy_keys - @enabled_keys
     @available_public_keys  = DeployKey.are_public - @enabled_keys
 
-    # Public keys that are already used by another accessible project are already
-    # in @available_project_keys.
     @available_public_keys -= @available_project_keys
   end
 

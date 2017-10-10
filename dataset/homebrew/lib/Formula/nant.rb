@@ -15,7 +15,6 @@ class Nant < Formula
   depends_on "mono"
 
   patch do
-    # fix build with newer versions of mono
     url "https://github.com/nant/nant/commit/69c8ee96493c5d953212397c8ca06c2392372ca4.diff"
     sha256 "1194a3b5c8e65d47e606f9d0f3b348fb6fe1998db929a7f711a9e172764b8075"
   end
@@ -23,7 +22,6 @@ class Nant < Formula
   def install
     ENV.deparallelize
 
-    # https://github.com/nant/nant/issues/151#issuecomment-125685734
     system "make", "install", "MCS=mcs", "prefix=#{prefix}"
     inreplace bin/"nant", bin/"mono", "mono"
   end

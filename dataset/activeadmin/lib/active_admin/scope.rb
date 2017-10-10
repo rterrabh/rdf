@@ -3,27 +3,6 @@ module ActiveAdmin
 
     attr_reader :scope_method, :id, :scope_block, :display_if_block, :show_count, :default_block
 
-    # Create a Scope
-    #
-    # Examples:
-    #
-    #   Scope.new(:published)
-    #   # => Scope with name 'Published' and scope method :published
-    #
-    #   Scope.new('Published', :public)
-    #   # => Scope with name 'Published' and scope method :public
-    #
-    #   Scope.new 'Published', :public, if: proc { current_admin_user.can? :manage, resource_class } do |articles|
-    #     articles.where published: true
-    #   end
-    #   # => Scope with name 'Published' and scope method :public, optionally displaying the scope per the :if block
-    #
-    #   Scope.new('Published') { |articles| articles.where(published: true) }
-    #   # => Scope with name 'Published' using a block to scope
-    #
-    #   Scope.new ->{Date.today.strftime '%A'}, :published_today
-    #   # => Scope with dynamic title using the :published_today scope method
-    #
     def initialize(name, method = nil, options = {}, &block)
       @name, @scope_method = name, method.try(:to_sym)
 

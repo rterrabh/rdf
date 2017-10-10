@@ -6,7 +6,6 @@ end
 
 Sidekiq.configure_server do |config|
   config.redis = Discourse.sidekiq_redis_config
-  # add our pausable middleware
   config.server_middleware do |chain|
     chain.add Sidekiq::Pausable
   end
@@ -14,7 +13,6 @@ end
 
 if Sidekiq.server?
 
-  # warm up AR
   RailsMultisite::ConnectionManagement.each_connection do
     (ActiveRecord::Base.connection.tables - %w[schema_migrations]).each do |table|
       table.classify.constantize.first rescue nil
@@ -32,7 +30,6 @@ if Sidekiq.server?
         begin
           manager.tick
         rescue => e
-          # the show must go on
           Discourse.handle_job_exception(e, {message: "While ticking scheduling manager"})
         end
         sleep 1
@@ -48,7 +45,6 @@ class SidekiqLogsterReporter < Sidekiq::ExceptionHandler::Logger
 
     return if Jobs::HandledExceptionWrapper === ex
 
-    # Pass context to Logster
     fake_env = {}
     context.each do |key, value|
       Logster.add_to_env(fake_env, key, value)

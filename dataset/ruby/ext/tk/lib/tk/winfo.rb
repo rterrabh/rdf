@@ -1,6 +1,3 @@
-#
-# tk/winfo.rb : methods for winfo command
-#
 module TkWinfo
 end
 
@@ -121,13 +118,10 @@ module TkWinfo
 
   def TkWinfo.interps(win=nil)
     if win
-      #tk_split_simplelist(tk_call_without_enc('winfo', 'interps',
-      #                                        '-displayof', win))
       tk_split_simplelist(tk_call_without_enc('winfo', 'interps',
                                               '-displayof', win),
                           false, true)
     else
-      #tk_split_simplelist(tk_call_without_enc('winfo', 'interps'))
       tk_split_simplelist(tk_call_without_enc('winfo', 'interps'),
                           false, true)
     end

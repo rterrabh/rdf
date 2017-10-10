@@ -1,28 +1,15 @@
-##
-# The global rubygems pool, available via the rubygems.org API.
-# Returns instances of APISpecification.
 
 class Gem::Resolver::APISet < Gem::Resolver::Set
 
-  ##
-  # The URI for the dependency API this APISet uses.
 
   attr_reader :dep_uri # :nodoc:
 
-  ##
-  # The Gem::Source that gems are fetched from
 
   attr_reader :source
 
-  ##
-  # The corresponding place to fetch gems.
 
   attr_reader :uri
 
-  ##
-  # Creates a new APISet that will retrieve gems from +uri+ using the RubyGems
-  # API URL +dep_uri+ which is described at
-  # http://guides.rubygems.org/rubygems-org-api
 
   def initialize dep_uri = 'https://rubygems.org/api/v1/dependencies'
     super()
@@ -38,9 +25,6 @@ class Gem::Resolver::APISet < Gem::Resolver::Set
     @to_fetch = []
   end
 
-  ##
-  # Return an array of APISpecification objects matching
-  # DependencyRequest +req+.
 
   def find_all req
     res = []
@@ -60,9 +44,6 @@ class Gem::Resolver::APISet < Gem::Resolver::Set
     res
   end
 
-  ##
-  # A hint run by the resolver to allow the Set to fetch
-  # data for DependencyRequests +reqs+.
 
   def prefetch reqs
     return unless @remote
@@ -103,8 +84,6 @@ class Gem::Resolver::APISet < Gem::Resolver::Set
     end
   end
 
-  ##
-  # Return data for all versions of the gem +name+.
 
   def versions name # :nodoc:
     if @data.key?(name)

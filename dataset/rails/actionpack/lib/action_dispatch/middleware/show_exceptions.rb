@@ -2,18 +2,6 @@ require 'action_dispatch/http/request'
 require 'action_dispatch/middleware/exception_wrapper'
 
 module ActionDispatch
-  # This middleware rescues any exception returned by the application
-  # and calls an exceptions app that will wrap it in a format for the end user.
-  #
-  # The exceptions app should be passed as parameter on initialization
-  # of ShowExceptions. Every time there is an exception, ShowExceptions will
-  # store the exception in env["action_dispatch.exception"], rewrite the
-  # PATH_INFO to the exception status code and call the rack app.
-  #
-  # If the application returns a "X-Cascade" pass response, this middleware
-  # will send an empty response as result with the correct status code.
-  # If any exception happens inside the exceptions app, this middleware
-  # catches the exceptions and returns a FAILSAFE_RESPONSE.
   class ShowExceptions
     FAILSAFE_RESPONSE = [500, { 'Content-Type' => 'text/plain' },
       ["500 Internal Server Error\n" \

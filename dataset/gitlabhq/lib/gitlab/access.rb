@@ -1,8 +1,3 @@
-# Gitlab::Access module
-#
-# Define allowed roles that can be used
-# in GitLab code to determine authorization level
-#
 module Gitlab
   module Access
     GUEST     = 10
@@ -11,7 +6,6 @@ module Gitlab
     MASTER    = 40
     OWNER     = 50
 
-    # Branch protection settings
     PROTECTION_NONE         = 0
     PROTECTION_DEV_CAN_PUSH = 1
     PROTECTION_FULL         = 2

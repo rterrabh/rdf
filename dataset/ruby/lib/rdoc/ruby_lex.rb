@@ -1,32 +1,17 @@
 :# coding: US-ASCII
 
-#--
-#   irb/ruby-lex.rb - ruby lexcal analyzer
-#   	$Release Version: 0.9.5$
-#   	$Revision: 17979 $
-#   	$Date: 2008-07-09 10:17:05 -0700 (Wed, 09 Jul 2008) $
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-#++
 
 require "e2mmap"
 require "irb/slex"
 require "stringio"
 
-##
-# Ruby lexer adapted from irb.
-#
-# The internals are not documented because they are scary.
 
 class RDoc::RubyLex
 
-  ##
-  # Raised upon invalid input
 
   class Error < RDoc::Error
   end
 
-  # :stopdoc:
 
   extend Exception2MessageMapper
 
@@ -56,11 +41,7 @@ class RDoc::RubyLex
 
   self.debug_level = 0
 
-  # :startdoc:
 
-  ##
-  # Returns an Array of +ruby+ tokens.  See ::new for a description of
-  # +options+.
 
   def self.tokenize ruby, options
     tokens = []
@@ -75,9 +56,6 @@ class RDoc::RubyLex
     tokens
   end
 
-  ##
-  # Creates a new lexer for +content+.  +options+ is an RDoc::Options, only
-  # +tab_width is used.
 
   def initialize(content, options)
     lex_init
@@ -122,7 +100,6 @@ class RDoc::RubyLex
     @ltype = nil
   end
 
-  # :stopdoc:
 
   def inspect # :nodoc:
     "#<%s:0x%x pos %d lex_state %p space_seen %p>" % [
@@ -140,7 +117,6 @@ class RDoc::RubyLex
   attr_reader :line_no
   attr_reader :indent
 
-  # io functions
   def set_input(io, p = nil, &block)
     @io = io
     if p.respond_to?(:call)
@@ -166,7 +142,6 @@ class RDoc::RubyLex
 
   def getc
     while @rests.empty?
-      #      return nil unless buf_input
       @rests.push nil unless buf_input
     end
     c = @rests.shift
@@ -301,7 +276,6 @@ class RDoc::RubyLex
           unless l = lex
             throw :TERM_INPUT if @line == ''
           else
-            #p l
             @line.concat l
             if @ltype or @continue or @indent > 0
               next
@@ -330,12 +304,8 @@ class RDoc::RubyLex
     until (((tk = token).kind_of?(TkNL) || tk.kind_of?(TkEND_OF_SCRIPT)) &&
            !@continue or
       tk.nil?)
-      #p tk
-      #p @lex_state
-      #p self
     end
     line = get_readed
-    #      print self.inspect
     if line == "" and tk.kind_of?(TkEND_OF_SCRIPT) || tk.nil?
       nil
     else
@@ -344,8 +314,6 @@ class RDoc::RubyLex
   end
 
   def token
-    #      require "tracer"
-    #      Tracer.on
     @prev_seek = @seek
     @prev_line_no = @line_no
     @prev_char_no = @char_no
@@ -364,7 +332,6 @@ class RDoc::RubyLex
     if @readed_auto_clean_up
       get_readed
     end
-    #      Tracer.off
     tk
   end
 
@@ -593,7 +560,6 @@ class RDoc::RubyLex
         ungetc
         identify_number
       else
-        # for "obj.if" etc.
         @lex_state = :EXPR_DOT
         Token(TkDOT)
       end
@@ -630,7 +596,6 @@ class RDoc::RubyLex
 
     @OP.def_rule("::") do
       |op, io|
-      #      p @lex_state.id2name, @space_seen
       if @lex_state == :EXPR_BEG or @lex_state == :EXPR_ARG && @space_seen
         @lex_state = :EXPR_BEG
         Token(TkCOLON3)
@@ -662,10 +627,6 @@ class RDoc::RubyLex
       Token("^")
     end
 
-    #       @OP.def_rules("^=") do
-    # 	@lex_state = :EXPR_BEG
-    # 	Token(OP_ASGN, :^)
-    #       end
 
     @OP.def_rules(",") do
       |op, io|
@@ -796,15 +757,6 @@ class RDoc::RubyLex
       end
     end
 
-    #       @OP.def_rule("def", proc{|op, io| /\s/ =~ io.peek(0)}) do
-    # 	|op, io|
-    # 	@indent += 1
-    # 	@lex_state = :EXPR_FNAME
-    # #	@lex_state = :EXPR_END
-    # #	until @rests[0] == "\n" or @rests[0] == ";"
-    # #	  rests.shift
-    # #	end
-    #       end
 
     @OP.def_rule("_") do
       if peek_match?(/_END__/) and @lex_state == :EXPR_BEG then
@@ -857,7 +809,7 @@ class RDoc::RubyLex
   end
 
   IDENT_RE = if defined? Encoding then
-               #nodyna <ID:eval-70> <EV COMPLEX (change-prone variables)>
+               #nodyna <eval-2033> <EV COMPLEX (change-prone variables)>
                eval '/[\w\u{0080}-\u{FFFFF}]/u' # 1.8 can't parse \u{}
              else
                /[\w\x80-\xFF]/
@@ -883,14 +835,12 @@ class RDoc::RubyLex
       token.concat getc
     end
 
-    # almost fix token
 
     case token
     when /^\$/
       return Token(TkGVAR, token)
     when /^\@\@/
       @lex_state = :EXPR_END
-      # p Token(TkCVAR, token)
       return Token(TkCVAR, token)
     when /^\@/
       @lex_state = :EXPR_END
@@ -902,12 +852,10 @@ class RDoc::RubyLex
 
       token_c, *trans = TkReading2Token[token]
       if token_c
-        # reserved word?
 
         if (@lex_state != :EXPR_BEG &&
             @lex_state != :EXPR_FNAME &&
             trans[1])
-          # modifiers
           token_c = TkSymbol2Token[trans[1]]
           @lex_state = trans[0]
         else
@@ -915,7 +863,6 @@ class RDoc::RubyLex
             if ENINDENT_CLAUSE.include?(token)
               valid = peek(0) != ':'
 
-              # check for ``class = val'' etc.
               case token
               when "class"
                 valid = false unless peek_match?(/^\s*(<<|\w|::)/)
@@ -926,7 +873,6 @@ class RDoc::RubyLex
               when *ENINDENT_CLAUSE
                 valid = false if peek_match?(/^\s*([+-\/*]?=|\*|<|>|\&|\|)/)
               else
-                # no nothing
               end if valid
 
               if valid
@@ -979,7 +925,6 @@ class RDoc::RubyLex
 
   def identify_here_document
     ch = getc
-    #    if lt = PERCENT_LTYPE[ch]
     if ch == "-"
       ch = getc
       indent = true
@@ -1060,11 +1005,6 @@ class RDoc::RubyLex
     else
       return Token(TkMOD, '%')
     end
-    #     if ch !~ /\W/
-    #       ungetc
-    #       next
-    #     end
-    #@ltype = lt
     @quoted = ch unless @quoted = PERCENT_PAREN[ch]
     identify_string(lt, @quoted, type)
   end
@@ -1270,9 +1210,6 @@ class RDoc::RubyLex
     comment = '#'
 
     while ch = getc
-      # if ch == "\\" #"
-      #   read_escape
-      # end
       if ch == "\n"
         @ltype = nil
         ungetc
@@ -1364,15 +1301,12 @@ class RDoc::RubyLex
     else
       escape << ch
 
-      # other characters
     end
 
     escape
   end
 
-  # :startdoc:
 
 end
 
-#RDoc::RubyLex.debug_level = 1
 

@@ -17,7 +17,6 @@ class Cweb < Formula
     emacsdir = (share/"emacs/site-lisp")
     cwebinputs = (lib/"cweb")
 
-    # make install doesn't use `mkdir -p` so this is needed
     [bin, man1, macrosdir, emacsdir, cwebinputs].each(&:mkpath)
 
     system "make", "install",
@@ -35,7 +34,6 @@ class Cweb < Formula
       This is a minimal program written in CWEB.
 
       @c
-      #include <stdio.h>
       void main() {
           printf("Hello world!");
       }

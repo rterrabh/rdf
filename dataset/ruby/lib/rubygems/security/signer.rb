@@ -1,33 +1,18 @@
-##
-# Basic OpenSSL-based package signing class.
 
 class Gem::Security::Signer
 
-  ##
-  # The chain of certificates for signing including the signing certificate
 
   attr_accessor :cert_chain
 
-  ##
-  # The private key for the signing certificate
 
   attr_accessor :key
 
-  ##
-  # The digest algorithm used to create the signature
 
   attr_reader :digest_algorithm
 
-  ##
-  # The name of the digest algorithm, used to pull digests out of the hash by
-  # name.
 
   attr_reader :digest_name # :nodoc:
 
-  ##
-  # Creates a new signer with an RSA +key+ or path to a key, and a certificate
-  # +chain+ containing X509 certificates, encoding certificates or paths to
-  # certificates.
 
   def initialize key, cert_chain, passphrase = nil
     @cert_chain = cert_chain
@@ -62,9 +47,6 @@ class Gem::Security::Signer
     end
   end
 
-  ##
-  # Extracts the full name of +cert+.  If the certificate has a subjectAltName
-  # this value is preferred, otherwise the subject is used.
 
   def extract_name cert # :nodoc:
     subject_alt_name = cert.extensions.find { |e| 'subjectAltName' == e.oid }
@@ -78,10 +60,6 @@ class Gem::Security::Signer
     end
   end
 
-  ##
-  # Loads any missing issuers in the cert chain from the trusted certificates.
-  #
-  # If the issuer does not exist it is ignored as it will be checked later.
 
   def load_cert_chain # :nodoc:
     return if @cert_chain.empty?
@@ -95,8 +73,6 @@ class Gem::Security::Signer
     end
   end
 
-  ##
-  # Sign data with given digest algorithm
 
   def sign data
     return unless @key
@@ -112,18 +88,6 @@ class Gem::Security::Signer
     @key.sign @digest_algorithm.new, data
   end
 
-  ##
-  # Attempts to re-sign the private key if the signing certificate is expired.
-  #
-  # The key will be re-signed if:
-  # * The expired certificate is self-signed
-  # * The expired certificate is saved at ~/.gem/gem-public_cert.pem
-  # * There is no file matching the expiry date at
-  #   ~/.gem/gem-public_cert.pem.expired.%Y%m%d%H%M%S
-  #
-  # If the signing certificate can be re-signed the expired certificate will
-  # be saved as ~/.gem/gem-pubilc_cert.pem.expired.%Y%m%d%H%M%S where the
-  # expiry time (not after) is used for the timestamp.
 
   def re_sign_key # :nodoc:
     old_cert = @cert_chain.last

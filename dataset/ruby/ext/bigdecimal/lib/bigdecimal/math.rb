@@ -1,59 +1,12 @@
 require 'bigdecimal'
 
-#
-#--
-# Contents:
-#   sqrt(x, prec)
-#   sin (x, prec)
-#   cos (x, prec)
-#   atan(x, prec)  Note: |x|<1, x=0.9999 may not converge.
-#   PI  (prec)
-#   E   (prec) == exp(1.0,prec)
-#
-# where:
-#   x    ... BigDecimal number to be computed.
-#            |x| must be small enough to get convergence.
-#   prec ... Number of digits to be obtained.
-#++
-#
-# Provides mathematical functions.
-#
-# Example:
-#
-#   require "bigdecimal/math"
-#
-#   include BigMath
-#
-#   a = BigDecimal((PI(100)/2).to_s)
-#   puts sin(a,100) # => 0.10000000000000000000......E1
-#
 module BigMath
   module_function
 
-  # call-seq:
-  #   sqrt(decimal, numeric) -> BigDecimal
-  #
-  # Computes the square root of +decimal+ to the specified number of digits of
-  # precision, +numeric+.
-  #
-  #   BigMath.sqrt(BigDecimal.new('2'), 16).to_s
-  #   #=> "0.1414213562373095048801688724E1"
-  #
   def sqrt(x, prec)
     x.sqrt(prec)
   end
 
-  # call-seq:
-  #   sin(decimal, numeric) -> BigDecimal
-  #
-  # Computes the sine of +decimal+ to the specified number of digits of
-  # precision, +numeric+.
-  #
-  # If +decimal+ is Infinity or NaN, returns NaN.
-  #
-  #   BigMath.sin(BigMath.PI(5)/4, 5).to_s
-  #   #=> "0.70710678118654752440082036563292800375E0"
-  #
   def sin(x, prec)
     raise ArgumentError, "Zero or negative precision for sin" if prec <= 0
     return BigDecimal("NaN") if x.infinite? || x.nan?
@@ -87,17 +40,6 @@ module BigMath
     neg ? -y : y
   end
 
-  # call-seq:
-  #   cos(decimal, numeric) -> BigDecimal
-  #
-  # Computes the cosine of +decimal+ to the specified number of digits of
-  # precision, +numeric+.
-  #
-  # If +decimal+ is Infinity or NaN, returns NaN.
-  #
-  #   BigMath.cos(BigMath.PI(4), 16).to_s
-  #   #=> "-0.999999999999999999999999999999856613163740061349E0"
-  #
   def cos(x, prec)
     raise ArgumentError, "Zero or negative precision for cos" if prec <= 0
     return BigDecimal("NaN") if x.infinite? || x.nan?
@@ -131,17 +73,6 @@ module BigMath
     y
   end
 
-  # call-seq:
-  #   atan(decimal, numeric) -> BigDecimal
-  #
-  # Computes the arctangent of +decimal+ to the specified number of digits of
-  # precision, +numeric+.
-  #
-  # If +decimal+ is NaN, returns NaN.
-  #
-  #   BigMath.atan(BigDecimal.new('-1'), 16).to_s
-  #   #=> "-0.785398163397448309615660845819878471907514682065E0"
-  #
   def atan(x, prec)
     raise ArgumentError, "Zero or negative precision for atan" if prec <= 0
     return BigDecimal("NaN") if x.nan?
@@ -170,15 +101,6 @@ module BigMath
     y
   end
 
-  # call-seq:
-  #   PI(numeric) -> BigDecimal
-  #
-  # Computes the value of pi to the specified number of digits of precision,
-  # +numeric+.
-  #
-  #   BigMath.PI(10).to_s
-  #   #=> "0.3141592653589793238462643388813853786957412E1"
-  #
   def PI(prec)
     raise ArgumentError, "Zero or negative precision for PI" if prec <= 0
     n      = prec + BigDecimal.double_fig
@@ -215,15 +137,6 @@ module BigMath
     pi
   end
 
-  # call-seq:
-  #   E(numeric) -> BigDecimal
-  #
-  # Computes e (the base of natural logarithms) to the specified number of
-  # digits of precision, +numeric+.
-  #
-  #   BigMath.E(10).to_s
-  #   #=> "0.271828182845904523536028752390026306410273E1"
-  #
   def E(prec)
     raise ArgumentError, "Zero or negative precision for E" if prec <= 0
     BigMath.exp(1, prec)

@@ -25,23 +25,17 @@ class Geocouch < Formula
     HOMEBREW_PREFIX/"share/geocouch"
   end
 
-  #  GeoCouch currently supports couch_version(s) 1.1.x and 1.2.x (other
-  #  versions at your own risk).  This formula supports GeoCouch 1.3.0 on top
-  #  of Apache couchdb 1.3.0.
   def install
     couchdb_dir = buildpath/"couchdb-src"
     Formula["couchdb"].brew { couchdb_dir.install Dir["*"] }
     ENV["COUCH_SRC"] = couchdb_dir/"src/couchdb"
 
-    #  Build geocouch.
     system "make"
 
-    #  Install geocouch build files.
     (share/"geocouch").mkpath
     rm_rf share/"geocouch/ebin/"
     (share/"geocouch").install Dir["ebin"]
 
-    #  Install geocouch.plist for launchctl support.
     (share/"geocouch").install Dir[couchdb_dir/"etc/launchd/org.apache.couchdb.plist.tpl.in"]
     mv share/"geocouch/org.apache.couchdb.plist.tpl.in", share/"geocouch/geocouch.plist"
     inreplace (share/"geocouch/geocouch.plist"), "<string>org.apache.couchdb</string>", \
@@ -53,34 +47,18 @@ class Geocouch < Formula
     EOS
     inreplace (share/"geocouch/geocouch.plist"), "%bindir%/%couchdb_command_name%", \
       HOMEBREW_PREFIX/"bin/couchdb"
-    #  Turn off RunAtLoad and KeepAlive (to simplify experience for first-timers).
     inreplace (share/"geocouch/geocouch.plist"), "<true/>", \
       "<false/>"
     (share/"geocouch/geocouch.plist").chmod 0644
 
-    #  Install geocouch.ini into couchdb.
     (etc/"couchdb/default.d").install Dir["etc/couchdb/default.d/geocouch.ini"]
 
-    #  Install tests into couchdb.
     test_files = Dir["share/www/script/test/*.js"]
-    #  Normal recipe "should" read:
-    #      (share/'couchdb/www/script/test/').install test_files
-    #  which would symlink geocouch tests into the couchdb share.  But couchdb
-    #  seems to sandbox its web-readable files to the share/couchdb/www branch,
-    #  and symlinks outside of that folder seem to violate couchdb's
-    #  requirements.  Consequently, we have to install geocouch tests directly
-    #  inside the share/couchdb/www branch and not symlink them from the
-    #  geocouch share branch (i.e., outside the couchdb sandbox).  So for
-    #  clarity sake, install/partition all the geocouch tests together into a
-    #  tidy subfolder, and symlink them into place in the normal couchdb tests
-    #  folder.
     rm_rf (couchdb_share/"www/script/test/geocouch")
     (couchdb_share/"www/script/test/geocouch").mkpath
     (couchdb_share/"www/script/test/geocouch").install test_files
     Dir[(couchdb_share/"www/script/test/geocouch/*.js")].each  \
       { |geotest| system "cd #{couchdb_share/"www/script/test"};  ln -s geocouch/#{File.basename(geotest)} ." }
-    #  Complete the install by referencing the geocouch tests in couch_tests.js
-    #  (which runs the tests).
     test_lines = test_files.map { |testline| testline.gsub(/^.*\/(.*)$/, 'loadTest("\1");' + "\n") }
     system "(echo;  echo '//REPLACE_ME') >> '#{couchdb_share}/www/script/couch_tests.js'"
     inreplace (couchdb_share/"www/script/couch_tests.js"), /^\/\/REPLACE_ME$/,  \

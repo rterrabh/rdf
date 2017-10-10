@@ -2,10 +2,6 @@ require 'active_support/core_ext/array/conversions'
 require 'active_support/core_ext/object/acts_like'
 
 module ActiveSupport
-  # Provides accurate date and time measurements using Date#advance and
-  # Time#advance, respectively. It mainly supports the methods on Numeric.
-  #
-  #   1.month.ago       # equivalent to Time.now.advance(months: -1)
   class Duration
     attr_accessor :value, :parts
 
@@ -13,8 +9,6 @@ module ActiveSupport
       @value, @parts = value, parts
     end
 
-    # Adds another Duration or a Numeric to this Duration. Numeric values
-    # are treated as seconds.
     def +(other)
       if Duration === other
         Duration.new(value + other.value, @parts + other.parts)
@@ -23,8 +17,6 @@ module ActiveSupport
       end
     end
 
-    # Subtracts another Duration or a Numeric from this Duration. Numeric
-    # values are treated as seconds.
     def -(other)
       self + (-other)
     end
@@ -42,8 +34,6 @@ module ActiveSupport
       Duration == klass || value.instance_of?(klass)
     end
 
-    # Returns +true+ if +other+ is also a Duration instance with the
-    # same +value+, or if <tt>other == value</tt>.
     def ==(other)
       if Duration === other
         other.value == value
@@ -56,32 +46,10 @@ module ActiveSupport
       @value.to_s
     end
 
-    # Returns the number of seconds that this Duration represents.
-    #
-    #   1.minute.to_i   # => 60
-    #   1.hour.to_i     # => 3600
-    #   1.day.to_i      # => 86400
-    #
-    # Note that this conversion makes some assumptions about the
-    # duration of some periods, e.g. months are always 30 days
-    # and years are 365.25 days:
-    #
-    #   # equivalent to 30.days.to_i
-    #   1.month.to_i    # => 2592000
-    #
-    #   # equivalent to 365.25.days.to_i
-    #   1.year.to_i     # => 31557600
-    #
-    # In such cases, Ruby's core
-    # Date[http://ruby-doc.org/stdlib/libdoc/date/rdoc/Date.html] and
-    # Time[http://ruby-doc.org/stdlib/libdoc/time/rdoc/Time.html] should be used for precision
-    # date and time arithmetic.
     def to_i
       @value.to_i
     end
 
-    # Returns +true+ if +other+ is also a Duration instance, which has the
-    # same parts as this one.
     def eql?(other)
       Duration === other && other.value.eql?(value)
     end
@@ -96,15 +64,11 @@ module ActiveSupport
       false
     end
 
-    # Calculates a new Time or Date that is as far in the future
-    # as this Duration represents.
     def since(time = ::Time.current)
       sum(1, time)
     end
     alias :from_now :since
 
-    # Calculates a new Time or Date that is as far in the past
-    # as this Duration represents.
     def ago(time = ::Time.current)
       sum(-1, time)
     end
@@ -146,15 +110,12 @@ module ActiveSupport
 
     private
 
-      # We define it as a workaround to Ruby 2.0.0-p353 bug.
-      # For more information, check rails/rails#13055.
-      # Remove it when we drop support for 2.0.0-p353.
       def ===(other) #:nodoc:
         value === other
       end
 
       def method_missing(method, *args, &block) #:nodoc:
-        #nodyna <ID:send-218> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1109> <SD COMPLEX (change-prone variables)>
         value.send(method, *args, &block)
       end
   end

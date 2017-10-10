@@ -1,19 +1,7 @@
-#
-#  tkextlib/tcllib/ip_entry.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * An IP address entry widget
-#
-# (The following is the original description of the library.)
-#
-# This package provides a widget for the entering of a IP address.
-# It guarantees a valid address at all times.
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('ipentry', '0.1')
 TkPackage.require('ipentry')
 
 module Tk

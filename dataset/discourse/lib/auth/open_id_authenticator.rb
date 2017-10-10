@@ -17,7 +17,6 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
 
     raise Discourse::InvalidParameters.new(:email) if email.blank?
 
-    # If the auth supplies a name / username, use those. Otherwise start with email.
     result.name = data[:name] || data[:email]
     result.username = data[:nickname] || data[:email]
 
@@ -30,7 +29,6 @@ class Auth::OpenIdAuthenticator < Auth::Authenticator
     result.user = user_open_id.try(:user)
     result.extra_data = {
       openid_url: identity_url,
-      # note email may change by the time after_create_account runs
       email: email
     }
 

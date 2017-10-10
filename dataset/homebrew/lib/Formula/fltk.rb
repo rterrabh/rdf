@@ -19,8 +19,6 @@ class Fltk < Formula
     cause "http://llvm.org/bugs/show_bug.cgi?id=10338"
   end
 
-  # Fixes issue with -lpng not found.
-  # Based on: https://trac.macports.org/browser/trunk/dports/aqua/fltk/files/patch-src-Makefile.diff
   patch :DATA
 
   def install

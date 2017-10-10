@@ -23,7 +23,6 @@ class FragFind < Formula
 
   def install
     if build.head?
-      # don't run ./configure without arguments
       inreplace "bootstrap.sh", "./configure", ""
       system "./bootstrap.sh"
     end

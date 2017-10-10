@@ -37,7 +37,6 @@ class Archetype
     @archetypes[name] = Archetype.new(name, options)
   end
 
-  # default archetypes
   register 'regular'
   register 'private_message'
   register 'banner'

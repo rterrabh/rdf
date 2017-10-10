@@ -14,10 +14,8 @@ module Jobs
 
       backup_path = "#{Backup.base_directory}/#{filename}"
       tmp_backup_path = "#{backup_path}.tmp"
-      # path to tmp directory
       tmp_directory = File.dirname(Backup.chunk_path(identifier, filename, 0))
 
-      # merge all chunks
       HandleChunkUpload.merge_chunks(chunks, upload_path: backup_path, tmp_upload_path: tmp_backup_path, model: Backup, identifier: identifier, filename: filename, tmp_directory: tmp_directory)
     end
 

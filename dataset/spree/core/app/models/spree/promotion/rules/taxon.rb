@@ -41,17 +41,14 @@ module Spree
 
         private
 
-        # All taxons in an order
         def order_taxons(order)
           Spree::Taxon.joins(products: {variants_including_master: :line_items}).where(spree_line_items: {order_id: order.id}).uniq
         end
 
-        # ids of taxons rules and taxons rules children
         def taxons_including_children_ids
           taxons.inject([]){ |ids,taxon| ids += taxon.self_and_descendants.ids }
         end
 
-        # taxons order vs taxons rules and taxons rules children
         def order_taxons_in_taxons_and_children(order)
           order_taxons(order).where(id: taxons_including_children_ids)
         end

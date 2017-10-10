@@ -96,7 +96,6 @@ class PostMover
       ]
     )
 
-    # Move any links from the post to the new topic
     post.topic_links.update_all(topic_id: destination_topic.id)
   end
 

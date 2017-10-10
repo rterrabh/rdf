@@ -3,14 +3,11 @@ require 'cancan/matchers'
 require 'spree/testing_support/ability_helpers'
 require 'spree/testing_support/bar_ability'
 
-# Fake ability for testing registration of additional abilities
 class FooAbility
   include CanCan::Ability
 
   def initialize(user)
-    # allow anyone to perform index on Order
     can :index, Spree::Order
-    # allow anyone to update an Order with id of 1
     can :update, Spree::Order do |order|
       order.id == 1
     end
@@ -90,7 +87,6 @@ describe Spree::Ability, :type => :model do
         expect(ability).to be_able_to :admin, resource_order
         expect(ability).to be_able_to :index, resource_order
         expect(ability).not_to be_able_to :update, resource_order
-        # ability.should_not be_able_to :create, resource_order # Fails
 
         expect(ability).to be_able_to :admin, resource_shipment
         expect(ability).to be_able_to :index, resource_shipment
@@ -98,15 +94,11 @@ describe Spree::Ability, :type => :model do
 
         expect(ability).not_to be_able_to :admin, resource_product
         expect(ability).not_to be_able_to :update, resource_product
-        # ability.should_not be_able_to :show, resource_product # Fails
 
         expect(ability).not_to be_able_to :admin, resource_user
         expect(ability).not_to be_able_to :update, resource_user
         expect(ability).to be_able_to :update, user
-        # ability.should_not be_able_to :create, resource_user # Fails
-        # It can create new users if is has access to the :admin, User!!
 
-        # TODO change the Ability class so only users and customers get the extra premissions?
 
         Spree::Ability.remove_ability(BarAbility)
       end

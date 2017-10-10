@@ -90,12 +90,6 @@ module Gitlab
       File.expand_path(File.join(File.dirname(__FILE__), '../..'))
     end
 
-    # Prompt the user to input something
-    #
-    # message - the message to display before input
-    # choices - array of strings of acceptable answers or nil for any answer
-    #
-    # Returns the user's answer
     def prompt(message, choices = nil)
       begin
         print(message)

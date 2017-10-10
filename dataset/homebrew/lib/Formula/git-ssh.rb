@@ -14,7 +14,6 @@ class GitSsh < Formula
   end
 
   def install
-    # Change loading of required code from libexec location (Cellar only)
     inreplace "bin/git-ssh" do |s|
       s.sub!(/path = .*$/, "path = '#{libexec}'")
     end

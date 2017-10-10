@@ -1,6 +1,3 @@
-#
-# Creates and Updates Topics based on an RSS or ATOM feed.
-#
 require 'digest/sha1'
 require_dependency 'post_creator'
 require_dependency 'post_revisor'
@@ -113,7 +110,7 @@ module Jobs
 
       def author_username
         begin
-          #nodyna <ID:send-151> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-408> <SD COMPLEX (change-prone variables)>
           @article_rss_item.send(SiteSetting.embed_username_key_from_feed.to_sym)
         rescue
           nil

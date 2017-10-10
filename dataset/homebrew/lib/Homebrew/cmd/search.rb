@@ -145,7 +145,6 @@ module Homebrew
 
     results.map do |name|
       canonical_name = Formulary.canonical_name(name)
-      # Ignore aliases from results when the full name was also found
       if aliases.include?(name) && results.include?(canonical_name)
         next
       elsif (HOMEBREW_CELLAR/canonical_name).directory?

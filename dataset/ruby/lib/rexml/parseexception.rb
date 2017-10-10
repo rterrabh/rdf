@@ -10,7 +10,6 @@ module REXML
     end
 
     def to_s
-      # Quote the original exception, if there was one
       if @continued_exception
         err = @continued_exception.inspect
         err << "\n"
@@ -20,10 +19,8 @@ module REXML
         err = ""
       end
 
-      # Get the stack trace and error message
       err << super
 
-      # Add contextual information
       if @source
         err << "\nLine: #{line}\n"
         err << "Position: #{position}\n"

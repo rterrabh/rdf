@@ -26,7 +26,6 @@ class Graphene < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <graphene-gobject.h>
 
       int main(int argc, char *argv[]) {
       GType type = graphene_point_get_type();

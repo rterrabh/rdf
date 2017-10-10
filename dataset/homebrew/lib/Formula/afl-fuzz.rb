@@ -21,7 +21,6 @@ class AflFuzz < Formula
     exe_file = testpath/"test"
 
     cpp_file.write <<-EOS.undent
-      #include <iostream>
 
       int main() {
         std::cout << "Hello, world!";

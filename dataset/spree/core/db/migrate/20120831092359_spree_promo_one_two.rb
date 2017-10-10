@@ -1,6 +1,5 @@
 class SpreePromoOneTwo < ActiveRecord::Migration
   def up
-    # This migration is just a compressed migration for all previous versions of spree_promo
     return if table_exists?(:spree_products_promotion_rules)
 
     create_table :spree_products_promotion_rules, :id => false, :force => true do |t|

@@ -15,8 +15,6 @@ class UserspaceRcu < Formula
     args = ["--disable-dependency-tracking",
             "--disable-silent-rules",
             "--prefix=#{prefix}"]
-    # workaround broken upstream detection of build platform
-    # marked as wontfix: http://bugs.lttng.org/issues/578#note-1
     if MacOS.prefer_64_bit?
       args << "--build=#{Hardware::CPU.arch_64_bit}"
     end

@@ -34,10 +34,8 @@ class Hping < Formula
   end
 
   def install
-    # Compile fails with tcl support; TCL on OS X is 32-bit only
     system "./configure", "--no-tcl"
 
-    # Target folders need to exist before installing
     sbin.mkpath
     man8.mkpath
     system "make", "CC=#{ENV.cc}",
@@ -54,8 +52,6 @@ index 3d0ea58..a8a9699 100644
 --- a/gethostname.c
 +++ b/gethostname.c
 @@ -18,8 +18,6 @@
- #include <arpa/inet.h>
- #include <string.h>
  
 -size_t strlcpy(char *dst, const char *src, size_t siz);
 -

@@ -15,8 +15,6 @@ class Clucene < Formula
 
   depends_on "cmake" => :build
 
-  # Portability fixes for 10.9+
-  # Upstream ticket: http://sourceforge.net/p/clucene/bugs/219/
   patch do
     url "https://raw.githubusercontent.com/DomT4/scripts/46d9672f7/Homebrew_Resources/MacPorts_Import/clucene/r126047/patch-src-shared-CLucene-LuceneThreads.h.diff"
     mirror "https://trac.macports.org/export/126047/trunk/dports/devel/clucene/files/patch-src-shared-CLucene-LuceneThreads.h.diff"

@@ -1,10 +1,3 @@
-#
-#  tkextlib/blt/ted.rb
-#
-#    *** This is alpha version, because there is no document on BLT. ***
-#
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -15,7 +8,6 @@ module Tk::BLT
 
     TkCommandNames = ['::blt::ted'.freeze].freeze
 
-    ##############################
 
     extend TkItemConfigMethod
 
@@ -53,7 +45,6 @@ module Tk::BLT
       end
     end
 
-    ##############################
 
     def self.edit(master, *args)
       tk_call('::blt::ted', 'edit', master, *args)

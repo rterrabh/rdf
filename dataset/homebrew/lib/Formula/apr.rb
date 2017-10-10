@@ -17,11 +17,8 @@ class Apr < Formula
   def install
     ENV.universal_binary if build.universal?
 
-    # https://bz.apache.org/bugzilla/show_bug.cgi?id=57359
-    # The internal libtool throws an enormous strop if we don't do...
     ENV.deparallelize
 
-    # Stick it in libexec otherwise it pollutes lib with a .exp file.
     system "./configure", "--prefix=#{libexec}"
     system "make", "install"
     bin.install_symlink Dir["#{libexec}/bin/*"]

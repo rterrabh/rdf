@@ -65,7 +65,6 @@ module ActiveAdmin
       @application ||= ::ActiveAdmin::Application.new
     end
 
-    # Gets called within the initializer
     def setup
       application.setup!
       yield(application)
@@ -78,37 +77,10 @@ module ActiveAdmin
     delegate :load!,         to: :application
     delegate :routes,        to: :application
 
-    # A callback is triggered each time (before) Active Admin loads the configuration files.
-    # In development mode, this will happen whenever the user changes files. In production
-    # it only happens on boot.
-    #
-    # The block takes the current instance of [ActiveAdmin::Application]
-    #
-    # Example:
-    #
-    #     ActiveAdmin.before_load do |app|
-    #       # Do some stuff before AA loads
-    #     end
-    #
-    # @param [Block] block A block to call each time (before) AA loads resources
     def before_load(&block)
       ActiveAdmin::Event.subscribe ActiveAdmin::Application::BeforeLoadEvent, &block
     end
 
-    # A callback is triggered each time (after) Active Admin loads the configuration files. This
-    # is an opportunity to hook into Resources after they've been loaded.
-    #
-    # The block takes the current instance of [ActiveAdmin::Application]
-    #
-    # Example:
-    #
-    #     ActiveAdmin.after_load do |app|
-    #       app.namespaces.each do |name, namespace|
-    #         puts "Namespace: #{name} loaded!"
-    #       end
-    #     end
-    #
-    # @param [Block] block A block to call each time (after) AA loads resources
     def after_load(&block)
       ActiveAdmin::Event.subscribe ActiveAdmin::Application::AfterLoadEvent, &block
     end
@@ -117,14 +89,11 @@ module ActiveAdmin
 
 end
 
-# Require things that don't support autoload
 require 'active_admin/engine'
 require 'active_admin/error'
 
-# Require internal plugins
 require 'active_admin/batch_actions'
 require 'active_admin/filters'
 
-# Require ORM-specific plugins
 require 'active_admin/orm/active_record' if defined? ActiveRecord
 require 'active_admin/orm/mongoid'       if defined? Mongoid

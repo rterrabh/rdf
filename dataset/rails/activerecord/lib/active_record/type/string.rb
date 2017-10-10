@@ -31,7 +31,6 @@ module ActiveRecord
         case value
         when true then "t"
         when false then "f"
-        # String.new is slightly faster than dup
         else ::String.new(value.to_s)
         end
       end

@@ -13,7 +13,6 @@ class Ranger < Formula
     sha256 "f64e5e2629bcd9bffc74b3453539ce956a293cad9d2925aef5e5f1cd532c5c09" => :mountain_lion
   end
 
-  # requires 2.6 or newer; Leopard comes with 2.5
   depends_on :python if MacOS.version <= :leopard
 
   def install

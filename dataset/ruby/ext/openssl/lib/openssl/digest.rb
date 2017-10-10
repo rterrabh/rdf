@@ -1,22 +1,3 @@
-#--
-#
-# $RCSfile$
-#
-# = Ruby-space predefined Digest subclasses
-#
-# = Info
-# 'OpenSSL for Ruby 2' project
-# Copyright (C) 2002  Michal Rokos <m.rokos@sh.cvut.cz>
-# All rights reserved.
-#
-# = Licence
-# This program is licenced under the same licence as Ruby.
-# (See the file 'LICENCE'.)
-#
-# = Version
-# $Id$
-#
-#++
 
 module OpenSSL
   class Digest
@@ -26,16 +7,6 @@ module OpenSSL
       alg += %w(SHA224 SHA256 SHA384 SHA512)
     end
 
-    # Return the +data+ hash computed with +name+ Digest. +name+ is either the
-    # long name or short name of a supported digest algorithm.
-    #
-    # === Examples
-    #
-    #   OpenSSL::Digest.digest("SHA256", "abc")
-    #
-    # which is equivalent to:
-    #
-    #   OpenSSL::Digest::SHA256.digest("abc")
 
     def self.digest(name, data)
       super(data, name)
@@ -43,27 +14,22 @@ module OpenSSL
 
     alg.each{|name|
       klass = Class.new(self) {
-        #nodyna <ID:define_method-3> <DM MODERATE (events)>
+        #nodyna <define_method-1498> <DM MODERATE (events)>
         define_method(:initialize, ->(data = nil) {super(name, data)})
       }
       singleton = (class << klass; self; end)
+      #nodyna <class_eval-1499> <not yet classified>
       singleton.class_eval{
-        #nodyna <ID:define_method-4> <DM MODERATE (events)>
+        #nodyna <define_method-1500> <DM MODERATE (events)>
         define_method(:digest){|data| new.digest(data) }
-        #nodyna <ID:define_method-5> <DM MODERATE (events)>
+        #nodyna <define_method-1501> <DM MODERATE (events)>
         define_method(:hexdigest){|data| new.hexdigest(data) }
       }
-      #nodyna <ID:const_set-8> <CS MODERATE (change-prone variable)>
+      #nodyna <const_set-1502> <CS MODERATE (change-prone variable)>
       const_set(name, klass)
     }
 
-    # Deprecated.
-    #
-    # This class is only provided for backwards compatibility.
     class Digest < Digest # :nodoc:
-      # Deprecated.
-      #
-      # See OpenSSL::Digest.new
       def initialize(*args)
         warn('Digest::Digest is deprecated; use Digest')
         super(*args)
@@ -72,18 +38,9 @@ module OpenSSL
 
   end # Digest
 
-  # Returns a Digest subclass by +name+.
-  #
-  #   require 'openssl'
-  #
-  #   OpenSSL::Digest("MD5")
-  #   # => OpenSSL::Digest::MD5
-  #
-  #   Digest("Foo")
-  #   # => NameError: wrong constant name Foo
 
   def Digest(name)
-    #nodyna <ID:const_get-3> <CG COMPLEX (change-prone variable)>
+    #nodyna <const_get-1503> <CG COMPLEX (change-prone variable)>
     OpenSSL::Digest.const_get(name)
   end
 

@@ -41,9 +41,7 @@ getv = Kernel32.extern "int GetVersionExA(void *)", :stdcall
 info = [ 148, 0, 0, 0, 0 ].pack('V5') + "\0" * 128
 getv.call(info)
 if info.unpack('V5')[4] == 2  # VER_PLATFORM_WIN32_NT
-#====================================================================
-# Windows NT
-#====================================================================
+  #nodyna <module_eval-1509> <not yet classified>
   module_eval <<-'__EOS__', __FILE__, __LINE__+1
     TCPIP_NT = 'SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
 
@@ -121,16 +119,13 @@ if info.unpack('V5')[4] == 2  # VER_PLATFORM_WIN32_NT
     end
   __EOS__
 else
-#====================================================================
-# Windows 9x
-#====================================================================
+  #nodyna <module_eval-1510> <not yet classified>
   module_eval <<-'__EOS__', __FILE__, __LINE__+1
     TCPIP_9X = 'SYSTEM\CurrentControlSet\Services\VxD\MSTCP'
     DHCP_9X = 'SYSTEM\CurrentControlSet\Services\VxD\DHCP'
     WINDOWS = 'Software\Microsoft\Windows\CurrentVersion'
 
     class << self
-   #   private
 
       def get_hosts_dir
         Registry::HKEY_LOCAL_MACHINE.open(WINDOWS) do |reg|
@@ -286,11 +281,8 @@ else
                      toi_class, toi_type, toi_id,
                      buffsize)
         reqinfo = [
-                  ## TDIEntityID
                     tei_entity, tei_instance,
-                  ## TDIObjectID
                     toi_class, toi_type, toi_id,
-                  ## TCP_REQUEST_INFORMATION_EX
                     ""
                   ].pack('VVVVVa16')
         reqsize = API.packdw(reqinfo.size)
@@ -309,7 +301,6 @@ else
       private_class_method :wsctl
 
       def self.get_iflist
-        # Get TDI Entity List
         entities, size =
           wsctl(GENERIC_ENTITY, 0,
                 INFO_CLASS_GENERIC,
@@ -320,7 +311,6 @@ else
                      scan(/.{8}/).
                      collect { |e| e.unpack('VV') }
 
-        # Get MIB Interface List
         iflist = []
         ifcount = 0
         entities.each do |entity, instance|
@@ -345,7 +335,6 @@ else
           end
         end
 
-        # Get IP Addresses
         entities.each do |entity, instance|
           if entity == CL_NL_ENTITY
             etype, = wsctl(entity, instance,
@@ -373,6 +362,5 @@ else
     end
   __EOS__
 end
-#====================================================================
   end
 end

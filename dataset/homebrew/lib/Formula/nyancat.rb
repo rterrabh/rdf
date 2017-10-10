@@ -11,13 +11,11 @@ class Nyancat < Formula
     sha256 "37afa1b385b8a8b07dc762f212e40a42105c23cd9c0ea079cc7c1ec4103a46de" => :mountain_lion
   end
 
-  # Add _DARWIN_C_SOURCE to allow compiling on OSX
   patch do
     url "https://github.com/klange/nyancat/pull/30.patch"
     sha256 "083b22dc19e246c5ba74959e548a07ced10e1776c57530600ffc8606153b4d1c"
   end
 
-  # Makefile: Add install directory option
   patch do
     url "https://github.com/klange/nyancat/pull/34.patch"
     sha256 "407e01bae1d97e5153fb467a8cf0b4bc68320bea687294d56bcbacc944220d2c"

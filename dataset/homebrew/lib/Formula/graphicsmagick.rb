@@ -74,13 +74,11 @@ class Graphicsmagick < Formula
     args << "--without-lcms" if build.without? "little-cms"
     args << "--without-lcms2" if build.without? "little-cms2"
 
-    # versioned stuff in main tree is pointless for us
     inreplace "configure", "${PACKAGE_NAME}-${PACKAGE_VERSION}", "${PACKAGE_NAME}"
     system "./configure", *args
     system "make", "install"
     if build.with? "perl"
       cd "PerlMagick" do
-        # Install the module under the GraphicsMagick prefix
         system "perl", "Makefile.PL", "INSTALL_BASE=#{prefix}"
         system "make"
         system "make", "install"
@@ -97,7 +95,6 @@ class Graphicsmagick < Formula
       <<-EOS.undent
         The Graphics::Magick perl module has been installed under:
 
-          #{lib}
 
       EOS
     end

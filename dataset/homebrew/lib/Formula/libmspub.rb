@@ -31,8 +31,6 @@ class Libmspub < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-    #include <librevenge-stream/librevenge-stream.h>
-    #include <libmspub/MSPUBDocument.h>
     int main() {
         librevenge::RVNGStringStream docStream(0, 0);
         libmspub::MSPUBDocument::isSupported(&docStream);

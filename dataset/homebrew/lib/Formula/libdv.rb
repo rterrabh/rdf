@@ -15,10 +15,6 @@ class Libdv < Formula
   depends_on "popt"
 
   def install
-    # This fixes an undefined symbol error on compile.
-    # See the port file for libdv. http://libdv.darwinports.com/
-    # This flag is the preferred method over what macports uses.
-    # See the apple docs: http://cl.ly/2HeF bottom of the "Finding Imported Symbols" section
     ENV.append "LDFLAGS", "-undefined dynamic_lookup"
 
     system "./configure", "--disable-dependency-tracking",

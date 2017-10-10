@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 require 'money'
 
@@ -8,8 +7,6 @@ module Spree
       attr_accessor :default_formatting_rules
     end
     self.default_formatting_rules = {
-      # Ruby money currently has this as false, which is wrong for the vast
-      # majority of locales.
       sign_before_symbol: true
     }
 
@@ -29,8 +26,6 @@ module Spree
     def to_html(options = { html: true })
       output = @money.format(@options.merge(options))
       if options[:html]
-        # 1) prevent blank, breaking spaces
-        # 2) prevent escaping of HTML character entities
         output = output.sub(" ", "&nbsp;").html_safe
       end
       output

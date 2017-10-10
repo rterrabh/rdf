@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Service < ActiveRecord::Base
   attr_accessor :provider, :info, :access_level
@@ -13,7 +10,6 @@ class Service < ActiveRecord::Base
   end
 
   def delete_post(post)
-    #don't do anything (should be overriden by service extensions)
   end
 
   class << self

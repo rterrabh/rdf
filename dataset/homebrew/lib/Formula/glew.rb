@@ -14,13 +14,11 @@ class Glew < Formula
   option :universal
 
   def install
-    # Makefile directory race condition on lion
     ENV.deparallelize
 
     if build.universal?
       ENV.universal_binary
 
-      # Do not strip resulting binaries; https://sourceforge.net/p/glew/bugs/259/
       ENV["STRIP"] = ""
     end
 

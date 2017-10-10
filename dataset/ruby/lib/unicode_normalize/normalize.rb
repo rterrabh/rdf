@@ -1,15 +1,11 @@
-# coding: utf-8
 
-# Copyright Ayumu Nojima (野島 歩) and Martin J. Dürst (duerst@it.aoyama.ac.jp)
 
 require 'unicode_normalize/tables.rb'
 
 
 module UnicodeNormalize
-  ## Constant for max hash capacity to avoid DoS attack
   MAX_HASH_LENGTH = 18000 # enough for all test cases, otherwise tests get slow
 
-  ## Regular Expressions and Hash Constants
   REGEXP_D = Regexp.compile(REGEXP_D_STRING, Regexp::EXTENDED)
   REGEXP_C = Regexp.compile(REGEXP_C_STRING, Regexp::EXTENDED)
   REGEXP_K = Regexp.compile(REGEXP_K_STRING, Regexp::EXTENDED)
@@ -26,9 +22,6 @@ module UnicodeNormalize
                          hash[key] = nfkd_one(key)
                        end
 
-  ## Constants For Hangul
-  # for details such as the meaning of the identifiers below, please see
-  # http://www.unicode.org/versions/Unicode7.0.0/ch03.pdf, pp. 144/145
   SBASE = 0xAC00
   LBASE = 0x1100
   VBASE = 0x1161
@@ -39,11 +32,9 @@ module UnicodeNormalize
   NCOUNT = VCOUNT * TCOUNT
   SCOUNT = LCOUNT * NCOUNT
 
-  # Unicode-based encodings (except UTF-8)
   UNICODE_ENCODINGS = [Encoding::UTF_16BE, Encoding::UTF_16LE, Encoding::UTF_32BE, Encoding::UTF_32LE,
                        Encoding::GB18030, Encoding::UCS_2BE, Encoding::UCS_4BE]
 
-  ## Hangul Algorithm
   def self.hangul_decomp_one(target)
     syllable_index = target.ord - SBASE
     return target if syllable_index < 0 || syllable_index >= SCOUNT
@@ -68,7 +59,6 @@ module UnicodeNormalize
     end
   end
 
-  ## Canonical Ordering
   def self.canonical_ordering_one(string)
     sorting = string.each_char.collect { |c| [c, CLASS_TABLE[c]] }
     (sorting.length-2).downto(0) do |i| # almost, but not exactly bubble sort
@@ -82,7 +72,6 @@ module UnicodeNormalize
     return sorting.collect(&:first).join('')
   end
 
-  ## Normalization Forms for Patterns (not whole Strings)
   def self.nfd_one(string)
     string = string.chars.map! {|c| DECOMPOSITION_TABLE[c] || c}.join('')
     canonical_ordering_one(hangul_decomp_one(string))

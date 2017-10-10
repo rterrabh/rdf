@@ -18,7 +18,6 @@ class Libmagic < Formula
   def install
     ENV.universal_binary if build.universal?
 
-    # Clean up "src/magic.h" as per http://bugs.gw.com/view.php?id=330
     rm "src/magic.h"
 
     system "./configure", "--disable-dependency-tracking",
@@ -35,7 +34,6 @@ class Libmagic < Formula
       end
     end
 
-    # Don't dupe this system utility
     rm bin/"file"
     rm man1/"file.1"
   end

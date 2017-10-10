@@ -17,7 +17,6 @@ class Libev < Formula
                           "--mandir=#{man}"
     system "make", "install"
 
-    # Remove compatibility header to prevent conflict with libevent
     (include/"event.h").unlink
   end
 end

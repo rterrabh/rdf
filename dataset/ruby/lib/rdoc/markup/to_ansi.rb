@@ -1,10 +1,6 @@
-##
-# Outputs RDoc markup with vibrant ANSI color!
 
 class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
 
-  ##
-  # Creates a new ToAnsi visitor that is ready to output vibrant ANSI color!
 
   def initialize markup = nil
     super
@@ -15,8 +11,6 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
     @headings[3] = ["\e[32m",   "\e[m"] # just green
   end
 
-  ##
-  # Maps attributes to ANSI sequences
 
   def init_tags
     add_tag :BOLD, "\e[1m", "\e[m"
@@ -24,8 +18,6 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
     add_tag :EM,   "\e[4m", "\e[m"
   end
 
-  ##
-  # Overrides indent width to ensure output lines up correctly.
 
   def accept_list_item_end list_item
     width = case @list_type.last
@@ -48,8 +40,6 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
     @indent -= width
   end
 
-  ##
-  # Adds coloring to note and label list items
 
   def accept_list_item_start list_item
     bullet = case @list_type.last
@@ -80,8 +70,6 @@ class RDoc::Markup::ToAnsi < RDoc::Markup::ToRdoc
     end
   end
 
-  ##
-  # Starts accepting with a reset screen
 
   def start_accepting
     super

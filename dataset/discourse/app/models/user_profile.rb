@@ -97,23 +97,3 @@ class UserProfile < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: user_profiles
-#
-#  user_id              :integer          not null, primary key
-#  location             :string(255)
-#  website              :string(255)
-#  bio_raw              :text
-#  bio_cooked           :text
-#  profile_background   :string(255)
-#  dismissed_banner_key :integer
-#  bio_cooked_version   :integer
-#  badge_granted_title  :boolean          default(FALSE)
-#  card_background      :string(255)
-#  card_image_badge_id  :integer
-#
-# Indexes
-#
-#  index_user_profiles_on_bio_cooked_version  (bio_cooked_version)
-#

@@ -1,9 +1,5 @@
 require_dependency 'screening_model'
 
-# A ScreenedEmail record represents an email address that is being watched,
-# typically when creating a new User account. If the email of the signup form
-# (or some other form) matches a ScreenedEmail record, an action can be
-# performed based on the action_type.
 class ScreenedEmail < ActiveRecord::Base
 
   include ScreeningModel
@@ -62,21 +58,3 @@ class ScreenedEmail < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: screened_emails
-#
-#  id            :integer          not null, primary key
-#  email         :string(255)      not null
-#  action_type   :integer          not null
-#  match_count   :integer          default(0), not null
-#  last_match_at :datetime
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  ip_address    :inet
-#
-# Indexes
-#
-#  index_screened_emails_on_email          (email) UNIQUE
-#  index_screened_emails_on_last_match_at  (last_match_at)
-#

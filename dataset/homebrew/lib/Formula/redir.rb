@@ -28,14 +28,11 @@ class Redir < Formula
       exec "nc -l 12345"
     end
 
-    # Give time to processes start
     sleep(1)
 
     begin
-      # Check if the process is running
       system "kill", "-0", redir_pid
 
-      # Check if the port redirect works
       system "nc", "-z", "localhost", "54321"
     ensure
       Process.kill("TERM", redir_pid)

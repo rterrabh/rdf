@@ -21,7 +21,6 @@ class Doxymacs < Formula
   depends_on "doxygen"
 
   def install
-    # https://sourceforge.net/tracker/?func=detail&aid=3577208&group_id=23584&atid=378985
     ENV.append "CFLAGS", "-std=gnu89"
 
     system "./bootstrap" if build.head?

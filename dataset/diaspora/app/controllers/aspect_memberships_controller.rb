@@ -1,7 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
-#
 
 class AspectMembershipsController < ApplicationController
   before_action :authenticate_user!
@@ -21,10 +17,8 @@ class AspectMembershipsController < ApplicationController
 
     raise ActiveRecord::RecordNotFound unless membership.present?
 
-    # do it!
     success = membership.destroy
 
-    # set the flash message
     if success
       flash.now[:notice] = I18n.t 'aspect_memberships.destroy.success'
     else

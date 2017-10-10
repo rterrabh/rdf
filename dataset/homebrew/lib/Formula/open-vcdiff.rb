@@ -22,7 +22,6 @@ class OpenVcdiff < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS
-      #include <google/vcdecoder.h>
       int main()
       {
         open_vcdiff::VCDiffDecoder decoder;

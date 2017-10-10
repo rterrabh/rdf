@@ -1,8 +1,3 @@
-#
-# Copyright (C) 2001, 2002, 2003 by Michael Neumann (mneumann@ntecs.de)
-#
-# $Id$
-#
 
 require "date"
 require "xmlrpc/base64"
@@ -86,7 +81,6 @@ module XMLRPC # :nodoc:
 
     Classes = [Simple, XMLParser]
 
-    # yields an instance of each installed XML writer
     def self.each_installed_writer
       XMLRPC::XMLWriter::Classes.each do |klass|
         begin
@@ -98,8 +92,6 @@ module XMLRPC # :nodoc:
 
   end # module XMLWriter
 
-  # Creates XML-RPC call/response documents
-  #
   class Create
 
     def initialize(xml_writer = nil)
@@ -131,16 +123,6 @@ module XMLRPC # :nodoc:
 
 
 
-    #
-    # Generates a XML-RPC methodResponse document
-    #
-    # When +is_ret+ is +false+ then the +params+ array must
-    # contain only one element, which is a structure
-    # of a fault return-value.
-    #
-    # When +is_ret+ is +true+ then a normal
-    # return-value of all the given +params+ is created.
-    #
     def methodResponse(is_ret, *params)
 
       if is_ret
@@ -169,14 +151,10 @@ module XMLRPC # :nodoc:
 
     private
 
-    #
-    # Converts a Ruby object into a XML-RPC <code><value></code> tag
-    #
     def conv2value(param) # :doc:
 
         val = case param
         when Fixnum, Bignum
-          # XML-RPC's int is 32bit int, and Fixnum also may be beyond 32bit
           if Config::ENABLE_BIGINT
             @writer.tag("i4", param.to_s)
           else
@@ -218,7 +196,6 @@ module XMLRPC # :nodoc:
           @writer.ele("struct", *h)
 
         when Hash
-          # TODO: can a Hash be empty?
 
           h = param.collect do |key, value|
             @writer.ele("member",
@@ -230,7 +207,6 @@ module XMLRPC # :nodoc:
           @writer.ele("struct", *h)
 
         when Array
-          # TODO: can an Array be empty?
           a = param.collect {|v| conv2value(v) }
 
           @writer.ele("array",
@@ -249,10 +225,10 @@ module XMLRPC # :nodoc:
 
         else
           if Config::ENABLE_MARSHALLING and param.class.included_modules.include? XMLRPC::Marshallable
-            # convert Ruby object into Hash
             ret = {"___class___" => param.class.name}
             param.instance_variables.each {|v|
               name = v[1..-1]
+              #nodyna <instance_variable_get-2009> <not yet classified>
               val = param.instance_variable_get(v)
 
               if val.nil?

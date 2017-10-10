@@ -21,8 +21,6 @@ class Vte < Formula
       "--enable-python"
     ]
 
-    # pygtk-codegen-2.0 has been deprecated and replaced by
-    # pygobject-codegen-2.0, but the vte Makefile does not detect this.
     ENV["PYGTK_CODEGEN"] = Formula["pygobject"].bin/"pygobject-codegen-2.0"
 
     system "./configure", *args
@@ -31,7 +29,6 @@ class Vte < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <vte/vte.h>
 
       int main(int argc, char *argv[]) {
         char *rv = vte_get_user_shell();

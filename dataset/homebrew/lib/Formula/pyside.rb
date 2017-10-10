@@ -13,7 +13,6 @@ class Pyside < Formula
     sha1 "370b1d0fc1099689977ba04eb3602c41b5def89c" => :mountain_lion
   end
 
-  # don't use depends_on :python because then bottles install Homebrew's python
   option "without-python", "Build without python 2 support"
   depends_on :python => :recommended if MacOS.version <= :snow_leopard
   depends_on :python3 => :optional
@@ -48,8 +47,6 @@ class Pyside < Formula
       rm buildpath/"doc/CMakeLists.txt"
     end
 
-    # Add out of tree build because one of its deps, shiboken, itself needs an
-    # out of tree build in shiboken.rb.
     Language::Python.each_python(build) do |_python, version|
       mkdir "macbuild#{version}" do
         qt = Formula["qt"].opt_prefix

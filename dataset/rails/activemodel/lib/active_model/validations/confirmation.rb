@@ -8,7 +8,7 @@ module ActiveModel
       end
 
       def validate_each(record, attribute, value)
-        #nodyna <ID:send-23> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-947> <SD COMPLEX (change-prone variables)>
         if (confirmed = record.send("#{attribute}_confirmation")) && (value != confirmed)
           human_attribute_name = record.class.human_attribute_name(attribute)
           record.errors.add(:"#{attribute}_confirmation", :confirmation, options.merge(attribute: human_attribute_name))
@@ -17,12 +17,12 @@ module ActiveModel
 
       private
       def setup!(klass)
-        #nodyna <ID:send-24> <SD COMPLEX (private methods)>
+        #nodyna <send-948> <SD COMPLEX (private methods)>
         klass.send(:attr_reader, *attributes.map do |attribute|
           :"#{attribute}_confirmation" unless klass.method_defined?(:"#{attribute}_confirmation")
         end.compact)
 
-        #nodyna <ID:send-25> <SD COMPLEX (private methods)>
+        #nodyna <send-949> <SD COMPLEX (private methods)>
         klass.send(:attr_writer, *attributes.map do |attribute|
           :"#{attribute}_confirmation" unless klass.method_defined?(:"#{attribute}_confirmation=")
         end.compact)
@@ -30,38 +30,6 @@ module ActiveModel
     end
 
     module HelperMethods
-      # Encapsulates the pattern of wanting to validate a password or email
-      # address field with a confirmation.
-      #
-      #   Model:
-      #     class Person < ActiveRecord::Base
-      #       validates_confirmation_of :user_name, :password
-      #       validates_confirmation_of :email_address,
-      #                                 message: 'should match confirmation'
-      #     end
-      #
-      #   View:
-      #     <%= password_field "person", "password" %>
-      #     <%= password_field "person", "password_confirmation" %>
-      #
-      # The added +password_confirmation+ attribute is virtual; it exists only
-      # as an in-memory attribute for validating the password. To achieve this,
-      # the validation adds accessors to the model for the confirmation
-      # attribute.
-      #
-      # NOTE: This check is performed only if +password_confirmation+ is not
-      # +nil+. To require confirmation, make sure to add a presence check for
-      # the confirmation attribute:
-      #
-      #   validates_presence_of :password_confirmation, if: :password_changed?
-      #
-      # Configuration options:
-      # * <tt>:message</tt> - A custom error message (default is: "doesn't match
-      #   <tt>%{translated_attribute_name}</tt>").
-      #
-      # There is also a list of default options supported by every validator:
-      # +:if+, +:unless+, +:on+, +:allow_nil+, +:allow_blank+, and +:strict+.
-      # See <tt>ActiveModel::Validation#validates</tt> for more information
       def validates_confirmation_of(*attr_names)
         validates_with ConfirmationValidator, _merge_attributes(attr_names)
       end

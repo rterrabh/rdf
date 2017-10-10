@@ -5,8 +5,6 @@ class Msdl < Formula
   version "1.2.7-r2"
   sha256 "0297e87bafcab885491b44f71476f5d5bfc648557e7d4ef36961d44dd430a3a1"
 
-  # Fixes linker error under clang; apparently reported upstream:
-  # https://github.com/Homebrew/homebrew/pull/13907
   patch :DATA
 
   def install

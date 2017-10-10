@@ -30,7 +30,6 @@ describe Spree::Api::ShipmentsController, :type => :controller do
 
     sign_in_as_admin!
 
-    # Start writing this spec a bit differently than before....
     describe 'POST #create' do
       let(:params) do
         {

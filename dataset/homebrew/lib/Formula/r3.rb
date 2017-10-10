@@ -45,7 +45,6 @@ class R3 < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include "r3.h"
       int main() {
           node * n = r3_tree_create(1);
           r3_tree_free(n);

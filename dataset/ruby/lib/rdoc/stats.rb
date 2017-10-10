@@ -1,29 +1,17 @@
-##
-# RDoc statistics collector which prints a summary and report of a project's
-# documentation totals.
 
 class RDoc::Stats
 
   include RDoc::Text
 
-  ##
-  # Output level for the coverage report
 
   attr_reader :coverage_level
 
-  ##
-  # Count of files parsed during parsing
 
   attr_reader :files_so_far
 
-  ##
-  # Total number of files found
 
   attr_reader :num_files
 
-  ##
-  # Creates a new Stats that will have +num_files+.  +verbosity+ defaults to 1
-  # which will create an RDoc::Stats::Normal outputter.
 
   def initialize store, num_files, verbosity = 1
     @num_files = num_files
@@ -45,66 +33,47 @@ class RDoc::Stats
                end
   end
 
-  ##
-  # Records the parsing of an alias +as+.
 
   def add_alias as
     @display.print_alias as
   end
 
-  ##
-  # Records the parsing of an attribute +attribute+
 
   def add_attribute attribute
     @display.print_attribute attribute
   end
 
-  ##
-  # Records the parsing of a class +klass+
 
   def add_class klass
     @display.print_class klass
   end
 
-  ##
-  # Records the parsing of +constant+
 
   def add_constant constant
     @display.print_constant constant
   end
 
-  ##
-  # Records the parsing of +file+
 
   def add_file(file)
     @files_so_far += 1
     @display.print_file @files_so_far, file
   end
 
-  ##
-  # Records the parsing of +method+
 
   def add_method(method)
     @display.print_method method
   end
 
-  ##
-  # Records the parsing of a module +mod+
 
   def add_module(mod)
     @display.print_module mod
   end
 
-  ##
-  # Call this to mark the beginning of parsing for display purposes
 
   def begin_adding
     @display.begin_adding
   end
 
-  ##
-  # Calculates documentation totals and percentages for classes, modules,
-  # constants, attributes and methods.
 
   def calculate
     return if @doc_items
@@ -147,12 +116,6 @@ class RDoc::Stats
     @doc_items = @num_items - @undoc_items
   end
 
-  ##
-  # Sets coverage report level.  Accepted values are:
-  #
-  # false or nil:: No report
-  # 0:: Classes, modules, constants, attributes, methods
-  # 1:: Level 0 + method parameters
 
   def coverage_level= level
     level = -1 unless level
@@ -160,33 +123,22 @@ class RDoc::Stats
     @coverage_level = level
   end
 
-  ##
-  # Returns the length and number of undocumented items in +collection+.
 
   def doc_stats collection
     visible = collection.select { |item| item.display? }
     [visible.length, visible.count { |item| not item.documented? }]
   end
 
-  ##
-  # Call this to mark the end of parsing for display purposes
 
   def done_adding
     @display.done_adding
   end
 
-  ##
-  # The documentation status of this project.  +true+ when 100%, +false+ when
-  # less than 100% and +nil+ when unknown.
-  #
-  # Set by calling #calculate
 
   def fully_documented?
     @fully_documented
   end
 
-  ##
-  # A report that says you did a great job!
 
   def great_job
     report = RDoc::Markup::Document.new
@@ -197,8 +149,6 @@ class RDoc::Stats
     report
   end
 
-  ##
-  # Calculates the percentage of items documented.
 
   def percent_doc
     return @percent_doc if @percent_doc
@@ -211,8 +161,6 @@ class RDoc::Stats
     @percent_doc
   end
 
-  ##
-  # Returns a report on which items are not documented
 
   def report
     if @coverage_level > 0 then
@@ -252,8 +200,6 @@ class RDoc::Stats
     report
   end
 
-  ##
-  # Returns a report on undocumented attributes in ClassModule +cm+
 
   def report_attributes cm
     return if cm.attributes.empty?
@@ -270,8 +216,6 @@ class RDoc::Stats
     report
   end
 
-  ##
-  # Returns a report on undocumented items in ClassModule +cm+
 
   def report_class_module cm
     return if cm.fully_documented? and @coverage_level.zero?
@@ -322,8 +266,6 @@ class RDoc::Stats
     report
   end
 
-  ##
-  # Returns a report on undocumented constants in ClassModule +cm+
 
   def report_constants cm
     return if cm.constants.empty?
@@ -331,8 +273,6 @@ class RDoc::Stats
     report = []
 
     cm.each_constant do |constant|
-      # TODO constant aliases are listed in the summary but not reported
-      # figure out what to do here
       next if constant.documented? || constant.is_alias_for
 
       line = constant.line ? ":#{constant.line}" : line
@@ -344,8 +284,6 @@ class RDoc::Stats
     report
   end
 
-  ##
-  # Returns a report on undocumented methods in ClassModule +cm+
 
   def report_methods cm
     return if cm.method_list.empty?
@@ -382,8 +320,6 @@ class RDoc::Stats
     report
   end
 
-  ##
-  # Returns a summary of the collected statistics.
 
   def summary
     calculate
@@ -431,9 +367,6 @@ class RDoc::Stats
     RDoc::Markup::Document.new report
   end
 
-  ##
-  # Determines which parameters in +method+ were not documented.  Returns a
-  # total parameter count and an Array of undocumented methods.
 
   def undoc_params method
     @formatter ||= RDoc::Markup::ToTtOnly.new

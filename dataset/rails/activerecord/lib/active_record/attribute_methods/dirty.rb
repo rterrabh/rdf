@@ -16,7 +16,6 @@ module ActiveRecord
         self.partial_writes = true
       end
 
-      # Attempts to +save+ the record and clears changed attributes if successful.
       def save(*)
         if status = super
           changes_applied
@@ -24,14 +23,12 @@ module ActiveRecord
         status
       end
 
-      # Attempts to <tt>save!</tt> the record and clears changed attributes if successful.
       def save!(*)
         super.tap do
           changes_applied
         end
       end
 
-      # <tt>reload</tt> the record and clears changed attributes.
       def reload(*)
         super.tap do
           clear_changes_information
@@ -54,8 +51,6 @@ module ActiveRecord
       end
 
       def changed_attributes
-        # This should only be set by methods which will call changed_attributes
-        # multiple times when it is known that the computed value cannot change.
         if defined?(@cached_changed_attributes)
           @cached_changed_attributes
         else
@@ -87,7 +82,6 @@ module ActiveRecord
         end
       end
 
-      # Wrap write_attribute to remember original attribute value.
       def write_attribute(attr, value)
         attr = attr.to_s
 
@@ -132,8 +126,6 @@ module ActiveRecord
         partial_writes? ? super(keys_for_partial_write) : super
       end
 
-      # Serialized attributes should always be written in case they've been
-      # changed in place.
       def keys_for_partial_write
         changed & persistable_attribute_names
       end

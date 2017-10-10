@@ -1,4 +1,3 @@
-# Custom Redis configuration
 config_file = Rails.root.join('config', 'resque.yml')
 
 resque_url = if File.exists?(config_file)

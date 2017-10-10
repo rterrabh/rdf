@@ -9,7 +9,6 @@ class Groovy < Formula
   deprecated_option "invokedynamic" => "with-invokedynamic"
 
   def install
-    # Don't need Windows files.
     rm_f Dir["bin/*.bat"]
 
     if build.with? "invokedynamic"

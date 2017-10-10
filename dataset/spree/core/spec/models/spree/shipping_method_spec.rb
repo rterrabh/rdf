@@ -20,7 +20,6 @@ describe Spree::ShippingMethod, :type => :model do
     end
   end
 
-  # Regression test for #4492
   context "#shipments" do
     let!(:shipping_method) { create(:shipping_method) }
     let!(:shipment) do
@@ -77,7 +76,6 @@ describe Spree::ShippingMethod, :type => :model do
     end
   end
 
-  # Regression test for #4320
   context "soft deletion" do
     let(:shipping_method) { create(:shipping_method) }
     it "soft-deletes when destroy is called" do

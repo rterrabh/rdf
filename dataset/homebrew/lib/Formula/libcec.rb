@@ -19,8 +19,6 @@ class Libcec < Formula
 
   needs :cxx11
 
-  # This patch can be removed with the next release bump
-  # https://github.com/Pulse-Eight/libcec/issues/112
   patch do
     url "https://github.com/Pulse-Eight/libcec/commit/2f32a9debc1f148b5dfcfc463480f1432bb71725.diff"
     sha256 "93ae5259fadeb710c5ac70d72955c3be55cf68e589584ee7f520c0b2a7bc8a20"

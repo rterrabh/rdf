@@ -22,7 +22,6 @@ class GameMusicEmu < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gme/gme.h>
       int main(void)
       {
         Music_Emu* emu;

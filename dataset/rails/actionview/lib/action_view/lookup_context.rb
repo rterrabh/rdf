@@ -4,12 +4,6 @@ require 'active_support/core_ext/module/attribute_accessors'
 require 'action_view/template/resolver'
 
 module ActionView
-  # = Action View Lookup Context
-  #
-  # LookupContext is the object responsible to hold all information required to lookup
-  # templates, i.e. view paths and details. The LookupContext is also responsible to
-  # generate a key, given to view paths, used in the resolver cache lookup. Since
-  # this key is generated just once during the request, it speeds up all cache accesses.
   class LookupContext #:nodoc:
     attr_accessor :prefixes, :rendered_format
 
@@ -23,9 +17,10 @@ module ActionView
       self.registered_details << name
       initialize = registered_details.map { |n| "@details[:#{n}] = details[:#{n}] || default_#{n}" }
 
-      #nodyna <ID:send-44> <SD MODERATE (private methods)>
-      #nodyna <ID:define_method-4> <DM MODERATE (events)>
+      #nodyna <send-1192> <SD MODERATE (private methods)>
+      #nodyna <define_method-1193> <DM MODERATE (events)>
       Accessors.send :define_method, :"default_#{name}", &block
+      #nodyna <module_eval-1194> <not yet classified>
       Accessors.module_eval <<-METHOD, __FILE__, __LINE__ + 1
         def #{name}
           @details.fetch(:#{name}, [])
@@ -38,12 +33,10 @@ module ActionView
 
         remove_possible_method :initialize_details
         def initialize_details(details)
-          #{initialize.join("\n")}
         end
       METHOD
     end
 
-    # Holds accessors for the registered details.
     module Accessors #:nodoc:
     end
 
@@ -82,17 +75,13 @@ module ActionView
       end
     end
 
-    # Add caching behavior on top of Details.
     module DetailsCache
       attr_accessor :cache
 
-      # Calculate the details key. Remove the handlers from calculation to improve performance
-      # since the user cannot modify it explicitly.
       def details_key #:nodoc:
         @details_key ||= DetailsKey.get(@details) if @cache
       end
 
-      # Temporary skip passing the details_key forward.
       def disable_cache
         old_value, @cache = @cache, false
         yield
@@ -109,12 +98,9 @@ module ActionView
       end
     end
 
-    # Helpers related to template lookup using the lookup context information.
     module ViewPaths
       attr_reader :view_paths, :html_fallback_for_js
 
-      # Whenever setting view paths, makes a copy so that we can manipulate them in
-      # instance objects as we wish.
       def view_paths=(paths)
         @view_paths = ActionView::PathSet.new(Array(paths))
       end
@@ -133,8 +119,6 @@ module ActionView
       end
       alias :template_exists? :exists?
 
-      # Adds fallbacks to the view paths. Useful in cases when you are rendering
-      # a :file.
       def with_fallbacks
         added_resolvers = 0
         self.class.fallbacks.each do |resolver|
@@ -155,7 +139,6 @@ module ActionView
         [name, prefixes, partial || false, details, details_key, keys]
       end
 
-      # Compute details hash and key according to user options (e.g. passed from #render).
       def detail_args_for(options)
         return @details, details_key if options.empty? # most common path.
         user_details = @details.merge(options)
@@ -169,9 +152,6 @@ module ActionView
         [user_details, details_key]
       end
 
-      # Support legacy foo.erb names even though we now ignore .erb
-      # as well as incorrectly putting part of the path in the template
-      # name instead of the prefix.
       def normalize_name(name, prefixes) #:nodoc:
         prefixes = prefixes.presence
         parts    = name.to_s.split('/')
@@ -202,8 +182,6 @@ module ActionView
       initialize_details(details)
     end
 
-    # Override formats= to expand ["*/*"] values and automatically
-    # add :html as fallback to :js.
     def formats=(values)
       if values
         values.concat(default_formats) if values.delete "*/*"
@@ -215,20 +193,15 @@ module ActionView
       super(values)
     end
 
-    # Do not use the default locale on template lookup.
     def skip_default_locale!
       @skip_default_locale = true
       self.locale = nil
     end
 
-    # Override locale to return a symbol instead of array.
     def locale
       @details[:locale].first
     end
 
-    # Overload locale= to also set the I18n.locale. If the current I18n.config object responds
-    # to original_config, it means that it has a copy of the original I18n configuration and it's
-    # acting as proxy, which we need to skip.
     def locale=(value)
       if value
         config = I18n.config.respond_to?(:original_config) ? I18n.config.original_config : I18n.config
@@ -238,7 +211,6 @@ module ActionView
       super(@skip_default_locale ? I18n.locale : default_locale)
     end
 
-    # Uses the first format in the formats array for layout lookup.
     def with_layout_format
       if formats.size == 1
         yield

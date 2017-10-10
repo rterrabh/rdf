@@ -19,12 +19,9 @@ class Libagg < Formula
   depends_on "sdl"
   depends_on "freetype" => :optional
 
-  # Fix build with clang; last release was in 2006
   patch :DATA
 
   def install
-    # AM_C_PROTOTYPES was removed in automake 1.12, as it's only needed for
-    # pre-ANSI compilers
     inreplace "configure.in", "AM_C_PROTOTYPES", ""
     inreplace "autogen.sh", "libtoolize", "glibtoolize"
 

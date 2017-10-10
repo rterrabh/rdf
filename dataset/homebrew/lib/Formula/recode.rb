@@ -9,7 +9,6 @@ class Recode < Formula
   depends_on "libtool" => :build
 
   def install
-    # Yep, missing symbol errors without these
     ENV.append "LDFLAGS", "-liconv"
     ENV.append "LDFLAGS", "-lintl"
 

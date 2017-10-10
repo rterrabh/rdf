@@ -36,21 +36,11 @@ module ActiveRecord
       end
 
       module SchemaStatements
-        # Drops the database specified on the +name+ attribute
-        # and creates it again using the provided +options+.
         def recreate_database(name, options = {}) #:nodoc:
           drop_database(name)
           create_database(name, options)
         end
 
-        # Create a new PostgreSQL database. Options include <tt>:owner</tt>, <tt>:template</tt>,
-        # <tt>:encoding</tt> (defaults to utf8), <tt>:collation</tt>, <tt>:ctype</tt>,
-        # <tt>:tablespace</tt>, and <tt>:connection_limit</tt> (note that MySQL uses
-        # <tt>:charset</tt> while PostgreSQL uses <tt>:encoding</tt>).
-        #
-        # Example:
-        #   create_database config[:database], config
-        #   create_database 'foo_development', encoding: 'unicode'
         def create_database(name, options = {})
           options = { encoding: 'utf8' }.merge!(options.symbolize_keys)
 
@@ -78,15 +68,10 @@ module ActiveRecord
           execute "CREATE DATABASE #{quote_table_name(name)}#{option_string}"
         end
 
-        # Drops a PostgreSQL database.
-        #
-        # Example:
-        #   drop_database 'matt_development'
         def drop_database(name) #:nodoc:
           execute "DROP DATABASE IF EXISTS #{quote_table_name(name)}"
         end
 
-        # Returns the list of all tables in the schema search path or a specified schema.
         def tables(name = nil)
           query(<<-SQL, 'SCHEMA').map { |row| row[0] }
             SELECT tablename
@@ -95,9 +80,6 @@ module ActiveRecord
           SQL
         end
 
-        # Returns true if table exists.
-        # If the schema is not specified as part of +name+ then it will only find tables within
-        # the current schema search path (regardless of permissions to access tables in other schemas)
         def table_exists?(name)
           name = Utils.extract_schema_qualified_name(name.to_s)
           return false unless name.identifier
@@ -116,7 +98,6 @@ module ActiveRecord
           execute "DROP TABLE #{quote_table_name(table_name)}#{' CASCADE' if options[:force] == :cascade}"
         end
 
-        # Returns true if schema exists.
         def schema_exists?(name)
           exec_query(<<-SQL, 'SCHEMA').rows.first[0].to_i > 0
             SELECT COUNT(*)
@@ -138,7 +119,6 @@ module ActiveRecord
           SQL
         end
 
-        # Returns an array of indexes for the given table.
         def indexes(table_name, name = nil)
            result = query(<<-SQL, 'SCHEMA')
              SELECT distinct i.relname, d.indisunique, d.indkey, pg_get_indexdef(d.indexrelid), t.oid
@@ -169,7 +149,6 @@ module ActiveRecord
             column_names = columns.values_at(*indkey).compact
 
             unless column_names.empty?
-              # add info on sort order for columns (only desc order is explicitly specified, asc is the default)
               desc_order_columns = inddef.scan(/(\w+) DESC/).flatten
               orders = desc_order_columns.any? ? Hash[desc_order_columns.map {|order_column| [order_column, :desc]}] : {}
               where = inddef.scan(/WHERE (.+)$/).flatten[0]
@@ -180,9 +159,7 @@ module ActiveRecord
           end.compact
         end
 
-        # Returns the list of all column definitions for a table.
         def columns(table_name)
-          # Limit, precision, and scale are all handled by the superclass.
           column_definitions(table_name).map do |column_name, type, default, notnull, oid, fmod|
             oid = get_oid_type(oid.to_i, fmod.to_i, column_name, type)
             default_value = extract_value_from_default(oid, default)
@@ -195,17 +172,14 @@ module ActiveRecord
           PostgreSQLColumn.new(name, default, cast_type, sql_type, null, default_function)
         end
 
-        # Returns the current database name.
         def current_database
           query('select current_database()', 'SCHEMA')[0][0]
         end
 
-        # Returns the current schema name.
         def current_schema
           query('SELECT current_schema', 'SCHEMA')[0][0]
         end
 
-        # Returns the current database encoding format.
         def encoding
           query(<<-end_sql, 'SCHEMA')[0][0]
             SELECT pg_encoding_to_char(pg_database.encoding) FROM pg_database
@@ -213,21 +187,18 @@ module ActiveRecord
           end_sql
         end
 
-        # Returns the current database collation.
         def collation
           query(<<-end_sql, 'SCHEMA')[0][0]
             SELECT pg_database.datcollate FROM pg_database WHERE pg_database.datname LIKE '#{current_database}'
           end_sql
         end
 
-        # Returns the current database ctype.
         def ctype
           query(<<-end_sql, 'SCHEMA')[0][0]
             SELECT pg_database.datctype FROM pg_database WHERE pg_database.datname LIKE '#{current_database}'
           end_sql
         end
 
-        # Returns an array of schema names.
         def schema_names
           query(<<-SQL, 'SCHEMA').flatten
             SELECT nspname
@@ -238,21 +209,14 @@ module ActiveRecord
           SQL
         end
 
-        # Creates a schema for the given schema name.
         def create_schema schema_name
           execute "CREATE SCHEMA #{schema_name}"
         end
 
-        # Drops the schema for the given schema name.
         def drop_schema schema_name
           execute "DROP SCHEMA #{schema_name} CASCADE"
         end
 
-        # Sets the schema search path to a string of comma-separated schema names.
-        # Names beginning with $ have to be quoted (e.g. $user => '$user').
-        # See: http://www.postgresql.org/docs/current/static/ddl-schemas.html
-        #
-        # This should be not be called manually but set in database.yml.
         def schema_search_path=(schema_csv)
           if schema_csv
             execute("SET search_path TO #{schema_csv}", 'SCHEMA')
@@ -260,22 +224,18 @@ module ActiveRecord
           end
         end
 
-        # Returns the active schema search path.
         def schema_search_path
           @schema_search_path ||= query('SHOW search_path', 'SCHEMA')[0][0]
         end
 
-        # Returns the current client message level.
         def client_min_messages
           query('SHOW client_min_messages', 'SCHEMA')[0][0]
         end
 
-        # Set the client message level.
         def client_min_messages=(level)
           execute("SET client_min_messages TO '#{level}'", 'SCHEMA')
         end
 
-        # Returns the sequence name for a table's primary key or some other specified key.
         def default_sequence_name(table_name, pk = nil) #:nodoc:
           result = serial_sequence(table_name, pk || 'id')
           return nil unless result
@@ -291,7 +251,6 @@ module ActiveRecord
           result.rows.first.first
         end
 
-        # Sets the sequence of a table's primary key to the specified value.
         def set_pk_sequence!(table, value) #:nodoc:
           pk, sequence = pk_and_sequence_for(table)
 
@@ -308,7 +267,6 @@ module ActiveRecord
           end
         end
 
-        # Resets the sequence of a table's primary key to the maximum value.
         def reset_pk_sequence!(table, pk = nil, sequence = nil) #:nodoc:
           unless pk and sequence
             default_pk, default_sequence = pk_and_sequence_for(table)
@@ -330,10 +288,7 @@ module ActiveRecord
           end
         end
 
-        # Returns a table's primary key and belonging sequence.
         def pk_and_sequence_for(table) #:nodoc:
-          # First try looking for a sequence with a dependency on the
-          # given table's primary key.
           result = query(<<-end_sql, 'SCHEMA')[0]
             SELECT attr.attname, nsp.nspname, seq.relname
             FROM pg_class      seq,
@@ -384,7 +339,6 @@ module ActiveRecord
           nil
         end
 
-        # Returns just a table's primary key
         def primary_key(table)
           pks = exec_query(<<-end_sql, 'SCHEMA').rows
             SELECT attr.attname
@@ -397,12 +351,6 @@ module ActiveRecord
           pks[0][0]
         end
 
-        # Renames a table.
-        # Also renames a table's primary key sequence if the sequence name exists and
-        # matches the Active Record default.
-        #
-        # Example:
-        #   rename_table('octopuses', 'octopi')
         def rename_table(table_name, new_name)
           clear_cache!
           execute "ALTER TABLE #{quote_table_name(table_name)} RENAME TO #{quote_table_name(new_name)}"
@@ -423,7 +371,6 @@ module ActiveRecord
           super
         end
 
-        # Changes the column of a table.
         def change_column(table_name, column_name, type, options = {})
           clear_cache!
           quoted_table_name = quote_table_name(table_name)
@@ -440,7 +387,6 @@ module ActiveRecord
           change_column_null(table_name, column_name, options[:null], options[:default]) if options.key?(:null)
         end
 
-        # Changes the default value of a table column.
         def change_column_default(table_name, column_name, default)
           clear_cache!
           column = column_for(table_name, column_name)
@@ -448,8 +394,6 @@ module ActiveRecord
 
           alter_column_query = "ALTER TABLE #{quote_table_name(table_name)} ALTER COLUMN #{quote_column_name(column_name)} %s"
           if default.nil?
-            # <tt>DEFAULT NULL</tt> results in the same behavior as <tt>DROP DEFAULT</tt>. However, PostgreSQL will
-            # cast the default to the columns type, which leaves us with a default like "default NULL::character varying".
             execute alter_column_query % "DROP DEFAULT"
           else
             execute alter_column_query % "SET DEFAULT #{quote_default_value(default, column)}"
@@ -465,7 +409,6 @@ module ActiveRecord
           execute("ALTER TABLE #{quote_table_name(table_name)} ALTER #{quote_column_name(column_name)} #{null ? 'DROP' : 'SET'} NOT NULL")
         end
 
-        # Renames a column in a table.
         def rename_column(table_name, column_name, new_column_name) #:nodoc:
           clear_cache!
           execute "ALTER TABLE #{quote_table_name(table_name)} RENAME COLUMN #{quote_column_name(column_name)} TO #{quote_column_name(new_column_name)}"
@@ -528,19 +471,14 @@ module ActiveRecord
           63
         end
 
-        # Maps logical Rails types to PostgreSQL-specific data types.
         def type_to_sql(type, limit = nil, precision = nil, scale = nil)
           case type.to_s
           when 'binary'
-            # PostgreSQL doesn't support limits on binary (bytea) columns.
-            # The hard limit is 1Gb, because of a 32-bit size field, and TOAST.
             case limit
             when nil, 0..0x3fffffff; super(type)
             else raise(ActiveRecordError, "No binary type has byte size #{limit}.")
             end
           when 'text'
-            # PostgreSQL doesn't support limits on text columns.
-            # The hard limit is 1Gb, according to section 8.3 in the manual.
             case limit
             when nil, 0..0x3fffffff; super(type)
             else raise(ActiveRecordError, "The limit on text can be at most 1GB - 1byte.")
@@ -566,13 +504,9 @@ module ActiveRecord
           end
         end
 
-        # PostgreSQL requires the ORDER BY columns in the select list for distinct queries, and
-        # requires that the ORDER BY include the distinct column.
         def columns_for_distinct(columns, orders) #:nodoc:
           order_columns = orders.reject(&:blank?).map{ |s|
-              # Convert Arel node to string
               s = s.to_sql unless s.is_a?(String)
-              # Remove any ASC/DESC modifiers
               s.gsub(/\s+(?:ASC|DESC)\b/i, '')
                .gsub(/\s+NULLS\s+(?:FIRST|LAST)\b/i, '')
             }.reject(&:blank?).map.with_index { |column, i| "#{column} AS alias_#{i}" }

@@ -1,4 +1,3 @@
-# Helps us respond with a topic list from a controller
 module TopicListResponder
 
   def respond_with_list(list)

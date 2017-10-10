@@ -1,8 +1,3 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
 class Gem::Ext::RakeBuilder < Gem::Ext::Builder
 
@@ -13,7 +8,6 @@ class Gem::Ext::RakeBuilder < Gem::Ext::Builder
       run cmd, results
     end
 
-    # Deal with possible spaces in the path, e.g. C:/Program Files
     dest_path = '"' + dest_path.to_s + '"' if dest_path.to_s.include?(' ')
 
     rake = ENV['rake']

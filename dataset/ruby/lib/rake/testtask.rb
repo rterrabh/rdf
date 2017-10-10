@@ -3,80 +3,30 @@ require 'rake/tasklib'
 
 module Rake
 
-  # Create a task that runs a set of tests.
-  #
-  # Example:
-  #
-  #   Rake::TestTask.new do |t|
-  #     t.libs << "test"
-  #     t.test_files = FileList['test/test*.rb']
-  #     t.verbose = true
-  #   end
-  #
-  # If rake is invoked with a "TEST=filename" command line option,
-  # then the list of test files will be overridden to include only the
-  # filename specified on the command line.  This provides an easy way
-  # to run just one test.
-  #
-  # If rake is invoked with a "TESTOPTS=options" command line option,
-  # then the given options are passed to the test process after a
-  # '--'.  This allows Test::Unit options to be passed to the test
-  # suite.
-  #
-  # Examples:
-  #
-  #   rake test                           # run tests normally
-  #   rake test TEST=just_one_file.rb     # run just one test file.
-  #   rake test TESTOPTS="-v"             # run in verbose mode
-  #   rake test TESTOPTS="--runner=fox"   # use the fox test runner
-  #
   class TestTask < TaskLib
 
-    # Name of test task. (default is :test)
     attr_accessor :name
 
-    # List of directories to added to $LOAD_PATH before running the
-    # tests. (default is 'lib')
     attr_accessor :libs
 
-    # True if verbose test output desired. (default is false)
     attr_accessor :verbose
 
-    # Test options passed to the test suite.  An explicit
-    # TESTOPTS=opts on the command line will override this. (default
-    # is NONE)
     attr_accessor :options
 
-    # Request that the tests be run with the warning flag set.
-    # E.g. warning=true implies "ruby -w" used to run the tests.
     attr_accessor :warning
 
-    # Glob pattern to match test files. (default is 'test/test*.rb')
     attr_accessor :pattern
 
-    # Style of test loader to use.  Options are:
-    #
-    # * :rake -- Rake provided test loading script (default).
-    # * :testrb -- Ruby provided test loading script.
-    # * :direct -- Load tests using command line loader.
-    #
     attr_accessor :loader
 
-    # Array of commandline options to pass to ruby when running test loader.
     attr_accessor :ruby_opts
 
-    # Description of the test task. (default is 'Run tests')
     attr_accessor :description
 
-    # Explicitly define the list of test files to be included in a
-    # test.  +list+ is expected to be an array of file names (a
-    # FileList is acceptable).  If both +pattern+ and +test_files+ are
-    # used, then the list of test files is the union of the two.
     def test_files=(list)
       @test_files = list
     end
 
-    # Create a testing task.
     def initialize(name=:test)
       @name = name
       @libs = ["lib"]
@@ -93,7 +43,6 @@ module Rake
       define
     end
 
-    # Create the tasks defined by this task lib.
     def define
       desc @description
       task @name do

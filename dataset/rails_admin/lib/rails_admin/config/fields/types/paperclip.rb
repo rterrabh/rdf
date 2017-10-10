@@ -5,7 +5,6 @@ module RailsAdmin
   module Config
     module Fields
       module Types
-        # Field type that supports Paperclip file uploads
         class Paperclip < RailsAdmin::Config::Fields::Types::FileUpload
           RailsAdmin::Config::Fields::Types.register(self)
 
@@ -14,7 +13,7 @@ module RailsAdmin
           end
 
           register_instance_option :thumb_method do
-            #nodyna <ID:send-18> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1356> <SD COMPLEX (change-prone variables)>
             @styles ||= bindings[:object].send(name).styles.collect(&:first)
             @thumb_method ||= @styles.detect { |s| [:thumb, 'thumb', :thumbnail, 'thumbnail'].include?(s) } || @styles.first || :original
           end

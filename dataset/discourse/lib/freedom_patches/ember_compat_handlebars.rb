@@ -1,5 +1,3 @@
-# barber patches to re-route raw compilation via ember compat handlebars
-#
 
 module Barber
   class EmberCompatPrecompiler < Barber::Precompiler
@@ -11,7 +9,6 @@ module Barber
     def precompiler
     @precompiler ||= StringIO.new <<END
       var Discourse = {};
-      #{File.read(Rails.root + "app/assets/javascripts/discourse/lib/ember_compat_handlebars.js")}
       var Barber = {
         precompile: function(string) {
           return Discourse.EmberCompatHandlebars.precompile(string,false).toString();

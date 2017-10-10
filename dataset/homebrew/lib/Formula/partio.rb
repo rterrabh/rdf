@@ -8,7 +8,6 @@ class Partio < Formula
   depends_on "swig" => :build
   depends_on "doxygen" => :build
 
-  # These fixes are upstream and can be removed in the next released version.
   patch do
     url "https://github.com/wdas/partio/commit/5b80b00ddedaef9ffed19ea4e6773ed1dc27394e.diff"
     sha256 "f3808c2b8032f35fee84d90ebaaa8f740376129cd5af363a32ea1e0f92d9282a"

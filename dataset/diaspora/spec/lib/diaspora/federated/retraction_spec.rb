@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 require 'spec_helper'
 
@@ -23,6 +20,7 @@ describe Retraction do
     context 'posts' do
       before do
         @retraction = described_class.for(@post)
+        #nodyna <instance_variable_get-122> <not yet classified>
         @obj = @retraction.instance_variable_get(:@object)
         @wanted_subscribers = @obj.subscribers(alice)
       end
@@ -43,6 +41,7 @@ describe Retraction do
     context 'setting subscribers' do
       it 'barfs if the type is a person, and subscribers instance varabile is not set' do
         retraction = described_class.for(alice)
+        #nodyna <instance_variable_get-123> <not yet classified>
         obj = retraction.instance_variable_get(:@object)
 
         expect {

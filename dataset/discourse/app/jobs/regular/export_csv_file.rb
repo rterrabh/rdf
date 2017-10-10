@@ -27,7 +27,7 @@ module Jobs
       export_method = "#{@entity}_export".to_sym
       data =
         if respond_to?(export_method)
-          #nodyna <ID:send-160> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-414> <SD COMPLEX (change-prone variables)>
           send(export_method)
         else
           raise Discourse::InvalidParameters.new(:entity)
@@ -64,7 +64,6 @@ module Jobs
       if @current_user.admin?
         staff_action_data = UserHistory.only_staff_actions.order('id DESC').to_a
       else
-        # moderator
         staff_action_data = UserHistory.where(admin_only: false).only_staff_actions.order('id DESC').to_a
       end
 
@@ -138,12 +137,10 @@ module Jobs
         if category
           category_name = category.name
           if !category.parent_category_id.nil?
-            # sub category
             category_name = Category.find_by(id: category.parent_category_id).name
             sub_category = category.name
           end
         else
-          # PM
           category_name = "-"
         end
         is_pm = topic_data.archetype == "private_message" ? I18n.t("csv_export.boolean_yes") : I18n.t("csv_export.boolean_no")
@@ -269,20 +266,17 @@ module Jobs
         @file = UserExport.create(file_name: file_name_prefix, user_id: @current_user.id)
         @file_name = "#{file_name_prefix}-#{@file.id}.csv"
 
-        # ensure directory exists
         dir = File.dirname("#{UserExport.base_directory}/#{@file_name}")
         FileUtils.mkdir_p(dir) unless Dir.exists?(dir)
       end
 
       def write_csv_file(data)
-        # write to CSV file
         CSV.open(File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__), "w") do |csv|
           csv << get_header
           data.each do |value|
             csv << value
           end
         end
-        # compress CSV file
         `gzip -5 #{File.expand_path("#{UserExport.base_directory}/#{@file_name}", __FILE__)}`
       end
 

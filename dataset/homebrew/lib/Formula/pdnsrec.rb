@@ -16,34 +16,28 @@ class Pdnsrec < Formula
   depends_on "lua" => :optional
 
   def install
-    # Set overrides using environment variables
     ENV["DESTDIR"] = "#{prefix}"
     ENV["OPTFLAGS"] = "-O0"
     ENV.O0
 
-    # Include Lua if requested
     if build.with? "lua"
       ENV["LUA"] = "1"
       ENV["LUA_CPPFLAGS_CONFIG"] = "-I#{Formula["lua"].opt_include}"
       ENV["LUA_LIBS_CONFIG"] = "-llua"
     end
 
-    # Adjust hard coded paths in Makefile
     inreplace "Makefile.in", "/usr/sbin/", "#{sbin}/"
     inreplace "Makefile.in", "/usr/bin/", "#{bin}/"
     inreplace "Makefile.in", "/etc/powerdns/", "#{etc}/powerdns/"
     inreplace "Makefile.in", "/var/run/", "#{var}/run/"
 
-    # Compile
     system "./configure"
     system "make"
 
-    # Do the install manually
     bin.install "rec_control"
     sbin.install "pdns_recursor"
     man1.install "pdns_recursor.1", "rec_control.1"
 
-    # Generate a default configuration file
     (prefix/"etc/powerdns").mkpath
     system "#{sbin}/pdns_recursor --config > #{prefix}/etc/powerdns/recursor.conf"
   end

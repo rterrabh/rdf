@@ -47,12 +47,10 @@ class ColorScheme < ActiveRecord::Base
     @base_color_scheme
   end
 
-  # create_from_base will create a new ColorScheme that overrides Discourse's base color scheme with the given colors.
   def self.create_from_base(params)
     new_color_scheme = new(name: params[:name])
     colors = base.colors_hashes
 
-    # Override base values
     params[:colors].each do |name, hex|
       c = colors.find {|x| x[:name].to_s == name.to_s}
       c[:hex] = hex
@@ -64,7 +62,6 @@ class ColorScheme < ActiveRecord::Base
   end
 
   def self.hex_for_name(name)
-    # Can't use `where` here because base doesn't allow it
     (enabled || base).colors.find {|c| c.name == name }.try(:hex)
   end
 
@@ -103,15 +100,3 @@ class ColorScheme < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: color_schemes
-#
-#  id           :integer          not null, primary key
-#  name         :string(255)      not null
-#  enabled      :boolean          default(FALSE), not null
-#  versioned_id :integer
-#  version      :integer          default(1), not null
-#  created_at   :datetime         not null
-#  updated_at   :datetime         not null
-#

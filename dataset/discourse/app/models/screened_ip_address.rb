@@ -1,8 +1,6 @@
 require_dependency 'screening_model'
 require_dependency 'ip_addr'
 
-# A ScreenedIpAddress record represents an IP address or subnet that is being watched,
-# and possibly blocked from creating accounts.
 class ScreenedIpAddress < ActiveRecord::Base
 
   include ScreeningModel
@@ -15,9 +13,6 @@ class ScreenedIpAddress < ActiveRecord::Base
     match_for_ip_address(ip_address) || create(opts.slice(:action_type).merge(ip_address: ip_address))
   end
 
-  # In Rails 4.0.0, validators are run to handle invalid assignments to inet columns (as they should).
-  # In Rails 4.0.1, an exception is raised before validation happens, so we need this hack for
-  # inet/cidr columns:
   def ip_address=(val)
     if val.nil?
       self.errors.add(:ip_address, :invalid)
@@ -38,24 +33,15 @@ class ScreenedIpAddress < ActiveRecord::Base
 
     write_attribute(:ip_address, v)
 
-  # this gets even messier, Ruby 1.9.2 raised a different exception to Ruby 2.0.0
-  # handle both exceptions
   rescue ArgumentError, IPAddr::InvalidAddressError
     self.errors.add(:ip_address, :invalid)
   end
 
-  # Return a string with the ip address and mask in standard format. e.g., "127.0.0.0/8".
   def ip_address_with_mask
     ip_address.try(:to_cidr_s)
   end
 
   def self.match_for_ip_address(ip_address)
-    # The <<= operator on inet columns means "is contained within or equal to".
-    #
-    # Read more about PostgreSQL's inet data type here:
-    #
-    #   http://www.postgresql.org/docs/9.1/static/datatype-net-types.html
-    #   http://www.postgresql.org/docs/9.1/static/functions-net.html
     find_by("'#{ip_address.to_s}' <<= ip_address")
   end
 
@@ -125,17 +111,13 @@ class ScreenedIpAddress < ActiveRecord::Base
   end
 
   def self.roll_up(current_user=Discourse.system_user)
-    # 1 - retrieve all subnets that needs roll up
     subnets = [star_subnets, star_star_subnets].flatten
 
-    # 2 - log the call
     StaffActionLogger.new(current_user).log_roll_up(subnets) unless subnets.blank?
 
     subnets.each do |subnet|
-      # 3 - create subnet if not already exists
       ScreenedIpAddress.new(ip_address: subnet).save unless ScreenedIpAddress.where(ip_address: subnet).exists?
 
-      # 4 - update stats
       sql = <<-SQL
         UPDATE screened_ip_addresses
            SET match_count   = sum_match_count,
@@ -155,33 +137,14 @@ class ScreenedIpAddress < ActiveRecord::Base
 
       ScreenedIpAddress.exec_sql(sql, ip_address: subnet)
 
-      # 5 - remove old matches
       ScreenedIpAddress.where(action_type: ScreenedIpAddress.actions[:block])
                        .where("family(ip_address) = 4")
                        .where("ip_address << ?", subnet)
                        .delete_all
     end
 
-    # return the subnets
     subnets
   end
 
 end
 
-# == Schema Information
-#
-# Table name: screened_ip_addresses
-#
-#  id            :integer          not null, primary key
-#  ip_address    :inet             not null
-#  action_type   :integer          not null
-#  match_count   :integer          default(0), not null
-#  last_match_at :datetime
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#
-# Indexes
-#
-#  index_screened_ip_addresses_on_ip_address     (ip_address) UNIQUE
-#  index_screened_ip_addresses_on_last_match_at  (last_match_at)
-#

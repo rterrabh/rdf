@@ -32,12 +32,10 @@ module ActiveAdmin
         col = Column.new(title, data, @resource_class, options, &block)
         @columns << col
 
-        # Build our header item
         within @header_row do
           build_table_header(col)
         end
 
-        # Add a table cell for each item
         @collection.each_with_index do |item, i|
           within @tbody.children[i] do
             build_table_cell col, item
@@ -82,7 +80,6 @@ module ActiveAdmin
 
       def build_table_body
         @tbody = tbody do
-          # Build enough rows for our collection
           @collection.each do |elem|
             classes = [cycle('odd', 'even')]
 
@@ -105,7 +102,7 @@ module ActiveAdmin
         value = if data.is_a? Proc
           data.call item
         elsif item.respond_to? data
-          #nodyna <ID:send-59> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-52> <SD COMPLEX (change-prone variables)>
           item.public_send data
         elsif item.respond_to? :[]
           item[data]
@@ -123,9 +120,6 @@ module ActiveAdmin
         end
       end
 
-      # Returns an array for the current sort order
-      #   current_sort[0] #=> sort_key
-      #   current_sort[1] #=> asc | desc
       def current_sort
         @current_sort ||= begin
           order_clause = OrderClause.new params[:order]
@@ -138,10 +132,6 @@ module ActiveAdmin
         end
       end
 
-      # Returns the order to use for a given sort key
-      #
-      # Default is to use 'desc'. If the current sort key is
-      # 'desc' it will return 'asc'
       def order_for_sort_key(sort_key)
         current_key, current_order = current_sort
         return 'desc' unless current_key == sort_key
@@ -184,26 +174,7 @@ module ActiveAdmin
           end
         end
 
-        #
-        # Returns the key to be used for sorting this column
-        #
-        # Defaults to the column's method if its a symbol
-        #   column :username
-        #   # => Sort key will be set to 'username'
-        #
-        # You can set the sort key by passing a string or symbol
-        # to the sortable option:
-        #   column :username, sortable: 'other_column_to_sort_on'
-        #
-        # If you pass a block to be rendered for this column, the column
-        # will not be sortable unless you pass a string to sortable to
-        # sort the column on:
-        #
-        #   column('Username', sortable: 'login'){ @user.pretty_name }
-        #   # => Sort key will be 'login'
-        #
         def sort_key
-          # If boolean or nil, use the default sort key.
           if @options[:sortable] == true || @options[:sortable] == false
             @data.to_s
           elsif @options[:sortable].nil?

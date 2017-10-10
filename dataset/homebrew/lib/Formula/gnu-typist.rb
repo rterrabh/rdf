@@ -13,12 +13,9 @@ class GnuTypist < Formula
 
   depends_on "gettext"
 
-  # Use Apple's ncurses instead of ncursesw.
-  # TODO: use an IFDEF for apple and submit upstream
   patch :DATA
 
   def install
-    # libiconv is not linked properly without this
     ENV.append "LDFLAGS", "-liconv"
 
     system "./configure", "--disable-dependency-tracking",
@@ -81,63 +78,38 @@ index 1c3990e..f0fc21a 100644
 --- a/src/cursmenu.c
 +++ b/src/cursmenu.c
 @@ -24,7 +24,7 @@
- #ifdef HAVE_PDCURSES
- #include <curses.h>
- #else
 -#include <ncursesw/ncurses.h>
 +#include <ncurses.h>
- #endif
 
- #include "error.h"
 diff --git a/src/error.c b/src/error.c
 index 2022f2b..4ab6741 100644
 --- a/src/error.c
 +++ b/src/error.c
 @@ -25,7 +25,7 @@
- #ifdef HAVE_PDCURSES
- #include <curses.h>
- #else
 -#include <ncursesw/ncurses.h>
 +#include <ncurses.h>
- #endif
 
- #include <stdlib.h>
 diff --git a/src/gtypist.c b/src/gtypist.c
 index bd5af8d..b634325 100644
 --- a/src/gtypist.c
 +++ b/src/gtypist.c
 @@ -31,7 +31,7 @@
- #ifdef HAVE_PDCURSES
- #include <curses.h>
- #else
 -#include <ncursesw/ncurses.h>
 +#include <ncurses.h>
- #endif
 
- #include <time.h>
 diff --git a/src/script.c b/src/script.c
 index ce04d68..f4032e2 100644
 --- a/src/script.c
 +++ b/src/script.c
 @@ -24,7 +24,7 @@
- #ifdef HAVE_PDCURSES
- #include <curses.h>
- #else
 -#include <ncursesw/ncurses.h>
 +#include <ncurses.h>
- #endif
 
- #include "error.h"
 diff --git a/src/utf8.c b/src/utf8.c
 index 8eab3d3..e3194df 100644
 --- a/src/utf8.c
 +++ b/src/utf8.c
 @@ -23,7 +23,7 @@
- #ifdef HAVE_PDCURSES
- #include <curses.h>
- #else
 -#include <ncursesw/ncurses.h>
 +#include <ncurses.h>
- #endif
 
- #include <stdlib.h>

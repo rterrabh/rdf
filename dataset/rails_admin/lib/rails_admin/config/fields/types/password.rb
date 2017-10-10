@@ -5,7 +5,6 @@ module RailsAdmin
     module Fields
       module Types
         class Password < RailsAdmin::Config::Fields::Types::String
-          # Register field type for the type loader
           RailsAdmin::Config::Fields::Types.register(self)
 
           register_instance_option :view_helper do
@@ -20,7 +19,6 @@ module RailsAdmin
             ''.html_safe
           end
 
-          # Password field's value does not need to be read
           def value
             ''
           end

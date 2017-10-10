@@ -1,5 +1,3 @@
-##
-# A heading with a level (1-6) and text
 
 RDoc::Markup::Heading =
   Struct.new :level, :text do
@@ -7,16 +5,11 @@ RDoc::Markup::Heading =
   @to_html = nil
   @to_label = nil
 
-  ##
-  # A singleton RDoc::Markup::ToLabel formatter for headings.
 
   def self.to_label
     @to_label ||= RDoc::Markup::ToLabel.new
   end
 
-  ##
-  # A singleton plain HTML formatter for headings.  Used for creating labels
-  # for the Table of Contents
 
   def self.to_html
     return @to_html if @to_html
@@ -33,23 +26,16 @@ RDoc::Markup::Heading =
     @to_html
   end
 
-  ##
-  # Calls #accept_heading on +visitor+
 
   def accept visitor
     visitor.accept_heading self
   end
 
-  ##
-  # An HTML-safe anchor reference for this header.
 
   def aref
     "label-#{self.class.to_label.convert text.dup}"
   end
 
-  ##
-  # Creates a fully-qualified label which will include the label from
-  # +context+.  This helps keep ids unique in HTML.
 
   def label context = nil
     label = aref
@@ -60,9 +46,6 @@ RDoc::Markup::Heading =
     label
   end
 
-  ##
-  # HTML markup of the text of this label without the surrounding header
-  # element.
 
   def plain_html
     self.class.to_html.to_html(text.dup)

@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class StatusMessagesController < ApplicationController
   before_action :authenticate_user!
@@ -13,8 +10,6 @@ class StatusMessagesController < ApplicationController
 
   layout 'application', only: :bookmarklet
 
-  # Called when a user clicks "Mention" on a profile page
-  # @param person_id [Integer] The id of the person to be mentioned
   def new
     if params[:person_id] && @person = Person.where(:id => params[:person_id]).first
       @aspect = :profile
@@ -88,7 +83,6 @@ class StatusMessagesController < ApplicationController
       respond_to do |format|
         format.html { redirect_to :back }
         format.mobile { redirect_to stream_path }
-        #there are some errors, so we report the first one to the user
         format.json { render :text => @status_message.errors.messages.values.first.to_sentence, :status => 403 }
       end
     end
@@ -117,7 +111,6 @@ class StatusMessagesController < ApplicationController
   end
 
   def normalize_public_flag!
-    # mobile || desktop conditions
     sm = params[:status_message]
     public_flag = (sm[:aspect_ids] && sm[:aspect_ids].first == 'public') || sm[:public]
     public_flag.to_s.match(/(true)|(on)/) ? public_flag = true : public_flag = false

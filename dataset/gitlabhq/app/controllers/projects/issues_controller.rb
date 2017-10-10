@@ -2,16 +2,12 @@ class Projects::IssuesController < Projects::ApplicationController
   before_action :module_enabled
   before_action :issue, only: [:edit, :update, :show, :toggle_subscription]
 
-  # Allow read any issue
   before_action :authorize_read_issue!
 
-  # Allow write(create) issue
   before_action :authorize_create_issue!, only: [:new, :create]
 
-  # Allow modify issue
   before_action :authorize_update_issue!, only: [:edit, :update]
 
-  # Allow issues bulk update
   before_action :authorize_admin_issues!, only: [:bulk_update]
 
   respond_to :html
@@ -134,11 +130,6 @@ class Projects::IssuesController < Projects::ApplicationController
     return render_404 unless @project.issues_enabled && @project.default_issues_tracker?
   end
 
-  # Since iids are implemented only in 6.1
-  # user may navigate to issue page using old global ids.
-  #
-  # To prevent 404 errors we provide a redirect to correct iids until 7.0 release
-  #
   def redirect_old
     issue = @project.issues.find_by(id: params[:id])
 

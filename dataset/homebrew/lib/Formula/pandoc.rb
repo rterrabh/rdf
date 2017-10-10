@@ -32,7 +32,6 @@ class Pandoc < Formula
 
   test do
     input_markdown = <<-EOS.undent
-      # Homebrew
 
       A package manager for humans. Cats should take a look at Tigerbrew.
     EOS

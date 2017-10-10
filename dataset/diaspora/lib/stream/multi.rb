@@ -1,16 +1,13 @@
 class Stream::Multi < Stream::Base
 
-  # @return [String] URL
   def link(opts)
     Rails.application.routes.url_helpers.stream_path(opts)
   end
 
-  # @return [String]
   def title
     I18n.t('streams.multi.title')
   end
 
-  # @return [String]
   def contacts_title
     I18n.t('streams.multi.contacts_title')
   end
@@ -19,8 +16,6 @@ class Stream::Multi < Stream::Base
     @posts ||= ::EvilQuery::MultiStream.new(user, order, max_time, include_community_spotlight?).make_relation!
   end
 
-  #emits an enum of the groups which the post appeared
-  # :spotlight, :aspects, :tags, :mentioned
   def post_from_group(post)
     streams_included.collect do |source|
       is_in?(source, post)
@@ -36,9 +31,6 @@ class Stream::Multi < Stream::Base
     end
   end
 
-  # Generates the prefill for the publisher
-  #
-  # @return [String]
   def publisher_prefill
     prefill = I18n.t("shared.publisher.new_user_prefill.hello", :new_user_tag => I18n.t('shared.publisher.new_user_prefill.newhere'))
     if self.user.followed_tags.size > 0
@@ -54,12 +46,10 @@ class Stream::Multi < Stream::Base
     prefill
   end
 
-  # @return [Boolean]
   def welcome?
     self.user.getting_started
   end
 
-  # @return [Array<Symbol>]
   def streams_included
     @streams_included ||= lambda do
       array = [:mentioned, :aspects, :followed_tags]
@@ -68,15 +58,13 @@ class Stream::Multi < Stream::Base
     end.call
   end
 
-  # @return [Symbol]
   def is_in?(sym, post)
-    #nodyna <ID:send-1> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-222> <SD COMPLEX (change-prone variables)>
     if self.send("#{sym.to_s}_post_ids").find{|x| (x == post.id) || (x.to_s == post.id.to_s)}
       "#{sym.to_s}_stream".to_sym
     end
   end
 
-  # @return [Boolean]
   def include_community_spotlight?
     AppConfig.settings.community_spotlight.enable? && user.show_community_spotlight_in_stream?
   end

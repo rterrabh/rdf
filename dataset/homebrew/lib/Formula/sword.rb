@@ -41,9 +41,6 @@ class Sword < Formula
   end
 
   test do
-    # This will call sword's module manager to list remote sources.
-    # It should just demonstrate that the lib was correctly installed
-    # and can be used by frontends like installmgr.
     system "#{bin}/installmgr", "-s"
   end
 end

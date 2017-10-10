@@ -34,8 +34,6 @@ class ApplicationController < ActionController::Base
 
   protected
 
-  # From https://github.com/plataformatec/devise/wiki/How-To:-Simple-Token-Authentication-Example
-  # https://gist.github.com/josevalim/fb706b1e933ef01e4fb6
   def authenticate_user_from_token!
     user_token = if params[:authenticity_token].presence
                    params[:authenticity_token].presence
@@ -45,16 +43,11 @@ class ApplicationController < ActionController::Base
     user = user_token && User.find_by_authentication_token(user_token.to_s)
 
     if user
-      # Notice we are passing store false, so the user is not
-      # actually stored in the session and a token is needed
-      # for every request. If you want the token to work as a
-      # sign in token, you can simply remove store: false.
       sign_in user, store: false
     end
   end
 
   def authenticate_user!(*args)
-    # If user is not signed-in and tries to access root_path - redirect him to landing page
     if current_application_settings.home_page_url.present?
       if current_user.nil? && root_path == request.path
         redirect_to current_application_settings.home_page_url and return
@@ -105,11 +98,6 @@ class ApplicationController < ActionController::Base
       namespace = params[:namespace_id]
       id = params[:project_id] || params[:id]
 
-      # Redirect from
-      #   localhost/group/project.git
-      # to
-      #   localhost/group/project
-      #
       if id =~ /\.git\Z/
         redirect_to request.original_url.gsub(/\.git\Z/, '') and return
       end
@@ -183,7 +171,6 @@ class ApplicationController < ActionController::Base
     headers['X-XSS-Protection'] = '1; mode=block'
     headers['X-UA-Compatible'] = 'IE=edge'
     headers['X-Content-Type-Options'] = 'nosniff'
-    # Enabling HSTS for non-standard ports would send clients to the wrong port
     if Gitlab.config.gitlab.https and Gitlab.config.gitlab.port == 443
       headers['Strict-Transport-Security'] = 'max-age=31536000'
     end
@@ -227,7 +214,6 @@ class ApplicationController < ActionController::Base
     Gitlab::LDAP::Access.open { |access| block.call(access) }
   end
 
-  # JSON for infinite scroll via Pager object
   def pager_json(partial, count)
     html = render_to_string(
       partial,
@@ -276,11 +262,6 @@ class ApplicationController < ActionController::Base
     elsif @group
       @filter_params[:group_id] = @group.id
     else
-      # TODO: this filter ignore issues/mr created in public or
-      # internal repos where you are not a member. Enable this filter
-      # or improve current implementation to filter only issues you
-      # created or assigned or mentioned
-      #@filter_params[:authorized_only] = true
     end
 
     @filter_params

@@ -9,8 +9,6 @@ module OS
 
     ::MacOS = self # compatibility
 
-    # This can be compared to numerics, strings, or symbols
-    # using the standard Ruby Comparable methods.
     def version
       @version ||= Version.new(MACOS_VERSION)
     end
@@ -20,13 +18,9 @@ module OS
     end
 
     def locate(tool)
-      # Don't call tools (cc, make, strip, etc.) directly!
-      # Give the name of the binary you look for as a string to this method
-      # in order to get the full path back as a Pathname.
       (@locate ||= {}).fetch(tool) do |key|
         @locate[key] = if File.executable?(path = "/usr/bin/#{tool}")
           Pathname.new path
-        # Homebrew GCCs most frequently; much faster to check this before xcrun
         elsif (path = HOMEBREW_PREFIX/"bin/#{tool}").executable?
           path
         else
@@ -36,8 +30,6 @@ module OS
       end
     end
 
-    # Locates a (working) copy of install_name_tool, guaranteed to function
-    # whether the user has developer tools installed or not.
     def install_name_tool
       if (path = HOMEBREW_PREFIX/"opt/cctools/bin/install_name_tool").executable?
         path
@@ -46,8 +38,6 @@ module OS
       end
     end
 
-    # Locates a (working) copy of otool, guaranteed to function whether the user
-    # has developer tools installed or not.
     def otool
       if (path = HOMEBREW_PREFIX/"opt/cctools/bin/otool").executable?
         path
@@ -56,9 +46,6 @@ module OS
       end
     end
 
-    # Checks if the user has any developer tools installed, either via Xcode
-    # or the CLT. Convenient for guarding against formula builds when building
-    # is impossible.
     def has_apple_developer_tools?
       Xcode.installed? || CLT.installed?
     end
@@ -70,11 +57,8 @@ module OS
     def sdk_path(v = version)
       (@sdk_path ||= {}).fetch(v.to_s) do |key|
         opts = []
-        # First query Xcode itself
         opts << Utils.popen_read(locate("xcodebuild"), "-version", "-sdk", "macosx#{v}", "Path").chomp
-        # Xcode.prefix is pretty smart, so lets look inside to find the sdk
         opts << "#{Xcode.prefix}/Platforms/MacOSX.platform/Developer/SDKs/MacOSX#{v}.sdk"
-        # Xcode < 4.3 style
         opts << "/Developer/SDKs/MacOSX#{v}.sdk"
         @sdk_path[key] = opts.map { |a| Pathname.new(a) }.detect(&:directory?)
       end
@@ -92,7 +76,6 @@ module OS
       when /^llvm/ then :llvm
       when "clang" then :clang
       else
-        # guess :(
         if Xcode.version >= "4.3"
           :clang
         elsif Xcode.version >= "4.2"
@@ -158,32 +141,19 @@ module OS
       @non_apple_gcc_version = {}
     end
 
-    # See these issues for some history:
-    # https://github.com/Homebrew/homebrew/issues/13
-    # https://github.com/Homebrew/homebrew/issues/41
-    # https://github.com/Homebrew/homebrew/issues/48
     def macports_or_fink
       paths = []
 
-      # First look in the path because MacPorts is relocatable and Fink
-      # may become relocatable in the future.
       %w[port fink].each do |ponk|
         path = which(ponk)
         paths << path unless path.nil?
       end
 
-      # Look in the standard locations, because even if port or fink are
-      # not in the path they can still break builds if the build scripts
-      # have these paths baked in.
       %w[/sw/bin/fink /opt/local/bin/port].each do |ponk|
         path = Pathname.new(ponk)
         paths << path if path.exist?
       end
 
-      # Finally, some users make their MacPorts or Fink directorie
-      # read-only in order to try out Homebrew, but this doens't work as
-      # some build scripts error out when trying to read from these now
-      # unreadable paths.
       %w[/sw /opt/local].map { |p| Pathname.new(p) }.each do |path|
         paths << path if path.exist? && !path.readable?
       end
@@ -243,7 +213,7 @@ module OS
 
     def compilers_standard?
       STANDARD_COMPILERS.fetch(Xcode.version.to_s).all? do |method, build|
-        #nodyna <ID:send-7> <SD MODERATE (array)>
+        #nodyna <send-623> <SD MODERATE (array)>
         send(:"#{method}_version") == build
       end
     rescue IndexError

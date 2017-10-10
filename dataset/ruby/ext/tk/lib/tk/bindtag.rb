@@ -1,15 +1,11 @@
-#
-# tk/bind.rb : control event binding
-#
 require 'tk'
 
 class TkBindTag
   include TkBindCore
 
-  #BTagID_TBL = {}
   BTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-58> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1855> <IEV MODERATE (method definition)>
   (Tk_BINDTAG_ID = ["btag".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -32,6 +28,7 @@ class TkBindTag
       return BTagID_TBL[name] if BTagID_TBL[name]
     }
 
+    #nodyna <instance_eval-1856> <not yet classified>
     self.new.instance_eval{
       BTagID_TBL.mutex.synchronize{
         BTagID_TBL.delete @id
@@ -49,7 +46,7 @@ class TkBindTag
       if BTagID_TBL[name]
         obj = BTagID_TBL[name]
       else
-        #nodyna <ID:instance_eval-60> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1857> <IEV MODERATE (private access)>
         (obj = BTagID_TBL[name] = self.allocate).instance_eval{
           @id = name
         }
@@ -61,7 +58,6 @@ class TkBindTag
 
   def initialize(*args, &b)
     Tk_BINDTAG_ID.mutex.synchronize{
-      # @id = Tk_BINDTAG_ID.join('')
       @id = Tk_BINDTAG_ID.join(TkCore::INTERP._ip_id_)
       Tk_BINDTAG_ID[1].succ!
     }
@@ -82,7 +78,6 @@ class TkBindTag
   end
 
   def inspect
-    #Kernel.format "#<TkBindTag: %s>", @id
     '#<TkBindTag: ' + @id + '>'
   end
 end
@@ -120,7 +115,7 @@ class TkDatabaseClass<TkBindTag
       if BTagID_TBL[name]
         BTagID_TBL[name]
       else
-        #nodyna <ID:instance_eval-61> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1858> <IEV MODERATE (private access)>
         BTagID_TBL[name] = self.allocate.instance_eval{
           initialize(name, *args, &b)
           self
@@ -135,7 +130,6 @@ class TkDatabaseClass<TkBindTag
   end
 
   def inspect
-    #Kernel.format "#<TkDatabaseClass: %s>", @id
     '#<TkDatabaseClass: ' + @id + '>'
   end
 end

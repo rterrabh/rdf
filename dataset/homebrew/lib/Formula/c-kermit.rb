@@ -15,9 +15,6 @@ class CKermit < Formula
     system "make", "macosx"
     man1.mkpath
 
-    # The makefile adds /man to the end of manroot when running install
-    # hence we pass share here, not man.  If we don't pass anything it
-    # uses {prefix}/man
     system "make", "prefix=#{prefix}", "manroot=#{share}", "install"
   end
 

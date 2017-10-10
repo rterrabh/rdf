@@ -39,7 +39,6 @@ describe Spree::Payment, :type => :model do
   end
 
   before(:each) do
-    # So it doesn't create log entries every time a processing method is called
     allow(payment.log_entries).to receive(:create!)
   end
 
@@ -97,7 +96,6 @@ describe Spree::Payment, :type => :model do
     end
   end
 
-  # Regression test for https://github.com/spree/spree/pull/2224
   context 'failure' do
     it 'should transition to failed from pending state' do
       payment.state = 'pending'
@@ -145,7 +143,6 @@ describe Spree::Payment, :type => :model do
         expect(payment.state).to eq('invalid')
       end
 
-      # Regression test for #4598
       it "should allow payments with a gateway_customer_profile_id" do
         allow(payment.source).to receive_messages :gateway_customer_profile_id => "customer_1"
         expect(payment.payment_method).to receive(:supports?).with(payment.source).and_return(false)
@@ -153,7 +150,6 @@ describe Spree::Payment, :type => :model do
         payment.process!
       end
 
-      # Another regression test for #4598
       it "should allow payments with a gateway_payment_profile_id" do
         allow(payment.source).to receive_messages :gateway_payment_profile_id => "customer_1"
         expect(payment.payment_method).to receive(:supports?).with(payment.source).and_return(false)
@@ -319,7 +315,6 @@ describe Spree::Payment, :type => :model do
 
               expect(payments.size).to eq 2
               expect(payments.pending.first.amount).to eq 1
-              # Payment stays processing for spec because of receive(:complete!) stub.
               expect(payments.processing.first.amount).to eq(capture_amount / 100)
               expect(payments.processing.first.source).to eq(payments.pending.first.source)
             end
@@ -342,7 +337,6 @@ describe Spree::Payment, :type => :model do
         end
       end
 
-      # Regression test for #2119
       context "when payment is completed" do
         before do
           payment.state = 'completed'
@@ -386,7 +380,6 @@ describe Spree::Payment, :type => :model do
 
       context "if successful" do
         it "should update the response_code with the authorization from the gateway" do
-          # Change it to something different
           payment.response_code = 'abc'
           payment.void_transaction!
           expect(payment.response_code).to eq('12345')
@@ -401,7 +394,6 @@ describe Spree::Payment, :type => :model do
         end
       end
 
-      # Regression test for #2119
       context "if payment is already voided" do
         before do
           payment.state = 'void'
@@ -450,7 +442,6 @@ describe Spree::Payment, :type => :model do
   end
 
   describe "#credit_allowed" do
-    # Regression test for #4403 & #4407
     it "is the difference between offsets total and payment amount" do
       payment.amount = 100
       allow(payment).to receive(:offsets_total).and_return(0)
@@ -647,7 +638,6 @@ describe Spree::Payment, :type => :model do
     end
   end
 
-  # Regression test for #2216
   describe "#gateway_options" do
     before { allow(order).to receive_messages(:last_ip_address => "192.168.1.1") }
 
@@ -656,7 +646,6 @@ describe Spree::Payment, :type => :model do
     end
 
     it "contains the email address from a persisted order" do
-      # Sets the payment's order to a different Ruby object entirely
       payment.order = Spree::Order.find(payment.order_id)
       email = 'foo@example.com'
       order.update_attributes(:email => email)
@@ -665,7 +654,6 @@ describe Spree::Payment, :type => :model do
   end
 
   describe "#set_unique_number" do
-    # Regression test for #1998
     it "sets a unique number on create" do
       payment.generate_number
       payment.save
@@ -675,7 +663,6 @@ describe Spree::Payment, :type => :model do
       expect(payment.number).to be_a(String)
     end
 
-    # Regression test for #3733
     it "does not regenerate the number on re-save" do
       payment.run_callbacks(:create)
       payment.save
@@ -755,7 +742,6 @@ describe Spree::Payment, :type => :model do
       context "amount is invalid" do
         let(:amount) { 'invalid' }
 
-        # this is a strange default for ActiveRecord
 
         it '#amount' do
           expect(subject.amount).to eql(BigDecimal('0'))
@@ -848,7 +834,6 @@ describe Spree::Payment, :type => :model do
     end
 
     it "returns true if avs_response in RISKY_AVS_CODES" do
-      # should use avs_response_code helper
       ('A'..'Z').reject{ |x| subject.class::NON_RISKY_AVS_CODES.include?(x) }.to_a.each do |char|
         payment.update_attribute(:avs_response, char)
         expect(payment.is_avs_risky?).to eq true
@@ -873,7 +858,6 @@ describe Spree::Payment, :type => :model do
     end
 
     it "returns true if cvv_response_code == [A-Z], omitting D" do
-      # should use cvv_response_code helper
       (%w{N P S U} << "").each do |char|
         payment.update_attribute(:cvv_response_code, char)
         expect(payment.is_cvv_risky?).to eq(true)
@@ -909,8 +893,6 @@ describe Spree::Payment, :type => :model do
     end
   end
 
-  # Regression test for #4072 (kinda)
-  # The need for this was discovered in the research for #4072
   context "state changes" do
     it "are logged to the database" do
       expect(payment.state_changes).to be_empty

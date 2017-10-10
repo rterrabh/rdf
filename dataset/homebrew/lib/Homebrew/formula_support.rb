@@ -1,8 +1,5 @@
-# Used to track formulae that cannot be installed at the same time
 FormulaConflict = Struct.new(:name, :reason)
 
-# Used to annotate formulae that duplicate OS X provided software
-# or cause conflicts when linked in.
 class KegOnlyReason
   def initialize(reason, explanation)
     @reason = reason

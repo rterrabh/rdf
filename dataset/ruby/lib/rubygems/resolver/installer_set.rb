@@ -1,32 +1,18 @@
-##
-# A set of gems for installation sourced from remote sources and local .gem
-# files
 
 class Gem::Resolver::InstallerSet < Gem::Resolver::Set
 
-  ##
-  # List of Gem::Specification objects that must always be installed.
 
   attr_reader :always_install # :nodoc:
 
-  ##
-  # Only install gems in the always_install list
 
   attr_accessor :ignore_dependencies # :nodoc:
 
-  ##
-  # Do not look in the installed set when finding specifications.  This is
-  # used by the --install-dir option to `gem install`
 
   attr_accessor :ignore_installed # :nodoc:
 
-  ##
-  # The remote_set looks up remote gems for installation.
 
   attr_reader :remote_set # :nodoc:
 
-  ##
-  # Creates a new InstallerSet that will look for gems in +domain+.
 
   def initialize domain
     super()
@@ -44,9 +30,6 @@ class Gem::Resolver::InstallerSet < Gem::Resolver::Set
     @specs               = {}
   end
 
-  ##
-  # Looks up the latest specification for +dependency+ and adds it to the
-  # always_install list.
 
   def add_always_install dependency
     request = Gem::Resolver::DependencyRequest.new dependency, nil
@@ -77,38 +60,26 @@ class Gem::Resolver::InstallerSet < Gem::Resolver::Set
     @always_install << newest.spec
   end
 
-  ##
-  # Adds a local gem requested using +dep_name+ with the given +spec+ that can
-  # be loaded and installed using the +source+.
 
   def add_local dep_name, spec, source
     @local[dep_name] = [spec, source]
   end
 
-  ##
-  # Should local gems should be considered?
 
   def consider_local? # :nodoc:
     @domain == :both or @domain == :local
   end
 
-  ##
-  # Should remote gems should be considered?
 
   def consider_remote? # :nodoc:
     @domain == :both or @domain == :remote
   end
 
-  ##
-  # Errors encountered while resolving gems
 
   def errors
     @errors + @remote_set.errors
   end
 
-  ##
-  # Returns an array of IndexSpecification objects matching DependencyRequest
-  # +req+.
 
   def find_all req
     res = []
@@ -171,9 +142,6 @@ class Gem::Resolver::InstallerSet < Gem::Resolver::Set
     ]
   end
 
-  ##
-  # Called from IndexSpecification to get a true Specification
-  # object.
 
   def load_spec name, ver, platform, source # :nodoc:
     key = "#{name}-#{ver}-#{platform}"
@@ -185,8 +153,6 @@ class Gem::Resolver::InstallerSet < Gem::Resolver::Set
     end
   end
 
-  ##
-  # Has a local gem for +dep_name+ been added to this set?
 
   def local? dep_name # :nodoc:
     spec, = @local[dep_name]

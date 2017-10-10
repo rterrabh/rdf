@@ -1,19 +1,3 @@
-# == Schema Information
-#
-# Table name: snippets
-#
-#  id               :integer          not null, primary key
-#  title            :string(255)
-#  content          :text
-#  author_id        :integer          not null
-#  project_id       :integer
-#  created_at       :datetime
-#  updated_at       :datetime
-#  file_name        :string(255)
-#  expires_at       :datetime
-#  type             :string(255)
-#  visibility_level :integer          default(0), not null
-#
 
 class Snippet < ActiveRecord::Base
   include Gitlab::VisibilityLevel
@@ -40,7 +24,6 @@ class Snippet < ActiveRecord::Base
   validates :content, presence: true
   validates :visibility_level, inclusion: { in: Gitlab::VisibilityLevel.values }
 
-  # Scopes
   scope :are_internal,  -> { where(visibility_level: Snippet::INTERNAL) }
   scope :are_private, -> { where(visibility_level: Snippet::PRIVATE) }
   scope :are_public, -> { where(visibility_level: Snippet::PUBLIC) }
@@ -55,13 +38,9 @@ class Snippet < ActiveRecord::Base
     '$'
   end
 
-  # Pattern used to extract `$123` snippet references from text
-  #
-  # This pattern supports cross-project references.
   def self.reference_pattern
     %r{
       (#{Project.reference_pattern})?
-      #{Regexp.escape(reference_prefix)}(?<snippet>\d+)
     }x
   end
 

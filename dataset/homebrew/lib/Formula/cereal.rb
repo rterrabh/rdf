@@ -31,10 +31,6 @@ class Cereal < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <cereal/types/unordered_map.hpp>
-      #include <cereal/types/memory.hpp>
-      #include <cereal/archives/binary.hpp>
-      #include <fstream>
 
       struct MyRecord
       {

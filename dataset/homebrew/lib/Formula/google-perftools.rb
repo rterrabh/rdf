@@ -26,8 +26,6 @@ class GooglePerftools < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <assert.h>
-      #include <gperftools/tcmalloc.h>
 
       int main()
       {

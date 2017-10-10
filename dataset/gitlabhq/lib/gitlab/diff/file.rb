@@ -10,7 +10,6 @@ module Gitlab
         @diff = diff
       end
 
-      # Array of Gitlab::DIff::Line objects
       def diff_lines
         @lines ||= parser.parse(raw_diff.lines)
       end

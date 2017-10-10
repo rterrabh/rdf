@@ -1,10 +1,3 @@
-##
-# A message container for a locale.
-#
-# This object provides the following two features:
-#
-#   * Loads translated messages from .po file.
-#   * Translates a message into the locale.
 
 class RDoc::I18n::Locale
 
@@ -12,18 +5,11 @@ class RDoc::I18n::Locale
 
   class << self
 
-    ##
-    # Returns the locale object for +locale_name+.
 
     def [](locale_name)
       @@locales[locale_name] ||= new(locale_name)
     end
 
-    ##
-    # Sets the locale object for +locale_name+.
-    #
-    # Normally, this method is not used. This method is useful for
-    # testing.
 
     def []=(locale_name, locale)
       @@locales[locale_name] = locale
@@ -31,33 +17,15 @@ class RDoc::I18n::Locale
 
   end
 
-  ##
-  # The name of the locale. It uses IETF language tag format
-  # +[language[_territory][.codeset][@modifier]]+.
-  #
-  # See also {BCP 47 - Tags for Identifying
-  # Languages}[http://tools.ietf.org/rfc/bcp/bcp47.txt].
 
   attr_reader :name
 
-  ##
-  # Creates a new locale object for +name+ locale. +name+ must
-  # follow IETF language tag format.
 
   def initialize(name)
     @name = name
     @messages = {}
   end
 
-  ##
-  # Loads translation messages from +locale_directory+/+@name+/rdoc.po
-  # or +locale_directory+/+@name+.po. The former has high priority.
-  #
-  # This method requires gettext gem for parsing .po file. If you
-  # don't have gettext gem, this method doesn't load .po file. This
-  # method warns and returns +false+.
-  #
-  # Returns +true+ if succeeded, +false+ otherwise.
 
   def load(locale_directory)
     return false if @name.nil?
@@ -90,9 +58,6 @@ class RDoc::I18n::Locale
     true
   end
 
-  ##
-  # Translates the +message+ into locale. If there is no tranlsation
-  # messages for +message+ in locale, +message+ itself is returned.
 
   def translate(message)
     @messages[message] || message

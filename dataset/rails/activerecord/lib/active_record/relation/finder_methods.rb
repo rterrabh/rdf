@@ -5,65 +5,6 @@ module ActiveRecord
   module FinderMethods
     ONE_AS_ONE = '1 AS one'
 
-    # Find by id - This can either be a specific id (1), a list of ids (1, 5, 6), or an array of ids ([5, 6, 10]).
-    # If no record can be found for all of the listed ids, then RecordNotFound will be raised. If the primary key
-    # is an integer, find by id coerces its arguments using +to_i+.
-    #
-    #   Person.find(1)          # returns the object for ID = 1
-    #   Person.find("1")        # returns the object for ID = 1
-    #   Person.find("31-sarah") # returns the object for ID = 31
-    #   Person.find(1, 2, 6)    # returns an array for objects with IDs in (1, 2, 6)
-    #   Person.find([7, 17])    # returns an array for objects with IDs in (7, 17)
-    #   Person.find([1])        # returns an array for the object with ID = 1
-    #   Person.where("administrator = 1").order("created_on DESC").find(1)
-    #
-    # <tt>ActiveRecord::RecordNotFound</tt> will be raised if one or more ids are not found.
-    #
-    # NOTE: The returned records may not be in the same order as the ids you
-    # provide since database rows are unordered. You'd need to provide an explicit <tt>order</tt>
-    # option if you want the results are sorted.
-    #
-    # ==== Find with lock
-    #
-    # Example for find with a lock: Imagine two concurrent transactions:
-    # each will read <tt>person.visits == 2</tt>, add 1 to it, and save, resulting
-    # in two saves of <tt>person.visits = 3</tt>. By locking the row, the second
-    # transaction has to wait until the first is finished; we get the
-    # expected <tt>person.visits == 4</tt>.
-    #
-    #   Person.transaction do
-    #     person = Person.lock(true).find(1)
-    #     person.visits += 1
-    #     person.save!
-    #   end
-    #
-    # ==== Variations of +find+
-    #
-    #   Person.where(name: 'Spartacus', rating: 4)
-    #   # returns a chainable list (which can be empty).
-    #
-    #   Person.find_by(name: 'Spartacus', rating: 4)
-    #   # returns the first item or nil.
-    #
-    #   Person.where(name: 'Spartacus', rating: 4).first_or_initialize
-    #   # returns the first item or returns a new instance (requires you call .save to persist against the database).
-    #
-    #   Person.where(name: 'Spartacus', rating: 4).first_or_create
-    #   # returns the first item or creates it and returns it, available since Rails 3.2.1.
-    #
-    # ==== Alternatives for +find+
-    #
-    #   Person.where(name: 'Spartacus', rating: 4).exists?(conditions = :none)
-    #   # returns a boolean indicating if any record with the given conditions exist.
-    #
-    #   Person.where(name: 'Spartacus', rating: 4).select("field1, field2, field3")
-    #   # returns a chainable list of instances with only the mentioned fields.
-    #
-    #   Person.where(name: 'Spartacus', rating: 4).ids
-    #   # returns an Array of ids, available since Rails 3.2.1.
-    #
-    #   Person.where(name: 'Spartacus', rating: 4).pluck(:field1, :field2)
-    #   # returns an Array of the required fields, available since Rails 3.1.
     def find(*args)
       if block_given?
         to_a.find(*args) { |*block_args| yield(*block_args) }
@@ -72,54 +13,26 @@ module ActiveRecord
       end
     end
 
-    # Finds the first record matching the specified conditions. There
-    # is no implied ordering so if order matters, you should specify it
-    # yourself.
-    #
-    # If no record is found, returns <tt>nil</tt>.
-    #
-    #   Post.find_by name: 'Spartacus', rating: 4
-    #   Post.find_by "published_at < ?", 2.weeks.ago
     def find_by(*args)
       where(*args).take
     rescue RangeError
       nil
     end
 
-    # Like <tt>find_by</tt>, except that if no record is found, raises
-    # an <tt>ActiveRecord::RecordNotFound</tt> error.
     def find_by!(*args)
       where(*args).take!
     rescue RangeError
       raise RecordNotFound, "Couldn't find #{@klass.name} with an out of range value"
     end
 
-    # Gives a record (or N records if a parameter is supplied) without any implied
-    # order. The order will depend on the database implementation.
-    # If an order is supplied it will be respected.
-    #
-    #   Person.take # returns an object fetched by SELECT * FROM people LIMIT 1
-    #   Person.take(5) # returns 5 objects fetched by SELECT * FROM people LIMIT 5
-    #   Person.where(["name LIKE '%?'", name]).take
     def take(limit = nil)
       limit ? limit(limit).to_a : find_take
     end
 
-    # Same as +take+ but raises <tt>ActiveRecord::RecordNotFound</tt> if no record
-    # is found. Note that <tt>take!</tt> accepts no arguments.
     def take!
       take or raise RecordNotFound.new("Couldn't find #{@klass.name} with [#{arel.where_sql}]")
     end
 
-    # Find the first record (or first N records if a parameter is supplied).
-    # If no order is defined it will order by primary key.
-    #
-    #   Person.first # returns the first object fetched by SELECT * FROM people ORDER BY people.id LIMIT 1
-    #   Person.where(["user_name = ?", user_name]).first
-    #   Person.where(["user_name = :u", { u: user_name }]).first
-    #   Person.order("created_on DESC").offset(5).first
-    #   Person.first(3) # returns the first three objects fetched by SELECT * FROM people ORDER BY people.id LIMIT 3
-    #
     def first(limit = nil)
       if limit
         find_nth_with_limit(offset_index, limit)
@@ -128,27 +41,10 @@ module ActiveRecord
       end
     end
 
-    # Same as +first+ but raises <tt>ActiveRecord::RecordNotFound</tt> if no record
-    # is found. Note that <tt>first!</tt> accepts no arguments.
     def first!
       find_nth! 0
     end
 
-    # Find the last record (or last N records if a parameter is supplied).
-    # If no order is defined it will order by primary key.
-    #
-    #   Person.last # returns the last object fetched by SELECT * FROM people
-    #   Person.where(["user_name = ?", user_name]).last
-    #   Person.order("created_on DESC").offset(5).last
-    #   Person.last(3) # returns the last three objects fetched by SELECT * FROM people.
-    #
-    # Take note that in that last case, the results are sorted in ascending order:
-    #
-    #   [#<Person id:2>, #<Person id:3>, #<Person id:4>]
-    #
-    # and not:
-    #
-    #   [#<Person id:4>, #<Person id:3>, #<Person id:2>]
     def last(limit = nil)
       if limit
         if order_values.empty? && primary_key
@@ -161,119 +57,50 @@ module ActiveRecord
       end
     end
 
-    # Same as +last+ but raises <tt>ActiveRecord::RecordNotFound</tt> if no record
-    # is found. Note that <tt>last!</tt> accepts no arguments.
     def last!
       last or raise RecordNotFound.new("Couldn't find #{@klass.name} with [#{arel.where_sql}]")
     end
 
-    # Find the second record.
-    # If no order is defined it will order by primary key.
-    #
-    #   Person.second # returns the second object fetched by SELECT * FROM people
-    #   Person.offset(3).second # returns the second object from OFFSET 3 (which is OFFSET 4)
-    #   Person.where(["user_name = :u", { u: user_name }]).second
     def second
       find_nth(1, offset_index)
     end
 
-    # Same as +second+ but raises <tt>ActiveRecord::RecordNotFound</tt> if no record
-    # is found.
     def second!
       find_nth! 1
     end
 
-    # Find the third record.
-    # If no order is defined it will order by primary key.
-    #
-    #   Person.third # returns the third object fetched by SELECT * FROM people
-    #   Person.offset(3).third # returns the third object from OFFSET 3 (which is OFFSET 5)
-    #   Person.where(["user_name = :u", { u: user_name }]).third
     def third
       find_nth(2, offset_index)
     end
 
-    # Same as +third+ but raises <tt>ActiveRecord::RecordNotFound</tt> if no record
-    # is found.
     def third!
       find_nth! 2
     end
 
-    # Find the fourth record.
-    # If no order is defined it will order by primary key.
-    #
-    #   Person.fourth # returns the fourth object fetched by SELECT * FROM people
-    #   Person.offset(3).fourth # returns the fourth object from OFFSET 3 (which is OFFSET 6)
-    #   Person.where(["user_name = :u", { u: user_name }]).fourth
     def fourth
       find_nth(3, offset_index)
     end
 
-    # Same as +fourth+ but raises <tt>ActiveRecord::RecordNotFound</tt> if no record
-    # is found.
     def fourth!
       find_nth! 3
     end
 
-    # Find the fifth record.
-    # If no order is defined it will order by primary key.
-    #
-    #   Person.fifth # returns the fifth object fetched by SELECT * FROM people
-    #   Person.offset(3).fifth # returns the fifth object from OFFSET 3 (which is OFFSET 7)
-    #   Person.where(["user_name = :u", { u: user_name }]).fifth
     def fifth
       find_nth(4, offset_index)
     end
 
-    # Same as +fifth+ but raises <tt>ActiveRecord::RecordNotFound</tt> if no record
-    # is found.
     def fifth!
       find_nth! 4
     end
 
-    # Find the forty-second record. Also known as accessing "the reddit".
-    # If no order is defined it will order by primary key.
-    #
-    #   Person.forty_two # returns the forty-second object fetched by SELECT * FROM people
-    #   Person.offset(3).forty_two # returns the forty-second object from OFFSET 3 (which is OFFSET 44)
-    #   Person.where(["user_name = :u", { u: user_name }]).forty_two
     def forty_two
       find_nth(41, offset_index)
     end
 
-    # Same as +forty_two+ but raises <tt>ActiveRecord::RecordNotFound</tt> if no record
-    # is found.
     def forty_two!
       find_nth! 41
     end
 
-    # Returns +true+ if a record exists in the table that matches the +id+ or
-    # conditions given, or +false+ otherwise. The argument can take six forms:
-    #
-    # * Integer - Finds the record with this primary key.
-    # * String - Finds the record with a primary key corresponding to this
-    #   string (such as <tt>'5'</tt>).
-    # * Array - Finds the record that matches these +find+-style conditions
-    #   (such as <tt>['name LIKE ?', "%#{query}%"]</tt>).
-    # * Hash - Finds the record that matches these +find+-style conditions
-    #   (such as <tt>{name: 'David'}</tt>).
-    # * +false+ - Returns always +false+.
-    # * No args - Returns +false+ if the table is empty, +true+ otherwise.
-    #
-    # For more information about specifying conditions as a hash or array,
-    # see the Conditions section in the introduction to <tt>ActiveRecord::Base</tt>.
-    #
-    # Note: You can't pass in a condition as a string (like <tt>name =
-    # 'Jamie'</tt>), since it would be sanitized and then queried against
-    # the primary key column, like <tt>id = 'name = \'Jamie\''</tt>.
-    #
-    #   Person.exists?(5)
-    #   Person.exists?('5')
-    #   Person.exists?(['name LIKE ?', "%#{query}%"])
-    #   Person.exists?(id: [1, 4, 8])
-    #   Person.exists?(name: 'David')
-    #   Person.exists?(false)
-    #   Person.exists?
     def exists?(conditions = :none)
       if Base === conditions
         conditions = conditions.id
@@ -302,14 +129,6 @@ module ActiveRecord
       connection.select_value(relation, "#{name} Exists", relation.arel.bind_values + relation.bind_values) ? true : false
     end
 
-    # This method is called whenever no records are found with either a single
-    # id or multiple ids and raises a +ActiveRecord::RecordNotFound+ exception.
-    #
-    # The error message is different depending on whether a single id or
-    # multiple ids are provided. If multiple ids are provided, then the number
-    # of results obtained should be provided in the +result_size+ argument and
-    # the expected number of results should be provided in the +expected_size+
-    # argument.
     def raise_record_not_found_exception!(ids, result_size, expected_size) #:nodoc:
       conditions = arel.where_sql
       conditions = " [#{conditions}]" if conditions
@@ -331,15 +150,6 @@ module ActiveRecord
     end
 
     def find_with_associations
-      # NOTE: the JoinDependency constructed here needs to know about
-      #       any joins already present in `self`, so pass them in
-      #
-      # failing to do so means that in cases like activerecord/test/cases/associations/inner_join_association_test.rb:136
-      # incorrect SQL is generated. In that case, the join dependency for
-      # SpecialCategorizations is constructed without knowledge of the
-      # preexisting join in joins_values to categorizations (by way of
-      # the `has_many :through` for categories).
-      #
       join_dependency = construct_join_dependency(joins_values)
 
       aliases  = join_dependency.aliases
@@ -369,9 +179,6 @@ module ActiveRecord
       if Arel::Table === from
         apply_join_dependency(self, construct_join_dependency(joins_values))
       else
-        # FIXME: as far as I can tell, `from` will always be an Arel::Table.
-        # There are no tests that test this branch, but presumably it's
-        # possible for `from` to be a list?
         apply_join_dependency(self, construct_join_dependency(from))
       end
     end
@@ -456,7 +263,6 @@ module ActiveRecord
           ids.size
         end
 
-      # 11 ids with limit 3, offset 9 should give 2 results.
       if offset_value && (ids.size - offset_value < expected_size)
         expected_size = ids.size - offset_value
       end

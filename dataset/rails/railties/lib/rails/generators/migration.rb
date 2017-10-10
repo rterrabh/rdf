@@ -3,9 +3,6 @@ require 'rails/generators/actions/create_migration'
 
 module Rails
   module Generators
-    # Holds common methods for migrations. It assumes that migrations has the
-    # [0-9]*_name format and can be used by another frameworks (like Sequel)
-    # just by implementing the next migration version method.
     module Migration
       extend ActiveSupport::Concern
       attr_reader :migration_number, :migration_file_name, :migration_class_name
@@ -43,19 +40,11 @@ module Rails
         @migration_class_name = @migration_file_name.camelize
       end
 
-      # Creates a migration template at the given destination. The difference
-      # to the default template method is that the migration version is appended
-      # to the destination file name.
-      #
-      # The migration version, migration file name, migration class name are
-      # available as instance variables in the template to be rendered.
-      #
-      #   migration_template "migration.rb", "db/migrate/add_foo_to_bar.rb"
       def migration_template(source, destination, config = {})
         source  = File.expand_path(find_in_source_paths(source.to_s))
 
         set_migration_assigns!(destination)
-        #nodyna <ID:instance_eval-14> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1163> <IEV MODERATE (private access)>
         context = instance_eval('binding')
 
         dir, base = File.split(destination)

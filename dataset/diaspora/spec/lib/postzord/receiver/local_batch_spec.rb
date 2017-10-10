@@ -11,7 +11,7 @@ describe Postzord::Receiver::LocalBatch do
   describe '.initialize' do
     it 'sets @post, @recipient_user_ids, and @user' do
       [:object, :recipient_user_ids, :users].each do |instance_var|
-        #nodyna <ID:send-125> <SD MODERATE (array)>
+        #nodyna <send-153> <SD MODERATE (array)>
         expect(receiver.send(instance_var)).not_to be_nil
       end
     end

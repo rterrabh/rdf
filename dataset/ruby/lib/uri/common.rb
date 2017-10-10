@@ -1,13 +1,3 @@
-#--
-# = uri/common.rb
-#
-# Author:: Akira Yamada <akira@ruby-lang.org>
-# Revision:: $Id$
-# License::
-#   You can redistribute it and/or modify it under the same term as Ruby.
-#
-# See URI for general documentation
-#
 
 require "uri/rfc2396_parser"
 require "uri/rfc3986_parser"
@@ -17,16 +7,15 @@ module URI
   Parser = RFC2396_Parser
   RFC3986_PARSER = RFC3986_Parser.new
 
-  # URI::Parser.new
   DEFAULT_PARSER = Parser.new
   DEFAULT_PARSER.pattern.each_pair do |sym, str|
     unless REGEXP::PATTERN.const_defined?(sym)
-      #nodyna <ID:const_set-61> <CS COMPLEX (change-prone variable)>
+      #nodyna <const_set-2234> <CS COMPLEX (change-prone variable)>
       REGEXP::PATTERN.const_set(sym, str)
     end
   end
   DEFAULT_PARSER.regexp.each_pair do |sym, str|
-    #nodyna <ID:const_set-62> <CS COMPLEX (change-prone variable)>
+    #nodyna <const_set-2235> <CS COMPLEX (change-prone variable)>
     const_set(sym, str)
   end
 
@@ -62,66 +51,12 @@ module URI
     module_function :make_components_hash
   end
 
-  # module for escaping unsafe characters with codes.
   module Escape
-    #
-    # == Synopsis
-    #
-    #   URI.escape(str [, unsafe])
-    #
-    # == Args
-    #
-    # +str+::
-    #   String to replaces in.
-    # +unsafe+::
-    #   Regexp that matches all symbols that must be replaced with codes.
-    #   By default uses <tt>REGEXP::UNSAFE</tt>.
-    #   When this argument is a String, it represents a character set.
-    #
-    # == Description
-    #
-    # Escapes the string, replacing all unsafe characters with codes.
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   enc_uri = URI.escape("http://example.com/?a=\11\15")
-    #   p enc_uri
-    #   # => "http://example.com/?a=%09%0D"
-    #
-    #   p URI.unescape(enc_uri)
-    #   # => "http://example.com/?a=\t\r"
-    #
-    #   p URI.escape("@?@!", "!?")
-    #   # => "@%3F@%21"
-    #
     def escape(*arg)
       warn "#{caller(1)[0]}: warning: URI.escape is obsolete" if $VERBOSE
       DEFAULT_PARSER.escape(*arg)
     end
     alias encode escape
-    #
-    # == Synopsis
-    #
-    #   URI.unescape(str)
-    #
-    # == Args
-    #
-    # +str+::
-    #   Unescapes the string.
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   enc_uri = URI.escape("http://example.com/?a=\11\15")
-    #   p enc_uri
-    #   # => "http://example.com/?a=%09%0D"
-    #
-    #   p URI.unescape(enc_uri)
-    #   # => "http://example.com/?a=\t\r"
-    #
     def unescape(*arg)
       warn "#{caller(1)[0]}: warning: URI.unescape is obsolete" if $VERBOSE
       DEFAULT_PARSER.unescape(*arg)
@@ -133,199 +68,32 @@ module URI
   include REGEXP
 
   @@schemes = {}
-  # Returns a Hash of the defined schemes
   def self.scheme_list
     @@schemes
   end
 
-  #
-  # Base class for all URI exceptions.
-  #
   class Error < StandardError; end
-  #
-  # Not a URI.
-  #
   class InvalidURIError < Error; end
-  #
-  # Not a URI component.
-  #
   class InvalidComponentError < Error; end
-  #
-  # URI is valid, bad usage is not.
-  #
   class BadURIError < Error; end
 
-  #
-  # == Synopsis
-  #
-  #   URI::split(uri)
-  #
-  # == Args
-  #
-  # +uri+::
-  #   String with URI.
-  #
-  # == Description
-  #
-  # Splits the string on following parts and returns array with result:
-  #
-  #   * Scheme
-  #   * Userinfo
-  #   * Host
-  #   * Port
-  #   * Registry
-  #   * Path
-  #   * Opaque
-  #   * Query
-  #   * Fragment
-  #
-  # == Usage
-  #
-  #   require 'uri'
-  #
-  #   p URI.split("http://www.ruby-lang.org/")
-  #   # => ["http", nil, "www.ruby-lang.org", nil, nil, "/", nil, nil, nil]
-  #
   def self.split(uri)
     RFC3986_PARSER.split(uri)
   end
 
-  #
-  # == Synopsis
-  #
-  #   URI::parse(uri_str)
-  #
-  # == Args
-  #
-  # +uri_str+::
-  #   String with URI.
-  #
-  # == Description
-  #
-  # Creates one of the URI's subclasses instance from the string.
-  #
-  # == Raises
-  #
-  # URI::InvalidURIError
-  #   Raised if URI given is not a correct one.
-  #
-  # == Usage
-  #
-  #   require 'uri'
-  #
-  #   uri = URI.parse("http://www.ruby-lang.org/")
-  #   p uri
-  #   # => #<URI::HTTP:0x202281be URL:http://www.ruby-lang.org/>
-  #   p uri.scheme
-  #   # => "http"
-  #   p uri.host
-  #   # => "www.ruby-lang.org"
-  #
-  # It's recommended to first ::escape the provided +uri_str+ if there are any
-  # invalid URI characters.
-  #
   def self.parse(uri)
     RFC3986_PARSER.parse(uri)
   end
 
-  #
-  # == Synopsis
-  #
-  #   URI::join(str[, str, ...])
-  #
-  # == Args
-  #
-  # +str+::
-  #   String(s) to work with, will be converted to RFC3986 URIs before merging.
-  #
-  # == Description
-  #
-  # Joins URIs.
-  #
-  # == Usage
-  #
-  #   require 'uri'
-  #
-  #   p URI.join("http://example.com/","main.rbx")
-  #   # => #<URI::HTTP:0x2022ac02 URL:http://localhost/main.rbx>
-  #
-  #   p URI.join('http://example.com', 'foo')
-  #   # => #<URI::HTTP:0x01ab80a0 URL:http://example.com/foo>
-  #
-  #   p URI.join('http://example.com', '/foo', '/bar')
-  #   # => #<URI::HTTP:0x01aaf0b0 URL:http://example.com/bar>
-  #
-  #   p URI.join('http://example.com', '/foo', 'bar')
-  #   # => #<URI::HTTP:0x801a92af0 URL:http://example.com/bar>
-  #
-  #   p URI.join('http://example.com', '/foo/', 'bar')
-  #   # => #<URI::HTTP:0x80135a3a0 URL:http://example.com/foo/bar>
-  #
-  #
   def self.join(*str)
     RFC3986_PARSER.join(*str)
   end
 
-  #
-  # == Synopsis
-  #
-  #   URI::extract(str[, schemes][,&blk])
-  #
-  # == Args
-  #
-  # +str+::
-  #   String to extract URIs from.
-  # +schemes+::
-  #   Limit URI matching to a specific schemes.
-  #
-  # == Description
-  #
-  # Extracts URIs from a string. If block given, iterates through all matched URIs.
-  # Returns nil if block given or array with matches.
-  #
-  # == Usage
-  #
-  #   require "uri"
-  #
-  #   URI.extract("text here http://foo.example.org/bla and here mailto:test@example.com and here also.")
-  #   # => ["http://foo.example.com/bla", "mailto:test@example.com"]
-  #
   def self.extract(str, schemes = nil, &block)
     warn "#{caller(1)[0]}: warning: URI.extract is obsolete" if $VERBOSE
     DEFAULT_PARSER.extract(str, schemes, &block)
   end
 
-  #
-  # == Synopsis
-  #
-  #   URI::regexp([match_schemes])
-  #
-  # == Args
-  #
-  # +match_schemes+::
-  #   Array of schemes. If given, resulting regexp matches to URIs
-  #   whose scheme is one of the match_schemes.
-  #
-  # == Description
-  # Returns a Regexp object which matches to URI-like strings.
-  # The Regexp object returned by this method includes arbitrary
-  # number of capture group (parentheses).  Never rely on it's number.
-  #
-  # == Usage
-  #
-  #   require 'uri'
-  #
-  #   # extract first URI from html_string
-  #   html_string.slice(URI.regexp)
-  #
-  #   # remove ftp URIs
-  #   html_string.sub(URI.regexp(['ftp'])
-  #
-  #   # You should not rely on the number of parentheses
-  #   html_string.scan(URI.regexp) do |*matches|
-  #     p $&
-  #   end
-  #
   def self.regexp(schemes = nil)
     warn "#{caller(1)[0]}: warning: URI.regexp is obsolete" if $VERBOSE
     DEFAULT_PARSER.make_regexp(schemes)
@@ -351,17 +119,6 @@ module URI
   HTML5ASCIIINCOMPAT = [Encoding::UTF_7, Encoding::UTF_16BE, Encoding::UTF_16LE,
     Encoding::UTF_32BE, Encoding::UTF_32LE] # :nodoc:
 
-  # Encode given +str+ to URL-encoded form data.
-  #
-  # This method doesn't convert *, -, ., 0-9, A-Z, _, a-z, but does convert SP
-  # (ASCII space) to + and converts others to %XX.
-  #
-  # If +enc+ is given, convert +str+ to the encoding before percent encoding.
-  #
-  # This is an implementation of
-  # http://www.w3.org/TR/2013/CR-html5-20130806/forms.html#url-encoded-form-data
-  #
-  # See URI.decode_www_form_component, URI.encode_www_form
   def self.encode_www_form_component(str, enc=nil)
     str = str.to_s.dup
     if str.encoding != Encoding::ASCII_8BIT
@@ -375,43 +132,11 @@ module URI
     str.force_encoding(Encoding::US_ASCII)
   end
 
-  # Decode given +str+ of URL-encoded form data.
-  #
-  # This decodes + to SP.
-  #
-  # See URI.encode_www_form_component, URI.decode_www_form
   def self.decode_www_form_component(str, enc=Encoding::UTF_8)
     raise ArgumentError, "invalid %-encoding (#{str})" if /%(?!\h\h)/ =~ str
     str.b.gsub(/\+|%\h\h/, TBLDECWWWCOMP_).force_encoding(enc)
   end
 
-  # Generate URL-encoded form data from given +enum+.
-  #
-  # This generates application/x-www-form-urlencoded data defined in HTML5
-  # from given an Enumerable object.
-  #
-  # This internally uses URI.encode_www_form_component(str).
-  #
-  # This method doesn't convert the encoding of given items, so convert them
-  # before call this method if you want to send data as other than original
-  # encoding or mixed encoding data. (Strings which are encoded in an HTML5
-  # ASCII incompatible encoding are converted to UTF-8.)
-  #
-  # This method doesn't handle files.  When you send a file, use
-  # multipart/form-data.
-  #
-  # This refers http://url.spec.whatwg.org/#concept-urlencoded-serializer
-  #
-  #    URI.encode_www_form([["q", "ruby"], ["lang", "en"]])
-  #    #=> "q=ruby&lang=en"
-  #    URI.encode_www_form("q" => "ruby", "lang" => "en")
-  #    #=> "q=ruby&lang=en"
-  #    URI.encode_www_form("q" => ["ruby", "perl"], "lang" => "en")
-  #    #=> "q=ruby&q=perl&lang=en"
-  #    URI.encode_www_form([["q", "ruby"], ["q", "perl"], ["lang", "en"]])
-  #    #=> "q=ruby&q=perl&lang=en"
-  #
-  # See URI.encode_www_form_component, URI.decode_www_form
   def self.encode_www_form(enum, enc=nil)
     enum.map do |k,v|
       if v.nil?
@@ -432,22 +157,6 @@ module URI
     end.join('&')
   end
 
-  # Decode URL-encoded form data from given +str+.
-  #
-  # This decodes application/x-www-form-urlencoded data
-  # and returns array of key-value array.
-  #
-  # This refers http://url.spec.whatwg.org/#concept-urlencoded-parser ,
-  # so this supports only &-separator, don't support ;-separator.
-  #
-  # ary = URI.decode_www_form("a=1&a=2&b=3")
-  # p ary                  #=> [['a', '1'], ['a', '2'], ['b', '3']]
-  # p ary.assoc('a').last  #=> '1'
-  # p ary.assoc('b').last  #=> '3'
-  # p ary.rassoc('a').last #=> '2'
-  # p Hash[ary]            # => {"a"=>"2", "b"=>"3"}
-  #
-  # See URI.decode_www_form_component, URI.encode_www_form
   def self.decode_www_form(str, enc=Encoding::UTF_8, separator: '&', use__charset_: false, isindex: false)
     raise ArgumentError, "the input of #{self.name}.#{__method__} must be ASCII only string" unless str.ascii_only?
     ary = []
@@ -488,7 +197,6 @@ module URI
   end
 
   private
-  # curl http://encoding.spec.whatwg.org/encodings.json|rb -rpp -rjson -e'H={};h={"shift_jis"=>"Windows-31J","euc-jp"=>"cp51932","iso-2022-jp"=>"cp50221","x-mac-cyrillic"=>"macCyrillic"};JSON($<.read).map{|x|x["encodings"]}.flatten.each{|x|Encoding.find(n=h.fetch(n=x["name"],n))rescue next;x["labels"].each{|y|H[y]=n}};pp H'
   WEB_ENCODINGS_ = {
     "unicode-1-1-utf-8"=>"utf-8",
     "utf-8"=>"utf-8",
@@ -695,9 +403,6 @@ module URI
     "utf-16le"=>"utf-16le"
   } # :nodoc:
 
-  # :nodoc:
-  # return encoding or nil
-  # http://encoding.spec.whatwg.org/#concept-encoding-get
   def self.get_encoding(label)
     Encoding.find(WEB_ENCODINGS_[label.to_str.strip.downcase]) rescue nil
   end
@@ -705,9 +410,6 @@ end # module URI
 
 module Kernel
 
-  #
-  # Returns +uri+ converted to a URI object.
-  #
   def URI(uri)
     if uri.is_a?(URI::Generic)
       uri

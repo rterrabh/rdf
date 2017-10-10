@@ -43,7 +43,6 @@ class Goffice < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <goffice/goffice.h>
       int main()
       {
           void

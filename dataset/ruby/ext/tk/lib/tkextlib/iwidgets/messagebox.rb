@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/messagebox.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -18,7 +14,6 @@ class Tk::Iwidgets::Messagebox
   WidgetClassName = 'Messagebox'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ####################################
 
   include TkItemConfigMethod
 
@@ -36,7 +31,6 @@ class Tk::Iwidgets::Messagebox
     if tagOrId.kind_of?(Tk::Itk::Component)
       tagOrId.name
     else
-      #_get_eval_string(tagOrId)
       tagOrId
     end
   end
@@ -56,7 +50,6 @@ class Tk::Iwidgets::Messagebox
   private :itemcget_tkstring, :itemcget, :itemcget_strict
   private :itemconfigure, :itemconfiginfo, :current_itemconfiginfo
 
-  ####################################
 
   def __strval_optkeys
     super() << 'filename' << 'savedir'

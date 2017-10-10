@@ -83,18 +83,12 @@ class Qt < Formula
     ENV.j1
     system "make", "install"
 
-    # what are these anyway?
     (bin+"pixeltool.app").rmtree
     (bin+"qhelpconverter.app").rmtree
-    # remove porting file for non-humans
     (prefix+"q3porting.xml").unlink if build.without? "qt3support"
 
-    # Some config scripts will only find Qt in a "Frameworks" folder
     frameworks.install_symlink Dir["#{lib}/*.framework"]
 
-    # The pkg-config files installed suggest that headers can be found in the
-    # `include` directory. Make this so by creating symlinks from `include` to
-    # the Frameworks' Headers folders.
     Pathname.glob("#{lib}/*.framework/Headers") do |path|
       include.install_symlink path => path.parent.basename(".framework")
     end

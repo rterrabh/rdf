@@ -22,7 +22,6 @@ class Pangomm < Formula
   end
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <pangomm.h>
       int main(int argc, char *argv[])
       {
         Pango::FontDescription fd;

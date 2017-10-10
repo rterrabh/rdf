@@ -8,7 +8,6 @@ class ClozureCl < Formula
   conflicts_with "cclive", :because => "both install a ccl binary"
 
   def install
-    # Get rid of all the .svn directories
     rm_rf Dir["**/.svn"]
 
     libexec.install Dir["*"]

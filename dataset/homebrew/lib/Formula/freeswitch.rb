@@ -33,12 +33,8 @@ class Freeswitch < Formula
   depends_on "speex"
   depends_on "sqlite"
 
-  #----------------------- Begin sound file resources -------------------------
   sounds_url_base = "https://files.freeswitch.org/releases/sounds"
 
-  #---------------
-  # music on hold
-  #---------------
   moh_version = "1.0.50" # from build/moh_version.txt
   resource "sounds-music-8000" do
     url "#{sounds_url_base}/freeswitch-sounds-music-8000-#{moh_version}.tar.gz"
@@ -61,9 +57,6 @@ class Freeswitch < Formula
     sha256 "d72e416ded81e0e8749145c82fee5c475841c143ee7b85f570f4cfb95c93c7e6"
   end
 
-  #-----------
-  # sounds-en
-  #-----------
   sounds_en_version = "1.0.50" # from build/sounds_version.txt
   resource "sounds-en-us-callie-8000" do
     url "#{sounds_url_base}/freeswitch-sounds-en-us-callie-8000-#{sounds_en_version}.tar.gz"
@@ -86,9 +79,6 @@ class Freeswitch < Formula
     sha256 "4bfa974cacb56cd99540831716bf7974dc1c99569a202b57120dc79e74877f1b"
   end
 
-  #-----------
-  # sounds-fr
-  #-----------
   sounds_fr_version = "1.0.18" # from build/sounds_version.txt
   resource "sounds-fr-ca-june-8000" do
     url "#{sounds_url_base}/freeswitch-sounds-fr-ca-june-8000-#{sounds_fr_version}.tar.gz"
@@ -111,9 +101,6 @@ class Freeswitch < Formula
     sha256 "4c7f6d373b72b5af5bad028b3b193d1b862abcee4466bb6f398f1d3f20befd0b"
   end
 
-  #-----------
-  # sounds-ru
-  #-----------
   sounds_ru_version = "1.0.50" # from build/sounds_version.txt
   resource "sounds-ru-RU-elena-8000" do
     url "#{sounds_url_base}/freeswitch-sounds-ru-RU-elena-8000-#{sounds_ru_version}.tar.gz"
@@ -136,12 +123,10 @@ class Freeswitch < Formula
     sha256 "fc67a97ef4db62b4559ecd30ee7da710a7f848f585cf7190c9d0ca39946c2999"
   end
 
-  #------------------------ End sound file resources --------------------------
 
   def install
     system "./bootstrap.sh", "-j"
 
-    # tiff will fail to find OpenGL unless told not to use X
     inreplace "libs/tiff-4.0.2/configure.gnu", "--with-pic", "--with-pic --without-x"
 
     system "./configure", "--disable-dependency-tracking",
@@ -154,7 +139,6 @@ class Freeswitch < Formula
     system "make", "install", "all"
 
     if build.with?("moh")
-      # Should be equivalent to: system "make", "cd-moh-install"
       mkdir_p prefix/"sounds/music"
       [8, 16, 32, 48].each do |n|
         resource("sounds-music-#{n}000").stage do
@@ -164,7 +148,6 @@ class Freeswitch < Formula
     end
 
     if build.with?("sounds-en")
-      # Should be equivalent to: system "make", "cd-sounds-install"
       mkdir_p prefix/"sounds/en"
       [8, 16, 32, 48].each do |n|
         resource("sounds-en-us-callie-#{n}000").stage do
@@ -174,7 +157,6 @@ class Freeswitch < Formula
     end
 
     if build.with?("sounds-fr")
-      # Should be equivalent to: system "make", "cd-sounds-fr-install"
       mkdir_p prefix/"sounds/fr"
       [8, 16, 32, 48].each do |n|
         resource("sounds-fr-ca-june-#{n}000").stage do
@@ -184,7 +166,6 @@ class Freeswitch < Formula
     end
 
     if build.with?("sounds-ru")
-      # Should be equivalent to: system "make", "cd-sounds-ru-install"
       mkdir_p prefix/"sounds/ru"
       [8, 16, 32, 48].each do |n|
         resource("sounds-ru-RU-elena-#{n}000").stage do

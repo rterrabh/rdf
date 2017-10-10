@@ -1,12 +1,3 @@
-#
-# cgihandler.rb -- CGIHandler Class
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2001 TAKAHASHI Masayoshi, GOTOU Yuuzou
-# Copyright (c) 2002 Internet Programming with Ruby writers. All rights
-# reserved.
-#
-# $IPR: cgihandler.rb,v 1.27 2003/03/21 19:56:01 gotoyuzo Exp $
 
 require 'rbconfig'
 require 'tempfile'
@@ -16,20 +7,11 @@ require 'webrick/httpservlet/abstract'
 module WEBrick
   module HTTPServlet
 
-    ##
-    # Servlet for handling CGI scripts
-    #
-    # Example:
-    #
-    #  server.mount('/cgi/my_script', WEBrick::HTTPServlet::CGIHandler,
-    #               '/path/to/my_script')
 
     class CGIHandler < AbstractServlet
       Ruby = RbConfig.ruby # :nodoc:
       CGIRunner = "\"#{Ruby}\" \"#{WEBrick::Config::LIBDIR}/httpservlet/cgi_runner.rb\"" # :nodoc:
 
-      ##
-      # Creates a new CGI script servlet for the script at +name+
 
       def initialize(server, name)
         super(server, name)
@@ -38,7 +20,6 @@ module WEBrick
         @cgicmd = "#{CGIRunner} #{server[:CGIInterpreter]}"
       end
 
-      # :stopdoc:
 
       def do_GET(req, res)
         cgi_in = IO::popen(@cgicmd, "wb")
@@ -96,7 +77,6 @@ module WEBrick
             header.delete('status')
           end
           if header.has_key?('location')
-            # RFC 3875 6.2.3, 6.2.4
             res.status = 302 unless (300...400) === res.status
           end
           if header.has_key?('set-cookie')
@@ -113,7 +93,6 @@ module WEBrick
       end
       alias do_POST do_GET
 
-      # :startdoc:
     end
 
   end

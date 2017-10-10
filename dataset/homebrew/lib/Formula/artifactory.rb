@@ -9,32 +9,24 @@ class Artifactory < Formula
   option "with-low-heap", "Run artifactory with low Java memory options. Useful for development machines. Do not use in production."
 
   def install
-    # Remove Windows binaries
     rm_f Dir["bin/*.bat"]
     rm_f Dir["bin/*.exe"]
 
-    # Set correct working directory
     inreplace "bin/artifactory.sh",
       'export ARTIFACTORY_HOME="$(cd "$(dirname "${artBinDir}")" && pwd)"',
       "export ARTIFACTORY_HOME=#{libexec}"
 
-    # Reduce memory consumption for non production use
     inreplace "bin/artifactory.default",
       "-server -Xms512m -Xmx2g",
       "-Xms128m -Xmx768m" if build.with? "low-heap"
 
     libexec.install Dir["*"]
 
-    # Launch Script
     bin.install_symlink libexec/"bin/artifactory.sh"
-    # Memory Options
     bin.install_symlink libexec/"bin/artifactory.default"
   end
 
   def post_install
-    # Create persistent data directory. Artifactory heavily relies on the data
-    # directory being directly under ARTIFACTORY_HOME.
-    # Therefore, we symlink the data dir to var.
     data = var/"artifactory"
     data.mkpath
 

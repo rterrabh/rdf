@@ -1,7 +1,3 @@
-##
-# A GitSpecification represents a gem that is sourced from a git repository
-# and is being loaded through a gem dependencies file through the +git:+
-# option.
 
 class Gem::Resolver::GitSpecification < Gem::Resolver::SpecSpecification
 
@@ -16,9 +12,6 @@ class Gem::Resolver::GitSpecification < Gem::Resolver::SpecSpecification
     spec.dependencies << dependency
   end
 
-  ##
-  # Installing a git gem only involves building the extensions and generating
-  # the executables.
 
   def install options = {}
     require 'rubygems/installer'

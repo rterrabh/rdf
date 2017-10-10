@@ -31,21 +31,17 @@ module ActiveAdmin
         helper ::ActiveAdmin::ViewHelpers
       end
 
-      # Redirect to the default namespace on logout
       def root_path
         namespace = ActiveAdmin.application.default_namespace.presence
         root_path_method = [namespace, :root_path].compact.join('_')
 
         path = if Helpers::Routes.respond_to? root_path_method
-                 #nodyna <ID:send-34> <SD COMPLEX (change-prone variables)>
+                 #nodyna <send-14> <SD COMPLEX (change-prone variables)>
                  Helpers::Routes.send root_path_method
                else
-                 # Guess a root_path when url_helpers not helpful
                  "/#{namespace}"
                end
 
-        # NOTE: `relative_url_root` is deprecated by rails.
-        #       Remove prefix here if it is removed completely.
         prefix = Rails.configuration.action_controller[:relative_url_root] || ''
         prefix + path
       end

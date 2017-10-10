@@ -17,7 +17,6 @@ module ActionView
           @auto_index = retrieve_autoindex(Regexp.last_match.pre_match) if Regexp.last_match
         end
 
-        # This is what child classes implement.
         def render
           raise NotImplementedError, "Subclasses must implement a render method"
         end
@@ -25,7 +24,7 @@ module ActionView
         private
 
         def value(object)
-          #nodyna <ID:send-54> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1228> <SD COMPLEX (change-prone variables)>
           object.public_send @method_name if object
         end
 
@@ -34,7 +33,7 @@ module ActionView
             method_before_type_cast = @method_name + "_before_type_cast"
 
             if value_came_from_user?(object) && object.respond_to?(method_before_type_cast)
-              #nodyna <ID:send-55> <SD COMPLEX (change-prone variables)>
+              #nodyna <send-1229> <SD COMPLEX (change-prone variables)>
               object.public_send(method_before_type_cast)
             else
               value(object)
@@ -44,7 +43,7 @@ module ActionView
 
         def value_came_from_user?(object)
           method_name = "#{@method_name}_came_from_user?"
-          #nodyna <ID:send-56> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1230> <SD COMPLEX (change-prone variables)>
           !object.respond_to?(method_name) || object.public_send(method_name)
         end
 
@@ -52,14 +51,15 @@ module ActionView
           if object
             object
           elsif @template_object.instance_variable_defined?("@#{@object_name}")
+            #nodyna <instance_variable_get-1231> <not yet classified>
             @template_object.instance_variable_get("@#{@object_name}")
           end
         rescue NameError
-          # As @object_name may contain the nested syntax (item[subobject]) we need to fallback to nil.
           nil
         end
 
         def retrieve_autoindex(pre_match)
+          #nodyna <instance_variable_get-1232> <not yet classified>
           object = self.object || @template_object.instance_variable_get("@#{pre_match}")
           if object && object.respond_to?(:to_param)
             object.to_param

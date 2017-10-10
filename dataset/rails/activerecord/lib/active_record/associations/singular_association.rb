@@ -1,7 +1,6 @@
 module ActiveRecord
   module Associations
     class SingularAssociation < Association #:nodoc:
-      # Implements the reader method, e.g. foo.bar for Foo.has_one :bar
       def reader(force_reload = false)
         if force_reload && klass
           klass.uncached { reload }
@@ -12,7 +11,6 @@ module ActiveRecord
         target
       end
 
-      # Implements the writer method, e.g. foo.bar= for Foo.belongs_to :bar
       def writer(record)
         replace(record)
       end

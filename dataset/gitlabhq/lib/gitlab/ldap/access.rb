@@ -1,7 +1,3 @@
-# LDAP authorization model
-#
-# * Check if we are allowed access (not blocked)
-#
 module Gitlab
   module LDAP
     class Access
@@ -35,7 +31,6 @@ module Gitlab
         if Gitlab::LDAP::Person.find_by_dn(user.ldap_identity.extern_uid, adapter)
           return true unless ldap_config.active_directory
 
-          # Block user in GitLab if he/she was blocked in AD
           if Gitlab::LDAP::Person.disabled_via_active_directory?(user.ldap_identity.extern_uid, adapter)
             user.block unless user.blocked?
             false

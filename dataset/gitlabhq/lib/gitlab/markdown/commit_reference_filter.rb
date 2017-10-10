@@ -1,23 +1,8 @@
 module Gitlab
   module Markdown
-    # HTML filter that replaces commit references with links.
-    #
-    # This filter supports cross-project references.
     class CommitReferenceFilter < ReferenceFilter
       include CrossProjectReference
 
-      # Public: Find commit references in text
-      #
-      #   CommitReferenceFilter.references_in(text) do |match, commit, project_ref|
-      #     "<a href=...>#{commit}</a>"
-      #   end
-      #
-      # text - String text to search.
-      #
-      # Yields the String match, the String commit identifier, and an optional
-      # String of the external project reference.
-      #
-      # Returns a String replaced with the return of the block.
       def self.references_in(text)
         text.gsub(Commit.reference_pattern) do |match|
           yield match, $~[:commit], $~[:project]
@@ -30,12 +15,6 @@ module Gitlab
         end
       end
 
-      # Replace commit references in text with links to the commit specified.
-      #
-      # text - String text to replace references in.
-      #
-      # Returns a String with commit references replaced with links. All links
-      # have `gfm` and `gfm-commit` class names attached for styling.
       def commit_link_filter(text)
         self.class.references_in(text) do |match, commit_ref, project_ref|
           project = self.project_from_ref(project_ref)

@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class ShareVisibility < ActiveRecord::Base
   belongs_to :contact
@@ -16,11 +13,6 @@ class ShareVisibility < ActiveRecord::Base
 
   validate :not_public
 
-  # Perform a batch import, given a set of contacts and a shareable
-  # @note performs a bulk insert in mySQL; performs linear insertions in postgres
-  # @param contacts [Array<Contact>] Recipients
-  # @param share [Shareable]
-  # @return [void]
   def self.batch_import(contact_ids, share)
     return false unless ShareVisibility.new(:shareable_id => share.id, :shareable_type => share.class.to_s).valid?
 

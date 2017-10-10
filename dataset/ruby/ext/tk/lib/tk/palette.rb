@@ -1,7 +1,3 @@
-#
-#   tk/palette.rb : methods for Tcl/Tk standard library 'palette.tcl'
-#                     1998/06/21 by Hidetoshi Nagai <nagai@ai.kyutech.ac.jp>
-#
 require 'tk'
 
 module TkPalette
@@ -42,7 +38,6 @@ module TkPalette
           win[key] = colors[key]
         end
       rescue
-        # ignore
       end
     }
 

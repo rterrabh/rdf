@@ -20,7 +20,6 @@ class Mandoc < Formula
   def install
     localconfig = [
 
-      # Sane prefixes.
       "PREFIX=#{prefix}",
       "INCLUDEDIR=#{include}",
       "LIBDIR=#{lib}",
@@ -28,17 +27,11 @@ class Mandoc < Formula
       "WWWPREFIX=#{prefix}/var/www",
       "EXAMPLEDIR=#{share}/examples",
 
-      # Executable names, where utilities would be replaced/duplicated.
-      # The mdocml versions of the utilities are definitely *not* ready
-      # for prime-time on Darwin, though some changes in HEAD are promising.
-      # The "bsd" prefix (like bsdtar, bsdmake) is more informative than "m".
       "BINM_MAN=bsdman",
       "BINM_APROPOS=bsdapropos",
       "BINM_WHATIS=bsdwhatis",
       "BINM_MAKEWHATIS=bsdmakewhatis",	# default is "makewhatis".
 
-      # These are names for *section 7* pages only. Several other pages are
-      # prefixed "mandoc_", similar to the "groff_" pages.
       "MANM_MAN=man",
       "MANM_MDOC=mdoc",
       "MANM_ROFF=mandoc_roff", # This is the only one that conflicts (groff).
@@ -47,8 +40,6 @@ class Mandoc < Formula
 
       "OSNAME='Mac OS X #{MacOS.version}'", # Bottom corner signature line.
 
-      # Not quite sure what to do here. The default ("/usr/share", etc.) needs
-      # sudoer privileges, or will error. So just brew's manpages for now?
       "MANPATH_DEFAULT=#{HOMEBREW_PREFIX}/share/man",
 
       "HAVE_MANPATH=0",   # Our `manpath` is a symlink to system `man`.
@@ -64,9 +55,6 @@ class Mandoc < Formula
     (buildpath/"configure.local").write localconfig.join("\n")
     system "./configure"
 
-    # I've tried twice to send a bug report on this to tech@mdocml.bsd.lv.
-    # In theory, it should show up with:
-    # search.gmane.org/?query=jobserver&group=gmane.comp.tools.mdocml.devel
     ENV.deparallelize do
       system "make"
       system "make", "install"

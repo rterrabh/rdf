@@ -4,8 +4,6 @@ class Fontconfig < Formula
   url "http://fontconfig.org/release/fontconfig-2.11.1.tar.bz2"
   sha256 "dc62447533bca844463a3c3fd4083b57c90f18a70506e7a9f4936b5a1e516a99"
 
-  # The bottle tooling is too lenient and thinks fontconfig
-  # is relocatable, but it has hardcoded paths in the executables.
   bottle do
     cellar :any
     revision 3
@@ -21,10 +19,6 @@ class Fontconfig < Formula
   depends_on "pkg-config" => :build
   depends_on "freetype"
 
-  # Reverts commit http://cgit.freedesktop.org/fontconfig/commit/?id=7a6622f25cdfab5ab775324bef1833b67109801b,
-  # which breaks caching font directories containing subdirectories
-  # See: https://github.com/Homebrew/homebrew/issues/28111
-  # Reported upstream, message to mailing list is waiting moderation.
   patch :DATA
 
   def install
@@ -208,9 +202,6 @@ index 21c6c7c..941abba 100644
 -    return NULL;
 -}
 -
- #define __fcfs__
- #include "fcaliastail.h"
- #undef __fcfs__
 diff --git a/src/fcint.h b/src/fcint.h
 index cdf2dab..362ea6f 100644
 --- a/src/fcint.h
@@ -252,6 +243,3 @@ index 986cca3..0614ac2 100644
      return head_serialized;
  }
 -
- #define __fcpat__
- #include "fcaliastail.h"
- #include "fcftaliastail.h"

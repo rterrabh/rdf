@@ -1,7 +1,4 @@
 module ActionController #:nodoc:
-  # This module is responsible to provide `rescue_from` helpers
-  # to controllers and configure when detailed exceptions must be
-  # shown.
   module Rescue
     extend ActiveSupport::Concern
     include ActiveSupport::Rescuable
@@ -15,11 +12,6 @@ module ActionController #:nodoc:
       super(exception)
     end
 
-    # Override this method if you want to customize when detailed
-    # exceptions must be shown. This method is only called when
-    # consider_all_requests_local is false. By default, it returns
-    # false, but someone may set it to `request.local?` so local
-    # requests in production still shows the detailed exception pages.
     def show_detailed_exceptions?
       false
     end

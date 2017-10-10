@@ -4,39 +4,26 @@ require 'rubygems/errors'
 require 'rubygems/text'
 require 'rubygems/name_tuple'
 
-##
-# SpecFetcher handles metadata updates from remote gem repositories.
 
 class Gem::SpecFetcher
 
   include Gem::UserInteraction
   include Gem::Text
 
-  ##
-  # Cache of latest specs
 
   attr_reader :latest_specs # :nodoc:
 
-  ##
-  # Sources for this SpecFetcher
 
   attr_reader :sources # :nodoc:
 
-  ##
-  # Cache of all released specs
 
   attr_reader :specs # :nodoc:
 
-  ##
-  # Cache of prerelease specs
 
   attr_reader :prerelease_specs # :nodoc:
 
   @fetcher = nil
 
-  ##
-  # Default fetcher instance.  Use this instead of ::new to reduce object
-  # allocation.
 
   def self.fetcher
     @fetcher ||= new
@@ -46,12 +33,6 @@ class Gem::SpecFetcher
     @fetcher = fetcher
   end
 
-  ##
-  # Creates a new SpecFetcher.  Ordinarily you want to use the default fetcher
-  # from Gem::SpecFetcher::fetcher which uses the Gem.sources.
-  #
-  # If you need to retrieve specifications from a different +source+, you can
-  # send it as an argument.
 
   def initialize sources = nil
     @sources = sources || Gem.sources
@@ -76,11 +57,6 @@ class Gem::SpecFetcher
     @fetcher = Gem::RemoteFetcher.fetcher
   end
 
-  ##
-  #
-  # Find and fetch gem name tuples that match +dependency+.
-  #
-  # If +matching_platform+ is false, gems for all platforms are returned.
 
   def search_for_dependency(dependency, matching_platform=true)
     found = {}
@@ -138,8 +114,6 @@ class Gem::SpecFetcher
   end
 
 
-  ##
-  # Return all gem name tuples who's names match +obj+
 
   def detect(type=:complete)
     tuples = []
@@ -157,10 +131,6 @@ class Gem::SpecFetcher
   end
 
 
-  ##
-  # Find and fetch specs that match +dependency+.
-  #
-  # If +matching_platform+ is false, gems for all platforms are returned.
 
   def spec_for_dependency(dependency, matching_platform=true)
     tuples, errors = search_for_dependency(dependency, matching_platform)
@@ -179,9 +149,6 @@ class Gem::SpecFetcher
     return [specs, errors]
   end
 
-  ##
-  # Suggests gems based on the supplied +gem_name+. Returns an array of
-  # alternative gem names.
 
   def suggest_gems_from_name gem_name
     gem_name        = gem_name.downcase.tr('_-', '')
@@ -205,15 +172,6 @@ class Gem::SpecFetcher
     matches.first(5).map { |name, dist| name }
   end
 
-  ##
-  # Returns a list of gems available for each source in Gem::sources.
-  #
-  # +type+ can be one of 3 values:
-  # :released   => Return the list of all released specs
-  # :complete   => Return the list of all specs
-  # :latest     => Return the list of only the highest version of each gem
-  # :prerelease => Return the list of all prerelease only specs
-  #
 
   def available_specs(type)
     errors = []
@@ -253,9 +211,6 @@ class Gem::SpecFetcher
     [list, errors]
   end
 
-  ##
-  # Retrieves NameTuples from +source+ of the given +type+ (:prerelease,
-  # etc.).  If +gracefully_ignore+ is true, errors are ignored.
 
   def tuples_for(source, type, gracefully_ignore=false) # :nodoc:
     @caches[type][source.uri] ||=

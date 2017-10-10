@@ -18,12 +18,12 @@ class CustomRenderer < AbstractController::Base
   end
 
   def cookies
-    #nodyna <ID:send-6> <SD EASY (private methods)>
+    #nodyna <send-354> <SD EASY (private methods)>
     @parent.send(:cookies)
   end
 
   def session
-    #nodyna <ID:send-7> <SD EASY (private methods)>
+    #nodyna <send-355> <SD EASY (private methods)>
     @parent.send(:session)
   end
 

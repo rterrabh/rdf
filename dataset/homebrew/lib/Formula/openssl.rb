@@ -130,19 +130,15 @@ class Openssl < Formula
   def caveats; <<-EOS.undent
     A CA file has been bootstrapped using certificates from the system
     keychain. To add additional certificates, place .pem files in
-      #{openssldir}/certs
 
     and run
-      #{opt_bin}/c_rehash
     EOS
   end
 
   test do
-    # Make sure the necessary .cnf file exists, otherwise OpenSSL gets moody.
     assert (HOMEBREW_PREFIX/"etc/openssl/openssl.cnf").exist?,
             "OpenSSL requires the .cnf file for some functionality"
 
-    # Check OpenSSL itself functions as expected.
     (testpath/"testfile.txt").write("This is a test file")
     expected_checksum = "e2d0fe1585a63ec6009c8016ff8dda8b17719a637405a4e23c0ff81339148249"
     system "#{bin}/openssl", "dgst", "-sha256", "-out", "checksum.txt", "testfile.txt"

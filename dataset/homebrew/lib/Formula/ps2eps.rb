@@ -18,7 +18,6 @@ class Ps2eps < Formula
     bin.install "bbox"
     (libexec/"bin").install "bin/ps2eps"
     (bin/"ps2eps").write <<-EOS.undent
-      #!/bin/sh
       perl -S #{libexec}/bin/ps2eps $*
     EOS
     share.install "doc/man"

@@ -27,9 +27,6 @@ class Libspatialite < Formula
   depends_on "pkg-config" => :build
   depends_on "proj"
   depends_on "geos"
-  # Needs SQLite > 3.7.3 which rules out system SQLite on Snow Leopard and
-  # below. Also needs dynamic extension support which rules out system SQLite
-  # on Lion. Finally, RTree index support is required as well.
   depends_on "sqlite"
   depends_on "libxml2" => :recommended
   depends_on "freexl" => :recommended
@@ -38,15 +35,10 @@ class Libspatialite < Formula
   def install
     system "autoreconf", "-fi" if build.head?
 
-    # New SQLite3 extension won't load via SELECT load_extension("mod_spatialite");
-    # unless named mod_spatialite.dylib (should actually be mod_spatialite.bundle)
-    # See: https://groups.google.com/forum/#!topic/spatialite-users/EqJAB8FYRdI
-    #      needs upstream fixes in both SQLite and libtool
     inreplace "configure",
               "shrext_cmds='`test .$module = .yes && echo .so || echo .dylib`'",
               "shrext_cmds='.dylib'"
 
-    # Ensure Homebrew's libsqlite is found before the system version.
     sqlite = Formula["sqlite"]
     ENV.append "LDFLAGS", "-L#{sqlite.opt_lib}"
     ENV.append "CFLAGS", "-I#{sqlite.opt_include}"
@@ -74,7 +66,6 @@ class Libspatialite < Formula
   end
 
   test do
-    # Verify mod_spatialite extension can be loaded using Homebrew's SQLite
     system "echo \"SELECT load_extension('#{opt_lib}/mod_spatialite');\" | #{Formula["sqlite"].opt_bin}/sqlite3"
   end
 end

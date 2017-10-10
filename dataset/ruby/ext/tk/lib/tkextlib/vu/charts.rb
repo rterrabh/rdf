@@ -1,11 +1,6 @@
-#
-#  charts -- Create and manipulate canvas Add-On Items
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tk/canvas'
 
-# call setup script  --  <libdir>/tkextlib/vu.rb
 require 'tkextlib/vu.rb'
 
 module Tk

@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 require 'spec_helper'
 
@@ -96,7 +95,6 @@ describe Spree::ShippingRate, :type => :model do
     end
   end
 
-  # Regression test for #3829
   context "#shipping_method" do
     it "can be retrieved" do
       expect(shipping_rate.shipping_method.reload).to eq(shipping_method)

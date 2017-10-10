@@ -11,7 +11,6 @@ class Aggregate < Formula
     sha1 "c2a27bf04eb3efcafbf4b271e7cfb7b520eac7f4" => :lion
   end
 
-  # Note - Freecode is no longer being updated & an alternative homepage should be found if possible.
 
   conflicts_with "crush-tools", :because => "both install an `aggregate` binary"
 
@@ -19,7 +18,6 @@ class Aggregate < Formula
     bin.mkpath
     man1.mkpath
 
-    # Makefile doesn't respect --mandir or MANDIR
     inreplace "Makefile.in", "$(prefix)/man/man1", "$(prefix)/share/man/man1"
 
     system "./configure", "--disable-debug",

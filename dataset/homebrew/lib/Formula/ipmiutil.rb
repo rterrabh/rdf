@@ -13,9 +13,6 @@ class Ipmiutil < Formula
 
   depends_on "openssl"
 
-  # Ensure ipmiutil does not try to link against (disabled) OpenSSL's MD2
-  # support. Patch submitted upstream in
-  # http://sourceforge.net/p/ipmiutil/mailman/message/33373858/
   patch :DATA
 
   def install
@@ -25,7 +22,6 @@ class Ipmiutil < Formula
                           "--enable-gpl"
 
     system "make", "TMPDIR=#{ENV["TMPDIR"]}"
-    # DESTDIR is needed to make everything go where we want it.
     system "make", "prefix=/",
                    "DESTDIR=#{prefix}",
                    "varto=#{var}/lib/#{name}",

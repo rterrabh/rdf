@@ -28,15 +28,8 @@ class Libsigsegv < Formula
   end
 
   test do
-    # Sourced from tests/efault1.c in tarball.
     (testpath/"test.c").write <<-EOS.undent
-      #include "sigsegv.h"
 
-      #include <errno.h>
-      #include <fcntl.h>
-      #include <stdio.h>
-      #include <stdlib.h>
-      #include <unistd.h>
 
       const char *null_pointer = NULL;
       static int

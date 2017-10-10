@@ -4,19 +4,16 @@ module ActionController
 
     RENDER_FORMATS_IN_PRIORITY = [:body, :text, :plain, :html]
 
-    # Before processing, set the request formats in current controller formats.
     def process_action(*) #:nodoc:
       self.formats = request.formats.map(&:ref).compact
       super
     end
 
-    # Check for double render errors and set the content_type after rendering.
     def render(*args) #:nodoc:
       raise ::AbstractController::DoubleRenderError if self.response_body
       super
     end
 
-    # Overwrite render_to_string because body can now be set to a rack body.
     def render_to_string(*)
       result = super
       if result.respond_to?(:each)
@@ -52,14 +49,12 @@ module ActionController
       end
     end
 
-    # Normalize arguments by catching blocks and setting them on :update.
     def _normalize_args(action=nil, options={}, &blk) #:nodoc:
       options = super
       options[:update] = blk if block_given?
       options
     end
 
-    # Normalize both text and status options.
     def _normalize_options(options) #:nodoc:
       _normalize_text(options)
 
@@ -86,7 +81,6 @@ module ActionController
       end
     end
 
-    # Process controller specific options, as status, content-type and location.
     def _process_options(options) #:nodoc:
       status, content_type, location = options.values_at(:status, :content_type, :location)
 

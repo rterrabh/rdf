@@ -5,7 +5,6 @@ class Cdecl < Formula
   sha256 "9ee6402be7e4f5bb5e6ee60c6b9ea3862935bf070e6cecd0ab0842305406f3ac"
 
   def install
-    # Fix namespace clash with Lion's getline
     inreplace "cdecl.c", "getline", "cdecl_getline"
 
     bin.mkpath

@@ -22,7 +22,6 @@ class Mtr < Formula
   depends_on "glib" => :optional
 
   def install
-    # We need to add this because nameserver8_compat.h has been removed in Snow Leopard
     ENV["LIBS"] = "-lresolv"
     args = %W[
       --disable-dependency-tracking

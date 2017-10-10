@@ -35,8 +35,6 @@ module Spree
 
     private
 
-    # attempts to perform the refund.
-    # raises an error if the refund fails.
     def perform!
       return true if transaction_id.present?
 
@@ -49,7 +47,6 @@ module Spree
       update_order
     end
 
-    # return an activemerchant response object if successful or else raise an error
     def process!(credit_cents)
       response = if payment.payment_method.payment_profiles_supported?
         payment.payment_method.credit(credit_cents, payment.source, payment.transaction_id, {originator: self})

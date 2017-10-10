@@ -13,7 +13,6 @@ class Cake < Formula
 
     bin.mkpath
     (bin/"cake").write <<-EOS.undent
-      #!/bin/bash
       mono #{libexec}/Cake.exe "$@"
     EOS
   end

@@ -23,7 +23,6 @@ class GnomeDocUtils < Formula
   end
 
   def install
-    # Find our docbook catalog
     ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
     ENV.append_path "PYTHONPATH", "#{Formula["libxml2"].opt_lib}/python2.7/site-packages"
 
@@ -31,7 +30,6 @@ class GnomeDocUtils < Formula
                           "--disable-scrollkeeper",
                           "--enable-build-utils=yes"
 
-    # Compilation doesn't work right if we jump straight to make install
     system "make"
     system "make", "install"
   end

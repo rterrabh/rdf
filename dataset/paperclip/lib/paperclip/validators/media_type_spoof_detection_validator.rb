@@ -12,11 +12,6 @@ module Paperclip
     end
 
     module HelperMethods
-      # Places ActiveModel validations on the presence of a file.
-      # Options:
-      # * +if+: A lambda or name of an instance method. Validation will only
-      #   be run if this lambda or method returns true.
-      # * +unless+: Same as +if+ but validates if lambda or method returns false.
       def validates_media_type_spoof_detection(*attr_names)
         options = _merge_attributes(attr_names)
         validates_with MediaTypeSpoofDetectionValidator, options.dup

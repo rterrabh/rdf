@@ -28,7 +28,6 @@ class Libfreehand < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libfreehand/libfreehand.h>
       int main() {
         libfreehand::FreeHandDocument::isSupported(0);
       }

@@ -24,7 +24,6 @@ module Spree
       self[:amount] = Spree::LocalizedNumber.parse(price)
     end
 
-    # Remove variant default_scope `deleted_at: nil`
     def variant
       Spree::Variant.unscoped { super }
     end

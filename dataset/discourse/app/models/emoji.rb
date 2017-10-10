@@ -4,7 +4,6 @@ class Emoji
   attr_reader :path
   attr_accessor :name, :url
 
-  # whitelist emojis so that new user can post emojis
   Post::white_listed_image_classes << "emoji"
 
   def initialize(path = nil)
@@ -64,14 +63,10 @@ class Emoji
     extension = File.extname(file.original_filename)
     path = "#{Emoji.base_directory}/#{name}#{extension}"
 
-    # store the emoji
     FileUtils.mkdir_p(Pathname.new(path).dirname)
     File.open(path, "wb") { |f| f << file.tempfile.read }
-    # clear the cache
     Emoji.clear_cache
-    # launch resize job
     Jobs.enqueue(:resize_emoji, path: path)
-    # return created emoji
     Emoji[name]
   end
 

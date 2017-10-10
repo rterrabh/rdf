@@ -1,6 +1,5 @@
 class Unread
 
-  # This module helps us calculate unread and new post counts
 
   def initialize(topic, topic_user)
     @topic = topic

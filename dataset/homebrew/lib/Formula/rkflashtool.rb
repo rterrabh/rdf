@@ -15,7 +15,6 @@ class Rkflashtool < Formula
 
   depends_on "libusb"
 
-  # Add file 'version.h' that has been forgotten in the tarball
   resource "version" do
     url "https://downloads.sourceforge.net/project/rkflashtool/rkflashtool-5.1/version.h"
     sha256 "b7bd8e3c66170d5f6e6a68c5add677ad365e37b4121251de87ad29e7fdf06cd6"
@@ -25,7 +24,6 @@ class Rkflashtool < Formula
     resource("version").stage { buildpath.install "version.h" } if build.stable?
     system "make"
 
-    # No 'install' method found in Makefile
     bin.install "rkflashtool", "rkcrc", "rkmisc", "rkpad",
       "rkparameters", "rkparametersblock", "rkunpack", "rkunsign"
   end

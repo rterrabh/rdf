@@ -5,22 +5,18 @@ module RailsAdmin
     module Fields
       module Types
         class PolymorphicAssociation < RailsAdmin::Config::Fields::Types::BelongsToAssociation
-          # Register field type for the type loader
           RailsAdmin::Config::Fields::Types.register(self)
 
           register_instance_option :partial do
             :form_polymorphic_association
           end
 
-          # Accessor whether association is visible or not. By default
-          # association checks that any of the child models are included in
-          # configuration.
           register_instance_option :visible? do
             associated_model_config.length > 0
           end
 
           register_instance_option :formatted_value do
-            #nodyna <ID:send-22> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1357> <SD COMPLEX (change-prone variables)>
             (o = value) && o.send(RailsAdmin.config(o).object_label_method)
           end
 
@@ -32,12 +28,10 @@ module RailsAdmin
             false
           end
 
-          # TODO: not supported yet
           register_instance_option :associated_collection_cache_all do
             false
           end
 
-          # TODO: not supported yet
           register_instance_option :associated_collection_scope do
             nil
           end
@@ -50,7 +44,7 @@ module RailsAdmin
             return [] if type.blank?
             config = RailsAdmin.config(type)
             config.abstract_model.all.collect do |object|
-              #nodyna <ID:send-23> <SD COMPLEX (array)>
+              #nodyna <send-1358> <SD COMPLEX (array)>
               [object.send(config.object_label_method), object.id]
             end
           end
@@ -72,9 +66,8 @@ module RailsAdmin
             ::Hash[*types.collect { |v| [v[0], bindings[:view].index_path(v[1])] }.flatten]
           end
 
-          # Reader for field's value
           def value
-            #nodyna <ID:send-24> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1359> <SD COMPLEX (change-prone variables)>
             bindings[:object].send(association.name)
           end
         end

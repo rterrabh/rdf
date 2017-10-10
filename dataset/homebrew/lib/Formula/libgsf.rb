@@ -38,7 +38,6 @@ class Libgsf < Formula
   test do
     system bin/"gsf", "--help"
     (testpath/"test.c").write <<-EOS.undent
-      #include <gsf/gsf-utils.h>
       int main()
       {
           void

@@ -15,7 +15,6 @@ class Colortail < Formula
   depends_on "automake" => :build
   depends_on "autoconf" => :build
 
-  # Upstream PR to fix the build on ML
   patch do
     url "https://github.com/joakim666/colortail/pull/12.diff"
     sha256 "2bb9963f6fc586c8faff3b51a48896cf09c68c4229c39c6ae978a59cb58d0fd7"

@@ -49,36 +49,25 @@ class Upload < ActiveRecord::Base
     File.extname(original_filename)
   end
 
-  # list of image types that will be cropped
   CROPPED_IMAGE_TYPES ||= ["avatar", "profile_background", "card_background"]
 
-  # options
-  #   - content_type
-  #   - origin
-  #   - image_type
   def self.create_for(user_id, file, filename, filesize, options = {})
     DistributedMutex.synchronize("upload_#{user_id}_#{filename}") do
-      # do some work on images
       if FileHelper.is_image?(filename)
         if filename =~ /\.svg$/i
           svg = Nokogiri::XML(file).at_css("svg")
           w = svg["width"].to_i
           h = svg["height"].to_i
         else
-          # fix orientation first (but not for GIFs)
           fix_image_orientation(file.path) unless filename =~ /\.GIF$/i
-          # retrieve image info
           image_info = FastImage.new(file) rescue nil
           w, h = *(image_info.try(:size) || [0, 0])
         end
 
-        # default size
         width, height = ImageSizer.resize(w, h)
 
-        # make sure we're at the beginning of the file (both FastImage and Nokogiri move the pointer)
         file.rewind
 
-        # crop images depending on their type
         if CROPPED_IMAGE_TYPES.include?(options[:image_type])
           allow_animation = SiteSetting.allow_animated_thumbnails
           max_pixel_ratio = Discourse::PIXEL_RATIOS.max
@@ -98,26 +87,20 @@ class Upload < ActiveRecord::Base
           OptimizedImage.resize(file.path, file.path, width, height, allow_animation: allow_animation)
         end
 
-        # optimize image
         ImageOptim.new.optimize_image!(file.path) rescue nil
       end
 
-      # compute the sha of the file
       sha1 = Digest::SHA1.file(file).hexdigest
 
-      # do we already have that upload?
       upload = find_by(sha1: sha1)
 
-      # make sure the previous upload has not failed
       if upload && upload.url.blank?
         upload.destroy
         upload = nil
       end
 
-      # return the previous upload if any
       return upload unless upload.nil?
 
-      # create the upload otherwise
       upload = Upload.new
       upload.user_id           = user_id
       upload.original_filename = filename
@@ -134,7 +117,6 @@ class Upload < ActiveRecord::Base
 
       return upload unless upload.save
 
-      # store the file and update its url
       File.open(file.path) do |f|
         url = Discourse.store.store_upload(f, upload, options[:content_type])
         if url.present?
@@ -151,9 +133,7 @@ class Upload < ActiveRecord::Base
 
   def self.get_from_url(url)
     return if url.blank?
-    # we store relative urls, so we need to remove any host/cdn
     url = url.sub(/^#{Discourse.asset_host}/i, "") if Discourse.asset_host.present?
-    # when using s3, we need to replace with the absolute base url
     url = url.sub(/^#{SiteSetting.s3_cdn_url}/i, Discourse.store.absolute_base_url) if SiteSetting.s3_cdn_url.present?
     Upload.find_by(url: url)
   end
@@ -174,11 +154,8 @@ class Upload < ActiveRecord::Base
             .order(id: :desc)
             .each do |upload|
         begin
-          # keep track of the url
           previous_url = upload.url.dup
-          # where is the file currently stored?
           external = previous_url =~ /^\/\//
-          # download if external
           if external
             url = SiteSetting.scheme + ":" + previous_url
             file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
@@ -186,24 +163,19 @@ class Upload < ActiveRecord::Base
           else
             path = local_store.path_for(upload)
           end
-          # compute SHA if missing
           if upload.sha1.blank?
             upload.sha1 = Digest::SHA1.file(path).hexdigest
           end
-          # optimize if image
           if FileHelper.is_image?(File.basename(path))
             ImageOptim.new.optimize_image!(path)
           end
-          # store to new location & update the filesize
           File.open(path) do |f|
             upload.url = Discourse.store.store_upload(f, upload)
             upload.filesize = f.size
             upload.save
           end
-          # remap the URLs
           DbHelper.remap(UrlHelper.absolute(previous_url), upload.url) unless external
           DbHelper.remap(previous_url, upload.url)
-          # remove the old file (when local)
           unless external
             FileUtils.rm(path, force: true) rescue nil
           end
@@ -221,27 +193,3 @@ class Upload < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: uploads
-#
-#  id                :integer          not null, primary key
-#  user_id           :integer          not null
-#  original_filename :string(255)      not null
-#  filesize          :integer          not null
-#  width             :integer
-#  height            :integer
-#  url               :string(255)      not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  sha1              :string(40)
-#  origin            :string(1000)
-#  retain_hours      :integer
-#
-# Indexes
-#
-#  index_uploads_on_id_and_url  (id,url)
-#  index_uploads_on_sha1        (sha1) UNIQUE
-#  index_uploads_on_url         (url)
-#  index_uploads_on_user_id     (user_id)
-#

@@ -15,9 +15,6 @@ class GnuTime < Formula
 
   option "with-default-names", "Do not prepend 'g' to the binary"
 
-  # Fixes issue with main returning void rather than int
-  # https://trac.macports.org/ticket/32860
-  # https://trac.macports.org/browser/trunk/dports/sysutils/gtime/files/patch-time.c.diff?rev=88924
   patch :DATA
 
   def install

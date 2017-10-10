@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/buttonbox.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/bwidget.rb'
@@ -34,7 +30,6 @@ class Tk::BWidget::ButtonBox
     if tagOrId.kind_of?(Tk::Button)
       return index(tagOrId[:text])
     end
-    # index(tagOrId.to_s)
     index(_get_eval_string(tagOrId))
   end
 
@@ -42,10 +37,10 @@ class Tk::BWidget::ButtonBox
     win = window(tk_send('add', *hash_kv(keys)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-7> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1631> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-108> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1632> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -72,10 +67,10 @@ class Tk::BWidget::ButtonBox
     win = window(tk_send('insert', tagid(idx), *hash_kv(keys)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-8> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1633> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-109> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1634> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

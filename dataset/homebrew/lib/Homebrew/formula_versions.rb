@@ -35,11 +35,8 @@ class FormulaVersions
       begin
         nostdout { yield Formulary.factory(path.to_s) }
       rescue *IGNORED_EXCEPTIONS => e
-        # We rescue these so that we can skip bad versions and
-        # continue walking the history
         ohai "#{e} in #{name} at revision #{rev}", e.backtrace if ARGV.debug?
       rescue FormulaUnavailableError
-        # Suppress this error
       end
     end
   end

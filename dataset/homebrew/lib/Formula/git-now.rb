@@ -13,7 +13,6 @@ class GitNow < Formula
     system "make", "prefix=#{libexec}", "install"
 
     (bin/"git-now").write <<-EOS.undent
-      #!/bin/sh
       PATH=#{Formula["gnu-getopt"].opt_bin}:$PATH #{libexec}/bin/git-now "$@"
     EOS
 

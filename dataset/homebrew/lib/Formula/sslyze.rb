@@ -31,9 +31,6 @@ class Sslyze < Formula
   end
 
   def install
-    # openssl fails on parallel build. Related issues:
-    # - http://rt.openssl.org/Ticket/Display.html?id=3736
-    # - http://rt.openssl.org/Ticket/Display.html?id=3737
     ENV.deparallelize
 
     resource("openssl").stage do

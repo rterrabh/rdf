@@ -14,7 +14,6 @@ class Tidyp < Formula
                           "--prefix=#{prefix}"
     system "make", "install"
 
-    # Use the newly brewed tidyp to generate the manual
     resource("manual").stage do
       system "#{bin}/tidyp -xml-help > tidyp1.xml"
       system "#{bin}/tidyp -xml-config > tidyp-config.xml"

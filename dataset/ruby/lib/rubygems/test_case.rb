@@ -1,9 +1,7 @@
-# TODO: $SAFE = 1
 
 begin
   gem 'minitest', '~> 4.0'
 rescue NoMethodError, Gem::LoadError
-  # for ruby tests
 end
 
 if defined? Gem::QuickLoader
@@ -17,8 +15,6 @@ begin
 rescue Gem::LoadError
 end
 
-# We have to load these up front because otherwise we'll try to load
-# them while we're testing rubygems, and thus we can't actually load them.
 unless Gem::Dependency.new('rdoc', '>= 3.10').matching_specs.empty?
   gem 'rdoc'
   gem 'json'
@@ -43,46 +39,27 @@ require 'rubygems/mock_gem_ui'
 
 module Gem
 
-  ##
-  # Allows setting the gem path searcher.  This method is available when
-  # requiring 'rubygems/test_case'
 
   def self.searcher=(searcher)
     @searcher = searcher
   end
 
-  ##
-  # Allows toggling Windows behavior.  This method is available when requiring
-  # 'rubygems/test_case'
 
   def self.win_platform=(val)
     @@win_platform = val
   end
 
-  ##
-  # Allows setting path to Ruby.  This method is available when requiring
-  # 'rubygems/test_case'
 
   def self.ruby= ruby
     @ruby = ruby
   end
 
-  ##
-  # When rubygems/test_case is required the default user interaction is a
-  # MockGemUi.
 
   module DefaultUserInteraction
     @ui = Gem::MockGemUi.new
   end
 end
 
-##
-# RubyGemTestCase provides a variety of methods for testing rubygems and
-# gem-related behavior in a sandbox.  Through RubyGemTestCase you can install
-# and uninstall gems, fetch remote gems through a stub fetcher and be assured
-# your normal set of gems is not affected.
-#
-# Tests are always run at a safe level of 1.
 
 class Gem::TestCase < MiniTest::Unit::TestCase
 
@@ -109,15 +86,11 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     assert_equal expected.sort, loaded.sort if expected
   end
 
-  # TODO: move to minitest
   def assert_path_exists path, msg = nil
     msg = message(msg) { "Expected path '#{path}' to exist" }
     assert File.exist?(path), msg
   end
 
-  ##
-  # Sets the ENABLE_SHARED entry in RbConfig::CONFIG to +value+ and restores
-  # the original value when the block ends
 
   def enable_shared value
     enable_shared = RbConfig::CONFIG['ENABLE_SHARED']
@@ -132,7 +105,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     end
   end
 
-  # TODO: move to minitest
   def refute_path_exists path, msg = nil
     msg = message(msg) { "Expected path '#{path}' to not exist" }
     refute File.exist?(path), msg
@@ -204,16 +176,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
 
   @@initial_reset = false
 
-  ##
-  # #setup prepares a sandboxed location to install gems.  All installs are
-  # directed to a temporary directory.  All install plugins are removed.
-  #
-  # If the +RUBY+ environment variable is set the given path is used for
-  # Gem::ruby.  The local platform is set to <tt>i386-mswin32</tt> for Windows
-  # or <tt>i686-darwin8.10.1</tt> otherwise.
-  #
-  # If the +KEEP_FILES+ environment variable is set the files will not be
-  # removed from <tt>/tmp/test_rubygems_#{$$}.#{Time.now.to_i}</tt>.
 
   def setup
     super
@@ -240,11 +202,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
 
     FileUtils.mkdir_p @tempdir
 
-    # This makes the tempdir consistent on OS X.
-    # File.expand_path Dir.tmpdir                      #=> "/var/..."
-    # Dir.chdir Dir.tmpdir do File.expand_path '.' end #=> "/private/var/..."
-    # TODO use File#realpath above instead of #expand_path once 1.8 support is
-    # dropped.
     Dir.chdir @tempdir do
       @tempdir = File.expand_path '.'
       @tempdir.untaint
@@ -271,8 +228,9 @@ class Gem::TestCase < MiniTest::Unit::TestCase
 
     @orig_ENV_HOME = ENV['HOME']
     ENV['HOME'] = @userhome
+    #nodyna <instance_variable_set-2294> <not yet classified>
     Gem.instance_variable_set :@user_home, nil
-    #nodyna <ID:send-51> <SD EASY (private methods)>
+    #nodyna <send-2295> <SD EASY (private methods)>
     Gem.send :remove_instance_variable, :@ruby_version if
       Gem.instance_variables.include? :@ruby_version
 
@@ -284,12 +242,10 @@ class Gem::TestCase < MiniTest::Unit::TestCase
 
     @default_dir = File.join @tempdir, 'default'
     @default_spec_dir = File.join @default_dir, "specifications", "default"
+    #nodyna <instance_variable_set-2296> <not yet classified>
     Gem.instance_variable_set :@default_dir, @default_dir
     FileUtils.mkdir_p @default_spec_dir
 
-    # We use Gem::Specification.reset the first time only so that if there
-    # are unresolved deps that leak into the whole test suite, they're at least
-    # reported once.
     if @@initial_reset
       Gem::Specification.unresolved_deps.clear # done to avoid cross-test warnings
     else
@@ -329,9 +285,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     @marshal_version = "#{Marshal::MAJOR_VERSION}.#{Marshal::MINOR_VERSION}"
   end
 
-  ##
-  # #teardown restores the process to its original state and removes the
-  # tempdir unless the +KEEP_FILES+ environment variable was set.
 
   def teardown
     $LOAD_PATH.replace @orig_LOAD_PATH if @orig_LOAD_PATH
@@ -363,6 +316,7 @@ class Gem::TestCase < MiniTest::Unit::TestCase
       ENV.delete 'HOME'
     end
 
+    #nodyna <instance_variable_set-2297> <not yet classified>
     Gem.instance_variable_set :@default_dir, nil
 
     ENV['GEM_PRIVATE_KEY_PASSPHRASE'] = @orig_gem_private_key_passphrase
@@ -407,11 +361,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     Gem.pre_uninstall_hooks.clear
   end
 
-  ##
-  # A git_gem is used with a gem dependencies file.  The gem created here
-  # has no files, just a gem specification for the given +name+ and +version+.
-  #
-  # Yields the +specification+ to the block, if given
 
   def git_gem name = 'a', version = 1
     have_git?
@@ -448,8 +397,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     return name, git_spec.version, directory, head
   end
 
-  ##
-  # Skips this test unless you have a git executable
 
   def have_git?
     return if in_path? @git
@@ -465,8 +412,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     end
   end
 
-  ##
-  # Builds and installs the Gem::Specification +spec+
 
   def install_gem spec, options = {}
     require 'rubygems/installer'
@@ -486,15 +431,11 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     Gem::Installer.new(gem, options.merge({:wrappers => true})).install
   end
 
-  ##
-  # Builds and installs the Gem::Specification +spec+ into the user dir
 
   def install_gem_user spec
     install_gem spec, :user_install => true
   end
 
-  ##
-  # Uninstalls the Gem::Specification +spec+
   def uninstall_gem spec
     require 'rubygems/uninstaller'
 
@@ -502,9 +443,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
                          :executables => true, :user_install => true).uninstall
   end
 
-  ##
-  # creates a temporary directory with hax
-  # TODO: deprecate and remove
 
   def create_tmpdir
     tmpdir = nil
@@ -514,8 +452,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     return tmpdir
   end
 
-  ##
-  # Enables pretty-print for all tests
 
   def mu_pp(obj)
     s = ''
@@ -524,8 +460,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     s.chomp
   end
 
-  ##
-  # Reads a Marshal file at +path+
 
   def read_cache(path)
     open path.dup.untaint, 'rb' do |io|
@@ -533,15 +467,11 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     end
   end
 
-  ##
-  # Reads a binary file at +path+
 
   def read_binary(path)
     Gem.read_binary path
   end
 
-  ##
-  # Writes a binary file to +path+ which is relative to +@gemhome+
 
   def write_file(path)
     path = File.join @gemhome, path unless Pathname.new(path).absolute?
@@ -559,15 +489,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     Gem::Specification.map(&:full_name)
   end
 
-  ##
-  # Creates a Gem::Specification with a minimum of extra work.  +name+ and
-  # +version+ are the gem's name and version,  platform, author, email,
-  # homepage, summary and description are defaulted.  The specification is
-  # yielded for customization.
-  #
-  # The gem is added to the installed gems in +@gemhome+ and the runtime.
-  #
-  # Use this with #write_file to build an installed gem.
 
   def quick_gem(name, version='2')
     require 'rubygems/specification'
@@ -598,16 +519,11 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     return spec
   end
 
-  ##
-  # TODO:  remove in RubyGems 3.0
 
   def quick_spec name, version = '2' # :nodoc:
     util_spec name, version
   end
 
-  ##
-  # Builds a gem from +spec+ and places it in <tt>File.join @gemhome,
-  # 'cache'</tt>.  Automatically creates files based on +spec.files+
 
   def util_build_gem(spec)
     dir = spec.gem_dir
@@ -634,8 +550,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     FileUtils.rm_rf spec.spec_file
   end
 
-  ##
-  # Removes all installed gems from +@gemhome+.
 
   def util_clear_gems
     FileUtils.rm_rf File.join(@gemhome, "gems") # TODO: use Gem::Dirs
@@ -645,16 +559,12 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     Gem::Specification.reset
   end
 
-  ##
-  # Install the provided specs
 
   def install_specs(*specs)
     Gem::Specification.add_specs(*specs)
     Gem.searcher = nil
   end
 
-  ##
-  # Installs the provided default specs including writing the spec file
 
   def install_default_gems(*specs)
     install_default_specs(*specs)
@@ -666,8 +576,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     end
   end
 
-  ##
-  # Install the provided default specs
 
   def install_default_specs(*specs)
     install_specs(*specs)
@@ -691,10 +599,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     $LOADED_FEATURES.replace old_loaded_features
   end
 
-  ##
-  # new_spec is deprecated as it is never used.
-  #
-  # TODO:  remove in RubyGems 3.0
 
   def new_spec name, version, deps = nil, *files # :nodoc:
     require 'rubygems/specification'
@@ -755,9 +659,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     spec
   end
 
-  ##
-  # Creates a spec with +name+, +version+.  +deps+ can specify the dependency
-  # or a +block+ can be given for full customization of the specification.
 
   def util_spec name, version = 2, deps = nil # :yields: specification
     raise "deps or block, not both" if deps and block_given?
@@ -776,8 +677,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     end
 
     if deps then
-      # Since Hash#each is unordered in 1.8, sort the keys and iterate that
-      # way so the tests are deterministic on all implementations.
       deps.keys.sort.each do |n|
         spec.add_dependency n, (deps[n] || '>= 0')
       end
@@ -790,21 +689,12 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     return spec
   end
 
-  ##
-  # Creates a gem with +name+, +version+ and +deps+.  The specification will
-  # be yielded before gem creation for customization.  The gem will be placed
-  # in <tt>File.join @tempdir, 'gems'</tt>.  The specification and .gem file
-  # location are returned.
 
   def util_gem(name, version, deps = nil, &block)
-    # TODO: deprecate
     raise "deps or block, not both" if deps and block
 
     if deps then
       block = proc do |s|
-        # Since Hash#each is unordered in 1.8, sort
-        # the keys and iterate that way so the tests are
-        # deterministic on all implementations.
         deps.keys.sort.each do |n|
           s.add_dependency n, (deps[n] || '>= 0')
         end
@@ -825,8 +715,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     [spec, cache_file]
   end
 
-  ##
-  # Gzips +data+.
 
   def util_gzip(data)
     out = StringIO.new
@@ -838,23 +726,6 @@ class Gem::TestCase < MiniTest::Unit::TestCase
     out.string
   end
 
-  ##
-  # Creates several default gems which all have a lib/code.rb file.  The gems
-  # are not installed but are available in the cache dir.
-  #
-  # +@a1+:: gem a version 1, this is the best-described gem.
-  # +@a2+:: gem a version 2
-  # +@a3a:: gem a version 3.a
-  # +@a_evil9+:: gem a_evil version 9, use this to ensure similarly-named gems
-  #              don't collide with a.
-  # +@b2+:: gem b version 2
-  # +@c1_2+:: gem c version 1.2
-  # +@pl1+:: gem pl version 1, this gem has a legacy platform of i386-linux.
-  #
-  # Additional +prerelease+ gems may also be created:
-  #
-  # +@a2_pre+:: gem a version 2.a
-  # TODO: nuke this and fix tests. this should speed up a lot
 
   def util_make_gems(prerelease = false)
     @a1 = quick_gem 'a', '1' do |s|
@@ -894,6 +765,7 @@ Also, a list:
       s.files = %w[lib/code.rb]
       s.require_paths = %w[lib]
       s.platform = Gem::Platform.new 'i386-linux'
+      #nodyna <instance_variable_set-2298> <not yet classified>
       s.instance_variable_set :@original_platform, 'i386-linux'
     end
 
@@ -920,24 +792,19 @@ Also, a list:
     FileUtils.rm_r File.join(@gemhome, "gems", @pl1.original_name)
   end
 
-  ##
-  # Set the platform to +arch+
 
   def util_set_arch(arch)
     RbConfig::CONFIG['arch'] = arch
     platform = Gem::Platform.new arch
 
+    #nodyna <instance_variable_set-2299> <not yet classified>
     Gem.instance_variable_set :@platforms, nil
+    #nodyna <instance_variable_set-2300> <not yet classified>
     Gem::Platform.instance_variable_set :@local, nil
 
     platform
   end
 
-  ##
-  # Sets up a fake fetcher using the gems from #util_make_gems.  Optionally
-  # additional +prerelease+ gems may be included.
-  #
-  # Gems created by this method may be fetched using Gem::RemoteFetcher.
 
   def util_setup_fake_fetcher(prerelease = false)
     require 'zlib'
@@ -958,18 +825,12 @@ Also, a list:
     Gem::RemoteFetcher.fetcher = @fetcher
   end
 
-  ##
-  # Add +spec+ to +@fetcher+ serving the data in the file +path+.
-  # +repo+ indicates which repo to make +spec+ appear to be in.
 
   def add_to_fetcher(spec, path=nil, repo=@gem_repo)
     path ||= spec.cache_file
     @fetcher.data["#{@gem_repo}gems/#{spec.file_name}"] = read_binary(path)
   end
 
-  ##
-  # Sets up Gem::SpecFetcher to return information from the gems in +specs+.
-  # Best used with +@all_gems+ from #util_setup_fake_fetcher.
 
   def util_setup_spec_fetcher(*specs)
     specs -= Gem::Specification._all
@@ -996,7 +857,6 @@ Also, a list:
       spec_fetcher.prerelease_specs[@uri] << spec.name_tuple
     end
 
-    # HACK for test_download_to_cache
     unless Gem::RemoteFetcher === @fetcher then
       v = Gem.marshal_version
 
@@ -1029,8 +889,6 @@ Also, a list:
     nil # force errors
   end
 
-  ##
-  # Deflates +data+
 
   def util_zip(data)
     Zlib::Deflate.deflate data
@@ -1039,127 +897,96 @@ Also, a list:
   def util_set_RUBY_VERSION(version, patchlevel = nil, revision = nil)
     if Gem.instance_variables.include? :@ruby_version or
        Gem.instance_variables.include? '@ruby_version' then
-      #nodyna <ID:send-51> <SD MODERATE (private methods)>
+      #nodyna <send-2301> <SD MODERATE (private methods)>
       Gem.send :remove_instance_variable, :@ruby_version
     end
 
     @RUBY_VERSION    = RUBY_VERSION
     @RUBY_PATCHLEVEL = RUBY_PATCHLEVEL if defined?(RUBY_PATCHLEVEL)
     @RUBY_REVISION   = RUBY_REVISION   if defined?(RUBY_REVISION)
-    #nodyna <ID:send-51> <SD MODERATE (private methods)>
+    #nodyna <send-2302> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_VERSION
-    #nodyna <ID:send-51> <SD MODERATE (private methods)>
+    #nodyna <send-2303> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_PATCHLEVEL if defined?(RUBY_PATCHLEVEL)
-    #nodyna <ID:send-51> <SD MODERATE (private methods)>
+    #nodyna <send-2304> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_REVISION   if defined?(RUBY_REVISION)
 
-    #nodyna <ID:const_set-29> <CS TRIVIAL (static values)>
+    #nodyna <const_set-2305> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_VERSION,    version
-    #nodyna <ID:const_set-30> <CS TRIVIAL (static values)>
+    #nodyna <const_set-2306> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_PATCHLEVEL, patchlevel if patchlevel
-    #nodyna <ID:const_set-31> <CS TRIVIAL (static values)>
+    #nodyna <const_set-2307> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_REVISION,   revision   if revision
   end
 
   def util_restore_RUBY_VERSION
-    #nodyna <ID:send-51> <SD MODERATE (private methods)>
+    #nodyna <send-2308> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_VERSION
-    #nodyna <ID:send-51> <SD MODERATE (private methods)>
+    #nodyna <send-2309> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_PATCHLEVEL if defined?(RUBY_PATCHLEVEL)
-    #nodyna <ID:send-51> <SD MODERATE (private methods)>
+    #nodyna <send-2310> <SD MODERATE (private methods)>
     Object.send :remove_const, :RUBY_REVISION   if defined?(RUBY_REVISION)
 
-    #nodyna <ID:const_set-32> <CS TRIVIAL (static values)>
+    #nodyna <const_set-2311> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_VERSION,    @RUBY_VERSION
-    #nodyna <ID:const_set-33> <CS TRIVIAL (static values)>
+    #nodyna <const_set-2312> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_PATCHLEVEL, @RUBY_PATCHLEVEL if
       defined?(@RUBY_PATCHLEVEL)
-    #nodyna <ID:const_set-34> <CS TRIVIAL (static values)>
+    #nodyna <const_set-2313> <CS TRIVIAL (static values)>
     Object.const_set :RUBY_REVISION,   @RUBY_REVISION   if
       defined?(@RUBY_REVISION)
   end
 
-  ##
-  # Is this test being run on a Windows platform?
 
   def self.win_platform?
     Gem.win_platform?
   end
 
-  ##
-  # Is this test being run on a Windows platform?
 
   def win_platform?
     Gem.win_platform?
   end
 
-  ##
-  # Returns whether or not we're on a version of Ruby built with VC++ (or
-  # Borland) versus Cygwin, Mingw, etc.
 
   def self.vc_windows?
     RUBY_PLATFORM.match('mswin')
   end
 
-  ##
-  # Returns whether or not we're on a version of Ruby built with VC++ (or
-  # Borland) versus Cygwin, Mingw, etc.
 
   def vc_windows?
     RUBY_PLATFORM.match('mswin')
   end
 
-  ##
-  # Returns the make command for the current platform. For versions of Ruby
-  # built on MS Windows with VC++ or Borland it will return 'nmake'. On all
-  # other platforms, including Cygwin, it will return 'make'.
 
   def self.make_command
     ENV["make"] || (vc_windows? ? 'nmake' : 'make')
   end
 
-  ##
-  # Returns the make command for the current platform. For versions of Ruby
-  # built on MS Windows with VC++ or Borland it will return 'nmake'. On all
-  # other platforms, including Cygwin, it will return 'make'.
 
   def make_command
     ENV["make"] || (vc_windows? ? 'nmake' : 'make')
   end
 
-  ##
-  # Returns whether or not the nmake command could be found.
 
   def nmake_found?
     system('nmake /? 1>NUL 2>&1')
   end
 
-  # In case we're building docs in a background process, this method waits for
-  # that process to exit (or if it's already been reaped, or never happened,
-  # swallows the Errno::ECHILD error).
   def wait_for_child_process_to_exit
     Process.wait if Process.respond_to?(:fork)
   rescue Errno::ECHILD
   end
 
-  ##
-  # Allows tests to use a random (but controlled) port number instead of
-  # a hardcoded one. This helps CI tools when running parallels builds on
-  # the same builder slave.
 
   def self.process_based_port
     @@process_based_port ||= 8000 + $$ % 1000
   end
 
-  ##
-  # See ::process_based_port
 
   def process_based_port
     self.class.process_based_port
   end
 
-  ##
-  # Allows the proper version of +rake+ to be used for the test.
 
   def build_rake_in(good=true)
     gem_ruby = Gem.ruby
@@ -1177,8 +1004,6 @@ Also, a list:
     end
   end
 
-  ##
-  # Finds the path to the Ruby executable
 
   def self.rubybin
     ruby = ENV["RUBY"]
@@ -1210,17 +1035,11 @@ Also, a list:
   @@good_rake = "#{rubybin} #{File.expand_path('../../../test/rubygems/good_rake.rb', __FILE__)}"
   @@bad_rake = "#{rubybin} #{File.expand_path('../../../test/rubygems/bad_rake.rb', __FILE__)}"
 
-  ##
-  # Construct a new Gem::Dependency.
 
   def dep name, *requirements
     Gem::Dependency.new name, *requirements
   end
 
-  ##
-  # Constructs a Gem::Resolver::DependencyRequest from a
-  # Gem::Dependency +dep+, a +from_name+ and +from_version+ requesting the
-  # dependency and a +parent+ DependencyRequest
 
   def dependency_request dep, from_name, from_version, parent = nil
     remote = Gem::Source.new @uri
@@ -1237,40 +1056,17 @@ Also, a list:
     Gem::Resolver::DependencyRequest.new dep, activation
   end
 
-  ##
-  # Constructs a new Gem::Requirement.
 
   def req *requirements
     return requirements.first if Gem::Requirement === requirements.first
     Gem::Requirement.create requirements
   end
 
-  ##
-  # Constructs a new Gem::Specification.
 
   def spec name, version, &block
     Gem::Specification.new name, v(version), &block
   end
 
-  ##
-  # Creates a SpecFetcher pre-filled with the gems or specs defined in the
-  # block.
-  #
-  # Yields a +fetcher+ object that responds to +spec+ and +gem+.  +spec+ adds
-  # a specification to the SpecFetcher while +gem+ adds both a specification
-  # and the gem data to the RemoteFetcher so the built gem can be downloaded.
-  #
-  # If only the a-3 gem is supposed to be downloaded you can save setup
-  # time by creating only specs for the other versions:
-  #
-  #   spec_fetcher do |fetcher|
-  #     fetcher.spec 'a', 1
-  #     fetcher.spec 'a', 2, 'b' => 3 # dependency on b = 3
-  #     fetcher.gem 'a', 3 do |spec|
-  #       # spec is a Gem::Specification
-  #       # ...
-  #     end
-  #   end
 
   def spec_fetcher repository = @gem_repo
     Gem::TestCase::SpecFetcherSetup.declare self, repository do |spec_fetcher_setup|
@@ -1278,18 +1074,11 @@ Also, a list:
     end
   end
 
-  ##
-  # Construct a new Gem::Version.
 
   def v string
     Gem::Version.create string
   end
 
-  ##
-  # A vendor_gem is used with a gem dependencies file.  The gem created here
-  # has no files, just a gem specification for the given +name+ and +version+.
-  #
-  # Yields the +specification+ to the block, if given
 
   def vendor_gem name = 'a', version = 1
     directory = File.join 'vendor', name
@@ -1307,19 +1096,12 @@ Also, a list:
     return name, vendor_spec.version, directory
   end
 
-  ##
-  # The StaticSet is a static set of gem specifications used for testing only.
-  # It is available by requiring Gem::TestCase.
 
   class StaticSet < Gem::Resolver::Set
 
-    ##
-    # A StaticSet ignores remote because it has a fixed set of gems.
 
     attr_accessor :remote
 
-    ##
-    # Creates a new StaticSet for the given +specs+
 
     def initialize(specs)
       super()
@@ -1329,15 +1111,11 @@ Also, a list:
       @remote = true
     end
 
-    ##
-    # Adds +spec+ to this set.
 
     def add spec
       @specs << spec
     end
 
-    ##
-    # Finds +dep+ in this set.
 
     def find_spec(dep)
       @specs.reverse_each do |s|
@@ -1345,16 +1123,11 @@ Also, a list:
       end
     end
 
-    ##
-    # Finds all gems matching +dep+ in this set.
 
     def find_all(dep)
       @specs.find_all { |s| dep.match? s, @prerelease }
     end
 
-    ##
-    # Loads a Gem::Specification from this set which has the given +name+,
-    # version +ver+, +platform+.  The +source+ is ignored.
 
     def load_spec name, ver, platform, source
       dep = Gem::Dependency.new name, ver
@@ -1369,8 +1142,6 @@ Also, a list:
     end
   end
 
-  ##
-  # Loads certificate named +cert_name+ from <tt>test/rubygems/</tt>.
 
   def self.load_cert cert_name
     cert_file = cert_path cert_name
@@ -1380,9 +1151,6 @@ Also, a list:
     OpenSSL::X509::Certificate.new cert
   end
 
-  ##
-  # Returns the path to the certificate named +cert_name+ from
-  # <tt>test/rubygems/</tt>.
 
   def self.cert_path cert_name
     if 32 == (Time.at(2**32) rescue 32) then
@@ -1396,8 +1164,6 @@ Also, a list:
     File.expand_path "../../../test/rubygems/#{cert_name}_cert.pem", __FILE__
   end
 
-  ##
-  # Loads an RSA private key named +key_name+ with +passphrase+ in <tt>test/rubygems/</tt>
 
   def self.load_key key_name, passphrase = nil
     key_file = key_path key_name
@@ -1407,15 +1173,11 @@ Also, a list:
     OpenSSL::PKey::RSA.new key, passphrase
   end
 
-  ##
-  # Returns the path to the key named +key_name+ from <tt>test/rubygems</tt>
 
   def self.key_path key_name
     File.expand_path "../../../test/rubygems/#{key_name}_key.pem", __FILE__
   end
 
-  # :stopdoc:
-  # only available in RubyGems tests
 
   PRIVATE_KEY_PASSPHRASE      = 'Foo bar'
 
@@ -1423,7 +1185,6 @@ Also, a list:
     PRIVATE_KEY                 = load_key 'private'
     PRIVATE_KEY_PATH            = key_path 'private'
 
-    # ENCRYPTED_PRIVATE_KEY is PRIVATE_KEY encrypted with PRIVATE_KEY_PASSPHRASE
     ENCRYPTED_PRIVATE_KEY       = load_key 'encrypted_private', PRIVATE_KEY_PASSPHRASE
     ENCRYPTED_PRIVATE_KEY_PATH  = key_path 'encrypted_private'
 

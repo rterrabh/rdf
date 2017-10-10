@@ -64,7 +64,7 @@ class UserEmailObserver < ActiveRecord::Observer
   end
 
   def after_commit(notification)
-    #nodyna <ID:send-198> <SD COMPLEX (private methods)>
+    #nodyna <send-388> <SD COMPLEX (private methods)>
     transaction_includes_action = notification.send(:transaction_include_any_action?, [:create])
 
     delegate_to_email_user notification if transaction_includes_action
@@ -81,7 +81,7 @@ class UserEmailObserver < ActiveRecord::Observer
     email_user   = EmailUser.new(notification)
     email_method = extract_notification_type notification
 
-    #nodyna <ID:send-199> <SD MODERATE (change-prone variables)>
+    #nodyna <send-389> <SD MODERATE (change-prone variables)>
     email_user.send(email_method) if email_user.respond_to? email_method
   end
 end

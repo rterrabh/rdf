@@ -12,8 +12,6 @@ class Linklint < Formula
   def install
     mv "READ_ME.txt", "README" unless build.devel?
 
-    # fix version number reported by linklint -version in beta
-    # note, upstream is abandoned, so inreplace instead of patch
     inreplace "linklint-#{version}", "2.3.1", version if build.devel?
 
     doc.install "README"

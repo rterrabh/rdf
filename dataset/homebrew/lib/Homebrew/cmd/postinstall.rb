@@ -11,8 +11,6 @@ module Homebrew
       -W0
       -I #{HOMEBREW_LOAD_PATH}
       --
-      #{HOMEBREW_LIBRARY_PATH}/postinstall.rb
-      #{formula.path}
     ].concat(ARGV.options_only)
 
     if Sandbox.available? && ARGV.sandbox?

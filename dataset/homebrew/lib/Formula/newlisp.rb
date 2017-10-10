@@ -22,7 +22,6 @@ class Newlisp < Formula
   patch :DATA
 
   def install
-    # Required to use our configuration
     ENV.append_to_cflags "-DNEWCONFIG -c"
 
     system "./configure-alt", "--prefix=#{prefix}", "--mandir=#{man}"

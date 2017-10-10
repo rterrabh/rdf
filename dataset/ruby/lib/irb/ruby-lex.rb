@@ -1,19 +1,8 @@
-#
-#   irb/ruby-lex.rb - ruby lexcal analyzer
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 require "e2mmap"
 require "irb/slex"
 require "irb/ruby-token"
 
-# :stopdoc:
 class RubyLex
 
   extend Exception2MessageMapper
@@ -74,7 +63,6 @@ class RubyLex
   attr_reader :line_no
   attr_reader :indent
 
-  # io functions
   def set_input(io, p = nil, &block)
     @io = io
     if p.respond_to?(:call)
@@ -508,7 +496,6 @@ class RubyLex
         ungetc
         identify_number
       else
-        # for "obj.if" etc.
         @lex_state = EXPR_DOT
         Token(TkDOT)
       end
@@ -763,14 +750,12 @@ class RubyLex
       token.concat getc
     end
 
-    # almost fix token
 
     case token
     when /^\$/
       return Token(TkGVAR, token)
     when /^\@\@/
       @lex_state = EXPR_END
-      # p Token(TkCVAR, token)
       return Token(TkCVAR, token)
     when /^\@/
       @lex_state = EXPR_END
@@ -782,18 +767,15 @@ class RubyLex
 
       token_c, *trans = TkReading2Token[token]
       if token_c
-        # reserved word?
 
         if (@lex_state != EXPR_BEG &&
             @lex_state != EXPR_FNAME &&
             trans[1])
-          # modifiers
           token_c = TkSymbol2Token[trans[1]]
           @lex_state = trans[0]
         else
           if @lex_state != EXPR_FNAME
             if ENINDENT_CLAUSE.include?(token)
-              # check for ``class = val'' etc.
               valid = true
               case token
               when "class"
@@ -805,7 +787,6 @@ class RubyLex
               when *ENINDENT_CLAUSE
                 valid = false if peek_match?(/^\s*([+\-\/*]?=|\*|<|>|\&|\|)/)
               else
-                # no nothing
               end
               if valid
                 if token == "do"
@@ -1163,8 +1144,6 @@ class RubyLex
         read_escape
       end
     else
-      # other characters
     end
   end
 end
-# :startdoc:

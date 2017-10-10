@@ -27,7 +27,7 @@ class Admin::UserFieldsController < Admin::AdminController
 
     Admin::UserFieldsController.columns.each do |col|
       unless field_params[col].nil?
-        #nodyna <ID:send-93> <SD MODERATE (array)>
+        #nodyna <send-450> <SD MODERATE (array)>
         field.send("#{col}=", field_params[col])
       end
     end

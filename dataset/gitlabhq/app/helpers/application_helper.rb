@@ -2,30 +2,10 @@ require 'digest/md5'
 require 'uri'
 
 module ApplicationHelper
-  # Check if a particular controller is the current one
-  #
-  # args - One or more controller names to check
-  #
-  # Examples
-  #
-  #   # On TreeController
-  #   current_controller?(:tree)           # => true
-  #   current_controller?(:commits)        # => false
-  #   current_controller?(:commits, :tree) # => true
   def current_controller?(*args)
     args.any? { |v| v.to_s.downcase == controller.controller_name }
   end
 
-  # Check if a particular action is the current one
-  #
-  # args - One or more action names to check
-  #
-  # Examples
-  #
-  #   # On Projects#new
-  #   current_action?(:new)           # => true
-  #   current_action?(:create)        # => false
-  #   current_action?(:new, :create)  # => true
   def current_action?(*args)
     args.any? { |v| v.to_s.downcase == action_name }
   end
@@ -103,7 +83,6 @@ module ApplicationHelper
       ['Tags', VersionSorter.rsort(repository.tag_names)]
     ]
 
-    # If reference is commit id - we should add it to branch/tag selectbox
     if(@ref && !options.flatten.include?(@ref) &&
        @ref =~ /\A[0-9a-zA-Z]{6,52}\z/)
       options << ['Commit', [@ref]]
@@ -113,26 +92,18 @@ module ApplicationHelper
   end
 
   def emoji_autocomplete_source
-    # should be an array of strings
-    # so to_s can be called, because it is sufficient and to_json is too slow
     Emoji.names.to_s
   end
 
-  # Define whenever show last push event
-  # with suggestion to create MR
   def show_last_push_widget?(event)
-    # Skip if event is not about added or modified non-master branch
     return false unless event && event.last_push_to_non_root? && !event.rm_ref?
 
     project = event.project
 
-    # Skip if project repo is empty or MR disabled
     return false unless project && !project.empty_repo? && project.merge_requests_enabled
 
-    # Skip if user already created appropriate MR
     return false if project.merge_requests.where(source_branch: event.branch_name).opened.any?
 
-    # Skip if user removed branch right after that
     return false unless project.repository.branch_names.include?(event.branch_name)
 
     true
@@ -153,12 +124,10 @@ module ApplicationHelper
     [namespace, controller.controller_name, controller.action_name].compact.join(':')
   end
 
-  # shortcut for gitlab config
   def gitlab_config
     Gitlab.config.gitlab
   end
 
-  # shortcut for gitlab extra config
   def extra_config
     Gitlab.config.extra
   end
@@ -179,23 +148,6 @@ module ApplicationHelper
     BroadcastMessage.current
   end
 
-  # Render a `time` element with Javascript-based relative date and tooltip
-  #
-  # time       - Time object
-  # placement  - Tooltip placement String (default: "top")
-  # html_class - Custom class for `time` element (default: "time_ago")
-  # skip_js    - When true, exclude the `script` tag (default: false)
-  #
-  # By default also includes a `script` element with Javascript necessary to
-  # initialize the `timeago` jQuery extension. If this method is called many
-  # times, for example rendering hundreds of commits, it's advisable to disable
-  # this behavior using the `skip_js` argument and re-initializing `timeago`
-  # manually once all of the elements have been rendered.
-  #
-  # A `js-timeago` class is always added to the element, even when a custom
-  # `html_class` argument is provided.
-  #
-  # Returns an HTML-safe String
   def time_ago_with_tooltip(time, placement: 'top', html_class: 'time_ago', skip_js: false)
     element = content_tag :time, time.to_s,
       class: "#{html_class} js-timeago",
@@ -298,10 +250,10 @@ module ApplicationHelper
       if project.nil?
         nil
       elsif current_controller?(:issues)
-        #nodyna <ID:send-128> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-524> <SD COMPLEX (change-prone variables)>
         project.issues.send(entity).count
       elsif current_controller?(:merge_requests)
-        #nodyna <ID:send-129> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-525> <SD COMPLEX (change-prone variables)>
         project.merge_requests.send(entity).count
       end
 

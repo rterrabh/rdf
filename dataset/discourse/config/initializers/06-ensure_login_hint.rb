@@ -1,4 +1,3 @@
-# Some sanity checking so we don't count on an unindexed column on boot
 if User.limit(20).count < 20 && User.where(admin: true).count == 1
   notice =
     if GlobalSetting.developer_emails.blank?
@@ -18,5 +17,4 @@ if User.limit(20).count < 20 && User.where(admin: true).count == 1
     SiteSetting.has_login_hint = true
   end
 
-# we may be booting with no User table eg: first migration, just skip
 end rescue nil

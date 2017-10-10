@@ -3,72 +3,41 @@ require 'fiddle/value'
 require 'fiddle/pack'
 
 module Fiddle
-  # C struct shell
   class CStruct
-    # accessor to Fiddle::CStructEntity
     def CStruct.entity_class
       CStructEntity
     end
   end
 
-  # C union shell
   class CUnion
-    # accessor to Fiddle::CUnionEntity
     def CUnion.entity_class
       CUnionEntity
     end
   end
 
-  # Used to construct C classes (CUnion, CStruct, etc)
-  #
-  # Fiddle::Importer#struct and Fiddle::Importer#union wrap this functionality in an
-  # easy-to-use manner.
   module CStructBuilder
-    # Construct a new class given a C:
-    # * class +klass+ (CUnion, CStruct, or other that provide an
-    #   #entity_class)
-    # * +types+ (Fiddle::TYPE_INT, Fiddle::TYPE_SIZE_T, etc., see the C types
-    #   constants)
-    # * corresponding +members+
-    #
-    # Fiddle::Importer#struct and Fiddle::Importer#union wrap this functionality in an
-    # easy-to-use manner.
-    #
-    # Example:
-    #
-    #   require 'fiddle/struct'
-    #   require 'fiddle/cparser'
-    #
-    #   include Fiddle::CParser
-    #
-    #   types, members = parse_struct_signature(['int i','char c'])
-    #
-    #   MyStruct = Fiddle::CStructBuilder.create(Fiddle::CUnion, types, members)
-    #
-    #   obj = MyStruct.allocate
-    #
     def create(klass, types, members)
       new_class = Class.new(klass){
-        #nodyna <ID:define_method-9> <DM COMPLEX (events)>
+        #nodyna <define_method-1489> <DM COMPLEX (events)>
         define_method(:initialize){|addr|
           @entity = klass.entity_class.new(addr, types)
           @entity.assign_names(members)
         }
-        #nodyna <ID:define_method-10> <DM MODERATE (events)>
+        #nodyna <define_method-1490> <DM MODERATE (events)>
         define_method(:to_ptr){ @entity }
-        #nodyna <ID:define_method-11> <DM MODERATE (events)>
+        #nodyna <define_method-1491> <DM MODERATE (events)>
         define_method(:to_i){ @entity.to_i }
         members.each{|name|
-          #nodyna <ID:define_method-12> <DM COMPLEX (events)>
+          #nodyna <define_method-1492> <DM COMPLEX (events)>
           define_method(name){ @entity[name] }
-          #nodyna <ID:define_method-13> <DM COMPLEX (events)>
+          #nodyna <define_method-1493> <DM COMPLEX (events)>
           define_method(name + "="){|val| @entity[name] = val }
         }
       }
       size = klass.entity_class.size(types)
+      #nodyna <module_eval-1494> <not yet classified>
       new_class.module_eval(<<-EOS, __FILE__, __LINE__+1)
         def new_class.size()
-          #{size}
         end
         def new_class.malloc()
           addr = Fiddle.malloc(#{size})
@@ -80,26 +49,15 @@ module Fiddle
     module_function :create
   end
 
-  # A C struct wrapper
   class CStructEntity < Fiddle::Pointer
     include PackInfo
     include ValueUtil
 
-    # Allocates a C struct with the +types+ provided.
-    #
-    # When the instance is garbage collected, the C function +func+ is called.
     def CStructEntity.malloc(types, func = nil)
       addr = Fiddle.malloc(CStructEntity.size(types))
       CStructEntity.new(addr, types, func)
     end
 
-    # Returns the offset for the packed sizes for the given +types+.
-    #
-    #   Fiddle::CStructEntity.size(
-    #     [ Fiddle::TYPE_DOUBLE,
-    #       Fiddle::TYPE_INT,
-    #       Fiddle::TYPE_CHAR,
-    #       Fiddle::TYPE_VOIDP ]) #=> 24
     def CStructEntity.size(types)
       offset = 0
 
@@ -116,22 +74,15 @@ module Fiddle
       PackInfo.align(offset, max_align)
     end
 
-    # Wraps the C pointer +addr+ as a C struct with the given +types+.
-    #
-    # When the instance is garbage collected, the C function +func+ is called.
-    #
-    # See also Fiddle::Pointer.new
     def initialize(addr, types, func = nil)
       set_ctypes(types)
       super(addr, @size, func)
     end
 
-    # Set the names of the +members+ in this C struct
     def assign_names(members)
       @members = members
     end
 
-    # Calculates the offsets and sizes for the given +types+ in the struct.
     def set_ctypes(types)
       @ctypes = types
       @offset = []
@@ -152,7 +103,6 @@ module Fiddle
       @size = PackInfo.align(offset, max_align)
     end
 
-    # Fetch struct member +name+
     def [](name)
       idx = @members.index(name)
       if( idx.nil? )
@@ -186,7 +136,6 @@ module Fiddle
       end
     end
 
-    # Set struct member +name+, to value +val+
     def []=(name, val)
       idx = @members.index(name)
       if( idx.nil? )
@@ -211,33 +160,20 @@ module Fiddle
     end
   end
 
-  # A C union wrapper
   class CUnionEntity < CStructEntity
     include PackInfo
 
-    # Allocates a C union the +types+ provided.
-    #
-    # When the instance is garbage collected, the C function +func+ is called.
     def CUnionEntity.malloc(types, func=nil)
       addr = Fiddle.malloc(CUnionEntity.size(types))
       CUnionEntity.new(addr, types, func)
     end
 
-    # Returns the size needed for the union with the given +types+.
-    #
-    #   Fiddle::CUnionEntity.size(
-    #     [ Fiddle::TYPE_DOUBLE,
-    #       Fiddle::TYPE_INT,
-    #       Fiddle::TYPE_CHAR,
-    #       Fiddle::TYPE_VOIDP ]) #=> 8
     def CUnionEntity.size(types)
       types.map { |type, count = 1|
         PackInfo::SIZE_MAP[type] * count
       }.max
     end
 
-    # Calculate the necessary offset and for each union member with the given
-    # +types+
     def set_ctypes(types)
       @ctypes = types
       @offset = Array.new(types.length, 0)

@@ -1,22 +1,11 @@
 require 'rubygems'
 require 'rubygems/user_interaction'
 
-##
-# Cleans up after a partially-failed uninstall or for an invalid
-# Gem::Specification.
-#
-# If a specification was removed by hand this will remove any remaining files.
-#
-# If a corrupt specification was installed this will clean up warnings by
-# removing the bogus specification.
 
 class Gem::Doctor
 
   include Gem::UserInteraction
 
-  ##
-  # Maps a gem subdirectory to the files that are expected to exist in the
-  # subdirectory.
 
   REPOSITORY_EXTENSION_MAP = [ # :nodoc:
     ['specifications', '.gemspec'],
@@ -34,11 +23,6 @@ class Gem::Doctor
   raise "Update REPOSITORY_EXTENSION_MAP, missing: #{missing.join ', '}" unless
     missing.empty?
 
-  ##
-  # Creates a new Gem::Doctor that will clean up +gem_repository+.  Only one
-  # gem repository may be cleaned at a time.
-  #
-  # If +dry_run+ is true no files or directories will be removed.
 
   def initialize gem_repository, dry_run = false
     @gem_repository = gem_repository
@@ -47,22 +31,16 @@ class Gem::Doctor
     @installed_specs = nil
   end
 
-  ##
-  # Specs installed in this gem repository
 
   def installed_specs # :nodoc:
     @installed_specs ||= Gem::Specification.map { |s| s.full_name }
   end
 
-  ##
-  # Are we doctoring a gem repository?
 
   def gem_repository?
     not installed_specs.empty?
   end
 
-  ##
-  # Cleans up uninstalled files and invalid gem specifications
 
   def doctor
     @orig_home = Gem.dir
@@ -86,8 +64,6 @@ class Gem::Doctor
     Gem.use_paths @orig_home, *@orig_path
   end
 
-  ##
-  # Cleans up children of this gem repository
 
   def doctor_children # :nodoc:
     REPOSITORY_EXTENSION_MAP.each do |sub_directory, extension|
@@ -95,8 +71,6 @@ class Gem::Doctor
     end
   end
 
-  ##
-  # Removes files in +sub_directory+ with +extension+
 
   def doctor_child sub_directory, extension # :nodoc:
     directory = File.join(@gem_repository, sub_directory)
@@ -124,7 +98,6 @@ class Gem::Doctor
       say "#{action} #{type} #{sub_directory}/#{File.basename(child)}"
     end
   rescue Errno::ENOENT
-    # ignore
   end
 
 end

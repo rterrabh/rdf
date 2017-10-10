@@ -3,12 +3,10 @@ class GroupsController < Groups::ApplicationController
   respond_to :html
   before_action :group, except: [:new, :create]
 
-  # Authorize
   before_action :authorize_read_group!, except: [:new, :create]
   before_action :authorize_admin_group!, only: [:edit, :update, :destroy, :projects]
   before_action :authorize_create_group!, only: [:new, :create]
 
-  # Load group projects
   before_action :load_projects, except: [:new, :create, :projects, :edit, :update]
   before_action :event_filter, only: :show
 
@@ -101,7 +99,6 @@ class GroupsController < Groups::ApplicationController
     @projects.pluck(:id)
   end
 
-  # Dont allow unauthorized access to group
   def authorize_read_group!
     unless @group and (@projects.present? or can?(current_user, :read_group, @group))
       if current_user.nil?

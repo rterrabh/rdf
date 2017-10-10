@@ -1,7 +1,3 @@
-#
-#  tnotebook widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -14,7 +10,6 @@ module Tk
 end
 
 class Tk::Tile::TNotebook < TkWindow
-  ################################
   include TkItemConfigMethod
 
   def __item_cget_cmd(id)
@@ -37,8 +32,6 @@ class Tk::Tile::TNotebook < TkWindow
   end
   private :__item_methodcall_optkeys
 
-  #alias tabcget itemcget
-  #alias tabcget_strict itemcget_strict
   alias tabconfigure itemconfigure
   alias tabconfiginfo itemconfiginfo
   alias current_tabconfiginfo current_itemconfiginfo
@@ -58,10 +51,8 @@ class Tk::Tile::TNotebook < TkWindow
       rescue => e
         begin
           if current_tabconfiginfo(tagOrId).has_key?(option.to_s)
-            # not tag error & option is known -> error on known option
             fail e
           else
-            # not tag error & option is unknown
             nil
           end
         rescue
@@ -70,7 +61,6 @@ class Tk::Tile::TNotebook < TkWindow
       end
     end
   end
-  ################################
 
   include Tk::Tile::TileWidget
 
@@ -142,6 +132,5 @@ class Tk::Tile::TNotebook < TkWindow
   end
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Notebook, :TkNotebook)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tnotebook.rb',
                                    :Ttk, Tk::Tile::Notebook, :TkNotebook)

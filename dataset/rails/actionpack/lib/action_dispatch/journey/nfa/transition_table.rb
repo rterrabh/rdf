@@ -45,10 +45,6 @@ module ActionDispatch
           (@table.keys + @table.values.flat_map(&:keys)).uniq
         end
 
-        # Returns a generalized transition graph with reduced states. The states
-        # are reduced like a DFA, but the table must be simulated like an NFA.
-        #
-        # Edges of the GTG are regular expressions.
         def generalized_table
           gt       = GTG::TransitionTable.new
           marked   = {}
@@ -90,14 +86,10 @@ module ActionDispatch
           gt
         end
 
-        # Returns set of NFA states to which there is a transition on ast symbol
-        # +a+ from some state +s+ in +t+.
         def following_states(t, a)
           Array(t).flat_map { |s| inverted[s][a] }.uniq
         end
 
-        # Returns set of NFA states to which there is a transition on ast symbol
-        # +a+ from some state +s+ in +t+.
         def move(t, a)
           Array(t).map { |s|
             inverted[s].keys.compact.find_all { |sym|
@@ -110,8 +102,6 @@ module ActionDispatch
           inverted.values.flat_map(&:keys).compact.uniq.sort_by { |x| x.to_s }
         end
 
-        # Returns a set of NFA states reachable from some NFA state +s+ in set
-        # +t+ on nil-transitions alone.
         def eclosure(t)
           stack = Array(t)
           seen  = {}

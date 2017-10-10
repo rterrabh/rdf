@@ -7,7 +7,6 @@ class Grass < Formula
     url "http://grass.osgeo.org/grass64/source/grass-6.4.4.tar.gz"
     sha256 "5ddba27b4e5495f602ee5249a07e287f342dd8e1422ea5d490c04311c731d274"
 
-    # Patches that files are not installed outside of the prefix.
     patch :DATA
   end
 
@@ -43,8 +42,6 @@ class Grass < Formula
   end
 
   def headless?
-    # The GRASS GUI is based on WxPython. Unfortunately, Lion does not include
-    # this module so we have to drop it.
     build.without?("gui") || MacOS.version == :lion
   end
 
@@ -76,7 +73,6 @@ class Grass < Formula
     ]
 
     unless MacOS::CLT.installed?
-      # On Xcode-only systems (without the CLT), we have to help:
       args << "--with-macosx-sdk=#{MacOS.sdk_path}"
       args << "--with-opengl-includes=#{MacOS.sdk_path}/System/Library/Frameworks/OpenGL.framework/Headers"
     end
@@ -101,7 +97,6 @@ class Grass < Formula
     args << "--with-cairo-libs=#{cairo.lib}"
     args << "--with-cairo"
 
-    # Database support
     args << "--with-postgres" if build.with? "postgresql"
 
     if build.with? "mysql"
@@ -126,7 +121,6 @@ class Grass < Formula
         The command line tools remain fully functional.
         EOS
     elsif MacOS.version < :lion
-      # On Lion or above, we are very happy with our brewed wxwidgets.
       <<-EOS.undent
         GRASS is currently in a transition period with respect to GUI support.
         The old Tcl/Tk GUI cannot be built using the version of Tcl/Tk provided
@@ -140,7 +134,6 @@ class Grass < Formula
         which affects Snow Leopard users. In order to remedy this, the GRASS
         startup script:
 
-          #{prefix}/grass-#{version}/etc/Init.sh
 
         has been modified to use the OS X system Python and to start it in 32 bit mode.
         EOS

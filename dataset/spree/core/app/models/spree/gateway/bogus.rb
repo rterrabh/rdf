@@ -19,7 +19,6 @@ module Spree
 
     def create_profile(payment)
       return if payment.source.has_payment_profile?
-      # simulate the storage of credit card profile using remote service
       if success = VALID_CCS.include?(payment.source.number)
         payment.source.update_attributes(:gateway_customer_profile_id => generate_profile_id(success))
       end
@@ -65,7 +64,6 @@ module Spree
     end
 
     def test?
-      # Test mode is not really relevant with bogus gateway (no such thing as live server)
       true
     end
 

@@ -6,7 +6,6 @@ class Luciddb < Formula
 
   def shim_script(target)
     <<-EOS.undent
-      #!/bin/bash
       export JAVA_HOME=`/usr/libexec/java_home`
       exec "#{libexec}/bin/#{target}" "$@"
     EOS
@@ -15,8 +14,6 @@ class Luciddb < Formula
   def install
     libexec.install Dir["*"]
     cd libexec/"install" do
-      # install.sh just sets Java classpaths and writes them to bin/classpath.gen.
-      # This is why we run it /after/ copying all the files to #{libexec}.
       ENV["JAVA_HOME"] = `/usr/libexec/java_home`.chomp
       system "./install.sh"
     end

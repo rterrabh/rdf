@@ -92,8 +92,6 @@ module Rails
         end
       end
 
-      # Loads and returns the entire raw configuration of database from
-      # values stored in `config/database.yml`.
       def database_configuration
         path = paths["config/database"].existent.first
         yaml = Pathname.new(path) if path
@@ -103,10 +101,9 @@ module Rails
           require "erb"
           YAML.load(ERB.new(yaml.read).result) || {}
         elsif ENV['DATABASE_URL']
-          # Value from ENV['DATABASE_URL'] is set to default database connection
-          # by Active Record.
           {}
         else
+          #nodyna <instance_variable_get-1178> <not yet classified>
           raise "Could not load database configuration. No such file - #{paths["config/database"].instance_variable_get(:@paths)}"
         end
 
@@ -141,7 +138,6 @@ module Rails
         self.generators.colorize_logging = val
       end
 
-      # :nodoc:
       SERVE_STATIC_ASSETS_DEPRECATION_MESSAGE = <<-MSG.squish
         The configuration option `config.serve_static_assets` has been renamed
         to `config.serve_static_files` to clarify its role (it merely enables
@@ -173,7 +169,7 @@ module Rails
                 "Please add `activerecord-session_store` to your Gemfile to use it."
             end
           when Symbol
-            #nodyna <ID:const_get-24> <CG COMPLEX (change-prone variable)>
+            #nodyna <const_get-1179> <CG COMPLEX (change-prone variable)>
             ActionDispatch::Session.const_get(@session_store.to_s.camelize)
           else
             @session_store

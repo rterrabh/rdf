@@ -18,10 +18,6 @@ class Compcert < Formula
   def install
     ENV.permit_arch_flags
 
-    # Compcert's configure script hard-codes gcc. On Lion and under, this
-    # creates problems since XCode's gcc does not support CFI,
-    # but superenv will trick it into using clang which does. This
-    # causes problems with the compcert compiler at runtime.
     inreplace "configure", "${toolprefix}gcc", "${toolprefix}#{ENV.cc}"
 
     system "./configure", "-prefix", prefix, "ia32-macosx"

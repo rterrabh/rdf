@@ -1,4 +1,3 @@
-# lightweight Twitter api calls
 class TwitterApi
 
   class << self

@@ -1,16 +1,7 @@
-#
-#  tkextlib/tcllib/ico.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Reading and writing windows icons
-#
 
 require 'tk'
 require 'tk/image'
-#require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('ico', '0.3')
 TkPackage.require('ico')
 
 module Tk
@@ -117,7 +108,6 @@ class Tk::Tcllib::ICO
     tk_call_without_enc('::ico::Show', file, *hash_kv(keys, true))
   end
 
-  ###########################
 
   def initialize(file, index, keys=nil)
     keys = _symbolkey2str(keys)

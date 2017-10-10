@@ -17,7 +17,6 @@ end
 
 module ActiveRecord
   module ConnectionHandling # :nodoc:
-    # Establishes a connection to the database that's used by all Active Record objects.
     def mysql_connection(config)
       config = config.symbolize_keys
       host     = config[:host]
@@ -44,27 +43,6 @@ module ActiveRecord
   end
 
   module ConnectionAdapters
-    # The MySQL adapter will work with both Ruby/MySQL, which is a Ruby-based MySQL adapter that comes bundled with Active Record, and with
-    # the faster C-based MySQL/Ruby adapter (available both as a gem and from http://www.tmtm.org/en/mysql/ruby/).
-    #
-    # Options:
-    #
-    # * <tt>:host</tt> - Defaults to "localhost".
-    # * <tt>:port</tt> - Defaults to 3306.
-    # * <tt>:socket</tt> - Defaults to "/tmp/mysql.sock".
-    # * <tt>:username</tt> - Defaults to "root"
-    # * <tt>:password</tt> - Defaults to nothing.
-    # * <tt>:database</tt> - The name of the database. No default, must be provided.
-    # * <tt>:encoding</tt> - (Optional) Sets the client encoding by executing "SET NAMES <encoding>" after connection.
-    # * <tt>:reconnect</tt> - Defaults to false (See MySQL documentation: http://dev.mysql.com/doc/refman/5.0/en/auto-reconnect.html).
-    # * <tt>:strict</tt> - Defaults to true. Enable STRICT_ALL_TABLES. (See MySQL documentation: http://dev.mysql.com/doc/refman/5.0/en/sql-mode.html)
-    # * <tt>:variables</tt> - (Optional) A hash session variables to send as <tt>SET @@SESSION.key = value</tt> on each database connection. Use the value +:default+ to set a variable to its DEFAULT value. (See MySQL documentation: http://dev.mysql.com/doc/refman/5.0/en/set-statement.html).
-    # * <tt>:sslca</tt> - Necessary to use MySQL with an SSL connection.
-    # * <tt>:sslkey</tt> - Necessary to use MySQL with an SSL connection.
-    # * <tt>:sslcert</tt> - Necessary to use MySQL with an SSL connection.
-    # * <tt>:sslcapath</tt> - Necessary to use MySQL with an SSL connection.
-    # * <tt>:sslcipher</tt> - Necessary to use MySQL with an SSL connection.
-    #
     class MysqlAdapter < AbstractMysqlAdapter
       ADAPTER_NAME = 'MySQL'.freeze
 
@@ -108,13 +86,10 @@ module ActiveRecord
         connect
       end
 
-      # Returns true, since this connection adapter supports prepared statement
-      # caching.
       def supports_statement_cache?
         true
       end
 
-      # HELPER METHODS ===========================================
 
       def each_hash(result) # :nodoc:
         if block_given?
@@ -131,15 +106,11 @@ module ActiveRecord
         exception.errno if exception.respond_to?(:errno)
       end
 
-      # QUOTING ==================================================
 
       def quote_string(string) #:nodoc:
         @connection.quote(string)
       end
 
-      #--
-      # CONNECTION MANAGEMENT ====================================
-      #++
 
       def active?
         if @connection.respond_to?(:stat)
@@ -148,7 +119,6 @@ module ActiveRecord
           @connection.query 'select 1'
         end
 
-        # mysql-ruby doesn't raise an exception when stat fails.
         if @connection.respond_to?(:errno)
           @connection.errno.zero?
         else
@@ -164,8 +134,6 @@ module ActiveRecord
         connect
       end
 
-      # Disconnects from the database if already connected. Otherwise, this
-      # method does nothing.
       def disconnect!
         super
         @connection.close rescue nil
@@ -173,16 +141,11 @@ module ActiveRecord
 
       def reset!
         if @connection.respond_to?(:change_user)
-          # See http://bugs.mysql.com/bug.php?id=33540 -- the workaround way to
-          # reset the connection is to change the user to the same user.
           @connection.change_user(@config[:username], @config[:password], @config[:database])
           configure_connection
         end
       end
 
-      #--
-      # DATABASE STATEMENTS ======================================
-      #++
 
       def select_rows(sql, name = nil, binds = [])
         @connection.query_with_result = true
@@ -191,15 +154,11 @@ module ActiveRecord
         rows
       end
 
-      # Clears the prepared statements cache.
       def clear_cache!
         super
         @statements.clear
       end
 
-      # Taken from here:
-      #   https://github.com/tmtm/ruby-mysql/blob/master/lib/mysql/charset.rb
-      # Author: TOMITA Masahiro <tommy@tmtm.org>
       ENCODINGS = {
         "armscii8" => nil,
         "ascii"    => Encoding::US_ASCII,
@@ -240,7 +199,6 @@ module ActiveRecord
         "utf8mb4"  => Encoding::UTF_8,
       }
 
-      # Get the client encoding for this database
       def client_encoding
         return @client_encoding if @client_encoding
 
@@ -333,8 +291,6 @@ module ActiveRecord
       end
 
       def exec_without_stmt(sql, name = 'SQL') # :nodoc:
-        # Some queries, like SHOW CREATE TABLE don't work through the prepared
-        # statement API. For those queries, we need to use this method. :'(
         log(sql, name) do
           result = @connection.query(sql)
           affected_rows = @connection.affected_rows
@@ -412,10 +368,6 @@ module ActiveRecord
           begin
             stmt.execute(*type_casted_binds.map { |_, val| val })
           rescue Mysql::Error => e
-            # Older versions of MySQL leave the prepared statement in a bad
-            # place when an error occurs. To support older MySQL versions, we
-            # need to close the statement and delete the statement from the
-            # cache.
             stmt.close
             @statements.delete sql
             raise e
@@ -455,14 +407,11 @@ module ActiveRecord
 
         @connection.real_connect(*@connection_options)
 
-        # reconnect must be set after real_connect is called, because real_connect sets it to false internally
         @connection.reconnect = !!@config[:reconnect] if @connection.respond_to?(:reconnect=)
 
         configure_connection
       end
 
-      # Many Rails applications monkey-patch a replacement of the configure_connection method
-      # and don't call 'super', so leave this here even though it looks superfluous.
       def configure_connection
         super
       end
@@ -474,7 +423,6 @@ module ActiveRecord
         rows
       end
 
-      # Returns the full version of the connected MySQL server.
       def full_version
         @full_version ||= @connection.server_info
       end

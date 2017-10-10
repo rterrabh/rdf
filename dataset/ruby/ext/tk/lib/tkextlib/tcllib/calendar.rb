@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/calendar.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * calendar widget
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::calendar', '0.9')
 TkPackage.require('widget::calendar')
 
 module Tk::Tcllib

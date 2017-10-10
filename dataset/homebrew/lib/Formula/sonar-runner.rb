@@ -7,7 +7,6 @@ class SonarRunner < Formula
   head "https://github.com/SonarSource/sonar-runner.git"
 
   def install
-    # Remove windows files
     rm_rf Dir["bin/*.bat"]
     libexec.install Dir["*"]
     bin.write_exec_script libexec/"bin/sonar-runner"
@@ -15,7 +14,6 @@ class SonarRunner < Formula
 
   def caveats; <<-EOS.undent
       If this is your first install, you should adjust its default configuration:
-        #{libexec}/conf/sonar-runner.properties
 
       after that you should also add a new enviroment variable:
         SONAR_RUNNER_HOME=#{libexec}

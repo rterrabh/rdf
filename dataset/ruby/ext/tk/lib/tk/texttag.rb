@@ -1,6 +1,3 @@
-#
-# tk/texttag.rb - methods for treating text tags
-#
 require 'tk'
 require 'tk/text'
 require 'tk/tagfont'
@@ -11,7 +8,7 @@ class TkTextTag<TkObject
 
   TTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-62> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1801> <IEV MODERATE (method definition)>
   (Tk_TextTag_ID = ['tag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -34,13 +31,9 @@ class TkTextTag<TkObject
   end
 
   def initialize(parent, *args)
-    #unless parent.kind_of?(TkText)
-    #  fail ArgumentError, "expect TkText for 1st argument"
-    #end
     @parent = @t = parent
     @tpath = parent.path
     Tk_TextTag_ID.mutex.synchronize{
-      # @path = @id = Tk_TextTag_ID.join('')
       @path = @id = Tk_TextTag_ID.join(TkCore::INTERP._ip_id_).freeze
       Tk_TextTag_ID[1].succ!
     }
@@ -49,7 +42,6 @@ class TkTextTag<TkObject
       TTagID_TBL[@tpath] = {} unless TTagID_TBL[@tpath]
       TTagID_TBL[@tpath][@id] = self
     }
-    #tk_call @t.path, "tag", "configure", @id, *hash_kv(keys)
     if args != []
       keys = args.pop
       if keys.kind_of?(Hash)
@@ -68,7 +60,6 @@ class TkTextTag<TkObject
   end
 
   def exist?
-    #if ( tk_split_simplelist(_fromUTF8(tk_call_without_enc(@t.path, 'tag', 'names'))).find{|id| id == @id } )
     if ( tk_split_simplelist(tk_call_without_enc(@t.path, 'tag', 'names'), false, true).find{|id| id == @id } )
       true
     else
@@ -145,14 +136,12 @@ class TkTextTag<TkObject
     when 'text', 'label', 'show', 'data', 'file'
       _fromUTF8(tk_call_without_enc(@t.path, 'tag', 'cget', @id, "-#{key}"))
     when 'font', 'kanjifont'
-      #fnt = tk_tcl2ruby(tk_call(@t.path, 'tag', 'cget', @id, "-#{key}"))
       fnt = tk_tcl2ruby(_fromUTF8(tk_call_without_enc(@t.path, 'tag', 'cget',
                                                       @id, '-font')))
       unless fnt.kind_of?(TkFont)
         fnt = tagfontobj(@id, fnt)
       end
       if key.to_s == 'kanjifont' && JAPANIZED_TK && TK_VERSION =~ /^4\.*/
-        # obsolete; just for compatibility
         fnt.kanji_font
       else
         fnt
@@ -167,21 +156,6 @@ class TkTextTag<TkObject
   def configure(key, val=None)
     @t.tag_configure @id, key, val
   end
-#  def configure(key, val=None)
-#    if key.kind_of?(Hash)
-#      tk_call @t.path, 'tag', 'configure', @id, *hash_kv(key)
-#    else
-#      tk_call @t.path, 'tag', 'configure', @id, "-#{key}", val
-#    end
-#  end
-#  def configure(key, value)
-#    if value == FALSE
-#      value = "0"
-#    elsif value.kind_of?(Proc)
-#      value = install_cmd(value)
-#    end
-#    tk_call @t.path, 'tag', 'configure', @id, "-#{key}", value
-#  end
 
   def configinfo(key=nil)
     @t.tag_configinfo @id, key
@@ -191,12 +165,7 @@ class TkTextTag<TkObject
     @t.current_tag_configinfo @id, key
   end
 
-  #def bind(seq, cmd=Proc.new, *args)
-  #  _bind([@t.path, 'tag', 'bind', @id], seq, cmd, *args)
-  #  self
-  #end
   def bind(seq, *args)
-    # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -206,12 +175,7 @@ class TkTextTag<TkObject
     self
   end
 
-  #def bind_append(seq, cmd=Proc.new, *args)
-  #  _bind_append([@t.path, 'tag', 'bind', @id], seq, cmd, *args)
-  #  self
-  #end
   def bind_append(seq, *args)
-    # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -259,8 +223,7 @@ class TkTextNamedTag<TkTextTag
       if TTagID_TBL[parent.path] && TTagID_TBL[parent.path][name]
         tagobj = TTagID_TBL[parent.path][name]
       else
-        # super(parent, name, *args)
-        #nodyna <ID:instance_eval-63> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1802> <IEV MODERATE (private access)>
         (tagobj = self.allocate).instance_eval{
           @parent = @t = parent
           @tpath = parent.path
@@ -288,18 +251,11 @@ class TkTextNamedTag<TkTextTag
   end
 
   def initialize(parent, name, *args)
-    # dummy:: not called by 'new' method
 
-    #unless parent.kind_of?(Tk::Text)
-    #  fail ArgumentError, "expect Tk::Text for 1st argument"
-    #end
     @parent = @t = parent
     @tpath = parent.path
     @path = @id = name
 
-    #if mode
-    #  tk_call @t.path, "addtag", @id, *args
-    #end
     if args != []
       keys = args.pop
       if keys.kind_of?(Hash)

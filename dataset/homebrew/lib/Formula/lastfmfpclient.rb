@@ -12,10 +12,6 @@ class Lastfmfpclient < Formula
   depends_on "libsamplerate"
 
   def inreplace_fix
-    # This project was made on Windows (LOL), patches against Windows
-    # line-endings fail for some reason, so we will inreplace instead.
-    # Fixes compile with clang failure due to entirely missing variable, how
-    # on earth did GCC ever compile this?!
     inreplace "fplib/src/FloatingAverage.h",
       "for ( int i = 0; i < size; ++i )",
       "for ( int i = 0; i < m_values.size(); ++i )"

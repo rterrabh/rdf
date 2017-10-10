@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 module AspectGlobalHelper
   def aspect_membership_dropdown(contact, person, hang, aspect=nil, size="small")
@@ -38,7 +35,6 @@ module AspectGlobalHelper
 
     str = <<LISTITEM
 <li data-aspect_id="#{aspect.id}" data-membership_id="#{am_id}" class="#{klass} aspect_selector" tabindex="0">
-  #{aspect.name}
 </li>
 LISTITEM
     str.html_safe

@@ -11,7 +11,6 @@ class KyotoTycoon < Formula
   patch :DATA if MacOS.version >= :mavericks
 
   def install
-    # Locate kyoto-cabinet for non-/usr/local builds
     cabinet = Formula["kyoto-cabinet"].opt_prefix
     args = ["--prefix=#{prefix}", "--with-kc=#{cabinet}"]
 

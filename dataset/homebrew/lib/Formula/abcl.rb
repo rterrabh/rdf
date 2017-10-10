@@ -17,7 +17,6 @@ class Abcl < Formula
   def install
     libexec.install "abcl.jar", "abcl-contrib.jar"
     (bin+"abcl").write <<-EOS.undent
-      #!/bin/sh
       rlwrap java -jar "#{libexec}/abcl.jar" "$@"
     EOS
   end

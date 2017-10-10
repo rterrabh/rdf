@@ -11,11 +11,11 @@ module RSS
         klass_name = Utils.to_class_name(name)
         plural_klass_name = Utils.to_class_name(plural)
 
+        #nodyna <class_eval-2067> <not yet classified>
         klass.class_eval(<<-EOC, __FILE__, __LINE__ + 1)
           class #{plural_klass_name} < #{plural_klass_name}Base
             class #{klass_name} < #{klass_name}Base
               def to_feed(feed, current)
-                #{name} = feed.class::#{klass_name}.new
                 set = setup_values(#{name})
                 unless set
                   raise NotSetError.new(#{maker_name.dump},
@@ -43,11 +43,11 @@ EOC
           klass_name ||= Utils.to_class_name(name)
           atom_klass_name ||= Utils.to_class_name(name)
 
+          #nodyna <class_eval-2068> <not yet classified>
           klass.class_eval(<<-EOC, __FILE__, __LINE__ + 1)
             class #{klass_name} < #{klass_name}Base
               include #{self.name}
               def to_feed(feed, current)
-                #{name} = current.class::#{atom_klass_name}.new
                 if setup_values(#{name})
                   current.#{name} = #{name}
                   set_parent(#{name}, current)

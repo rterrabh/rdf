@@ -12,8 +12,6 @@ class Ganglia < Formula
   depends_on "pcre"
   depends_on "rrdtool"
 
-  # fixes build on Leopard and newer, which lack kvm.h, cpu_steal_func() and its corresponding /dev/ node
-  # merged upstream: https://github.com/ganglia/monitor-core/issues/150
   patch do
     url "https://github.com/ganglia/monitor-core/commit/ba942f.diff"
     sha256 "f339b43a4409c74a9cbe073041fed9e1512ad58b8bc3324a6a1e7c86df0ce7b2"
@@ -31,7 +29,6 @@ class Ganglia < Formula
                           "--with-libpcre=#{Formula["pcre"].opt_prefix}"
     system "make", "install"
 
-    # Generate the default config file
     system "#{bin}/gmond -t > #{etc}/gmond.conf" unless File.exist? "#{etc}/gmond.conf"
   end
 
@@ -41,7 +38,6 @@ class Ganglia < Formula
 
   def caveats; <<-EOS.undent
     If you didn't have a default config file, one was created here:
-      #{etc}/gmond.conf
     EOS
   end
 end

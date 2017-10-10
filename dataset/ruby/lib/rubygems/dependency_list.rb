@@ -1,19 +1,7 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
 require 'tsort'
 require 'rubygems/deprecate'
 
-##
-# Gem::DependencyList is used for installing and uninstalling gems in the
-# correct order to avoid conflicts.
-#--
-# TODO: It appears that all but topo-sort functionality is being duplicated
-# (or is planned to be duplicated) elsewhere in rubygems.  Is the majority of
-# this class necessary anymore?  Especially #ok?, #why_not_ok?
 
 class Gem::DependencyList
   attr_reader :specs
@@ -21,13 +9,9 @@ class Gem::DependencyList
   include Enumerable
   include TSort
 
-  ##
-  # Allows enabling/disabling use of development dependencies
 
   attr_accessor :development
 
-  ##
-  # Creates a DependencyList from the current specs.
 
   def self.from_specs
     list = new
@@ -35,9 +19,6 @@ class Gem::DependencyList
     list
   end
 
-  ##
-  # Creates a new DependencyList.  If +development+ is true, development
-  # dependencies will be included.
 
   def initialize development = false
     @specs = []
@@ -45,8 +26,6 @@ class Gem::DependencyList
     @development = development
   end
 
-  ##
-  # Adds +gemspecs+ to the dependency list.
 
   def add(*gemspecs)
     @specs.concat gemspecs
@@ -56,20 +35,6 @@ class Gem::DependencyList
     @specs.clear
   end
 
-  ##
-  # Return a list of the gem specifications in the dependency list, sorted in
-  # order so that no gemspec in the list depends on a gemspec earlier in the
-  # list.
-  #
-  # This is useful when removing gems from a set of installed gems.  By
-  # removing them in the returned order, you don't get into as many dependency
-  # issues.
-  #
-  # If there are circular dependencies (yuck!), then gems will be returned in
-  # order until only the circular dependents and anything they reference are
-  # left.  Then arbitrary gemspecs will be returned until the circular
-  # dependency is broken, after which gems will be returned in dependency
-  # order again.
 
   def dependency_order
     sorted = strongly_connected_components.flatten
@@ -91,8 +56,6 @@ class Gem::DependencyList
     result.reverse
   end
 
-  ##
-  # Iterator over dependency_order
 
   def each(&block)
     dependency_order.each(&block)
@@ -106,8 +69,6 @@ class Gem::DependencyList
     "#<%s:0x%x %p>" % [self.class, object_id, map { |s| s.full_name }]
   end
 
-  ##
-  # Are all the dependencies in the list satisfied?
 
   def ok?
     why_not_ok?(:quick).empty?
@@ -132,11 +93,6 @@ class Gem::DependencyList
     unsatisfied
   end
 
-  ##
-  # Is is ok to remove a gemspec from the dependency list?
-  #
-  # If removing the gemspec creates breaks a currently ok dependency, then it
-  # is NOT ok to remove the gemspec.
 
   def ok_to_remove?(full_name, check_dev=true)
     gem_to_remove = find_name full_name
@@ -163,10 +119,6 @@ class Gem::DependencyList
     }
   end
 
-  ##
-  # Remove everything in the DependencyList that matches but doesn't
-  # satisfy items in +dependencies+ (a hash of gem names to arrays of
-  # dependencies).
 
   def remove_specs_unsatisfied_by dependencies
     specs.reject! { |spec|
@@ -175,16 +127,11 @@ class Gem::DependencyList
     }
   end
 
-  ##
-  # Removes the gemspec matching +full_name+ from the dependency list
 
   def remove_by_name(full_name)
     @specs.delete_if { |spec| spec.full_name == full_name }
   end
 
-  ##
-  # Return a hash of predecessors.  <tt>result[spec]</tt> is an Array of
-  # gemspecs that have a dependency satisfied by the named gemspec.
 
   def spec_predecessors
     result = Hash.new { |h,k| h[k] = [] }
@@ -228,9 +175,6 @@ class Gem::DependencyList
 
   private
 
-  ##
-  # Count the number of gemspecs in the list +specs+ that are not in
-  # +ignored+.
 
   def active_count(specs, ignored)
     specs.count { |spec| ignored[spec.full_name].nil? }

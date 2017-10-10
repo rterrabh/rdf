@@ -23,16 +23,11 @@ class Vice < Formula
   end
 
   def install
-    # Use Cocoa instead of X
-    # Use a static lame, otherwise Vice is hard-coded to look in
-    # /opt for the library.
     system "./configure", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--with-cocoa",
                           "--without-x",
                           "--enable-static-lame",
-                          # VICE can't compile against FFMPEG newer than 0.11:
-                          # http://sourceforge.net/tracker/?func=detail&aid=3585471&group_id=223021&atid=1057617
                           "--disable-ffmpeg"
     system "make"
     system "make", "bindist"

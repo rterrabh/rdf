@@ -11,7 +11,6 @@ class Rtf2latex2e < Formula
 
   def caveats; <<-EOS.undent
     Configuration files have been installed to:
-      #{share}/rtf2latex2e
     EOS
   end
 

@@ -8,13 +8,11 @@ module Homebrew
     raise FormulaUnspecifiedError if ARGV.named.empty?
 
     ARGV.resolved_formulae.each do |f|
-      # Cannot test uninstalled formulae
       unless f.installed?
         ofail "Testing requires the latest version of #{f.full_name}"
         next
       end
 
-      # Cannot test formulae without a test method
       unless f.test_defined?
         ofail "#{f.full_name} defines no test"
         next
@@ -26,12 +24,9 @@ module Homebrew
 
       begin
         args = %W[
-          #{RUBY_PATH}
           -W0
           -I #{HOMEBREW_LOAD_PATH}
           --
-          #{HOMEBREW_LIBRARY_PATH}/test.rb
-          #{f.path}
         ].concat(ARGV.options_only)
 
         if Sandbox.available? && ARGV.sandbox?

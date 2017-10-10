@@ -56,7 +56,6 @@ module Spree
         expect(item.quantity).to eq 1
       end
 
-      # Contains regression test for #2804
       it 'builds a list of shipping methods common to all categories' do
         category1 = create(:shipping_category)
         category2 = create(:shipping_category)
@@ -107,7 +106,6 @@ module Spree
       end
 
       it 'does not add an inventory unit to a package twice' do
-        # since inventory units currently don't have a quantity
         unit = build_inventory_unit
         subject.add unit
         subject.add unit

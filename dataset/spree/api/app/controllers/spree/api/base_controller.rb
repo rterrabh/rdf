@@ -33,7 +33,6 @@ module Spree
         end.with_indifferent_access
       end
 
-      # users should be able to set price when importing orders via api
       def permitted_line_item_attributes
         if @current_user_roles.include?("admin")
           super + [:price, :variant_id, :sku]
@@ -68,7 +67,6 @@ module Spree
           elsif order_token.blank? && (requires_authentication? || api_key.present?)
             render "spree/api/errors/invalid_api_key", :status => 401 and return
           else
-            # An anonymous user
             @current_api_user = Spree.user_class.new
           end
         end

@@ -1,17 +1,6 @@
-#
-#   irb/init.rb - irb initialize module
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 module IRB # :nodoc:
 
-  # initialize config
   def IRB.setup(ap_path)
     IRB.init_config(ap_path)
     IRB.init_error
@@ -24,12 +13,9 @@ module IRB # :nodoc:
     end
   end
 
-  # @CONF default setting
   def IRB.init_config(ap_path)
-    # class instance variables
     @TRACER_INITIALIZED = false
 
-    # default configurations
     unless ap_path and @CONF[:AP_NAME]
       ap_path = File.join(File.dirname(File.dirname(__FILE__)), "irb.rb")
     end
@@ -120,7 +106,6 @@ module IRB # :nodoc:
     @CONF[:LC_MESSAGES].load("irb/error.rb")
   end
 
-  # option analyzing
   def IRB.parse_opts
     load_path = []
     while opt = ARGV.shift
@@ -223,7 +208,6 @@ module IRB # :nodoc:
 
   end
 
-  # running config
   def IRB.run_config
     if @CONF[:RC]
       begin
@@ -258,7 +242,6 @@ module IRB # :nodoc:
     end
   end
 
-  # enumerate possible rc-file base name generators
   def IRB.rc_file_generators
     if irbrc = ENV["IRBRC"]
       yield proc{|rc| rc == "rc" ? irbrc : irbrc+rc}
@@ -273,7 +256,6 @@ module IRB # :nodoc:
     yield proc{|rc| home+"/$irb#{rc}"}
   end
 
-  # loading modules
   def IRB.load_modules
     for m in @CONF[:LOAD_MODULES]
       begin
@@ -296,6 +278,7 @@ module IRB # :nodoc:
       [$stdin, $stdout, $stderr].each do |io|
         io.set_encoding(extern, intern)
       end
+      #nodyna <instance_variable_set-2191> <not yet classified>
       @CONF[:LC_MESSAGES].instance_variable_set(:@encoding, extern)
     ensure
       $VERBOSE = verbose

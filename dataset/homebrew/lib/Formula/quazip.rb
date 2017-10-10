@@ -14,7 +14,6 @@ class Quazip < Formula
   depends_on "qt"
 
   def install
-    # On Mavericks we want to target libc++, this requires a unsupported/macx-clang-libc++ flag
     if ENV.compiler == :clang && MacOS.version >= :mavericks
       spec = "unsupported/macx-clang-libc++"
     else

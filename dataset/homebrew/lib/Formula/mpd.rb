@@ -44,8 +44,6 @@ class Mpd < Formula
 
   depends_on "libmpdclient"
   depends_on "ffmpeg"                   # lots of codecs
-  # mpd also supports mad, mpg123, libsndfile, and audiofile, but those are
-  # redundant with ffmpeg
   depends_on "fluid-synth"              # MIDI
   depends_on "faad2"                    # MP4/AAC
   depends_on "wavpack" => :optional     # WavPack
@@ -62,9 +60,6 @@ class Mpd < Formula
   depends_on "libnfs" => :optional
 
   def install
-    # mpd specifies -std=gnu++0x, but clang appears to try to build
-    # that against libstdc++ anyway, which won't work.
-    # The build is fine with G++.
     ENV.libcxx
 
     system "./autogen.sh" if build.head?

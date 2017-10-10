@@ -20,7 +20,6 @@ module Spree
 
     context "without any option type scoping" do
       before do
-        # Create another option value with a brand new option type
         create(:option_value, :option_type => create(:option_type))
       end
 

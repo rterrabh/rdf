@@ -1,17 +1,6 @@
-##
-# Represents a specification retrieved via the rubygems.org API.
-#
-# This is used to avoid loading the full Specification object when all we need
-# is the name, version, and dependencies.
 
 class Gem::Resolver::APISpecification < Gem::Resolver::Specification
 
-  ##
-  # Creates an APISpecification for the given +set+ from the rubygems.org
-  # +api_data+.
-  #
-  # See http://guides.rubygems.org/rubygems-org-api/#misc_methods for the
-  # format of the +api_data+.
 
   def initialize(set, api_data)
     super()
@@ -65,8 +54,6 @@ class Gem::Resolver::APISpecification < Gem::Resolver::Specification
     end
   end
 
-  ##
-  # Fetches a Gem::Specification for this APISpecification.
 
   def spec # :nodoc:
     @spec ||=

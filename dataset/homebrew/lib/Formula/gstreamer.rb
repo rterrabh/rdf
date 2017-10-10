@@ -39,15 +39,9 @@ class Gstreamer < Formula
       ENV["NOCONFIGURE"] = "yes"
       system "./autogen.sh"
 
-      # Ban trying to chown to root.
-      # https://bugzilla.gnome.org/show_bug.cgi?id=750367
       args << "--with-ptp-helper-permissions=none"
     end
 
-    # Look for plugins in HOMEBREW_PREFIX/lib/gstreamer-1.0 instead of
-    # HOMEBREW_PREFIX/Cellar/gstreamer/1.0/lib/gstreamer-1.0, so we'll find
-    # plugins installed by other packages without setting GST_PLUGIN_PATH in
-    # the environment.
     inreplace "configure", 'PLUGINDIR="$full_var"',
       "PLUGINDIR=\"#{HOMEBREW_PREFIX}/lib/gstreamer-1.0\""
 

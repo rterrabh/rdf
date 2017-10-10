@@ -17,7 +17,6 @@ class Libinfinity < Formula
   depends_on "gnutls"
   depends_on "gsasl"
 
-  # MacPorts patch to fix pam include. This is still applicable to 0.6.4.
   patch :p0 do
     url "https://trac.macports.org/export/92297/trunk/dports/comms/libinfinity/files/patch-infinoted-infinoted-pam.c.diff"
     sha256 "d5924d6ee90c3aa756e52b97e32345dc1d77afdb5e4e0de8eac2a343d95ade00"
@@ -32,7 +31,6 @@ class Libinfinity < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <libinfinity/common/inf-init.h>
 
       int main(int argc, char *argv[]) {
         GError *error = NULL;

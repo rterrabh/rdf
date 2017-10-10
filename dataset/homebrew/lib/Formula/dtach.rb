@@ -5,7 +5,6 @@ class Dtach < Formula
   sha256 "16614ebddf8ab2811d3dc0e7f329c7de88929ac6a9632d4cb4aef7fe11b8f2a9"
 
   def install
-    # Includes <config.h> instead of "config.h", so "." needs to be in the include path.
     ENV.append "CFLAGS", "-I."
 
     system "./configure", "--disable-debug", "--disable-dependency-tracking",

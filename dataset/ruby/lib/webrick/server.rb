@@ -1,12 +1,3 @@
-#
-# server.rb -- GenericServer Class
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2000, 2001 TAKAHASHI Masayoshi, GOTOU Yuuzou
-# Copyright (c) 2002 Internet Programming with Ruby writers. All rights
-# reserved.
-#
-# $IPR: server.rb,v 1.62 2003/07/22 19:20:43 gotoyuzo Exp $
 
 require 'thread'
 require 'socket'
@@ -15,32 +6,21 @@ require 'webrick/log'
 
 module WEBrick
 
-  ##
-  # Server error exception
 
   class ServerError < StandardError; end
 
-  ##
-  # Base server class
 
   class SimpleServer
 
-    ##
-    # A SimpleServer only yields when you start it
 
     def SimpleServer.start
       yield
     end
   end
 
-  ##
-  # A generic module for daemonizing a process
 
   class Daemon
 
-    ##
-    # Performs the standard operations for daemonizing a process.  Runs a
-    # block, if given.
 
     def Daemon.start
       exit!(0) if fork
@@ -55,41 +35,24 @@ module WEBrick
     end
   end
 
-  ##
-  # Base TCP server class.  You must subclass GenericServer and provide a #run
-  # method.
 
   class GenericServer
 
-    ##
-    # The server status.  One of :Stop, :Running or :Shutdown
 
     attr_reader :status
 
-    ##
-    # The server configuration
 
     attr_reader :config
 
-    ##
-    # The server logger.  This is independent from the HTTP access log.
 
     attr_reader :logger
 
-    ##
-    # Tokens control the number of outstanding clients.  The
-    # <code>:MaxClients</code> configuration sets this.
 
     attr_reader :tokens
 
-    ##
-    # Sockets listening for connections.
 
     attr_reader :listeners
 
-    ##
-    # Creates a new generic server from +config+.  The default configuration
-    # comes from +default+.
 
     def initialize(config={}, default=Config::General)
       @config = default.dup.update(config)
@@ -118,42 +81,17 @@ module WEBrick
       end
     end
 
-    ##
-    # Retrieves +key+ from the configuration
 
     def [](key)
       @config[key]
     end
 
-    ##
-    # Adds listeners from +address+ and +port+ to the server.  See
-    # WEBrick::Utils::create_listeners for details.
 
     def listen(address, port)
       @listeners += Utils::create_listeners(address, port, @logger)
       setup_shutdown_pipe
     end
 
-    ##
-    # Starts the server and runs the +block+ for each connection.  This method
-    # does not return until the server is stopped from a signal handler or
-    # another thread using #stop or #shutdown.
-    #
-    # If the block raises a subclass of StandardError the exception is logged
-    # and ignored.  If an IOError or Errno::EBADF exception is raised the
-    # exception is ignored.  If an Exception subclass is raised the exception
-    # is logged and re-raised which stops the server.
-    #
-    # To completely shut down a server call #shutdown from ensure:
-    #
-    #   server = WEBrick::GenericServer.new
-    #   # or WEBrick::HTTPServer.new
-    #
-    #   begin
-    #     server.start
-    #   ensure
-    #     server.shutdown
-    #   end
 
     def start(&block)
       raise ServerError, "already started." if @status != :Stop
@@ -188,8 +126,6 @@ module WEBrick
                 }
               end
             rescue Errno::EBADF, Errno::ENOTSOCK, IOError => ex
-              # if the listening socket was closed in GenericServer#shutdown,
-              # IO::select raise it.
             rescue StandardError => ex
               msg = "#{ex.class}: #{ex.message}\n\t#{ex.backtrace[0]}"
               @logger.error msg
@@ -211,8 +147,6 @@ module WEBrick
       }
     end
 
-    ##
-    # Stops the server from accepting new connections.
 
     def stop
       if @status == :Running
@@ -220,9 +154,6 @@ module WEBrick
       end
     end
 
-    ##
-    # Shuts down the server and all listening sockets.  New listeners must be
-    # provided to restart the server.
 
     def shutdown
       stop
@@ -238,9 +169,6 @@ module WEBrick
       end
     end
 
-    ##
-    # You must subclass GenericServer and implement \#run which accepts a TCP
-    # client socket
 
     def run(sock)
       @logger.fatal "run() must be provided by user."
@@ -248,11 +176,7 @@ module WEBrick
 
     private
 
-    # :stopdoc:
 
-    ##
-    # Accepts a TCP client socket from the TCP server socket +svr+ and returns
-    # the client socket.
 
     def accept_client(svr)
       sock = nil
@@ -270,14 +194,6 @@ module WEBrick
       return sock
     end
 
-    ##
-    # Starts a server thread for the client socket +sock+ that runs the given
-    # +block+.
-    #
-    # Sets the socket to the <code>:WEBrickSocket</code> thread local variable
-    # in the thread.
-    #
-    # If any errors occur in the block they are logged and handled.
 
     def start_thread(sock, &block)
       Thread.start{
@@ -312,8 +228,6 @@ module WEBrick
       }
     end
 
-    ##
-    # Calls the callback +callback_name+ from the configuration with +args+
 
     def call_callback(callback_name, *args)
       if cb = @config[callback_name]
@@ -349,9 +263,6 @@ module WEBrick
         begin
           s.shutdown
         rescue Errno::ENOTCONN
-          # when `Errno::ENOTCONN: Socket is not connected' on some platforms,
-          # call #close instead of #shutdown.
-          # (ignore @config[:ShutdownSocketWithoutClose])
           s.close
         else
           unless @config[:ShutdownSocketWithoutClose]

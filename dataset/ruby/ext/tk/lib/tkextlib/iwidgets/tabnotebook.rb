@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/tabnotebook.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -18,7 +14,6 @@ class Tk::Iwidgets::Tabnotebook
   WidgetClassName = 'Tabnotebook'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ####################################
 
   include TkItemConfigMethod
 
@@ -41,7 +36,6 @@ class Tk::Iwidgets::Tabnotebook
     if tagOrId.kind_of?(Tk::Itk::Component)
       tagOrId.name
     else
-      #_get_eval_string(tagOrId)
       tagOrId
     end
   end
@@ -56,7 +50,6 @@ class Tk::Iwidgets::Tabnotebook
   private :itemcget_tkstring, :itemcget, :itemcget_strict
   private :itemconfigure, :itemconfiginfo, :current_itemconfiginfo
 
-  ####################################
 
   def __boolval_optkeys
     super() << 'auto' << 'equaltabs' << 'raiseselect' << 'tabborders'
@@ -95,7 +88,6 @@ class Tk::Iwidgets::Tabnotebook
   end
 
   def index(idx)
-    #number(tk_call(@path, 'index', tagid(idx)))
     @tabset.index(tagid(idx))
   end
 

@@ -18,7 +18,6 @@ module ActiveRecord
         clear_caches_calculated_from_columns
         decorator_name = decorator_name.to_s
 
-        # Create new hashes so we don't modify parent classes
         self.attribute_type_decorations = attribute_type_decorations.merge(decorator_name => [matcher, block])
       end
 

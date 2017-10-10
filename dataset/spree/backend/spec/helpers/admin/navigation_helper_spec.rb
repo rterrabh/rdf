@@ -1,4 +1,3 @@
-# coding: UTF-8
 require 'spec_helper'
 
 describe Spree::Admin::NavigationHelper, type: :helper do
@@ -21,7 +20,6 @@ describe Spree::Admin::NavigationHelper, type: :helper do
     end
 
     it "should capitalize words with unicode characters" do
-      # overview
       admin_tab = helper.tab(:orders, label: "přehled")
       expect(admin_tab).to include("Přehled")
     end
@@ -86,7 +84,7 @@ describe Spree::Admin::NavigationHelper, type: :helper do
       end
       expect(klass_for(:my_users)).to eq(MyUser)
 
-      #nodyna <ID:send-21> <SD COMPLEX (private methods)>
+      #nodyna <send-2416> <SD COMPLEX (private methods)>
       Object.send(:remove_const, 'MyUser')
     end
 
@@ -98,9 +96,9 @@ describe Spree::Admin::NavigationHelper, type: :helper do
 
       expect(klass_for(:my_users)).to eq(My::User)
 
-      #nodyna <ID:send-22> <SD MODERATE (private methods)>
+      #nodyna <send-2417> <SD MODERATE (private methods)>
       My.send(:remove_const, 'User')
-      #nodyna <ID:send-23> <SD COMPLEX (private methods)>
+      #nodyna <send-2418> <SD COMPLEX (private methods)>
       Object.send(:remove_const, 'My')
     end
 

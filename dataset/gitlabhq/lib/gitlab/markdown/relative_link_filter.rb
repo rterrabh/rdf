@@ -3,14 +3,6 @@ require 'uri'
 
 module Gitlab
   module Markdown
-    # HTML filter that "fixes" relative links to files in a repository.
-    #
-    # Context options:
-    #   :commit
-    #   :project
-    #   :project_wiki
-    #   :ref
-    #   :requested_path
     class RelativeLinkFilter < HTML::Pipeline::Filter
       def call
         return doc unless linkable_files?
@@ -40,7 +32,6 @@ module Gitlab
           html_attr.value = rebuild_relative_uri(uri).to_s
         end
       rescue URI::Error
-        # noop
       end
 
       def rebuild_relative_uri(uri)
@@ -62,15 +53,6 @@ module Gitlab
         file_exists?(nested_path) ? nested_path : path
       end
 
-      # Covering a special case, when the link is referencing file in the same
-      # directory.
-      # If we are at doc/api/README.md and the README.md contains relative
-      # links like [Users](users.md), this takes the request
-      # path(doc/api/README.md) and replaces the README.md with users.md so the
-      # path looks like doc/api/users.md.
-      # If we are at doc/api and the README.md shown in below the tree view
-      # this takes the request path(doc/api) and adds users.md so the path
-      # looks like doc/api/users.md
       def build_nested_path(path, request_path)
         return request_path if path.empty?
         return path unless request_path
@@ -86,17 +68,6 @@ module Gitlab
           repository.tree(current_sha, path).entries.any?
       end
 
-      # Get the type of the given path
-      #
-      # path - String path to check
-      #
-      # Examples:
-      #
-      #   path_type('doc/README.md') # => 'blob'
-      #   path_type('doc/logo.png')  # => 'raw'
-      #   path_type('doc/api')       # => 'tree'
-      #
-      # Returns a String
       def path_type(path)
         unescaped_path = Addressable::URI.unescape(path)
 

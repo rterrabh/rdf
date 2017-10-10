@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/tabnotebook.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -37,7 +33,7 @@ module Tk::BLT
             end
             obj.configure if keys && ! keys.empty?
           else
-            #nodyna <ID:instance_eval-89> <IEV MODERATE (private access)>
+            #nodyna <instance_eval-1551> <IEV MODERATE (private access)>
             (obj = self.allocate).instance_eval{
               initialize(parent, pos, name, keys)
               TabID_TBL[@tpath] = {} unless TabID_TBL[@tpath]
@@ -73,7 +69,6 @@ module Tk::BLT
       end
     end
 
-    #######################################
 
     def get_tab(index)
       if (idx = tk_send_without_enc('id', tagindex(index))).empty?

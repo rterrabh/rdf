@@ -5,7 +5,6 @@ FactoryGirl.define do
 
     factory :exchange_return_item do
       after(:build) do |return_item|
-        # set track_inventory to false to ensure it passes the in_stock check
         return_item.inventory_unit.variant.update_column(:track_inventory, false)
         return_item.exchange_variant = return_item.inventory_unit.variant
       end

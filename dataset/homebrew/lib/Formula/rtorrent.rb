@@ -1,6 +1,5 @@
 class Rtorrent < Formula
   desc "Console-based BitTorrent client"
-  # Both homepage and primary url have been down since at least ~April 2015
   homepage "https://github.com/rakshasa/rtorrent"
   url "https://mirrors.ocf.berkeley.edu/debian/pool/main/r/rtorrent/rtorrent_0.9.4.orig.tar.gz"
   mirror "https://mirrors.kernel.org/debian/pool/main/r/rtorrent/rtorrent_0.9.4.orig.tar.gz"
@@ -11,14 +10,11 @@ class Rtorrent < Formula
   depends_on "libtorrent"
   depends_on "xmlrpc-c" => :optional
 
-  # https://github.com/Homebrew/homebrew/issues/24132
   fails_with :clang do
     cause "Causes segfaults at startup/at random."
   end
 
   def install
-    # Commented out since we're now marked as failing with clang - adamv
-    # ENV.libstdcxx if ENV.compiler == :clang
 
     args = ["--disable-debug", "--disable-dependency-tracking", "--prefix=#{prefix}"]
     args << "--with-xmlrpc-c" if build.with? "xmlrpc-c"

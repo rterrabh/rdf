@@ -9,7 +9,6 @@ class Vncsnapshot < Formula
   patch :DATA # remove old PPC __APPLE__ ifdef from sockets.cxx
 
   def install
-    # From Ubuntu
     inreplace "rfb.h" do |s|
       s.gsub! /typedef unsigned long CARD32;/, "typedef unsigned int CARD32;"
     end
@@ -26,8 +25,6 @@ index ecdf0db..6c827fa 100644
 --- a/sockets.cxx
 +++ b/sockets.cxx
 @@ -38,9 +38,9 @@ typedef int socklen_t;
- #include <fcntl.h>
- #endif
 
 -#ifdef __APPLE__
 -typedef int socklen_t;
@@ -37,4 +34,3 @@ index ecdf0db..6c827fa 100644
 +//#endif
 
  extern "C" {
- #include "vncsnapshot.h"

@@ -8,7 +8,6 @@ class Ee < Formula
     system "make", "localmake"
     system "make", "all"
 
-    # Install manually
     bin.install "ee"
     man1.install "ee.1"
   end

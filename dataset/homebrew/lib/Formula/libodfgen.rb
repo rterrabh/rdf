@@ -31,7 +31,6 @@ class Libodfgen < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libodfgen/OdfDocumentHandler.hxx>
       int main() {
         return ODF_FLAT_XML;
       }

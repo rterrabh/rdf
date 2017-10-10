@@ -2,9 +2,6 @@ module ActiveAdmin
   class ResourceController < BaseController
     module ResourceClassMethods
 
-      # Override the default `resource_class` class and instance
-      # methods to only return the class defined in the instance
-      # of ActiveAdmin::Resource
       def override_resource_class_methods!
         class_exec do
           def self.resource_class=(klass); end

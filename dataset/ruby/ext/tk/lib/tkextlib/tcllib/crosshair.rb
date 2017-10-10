@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/crosshair.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Crosshairs for Tk canvas
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('crosshair', '1.0.2')
 TkPackage.require('crosshair')
 
 module Tk::Tcllib
@@ -67,7 +59,6 @@ class << Tk::Tcllib::Crosshair
   private :__item_methodcall_optkeys
 
   def __item_config_cmd(id)
-    # maybe need to override
     ['::crosshair::configure', id]
   end
   private :__item_config_cmd

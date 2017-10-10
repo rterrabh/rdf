@@ -21,13 +21,14 @@ module Rails
         end
 
         def configure(&block)
+          #nodyna <class_eval-1148> <not yet classified>
           class_eval(&block)
         end
 
         protected
 
         def method_missing(*args, &block)
-          #nodyna <ID:send-276> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1149> <SD COMPLEX (change-prone variables)>
           instance.send(*args, &block)
         end
       end

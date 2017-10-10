@@ -23,8 +23,6 @@ class Hydra < Formula
   depends_on "gtk+" => :optional
 
   def install
-    # Having our gcc in the PATH first can cause issues. Monitor this.
-    # https://github.com/vanhauser-thc/thc-hydra/issues/22
     system "./configure", "--prefix=#{prefix}"
     bin.mkpath
     system "make", "all", "install"

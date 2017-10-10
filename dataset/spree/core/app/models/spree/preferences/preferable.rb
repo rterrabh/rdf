@@ -1,36 +1,3 @@
-# Preferable allows defining preference accessor methods.
-#
-# A class including Preferable must implement #preferences which should return
-# an object responding to .fetch(key), []=(key, val), and .delete(key).
-#
-# The generated writer method performs typecasting before assignment into the
-# preferences object.
-#
-# Examples:
-#
-#   # Spree::Base includes Preferable and defines preferences as a serialized
-#   # column.
-#   class Settings < Spree::Base
-#     preference :color,       :string,  default: 'red'
-#     preference :temperature, :integer, default: 21
-#   end
-#
-#   s = Settings.new
-#   s.preferred_color # => 'red'
-#   s.preferred_temperature # => 21
-#
-#   s.preferred_color = 'blue'
-#   s.preferred_color # => 'blue'
-#
-#   # Typecasting is performed on assignment
-#   s.preferred_temperature = '24'
-#   s.preferred_color # => 24
-#
-#   # Modifications have been made to the .preferences hash
-#   s.preferences #=> {color: 'blue', temperature: 24}
-#
-#   # Save the changes. All handled by activerecord
-#   s.save!
 module Spree::Preferences::Preferable
   extend ActiveSupport::Concern
 
@@ -40,25 +7,25 @@ module Spree::Preferences::Preferable
 
   def get_preference(name)
     has_preference! name
-    #nodyna <ID:send-89> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-2508> <SD COMPLEX (change-prone variables)>
     send self.class.preference_getter_method(name)
   end
 
   def set_preference(name, value)
     has_preference! name
-    #nodyna <ID:send-90> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-2509> <SD COMPLEX (change-prone variables)>
     send self.class.preference_setter_method(name), value
   end
 
   def preference_type(name)
     has_preference! name
-    #nodyna <ID:send-91> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-2510> <SD COMPLEX (change-prone variables)>
     send self.class.preference_type_getter_method(name)
   end
 
   def preference_default(name)
     has_preference! name
-    #nodyna <ID:send-92> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-2511> <SD COMPLEX (change-prone variables)>
     send self.class.preference_default_getter_method(name)
   end
 
@@ -117,7 +84,6 @@ module Spree::Preferences::Preferable
       when "Hash"
         value
       when "String"
-        # only works with hashes whose keys are strings
         JSON.parse value.gsub('=>', ':')
       when "Array"
         begin

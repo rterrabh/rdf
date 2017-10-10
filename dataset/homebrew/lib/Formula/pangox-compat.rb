@@ -16,8 +16,6 @@ class PangoxCompat < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <pango/pangox.h>
-      #include <string.h>
 
       int main(int argc, char *argv[]) {
         return strcmp(PANGO_RENDER_TYPE_X, "PangoRenderX");

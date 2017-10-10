@@ -1,6 +1,5 @@
 module Rake
 
-  # Include PrivateReader to use +private_reader+.
   module PrivateReader           # :nodoc: all
 
     def self.included(base)
@@ -9,7 +8,6 @@ module Rake
 
     module ClassMethods
 
-      # Declare a list of private accessors
       def private_reader(*names)
         attr_reader(*names)
         private(*names)

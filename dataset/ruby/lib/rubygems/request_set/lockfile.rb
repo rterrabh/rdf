@@ -1,35 +1,20 @@
 require 'strscan'
 
-##
-# Parses a gem.deps.rb.lock file and constructs a LockSet containing the
-# dependencies found inside.  If the lock file is missing no LockSet is
-# constructed.
 
 class Gem::RequestSet::Lockfile
 
-  ##
-  # Raised when a lockfile cannot be parsed
 
   class ParseError < Gem::Exception
 
-    ##
-    # The column where the error was encountered
 
     attr_reader :column
 
-    ##
-    # The line where the error was encountered
 
     attr_reader :line
 
-    ##
-    # The location of the lock file
 
     attr_reader :path
 
-    ##
-    # Raises a ParseError with the given +message+ which was encountered at a
-    # +line+ and +column+ while parsing.
 
     def initialize message, column, line, path
       @line   = line
@@ -40,14 +25,9 @@ class Gem::RequestSet::Lockfile
 
   end
 
-  ##
-  # The platforms for this Lockfile
 
   attr_reader :platforms
 
-  ##
-  # Creates a new Lockfile for the given +request_set+ and +gem_deps_file+
-  # location.
 
   def initialize request_set, gem_deps_file, dependencies = nil
     @set           = request_set
@@ -209,8 +189,6 @@ class Gem::RequestSet::Lockfile
     out << nil
   end
 
-  ##
-  # Gets the next token for a Lockfile
 
   def get expected_types = nil, expected_value = nil # :nodoc:
     @current_token = @tokens.shift
@@ -480,9 +458,6 @@ class Gem::RequestSet::Lockfile
     end
   end
 
-  ##
-  # Parses the requirements following the dependency +name+ and the +op+ for
-  # the first token of the requirements and returns a Gem::Dependency object.
 
   def parse_dependency name, op # :nodoc:
     return Gem::Dependency.new name, op unless peek[0] == :text
@@ -502,8 +477,6 @@ class Gem::RequestSet::Lockfile
     Gem::Dependency.new name, requirements
   end
 
-  ##
-  # Peeks at the next token for Lockfile
 
   def peek # :nodoc:
     @tokens.first || [:EOF]
@@ -524,8 +497,6 @@ class Gem::RequestSet::Lockfile
     get while not @tokens.empty? and peek.first == type
   end
 
-  ##
-  # The contents of the lock file.
 
   def to_s
     @set.resolve
@@ -551,17 +522,11 @@ class Gem::RequestSet::Lockfile
     out.join "\n"
   end
 
-  ##
-  # Calculates the column (by byte) and the line of the current token based on
-  # +byte_offset+.
 
   def token_pos byte_offset # :nodoc:
     [byte_offset - @line_pos, @line]
   end
 
-  ##
-  # Converts a lock file into an Array of tokens.  If the lock file is missing
-  # an empty Array is returned.
 
   def tokenize # :nodoc:
     @line     = 0
@@ -628,15 +593,11 @@ class Gem::RequestSet::Lockfile
     @tokens
   end
 
-  ##
-  # Ungets the last token retrieved by #get
 
   def unget # :nodoc:
     @tokens.unshift @current_token
   end
 
-  ##
-  # Writes the lock file alongside the gem dependencies file
 
   def write
     content = to_s

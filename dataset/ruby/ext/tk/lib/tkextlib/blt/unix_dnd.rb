@@ -1,10 +1,3 @@
-#
-#  tkextlib/blt/unix_dnd.rb
-#
-#    *** This is alpha version, because there is no document on BLT. ***
-#
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -15,7 +8,6 @@ module Tk::BLT
 
     TkCommandNames = ['::blt::dnd'.freeze].freeze
 
-    ##############################
 
     extend TkItemConfigMethod
 
@@ -82,7 +74,6 @@ module Tk::BLT
       end
     end
 
-    ##############################
 
     def self.cancel(win)
       tk_call('::blt::dnd', 'cancel', *wins)

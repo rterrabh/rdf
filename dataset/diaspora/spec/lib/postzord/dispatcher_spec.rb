@@ -1,6 +1,3 @@
-#   Copyright (c) 2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 require 'spec_helper'
 
@@ -54,6 +51,7 @@ describe Postzord::Dispatcher do
 
     describe '#post' do
       it 'calls Array#partition on subscribers' do
+        #nodyna <instance_variable_set-174> <not yet classified>
         @zord.instance_variable_set(:@subscribers, @subscribers)
         expect(@subscribers).to receive(:partition).and_return([@remote_people, @local_people])
         @zord.post
@@ -210,7 +208,7 @@ describe Postzord::Dispatcher do
       it 'should queue an HttpMultiJob for the remote people' do
         allow_any_instance_of(Postzord::Dispatcher::Public).to receive(:deliver_to_remote).and_call_original
         expect(Workers::HttpMulti).to receive(:perform_async).with(alice.id, anything, @remote_people.map{|p| p.id}, anything).once
-        #nodyna <ID:send-118> <SD EASY (private methods)>
+        #nodyna <send-175> <SD EASY (private methods)>
         @mailman.send(:deliver_to_remote, @remote_people)
 
         allow(Postzord::Dispatcher::Public).to receive(:deliver_to_remote)
@@ -226,20 +224,21 @@ describe Postzord::Dispatcher do
         local_people = []
         local_people << alice.person
         expect(Workers::ReceiveLocalBatch).to receive(:perform_async).with(@sm.class.to_s, @sm.id, [alice.id]).once
-        #nodyna <ID:send-119> <SD EASY (private methods)>
+        #nodyna <send-176> <SD EASY (private methods)>
         @mailman.send(:deliver_to_local, local_people)
       end
 
       it 'returns if people are empty' do
         expect(Workers::ReceiveLocalBatch).not_to receive(:perform_async)
-        #nodyna <ID:send-120> <SD EASY (private methods)>
+        #nodyna <send-177> <SD EASY (private methods)>
         @mailman.send(:deliver_to_local, [])
       end
 
       it 'returns if the object is a profile' do
+        #nodyna <instance_variable_set-178> <not yet classified>
         @mailman.instance_variable_set(:@object, Profile.new)
         expect(Workers::ReceiveLocalBatch).not_to receive(:perform_async)
-        #nodyna <ID:send-121> <SD EASY (private methods)>
+        #nodyna <send-179> <SD EASY (private methods)>
         @mailman.send(:deliver_to_local, [1])
       end
     end
@@ -283,7 +282,7 @@ describe Postzord::Dispatcher do
       it 'queues a job to notify the hub' do
         allow(Workers::PostToService).to receive(:perform_async).with(anything, anything, anything)
         expect(Workers::PublishToHub).to receive(:perform_async).with(alice.atom_url)
-        #nodyna <ID:send-122> <SD EASY (private methods)>
+        #nodyna <send-180> <SD EASY (private methods)>
         @zord.send(:deliver_to_services, nil, [])
       end
 
@@ -329,7 +328,7 @@ describe Postzord::Dispatcher do
     describe '#and_notify_local_users' do
       it 'calls notifiy_users' do
         expect(@zord).to receive(:notify_users).with([bob])
-        #nodyna <ID:send-123> <SD EASY (private methods)>
+        #nodyna <send-181> <SD EASY (private methods)>
         @zord.send(:notify_local_users, [bob.person])
       end
     end
@@ -337,7 +336,7 @@ describe Postzord::Dispatcher do
     describe '#notify_users' do
       it 'enqueues a NotifyLocalUsers job' do
         expect(Workers::NotifyLocalUsers).to receive(:perform_async).with([bob.id], @zord.object.class.to_s, @zord.object.id, @zord.object.author.id)
-        #nodyna <ID:send-124> <SD EASY (private methods)>
+        #nodyna <send-182> <SD EASY (private methods)>
         @zord.send(:notify_users, [bob])
       end
     end

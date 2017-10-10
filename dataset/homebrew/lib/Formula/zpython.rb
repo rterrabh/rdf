@@ -23,20 +23,12 @@ class Zpython < Formula
     url "https://downloads.sourceforge.net/project/zsh/zsh/5.0.5/zsh-5.0.5.tar.bz2"
     mirror "http://www.zsh.org/pub/zsh-5.0.5.tar.bz2"
 
-    # Note, non-head version is completly implemented in this lengthy patch
-    # later on, we hope to use https://bitbucket.org/ZyX_I/zsh.git to download a tagged release.
     patch do
       url "https://gist.githubusercontent.com/felixbuenemann/5790777/raw/cb5ea3b34617174e50fd3972792ec0944959de3c/zpython.patch"
       sha256 "73d6565536abe269cc7715e5200ba63000b7fb830c8975db7e5e6db2222e8f09"
     end
   end
 
-  # We prepend `00-` for the first version of the zpython module, which is
-  # itself a patch on top of zsh and does not have own version number yet.
-  # Hoping that upstream will provide tags that we could download properly.
-  # Starting here with `00-`, so that once we get tags for the upstream
-  # repository at https://bitbucket.org/ZyX_I/zsh.git, brew outdated will
-  # be able to tell us to upgrade zpython.
   version "00-5.0.5"
   sha256 "6624d2fb6c8fa4e044d2b009f86ed1617fe8583c83acfceba7ec82826cfa8eaf"
 
@@ -55,7 +47,6 @@ class Zpython < Formula
     system "autoreconf"
     system "./configure", *args
 
-    # Disable building docs due to exotic yodl dependency
     inreplace "Makefile", "subdir in Src Doc;", "subdir in Src;"
 
     system "make"

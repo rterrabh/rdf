@@ -4,6 +4,7 @@ module Spree
   module Api
     module ControllerSetup
       def self.included(klass)
+        #nodyna <class_eval-2411> <not yet classified>
         klass.class_eval do
           include CanCan::ControllerAdditions
           include Spree::Core::ControllerHelpers::Auth

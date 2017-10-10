@@ -5,12 +5,10 @@ require 'site_setting_validations'
 module SiteSettingExtension
   include SiteSettingValidations
 
-  # For plugins, so they can tell if a feature is supported
   def supported_types
     [:email, :username, :list, :enum]
   end
 
-  # part 1 of refactor, centralizing the dependency here
   def provider=(val)
     @provider = val
     refresh!
@@ -88,7 +86,7 @@ module SiteSettingExtension
       if new_choices = opts[:choices]
 
         if String === new_choices
-          #nodyna <ID:eval-25> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-321> <EV COMPLEX (change-prone variables)>
           new_choices = eval(new_choices)
         end
 
@@ -105,13 +103,10 @@ module SiteSettingExtension
         hidden_settings << name
       end
 
-      # You can "shadow" a site setting with a GlobalSetting. If the GlobalSetting
-      # exists it will be used instead of the setting and the setting will be hidden.
-      # Useful for things like API keys on multisite.
       if opts[:shadowed_by_global] && GlobalSetting.respond_to?(name)
         hidden_settings << name
         shadowed_settings << name
-        #nodyna <ID:send-31> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-322> <SD COMPLEX (change-prone variables)>
         current_value = GlobalSetting.send(name)
       end
 
@@ -135,7 +130,6 @@ module SiteSettingExtension
     end
   end
 
-  # just like a setting, except that it is available in javascript via DiscourseSession
   def client_setting(name, default = nil, opts = {})
     setting(name, default, opts)
     @client_settings ||= []
@@ -149,7 +143,7 @@ module SiteSettingExtension
   def settings_hash
     result = {}
     @defaults.each do |s, _|
-      #nodyna <ID:send-32> <SD COMPLEX (array)>
+      #nodyna <send-323> <SD COMPLEX (array)>
       result[s] = send(s).to_s
     end
     result
@@ -162,16 +156,15 @@ module SiteSettingExtension
   end
 
   def client_settings_json_uncached
-    #nodyna <ID:send-33> <SD COMPLEX (array)>
+    #nodyna <send-324> <SD COMPLEX (array)>
     MultiJson.dump(Hash[*@client_settings.map{|n| [n, self.send(n)]}.flatten])
   end
 
-  # Retrieve all settings
   def all_settings(include_hidden=false)
     @defaults
       .reject{|s, _| hidden_settings.include?(s) && !include_hidden}
       .map do |s, v|
-        #nodyna <ID:send-34> <SD COMPLEX (array)>
+        #nodyna <send-325> <SD COMPLEX (array)>
         value = send(s)
         type = types[get_data_type(s, value)]
         opts = {
@@ -200,13 +193,9 @@ module SiteSettingExtension
   end
 
   def self.client_settings_cache_key
-    # NOTE: we use the git version in the key to ensure
-    # that we don't end up caching the incorrect version
-    # in cases where we are cycling unicorns
     "client_settings_json_#{Discourse.git_version}"
   end
 
-  # refresh all the site settings
   def refresh!
     mutex.synchronize do
       ensure_listen_for_changes
@@ -216,12 +205,10 @@ module SiteSettingExtension
         [s.name.intern, convert(s.value,s.data_type)]
       }.to_a.flatten)]
 
-      # add defaults, cause they are cached
       new_hash = defaults.merge(new_hash)
 
-      # add shadowed
       shadowed_settings.each do |ss|
-        #nodyna <ID:send-35> <SD COMPLEX (array)>
+        #nodyna <send-326> <SD COMPLEX (array)>
         new_hash[ss] = GlobalSetting.send(ss)
       end
 
@@ -312,7 +299,7 @@ module SiteSettingExtension
     end
 
     if self.respond_to? "validate_#{name}"
-      #nodyna <ID:send-36> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-327> <SD COMPLEX (change-prone variables)>
       send("validate_#{name}", val)
     end
 
@@ -338,7 +325,6 @@ module SiteSettingExtension
     type = get_data_type(name, defaults[name.to_sym])
 
     if type == types[:fixnum]
-      # validate fixnum
       valid = false unless value.to_i.is_a?(Fixnum)
     end
 
@@ -346,7 +332,6 @@ module SiteSettingExtension
   end
 
   def filter_value(name, value)
-    # filter domain name
     if %w[disabled_image_download_domains onebox_domains_whitelist exclude_rel_nofollow_domains email_domains_blacklist email_domains_whitelist white_listed_spam_host_domains].include? name
       domain_array = []
       value.split('|').each { |url|
@@ -360,7 +345,7 @@ module SiteSettingExtension
   def set(name, value)
     if has_setting?(name) && is_valid_data?(name, value)
       value = filter_value(name, value)
-      #nodyna <ID:send-37> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-328> <SD COMPLEX (change-prone variables)>
       self.send("#{name}=", value)
       Discourse.request_refresh! if requires_refresh?(name)
     else
@@ -393,8 +378,6 @@ module SiteSettingExtension
   def get_data_type(name, val)
     return types[:null] if val.nil?
 
-    # Some types are just for validations like email. Only consider
-    # it valid if includes in `types`
     if static_type = static_types[name.to_sym]
       return types[static_type] if types.keys.include?(static_type)
     end
@@ -426,7 +409,6 @@ module SiteSettingExtension
     else
       return value if types[type]
 
-      # Otherwise it's a type error
       raise ArgumentError.new :type
     end
   end
@@ -458,7 +440,7 @@ module SiteSettingExtension
     end
 
     define_singleton_method "#{clean_name}?" do
-      #nodyna <ID:send-38> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-329> <SD COMPLEX (change-prone variables)>
       self.send clean_name
     end
 

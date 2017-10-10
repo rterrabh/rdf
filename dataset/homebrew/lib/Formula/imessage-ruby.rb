@@ -1,4 +1,5 @@
 class ImessageRuby < Formula
+  #nodyna <send-593> <not yet classified>
   desc "Command-line tool to send iMessage"
   homepage "https://github.com/linjunpop/imessage"
   url "https://github.com/linjunpop/imessage/archive/v0.3.1.tar.gz"

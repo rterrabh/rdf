@@ -30,21 +30,16 @@ class Clisp < Formula
     ENV.deparallelize # This build isn't parallel safe.
     ENV.O0 # Any optimization breaks the build
 
-    # Clisp requires to select word size explicitly this way,
-    # set it in CFLAGS won't work.
     ENV["CC"] = "#{ENV.cc} -m#{MacOS.prefer_64_bit? ? 64 : 32}"
 
     system "./configure", "--prefix=#{prefix}",
                           "--with-readline=yes"
 
     cd "src" do
-      # Multiple -O options will be in the generated Makefile,
-      # make Homebrew's the last such option so it's effective.
       inreplace "Makefile" do |s|
         s.change_make_var! "CFLAGS", "#{s.get_make_var("CFLAGS")} #{ENV["CFLAGS"]}"
       end
 
-      # The ulimit must be set, otherwise `make` will fail and tell you to do so
       system "ulimit -s 16384 && make"
 
       if MacOS.version >= :lion
@@ -54,7 +49,6 @@ class Clisp < Formula
            Please take them upstream to the clisp project itself.
         EOS
       else
-        # Considering the complexity of this package, a self-check is highly recommended.
         system "make", "check"
       end
 
@@ -78,6 +72,4 @@ index 5345ed6..cf14e29 100644
  /* Avoid annoying warning caused by a wrongly standardized iconv() prototype. */
 -#ifdef GNU_LIBICONV
 +#if defined(GNU_LIBICONV) && !defined(__APPLE_CC__)
-   #undef iconv
-   #define iconv(cd,inbuf,inbytesleft,outbuf,outbytesleft) \
      libiconv(cd,(ICONV_CONST char **)(inbuf),inbytesleft,outbuf,outbytesleft)

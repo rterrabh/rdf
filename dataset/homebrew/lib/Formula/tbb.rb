@@ -12,14 +12,11 @@ class Tbb < Formula
     sha256 "03a178526e7a878080bae4e730e14853afdf8cc6709c0e58d294ac916b6498d1" => :mountain_lion
   end
 
-  # requires malloc features first introduced in Lion
-  # https://github.com/Homebrew/homebrew/issues/32274
   depends_on :macos => :lion
 
   option :cxx11
 
   def install
-    # Intel sets varying O levels on each compile command.
     ENV.no_optimization
 
     args = %W[tbb_build_prefix=BUILDPREFIX]
@@ -36,8 +33,6 @@ class Tbb < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <tbb/task_scheduler_init.h>
-      #include <iostream>
 
       int main()
       {

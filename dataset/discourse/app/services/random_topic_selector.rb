@@ -7,7 +7,6 @@ class RandomTopicSelector
 
     exclude = category.try(:topic_id)
 
-    # don't leak private categories into the "everything" group
     user = category ? CategoryFeaturedTopic.fake_admin : nil
 
     options = {

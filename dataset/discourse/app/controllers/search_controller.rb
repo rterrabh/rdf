@@ -40,7 +40,6 @@ class SearchController < ApplicationController
       raise Discourse::InvalidParameters.new(:search_context) unless SearchController.valid_context_types.include?(search_context[:type])
       raise Discourse::InvalidParameters.new(:search_context) if search_context[:id].blank?
 
-      # A user is found by username
       context_obj = nil
       if ['user','private_messages'].include? search_context[:type]
         context_obj = User.find_by(username_lower: params[:search_context][:id].downcase)

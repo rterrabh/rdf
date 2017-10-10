@@ -1,11 +1,4 @@
 module ActionView #:nodoc:
-  # = Action View PathSet
-  #
-  # This class is used to store and access paths in Action View. A number of
-  # operations are defined so that you can search among the paths in this
-  # set and also perform operations on other +PathSet+ objects.
-  #
-  # A +LookupContext+ will use a +PathSet+ to store the paths in its context.
   class PathSet #:nodoc:
     include Enumerable
 
@@ -35,6 +28,7 @@ module ActionView #:nodoc:
     end
 
     %w(<< concat push insert unshift).each do |method|
+      #nodyna <class_eval-1191> <not yet classified>
       class_eval <<-METHOD, __FILE__, __LINE__ + 1
         def #{method}(*args)
           paths.#{method}(*typecast(args))

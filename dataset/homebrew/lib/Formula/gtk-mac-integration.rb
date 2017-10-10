@@ -33,7 +33,6 @@ class GtkMacIntegration < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gtkosxapplication.h>
 
       int main(int argc, char *argv[]) {
         gchar *bundle = gtkosx_application_get_bundle_path();

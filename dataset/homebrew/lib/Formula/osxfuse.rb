@@ -14,8 +14,6 @@ class Osxfuse < Formula
   depends_on :macos => :snow_leopard
   depends_on :xcode => :build
 
-  # A fairly heinous hack to workaround our dependency resolution getting upset
-  # See https://github.com/Homebrew/homebrew/issues/35073
   depends_on NonBinaryOsxfuseRequirement => :build
   depends_on UnsignedKextRequirement => [:cask => "osxfuse",
                                          :download => "http://sourceforge.net/projects/osxfuse/files/"]
@@ -26,7 +24,6 @@ class Osxfuse < Formula
   depends_on "gettext" => :build
 
   def install
-    # Do not override Xcode build settings
     ENV.remove_cc_etc
 
     system "./build.sh", "-t", "homebrew", "-f", prefix

@@ -34,16 +34,12 @@ class Go < Formula
   end
 
   def install
-    # GOROOT_FINAL must be overidden later on real Go install
     ENV["GOROOT_FINAL"] = buildpath/"gobootstrap"
 
-    # build the gobootstrap toolchain Go >=1.4
     (buildpath/"gobootstrap").install resource("gobootstrap")
     cd "#{buildpath}/gobootstrap/src" do
       system "./make.bash", "--no-clean"
     end
-    # This should happen after we build the test Go, just in case
-    # the bootstrap toolchain is aware of this variable too.
     ENV["GOROOT_BOOTSTRAP"] = ENV["GOROOT_FINAL"]
 
     cd "src" do
@@ -74,7 +70,6 @@ class Go < Formula
       if build.with? "vet"
         cd "src/golang.org/x/tools/cmd/vet/" do
           system "go", "build"
-          # This is where Go puts vet natively; not in the bin.
           (libexec/"pkg/tool/darwin_amd64/").install "vet"
         end
       end
@@ -100,8 +95,6 @@ class Go < Formula
         fmt.Println("Hello World")
     }
     EOS
-    # Run go fmt check for no errors then run the program.
-    # This is a a bare minimum of go working as it uses fmt, build, and run.
     system "#{bin}/go", "fmt", "hello.go"
     assert_equal "Hello World\n", `#{bin}/go run hello.go`
 

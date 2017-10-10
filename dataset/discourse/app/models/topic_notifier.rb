@@ -8,7 +8,7 @@ class TopicNotifier
     :regular!  => :regular,
     :muted!    => :muted }.each_pair do |method_name, level|
 
-    #nodyna <ID:define_method-38> <DM MODERATE (array)>
+    #nodyna <define_method-396> <DM MODERATE (array)>
     define_method method_name do |user_id|
       change_level user_id, level
     end
@@ -19,7 +19,6 @@ class TopicNotifier
     change_level user_id, :watching, reason
   end
 
-  # Enable/disable the mute on the topic
   def toggle_mute(user_id)
     change_level user_id, (muted?(user_id) ? levels[:regular] : levels[:muted])
   end

@@ -8,9 +8,7 @@ class Mpgtx < Formula
     system "./configure", "--parachute",
                           "--prefix=#{prefix}",
                           "--manprefix=#{man}"
-    # Unset LFLAGS, "-s" causes the linker to crash
     system "make", "LFLAGS="
-    # Overide BSD incompatible cp flags set in makefile
     system "make install cpflags=RP"
   end
 end

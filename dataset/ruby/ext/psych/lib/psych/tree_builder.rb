@@ -1,23 +1,9 @@
 require 'psych/handler'
 
 module Psych
-  ###
-  # This class works in conjunction with Psych::Parser to build an in-memory
-  # parse tree that represents a YAML document.
-  #
-  # == Example
-  #
-  #   parser = Psych::Parser.new Psych::TreeBuilder.new
-  #   parser.parse('--- foo')
-  #   tree = parser.handler.root
-  #
-  # See Psych::Handler for documentation on the event methods used in this
-  # class.
   class TreeBuilder < Psych::Handler
-    # Returns the root node for the built tree
     attr_reader :root
 
-    # Create a new TreeBuilder instance
     def initialize
       @stack = []
       @last  = nil
@@ -28,6 +14,7 @@ module Psych
       Sequence
       Mapping
     }.each do |node|
+      #nodyna <class_eval-1476> <not yet classified>
       class_eval %{
         def start_#{node.downcase}(anchor, tag, implicit, style)
           n = Nodes::#{node}.new(anchor, tag, implicit, style)
@@ -41,22 +28,12 @@ module Psych
       }
     end
 
-    ###
-    # Handles start_document events with +version+, +tag_directives+,
-    # and +implicit+ styling.
-    #
-    # See Psych::Handler#start_document
     def start_document version, tag_directives, implicit
       n = Nodes::Document.new version, tag_directives, implicit
       @last.children << n
       push n
     end
 
-    ###
-    # Handles end_document events with +version+, +tag_directives+,
-    # and +implicit+ styling.
-    #
-    # See Psych::Handler#start_document
     def end_document implicit_end = !streaming?
       @last.implicit_end = implicit_end
       pop

@@ -1,16 +1,7 @@
-#
-#   tk/winpkg.rb : methods for Tcl/Tk packages for Microsoft Windows
-#                     2000/11/22 by Hidetoshi Nagai <nagai@ai.kyutech.ac.jp>
-#
-#     ATTENTION !!
-#         This is NOT TESTED. Because I have no test-environment.
-#
 require 'tk'
 
 module Tk::WinDDE
 end
-#TkWinDDE = Tk::WinDDE
-#Tk.__set_toplevel_aliases__(:Tk, Tk::WinDDE, :TkWinDDE)
 Tk.__set_loaded_toplevel_aliases__('tk/winpkg.rb', :Tk, Tk::WinDDE, :TkWinDDE)
 
 module Tk::WinDDE
@@ -30,9 +21,6 @@ module Tk::WinDDE
     tk_call_without_enc('package', 'require', 'dde')
   end
 
-  #def servername(topic=None)
-  #  tk_call('dde', 'servername', topic)
-  #end
   def servername(*args)
     if args.size == 0
       tk_call('dde', 'servername')
@@ -79,22 +67,24 @@ module Tk::WinDDE
     tk_call('dde', 'services', service, topic)
   end
 
+  #nodyna <eval-1779> <not yet classified>
   def eval(topic, cmd, *args)
+    #nodyna <eval-1780> <not yet classified>
     tk_call('dde', 'eval', topic, cmd, *args)
   end
 
   def async_eval(topic, cmd, *args)
+    #nodyna <eval-1781> <not yet classified>
     tk_call('dde', 'eval', -async, topic, cmd, *args)
   end
 
   module_function :servername, :execute, :async_execute,
+                  #nodyna <eval-1782> <not yet classified>
                   :poke, :request, :services, :eval
 end
 
 module Tk::WinRegistry
 end
-#TkWinRegistry = Tk::WinRegistry
-#Tk.__set_toplevel_aliases__(:Tk, Tk::WinRegistry, :TkWinRegistry)
 Tk.__set_loaded_toplevel_aliases__('tk/winpkg.rb', :Tk, Tk::WinRegistry,
                                    :TkWinRegistry)
 

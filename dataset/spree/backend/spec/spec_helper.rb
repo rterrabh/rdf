@@ -1,5 +1,4 @@
 if ENV["COVERAGE"]
-  # Run Coverage report
   require 'simplecov'
   SimpleCov.start do
     add_group 'Controllers', 'app/controllers'
@@ -11,8 +10,6 @@ if ENV["COVERAGE"]
   end
 end
 
-# This file is copied to ~/spec when you run 'ruby script/generate rspec'
-# from the project root directory.
 ENV["RAILS_ENV"] ||= 'test'
 
 begin
@@ -24,8 +21,6 @@ end
 
 require 'rspec/rails'
 
-# Requires supporting files with custom matchers and macros, etc,
-# in ./support/ and its subdirectories.
 Dir["#{File.dirname(__FILE__)}/support/**/*.rb"].each {|f| require f}
 
 require 'database_cleaner'
@@ -45,7 +40,6 @@ require 'paperclip/matchers'
 require 'capybara/poltergeist'
 Capybara.javascript_driver = :poltergeist
 
-# Set timeout to something high enough to allow CI to pass
 Capybara.default_wait_time = 10
 
 RSpec.configure do |config|
@@ -55,9 +49,6 @@ RSpec.configure do |config|
   config.mock_with :rspec
   config.raise_errors_for_deprecations!
 
-  # If you're not using ActiveRecord, or you'd prefer not to run each of your
-  # examples within a transaction, comment the following line or assign false
-  # instead of true.
   config.use_transactional_fixtures = false
 
   config.before :suite do
@@ -73,8 +64,6 @@ RSpec.configure do |config|
     else
       DatabaseCleaner.strategy = :transaction
     end
-    # TODO: Find out why open_transactions ever gets below 0
-    # See issue #3428
     if ActiveRecord::Base.connection.open_transactions < 0
       ActiveRecord::Base.connection.increment_open_transactions
     end
@@ -84,7 +73,6 @@ RSpec.configure do |config|
   end
 
   config.after(:each) do
-    # Ensure js requests finish processing before advancing to the next test
     wait_for_ajax if RSpec.current_example.metadata[:js]
 
     DatabaseCleaner.clean

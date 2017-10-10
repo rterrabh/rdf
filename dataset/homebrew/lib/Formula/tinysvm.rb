@@ -11,14 +11,12 @@ class Tinysvm < Formula
     sha1 "ae5f0cd4fdb3b6c6e951791496ba0a0487fb687c" => :mountain_lion
   end
 
-  # Use correct compilation flag
   patch :p0 do
     url "https://trac.macports.org/export/94156/trunk/dports/math/TinySVM/files/patch-configure.diff"
     sha256 "b4cd84063fd56cdcb0212528c6d424788528a9d6b8b0a17aa01294773c62e8a7"
   end
 
   def install
-    # Needed to select proper getopt, per MacPorts
     ENV.append_to_cflags "-D__GNU_LIBRARY__"
 
     inreplace "configure", "-O9", "" # clang barfs on -O9

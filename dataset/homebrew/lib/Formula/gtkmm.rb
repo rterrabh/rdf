@@ -26,7 +26,6 @@ class Gtkmm < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <gtkmm.h>
 
       int main(int argc, char *argv[]) {
         Gtk::Label label("Hello World!");

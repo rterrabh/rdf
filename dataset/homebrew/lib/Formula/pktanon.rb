@@ -8,11 +8,9 @@ class Pktanon < Formula
   depends_on "boost"
 
   def install
-    # fix compile failure caused by undefined function 'sleep'.
     inreplace "src/Timer.cpp", %(#include "Timer.h"\r\n),
       %(#include "Timer.h"\r\n#include "unistd.h"\r\n)
 
-    # include the boost system library to resolve compilation errors
     ENV["LIBS"] = "-lboost_system-mt"
 
     system "./configure", "--disable-dependency-tracking", "--prefix=#{prefix}"

@@ -7,54 +7,6 @@ require 'active_support/core_ext/kernel/singleton_class'
 require 'thread'
 
 module ActiveSupport
-  # Callbacks are code hooks that are run at key points in an object's life cycle.
-  # The typical use case is to have a base class define a set of callbacks
-  # relevant to the other functionality it supplies, so that subclasses can
-  # install callbacks that enhance or modify the base functionality without
-  # needing to override or redefine methods of the base class.
-  #
-  # Mixing in this module allows you to define the events in the object's
-  # life cycle that will support callbacks (via +ClassMethods.define_callbacks+),
-  # set the instance methods, procs, or callback objects to be called (via
-  # +ClassMethods.set_callback+), and run the installed callbacks at the
-  # appropriate times (via +run_callbacks+).
-  #
-  # Three kinds of callbacks are supported: before callbacks, run before a
-  # certain event; after callbacks, run after the event; and around callbacks,
-  # blocks that surround the event, triggering it when they yield. Callback code
-  # can be contained in instance methods, procs or lambdas, or callback objects
-  # that respond to certain predetermined methods. See +ClassMethods.set_callback+
-  # for details.
-  #
-  #   class Record
-  #     include ActiveSupport::Callbacks
-  #     define_callbacks :save
-  #
-  #     def save
-  #       run_callbacks :save do
-  #         puts "- save"
-  #       end
-  #     end
-  #   end
-  #
-  #   class PersonRecord < Record
-  #     set_callback :save, :before, :saving_message
-  #     def saving_message
-  #       puts "saving..."
-  #     end
-  #
-  #     set_callback :save, :after do |object|
-  #       puts "saved"
-  #     end
-  #   end
-  #
-  #   person = PersonRecord.new
-  #   person.save
-  #
-  # Output:
-  #   saving...
-  #   - save
-  #   saved
   module Callbacks
     extend Concern
 
@@ -64,21 +16,8 @@ module ActiveSupport
 
     CALLBACK_FILTER_TYPES = [:before, :after, :around]
 
-    # Runs the callbacks for the given event.
-    #
-    # Calls the before and around callbacks in the order they were set, yields
-    # the block (if given one), and then runs the after callbacks in reverse
-    # order.
-    #
-    # If the callback chain was halted, returns +false+. Otherwise returns the
-    # result of the block, +nil+ if no callbacks have been set, or +true+
-    # if callbacks have been set but no block is given.
-    #
-    #   run_callbacks :save do
-    #     save
-    #   end
     def run_callbacks(kind, &block)
-      #nodyna <ID:send-228> <SD MODERATE (change-prone variables)>
+      #nodyna <send-984> <SD MODERATE (change-prone variables)>
       send "_run_#{kind}_callbacks", &block
     end
 
@@ -94,9 +33,6 @@ module ActiveSupport
       end
     end
 
-    # A hook invoked every time a before callback is halted.
-    # This can be overridden in AS::Callback implementors in order
-    # to provide better debugging/logging.
     def halted_callback_hook(filter)
     end
 
@@ -146,7 +82,7 @@ module ActiveSupport
               result = user_callback.call target, value
               env.halted = halted_lambda.call(target, result)
               if env.halted
-                #nodyna <ID:send-229> <SD EASY (private methods)>
+                #nodyna <send-985> <SD EASY (private methods)>
                 target.send :halted_callback_hook, filter
               end
             end
@@ -166,7 +102,7 @@ module ActiveSupport
               result = user_callback.call target, value
               env.halted = halted_lambda.call(target, result)
               if env.halted
-                #nodyna <ID:send-230> <SD EASY (private methods)>
+                #nodyna <send-986> <SD EASY (private methods)>
                 target.send :halted_callback_hook, filter
               end
             end
@@ -399,7 +335,6 @@ module ActiveSupport
         end
       end
 
-      # Wraps code with filter
       def apply(callback_sequence)
         user_conditions = conditions_lambdas
         user_callback = make_lambda @filter
@@ -420,49 +355,40 @@ module ActiveSupport
         lambda { |*args, &blk| !l.call(*args, &blk) }
       end
 
-      # Filters support:
-      #
-      #   Symbols:: A method to call.
-      #   Strings:: Some content to evaluate.
-      #   Procs::   A proc to call with the object.
-      #   Objects:: An object with a <tt>before_foo</tt> method on it to call.
-      #
-      # All of these objects are converted into a lambda and handled
-      # the same after this point.
       def make_lambda(filter)
         case filter
         when Symbol
-          #nodyna <ID:send-231> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-987> <SD COMPLEX (change-prone variables)>
           lambda { |target, _, &blk| target.send filter, &blk }
         when String
-          #nodyna <ID:eval-2> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-988> <EV COMPLEX (change-prone variables)>
           l = eval "lambda { |value| #{filter} }"
-          #nodyna <ID:instance_exec-17> <IEX COMPLEX (block with parameters)>
+          #nodyna <instance_exec-989> <IEX COMPLEX (block with parameters)>
           lambda { |target, value| target.instance_exec(value, &l) }
         when Conditionals::Value then filter
         when ::Proc
           if filter.arity > 1
             return lambda { |target, _, &block|
               raise ArgumentError unless block
-              #nodyna <ID:instance_exec-18> <IEX COMPLEX (block with parameters)>
+              #nodyna <instance_exec-990> <IEX COMPLEX (block with parameters)>
               target.instance_exec(target, block, &filter)
             }
           end
 
           if filter.arity <= 0
-            #nodyna <ID:instance_exec-19> <IEX COMPLEX (block without parameters)>
+            #nodyna <instance_exec-991> <IEX COMPLEX (block without parameters)>
             lambda { |target, _| target.instance_exec(&filter) }
           else
-            #nodyna <ID:instance_exec-20> <IEX COMPLEX (block with parameters)>
+            #nodyna <instance_exec-992> <IEX COMPLEX (block with parameters)>
             lambda { |target, _| target.instance_exec(target, &filter) }
           end
         else
           scopes = Array(chain_config[:scope])
-          #nodyna <ID:send-232> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-993> <SD COMPLEX (change-prone variables)>
           method_to_call = scopes.map{ |s| public_send(s) }.join("_")
 
           lambda { |target, _, &blk|
-            #nodyna <ID:send-233> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-994> <SD COMPLEX (change-prone variables)>
             filter.public_send method_to_call, target, &blk
           }
         end
@@ -483,9 +409,6 @@ module ActiveSupport
       end
     end
 
-    # Execute before and after filters in a sequence instead of
-    # chaining them with nested lambda calls, see:
-    # https://github.com/rails/rails/issues/18011
     class CallbackSequence
       def initialize(&call)
         @call = call
@@ -519,7 +442,6 @@ module ActiveSupport
       end
     end
 
-    # An Array with a compile method.
     class CallbackChain #:nodoc:#
       include Enumerable
 
@@ -609,8 +531,6 @@ module ActiveSupport
         [type, filters, options.dup]
       end
 
-      # This is used internally to append, prepend and skip callbacks to the
-      # CallbackChain.
       def __update_callbacks(name) #:nodoc:
         ([self] + ActiveSupport::DescendantsTracker.descendants(self)).reverse_each do |target|
           chain = target.get_callbacks name
@@ -618,43 +538,6 @@ module ActiveSupport
         end
       end
 
-      # Install a callback for the given event.
-      #
-      #   set_callback :save, :before, :before_meth
-      #   set_callback :save, :after,  :after_meth, if: :condition
-      #   set_callback :save, :around, ->(r, block) { stuff; result = block.call; stuff }
-      #
-      # The second arguments indicates whether the callback is to be run +:before+,
-      # +:after+, or +:around+ the event. If omitted, +:before+ is assumed. This
-      # means the first example above can also be written as:
-      #
-      #   set_callback :save, :before_meth
-      #
-      # The callback can be specified as a symbol naming an instance method; as a
-      # proc, lambda, or block; as a string to be instance evaluated; or as an
-      # object that responds to a certain method determined by the <tt>:scope</tt>
-      # argument to +define_callbacks+.
-      #
-      # If a proc, lambda, or block is given, its body is evaluated in the context
-      # of the current object. It can also optionally accept the current object as
-      # an argument.
-      #
-      # Before and around callbacks are called in the order that they are set;
-      # after callbacks are called in the reverse order.
-      #
-      # Around callbacks can access the return value from the event, if it
-      # wasn't halted, from the +yield+ call.
-      #
-      # ===== Options
-      #
-      # * <tt>:if</tt> - A symbol, a string or an array of symbols and strings,
-      #   each naming an instance method or a proc; the callback will be called
-      #   only when they all return a true value.
-      # * <tt>:unless</tt> - A symbol, a string or an array of symbols and
-      #   strings, each naming an instance method or a proc; the callback will
-      #   be called only when they all return a false value.
-      # * <tt>:prepend</tt> - If +true+, the callback will be prepended to the
-      #   existing chain rather than appended.
       def set_callback(name, *filter_list, &block)
         type, filters, options = normalize_callback_params(filter_list, block)
         self_chain = get_callbacks name
@@ -668,13 +551,6 @@ module ActiveSupport
         end
       end
 
-      # Skip a previously set callback. Like +set_callback+, <tt>:if</tt> or
-      # <tt>:unless</tt> options may be passed in order to control when the
-      # callback is skipped.
-      #
-      #   class Writer < Person
-      #      skip_callback :validate, :before, :check_membership, if: -> { self.age > 18 }
-      #   end
       def skip_callback(name, *filter_list, &block)
         type, filters, options = normalize_callback_params(filter_list, block)
 
@@ -693,7 +569,6 @@ module ActiveSupport
         end
       end
 
-      # Remove all set callbacks for the given event.
       def reset_callbacks(name)
         callbacks = get_callbacks name
 
@@ -706,77 +581,6 @@ module ActiveSupport
         self.set_callbacks name, callbacks.dup.clear
       end
 
-      # Define sets of events in the object life cycle that support callbacks.
-      #
-      #   define_callbacks :validate
-      #   define_callbacks :initialize, :save, :destroy
-      #
-      # ===== Options
-      #
-      # * <tt>:terminator</tt> - Determines when a before filter will halt the
-      #   callback chain, preventing following callbacks from being called and
-      #   the event from being triggered. This should be a lambda to be executed.
-      #   The current object and the return result of the callback will be called
-      #   with the lambda.
-      #
-      #     define_callbacks :validate, terminator: ->(target, result) { result == false }
-      #
-      #   In this example, if any before validate callbacks returns +false+,
-      #   other callbacks are not executed. Defaults to +false+, meaning no value
-      #   halts the chain.
-      #
-      # * <tt>:skip_after_callbacks_if_terminated</tt> - Determines if after
-      #   callbacks should be terminated by the <tt>:terminator</tt> option. By
-      #   default after callbacks executed no matter if callback chain was
-      #   terminated or not. Option makes sense only when <tt>:terminator</tt>
-      #   option is specified.
-      #
-      # * <tt>:scope</tt> - Indicates which methods should be executed when an
-      #   object is used as a callback.
-      #
-      #     class Audit
-      #       def before(caller)
-      #         puts 'Audit: before is called'
-      #       end
-      #
-      #       def before_save(caller)
-      #         puts 'Audit: before_save is called'
-      #       end
-      #     end
-      #
-      #     class Account
-      #       include ActiveSupport::Callbacks
-      #
-      #       define_callbacks :save
-      #       set_callback :save, :before, Audit.new
-      #
-      #       def save
-      #         run_callbacks :save do
-      #           puts 'save in main'
-      #         end
-      #       end
-      #     end
-      #
-      #   In the above case whenever you save an account the method
-      #   <tt>Audit#before</tt> will be called. On the other hand
-      #
-      #     define_callbacks :save, scope: [:kind, :name]
-      #
-      #   would trigger <tt>Audit#before_save</tt> instead. That's constructed
-      #   by calling <tt>#{kind}_#{name}</tt> on the given instance. In this
-      #   case "kind" is "before" and "name" is "save". In this context +:kind+
-      #   and +:name+ have special meanings: +:kind+ refers to the kind of
-      #   callback (before/after/around) and +:name+ refers to the method on
-      #   which callbacks are being defined.
-      #
-      #   A declaration like
-      #
-      #     define_callbacks :save, scope: [:name]
-      #
-      #   would call <tt>Audit#save</tt>.
-      #
-      # NOTE: +method_name+ passed to `define_model_callbacks` must not end with
-      # `!`, `?` or `=`.
       def define_callbacks(*names)
         options = names.extract_options!
 
@@ -784,6 +588,7 @@ module ActiveSupport
           class_attribute "_#{name}_callbacks"
           set_callbacks name, CallbackChain.new(name, options)
 
+          #nodyna <module_eval-995> <not yet classified>
           module_eval <<-RUBY, __FILE__, __LINE__ + 1
             def _run_#{name}_callbacks(&block)
               __run_callbacks__(_#{name}_callbacks, &block)
@@ -795,12 +600,12 @@ module ActiveSupport
       protected
 
       def get_callbacks(name)
-        #nodyna <ID:send-234> <SD MODERATE (change-prone variables)>
+        #nodyna <send-996> <SD MODERATE (change-prone variables)>
         send "_#{name}_callbacks"
       end
 
       def set_callbacks(name, callbacks)
-        #nodyna <ID:send-235> <SD MODERATE (change-prone variables)>
+        #nodyna <send-997> <SD MODERATE (change-prone variables)>
         send "_#{name}_callbacks=", callbacks
       end
     end

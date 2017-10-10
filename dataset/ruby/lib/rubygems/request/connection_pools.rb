@@ -34,8 +34,6 @@ class Gem::Request::ConnectionPools # :nodoc:
 
   private
 
-  ##
-  # Returns list of no_proxy entries (if any) from the environment
 
   def get_no_proxy_from_env
     env_no_proxy = ENV['no_proxy'] || ENV['NO_PROXY']

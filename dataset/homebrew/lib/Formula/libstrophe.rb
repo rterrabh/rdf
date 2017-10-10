@@ -22,7 +22,6 @@ class Libstrophe < Formula
   depends_on "check"
 
   def install
-    # see https://github.com/strophe/libstrophe/issues/28
     ENV.deparallelize
 
     system "./bootstrap.sh"
@@ -34,8 +33,6 @@ class Libstrophe < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <strophe.h>
-      #include <assert.h>
 
       int main(void) {
         xmpp_ctx_t *ctx;

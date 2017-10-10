@@ -56,12 +56,10 @@ class Keg
   class DirectoryNotWritableError < LinkError
     def to_s; <<-EOS.undent
       Could not symlink #{src}
-      #{dst.dirname} is not writable.
       EOS
     end
   end
 
-  # locale-specific directories have the form language[_territory][.codeset][@modifier]
   LOCALEDIR_RX = /(locale|man)\/([a-z]{2}|C|POSIX)(_[A-Z]{2})?(\.[a-zA-Z\-0-9]+(@.+)?)?/
   INFOFILE_RX = %r{info/([^.].*?\.info|dir)$}
   TOP_LEVEL_DIRECTORIES = %w[bin etc include lib sbin share var Frameworks]
@@ -69,8 +67,6 @@ class Keg
     case d when "LinkedKegs" then HOMEBREW_LIBRARY/d else HOMEBREW_PREFIX/d end
   end
 
-  # These paths relative to the keg's share directory should always be real
-  # directories in the prefix, never symlinks.
   SHARE_PATHS = %w[
     aclocal doc info locale man
     man/man1 man/man2 man/man3 man/man4
@@ -81,7 +77,6 @@ class Keg
     mime-info pixmaps sounds
   ]
 
-  # if path is a file in a keg then this will return the containing Keg object
   def self.for(path)
     path = path.realpath
     until path.root?
@@ -199,7 +194,6 @@ class Keg
 
         dirs << dst if dst.directory? && !dst.symlink?
 
-        # check whether the file to be unlinked is from the current keg first
         if dst.symlink? && src == dst.resolved_path
           dst.uninstall_info if dst.to_s =~ INFOFILE_RX
           dst.unlink
@@ -276,8 +270,6 @@ class Keg
 
     ObserverPathnameExtension.reset_counts!
 
-    # yeah indeed, you have to force anything you need in the main tree into
-    # these dirs REMEMBER that *NOT* everything needs to be in the main tree
     link_dir("etc", mode) { :mkpath }
     link_dir("bin", mode) { :skip_dir }
     link_dir("sbin", mode) { :skip_dir }
@@ -290,7 +282,6 @@ class Keg
       when LOCALEDIR_RX then :mkpath
       when *SHARE_PATHS then :mkpath
       when /^icons\/.*\/icon-theme\.cache$/ then :skip_file
-      # all icons subfolders should also mkpath
       when /^icons\// then :mkpath
       when /^zsh/ then :mkpath
       when /^fish/ then :mkpath
@@ -301,11 +292,8 @@ class Keg
     link_dir("lib", mode) do |relative_path|
       case relative_path.to_s
       when "charset.alias" then :skip_file
-      # pkg-config database gets explicitly created
       when "pkgconfig" then :mkpath
-      # cmake database gets explicitly created
       when "cmake" then :mkpath
-      # lib/language folders also get explicitly created
       when "dtrace" then :mkpath
       when /^gdk-pixbuf/ then :mkpath
       when "ghc" then :mkpath
@@ -319,16 +307,11 @@ class Keg
       when /^python[23]\.\d/ then :mkpath
       when /^R/ then :mkpath
       when /^ruby/ then :mkpath
-      # Everything else is symlinked to the cellar
       else :link
       end
     end
 
     link_dir("Frameworks", mode) do |relative_path|
-      # Frameworks contain symlinks pointing into a subdir, so we have to use
-      # the :link strategy. However, for Foo.framework and
-      # Foo.framework/Versions we have to use :mkpath so that multiple formulae
-      # can link their versions into it and `brew [un]link` works.
       if relative_path.to_s =~ /[^\/]*\.framework(\/Versions)?$/
         :mkpath
       else
@@ -376,14 +359,10 @@ class Keg
 
     src = dst.resolved_path
 
-    # src itself may be a symlink, so check lstat to ensure we are dealing with
-    # a directory, and not a symlink pointing at a directory (which needs to be
-    # treated as a file). In other words, we only want to resolve one symlink.
 
     begin
       stat = src.lstat
     rescue Errno::ENOENT
-      # dst is a broken symlink, so remove it.
       dst.unlink unless mode.dry_run
       return
     end
@@ -408,7 +387,6 @@ class Keg
       return
     end
 
-    # cf. git-clean -n: list files to delete, don't really link or delete
     if mode.dry_run && mode.overwrite
       if dst.symlink?
         puts "#{dst} -> #{dst.resolved_path}"
@@ -418,7 +396,6 @@ class Keg
       return
     end
 
-    # list all link targets
     if mode.dry_run
       puts dst
       return
@@ -441,7 +418,6 @@ class Keg
 
   protected
 
-  # symlinks the contents of path+relative_dir recursively into #{HOMEBREW_PREFIX}/relative_dir
   def link_dir(relative_dir, mode)
     root = path+relative_dir
     return unless root.exist?
@@ -453,8 +429,6 @@ class Keg
       if src.symlink? || src.file?
         Find.prune if File.basename(src) == ".DS_Store"
         Find.prune if src.realpath == dst
-        # Don't link pyc files because Python overwrites these cached object
-        # files and next time brew wants to link, the pyc file is in the way.
         if src.extname == ".pyc" && src.to_s =~ /site-packages/
           Find.prune
         end
@@ -470,10 +444,7 @@ class Keg
           make_relative_symlink dst, src, mode
         end
       elsif src.directory?
-        # if the dst dir already exists, then great! walk the rest of the tree tho
         next if dst.directory? && !dst.symlink?
-        # no need to put .app bundles in the path, the user can just use
-        # spotlight, or the open command and actual mac apps use an equivalent
         Find.prune if src.extname == ".app"
 
         case yield src.relative_path_from(root)

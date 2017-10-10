@@ -33,14 +33,10 @@ class Logstalgia < Formula
   needs :cxx11
 
   def install
-    # clang on Mt. Lion will try to build against libstdc++,
-    # despite -std=gnu++0x
     ENV.libcxx
 
-    # For non-/usr/local installs
     ENV.append "CXXFLAGS", "-I#{HOMEBREW_PREFIX}/include"
 
-    # Handle building head.
     system "autoreconf -f -i" if build.head?
 
     system "./configure", "--disable-dependency-tracking",

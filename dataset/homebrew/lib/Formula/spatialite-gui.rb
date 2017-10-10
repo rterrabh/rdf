@@ -24,8 +24,6 @@ class SpatialiteGui < Formula
   patch :DATA
 
   def install
-    # Add aui library; reported upstream multiple times:
-    # https://groups.google.com/forum/#!searchin/spatialite-users/aui/spatialite-users/wnkjK9pde2E/hVCpcndUP_wJ
     inreplace "configure", "WX_LIBS=\"$(wx-config --libs)\"", "WX_LIBS=\"$(wx-config --libs std,aui)\""
     system "./configure", "--prefix=#{prefix}"
     system "make", "install"
@@ -52,8 +50,6 @@ index a857e8a..9c90afb 100644
 --- a/Main.cpp
 +++ b/Main.cpp
 @@ -71,6 +71,12 @@
- #define unlink	_unlink
- #endif
 
 +#ifdef __WXMAC__
 +// Allow the program to run and recieve focus without creating an app bundle.

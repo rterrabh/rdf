@@ -8,7 +8,6 @@ class Cvsps < Formula
   depends_on "docbook"
 
   def install
-    # otherwise asciidoc will fail to find docbook
     ENV["XML_CATALOG_FILES"] = etc/"xml/catalog"
 
     system "make", "all", "cvsps.1"

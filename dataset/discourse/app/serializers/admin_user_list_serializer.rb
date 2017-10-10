@@ -27,15 +27,14 @@ class AdminUserListSerializer < BasicUserSerializer
 
   [:days_visited, :posts_read_count, :topics_entered, :post_count].each do |sym|
     attributes sym
-    #nodyna <ID:define_method-31> <DM MODERATE (array)>
+    #nodyna <define_method-475> <DM MODERATE (array)>
     define_method sym do
-      #nodyna <ID:send-141> <SD MODERATE (change-prone variables)>
+      #nodyna <send-476> <SD MODERATE (change-prone variables)>
       object.user_stat.send(sym)
     end
   end
 
   def include_email?
-    # staff members can always see their email
     (scope.is_staff? && object.id == scope.user.id) || scope.can_see_emails?
   end
 

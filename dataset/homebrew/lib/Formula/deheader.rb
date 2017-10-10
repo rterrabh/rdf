@@ -25,8 +25,6 @@ class Deheader < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <string.h>
       int main(void) {
         printf("%s", "foo");
         return 0;

@@ -14,8 +14,6 @@ class ApacheForrest < Formula
     bin.install_symlink "#{libexec}/bin/forrest"
 
     resource("deps").stage do
-      # To avoid conflicts with directory names already installed from the
-      # main tarball, surgically install contents of dependency tarball
       deps_to_install = [
         "lib",
         "main/webapp/resources/schema/relaxng",

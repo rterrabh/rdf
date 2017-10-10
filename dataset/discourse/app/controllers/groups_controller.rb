@@ -49,7 +49,6 @@ class GroupsController < ApplicationController
       end
     end
 
-    # always succeeds, even if bogus usernames were provided
     render_serialized(added_users, GroupUserSerializer)
   end
 
@@ -63,7 +62,6 @@ class GroupsController < ApplicationController
       removed_users << user
     end
 
-    # always succeeds, even if user was not a member
     render_serialized(removed_users, GroupUserSerializer)
   end
 

@@ -1,6 +1,4 @@
-# configure the federation engine
 DiasporaFederation.configure do |config|
-  # the pod url
   config.server_uri = AppConfig.pod_uri
 
   config.define_callbacks do

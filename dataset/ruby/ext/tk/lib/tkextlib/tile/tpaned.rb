@@ -1,7 +1,3 @@
-#
-#  tpaned widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -83,10 +79,8 @@ class Tk::Tile::TPaned < TkWindow
       rescue => e
         begin
           if current_paneconfiginfo(pane).has_key?(slot.to_s)
-            # not tag error & option is known -> error on known option
             fail e
           else
-            # not tag error & option is unknown
             nil
           end
         rescue
@@ -103,12 +97,10 @@ class Tk::Tile::TPaned < TkWindow
       params = []
       key.each{|k, v|
         params.push("-#{k}")
-        # params.push((v.kind_of?(TkObject))? v.epath: v)
         params.push(_epath(v))
       }
       tk_send_without_enc('pane', pane, *params)
     else
-      # value = value.epath if value.kind_of?(TkObject)
       value = _epath(value)
       tk_send_without_enc('pane', pane, "-#{key}", value)
     end
@@ -238,8 +230,6 @@ class Tk::Tile::TPaned < TkWindow
   end
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Panedwindow,
-#                            :TkPanedwindow, :TkPanedWindow)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tpaned.rb',
                                    :Ttk, Tk::Tile::Panedwindow,
                                    :TkPanedwindow, :TkPanedWindow)

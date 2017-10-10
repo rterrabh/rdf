@@ -35,11 +35,10 @@ class TopicView
     check_and_raise_exceptions
 
     options.each do |key, value|
+      #nodyna <instance_variable_set-291> <not yet classified>
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 
-    # work around people somehow sending in arrays,
-    # arrays are not supported
     @page = @page.to_i rescue 1
     @page = 1 if @page.zero?
     @chunk_size = options[:slow_platform] ? TopicView.slow_chunk_size : TopicView.chunk_size
@@ -154,7 +153,6 @@ class TopicView
 
   def summary
     return nil if desired_post.blank?
-    # TODO, this is actually quite slow, should be cached in the post table
     excerpt = desired_post.excerpt(500, strip_links: true, text_entities: true)
     (excerpt || "").gsub(/\n/, ' ').strip
   end
@@ -189,7 +187,6 @@ class TopicView
     result
   end
 
-  # Find the sort order for a post in the topic
   def sort_order_for_post_number(post_number)
     Post.where(topic_id: @topic.id, post_number: post_number)
         .with_deleted
@@ -198,7 +195,6 @@ class TopicView
         .try(:sort_order)
   end
 
-  # Filter to all posts near a particular post number
   def filter_posts_near(post_number)
     min_idx, max_idx = get_minmax_ids(post_number)
     filter_posts_in_range(min_idx, max_idx)
@@ -209,7 +205,6 @@ class TopicView
     page = [page, 1].max
     min = @limit * (page - 1)
 
-    # Sometimes we don't care about the OP, for example when embedding comments
     min = 1 if min == 0 && @exclude_first
 
     max = (min + @limit) - 1
@@ -275,8 +270,6 @@ class TopicView
     @link_counts ||= TopicLink.counts_for(guardian,@topic, posts)
   end
 
-  # Are we the initial page load? If so, we can return extra information like
-  # user post counts, etc.
   def initial_load?
     @initial_load
   end
@@ -286,11 +279,6 @@ class TopicView
     @suggested_topics ||= TopicQuery.new(@user).list_suggested_for(topic)
   end
 
-  # This is pending a larger refactor, that allows custom orders
-  #  for now we need to look for the highest_post_number in the stream
-  #  the cache on topics is not correct if there are deleted posts at
-  #  the end of the stream (for mods), nor is it correct for filtered
-  #  streams
   def highest_post_number
     @highest_post_number ||= @filtered_posts.maximum(:post_number)
   end
@@ -333,7 +321,6 @@ class TopicView
   private
 
   def filter_posts_by_ids(post_ids)
-    # TODO: Sort might be off
     @posts = Post.where(id: post_ids, topic_id: @topic.id)
                  .includes(:user, :reply_to_user)
                  .order('sort_order')
@@ -368,11 +355,9 @@ class TopicView
   end
 
   def setup_filtered_posts
-    # Certain filters might leave gaps between posts. If that's true, we can return a gap structure
     @contains_gaps = false
     @filtered_posts = unfiltered_posts
 
-    # Filters
     if @filter == 'summary'
       @filtered_posts = @filtered_posts.summary(@topic.id)
       @contains_gaps = true
@@ -383,16 +368,12 @@ class TopicView
       @contains_gaps = true
     end
 
-    # Username filters
     if @username_filters.present?
       usernames = @username_filters.map{|u| u.downcase}
       @filtered_posts = @filtered_posts.where('post_number = 1 OR posts.user_id IN (SELECT u.id FROM users u WHERE username_lower IN (?))', usernames)
       @contains_gaps = true
     end
 
-    # Deleted
-    # This should be last - don't want to tell the admin about deleted posts that clicking the button won't show
-    # copy the filter for has_deleted? method
     @predelete_filtered_posts = @filtered_posts.spawn
     if @guardian.can_see_deleted_posts? && !@show_deleted && has_deleted?
       @filtered_posts = @filtered_posts.where("deleted_at IS NULL OR post_number = 1")
@@ -403,8 +384,6 @@ class TopicView
 
   def check_and_raise_exceptions
     raise Discourse::NotFound if @topic.blank?
-    # Special case: If the topic is private and the user isn't logged in, ask them
-    # to log in!
     if @topic.present? && @topic.private_message? && @user.blank?
       raise Discourse::NotLoggedIn.new
     end
@@ -417,11 +396,9 @@ class TopicView
   end
 
   def get_minmax_ids(post_number)
-    # Find the closest number we have
     closest_index = closest_post_to(post_number)
     return nil if closest_index.nil?
 
-    # Make sure to get at least one post before, even with rounding
     posts_before = (@limit.to_f / 4).floor
     posts_before = 1 if posts_before.zero?
 
@@ -429,7 +406,6 @@ class TopicView
     min_idx = 0 if min_idx < 0
     max_idx = min_idx + (@limit - 1)
 
-    # Get a full page even if at the end
     ensure_full_page(min_idx, max_idx)
   end
 
@@ -443,11 +419,9 @@ class TopicView
   end
 
   def closest_post_to(post_number)
-    # happy path
     closest_post = @filtered_posts.where("post_number = ?", post_number).limit(1).pluck(:id)
 
     if closest_post.empty?
-      # less happy path, missing post
       closest_post = @filtered_posts.order("@(post_number - #{post_number})").limit(1).pluck(:id)
     end
 

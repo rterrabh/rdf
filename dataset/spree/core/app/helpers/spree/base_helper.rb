@@ -35,6 +35,7 @@ module Spree
     end
 
     def meta_data
+      #nodyna <instance_variable_get-2538> <not yet classified>
       object = instance_variable_get('@'+controller_name.singularize)
       meta = {}
 
@@ -63,7 +64,7 @@ module Spree
     def method_missing(method_name, *args, &block)
       if image_style = image_style_from_method_name(method_name)
         define_image_method(image_style)
-        #nodyna <ID:send-118> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2539> <SD COMPLEX (change-prone variables)>
         self.send(method_name, *args)
       else
         super
@@ -78,7 +79,6 @@ module Spree
       return spree.nested_taxons_path(taxon.permalink)
     end
 
-    # human readable list of variant options
     def variant_options(v, options={})
       v.options_text
     end
@@ -91,8 +91,8 @@ module Spree
     end
 
     def define_image_method(style)
-      #nodyna <ID:send-119> <SD COMPLEX (private methods)>
-      #nodyna <ID:define_method-11> <DM COMPLEX (events)>
+      #nodyna <send-2540> <SD COMPLEX (private methods)>
+      #nodyna <define_method-2541> <DM COMPLEX (events)>
       self.class.send :define_method, "#{style}_image" do |product, *options|
         options = options.first || {}
         options[:alt] ||= product.name
@@ -112,7 +112,6 @@ module Spree
       end
     end
 
-    # Returns style of image or nil
     def image_style_from_method_name(method_name)
       if method_name.to_s.match(/_image$/) && style = method_name.to_s.sub(/_image$/, '')
         possible_styles = Spree::Image.attachment_definitions[:attachment][:styles]

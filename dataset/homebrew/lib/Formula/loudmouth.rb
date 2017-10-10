@@ -20,9 +20,6 @@ class Loudmouth < Formula
     depends_on "automake" => :build
     depends_on "libtool" => :build
 
-    # Fixes configure.ac subdir-objects for recent autoconf version
-    # Remove this once the following pull request has been applied to master
-    # https://github.com/mcabber/loudmouth/pull/11
     patch do
       url "https://github.com/languitar/loudmouth/commit/f22dd6.diff"
       sha1 "776f6c20259579e542ef588570956f26d71a46e5"
@@ -34,9 +31,6 @@ class Loudmouth < Formula
   depends_on "libidn"
   depends_on "gnutls"
 
-  # Fix compilation on 10.9. Sent upstream:
-  # https://github.com/mcabber/loudmouth/pull/9
-  # Has been merged and will be in next release, if there is one.
   stable do
     patch do
       url "https://github.com/mcabber/loudmouth/commit/369844a0fc.diff"

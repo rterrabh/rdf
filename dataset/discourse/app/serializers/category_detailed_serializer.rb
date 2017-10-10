@@ -37,7 +37,6 @@ class CategoryDetailedSerializer < BasicCategorySerializer
     subcategory_ids.present?
   end
 
-  # Topic and post counts, including counts from the sub-categories:
 
   def topics_day
     count_with_subcategories(:topics_day)
@@ -72,10 +71,10 @@ class CategoryDetailedSerializer < BasicCategorySerializer
   end
 
   def count_with_subcategories(method)
-    #nodyna <ID:send-142> <SD MODERATE (change-prone variables)>
+    #nodyna <send-477> <SD MODERATE (change-prone variables)>
     count = object.send(method) || 0
     object.subcategories.each do |category|
-      #nodyna <ID:send-143> <SD MODERATE (array)>
+      #nodyna <send-478> <SD MODERATE (array)>
       count += (category.send(method) || 0)
     end
     count

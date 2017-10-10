@@ -4,14 +4,6 @@ require 'active_support/core_ext/module/attribute_accessors'
 
 module RailsAdmin
   module Config
-    # RailsAdmin is setup to try and authenticate with warden
-    # If warden is found, then it will try to authenticate
-    #
-    # This is valid for custom warden setups, and also devise
-    # If you're using the admin setup for devise, you should set RailsAdmin to use the admin
-    #
-    # @see RailsAdmin::Config.authenticate_with
-    # @see RailsAdmin::Config.authorize_with
     DEFAULT_AUTHENTICATION = proc {}
 
     DEFAULT_AUTHORIZE = proc {}
@@ -21,86 +13,40 @@ module RailsAdmin
     DEFAULT_CURRENT_USER = proc {}
 
     class << self
-      # Application title, can be an array of two elements
       attr_accessor :main_app_name
 
-      # Configuration option to specify which models you want to exclude.
       attr_accessor :excluded_models
 
-      # Configuration option to specify a whitelist of models you want to RailsAdmin to work with.
-      # The excluded_models list applies against the whitelist as well and further reduces the models
-      # RailsAdmin will use.
-      # If included_models is left empty ([]), then RailsAdmin will automatically use all the models
-      # in your application (less any excluded_models you may have specified).
       attr_accessor :included_models
 
-      # Fields to be hidden in show, create and update views
       attr_accessor :default_hidden_fields
 
-      # Default items per page value used if a model level option has not
-      # been configured
       attr_accessor :default_items_per_page
 
       attr_reader :default_search_operator
 
-      # Configuration option to specify which method names will be searched for
-      # to be used as a label for object records. This defaults to [:name, :title]
       attr_accessor :label_methods
 
-      # hide blank fields in show view if true
       attr_accessor :compact_show_view
 
-      # Tell browsers whether to use the native HTML5 validations (novalidate form option).
       attr_accessor :browser_validations
 
-      # Set the max width of columns in list view before a new set is created
       attr_accessor :total_columns_width
 
-      # set parent controller
       attr_accessor :parent_controller
 
-      # Stores model configuration objects in a hash identified by model's class
-      # name.
-      #
-      # @see RailsAdmin.config
       attr_reader :registry
 
-      # accepts a hash of static links to be shown below the main navigation
       attr_accessor :navigation_static_links
       attr_accessor :navigation_static_label
 
-      # yell about fields that are not marked as accessible
       attr_accessor :yell_for_non_accessible_fields
 
-      # Setup authentication to be run as a before filter
-      # This is run inside the controller instance so you can setup any authentication you need to
-      #
-      # By default, the authentication will run via warden if available
-      # and will run the default.
-      #
-      # If you use devise, this will authenticate the same as _authenticate_user!_
-      #
-      # @example Devise admin
-      #   RailsAdmin.config do |config|
-      #     config.authenticate_with do
-      #       authenticate_admin!
-      #     end
-      #   end
-      #
-      # @example Custom Warden
-      #   RailsAdmin.config do |config|
-      #     config.authenticate_with do
-      #       warden.authenticate! scope: :paranoid
-      #     end
-      #   end
-      #
-      # @see RailsAdmin::Config::DEFAULT_AUTHENTICATION
       def authenticate_with(&blk)
         @authenticate = blk if blk
         @authenticate || DEFAULT_AUTHENTICATION
       end
 
-      # Setup auditing/history/versioning provider that observe objects lifecycle
       def audit_with(*args, &block)
         extension = args.shift
         if extension
@@ -113,29 +59,6 @@ module RailsAdmin
         @audit || DEFAULT_AUDIT
       end
 
-      # Setup authorization to be run as a before filter
-      # This is run inside the controller instance so you can setup any authorization you need to.
-      #
-      # By default, there is no authorization.
-      #
-      # @example Custom
-      #   RailsAdmin.config do |config|
-      #     config.authorize_with do
-      #       redirect_to root_path unless warden.user.is_admin?
-      #     end
-      #   end
-      #
-      # To use an authorization adapter, pass the name of the adapter. For example,
-      # to use with CanCan[https://github.com/ryanb/cancan], pass it like this.
-      #
-      # @example CanCan
-      #   RailsAdmin.config do |config|
-      #     config.authorize_with :cancan
-      #   end
-      #
-      # See the wiki[https://github.com/sferik/rails_admin/wiki] for more on authorization.
-      #
-      # @see RailsAdmin::Config::DEFAULT_AUTHORIZE
       def authorize_with(*args, &block)
         extension = args.shift
         if extension
@@ -148,36 +71,11 @@ module RailsAdmin
         @authorize || DEFAULT_AUTHORIZE
       end
 
-      # Setup configuration using an extension-provided ConfigurationAdapter
-      #
-      # @example Custom configuration for role-based setup.
-      #   RailsAdmin.config do |config|
-      #     config.configure_with(:custom) do |config|
-      #       config.models = ['User', 'Comment']
-      #       config.roles  = {
-      #         'Admin' => :all,
-      #         'User'  => ['User']
-      #       }
-      #     end
-      #   end
       def configure_with(extension)
         configuration = RailsAdmin::CONFIGURATION_ADAPTERS[extension].new
         yield(configuration) if block_given?
       end
 
-      # Setup a different method to determine the current user or admin logged in.
-      # This is run inside the controller instance and made available as a helper.
-      #
-      # By default, _request.env["warden"].user_ or _current_user_ will be used.
-      #
-      # @example Custom
-      #   RailsAdmin.config do |config|
-      #     config.current_user_method do
-      #       current_admin
-      #     end
-      #   end
-      #
-      # @see RailsAdmin::Config::DEFAULT_CURRENT_USER
       def current_user_method(&block)
         @current_user = block if block
         @current_user || DEFAULT_CURRENT_USER
@@ -191,25 +89,12 @@ module RailsAdmin
         end
       end
 
-      # pool of all found model names from the whole application
       def models_pool
         excluded = (excluded_models.collect(&:to_s) + ['RailsAdmin::History'])
 
         (viable_models - excluded).uniq.sort
       end
 
-      # Loads a model configuration instance from the registry or registers
-      # a new one if one is yet to be added.
-      #
-      # First argument can be an instance of requested model, its class object,
-      # its class name as a string or symbol or a RailsAdmin::AbstractModel
-      # instance.
-      #
-      # If a block is given it is evaluated in the context of configuration instance.
-      #
-      # Returns given model's configuration
-      #
-      # @see RailsAdmin::Config.registry
       def model(entity, &block)
         key = begin
           if entity.is_a?(RailsAdmin::AbstractModel)
@@ -240,22 +125,15 @@ module RailsAdmin
         end
       end
 
-      # Returns action configuration object
       def actions(&block)
-        #nodyna <ID:instance_eval-22> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1332> <IEV COMPLEX (block execution)>
         RailsAdmin::Config::Actions.instance_eval(&block) if block
       end
 
-      # Returns all model configurations
-      #
-      # @see RailsAdmin::Config.registry
       def models
         RailsAdmin::AbstractModel.all.collect { |m| model(m) }
       end
 
-      # Reset all configurations to defaults.
-      #
-      # @see RailsAdmin::Config.registry
       def reset
         @compact_show_view = true
         @browser_validations = true
@@ -282,17 +160,11 @@ module RailsAdmin
         RailsAdmin::Config::Actions.reset
       end
 
-      # Reset a provided model's configuration.
-      #
-      # @see RailsAdmin::Config.registry
       def reset_model(model)
         key = model.is_a?(Class) ? model.name.to_sym : model.to_sym
         @registry.delete(key)
       end
 
-      # Get all models that are configured as visible sorted by their weight and label.
-      #
-      # @see RailsAdmin::Config::Hideable
 
       def visible_models(bindings)
         visible_models_with_bindings(bindings).sort do |a, b|
@@ -317,7 +189,6 @@ module RailsAdmin
               (app.paths['app/models'].to_a + app.config.autoload_paths).collect do |load_path|
                 Dir.glob(app.root.join(load_path)).collect do |load_dir|
                   Dir.glob(load_dir + '/**/*.rb').collect do |filename|
-                    # app/models/module/class.rb => module/class.rb => module/class => Module::Class
                     lchomp(filename, "#{app.root.join(load_dir)}/").chomp('.rb').camelize
                   end
                 end
@@ -335,7 +206,6 @@ module RailsAdmin
       end
     end
 
-    # Set default values for configuration options on load
     reset
   end
 end

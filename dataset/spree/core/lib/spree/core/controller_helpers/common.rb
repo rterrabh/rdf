@@ -14,8 +14,6 @@ module Spree
 
           protected
 
-          # can be used in views as well as controllers.
-          # e.g. <% self.title = 'This is a custom title for this view' %>
           attr_writer :title
 
           def title
@@ -35,7 +33,6 @@ module Spree
             current_store.name
           end
 
-          # this is a hook for subclasses to provide title
           def accurate_title
             current_store.seo_title
           end
@@ -57,12 +54,6 @@ module Spree
             I18n.locale = locale
           end
 
-          # Returns which layout to render.
-          #
-          # You can set the layout you want to render inside your Spree configuration with the +:layout+ option.
-          #
-          # Default layout is: +app/views/spree/layouts/spree_application+
-          #
           def get_layout
             layout ||= Spree::Config[:layout]
           end

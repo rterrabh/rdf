@@ -7,7 +7,6 @@ module Roleable
     scope :staff, -> { where("moderator or admin ") }
   end
 
-  # any user that is either a moderator or an admin
   def staff?
     admin || moderator
   end
@@ -40,7 +39,7 @@ module Roleable
   end
 
   def set_permission(permission_name, value)
-    #nodyna <ID:send-180> <SD MODERATE (change-prone variables)>
+    #nodyna <send-400> <SD MODERATE (change-prone variables)>
     self.send("#{permission_name}=", value)
     save_and_refresh_staff_groups!
   end

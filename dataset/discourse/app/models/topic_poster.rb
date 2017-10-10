@@ -12,9 +12,8 @@ class TopicPoster < OpenStruct
     }
   end
 
-  # TODO: Remove when old list is removed
   def [](attr)
-    #nodyna <ID:send-213> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-373> <SD COMPLEX (change-prone variables)>
     send(attr)
   end
 end

@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'csv'
 
 module RailsAdmin
@@ -34,7 +33,6 @@ module RailsAdmin
     end
 
     def to_csv(options = {})
-      # encoding shenanigans first
       @encoding_from = Encoding.find(UTF8_ENCODINGS.include?(@abstract_model.encoding) ? 'UTF-8' : @abstract_model.encoding)
       @encoding_to = Encoding.find(options[:encoding_to].presence || @encoding_from)
 
@@ -43,11 +41,6 @@ module RailsAdmin
       if @encoding_to != @encoding_from
         csv_string = csv_string.encode(@encoding_to, @encoding_from, invalid: :replace, undef: :replace, replace: '?')
       end
-      # Add a BOM for utf8 encodings, helps with utf8 auto-detect for some versions of Excel.
-      # Don't add if utf8 but user don't want to touch input encoding:
-      # If user chooses utf8, they will open it in utf8 and BOM will disappear at reading.
-      # But that way "English" users who don't bother and chooses to let utf8 by default won't get BOM added
-      # and will not see it if Excel opens the file with a different encoding.
       if options[:encoding_to].present? && @encoding_to == Encoding::UTF_8
         csv_string = "\xEF\xBB\xBF#{csv_string}"
       end
@@ -70,7 +63,7 @@ module RailsAdmin
         csv << generate_csv_header unless options[:skip_header]
 
         method = @objects.respond_to?(:find_each) ? :find_each : :each
-        #nodyna <ID:send-56> <SD TRIVIAL (public methods)>
+        #nodyna <send-1330> <SD TRIVIAL (public methods)>
         @objects.send(method) do |object|
           csv << generate_csv_row(object)
         end
@@ -93,7 +86,7 @@ module RailsAdmin
         field.with(object: object).export_value
       end +
         @associations.flat_map do |association_name, option_hash|
-          #nodyna <ID:send-57> <SD COMPLEX (array)>
+          #nodyna <send-1331> <SD COMPLEX (array)>
           associated_objects = [object.send(association_name)].flatten.compact
           option_hash[:fields].collect do |field|
             associated_objects.collect { |ao| field.with(object: ao).export_value.presence || @empty }.join(',')

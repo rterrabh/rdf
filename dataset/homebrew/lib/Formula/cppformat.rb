@@ -20,9 +20,6 @@ class Cppformat < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
-      #include <string>
-      #include <format.h>
       int main()
       {
         std::string str = fmt::format("The answer is {}", 42);

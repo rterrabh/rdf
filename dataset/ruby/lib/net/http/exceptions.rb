@@ -1,6 +1,3 @@
-# Net::HTTP exception class.
-# You cannot use Net::HTTPExceptions directly; instead, you must use
-# its subclasses.
 module Net::HTTPExceptions
   def initialize(msg, res)   #:nodoc:
     super msg
@@ -16,7 +13,6 @@ class Net::HTTPRetriableError < Net::ProtoRetriableError
   include Net::HTTPExceptions
 end
 class Net::HTTPServerException < Net::ProtoServerError
-  # We cannot use the name "HTTPServerError", it is the name of the response.
   include Net::HTTPExceptions
 end
 class Net::HTTPFatalError < Net::ProtoFatalError

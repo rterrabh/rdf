@@ -10,8 +10,6 @@ class TinyFugue < Formula
   depends_on "libnet"
   depends_on "pcre"
 
-  # pcre deprecated pcre_info. Switch to HB pcre-8.31 and pcre_fullinfo.
-  # Not reported upstream; project is in stasis since 2007.
   patch :DATA
 
   def install
@@ -32,9 +30,6 @@ __END__
  static const char RCSid[] = "$Id: malloc.c,v 35004.22 2007/01/13 23:12:39 kkeys Exp $";
  
 +#include "sys/types.h"
- #include "tfconfig.h"
- #include "port.h"
- #include "signals.h"
 --- a/src/macro.c	2007-01-13 15:12:39.000000000 -0800
 +++ b/src/macro.c	2012-10-26 08:15:31.000000000 -0700
 @@ -893,7 +893,8 @@
@@ -61,8 +56,6 @@ __END__
 --- a/src/pattern.h	2007-01-13 15:12:39.000000000 -0800
 +++ b/src/pattern.h	2012-10-26 08:17:54.000000000 -0700
 @@ -10,7 +10,7 @@
- #ifndef PATTERN_H
- #define PATTERN_H
  
 -#include "pcre-2.08/pcre.h"
 +#include <pcre.h>

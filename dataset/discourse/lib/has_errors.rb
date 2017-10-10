@@ -1,5 +1,3 @@
-# Helper functions for dealing with errors and objects that have
-# child objects with errors
 module HasErrors
 
   def errors

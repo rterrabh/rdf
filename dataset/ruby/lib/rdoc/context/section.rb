@@ -1,11 +1,3 @@
-##
-# A section of documentation like:
-#
-#   # :section: The title
-#   # The body
-#
-# Sections can be referenced multiple times and will be collapsed into a
-# single section.
 
 class RDoc::Context::Section
 
@@ -13,30 +5,20 @@ class RDoc::Context::Section
 
   MARSHAL_VERSION = 0 # :nodoc:
 
-  ##
-  # Section comment
 
   attr_reader :comment
 
-  ##
-  # Section comments
 
   attr_reader :comments
 
-  ##
-  # Context this Section lives in
 
   attr_reader :parent
 
-  ##
-  # Section title
 
   attr_reader :title
 
   @@sequence = "SEC00000"
 
-  ##
-  # Creates a new section with +title+ and +comment+
 
   def initialize parent, title, comment
     @parent = parent
@@ -50,15 +32,11 @@ class RDoc::Context::Section
     add_comment comment
   end
 
-  ##
-  # Sections are equal when they have the same #title
 
   def == other
     self.class === other and @title == other.title
   end
 
-  ##
-  # Adds +comment+ to this section
 
   def add_comment comment
     comment = extract_comment comment
@@ -77,8 +55,6 @@ class RDoc::Context::Section
     end
   end
 
-  ##
-  # Anchor reference for linking to this section
 
   def aref
     title = @title || '[untitled]'
@@ -86,14 +62,6 @@ class RDoc::Context::Section
     CGI.escape(title).gsub('%', '-').sub(/^-/, '')
   end
 
-  ##
-  # Extracts the comment for this section from the original comment block.
-  # If the first line contains :section:, strip it and use the rest.
-  # Otherwise remove lines up to the line containing :section:, and look
-  # for those lines again at the end and remove them. This lets us write
-  #
-  #   # :section: The title
-  #   # The body
 
   def extract_comment comment
     case comment
@@ -127,8 +95,6 @@ class RDoc::Context::Section
     "#<%s:0x%x %p>" % [self.class, object_id, title]
   end
 
-  ##
-  # The files comments in this section come from
 
   def in_files
     return [] if @comments.empty?
@@ -147,9 +113,6 @@ class RDoc::Context::Section
     end
   end
 
-  ##
-  # Serializes this Section.  The title and parsed comment are saved, but not
-  # the section parent which must be restored manually.
 
   def marshal_dump
     [
@@ -159,8 +122,6 @@ class RDoc::Context::Section
     ]
   end
 
-  ##
-  # De-serializes this Section.  The section parent must be restored manually.
 
   def marshal_load array
     @parent  = nil
@@ -169,9 +130,6 @@ class RDoc::Context::Section
     @comments = array[2]
   end
 
-  ##
-  # Parses +comment_location+ into an RDoc::Markup::Document composed of
-  # multiple RDoc::Markup::Documents with their file set.
 
   def parse
     case @comments
@@ -196,18 +154,11 @@ class RDoc::Context::Section
     end
   end
 
-  ##
-  # The section's title, or 'Top Section' if the title is nil.
-  #
-  # This is used by the table of contents template so the name is silly.
 
   def plain_html
     @title || 'Top Section'
   end
 
-  ##
-  # Removes a comment from this section if it is from the same file as
-  # +comment+
 
   def remove_comment comment
     return if @comments.empty?
@@ -226,8 +177,6 @@ class RDoc::Context::Section
     end
   end
 
-  ##
-  # Section sequence number (deprecated)
 
   def sequence
     warn "RDoc::Context::Section#sequence is deprecated, use #aref"

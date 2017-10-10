@@ -14,7 +14,6 @@ module HighlightJs
       begin
         result << "\n" << File.read(path + "lang/#{lang}.js")
       rescue Errno::ENOENT
-        # no file, don't care
       end
     end
 

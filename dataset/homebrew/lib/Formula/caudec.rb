@@ -39,7 +39,6 @@ class Caudec < Formula
 
   def caveats; <<-EOS.undent
     You can find an up-to-date caudecrc file in
-    #{HOMEBREW_PREFIX}/etc
 
     Copy it to ~/.caudecrc ('.caudecrc' in your home directory),
     or update your existing copy as needed.

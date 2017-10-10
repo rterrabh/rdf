@@ -1,16 +1,11 @@
 require 'cgi'
 
-##
-# Outputs RDoc markup as HTML.
 
 class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
 
   include RDoc::Text
 
-  # :section: Utilities
 
-  ##
-  # Maps RDoc::Markup::Parser::LIST_TOKENS types to HTML tags
 
   LIST_TYPE_TO_HTML = {
     :BULLET => ['<ul>',                                      '</ul>'],
@@ -25,21 +20,13 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
   attr_reader :in_list_entry # :nodoc:
   attr_reader :list # :nodoc:
 
-  ##
-  # The RDoc::CodeObject HTML is being generated for.  This is used to
-  # generate namespaced URI fragments
 
   attr_accessor :code_object
 
-  ##
-  # Path to this document for relative links
 
   attr_accessor :from_path
 
-  # :section:
 
-  ##
-  # Creates a new formatter that will output HTML
 
   def initialize options, markup = nil
     super
@@ -51,7 +38,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @th = nil
     @hard_break = "<br>\n"
 
-    # external links
     @markup.add_special(/(?:link:|https?:|mailto:|ftp:|irc:|www\.)\S+\w/,
                         :HYPERLINK)
 
@@ -61,9 +47,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     init_tags
   end
 
-  # :section: Special Handling
-  #
-  # These methods handle special markup added by RDoc::Markup#add_special.
 
   def handle_RDOCLINK url # :nodoc:
     case url
@@ -89,24 +72,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     end
   end
 
-  ##
-  # +special+ is a <code><br></code>
 
   def handle_special_HARD_BREAK special
     '<br>'
   end
 
-  ##
-  # +special+ is a potential link.  The following schemes are handled:
-  #
-  # <tt>mailto:</tt>::
-  #   Inserted as-is.
-  # <tt>http:</tt>::
-  #   Links are checked to see if they reference an image. If so, that image
-  #   gets inserted using an <tt><img></tt> tag. Otherwise a conventional
-  #   <tt><a href></tt> is used.
-  # <tt>link:</tt>::
-  #   Reference to a local file relative to the output directory.
 
   def handle_special_HYPERLINK(special)
     url = special.text
@@ -114,22 +84,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     gen_url url, url
   end
 
-  ##
-  # +special+ is an rdoc-schemed link that will be converted into a hyperlink.
-  #
-  # For the +rdoc-ref+ scheme the named reference will be returned without
-  # creating a link.
-  #
-  # For the +rdoc-label+ scheme the footnote and label prefixes are stripped
-  # when creating a link.  All other contents will be linked verbatim.
 
   def handle_special_RDOCLINK special
     handle_RDOCLINK special.text
   end
 
-  ##
-  # This +special+ is a link where the label is different from the URL
-  # <tt>label[url]</tt> or <tt>{long label}[url]</tt>
 
   def handle_special_TIDYLINK(special)
     text = special.text
@@ -145,12 +104,7 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     gen_url url, label
   end
 
-  # :section: Visitor
-  #
-  # These methods implement the HTML visitor.
 
-  ##
-  # Prepares the visitor for HTML generation
 
   def start_accepting
     @res = []
@@ -158,15 +112,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @list = []
   end
 
-  ##
-  # Returns the generated output
 
   def end_accepting
     @res.join
   end
 
-  ##
-  # Adds +block_quote+ to the output
 
   def accept_block_quote block_quote
     @res << "\n<blockquote>"
@@ -178,8 +128,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "</blockquote>\n"
   end
 
-  ##
-  # Adds +paragraph+ to the output
 
   def accept_paragraph paragraph
     @res << "\n<p>"
@@ -189,8 +137,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "</p>\n"
   end
 
-  ##
-  # Adds +verbatim+ to the output
 
   def accept_verbatim verbatim
     text = verbatim.text.rstrip
@@ -217,15 +163,11 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     end
   end
 
-  ##
-  # Adds +rule+ to the output
 
   def accept_rule rule
     @res << "<hr>\n"
   end
 
-  ##
-  # Prepares the visitor for consuming +list+
 
   def accept_list_start(list)
     @list << list.type
@@ -233,8 +175,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @in_list_entry.push false
   end
 
-  ##
-  # Finishes consumption of +list+
 
   def accept_list_end(list)
     @list.pop
@@ -244,8 +184,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << html_list_name(list.type, false) << "\n"
   end
 
-  ##
-  # Prepares the visitor for consuming +list_item+
 
   def accept_list_item_start(list_item)
     if tag = @in_list_entry.last
@@ -255,23 +193,15 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << list_item_start(list_item, @list.last)
   end
 
-  ##
-  # Finishes consumption of +list_item+
 
   def accept_list_item_end(list_item)
     @in_list_entry[-1] = list_end_for(@list.last)
   end
 
-  ##
-  # Adds +blank_line+ to the output
 
   def accept_blank_line(blank_line)
-    # @res << annotate("<p />") << "\n"
   end
 
-  ##
-  # Adds +heading+ to the output.  The headings greater than 6 are trimmed to
-  # level 6.
 
   def accept_heading heading
     level = [6, heading.level].min
@@ -291,25 +221,17 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     @res << "</h#{level}>\n"
   end
 
-  ##
-  # Adds +raw+ to the output
 
   def accept_raw raw
     @res << raw.parts.join("\n")
   end
 
-  # :section: Utilities
 
-  ##
-  # CGI-escapes +text+
 
   def convert_string(text)
     CGI.escapeHTML text
   end
 
-  ##
-  # Generate a link to +url+ with content +text+.  Handles the special cases
-  # for img: and link: described under handle_special_HYPERLINK
 
   def gen_url url, text
     scheme, url, id = parse_url url
@@ -329,8 +251,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     end
   end
 
-  ##
-  # Determines the HTML list element for +list_type+ and +open_tag+
 
   def html_list_name(list_type, open_tag)
     tags = LIST_TYPE_TO_HTML[list_type]
@@ -338,8 +258,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     tags[open_tag ? 0 : 1]
   end
 
-  ##
-  # Maps attributes to HTML tags
 
   def init_tags
     add_tag :BOLD, "<strong>", "</strong>"
@@ -347,9 +265,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     add_tag :EM,   "<em>",     "</em>"
   end
 
-  ##
-  # Returns the HTML tag for +list_type+, possible using a label from
-  # +list_item+
 
   def list_item_start(list_item, list_type)
     case list_type
@@ -364,8 +279,6 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     end
   end
 
-  ##
-  # Returns the HTML end-tag for +list_type+
 
   def list_end_for(list_type)
     case list_type
@@ -378,18 +291,14 @@ class RDoc::Markup::ToHtml < RDoc::Markup::Formatter
     end
   end
 
-  ##
-  # Returns true if text is valid ruby syntax
 
   def parseable? text
-    #nodyna <ID:eval-69> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-2026> <EV COMPLEX (change-prone variables)>
     eval("BEGIN {return true}\n#{text}")
   rescue SyntaxError
     false
   end
 
-  ##
-  # Converts +item+ to HTML using RDoc::Text#to_html
 
   def to_html item
     super convert_flow @am.flow item

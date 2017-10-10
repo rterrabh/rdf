@@ -1,18 +1,6 @@
-# -*- coding: utf-8 -*-
-#   irb/lc/ja/error.rb -
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 require "e2mmap"
 
-# :stopdoc:
 module IRB
-  # exceptions
   extend Exception2MessageMapper
   def_exception :UnrecognizedSwitch, 'スイッチ(%s)が分りません'
   def_exception :NotImplementedError, '`%s\'の定義が必要です'
@@ -26,5 +14,3 @@ module IRB
   def_exception :UndefinedPromptMode, 'プロンプトモード(%s)は定義されていません.'
   def_exception :IllegalRCNameGenerator, 'RC_NAME_GENERATORが正しく定義されていません.'
 end
-# :startdoc:
-# vim:fileencoding=utf-8

@@ -6,9 +6,6 @@ class Re2 < Formula
     url "https://github.com/google/re2/archive/2015-07-01.tar.gz"
     version "20150701"
     sha256 "e32d6dfa48d882a81086ae26537dc2e78877bb427f61c8cd4062dff7d0b0ef08"
-    # Fix the symbol table to work with both libc++ and libstdc++
-    # Will be included in the next release
-    # https://github.com/google/re2/issues/1
     patch do
       url "https://github.com/google/re2/commit/44cdc782e5debc2c841b3fafa9ee5a61e8c42b95.patch"
       sha256 "b1720a4f3dd0b28969600698b1aadf15bf30b9e6aef42c589d512c6a2c088579"
@@ -39,8 +36,6 @@ class Re2 < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <re2/re2.h>
-      #include <assert.h>
       int main() {
         assert(!RE2::FullMatch("hello", "e"));
         assert(RE2::PartialMatch("hello", "e"));

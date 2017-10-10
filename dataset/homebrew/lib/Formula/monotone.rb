@@ -17,7 +17,6 @@ class Monotone < Formula
   depends_on "lua"
   depends_on "pcre"
   depends_on "botan"
-  # Monotone only needs headers, not any built libraries
   depends_on "boost" => :build
 
   fails_with :llvm do
@@ -35,13 +34,6 @@ class Monotone < Formula
                           "--prefix=#{prefix}"
     system "make", "install"
 
-    # Explicitly remove the bash completion script, as it uses features
-    # specific to Bash 4, and the default on OS X is Bash 3.
-    # Specifically, it uses `declare -A` to declare associate arrays.
-    # If this completion script is installed on Bash 3 along with
-    # bash-completion, it will be auto-sourced and cause error messages
-    # every time a new terminal is opened. See:
-    # https://github.com/Homebrew/homebrew/issues/29272
     rm prefix/"etc/bash_completion.d/monotone.bash_completion"
   end
 end

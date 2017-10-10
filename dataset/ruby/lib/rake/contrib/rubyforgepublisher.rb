@@ -1,4 +1,3 @@
-# TODO: Remove in Rake 11
 
 require 'rake/contrib/sshpublisher'
 

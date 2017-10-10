@@ -70,23 +70,16 @@ class Group < ActiveRecord::Base
 
     group.name = I18n.t("groups.default_names.#{name}")
 
-    # don't allow shoddy localization to break this
     validator = UsernameValidator.new(group.name)
     unless validator.valid_format?
       group.name = name
     end
 
-    # the everyone group is special, it can include non-users so there is no
-    # way to have the membership in a table
     if name == :everyone
       group.save!
       return group
     end
 
-    # Remove people from groups they don't belong in.
-    #
-    # BEWARE: any of these subqueries could match ALL the user records,
-    #         so they can't be used in IN clauses.
     remove_user_subquery = case name
                 when :admins
                   "SELECT u.id FROM users u WHERE NOT u.admin"
@@ -110,7 +103,6 @@ class Group < ActiveRecord::Base
       end
     end
 
-    # Add people to groups
     real_ids = case name
                when :admins
                  "SELECT u.id FROM users u WHERE u.admin"
@@ -135,7 +127,6 @@ class Group < ActiveRecord::Base
 
     group.save!
 
-    # we want to ensure consistency
     Group.reset_counters(group.id, :group_users)
 
     group
@@ -286,7 +277,6 @@ class Group < ActiveRecord::Base
       UsernameValidator.perform_validation(self, 'name')
     end
 
-    # hack around AR
     def destroy_deletions
       if @deletions
         @deletions.each do |gu|
@@ -358,22 +348,3 @@ SQL
     end
 end
 
-# == Schema Information
-#
-# Table name: groups
-#
-#  id                                 :integer          not null, primary key
-#  name                               :string(255)      not null
-#  created_at                         :datetime         not null
-#  updated_at                         :datetime         not null
-#  automatic                          :boolean          default(FALSE), not null
-#  user_count                         :integer          default(0), not null
-#  alias_level                        :integer          default(0)
-#  visible                            :boolean          default(TRUE), not null
-#  automatic_membership_email_domains :text
-#  automatic_membership_retroactive   :boolean          default(FALSE)
-#
-# Indexes
-#
-#  index_groups_on_name  (name) UNIQUE
-#

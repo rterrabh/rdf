@@ -16,7 +16,6 @@ class Sproxy < Formula
                           "--prefix=#{prefix}"
     system "make"
     system "make", "install"
-    # Makefile doesn't honor mandir, so move manpages post-install
     share.install prefix+"man"
   end
 end

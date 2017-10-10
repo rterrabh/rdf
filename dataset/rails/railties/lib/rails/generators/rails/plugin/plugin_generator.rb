@@ -3,13 +3,6 @@ require "rails/generators/rails/app/app_generator"
 require 'date'
 
 module Rails
-  # The plugin builder allows you to override elements of the plugin
-  # generator without being forced to reverse the operations of the default
-  # generator.
-  #
-  # This allows you to override entire operations, like the creation of the
-  # Gemfile, README, or JavaScript files, without needing to know exactly
-  # what those operations do so you can create another template action.
   class PluginBuilder
     def rakefile
       template "Rakefile"
@@ -64,7 +57,6 @@ module Rails
       template "test/test_helper.rb"
       template "test/%name%_test.rb"
       append_file "Rakefile", <<-EOF
-#{rakefile_test_tasks}
 
 task default: :test
       EOF
@@ -245,7 +237,6 @@ task default: :test
 
       def name
         @name ||= begin
-          # same as ActiveSupport::Inflector#underscore except not replacing '-'
           underscored = original_name.dup
           underscored.gsub!(/([A-Z]+)([A-Z][a-z])/,'\1_\2')
           underscored.gsub!(/([a-z\d])([A-Z])/,'\1_\2')
@@ -271,7 +262,6 @@ task default: :test
           build(:test_dummy_config)
           build(:test_dummy_assets)
           build(:test_dummy_clean)
-          # ensure that bin/rails has proper dummy_path
           build(:bin, true)
         end
       end

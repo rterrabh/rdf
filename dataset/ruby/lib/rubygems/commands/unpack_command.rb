@@ -56,10 +56,6 @@ command help for an example.
     "#{program_name} GEMNAME"
   end
 
-  #--
-  # TODO: allow, e.g., 'gem unpack rake-0.3.1'.  Find a general solution for
-  # this, so that it works for uninstall as well.  (And check other commands
-  # at the same time.)
 
   def execute
     get_all_gem_names.each do |name|
@@ -96,12 +92,6 @@ command help for an example.
     end
   end
 
-  ##
-  #
-  # Find cached filename in Gem.path. Returns nil if the file cannot be found.
-  #
-  #--
-  # TODO: see comments in get_path() about general service.
 
   def find_in_cache(filename)
     Gem.path.each do |path|
@@ -112,22 +102,6 @@ command help for an example.
     return nil
   end
 
-  ##
-  # Return the full path to the cached gem file matching the given
-  # name and version requirement.  Returns 'nil' if no match.
-  #
-  # Example:
-  #
-  #   get_path 'rake', '> 0.4' # "/usr/lib/ruby/gems/1.8/cache/rake-0.4.2.gem"
-  #   get_path 'rake', '< 0.1' # nil
-  #   get_path 'rak'           # nil (exact name required)
-  #--
-  # TODO: This should be refactored so that it's a general service. I don't
-  # think any of our existing classes are the right place though.  Just maybe
-  # 'Cache'?
-  #
-  # TODO: It just uses Gem.dir for now.  What's an easy way to get the list of
-  # source directories?
 
   def get_path dependency
     return dependency.name if dependency.name =~ /\.gem$/i
@@ -141,8 +115,6 @@ command help for an example.
 
     return unless dependency.name =~ /^#{selected.name}$/i
 
-    # We expect to find (basename).gem in the 'cache' directory.  Furthermore,
-    # the name match must be exact (ignoring case).
 
     path = find_in_cache File.basename selected.cache_file
 
@@ -151,11 +123,6 @@ command help for an example.
     path
   end
 
-  ##
-  # Extracts the Gem::Specification and raw metadata from the .gem file at
-  # +path+.
-  #--
-  # TODO move to Gem::Package as #raw_spec or something
 
   def get_metadata path
     format = Gem::Package.new path

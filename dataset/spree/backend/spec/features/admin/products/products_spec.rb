@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe "Products", type: :feature do
@@ -22,11 +21,9 @@ describe "Products", type: :feature do
 
         it "should list existing products with correct sorting by name" do
           visit spree.admin_products_path
-          # Name ASC
           within_row(1) { expect(page).to have_content('apache baseball cap') }
           within_row(2) { expect(page).to have_content("zomg shirt") }
 
-          # Name DESC
           click_link "admin_products_listing_name_title"
           within_row(1) { expect(page).to have_content("zomg shirt")  }
           within_row(2) { expect(page).to have_content('apache baseball cap') }
@@ -34,11 +31,9 @@ describe "Products", type: :feature do
 
         it "should list existing products with correct sorting by price" do
           visit spree.admin_products_path
-          # Name ASC (default)
           within_row(1) { expect(page).to have_content('apache baseball cap') }
           within_row(2) { expect(page).to have_content("zomg shirt") }
 
-          # Price DESC
           click_link "admin_products_listing_price_title"
           within_row(1) { expect(page).to have_content("zomg shirt") }
           within_row(2) { expect(page).to have_content('apache baseball cap') }
@@ -55,7 +50,6 @@ describe "Products", type: :feature do
             create(:product, name: "Just a product", price: 19.99)
           end
 
-          # Regression test for #2737
           context "uses руб as the currency symbol" do
             it "on the products listing page" do
               visit spree.admin_products_path
@@ -120,8 +114,6 @@ describe "Products", type: :feature do
       end
 
       let(:product_attributes) do
-        # FactoryGirl.attributes_for is un-deprecated!
-        #   https://github.com/thoughtbot/factory_girl/issues/274#issuecomment-3592054
         FactoryGirl.attributes_for(:simple_product)
       end
 
@@ -154,7 +146,6 @@ describe "Products", type: :feature do
         fill_in "product_sku", with: "B100"
         fill_in "product_price", with: "100"
         fill_in "product_available_on", with: "2012/01/24"
-        # Just so the datepicker gets out of poltergeists way.
         page.execute_script("$('#ui-datepicker-div').hide();")
         select "Size", from: "Prototype"
         wait_for_ajax
@@ -220,7 +211,6 @@ describe "Products", type: :feature do
 
       context "using a locale with a different decimal format " do
         before do
-          # change English locale’s separator and delimiter to match 19,99 format
           I18n.backend.store_translations(:en,
             :number => {
               :currency => {
@@ -233,7 +223,6 @@ describe "Products", type: :feature do
         end
 
         after do
-          # revert changes to English locale
           I18n.backend.store_translations(:en,
             :number => {
               :currency => {
@@ -252,7 +241,6 @@ describe "Products", type: :feature do
         end
       end
 
-      # Regression test for #2097
       it "can set the count on hand to a null value" do
         fill_in "product_name", with: "Baseball Cap"
         fill_in "product_price", with: "100"
@@ -344,7 +332,6 @@ describe "Products", type: :feature do
           wait_for_ajax
         end
         click_on 'Filter'
-        # This will show our deleted product
         check "Show Deleted"
         click_on 'Search'
         click_link product.name
@@ -380,14 +367,12 @@ describe "Products", type: :feature do
     it "should only display accessible links on edit" do
       visit spree.admin_product_path(product)
 
-      # product tabs should be hidden
       expect(page).to have_link('Details')
       expect(page).not_to have_link('Images')
       expect(page).not_to have_link('Variants')
       expect(page).not_to have_link('Properties')
       expect(page).not_to have_link('Stock Management')
 
-      # no create permission
       expect(page).not_to have_link('New Product')
     end
   end

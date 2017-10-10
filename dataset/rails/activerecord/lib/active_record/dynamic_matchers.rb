@@ -1,9 +1,5 @@
 module ActiveRecord
   module DynamicMatchers #:nodoc:
-    # This code in this file seems to have a lot of indirection, but the indirection
-    # is there to provide extension points for the activerecord-deprecated_finders
-    # gem. When we stop supporting activerecord-deprecated_finders (from Rails 5),
-    # then we can remove the indirection.
 
     def respond_to?(name, include_private = false)
       if self == Base
@@ -21,7 +17,7 @@ module ActiveRecord
 
       if match && match.valid?
         match.define
-        #nodyna <ID:send-193> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-860> <SD COMPLEX (change-prone variables)>
         send(name, *arguments, &block)
       else
         super
@@ -66,9 +62,9 @@ module ActiveRecord
       end
 
       def define
+        #nodyna <class_eval-861> <not yet classified>
         model.class_eval <<-CODE, __FILE__, __LINE__ + 1
           def self.#{name}(#{signature})
-            #{body}
           end
         CODE
       end
@@ -79,26 +75,18 @@ module ActiveRecord
     end
 
     module Finder
-      # Extended in activerecord-deprecated_finders
       def body
         result
       end
 
-      # Extended in activerecord-deprecated_finders
       def result
         "#{finder}(#{attributes_hash})"
       end
 
-      # The parameters in the signature may have reserved Ruby words, in order
-      # to prevent errors, we start each param name with `_`.
-      #
-      # Extended in activerecord-deprecated_finders
       def signature
         attribute_names.map { |name| "_#{name}" }.join(', ')
       end
 
-      # Given that the parameters starts with `_`, the finder needs to use the
-      # same parameter name.
       def attributes_hash
         "{" + attribute_names.map { |name| ":#{name} => _#{name}" }.join(',') + "}"
       end

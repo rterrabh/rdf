@@ -7,7 +7,6 @@ class Quassel < Formula
     url "http://www.quassel-irc.org/pub/quassel-0.11.0.tar.bz2"
     sha256 "99a191b8bc2a410f7020b890ec57e0be49313f539da9f4843675bb108b0f4504"
 
-    # http://www.openwall.com/lists/oss-security/2015/03/20/12
     patch do
       url "https://github.com/quassel/quassel/commit/b5e38970ffd55.diff"
       sha256 "324ce0edfe5744544846a4796187ceda77921434498089c49c2e50a7f8654fa1"
@@ -22,8 +21,6 @@ class Quassel < Formula
   depends_on "cmake" => :build
   depends_on "pkg-config" => :build
 
-  # Official binary packages upstream now built against qt5 by default. But source
-  # packages default to qt4 *for now*, and Homebrew prioritises qt5 in PATH due to keg_only.
   depends_on "qt5" => :optional
   depends_on "qt" => :recommended
 

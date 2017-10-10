@@ -38,7 +38,6 @@ describe Spree::Shipment, :type => :model do
     end
   end
 
-  # Regression test for #4063
   context "number generation" do
     before do
       allow(order).to receive :update!
@@ -348,12 +347,11 @@ describe Spree::Shipment, :type => :model do
         end
 
         after do
-          #nodyna <ID:send-33> <SD MODERATE (private methods)>
+          #nodyna <send-2481> <SD MODERATE (private methods)>
           Spree::ShipmentHandler.send(:remove_const, :UPS)
         end
       end
 
-      # Regression test for #4347
       context "with adjustments" do
         before do
           shipment.adjustments << Spree::Adjustment.create(order: order, label: "Label", amount: 5)
@@ -464,7 +462,6 @@ describe Spree::Shipment, :type => :model do
       expect(shipment).to receive(:determine_state).twice.and_return('ready')
       expect(shipment).to receive(:after_resume)
       shipment.resume!
-      # Shipment is pending because order is already paid
       expect(shipment.state).to eq 'pending'
     end
   end
@@ -500,11 +497,11 @@ describe Spree::Shipment, :type => :model do
 
           shipment.ship!
           expect(shipment.shipped_at).not_to be_nil
-          # Ensure value is persisted
           shipment.reload
           expect(shipment.shipped_at).not_to be_nil
         end
 
+        #nodyna <send-2482> <not yet classified>
         it "should send a shipment email" do
           mail_message = double 'Mail::Message'
           shipment_id = nil
@@ -534,7 +531,6 @@ describe Spree::Shipment, :type => :model do
 
   context "#ready" do
     context 'with Config.auto_capture_on_dispatch == false' do
-      # Regression test for #2040
       it "cannot ready a shipment for an order if the order is unpaid" do
         allow(order).to receive_messages(paid?: false)
         assert !shipment.can_ready?
@@ -696,7 +692,6 @@ describe Spree::Shipment, :type => :model do
   end
 
   context "set up new inventory units" do
-    # let(:line_item) { double(
     let(:variant) { double("Variant", id: 9) }
 
     let(:inventory_units) { double }
@@ -713,7 +708,6 @@ describe Spree::Shipment, :type => :model do
     end
   end
 
-  # Regression test for #3349
   context "#destroy" do
     it "destroys linked shipping_rates" do
       reflection = Spree::Shipment.reflect_on_association(:shipping_rates)
@@ -721,11 +715,8 @@ describe Spree::Shipment, :type => :model do
     end
   end
 
-  # Regression test for #4072 (kinda)
-  # The need for this was discovered in the research for #4702
   context "state changes" do
     before do
-      # Must be stubbed so transition can succeed
       allow(order).to receive_messages :paid? => true
     end
 

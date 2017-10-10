@@ -2,7 +2,6 @@ class TopTopic < ActiveRecord::Base
 
   belongs_to :topic
 
-  # The top topics we want to refresh often
   def self.refresh_daily!
     transaction do
       remove_invisible_topics
@@ -12,7 +11,6 @@ class TopTopic < ActiveRecord::Base
     end
   end
 
-  # We don't have to refresh these as often
   def self.refresh_older!
     older_periods = periods - [:daily,:all]
 
@@ -41,7 +39,7 @@ class TopTopic < ActiveRecord::Base
 
   def self.update_counts_and_compute_scores_for(period)
     sort_orders.each do |sort|
-      #nodyna <ID:send-197> <SD MODERATE (array)>
+      #nodyna <send-387> <SD MODERATE (array)>
       TopTopic.send("update_#{sort}_count_for", period)
     end
     compute_top_score_for(period)
@@ -152,7 +150,6 @@ class TopTopic < ActiveRecord::Base
           SELECT CASE
                    WHEN #{time_filter} THEN 0
                    ELSE log(GREATEST(#{period}_views_count, 1)) * 2 +
-                        #{period}_op_likes_count * 0.5 +
                         CASE WHEN #{period}_likes_count > 0 AND #{period}_posts_count > 0
                            THEN
                             LEAST(#{period}_likes_count / #{period}_posts_count, 3)
@@ -205,60 +202,3 @@ class TopTopic < ActiveRecord::Base
                        :compute_top_score_for, :start_of, :update_top_topics
 end
 
-# == Schema Information
-#
-# Table name: top_topics
-#
-#  id                       :integer          not null, primary key
-#  topic_id                 :integer
-#  yearly_posts_count       :integer          default(0), not null
-#  yearly_views_count       :integer          default(0), not null
-#  yearly_likes_count       :integer          default(0), not null
-#  monthly_posts_count      :integer          default(0), not null
-#  monthly_views_count      :integer          default(0), not null
-#  monthly_likes_count      :integer          default(0), not null
-#  weekly_posts_count       :integer          default(0), not null
-#  weekly_views_count       :integer          default(0), not null
-#  weekly_likes_count       :integer          default(0), not null
-#  daily_posts_count        :integer          default(0), not null
-#  daily_views_count        :integer          default(0), not null
-#  daily_likes_count        :integer          default(0), not null
-#  daily_score              :float            default(0.0)
-#  weekly_score             :float            default(0.0)
-#  monthly_score            :float            default(0.0)
-#  yearly_score             :float            default(0.0)
-#  all_score                :float            default(0.0)
-#  daily_op_likes_count     :integer          default(0), not null
-#  weekly_op_likes_count    :integer          default(0), not null
-#  monthly_op_likes_count   :integer          default(0), not null
-#  yearly_op_likes_count    :integer          default(0), not null
-#  quarterly_posts_count    :integer          default(0), not null
-#  quarterly_views_count    :integer          default(0), not null
-#  quarterly_likes_count    :integer          default(0), not null
-#  quarterly_score          :float            default(0.0)
-#  quarterly_op_likes_count :integer          default(0), not null
-#
-# Indexes
-#
-#  index_top_topics_on_daily_likes_count         (daily_likes_count)
-#  index_top_topics_on_daily_op_likes_count      (daily_op_likes_count)
-#  index_top_topics_on_daily_posts_count         (daily_posts_count)
-#  index_top_topics_on_daily_views_count         (daily_views_count)
-#  index_top_topics_on_monthly_likes_count       (monthly_likes_count)
-#  index_top_topics_on_monthly_op_likes_count    (monthly_op_likes_count)
-#  index_top_topics_on_monthly_posts_count       (monthly_posts_count)
-#  index_top_topics_on_monthly_views_count       (monthly_views_count)
-#  index_top_topics_on_quarterly_likes_count     (quarterly_likes_count)
-#  index_top_topics_on_quarterly_op_likes_count  (quarterly_op_likes_count)
-#  index_top_topics_on_quarterly_posts_count     (quarterly_posts_count)
-#  index_top_topics_on_quarterly_views_count     (quarterly_views_count)
-#  index_top_topics_on_topic_id                  (topic_id) UNIQUE
-#  index_top_topics_on_weekly_likes_count        (weekly_likes_count)
-#  index_top_topics_on_weekly_op_likes_count     (weekly_op_likes_count)
-#  index_top_topics_on_weekly_posts_count        (weekly_posts_count)
-#  index_top_topics_on_weekly_views_count        (weekly_views_count)
-#  index_top_topics_on_yearly_likes_count        (yearly_likes_count)
-#  index_top_topics_on_yearly_op_likes_count     (yearly_op_likes_count)
-#  index_top_topics_on_yearly_posts_count        (yearly_posts_count)
-#  index_top_topics_on_yearly_views_count        (yearly_views_count)
-#

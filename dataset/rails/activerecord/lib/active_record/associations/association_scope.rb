@@ -149,8 +149,6 @@ module ActiveRecord
           is_first_chain = i == 0
           klass = is_first_chain ? assoc_klass : reflection.klass
 
-          # Exclude the scope of the association itself, because that
-          # was already merged in the #scope method.
           scope_chain[i].each do |scope_chain_item|
             item  = eval_scope(klass, scope_chain_item, owner)
 
@@ -178,9 +176,6 @@ module ActiveRecord
 
       def table_name_for(reflection, klass, refl)
         if reflection == refl
-          # If this is a polymorphic belongs_to, we want to get the klass from the
-          # association because it depends on the polymorphic_type attribute of
-          # the owner
           klass.table_name
         else
           reflection.table_name
@@ -188,7 +183,7 @@ module ActiveRecord
       end
 
       def eval_scope(klass, scope, owner)
-        #nodyna <ID:instance_exec-13> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-896> <IEX COMPLEX (block with parameters)>
         klass.unscoped.instance_exec(owner, &scope)
       end
     end

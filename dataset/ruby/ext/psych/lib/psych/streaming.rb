@@ -1,11 +1,8 @@
 module Psych
   module Streaming
     module ClassMethods
-      ###
-      # Create a new streaming emitter.  Emitter will print to +io+.  See
-      # Psych::Stream for an example.
       def new io
-        #nodyna <ID:const_get-8> <CG TRIVIAL (static values)>
+        #nodyna <const_get-1475> <CG TRIVIAL (static values)>
         emitter      = const_get(:Emitter).new(io)
         class_loader = ClassLoader.new
         ss           = ScalarScanner.new class_loader
@@ -13,8 +10,6 @@ module Psych
       end
     end
 
-    ###
-    # Start streaming using +encoding+
     def start encoding = Nodes::Stream::UTF8
       super.tap { yield self if block_given?  }
     ensure

@@ -16,6 +16,7 @@ class Exenv < Formula
       export "EXENV_ROOT=#{var}/exenv"
 
     To enable shims and autocompletion add to your profile:
+      #nodyna <eval-573> <not yet classified>
       if which exenv > /dev/null; then eval "$(exenv init -)"; fi
     EOS
   end

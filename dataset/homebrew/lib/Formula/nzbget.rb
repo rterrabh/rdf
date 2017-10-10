@@ -36,7 +36,6 @@ class Nzbget < Formula
       system "make", "install"
     end
 
-    # Tell configure where libpar2 is, and tell it to use OpenSSL
     system "./configure", "--disable-debug", "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--with-libpar2-includes=#{libexec}/lp2/include",
@@ -74,11 +73,8 @@ class Nzbget < Formula
   end
 
   test do
-    # Start nzbget as a server in daemon-mode
     system "#{bin}/nzbget", "-D"
-    # Query server for version information
     system "#{bin}/nzbget", "-V"
-    # Shutdown server daemon
     system "#{bin}/nzbget", "-Q"
   end
 end

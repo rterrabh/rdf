@@ -14,9 +14,6 @@ class Zbar < Formula
   depends_on "freetype"
   depends_on "libtool" => :run
 
-  # Fix JPEG handling using patch from
-  # http://sourceforge.net/p/zbar/discussion/664596/thread/58b8d79b#8f67
-  # already applied upstream but not present in the 0.10 release
   patch :DATA
 
   def install

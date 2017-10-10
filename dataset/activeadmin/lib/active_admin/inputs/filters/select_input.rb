@@ -20,7 +20,6 @@ module ActiveAdmin
           end
         end
 
-        # Provide the AA translation to the blank input field.
         def include_blank
           I18n.t 'active_admin.any' if super
         end
@@ -29,13 +28,10 @@ module ActiveAdmin
           "#{object_name}[#{input_name}]" # was "#{object_name}[#{association_primary_key}]"
         end
 
-        # Would normally return true for has_many and HABTM, which would subsequently
-        # cause the select field to be multi-select instead of a dropdown.
         def multiple_by_association?
           false
         end
 
-        # Provides an efficient default lookup query if the attribute is a DB column.
         def collection
           if !options[:collection] && column
             pluck_column

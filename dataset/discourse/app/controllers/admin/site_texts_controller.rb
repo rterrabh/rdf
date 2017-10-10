@@ -8,7 +8,6 @@ class Admin::SiteTextsController < Admin::AdminController
   def update
     site_text = SiteText.find_or_new(params[:id].to_s)
 
-    # Updating to nothing is the same as removing it
     if params[:site_text][:value].present?
       site_text.value = params[:site_text][:value]
       site_text.save!

@@ -19,7 +19,7 @@ module ActiveRecord
           delegate = Class.new(klass) {
             include ClassSpecificRelation
           }
-          #nodyna <ID:const_set-5> <CS MEDIUM (array)>
+          #nodyna <const_set-824> <CS MEDIUM (array)>
           const_set klass.name.gsub('::', '_'), delegate
           cache[klass] = delegate
         end
@@ -33,10 +33,6 @@ module ActiveRecord
 
     extend ActiveSupport::Concern
 
-    # This module creates compiled delegation methods dynamically at runtime, which makes
-    # subsequent calls to that method faster by avoiding method_missing. The delegations
-    # may vary depending on the klass of a relation, so we create a subclass of Relation
-    # for each different klass, and the delegations are compiled into that subclass only.
 
     BLACKLISTED_ARRAY_METHODS = [
       :compact!, :flatten!, :reject!, :reverse!, :rotate!, :map!,
@@ -66,15 +62,16 @@ module ActiveRecord
             return if method_defined?(method)
 
             if method.to_s =~ /\A[a-zA-Z_]\w*[!?]?\z/
+              #nodyna <module_eval-825> <not yet classified>
               module_eval <<-RUBY, __FILE__, __LINE__ + 1
                 def #{method}(*args, &block)
                   scoping { @klass.#{method}(*args, &block) }
                 end
               RUBY
             else
-              #nodyna <ID:define_method-22> <DM COMPLEX (events)>
+              #nodyna <define_method-826> <DM COMPLEX (events)>
               define_method method do |*args, &block|
-                #nodyna <ID:send-169> <SD COMPLEX (change-prone variables)>
+                #nodyna <send-827> <SD COMPLEX (change-prone variables)>
                 scoping { @klass.public_send(method, *args, &block) }
               end
             end
@@ -94,11 +91,11 @@ module ActiveRecord
       def method_missing(method, *args, &block)
         if @klass.respond_to?(method)
           self.class.delegate_to_scoped_klass(method)
-          #nodyna <ID:send-170> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-828> <SD COMPLEX (change-prone variables)>
           scoping { @klass.public_send(method, *args, &block) }
         elsif arel.respond_to?(method)
           self.class.delegate method, :to => :arel
-          #nodyna <ID:send-171> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-829> <SD COMPLEX (change-prone variables)>
           arel.public_send(method, *args, &block)
         else
           super
@@ -132,13 +129,13 @@ module ActiveRecord
 
     def method_missing(method, *args, &block)
       if @klass.respond_to?(method)
-        #nodyna <ID:send-172> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-830> <SD COMPLEX (change-prone variables)>
         scoping { @klass.public_send(method, *args, &block) }
       elsif array_delegable?(method)
-        #nodyna <ID:send-173> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-831> <SD COMPLEX (change-prone variables)>
         to_a.public_send(method, *args, &block)
       elsif arel.respond_to?(method)
-        #nodyna <ID:send-174> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-832> <SD COMPLEX (change-prone variables)>
         arel.public_send(method, *args, &block)
       else
         super

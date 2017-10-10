@@ -1,7 +1,3 @@
-# = Tools for FTP uploading.
-#
-# This file is still under development and is not released for general
-# use.
 
 require 'date'
 require 'net/ftp'
@@ -66,16 +62,11 @@ module Rake # :nodoc:
     end
   end
 
-  ##
-  # Manage the uploading of files to an FTP account.
   class FtpUploader # :nodoc:
 
-    # Log uploads to standard output when true.
     attr_accessor :verbose
 
     class << FtpUploader
-      # Create an uploader and pass it to the given block as +up+.
-      # When the block is complete, close the uploader.
       def connect(path, host, account, password)
         up = self.new(path, host, account, password)
         begin
@@ -86,9 +77,6 @@ module Rake # :nodoc:
       end
     end
 
-    # Create an FTP uploader targeting the directory +path+ on +host+
-    # using the given account and password.  +path+ will be the root
-    # path of the uploader.
     def initialize(path, host, account, password)
       @created = Hash.new
       @path = path
@@ -97,7 +85,6 @@ module Rake # :nodoc:
       @ftp.chdir(@path)
     end
 
-    # Create the directory +path+ in the uploader root path.
     def makedirs(path)
       route = []
       File.split(path).each do |dir|
@@ -111,22 +98,18 @@ module Rake # :nodoc:
       end
     end
 
-    # Upload all files matching +wildcard+ to the uploader's root
-    # path.
     def upload_files(wildcard)
       FileList.glob(wildcard).each do |fn|
         upload(fn)
       end
     end
 
-    # Close the uploader.
     def close
       @ftp.close
     end
 
     private # --------------------------------------------------------
 
-    # Upload a single file to the uploader's root path.
     def upload(file)
       $stderr.puts "Uploading #{file}" if @verbose
       dir = File.dirname(file)

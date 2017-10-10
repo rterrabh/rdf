@@ -32,7 +32,6 @@ describe "Product Taxons", type: :feature, js: true do
       click_button "Update"
       expect(selected_taxons).to match_array([taxon_1.id, taxon_2.id])
 
-      # Regression test for #2139
       sleep(1)
       expect(first(".select2-search-choice", text: taxon_1.name)).to be_present
       expect(first(".select2-search-choice", text: taxon_2.name)).to be_present

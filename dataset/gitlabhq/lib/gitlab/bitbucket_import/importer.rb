@@ -14,7 +14,6 @@ module Gitlab
 
         return true unless client.project(project_identifier)["has_issues"]
 
-        #Issues && Comments
         issues = client.issues(project_identifier)
         
         issues["issues"].each do |issue|

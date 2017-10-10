@@ -13,7 +13,6 @@ class Dvorak7min < Formula
   end
 
   def install
-    # Remove pre-built ELF binary first
     system "make", "clean"
     system "make"
     system "make", "INSTALL=#{bin}", "install"

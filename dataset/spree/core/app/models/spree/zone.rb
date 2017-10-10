@@ -23,14 +23,11 @@ module Spree
 
     def self.potential_matching_zones(zone)
       if zone.country?
-        # Match zones of the same kind with simialr countries
         joins(countries: :zones).
           where('zone_members_spree_countries_join.zone_id = ? OR ' +
                 'spree_zones.default_tax = ?', zone.id, true).
           uniq
       else
-        # Match zones of the same kind with similar states in AND match zones
-        # that have the states countries in
         joins(:zone_members).where(
           "(spree_zone_members.zoneable_type = 'Spree::State' AND
             spree_zone_members.zoneable_id IN (?))
@@ -44,8 +41,6 @@ module Spree
       end
     end
 
-    # Returns the matching zone with the highest priority zone type (State, Country, Zone.)
-    # Returns nil in the case of no matches.
     def self.match(address)
       return unless address &&
                     matches = includes(:zone_members).
@@ -97,7 +92,6 @@ module Spree
       end
     end
 
-    # convenience method for returning the countries contained within a zone
     def country_list
       @countries ||= case kind
                      when 'country' then
@@ -113,8 +107,6 @@ module Spree
       name <=> other.name
     end
 
-    # All zoneables belonging to the zone members.  Will be a collection of either
-    # countries or states depending on the zone type.
     def zoneables
       members.includes(:zoneable).collect(&:zoneable)
     end
@@ -143,8 +135,6 @@ module Spree
       set_zone_members(ids, 'Spree::State')
     end
 
-    # Indicates whether the specified zone falls entirely within the zone performing
-    # the check.
     def contains?(target)
       return false if state? && target.country?
       return false if zone_members.empty? || target.zone_members.empty?

@@ -7,8 +7,6 @@ class PostJobsEnqueuer
   end
 
   def enqueue_jobs
-    # We need to enqueue jobs after the transaction. Otherwise they might begin before the data has
-    # been comitted.
     enqueue_post_alerts unless @opts[:import_mode]
     feature_topic_users unless @opts[:import_mode]
     trigger_post_post_process
@@ -46,7 +44,6 @@ class PostJobsEnqueuer
 
   def after_topic_create
     return unless @new_topic
-    # Don't publish invisible topics
     return unless @topic.visible?
 
     @topic.posters = @topic.posters_summary

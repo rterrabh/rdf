@@ -86,10 +86,8 @@ class Sslmate < Formula
 
   test do
     system "#{bin}/sslmate", "req", "www.example.com"
-    # Make sure well-formed files were generated:
     system "openssl", "rsa", "-in", "www.example.com.key", "-noout"
     system "openssl", "req", "-in", "www.example.com.csr", "-noout"
-    # The version command tests the HTTP client:
     system "#{bin}/sslmate", "version"
   end
 end

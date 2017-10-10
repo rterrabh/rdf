@@ -8,7 +8,7 @@ module Spree
       update.fails  :load_form_data
 
       def fire
-        #nodyna <ID:send-25> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2438> <SD COMPLEX (change-prone variables)>
         @return_authorization.send("#{params[:e]}!")
         flash[:success] = Spree.t(:return_authorization_updated)
         redirect_to :back
@@ -22,8 +22,6 @@ module Spree
         load_return_authorization_reasons
       end
 
-      # To satisfy how nested attributes works we want to create placeholder ReturnItems for
-      # any InventoryUnits that have not already been added to the ReturnAuthorization.
       def load_return_items
         all_inventory_units = @return_authorization.order.inventory_units
         associated_inventory_units = @return_authorization.return_items.map(&:inventory_unit)
@@ -42,7 +40,6 @@ module Spree
 
       def load_return_authorization_reasons
         @reasons = Spree::ReturnAuthorizationReason.active
-        # Only allow an inactive reason if it's already associated to the RMA
         if @return_authorization.reason && !@return_authorization.reason.active?
           @reasons << @return_authorization.reason
         end

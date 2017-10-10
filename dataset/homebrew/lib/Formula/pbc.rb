@@ -22,8 +22,6 @@ class Pbc < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <pbc/pbc.h>
-      #include <assert.h>
 
       int main()
       {

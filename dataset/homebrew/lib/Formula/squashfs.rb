@@ -14,9 +14,6 @@ class Squashfs < Formula
   depends_on "lzo"
   depends_on "xz"
 
-  # Patch necessary to emulate the sigtimedwait process otherwise we get build failures
-  # Also clang fixes, extra endianness knowledge and a bundle of other OS X fixes.
-  # Originally from https://github.com/plougher/squashfs-tools/pull/3
   patch do
     url "https://raw.githubusercontent.com/DomT4/scripts/master/Homebrew_Resources/Squashfs/squashfs.diff"
     sha256 "276763d01ec675793ddb0ae293fbe82cbf96235ade0258d767b6a225a84bc75f"

@@ -19,7 +19,6 @@ class Admesh < Formula
   end
 
   test do
-    # Test file is the beginning of block.stl from admesh's source
     (testpath/"test.stl").write <<-EOS.undent
       SOLID Untitled1
       FACET NORMAL  0.00000000E+00  0.00000000E+00  1.00000000E+00

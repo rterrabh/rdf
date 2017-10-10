@@ -1,10 +1,8 @@
 class DistributedMemoizer
 
-  # never wait for longer that 1 second for a cross process lock
   MAX_WAIT = 2
   LOCK = Mutex.new
 
-  # memoize a key across processes and machines
   def self.memoize(key, duration = 60 * 60 * 24, redis = nil)
     redis ||= $redis
 
@@ -30,8 +28,6 @@ class DistributedMemoizer
         end
 
       ensure
-        # NOTE: delete regardless so next one in does not need to wait MAX_WAIT
-        #   again
         redis.del(redis_lock_key)
       end
     end

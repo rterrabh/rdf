@@ -9,39 +9,28 @@ module Projects
 
       @project = Project.new(params)
 
-      # Make sure that the user is allowed to use the specified visibility
-      # level
       unless Gitlab::VisibilityLevel.allowed_for?(current_user,
                                                   params[:visibility_level])
         deny_visibility_level(@project)
         return @project
       end
 
-      # Set project name from path
       if @project.name.present? && @project.path.present?
-        # if both name and path set - everything is ok
       elsif @project.path.present?
-        # Set project name from path
         @project.name = @project.path.dup
       elsif @project.name.present?
-        # For compatibility - set path from name
-        # TODO: remove this in 8.0
         @project.path = @project.name.dup.parameterize
       end
 
-      # get namespace id
       namespace_id = params[:namespace_id]
 
       if namespace_id
-        # Find matching namespace and check if it allowed
-        # for current user if namespace_id passed.
         unless allowed_namespace?(current_user, namespace_id)
           @project.namespace_id = nil
           deny_namespace
           return @project
         end
       else
-        # Set current user namespace if namespace_id is nil
         @project.namespace_id = current_user.namespace_id
       end
 

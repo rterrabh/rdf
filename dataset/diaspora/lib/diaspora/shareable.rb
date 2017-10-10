@@ -1,12 +1,7 @@
-#   Copyright (c) 2010, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
-#the pont of this object is to centralize the simmilarities of Photo and post,
-# as they used to be the same class
 module Diaspora
   module Shareable
     def self.included(model)
-      #nodyna <ID:instance_eval-6> <IEV COMPLEX (method definition)>
+      #nodyna <instance_eval-208> <IEV COMPLEX (method definition)>
       model.instance_eval do
 
         has_many :aspect_visibilities, :as => :shareable, :validate => false
@@ -19,7 +14,6 @@ module Diaspora
 
         delegate :id, :name, :first_name, to: :author, prefix: true
 
-        #scopes
         scope :all_public, -> { where(:public => true, :pending => false) }
 
         def self.owned_or_visible_by_user(user)
@@ -47,7 +41,6 @@ module Diaspora
       end
     end
 
-    # @return [Integer]
     def update_reshares_counter
       self.class.where(:id => self.id).
         update_all(:reshares_count => self.reshares.count)

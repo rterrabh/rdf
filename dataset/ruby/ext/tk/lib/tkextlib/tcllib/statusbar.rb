@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/statusbar.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * statusbar widget
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::statusbar', '1.2')
 TkPackage.require('widget::statusbar')
 
 module Tk::Tcllib

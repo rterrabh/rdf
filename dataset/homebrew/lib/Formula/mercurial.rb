@@ -1,5 +1,3 @@
-# No head build supported; if you need head builds of Mercurial, do so outside
-# of Homebrew.
 class Mercurial < Formula
   desc "Scalable distributed version control system"
   homepage "https://mercurial.selenic.com/"
@@ -17,11 +15,9 @@ class Mercurial < Formula
     ENV.minimal_optimization if MacOS.version <= :snow_leopard
 
     system "make", "PREFIX=#{prefix}", "install-bin"
-    # Install man pages, which come pre-built in source releases
     man1.install "doc/hg.1"
     man5.install "doc/hgignore.5", "doc/hgrc.5"
 
-    # install the completion scripts
     bash_completion.install "contrib/bash_completion" => "hg-completion.bash"
     zsh_completion.install "contrib/zsh_completion" => "_hg"
   end

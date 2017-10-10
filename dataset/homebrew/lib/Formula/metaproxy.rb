@@ -22,7 +22,6 @@ class Metaproxy < Formula
     system "make", "install"
   end
 
-  # Test by making metaproxy test a trivial configuration file (etc/config0.xml).
   test do
     (testpath/"test-config.xml").write <<-EOS.undent
     <?xml version="1.0"?>

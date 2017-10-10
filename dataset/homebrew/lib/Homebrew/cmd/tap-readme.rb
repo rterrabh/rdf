@@ -7,9 +7,7 @@ module Homebrew
     titleized_name[0] = titleized_name[0].upcase
 
     template = <<-EOS.undent
-    # Homebrew #{titleized_name}
 
-    ## How do I install these formulae?
     `brew install homebrew/#{name}/<formula>`
 
     Or `brew tap homebrew/#{name}` and then `brew install <formula>`.
@@ -20,7 +18,6 @@ module Homebrew
     brew install https://raw.githubusercontent.com/Homebrew/homebrew-#{name}/master/<formula>.rb
     ```
 
-    ## Documentation
     `brew help`, `man brew` or check [Homebrew's documentation](https://github.com/Homebrew/homebrew/tree/master/share/doc/homebrew#readme).
     EOS
 

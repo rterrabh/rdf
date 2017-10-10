@@ -11,15 +11,12 @@ module Rails
 
       def initialize(args, *options) #:nodoc:
         @inside_template = nil
-        # Unfreeze name in case it's given as a frozen string
         args[0] = args[0].dup if args[0].is_a?(String) && args[0].frozen?
         super
         assign_names!(self.name)
         parse_attributes! if respond_to?(:attributes)
       end
 
-      # Defines the template that would be used for the migration file.
-      # The arguments include the source template file, the migration filename etc.
       no_tasks do
         def template(source, *args, &block)
           inside_template do
@@ -31,14 +28,10 @@ module Rails
       protected
         attr_reader :file_name
 
-        # FIXME: We are avoiding to use alias because a bug on thor that make
-        # this method public and add it to the task list.
         def singular_name
           file_name
         end
 
-        # Wrap block with namespace of current application
-        # if namespace exists and is not skipped
         def module_namespacing(&block)
           content = capture(&block)
           content = wrap_with_namespace(content) if namespaced?
@@ -145,7 +138,6 @@ module Rails
           @route_url ||= class_path.collect {|dname| "/" + dname }.join + "/" + plural_file_name
         end
 
-        # Tries to retrieve the application name or simple return application.
         def application_name
           if defined?(Rails) && Rails.application
             Rails.application.class.name.split('::').first.underscore
@@ -160,7 +152,6 @@ module Rails
           @file_name = @class_path.pop
         end
 
-        # Convert attributes array into GeneratedAttribute objects.
         def parse_attributes! #:nodoc:
           self.attributes = (attributes || []).map do |attr|
             Rails::Generators::GeneratedAttribute.parse(attr)
@@ -183,18 +174,8 @@ module Rails
           defined?(ENGINE_ROOT) && namespaced?
         end
 
-        # Add a class collisions name to be checked on class initialization. You
-        # can supply a hash with a :prefix or :suffix to be tested.
-        #
-        # ==== Examples
-        #
-        #   check_class_collision suffix: "Decorator"
-        #
-        # If the generator is invoked with class name Admin, it will check for
-        # the presence of "AdminDecorator".
-        #
         def self.check_class_collision(options={})
-          #nodyna <ID:define_method-68> <DM MODERATE (events)>
+          #nodyna <define_method-1157> <DM MODERATE (events)>
           define_method :check_class_collision do
             name = if self.respond_to?(:controller_class_name) # for ScaffoldBase
               controller_class_name

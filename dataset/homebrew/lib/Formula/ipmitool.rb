@@ -7,10 +7,7 @@ class Ipmitool < Formula
   depends_on "openssl"
 
   def install
-    # tracking upstream: http://sourceforge.net/p/ipmitool/feature-requests/47/
-    # fix build errors w/ clang
     inreplace "include/ipmitool/ipmi_user.h", "HAVE_PRAGMA_PACK", "DISABLE_PRAGMA_PACK"
-    # s6_addr16 is not available in Mac OS X
     inreplace "src/plugins/ipmi_intf.c", "s6_addr16", "s6_addr"
 
     system "./configure", "--disable-debug",

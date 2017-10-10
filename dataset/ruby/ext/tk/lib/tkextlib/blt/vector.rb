@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/vector.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -37,7 +33,6 @@ module Tk::BLT
       }
     end
 
-    ####################################
 
     def initialize(size=nil, keys={})
       if size.kind_of?(Hash)
@@ -45,7 +40,6 @@ module Tk::BLT
         size = nil
       end
       if size.kind_of?(Array)
-        # [first, last]
         size = size.join(':')
       end
       if size
@@ -67,7 +61,6 @@ module Tk::BLT
       @trace_elem = nil
       @trace_opts = nil
 
-      # teach Tk-ip that @id is global var
       TkCore::INTERP._invoke_without_enc('global', @id)
     end
 
@@ -230,7 +223,7 @@ module Tk::BLT
         if TkVar_ID_TBL[name]
           TkVar_ID_TBL[name]
         else
-          #nodyna <ID:instance_eval-104> <IEV MODERATE (private access)>
+          #nodyna <instance_eval-1548> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             initialize(name)
             TkVar_ID_TBL[@id] = self
@@ -250,7 +243,6 @@ module Tk::BLT
       @trace_elem = nil
       @trace_opts = nil
 
-      # teach Tk-ip that @id is global var
       TkCore::INTERP._invoke_without_enc('global', @id)
     end
   end

@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 module Slug
 
@@ -8,7 +7,6 @@ module Slug
            when :encoded then self.encoded_generator(string)
            when :none then self.none_generator(string)
            end
-    # Reject slugs that only contain numbers, because they would be indistinguishable from id's.
     slug = (slug =~ /[^\d]/ ? slug : '')
     slug.blank? ? default : slug
   end
@@ -26,9 +24,6 @@ module Slug
   end
 
   def self.encoded_generator(string)
-    # This generator will sanitize almost all special characters,
-    # including reserved characters from RFC3986.
-    # See also URI::REGEXP::PATTERN.
     string.strip
           .gsub(/\s+/, '-')
           .gsub(/[:\/\?#\[\]@!\$&'\(\)\*\+,;=_\.~%\\`^\s|\{\}"<>]+/, '') # :/?#[]@!$&'()*+,;=_.~%\`^|{}"<>

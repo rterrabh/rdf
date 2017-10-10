@@ -5,7 +5,6 @@ module RailsAdmin
     module Fields
       module Types
         class Date < RailsAdmin::Config::Fields::Types::Datetime
-          # Register field type for the type loader
           RailsAdmin::Config::Fields::Types.register(self)
 
           @format = :long

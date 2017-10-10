@@ -29,7 +29,7 @@ module Gitlab
 
       def method_missing(method, *args, &block)
         if api.respond_to?(method)
-          #nodyna <ID:send-15> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-493> <SD COMPLEX (change-prone variables)>
           api.send(method, *args, &block)
         else
           super(method, *args, &block)

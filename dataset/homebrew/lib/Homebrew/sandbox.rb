@@ -8,7 +8,6 @@ class Sandbox
     OS.mac? && File.executable?(SANDBOX_EXEC)
   end
 
-  # there are times the sandbox cannot be used.
   def self.auto_disable?
     @auto_disable ||= ARGV.interactive? || ARGV.debug?
   end
@@ -69,7 +68,6 @@ class Sandbox
     allow_write_path formula.var
   end
 
-  # Xcode projects expect access to certain cache/archive dirs.
   def allow_write_xcode
     allow_write_path "/Users/#{ENV["USER"]}/Library/Developer/Xcode/DerivedData/"
   end

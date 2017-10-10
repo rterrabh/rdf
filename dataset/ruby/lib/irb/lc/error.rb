@@ -1,19 +1,7 @@
-#
-#   irb/lc/error.rb -
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 require "e2mmap"
 
-# :stopdoc:
 module IRB
 
-  # exceptions
   extend Exception2MessageMapper
   def_exception :UnrecognizedSwitch, "Unrecognized switch: %s"
   def_exception :NotImplementedError, "Need to define `%s'"
@@ -28,4 +16,3 @@ module IRB
   def_exception :IllegalRCGenerator, 'Define illegal RC_NAME_GENERATOR.'
 
 end
-# :startdoc:

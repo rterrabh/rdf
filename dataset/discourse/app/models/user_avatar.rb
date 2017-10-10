@@ -12,7 +12,6 @@ class UserAvatar < ActiveRecord::Base
   def update_gravatar!
     DistributedMutex.synchronize("update_gravatar_#{user.id}") do
       begin
-        # special logic for our system user
         email_hash = user.id == Discourse::SYSTEM_USER_ID ? User.email_hash("info@discourse.org") : user.email_hash
 
         self.last_gravatar_download_attempt = Time.new
@@ -30,7 +29,6 @@ class UserAvatar < ActiveRecord::Base
       rescue OpenURI::HTTPError
         save!
       rescue SocketError
-        # skip saving, we are not connected to the net
         Rails.logger.warn "Failed to download gravatar, socket error - user id #{user.id}"
       ensure
         tempfile.try(:close!)
@@ -79,7 +77,6 @@ class UserAvatar < ActiveRecord::Base
       user.user_avatar.custom_upload_id = upload.id
     end
   rescue => e
-    # skip saving, we are not connected to the net
     Rails.logger.warn "#{e}: Failed to download external avatar: #{avatar_url}, user id #{ user.id }"
   ensure
     tempfile.close! if tempfile && tempfile.respond_to?(:close!)
@@ -87,19 +84,3 @@ class UserAvatar < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: user_avatars
-#
-#  id                             :integer          not null, primary key
-#  user_id                        :integer          not null
-#  custom_upload_id               :integer
-#  gravatar_upload_id             :integer
-#  last_gravatar_download_attempt :datetime
-#  created_at                     :datetime         not null
-#  updated_at                     :datetime         not null
-#
-# Indexes
-#
-#  index_user_avatars_on_user_id  (user_id)
-#

@@ -1,4 +1,3 @@
-# encoding: utf-8
 require 'spec_helper'
 
 describe "Variants", type: :feature, js: true do
@@ -37,7 +36,6 @@ describe "Variants", type: :feature, js: true do
           create(:variant, product: product, price: 19.99)
         end
 
-        # Regression test for #2737
         context "uses руб as the currency symbol" do
           it "on the products listing page" do
             visit spree.admin_product_variants_path(product)

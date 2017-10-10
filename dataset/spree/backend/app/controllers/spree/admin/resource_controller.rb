@@ -132,18 +132,15 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
     if member_action?
       @object ||= load_resource_instance
 
-      # call authorize! a third time (called twice already in Admin::BaseController)
-      # this time we pass the actual instance so fine-grained abilities can control
-      # access to individual records, not just entire models.
       authorize! action, @object
 
+      #nodyna <instance_variable_set-2427> <not yet classified>
       instance_variable_set("@#{resource.object_name}", @object)
     else
       @collection ||= collection
 
-      # note: we don't call authorize here as the collection method should use
-      # CanCan's accessible_by method to restrict the actual records returned
 
+      #nodyna <instance_variable_set-2428> <not yet classified>
       instance_variable_set("@#{controller_name}", @collection)
     end
   end
@@ -163,8 +160,9 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
   def parent
     if parent_data.present?
       @parent ||= parent_data[:model_class].
-          #nodyna <ID:send-26> <SD MODERATE (change-prone variables)>
+          #nodyna <send-2429> <SD MODERATE (change-prone variables)>
           send("find_by_#{parent_data[:find_by]}", params["#{resource.model_name}_id"])
+      #nodyna <instance_variable_set-2430> <not yet classified>
       instance_variable_set("@#{resource.model_name}", @parent)
     else
       nil
@@ -173,7 +171,7 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
 
   def find_resource
     if parent_data.present?
-      #nodyna <ID:send-27> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-2431> <SD COMPLEX (change-prone variables)>
       parent.send(controller_name).find(params[:id])
     else
       model_class.find(params[:id])
@@ -182,7 +180,7 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
 
   def build_resource
     if parent_data.present?
-      #nodyna <ID:send-28> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-2432> <SD COMPLEX (change-prone variables)>
       parent.send(controller_name).build
     else
       model_class.new
@@ -190,7 +188,7 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
   end
 
   def collection
-    #nodyna <ID:send-29> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-2433> <SD COMPLEX (change-prone variables)>
     return parent.send(controller_name) if parent_data.present?
     if model_class.respond_to?(:accessible_by) &&
         !current_ability.has_block?(params[:action], model_class)
@@ -208,7 +206,6 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
     collection_url
   end
 
-  # URL helpers
 
   def new_object_url(options = {})
     if parent_data.present?
@@ -220,11 +217,11 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
 
   def edit_object_url(object, options = {})
     if parent_data.present?
-      #nodyna <ID:send-30> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-2434> <SD COMPLEX (change-prone variables)>
       spree.send "edit_admin_#{resource.model_name}_#{resource.object_name}_url",
                  parent, object, options
     else
-      #nodyna <ID:send-31> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-2435> <SD COMPLEX (change-prone variables)>
       spree.send "edit_admin_#{resource.object_name}_url", object, options
     end
   end
@@ -232,10 +229,10 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
   def object_url(object = nil, options = {})
     target = object ? object : @object
     if parent_data.present?
-      #nodyna <ID:send-32> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-2436> <SD COMPLEX (change-prone variables)>
       spree.send "admin_#{resource.model_name}_#{resource.object_name}_url", parent, target, options
     else
-      #nodyna <ID:send-33> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-2437> <SD COMPLEX (change-prone variables)>
       spree.send "admin_#{resource.object_name}_url", target, options
     end
   end
@@ -248,13 +245,9 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
     end
   end
 
-  # This method should be overridden when object_name does not match the controller name
   def object_name
   end
 
-  # Allow all attributes to be updatable.
-  #
-  # Other controllers can, should, override it to set custom logic
   def permitted_resource_params
     params[resource.object_name].present? ? params.require(resource.object_name).permit! : ActionController::Parameters.new
   end

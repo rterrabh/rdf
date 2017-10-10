@@ -14,13 +14,11 @@ module TracePointChecker
     def after_teardown
       super
 
-      # detect zombie traces.
       assert_equal(
         @tracepoint_captured_stat,
         TracePoint.stat.map{|k, (activated, _deleted)| [k, activated]},
         "The number of active trace events was changed"
       )
-      # puts "TracePoint - deleted: #{deleted}" if deleted > 0
 
       TracePointChecker.check if STATE[:running]
     end
@@ -115,4 +113,3 @@ class ::Test::Unit::TestCase
   include TracePointChecker::ZombieTraceHunter
 end
 
-# TracePointChecker.start verbose: false

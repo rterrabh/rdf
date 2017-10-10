@@ -8,15 +8,7 @@ require_relative '../envutil'
 require 'test/unit/testcase'
 require 'optparse'
 
-# See Test::Unit
 module Test
-  ##
-  # Test::Unit is an implementation of the xUnit testing framework for Ruby.
-  #
-  # If you are writing new test code, please use MiniTest instead of Test::Unit.
-  #
-  # Test::Unit has been left in the standard library to support legacy test
-  # suites.
   module Unit
     TEST_UNIT_IMPLEMENTATION = 'test/unit compatibility layer using minitest' # :nodoc:
 
@@ -228,9 +220,10 @@ module Test
 
       def non_options(files, options)
         if options.delete(:gc_stress)
+          #nodyna <class_eval-1426> <not yet classified>
           MiniTest::Unit::TestCase.class_eval do
             oldrun = instance_method(:run)
-            #nodyna <ID:define_method-51> <DM MODERATE (events)>
+            #nodyna <define_method-1427> <DM MODERATE (events)>
             define_method(:run) do |runner|
               begin
                 gc_stress, GC.stress = GC.stress, true
@@ -527,7 +520,6 @@ module Test
             next unless w
             w = w.dup
             if w.status != :quit && !w.quit_called?
-              # Worker down
               w.died(nil, !stat.signaled? && stat.exitstatus)
             end
           end
@@ -540,7 +532,6 @@ module Test
         cmd.sub!(/\A\.+/, '')
         case cmd
         when ''
-          # just only dots, ignore
         when /^okay$/
           worker.status = :running
           jobs_status
@@ -594,7 +585,6 @@ module Test
           return
         end
 
-        # Require needed things for parallel running
         require 'thread'
         require 'timeout'
         @tasks = @files.dup # Array of filenames.
@@ -608,7 +598,6 @@ module Test
         @workers_hash = {} # out-IO => worker
         @ios          = [] # Array of worker IOs
         begin
-          # Thread: watchdog
           watchdog = start_watchdog
 
           @options[:parallel].times {launch_worker}
@@ -638,7 +627,7 @@ module Test
             @options[:parallel] = false
             suites, rep = rep.partition {|r| r[:testcase] && r[:file] && r[:report].any? {|e| !e[2].is_a?(MiniTest::Skip)}}
             suites.map {|r| r[:file]}.uniq.each {|file| require file}
-            #nodyna <ID:eval-127> <EV COMPLEX (change-prone variables)>
+            #nodyna <eval-1428> <EV COMPLEX (change-prone variables)>
             suites.map! {|r| eval("::"+r[:testcase])}
             del_status_line or puts
             unless suites.empty?
@@ -712,7 +701,6 @@ module Test
           color = false
         end
         if color
-          # dircolors-like style
           colors = (colors = ENV['TEST_COLORS']) ? Hash[colors.scan(/(\w+)=([^:]*)/)] : {}
           @passed_color = "\e[#{colors["pass"] || "32"}m"
           @failed_color = "\e[#{colors["fail"] || "31"}m"
@@ -730,10 +718,10 @@ module Test
         end
         type = "#{type}_methods"
         total = if filter
-                  #nodyna <ID:send-151> <SD COMPLEX (change-prone variables)>
+                  #nodyna <send-1429> <SD COMPLEX (change-prone variables)>
                   suites.inject(0) {|n, suite| n + suite.send(type).grep(filter).size}
                 else
-                  #nodyna <ID:send-152> <SD COMPLEX (change-prone variables)>
+                  #nodyna <send-1430> <SD COMPLEX (change-prone variables)>
                   suites.inject(0) {|n, suite| n + suite.send(type).size}
                 end
         @test_count = 0
@@ -775,11 +763,7 @@ module Test
         report.clear
       end
 
-      # Overriding of MiniTest::Unit#puke
       def puke klass, meth, e
-        # TODO:
-        #   this overriding is for minitest feature that skip messages are
-        #   hidden when not verbose (-v), note this is temporally.
         n = report.size
         rep = super
         if MiniTest::Skip === e and /no message given\z/ =~ e.message

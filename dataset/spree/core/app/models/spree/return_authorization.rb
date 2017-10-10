@@ -20,8 +20,6 @@ module Spree
     validate :must_have_shipped_units, on: :create
 
 
-    # These are called prior to generating expedited exchanges shipments.
-    # Should respond to a "call" method that takes the list of return items
     class_attribute :pre_expedited_exchange_hooks
     self.pre_expedited_exchange_hooks = []
 

@@ -13,8 +13,6 @@ class BbftpClient < Formula
 
   depends_on "openssl"
 
-  # Dirty patch to fix ntohll errors on Yosemite.
-  # Reported upstream on 14/01/2015.
   patch :DATA if MacOS.version >= :yosemite
 
   def install

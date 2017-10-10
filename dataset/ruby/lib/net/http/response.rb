@@ -1,21 +1,5 @@
-# HTTP response class.
-#
-# This class wraps together the response header and the response body (the
-# entity requested).
-#
-# It mixes in the HTTPHeader module, which provides access to response
-# header values both via hash-like methods and via individual readers.
-#
-# Note that each possible HTTP response code defines its own
-# HTTPResponse subclass.  These are listed below.
-#
-# All classes are defined under the Net module. Indentation indicates
-# inheritance.  For a list of the classes see Net::HTTP.
-#
-#
 class Net::HTTPResponse
   class << self
-    # true if the response has a body.
     def body_permitted?
       self::HAS_BODY
     end
@@ -66,8 +50,6 @@ class Net::HTTPResponse
     end
   end
 
-  # next is to fix bug in RDoc, where the private inside class << self
-  # spills out.
   public
 
   include Net::HTTPHeader
@@ -83,33 +65,21 @@ class Net::HTTPResponse
     @decode_content = false
   end
 
-  # The HTTP version supported by the server.
   attr_reader :http_version
 
-  # The HTTP result code string. For example, '302'.  You can also
-  # determine the response type by examining which response subclass
-  # the response object is an instance of.
   attr_reader :code
 
-  # The HTTP result message sent by the server. For example, 'Not Found'.
   attr_reader :message
   alias msg message   # :nodoc: obsolete
 
-  # The URI used to fetch this response.  The response URI is only available
-  # if a URI was used to create the request.
   attr_reader :uri
 
-  # Set to true automatically when the request did not contain an
-  # Accept-Encoding header from the user.
   attr_accessor :decode_content
 
   def inspect
     "#<#{self.class} #{@code} #{@message} readbody=#{@read}>"
   end
 
-  #
-  # response <-> exception relationship
-  #
 
   def code_type   #:nodoc:
     self.class
@@ -123,7 +93,6 @@ class Net::HTTPResponse
     self.class::EXCEPTION_TYPE
   end
 
-  # Raises an HTTP error if the response is not 2xx (success).
   def value
     error! unless self.kind_of?(Net::HTTPSuccess)
   end
@@ -132,9 +101,6 @@ class Net::HTTPResponse
     @uri = uri.dup if uri
   end
 
-  #
-  # header (for backward compatibility only; DO NOT USE)
-  #
 
   def response   #:nodoc:
     warn "#{caller(1)[0]}: warning: Net::HTTPResponse#response is obsolete" if $VERBOSE
@@ -151,9 +117,6 @@ class Net::HTTPResponse
     self
   end
 
-  #
-  # body
-  #
 
   def reading_body(sock, reqmethodallowbody)  #:nodoc: internal use only
     @socket = sock
@@ -166,30 +129,6 @@ class Net::HTTPResponse
     end
   end
 
-  # Gets the entity body returned by the remote HTTP server.
-  #
-  # If a block is given, the body is passed to the block, and
-  # the body is provided in fragments, as it is read in from the socket.
-  #
-  # Calling this method a second or subsequent time for the same
-  # HTTPResponse object will return the value already read.
-  #
-  #   http.request_get('/index.html') {|res|
-  #     puts res.read_body
-  #   }
-  #
-  #   http.request_get('/index.html') {|res|
-  #     p res.read_body.object_id   # 538149362
-  #     p res.read_body.object_id   # 538149362
-  #   }
-  #
-  #   # using iterator
-  #   http.request_get('/index.html') {|res|
-  #     res.read_body do |segment|
-  #       print segment
-  #     end
-  #   }
-  #
   def read_body(dest = nil, &block)
     if @read
       raise IOError, "#{self.class}\#read_body called twice" if dest or block
@@ -208,26 +147,10 @@ class Net::HTTPResponse
     @body
   end
 
-  # Returns the full entity body.
-  #
-  # Calling this method a second or subsequent time will return the
-  # string already read.
-  #
-  #   http.request_get('/index.html') {|res|
-  #     puts res.body
-  #   }
-  #
-  #   http.request_get('/index.html') {|res|
-  #     p res.body.object_id   # 538149362
-  #     p res.body.object_id   # 538149362
-  #   }
-  #
   def body
     read_body()
   end
 
-  # Because it may be necessary to modify the body, Eg, decompression
-  # this method facilitates that.
   def body=(value)
     @body = value
   end
@@ -236,14 +159,6 @@ class Net::HTTPResponse
 
   private
 
-  ##
-  # Checks for a supported Content-Encoding header and yields an Inflate
-  # wrapper for this response's socket when zlib is present.  If the
-  # Content-Encoding is unsupported or zlib is missing the plain socket is
-  # yielded.
-  #
-  # If a Content-Range header is present a plain socket is yielded as the
-  # bytes in the range may not be a complete deflate block.
 
   def inflater # :nodoc:
     return yield @socket unless Net::HTTP::HAVE_ZLIB
@@ -299,12 +214,6 @@ class Net::HTTPResponse
     end
   end
 
-  ##
-  # read_chunked reads from +@socket+ for chunk-size, chunk-extension, CRLF,
-  # etc. and +chunk_data_io+ for chunk-data which may be deflate or gzip
-  # encoded.
-  #
-  # See RFC 2616 section 3.6.1 for definitions
 
   def read_chunked(dest, chunk_data_io) # :nodoc:
     total = 0
@@ -322,7 +231,6 @@ class Net::HTTPResponse
       end
     end
     until @socket.readline.empty?
-      # none
     end
   end
 
@@ -340,34 +248,21 @@ class Net::HTTPResponse
     end
   end
 
-  ##
-  # Inflater is a wrapper around Net::BufferedIO that transparently inflates
-  # zlib and gzip streams.
 
   class Inflater # :nodoc:
 
-    ##
-    # Creates a new Inflater wrapping +socket+
 
     def initialize socket
       @socket = socket
-      # zlib with automatic gzip detection
       @inflate = Zlib::Inflate.new(32 + Zlib::MAX_WBITS)
     end
 
-    ##
-    # Finishes the inflate stream.
 
     def finish
       return if @inflate.total_in == 0
       @inflate.finish
     end
 
-    ##
-    # Returns a Net::ReadAdapter that inflates each read chunk into +dest+.
-    #
-    # This allows a large response body to be inflated without storing the
-    # entire body in memory.
 
     def inflate_adapter(dest)
       if dest.respond_to?(:set_encoding)
@@ -384,16 +279,6 @@ class Net::HTTPResponse
       Net::ReadAdapter.new(block)
     end
 
-    ##
-    # Reads +clen+ bytes from the socket, inflates them, then writes them to
-    # +dest+.  +ignore_eof+ is passed down to Net::BufferedIO#read
-    #
-    # Unlike Net::BufferedIO#read, this method returns more than +clen+ bytes.
-    # At this time there is no way for a user of Net::HTTPResponse to read a
-    # specific number of bytes from the HTTP response body, so this internal
-    # API does not return the same number of bytes as were requested.
-    #
-    # See https://bugs.ruby-lang.org/issues/6492 for further discussion.
 
     def read clen, dest, ignore_eof = false
       temp_dest = inflate_adapter(dest)
@@ -401,8 +286,6 @@ class Net::HTTPResponse
       @socket.read clen, temp_dest, ignore_eof
     end
 
-    ##
-    # Reads the rest of the socket, inflates it, then writes it to +dest+.
 
     def read_all dest
       temp_dest = inflate_adapter(dest)

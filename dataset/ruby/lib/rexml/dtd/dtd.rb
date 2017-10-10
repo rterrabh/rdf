@@ -17,7 +17,6 @@ module REXML
         end
       end
 
-      # Takes a String and parses it out
       def Parser.parse_helper( input )
         contents = Parent.new
         while input.size > 0

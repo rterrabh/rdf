@@ -10,7 +10,6 @@ module Spree
         respond_with(taxonomy)
       end
 
-      # Because JSTree wants parameters in a *slightly* different format
       def jstree
         show
       end

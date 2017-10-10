@@ -24,10 +24,6 @@ class Cmocka < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdarg.h>
-      #include <stddef.h>
-      #include <setjmp.h>
-      #include <cmocka.h>
 
       static void null_test_success(void **state) {
         (void) state; /* unused */

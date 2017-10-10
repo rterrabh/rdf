@@ -5,13 +5,11 @@ class Tuntap < Formula
   stable do
     url "https://downloads.sourceforge.net/project/tuntaposx/tuntap/20111101/tuntap_20111101_src.tar.gz"
     sha256 "d5a21b326e95afc7db3c6683d3860f3192e3260fae12f74e8404a8fd0764558f"
-    # Get Kernel.framework headers from the SDK
     patch :p2, :DATA
   end
 
   head do
     url "git://git.code.sf.net/p/tuntaposx/code"
-    # Get Kernel.framework headers from the SDK
     patch :DATA
   end
 

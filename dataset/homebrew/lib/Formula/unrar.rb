@@ -14,15 +14,10 @@ class Unrar < Formula
 
   def install
     system "make"
-    # Explicitly clean up for the library build to avoid an issue with an
-    # apparent implicit clean which confuses the dependencies.
     system "make", "clean"
     system "make", "lib"
 
     bin.install "unrar"
-    # Sent an email to dev@rarlab.com (18-Feb-2015) asking them to look into
-    # the need for the explicit clean, and to change the make to generate a
-    # dylib file on OS X
     lib.install "libunrar.so" => "libunrar.dylib"
   end
 

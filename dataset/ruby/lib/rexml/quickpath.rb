@@ -6,8 +6,6 @@ module REXML
     include Functions
     include XMLTokens
 
-    # A base Hash object to be used when initializing a
-    # default empty namespaces set.
     EMPTY_HASH = {}
 
     def QuickPath::first element, path, namespaces=EMPTY_HASH
@@ -25,7 +23,6 @@ module REXML
       Functions::namespace_context = namespaces
       case path
       when /^\/([^\/]|$)/u
-        # match on root
         path = path[1..-1]
         return [element.root.parent] if path == ''
         results = filter([element.root], path)
@@ -34,7 +31,6 @@ module REXML
       when /^\*/u
         results = filter(element.to_a, path)
       when /^[\[!\w:]/u
-        # match on child
         children = element.to_a
         results = filter(children, path)
       else
@@ -43,9 +39,6 @@ module REXML
       return results
     end
 
-    # Given an array of nodes it filters the array based on the path. The
-    # result is that when this method returns, the array will contain elements
-    # which match the path
     def QuickPath::filter elements, path
       return elements if path.nil? or path == '' or elements.size == 0
       case path
@@ -91,11 +84,6 @@ module REXML
         results = []
         elements.each do |element|
           results |= filter( [element], $' ) if element.kind_of? Element
-          #if element.kind_of? Element
-          #     children = element.to_a
-          #     children.delete_if { |child| !child.kind_of?(Element) }
-          #     results |= filter( children, $' )
-          #end
         end
         return results
       end
@@ -141,22 +129,6 @@ module REXML
     end
 
     OPERAND_ = '((?=(?:(?!and|or).)*[^\s<>=])[^\s<>=]+)'
-    # A predicate filters a node-set with respect to an axis to produce a
-    # new node-set. For each node in the node-set to be filtered, the
-    # PredicateExpr is evaluated with that node as the context node, with
-    # the number of nodes in the node-set as the context size, and with the
-    # proximity position of the node in the node-set with respect to the
-    # axis as the context position; if PredicateExpr evaluates to true for
-    # that node, the node is included in the new node-set; otherwise, it is
-    # not included.
-    #
-    # A PredicateExpr is evaluated by evaluating the Expr and converting
-    # the result to a boolean. If the result is a number, the result will
-    # be converted to true if the number is equal to the context position
-    # and will be converted to false otherwise; if the result is not a
-    # number, then the result will be converted as if by a call to the
-    # boolean function. Thus a location path para[3] is equivalent to
-    # para[position()=3].
     def QuickPath::predicate( elements, path )
       ind = 1
       bcount = 1
@@ -169,12 +141,9 @@ module REXML
       predicate = path[1..ind-1]
       rest = path[ind+1..-1]
 
-      # have to change 'a [=<>] b [=<>] c' into 'a [=<>] b and b [=<>] c'
-      #
       predicate.gsub!(
         /#{OPERAND_}\s*([<>=])\s*#{OPERAND_}\s*([<>=])\s*#{OPERAND_}/u,
         '\1 \2 \3 and \3 \4 \5' )
-      # Let's do some Ruby trickery to avoid some work:
       predicate.gsub!( /&/u, "&&" )
       predicate.gsub!( /=/u, "==" )
       predicate.gsub!( /@(\w[-\w.]*)/u, 'attribute("\1")' )
@@ -189,7 +158,7 @@ module REXML
       elements.each do |element|
         Functions.pair[0] += 1
         Functions.node = element
-        #nodyna <ID:eval-96> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-1983> <EV COMPLEX (change-prone variables)>
         res = eval( predicate )
         case res
         when true
@@ -213,7 +182,7 @@ module REXML
 
     def QuickPath::method_missing( id, *args )
       begin
-        #nodyna <ID:send-99> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1984> <SD COMPLEX (change-prone variables)>
         Functions.send( id.id2name, *args )
       rescue Exception
         raise "METHOD: #{id.id2name}(#{args.join ', '})\n#{$!.message}"
@@ -227,7 +196,7 @@ module REXML
       elements.each do |element|
         Functions.pair[0] += 1
         Functions.node = element
-        #nodyna <ID:send-100> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1985> <SD COMPLEX (change-prone variables)>
         res = Functions.send( fname, *args )
         case res
         when true
@@ -240,7 +209,6 @@ module REXML
     end
 
     def QuickPath::parse_args( element, string )
-      # /.*?(?:\)|,)/
       arguments = []
       buffer = ""
       while string and string != ""
@@ -248,15 +216,11 @@ module REXML
         string.sub!(/^./u, "")
         case c
         when ?,
-          # if depth = 1, then we start a new argument
           arguments << evaluate( buffer )
-          #arguments << evaluate( string[0..count] )
         when ?(
-          # start a new method call
           function( element, buffer, string )
           buffer = ""
         when ?)
-          # close the method call and return arguments
           return arguments
         else
           buffer << c

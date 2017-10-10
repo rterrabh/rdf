@@ -1,13 +1,3 @@
-#
-#   use-loader.rb -
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 require "irb/cmd/load"
 require "irb/ext/loader"
@@ -19,11 +9,9 @@ end
 
 module IRB
   module ExtendCommandBundle
-    # Loads the given file similarly to Kernel#load, see IrbLoader#irb_load
     def irb_load(*opts, &b)
       ExtendCommand::Load.execute(irb_context, *opts, &b)
     end
-    # Loads the given file similarly to Kernel#require
     def irb_require(*opts, &b)
       ExtendCommand::Require.execute(irb_context, *opts, &b)
     end
@@ -33,19 +21,12 @@ module IRB
 
     IRB.conf[:USE_LOADER] = false
 
-    # Returns whether +irb+'s own file reader method is used by
-    # +load+/+require+ or not.
-    #
-    # This mode is globally affected (irb-wide).
     def use_loader
       IRB.conf[:USE_LOADER]
     end
 
     alias use_loader? use_loader
 
-    # Sets IRB.conf[:USE_LOADER]
-    #
-    # See #use_loader for more information.
     def use_loader=(opt)
 
       if IRB.conf[:USE_LOADER] != opt
@@ -53,13 +34,13 @@ module IRB
         if opt
           if !$".include?("irb/cmd/load")
           end
-          #nodyna <ID:instance_eval-171> <IEV COMPLEX (private access)>
+          #nodyna <instance_eval-2192> <IEV COMPLEX (private access)>
           (class<<@workspace.main;self;end).instance_eval {
             alias_method :load, :irb_load
             alias_method :require, :irb_require
           }
         else
-          #nodyna <ID:instance_eval-172> <IEV COMPLEX (private access)>
+          #nodyna <instance_eval-2193> <IEV COMPLEX (private access)>
           (class<<@workspace.main;self;end).instance_eval {
             alias_method :load, :__original__load__IRB_use_loader__
             alias_method :require, :__original__require__IRB_use_loader__

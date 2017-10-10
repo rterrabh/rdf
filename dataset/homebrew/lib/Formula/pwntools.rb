@@ -35,7 +35,6 @@ class Pwntools < Formula
     sha256 "fc57aadd096e8f9b9b03f1a9578f673ee645e1513a5ff0192ef439e77eab21de"
   end
 
-  # Don't bump this beyond 2.1.
   resource "capstone" do
     url "https://pypi.python.org/packages/source/c/capstone/capstone-2.1.tar.gz"
     sha256 "b86ba2b9189fe60e286341da75d0ac24322014303f72ab3d6ba3d800f3af7864"
@@ -71,7 +70,6 @@ class Pwntools < Formula
     sha256 "8e3b6c193f91dc94b2f3b0261e3eabbdc604f78ff99fdad324a56fdd0b5e958c"
   end
 
-  # Don't bump this beyond 2.3.
   resource "pycrypto" do
     url "https://pypi.python.org/packages/source/p/pycrypto/pycrypto-2.3.tar.gz"
     sha256 "4f11e85fbcf13960373650fc2dae8f088f9b001f07fb6d3efb2fcb5334987182"

@@ -1,6 +1,3 @@
-#
-# tk/variable.rb : treat Tk variable object
-#
 require 'tk'
 
 class TkVariable
@@ -9,14 +6,11 @@ class TkVariable
 
   include Comparable
 
-  #TkCommandNames = ['tkwait'.freeze].freeze
   TkCommandNames = ['vwait'.freeze].freeze
 
-  #TkVar_CB_TBL = {}
-  #TkVar_ID_TBL = {}
   TkVar_CB_TBL = TkCore::INTERP.create_table
   TkVar_ID_TBL = TkCore::INTERP.create_table
-  #nodyna <ID:instance_eval-39> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1877> <IEV MODERATE (method definition)>
   (Tk_VARIABLE_ID = ["v".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -30,10 +24,8 @@ class TkVariable
   major, minor, type, patchlevel = TclTkLib.get_version
   USE_OLD_TRACE_OPTION_STYLE = (major < 8) || (major == 8 && minor < 4)
 
-  #TkCore::INTERP.add_tk_procs('rb_var', 'args',
-  #     "ruby [format \"TkVariable.callback %%Q!%s!\" $args]")
   TkCore::INTERP.add_tk_procs('rb_var', 'args', <<-'EOL')
-    #nodyna <ID:eval-35> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1878> <EV COMPLEX (change-prone variables)>
     if {[set st [catch {eval {ruby_cmd TkVariable callback} $args} ret]] != 0} {
        set idx [string first "\n\n" $ret]
        if {$idx > 0} {
@@ -47,18 +39,13 @@ class TkVariable
           bgerror $ret
        }
        return ""
-       #return -code $st $ret
     } else {
         return $ret
     }
   EOL
 
-  #def TkVariable.callback(args)
   def TkVariable.callback(id, name1, name2, op)
-    #name1,name2,op = tk_split_list(args)
-    #name1,name2,op = tk_split_simplelist(args)
     if cb_obj = TkVar_CB_TBL[id]
-      #_get_eval_string(TkVar_CB_TBL[name1].trace_callback(name2,op))
       begin
         _get_eval_string(cb_obj.trace_callback(name2, op))
       rescue SystemExit
@@ -75,6 +62,7 @@ class TkVariable
           if TkCore::WITH_ENCODING
             msg.force_encoding('utf-8')
           else
+            #nodyna <instance_variable_set-1879> <not yet classified>
             msg.instance_variable_set(:@encoding, 'utf-8')
           end
         rescue Exception
@@ -89,7 +77,6 @@ class TkVariable
       begin
         raise 'check backtrace'
       rescue
-        # ignore backtrace before 'callback'
         pos = -($!.backtrace.size)
       end
       begin
@@ -113,9 +100,6 @@ class TkVariable
     end
   end
 
-  #
-  # default_value is available only when the variable is an assoc array.
-  #
   def default_value(val=nil, &b)
     if b
       @def_default = :proc
@@ -282,7 +266,6 @@ class TkVariable
   private :_to_default_element_type
 
   def initialize(val="", type=nil)
-    # @id = Tk_VARIABLE_ID.join('')
     begin
       Tk_VARIABLE_ID.mutex.synchronize{
         @id = Tk_VARIABLE_ID.join(TkCore::INTERP._ip_id_)
@@ -310,13 +293,9 @@ class TkVariable
 
     self.default_value_type = type
 
-    # teach Tk-ip that @id is global var
     INTERP._invoke_without_enc('global', @id)
-    #INTERP._invoke('global', @id)
 
-    # create and init
     if val.kind_of?(Hash)
-      # assoc-array variable
       self[''] = 0
       self.clear
     end
@@ -324,37 +303,26 @@ class TkVariable
 
 =begin
     if val == []
-      # INTERP._eval(format('global %s; set %s(0) 0; unset %s(0)',
-      #                     @id, @id, @id))
     elsif val.kind_of?(Array)
       a = []
-      # val.each_with_index{|e,i| a.push(i); a.push(array2tk_list(e))}
-      # s = '"' + a.join(" ").gsub(/[\[\]$"]/, '\\\\\&') + '"'
       val.each_with_index{|e,i| a.push(i); a.push(e)}
-      #s = '"' + array2tk_list(a).gsub(/[\[\]$"]/, '\\\\\&') + '"'
       s = '"' + array2tk_list(a).gsub(/[\[\]$"\\]/, '\\\\\&') + '"'
       INTERP._eval(format('global %s; array set %s %s', @id, @id, s))
     elsif  val.kind_of?(Hash)
-      #s = '"' + val.to_a.collect{|e| array2tk_list(e)}.join(" ")\
-      #             .gsub(/[\[\]$"]/, '\\\\\&') + '"'
       s = '"' + val.to_a.collect{|e| array2tk_list(e)}.join(" ")\
                    .gsub(/[\[\]$"\\]/, '\\\\\&') + '"'
       INTERP._eval(format('global %s; array set %s %s', @id, @id, s))
     else
-      #s = '"' + _get_eval_string(val).gsub(/[\[\]$"]/, '\\\\\&') + '"'
       s = '"' + _get_eval_string(val).gsub(/[\[\]$"\\]/, '\\\\\&') + '"'
       INTERP._eval(format('global %s; set %s %s', @id, @id, s))
     end
 =end
 =begin
     if  val.kind_of?(Hash)
-      #s = '"' + val.to_a.collect{|e| array2tk_list(e)}.join(" ")\
-      #             .gsub(/[\[\]$"]/, '\\\\\&') + '"'
       s = '"' + val.to_a.collect{|e| array2tk_list(e)}.join(" ")\
                    .gsub(/[\[\]$"\\]/, '\\\\\&') + '"'
       INTERP._eval(Kernel.format('global %s; array set %s %s', @id, @id, s))
     else
-      #s = '"' + _get_eval_string(val).gsub(/[\[\]$"]/, '\\\\\&') + '"'
       s = '"' + _get_eval_string(val).gsub(/[\[\]$"\\]/, '\\\\\&') + '"'
       INTERP._eval(Kernel.format('global %s; set %s %s', @id, @id, s))
     end
@@ -401,14 +369,11 @@ class TkVariable
   end
 
   def ref(*idxs)
-    # "#{@id}(#{idxs.collect{|idx| _get_eval_string(idx)}.join(',')})"
     TkVarAccess.new("#{@id}(#{idxs.collect{|idx| _get_eval_string(idx)}.join(',')})")
   end
 
   def is_hash?
-    #ITNERP._eval("global #{@id}; array exist #{@id}") == '1'
     INTERP._invoke_without_enc('global', @id)
-    # INTERP._invoke_without_enc('array', 'exist', @id) == '1'
     TkComm.bool(INTERP._invoke_without_enc('array', 'exist', @id))
   end
 
@@ -421,7 +386,6 @@ class TkVariable
     if elems.empty?
       TkComm.bool(tk_call('info', 'exist', @id))
     else
-      # array
       index = elems.collect{|idx| _get_eval_string(idx, true)}.join(',')
       TkComm.bool(tk_call('info', 'exist', "#{@id}")) &&
         TkComm.bool(tk_call('info', 'exist', "#{@id}(#{index})"))
@@ -432,9 +396,7 @@ class TkVariable
     if (is_scalar?)
       fail RuntimeError, 'cannot get keys from a scalar variable'
     end
-    #tk_split_simplelist(INTERP._eval("global #{@id}; array get #{@id}"))
     INTERP._invoke_without_enc('global', @id)
-    #tk_split_simplelist(INTERP._fromUTF8(INTERP._invoke_without_enc('array', 'names', @id)))
     tk_split_simplelist(INTERP._invoke_without_enc('array', 'names', @id),
                         false, true)
   end
@@ -465,16 +427,10 @@ unless const_defined?(:USE_TCLs_SET_VARIABLE_FUNCTIONS)
 end
 
 if USE_TCLs_SET_VARIABLE_FUNCTIONS
-  ###########################################################################
-  # use Tcl function version of set tkvariable
-  ###########################################################################
 
   def _value
-    #if INTERP._eval("global #{@id}; array exist #{@id}") == '1'
     INTERP._invoke_without_enc('global', @id)
-    # if INTERP._invoke('array', 'exist', @id) == '1'
     if TkComm.bool(INTERP._invoke('array', 'exist', @id))
-      #Hash[*tk_split_simplelist(INTERP._eval("global #{@id}; array get #{@id}"))]
       Hash[*tk_split_simplelist(INTERP._invoke('array', 'get', @id))]
     else
       _fromUTF8(INTERP._get_global_var(@id))
@@ -486,17 +442,13 @@ if USE_TCLs_SET_VARIABLE_FUNCTIONS
     if val.kind_of?(Hash)
       self.clear
       val.each{|k, v|
-        #INTERP._set_global_var2(@id, _toUTF8(_get_eval_string(k)),
-        #                       _toUTF8(_get_eval_string(v)))
         INTERP._set_global_var2(@id, _get_eval_string(k, true),
                                 _get_eval_string(v, true))
       }
       self.value
-#    elsif val.kind_of?(Array)
 =begin
       INTERP._set_global_var(@id, '')
       val.each{|v|
-        #INTERP._set_variable(@id, _toUTF8(_get_eval_string(v)),
         INTERP._set_variable(@id, _get_eval_string(v, true),
                              TclTkLib::VarAccessFlag::GLOBAL_ONLY   |
                              TclTkLib::VarAccessFlag::LEAVE_ERR_MSG |
@@ -505,9 +457,7 @@ if USE_TCLs_SET_VARIABLE_FUNCTIONS
       }
       self.value
 =end
-#      _fromUTF8(INTERP._set_global_var(@id, array2tk_list(val, true)))
     else
-      #_fromUTF8(INTERP._set_global_var(@id, _toUTF8(_get_eval_string(val))))
       _fromUTF8(INTERP._set_global_var(@id, _get_eval_string(val, true)))
     end
   end
@@ -526,9 +476,6 @@ if USE_TCLs_SET_VARIABLE_FUNCTIONS
         fail e
       end
     end
-    #_fromUTF8(INTERP._get_global_var2(@id, index))
-    #_fromUTF8(INTERP._get_global_var2(@id, _toUTF8(_get_eval_string(index))))
-    #_fromUTF8(INTERP._get_global_var2(@id, _get_eval_string(index, true)))
   end
 
   def []=(*args)
@@ -537,10 +484,6 @@ if USE_TCLs_SET_VARIABLE_FUNCTIONS
     val = val._value if !type && type != :variable && val.kind_of?(TkVariable)
     index = args.collect{|idx| _get_eval_string(idx, true)}.join(',')
     _fromUTF8(INTERP._set_global_var2(@id, index, _get_eval_string(val, true)))
-    #_fromUTF8(INTERP._set_global_var2(@id, _toUTF8(_get_eval_string(index)),
-    #                                 _toUTF8(_get_eval_string(val))))
-    #_fromUTF8(INTERP._set_global_var2(@id, _get_eval_string(index, true),
-    #                                 _get_eval_string(val, true)))
   end
 
   def unset(*elems)
@@ -554,24 +497,16 @@ if USE_TCLs_SET_VARIABLE_FUNCTIONS
   alias remove unset
 
 else
-  ###########################################################################
-  # use Ruby script version of set tkvariable (traditional methods)
-  ###########################################################################
 
   def _value
     begin
       INTERP._eval(Kernel.format('global %s; set %s', @id, @id))
-      #INTERP._eval(Kernel.format('set %s', @id))
-      #INTERP._invoke_without_enc('set', @id)
     rescue
       if INTERP._eval(Kernel.format('global %s; array exists %s',
                             @id, @id)) != "1"
-      #if INTERP._eval(Kernel.format('array exists %s', @id)) != "1"
-      #if INTERP._invoke_without_enc('array', 'exists', @id) != "1"
         fail
       else
         Hash[*tk_split_simplelist(INTERP._eval(Kernel.format('global %s; array get %s', @id, @id)))]
-        #Hash[*tk_split_simplelist(_fromUTF8(INTERP._invoke_without_enc('array', 'get', @id)))]
       end
     end
   end
@@ -579,47 +514,26 @@ else
   def value=(val)
     val = val._value if !@type && @type != :variable && val.kind_of?(TkVariable)
     begin
-      #s = '"' + _get_eval_string(val).gsub(/[\[\]$"]/, '\\\\\&') + '"'
       s = '"' + _get_eval_string(val).gsub(/[\[\]$"\\]/, '\\\\\&') + '"'
       INTERP._eval(Kernel.format('global %s; set %s %s', @id, @id, s))
-      #INTERP._eval(Kernel.format('set %s %s', @id, s))
-      #_fromUTF8(INTERP._invoke_without_enc('set', @id, _toUTF8(s)))
     rescue
       if INTERP._eval(Kernel.format('global %s; array exists %s',
                             @id, @id)) != "1"
-      #if INTERP._eval(Kernel.format('array exists %s', @id)) != "1"
-      #if INTERP._invoke_without_enc('array', 'exists', @id) != "1"
         fail
       else
         if val == []
           INTERP._eval(Kernel.format('global %s; unset %s; set %s(0) 0; unset %s(0)', @id, @id, @id, @id))
-          #INTERP._eval(Kernel.format('unset %s; set %s(0) 0; unset %s(0)',
-          #                          @id, @id, @id))
-          #INTERP._invoke_without_enc('unset', @id)
-          #INTERP._invoke_without_enc('set', @id+'(0)', 0)
-          #INTERP._invoke_without_enc('unset', @id+'(0)')
         elsif val.kind_of?(Array)
           a = []
           val.each_with_index{|e,i| a.push(i); a.push(array2tk_list(e, true))}
-          #s = '"' + a.join(" ").gsub(/[\[\]$"]/, '\\\\\&') + '"'
           s = '"' + a.join(" ").gsub(/[\[\]$"\\]/, '\\\\\&') + '"'
           INTERP._eval(Kernel.format('global %s; unset %s; array set %s %s',
                                      @id, @id, @id, s))
-          #INTERP._eval(Kernel.format('unset %s; array set %s %s',
-          #                          @id, @id, s))
-          #INTERP._invoke_without_enc('unset', @id)
-          #_fromUTF8(INTERP._invoke_without_enc('array','set', @id, _toUTF8(s)))
         elsif  val.kind_of?(Hash)
-          #s = '"' + val.to_a.collect{|e| array2tk_list(e)}.join(" ")\
-          #                      .gsub(/[\[\]$"]/, '\\\\\&') + '"'
           s = '"' + val.to_a.collect{|e| array2tk_list(e, true)}.join(" ")\
                                 .gsub(/[\[\]$\\"]/, '\\\\\&') + '"'
           INTERP._eval(Kernel.format('global %s; unset %s; array set %s %s',
                                      @id, @id, @id, s))
-          #INTERP._eval(Kernel.format('unset %s; array set %s %s',
-          #                          @id, @id, s))
-          #INTERP._invoke_without_enc('unset', @id)
-          #_fromUTF8(INTERP._invoke_without_enc('array','set', @id, _toUTF8(s)))
         else
           fail
         end
@@ -641,11 +555,6 @@ else
         fail e
       end
     end
-    #INTERP._eval(Kernel.format('global %s; set %s(%s)', @id, @id, index))
-    #INTERP._eval(Kernel.format('global %s; set %s(%s)',
-    #                           @id, @id, _get_eval_string(index)))
-    #INTERP._eval(Kernel.format('set %s(%s)', @id, _get_eval_string(index)))
-    #INTERP._eval('set ' + @id + '(' + _get_eval_string(index) + ')')
   end
 
   def []=(*args)
@@ -655,26 +564,14 @@ else
     index = args.collect{|idx| _get_eval_string(idx)}.join(',')
     INTERP._eval(Kernel.format('global %s; set %s(%s) %s', @id, @id,
                               index, _get_eval_string(val)))
-    #INTERP._eval(Kernel.format('global %s; set %s(%s) %s', @id, @id,
-    #                          _get_eval_string(index), _get_eval_string(val)))
-    #INTERP._eval(Kernel.format('set %s(%s) %s', @id,
-    #                          _get_eval_string(index), _get_eval_string(val)))
-    #INTERP._eval('set ' + @id + '(' + _get_eval_string(index) + ') ' +
-    #            _get_eval_string(val))
   end
 
   def unset(*elems)
     if elems.empty?
       INTERP._eval(Kernel.format('global %s; unset %s', @id, @id))
-      #INTERP._eval(Kernel.format('unset %s', @id))
-      #INTERP._eval('unset ' + @id)
     else
       index = elems.collect{|idx| _get_eval_string(idx, true)}.join(',')
       INTERP._eval(Kernel.format('global %s; unset %s(%s)', @id, @id, index))
-      #INTERP._eval(Kernel.format('global %s; unset %s(%s)',
-      #                           @id, @id, _get_eval_string(elem)))
-      #INTERP._eval(Kernel.format('unset %s(%s)', @id, tk_tcl2ruby(elem)))
-      #INTERP._eval('unset ' + @id + '(' + _get_eval_string(elem) + ')')
     end
   end
   alias remove unset
@@ -779,7 +676,6 @@ end
   def bool
     TkComm.bool(_value)
 =begin
-    # see Tcl_GetBoolean man-page
     case _value.downcase
     when '0', 'false', 'no', 'off'
       false
@@ -835,7 +731,6 @@ end
   end
 
   def variable
-    # keeps a Tcl's variable name
     TkVarAccess.new(self._value)
   end
   def variable_element(*idxs)
@@ -936,7 +831,6 @@ end
     if cmd.respond_to?(:call)
       cmd
     else
-      # cmd is a String
       cmd.to_sym.to_proc
     end
   end
@@ -957,7 +851,6 @@ end
   end
 
   def to_s
-    #string(value).to_s
     _value
   end
   alias string to_s
@@ -1029,7 +922,6 @@ end
   end
 
   def list
-    #tk_split_list(value)
     tk_split_simplelist(_value)
   end
   alias to_a list
@@ -1154,7 +1046,6 @@ end
   end
 
   def inspect
-    #Kernel.format "#<TkVariable: %s>", @id
     '#<TkVariable: ' + @id + '>'
   end
 
@@ -1219,22 +1110,12 @@ end
   end
   def *(other)
     num_or_str(self._value) * other
-    #begin
-    #  number(self._value) * other
-    #rescue
-    #  self._value * other
-    #end
   end
   def /(other)
     number(self._value) / other
   end
   def %(other)
     num_or_str(self._value) % other
-    #begin
-    #  number(self._value) % other
-    #rescue
-    #  self._value % other
-    #end
   end
   def **(other)
     number(self._value) ** other
@@ -1246,7 +1127,6 @@ end
   def ==(other)
     case other
     when TkVariable
-      #self.equal?(other)
       self._value == other._value
     when String
       self.to_s == other
@@ -1259,10 +1139,8 @@ end
     when Array
       self.to_a == other
     when Hash
-      # false if self is not an assoc array
       self._value == other
     else
-      # false
       self._value == _get_eval_string(other)
     end
   end
@@ -1328,7 +1206,6 @@ end
     fail ArgumentError, 'null trace option' if opt_str.empty?
 
     if opt_str =~ /[^arwu\s]/
-      # new format (Tcl/Tk8.4+?)
       if opts.kind_of?(Array)
         opt_ary = opts.map{|opt| opt.to_s.strip}
       else
@@ -1354,7 +1231,6 @@ end
         opt_ary
       end
     else
-      # old format
       opt_ary = opt_str.delete('^arwu').split(//).uniq
       if USE_OLD_TRACE_OPTION_STYLE
         opt_ary.join
@@ -1494,7 +1370,6 @@ end
             break if (diff = e[0].index(c) ^ opts.index(c))
           }
           unless diff
-            #find
             idx = i
             next
           end
@@ -1506,7 +1381,6 @@ end
       @trace_var.each_with_index{|e, i|
         if idx < 0 && e[1] == cmd &&
             e[0].size == opts.size && (e[0] - opts).empty?
-          # find
           idx = i
           next
         end
@@ -1578,7 +1452,6 @@ end
             break if (diff = e[0].index(c) ^ opts.index(c))
           }
           unless diff
-            #find
             idx = i
             next
           end
@@ -1588,7 +1461,6 @@ end
       @trace_elem[elem].each_with_index{|e, i|
         if idx < 0 && e[1] == cmd &&
             e[0].size == opts.size && (e[0] - opts).empty?
-          # find
           idx = i
           next
         end
@@ -1667,7 +1539,7 @@ class TkVarAccess<TkVariable
         v.value = args[0] unless args.empty?
         return v
       else
-        #nodyna <ID:instance_eval-40> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1880> <IEV MODERATE (private access)>
         (v = self.allocate).instance_eval{
           @id = name
           TkVar_ID_TBL[@id] = self
@@ -1676,7 +1548,7 @@ class TkVarAccess<TkVariable
       end
     }
 
-    #nodyna <ID:instance_eval-41> <IEV MODERATE (private access)>
+    #nodyna <instance_eval-1881> <IEV MODERATE (private access)>
     v.instance_eval{ initialize(name, *args) }
     v
   end
@@ -1700,7 +1572,7 @@ class TkVarAccess<TkVariable
         v.value = args[0] unless args.empty?
         return v
       else
-        #nodyna <ID:instance_eval-42> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1882> <IEV MODERATE (private access)>
         (v = self.allocate).instance_eval{
           @id = name
           TkVar_ID_TBL[@id] = self
@@ -1711,20 +1583,17 @@ class TkVarAccess<TkVariable
 
     INTERP._invoke_without_enc('global', name)
     if args.empty? && INTERP._invoke_without_enc('array', 'exist', name) == '0'
-      #nodyna <ID:instance_eval-43> <IEV MODERATE (private access)>
+      #nodyna <instance_eval-1883> <IEV MODERATE (private access)>
       v.instance_eval{ initialize(name, {}) }  # force creating
     else
-      #nodyna <ID:instance_eval-44> <IEV MODERATE (private access)>
+      #nodyna <instance_eval-1884> <IEV MODERATE (private access)>
       v.instance_eval{ initialize(name, *args) }
     end
     v
   end
 
   def initialize(varname, val=nil)
-    # @id = varname
-    # TkVar_ID_TBL[@id] = self
 
-    # @var  = @id
     @elem = nil
 
     @def_default = false
@@ -1738,21 +1607,17 @@ class TkVarAccess<TkVariable
     var = self
     @element_type = Hash.new{|k,v| var.default_value_type }
 
-    # is an element?
     if @id =~ /^([^(]+)\((.+)\)$/
-      # is an element --> var == $1, elem == $2
       @var  = $1
       @elem = $2
     end
 
-    # teach Tk-ip that @id is global var
     INTERP._invoke_without_enc('global', @var)
 =begin
     begin
       INTERP._invoke_without_enc('global', @id)
     rescue => e
       if @id =~ /^(.+)\([^()]+\)$/
-        # is an element --> varname == $1
         INTERP._invoke_without_enc('global', $1)
       else
         fail e
@@ -1762,14 +1627,9 @@ class TkVarAccess<TkVariable
 
     if val
       if val.kind_of?(Hash)
-        # assoc-array variable
         self[''] = 0
         self.clear
       end
-      #s = '"' + _get_eval_string(val).gsub(/[\[\]$"]/, '\\\\\&') + '"' #"
-      #s = '"' + _get_eval_string(val).gsub(/[\[\]$"\\]/, '\\\\\&') + '"' #"
-      #INTERP._eval(Kernel.format('global %s; set %s %s', @id, @id, s))
-      #INTERP._set_global_var(@id, _toUTF8(_get_eval_string(val)))
       self.value = val
     end
   end

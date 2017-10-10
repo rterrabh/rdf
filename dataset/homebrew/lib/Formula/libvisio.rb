@@ -30,8 +30,6 @@ class Libvisio < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <librevenge-stream/librevenge-stream.h>
-      #include <libvisio/VisioDocument.h>
       int main() {
         librevenge::RVNGStringStream docStream(0, 0);
         libvisio::VisioDocument::isSupported(&docStream);

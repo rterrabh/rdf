@@ -4,7 +4,6 @@ module Spree
     include Spree::CalculatedAdjustments
     DISPLAY = [:both, :front_end, :back_end]
 
-    # Used for #refresh_rates
     DISPLAY_ON_FRONT_AND_BACK_END = 0
     DISPLAY_ON_FRONT_END = 1
     DISPLAY_ON_BACK_END = 2
@@ -39,12 +38,11 @@ module Spree
     end
 
     def self.calculators
-      #nodyna <ID:send-85> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-2502> <SD COMPLEX (change-prone variables)>
       spree_calculators.send(model_name_without_spree_namespace)
         .select { |c| c.to_s.constantize < Spree::ShippingCalculator }
     end
 
-    # Some shipping methods are only meant to be set via backend
     def frontend?
       self.display_on != "back_end"
     end

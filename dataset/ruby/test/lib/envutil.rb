@@ -1,4 +1,3 @@
-# -*- coding: us-ascii -*-
 require "open3"
 require "timeout"
 require_relative "find_executable"
@@ -178,8 +177,10 @@ module EnvUtil
 
   def labeled_module(name, &block)
     Module.new do
-      #nodyna <ID:define_method-49> <DM MODERATE (events)>
+      #nodyna <define_method-1458> <DM MODERATE (events)>
+      #nodyna <class_eval-1459> <not yet classified>
       singleton_class.class_eval {define_method(:to_s) {name}; alias inspect to_s}
+      #nodyna <class_eval-1460> <not yet classified>
       class_eval(&block) if block
     end
   end
@@ -187,8 +188,10 @@ module EnvUtil
 
   def labeled_class(name, superclass = Object, &block)
     Class.new(superclass) do
-      #nodyna <ID:define_method-50> <DM MODERATE (events)>
+      #nodyna <define_method-1461> <DM MODERATE (events)>
+      #nodyna <class_eval-1462> <not yet classified>
       singleton_class.class_eval {define_method(:to_s) {name}; alias inspect to_s}
+      #nodyna <class_eval-1463> <not yet classified>
       class_eval(&block) if block
     end
   end
@@ -244,7 +247,7 @@ module Test
           line = 0
         end
         assert_nothing_raised(SyntaxError, mesg) do
-          #nodyna <ID:eval-124> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-1464> <EV COMPLEX (change-prone variables)>
           assert_equal(:ok, catch {|tag| eval(code, binding, fname, line)}, mesg)
         end
       ensure
@@ -268,7 +271,7 @@ module Test
           line = 0
         end
         e = assert_raise(SyntaxError, mesg) do
-          #nodyna <ID:eval-125> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-1465> <EV COMPLEX (change-prone variables)>
           catch {|tag| eval(code, binding, fname, line)}
         end
         assert_match(error, e.message, mesg)
@@ -365,12 +368,10 @@ module Test
         end
         line -= 5 # lines until src
         src = <<eom
-# -*- coding: #{src.encoding}; -*-
   require #{__dir__.dump}'/test/unit';include Test::Unit::Assertions
   END {
     puts [Marshal.dump($!)].pack('m'), "assertions=\#{self._assertions}"
   }
-#{src}
   class Test::Unit::Runner
     @@stop_auto_run = true
   end
@@ -398,9 +399,7 @@ eom
           raise res
         end
 
-        # really is it succeed?
         unless ignore_stderr
-          # the body of assert_separately must not output anything to detect error
           assert_equal("", stderr, "assert_separately failed with error message")
         end
         assert_equal(0, status, "assert_separately failed: '#{stderr}'")
@@ -488,11 +487,6 @@ eom
         AssertFile
       end
 
-      # pattern_list is an array which contains regexp and :*.
-      # :* means any sequence.
-      #
-      # pattern_list is anchored.
-      # Use [:*, regexp, :*] for non-anchored match.
       def assert_pattern_list(pattern_list, actual, message=nil)
         rest = actual
         anchored = true
@@ -531,8 +525,6 @@ eom
         end
       end
 
-      # threads should respond to shift method.
-      # Array can be used.
       def assert_join_threads(threads, message = nil)
         errs = []
         values = []

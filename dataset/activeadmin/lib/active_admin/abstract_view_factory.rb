@@ -12,18 +12,6 @@ module ActiveAdmin
       @views = {}
     end
 
-    # Register a new view key with the view factory
-    #
-    # eg:
-    #
-    #   factory = AbstractViewFactory.new
-    #   factory.register my_view: SomeViewClass
-    #
-    # You can setup many at the same time:
-    #
-    #   factory.register  my_view: SomeClass,
-    #                     another_view: OtherViewClass
-    #
     def register(view_hash)
       view_hash.each do |view_key, view_class|
         @views[view_key] = view_class

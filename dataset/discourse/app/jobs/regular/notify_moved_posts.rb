@@ -6,7 +6,6 @@ module Jobs
       raise Discourse::InvalidParameters.new(:post_ids) if args[:post_ids].blank?
       raise Discourse::InvalidParameters.new(:moved_by_id) if args[:moved_by_id].blank?
 
-      # Make sure we don't notify the same user twice (in case multiple posts were moved at once.)
       users_notified = Set.new
       posts = Post.where(id: args[:post_ids]).where('user_id <> ?', args[:moved_by_id]).includes(:user, :topic)
       if posts.present?

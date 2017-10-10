@@ -1,8 +1,3 @@
-##
-# A connection "pool" that only manages one connection for now.  Provides
-# thread safe `checkout` and `checkin` methods.  The pool consists of one
-# connection that corresponds to `http_args`.  This class is private, do not
-# use it.
 
 class Gem::Request::HTTPPool # :nodoc:
   attr_reader :cert_files, :proxy_uri

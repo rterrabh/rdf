@@ -39,8 +39,6 @@ module Spree
             Spree::PaymentMethod::Check ]
       end
 
-      # We need to define promotions rules here so extensions and existing apps
-      # can add their custom classes on their initializer files
       initializer 'spree.promo.environment' do |app|
         app.config.spree.add_class('promotions')
         app.config.spree.promotions = Spree::Promo::Environment.new
@@ -65,10 +63,6 @@ module Spree
         ]
       end
 
-      # Promotion rules need to be evaluated on after initialize otherwise
-      # Spree.user_class would be nil and users might experience errors related
-      # to malformed model associations (Spree.user_class is only defined on
-      # the app initializer)
       config.after_initialize do
         Rails.application.config.spree.promotions.rules.concat [
           Spree::Promotion::Rules::ItemTotal,
@@ -90,7 +84,6 @@ module Spree
           Promotion::Actions::FreeShipping]
       end
 
-      # filter sensitive information during logging
       initializer "spree.params.filter" do |app|
         app.config.filter_parameters += [
           :password,
@@ -104,7 +97,6 @@ module Spree
       end
 
       config.to_prepare do
-        # Load application's model / class decorators
         Dir.glob(File.join(File.dirname(__FILE__), '../../../app/**/*_decorator*.rb')) do |c|
           Rails.configuration.cache_classes ? require(c) : load(c)
         end

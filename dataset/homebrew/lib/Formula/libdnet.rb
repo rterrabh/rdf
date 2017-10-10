@@ -19,7 +19,6 @@ class Libdnet < Formula
   depends_on "libtool" => :build
 
   def install
-    # autoreconf to get '.dylib' extension on shared lib
     ENV.append_path "ACLOCAL_PATH", "config"
     system "autoreconf", "-ivf"
 

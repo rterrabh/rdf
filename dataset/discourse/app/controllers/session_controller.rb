@@ -39,8 +39,6 @@ class SessionController < ApplicationController
     end
   end
 
-  # For use in development mode only when login options could be limited or disabled.
-  # NEVER allow this to work in production.
   def become
     raise Discourse::InvalidAccess.new unless Rails.env.development?
     user = User.find_by_username(params[:session_id])
@@ -86,7 +84,6 @@ class SessionController < ApplicationController
           log_on_user user
         end
 
-        # If it's not a relative URL check the host
         if return_path !~ /^\/[^\/]/
           begin
             uri = URI(return_path)
@@ -103,7 +100,7 @@ class SessionController < ApplicationController
     rescue => e
       details = {}
       SingleSignOn::ACCESSORS.each do |a|
-        #nodyna <ID:send-72> <SD MODERATE (array)>
+        #nodyna <send-444> <SD MODERATE (array)>
         details[a] = sso.send(a)
       end
       Rails.logger.error "Failed to create or lookup user: #{e}\n\n#{details.map{|k,v| "#{k}: #{v}"}.join("\n")}"
@@ -133,20 +130,16 @@ class SessionController < ApplicationController
 
     if user = User.find_by_username_or_email(login)
 
-      # If their password is correct
       unless user.confirm_password?(params[:password])
         invalid_credentials
         return
       end
 
-      # If the site requires user approval and the user is not approved yet
       if login_not_approved_for?(user)
         login_not_approved
         return
       end
 
-      # User signed on with username and password, so let's prevent the invite link
-      # from being used to log in (if one exists).
       Invite.invalidate_for_email(user.email)
     else
       invalid_credentials

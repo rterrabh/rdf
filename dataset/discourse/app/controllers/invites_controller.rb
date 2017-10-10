@@ -1,6 +1,5 @@
 class InvitesController < ApplicationController
 
-  # TODO tighten this, why skip check on everything?
   skip_before_filter :check_xhr, :preload_json
   skip_before_filter :redirect_to_login_if_required
 
@@ -15,7 +14,6 @@ class InvitesController < ApplicationController
       if user.present?
         log_on_user(user)
 
-        # Send a welcome message if required
         user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
 
         topic = invite.topics.first
@@ -55,7 +53,6 @@ class InvitesController < ApplicationController
     username_or_email = params[:username] ? fetch_username : fetch_email
     user = User.find_by_username_or_email(username_or_email)
 
-    # generate invite tokens
     invite_tokens = Invite.generate_disposable_tokens(user, params[:quantity], params[:group_names])
 
     render_json_dump(invite_tokens)
@@ -73,7 +70,6 @@ class InvitesController < ApplicationController
       if user.present?
         log_on_user(user)
 
-        # Send a welcome message if required
         user.enqueue_welcome_message('welcome_invite') if user.send_welcome_message
 
         topic = invite.topics.first
@@ -115,9 +111,7 @@ class InvitesController < ApplicationController
     chunk_number       = params.fetch(:resumableChunkNumber)
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
 
-    # path to chunk file
     chunk = Invite.chunk_path(identifier, filename, chunk_number)
-    # check chunk upload status
     status = HandleChunkUpload.check_chunk(chunk, current_chunk_size: current_chunk_size)
 
     render nothing: true, status: status
@@ -136,15 +130,11 @@ class InvitesController < ApplicationController
     total_size         = params.fetch(:resumableTotalSize).to_i
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
 
-    # path to chunk file
     chunk = Invite.chunk_path(identifier, filename, chunk_number)
-    # upload chunk
     HandleChunkUpload.upload_chunk(chunk, file: file)
 
     uploaded_file_size = chunk_number * chunk_size
-    # when all chunks are uploaded
     if uploaded_file_size + current_chunk_size >= total_size
-      # handle bulk_invite processing in a background thread
       Jobs.enqueue(:bulk_invite, filename: filename, identifier: identifier, chunks: chunk_number, current_user_id: current_user.id)
     end
 

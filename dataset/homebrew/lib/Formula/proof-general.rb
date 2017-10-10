@@ -24,10 +24,7 @@ class ProofGeneral < Formula
     ]
 
     cd "ProofGeneral" do
-      # http://proofgeneral.inf.ed.ac.uk/trac/ticket/458
-      # remove in next stable release
       inreplace "Makefile", "(setq byte-compile-error-on-warn t)", "" if build.stable?
-      # remove files compiled by emacs 24.2
       system "make", "clean"
       system "make", "install", *args
 

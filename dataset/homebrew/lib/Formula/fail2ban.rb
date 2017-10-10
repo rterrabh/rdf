@@ -17,7 +17,6 @@ class Fail2ban < Formula
       s.gsub! /\/var/, var
     end
 
-    # Replace hardcoded paths
     inreplace "fail2ban-client", "/usr/share/fail2ban", libexec
     inreplace "fail2ban-server", "/usr/share/fail2ban", libexec
     inreplace "fail2ban-regex", "/usr/share/fail2ban", libexec

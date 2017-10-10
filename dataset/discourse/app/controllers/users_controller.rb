@@ -10,9 +10,6 @@ class UsersController < ApplicationController
   before_filter :ensure_logged_in, only: [:username, :update, :change_email, :user_preferences_redirect, :upload_user_image, :pick_avatar, :destroy_user_image, :destroy, :check_emails]
   before_filter :respond_to_suspicious_request, only: [:create]
 
-  # we need to allow account creation with bad CSRF tokens, if people are caching, the CSRF token on the
-  #  page is going to be empty, this means that server will see an invalid CSRF and blow the session
-  #  once that happens you can't log in with social
   skip_before_filter :verify_authenticity_token, only: [:create]
   skip_before_filter :redirect_to_login_if_required, only: [:check_username,
                                                             :create,
@@ -39,8 +36,6 @@ class UsersController < ApplicationController
       user_serializer.topic_post_count = {topic_id => Post.where(topic_id: topic_id, user_id: @user.id).count }
     end
 
-    # This is a hack to get around a Rails issue where values with periods aren't handled correctly
-    # when used as part of a route.
     if params[:external_id] and params[:external_id].ends_with? '.json'
       return render_json_dump(user_serializer)
     end
@@ -109,7 +104,6 @@ class UsersController < ApplicationController
     user = fetch_user_from_params
     guardian.ensure_can_edit_username!(user)
 
-    # TODO proper error surfacing (result is a Model#save call)
     result = UsernameChanger.change(user, params[:new_username], current_user)
     raise Discourse::InvalidParameters.new(:new_username) unless result
 
@@ -208,8 +202,6 @@ class UsersController < ApplicationController
     target_user and username.downcase == target_user.username.downcase
   end
 
-  # Used for checking availability of a username and will return suggestions
-  # if the username is not available.
   def check_username
     if !params[:username].present?
       params.require(:username) if !params[:email].present?
@@ -219,7 +211,6 @@ class UsersController < ApplicationController
 
     target_user = user_from_params_or_current_user
 
-    # The special case where someone is changing the case of their own username
     return render_available_true if changing_case_of_own_username(target_user, username)
 
     checker = UsernameCheckerService.new
@@ -252,7 +243,6 @@ class UsersController < ApplicationController
 
     user = User.new(user_params)
 
-    # Handle custom fields
     user_fields = UserField.all
     if user_fields.present?
       field_params = params[:user_fields] || {}
@@ -281,15 +271,12 @@ class UsersController < ApplicationController
     activation = UserActivator.new(user, request, session, cookies)
     activation.start
 
-    # just assign a password if we have an authenticator and no password
-    # this is the case for Twitter
     user.password = SecureRandom.hex if user.password.blank? && authentication.has_authenticator?
 
     if user.save
       authentication.finish
       activation.finish
 
-      # save user email in session, to show on account-created page
       session["user_created_message"] = activation.message
 
       render json: {
@@ -360,7 +347,6 @@ class UsersController < ApplicationController
 
   def logon_after_password_reset
     message = if Guardian.new(@user).can_access_forum?
-                # Log in the user
                 log_on_user(@user)
                 'password_reset.success'
               else
@@ -389,11 +375,9 @@ class UsersController < ApplicationController
         @message = I18n.t("admin_login.error")
       end
     elsif params[:token].present?
-      # token recieved, try to login
       if EmailToken.valid_token_format?(params[:token])
         @user = EmailToken.confirm(params[:token])
         if @user && @user.admin?
-          # Log in user
           log_on_user(@user)
           return redirect_to path("/")
         else
@@ -431,7 +415,6 @@ class UsersController < ApplicationController
     RateLimiter.new(user, "change-email-hr-#{request.remote_ip}", 6, 1.hour).performed!
     RateLimiter.new(user, "change-email-min-#{request.remote_ip}", 3, 1.minute).performed!
 
-    # Raise an error if the email is already in use
     if User.find_by_email(lower_email)
       raise Discourse::InvalidParameters.new(:email)
     end
@@ -475,7 +458,6 @@ class UsersController < ApplicationController
     raise Discourse::InvalidAccess.new if honeypot_or_challenge_fails?(params)
     if @user = EmailToken.confirm(params[:token])
 
-      # Log in the user unless they need to be approved
       if Guardian.new(@user).can_access_forum?
         @user.enqueue_welcome_message('welcome_user') if @user.send_welcome_message
         log_on_user(@user)
@@ -535,7 +517,6 @@ class UsersController < ApplicationController
 
     user.uploaded_avatar_id = upload_id
 
-    # ensure we associate the custom avatar properly
     if upload_id && user.user_avatar.custom_upload_id != upload_id
       user.user_avatar.custom_upload_id = upload_id
     end
@@ -587,7 +568,7 @@ class UsersController < ApplicationController
     result = {}
 
     %W{number_of_deleted_posts number_of_flagged_posts number_of_flags_given number_of_suspensions number_of_warnings}.each do |info|
-      #nodyna <ID:send-118> <SD MODERATE (array)>
+      #nodyna <send-451> <SD MODERATE (array)>
       result[info] = @user.send(info)
     end
 

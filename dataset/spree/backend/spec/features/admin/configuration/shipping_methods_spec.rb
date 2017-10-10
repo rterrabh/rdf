@@ -11,7 +11,6 @@ describe "Shipping Methods", type: :feature do
 
   before do
     Capybara.ignore_hidden_elements = false
-    # HACK: To work around no email prompting on check out
     allow_any_instance_of(Spree::Order).to receive_messages(require_email: false)
     create(:check_payment_method)
 
@@ -44,7 +43,6 @@ describe "Shipping Methods", type: :feature do
     end
   end
 
-  # Regression test for #1331
   context "update" do
     it "can change the calculator", js: true do
       within("#listing_shipping_methods") do

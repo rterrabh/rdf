@@ -1,7 +1,3 @@
-# Copyright (C) 2001, 2002, 2003 by Michael Neumann (mneumann@ntecs.de)
-#
-# $Id$
-#
 
 
 require "date"
@@ -28,18 +24,15 @@ module NQXML
     def nodeType
       if @entity.instance_of? NQXML::Text then :TEXT
       elsif @entity.instance_of? NQXML::Comment then :COMMENT
-      #elsif @entity.instance_of? NQXML::Element then :ELEMENT
       elsif @entity.instance_of? NQXML::Tag then :ELEMENT
       else :ELSE
       end
     end
 
     def nodeValue
-      #TODO: error when wrong Entity-type
       @entity.text
     end
     def nodeName
-      #TODO: error when wrong Entity-type
       @entity.name
     end
   end # class Node
@@ -47,39 +40,26 @@ end # module NQXML
 
 module XMLRPC # :nodoc:
 
-  # Raised when the remote procedure returns a fault-structure, which has two
-  # accessor-methods +faultCode+ an Integer, and +faultString+ a String.
   class FaultException < StandardError
     attr_reader :faultCode, :faultString
 
-    # Creates a new XMLRPC::FaultException instance.
-    #
-    # +faultString+ is passed to StandardError as the +msg+ of the Exception.
     def initialize(faultCode, faultString)
       @faultCode   = faultCode
       @faultString = faultString
       super(@faultString)
     end
 
-    # The +faultCode+ and +faultString+ of the exception in a Hash.
     def to_h
       {"faultCode" => @faultCode, "faultString" => @faultString}
     end
   end
 
-  # Helper class used to convert types.
   module Convert
 
-    # Converts a String to an Integer
-    #
-    # See also String.to_i
     def self.int(str)
       str.to_i
     end
 
-    # Converts a String to +true+ or +false+
-    #
-    # Raises an exception if +str+ is not +0+ or +1+
     def self.boolean(str)
       case str
       when "0" then false
@@ -89,18 +69,10 @@ module XMLRPC # :nodoc:
       end
     end
 
-    # Converts a String to a Float
-    #
-    # See also String.to_f
     def self.double(str)
       str.to_f
     end
 
-    # Converts a the given +str+ to a +dateTime.iso8601+ formatted date.
-    #
-    # Raises an exception if the String isn't in +dateTime.iso8601+ format.
-    #
-    # See also, XMLRPC::DateTime
     def self.dateTime(str)
       case str
       when /^(-?\d\d\d\d)-?(\d\d)-?(\d\d)T(\d\d):(\d\d):(\d\d)(?:Z|([+-])(\d\d):?(\d\d))?$/
@@ -131,29 +103,25 @@ module XMLRPC # :nodoc:
       end
     end
 
-    # Decodes the given +str+ using XMLRPC::Base64.decode
     def self.base64(str)
       XMLRPC::Base64.decode(str)
     end
 
-    # Converts the given +hash+ to a marshalled object.
-    #
-    # Returns the given +hash+ if an exception occurs.
     def self.struct(hash)
-      # convert to marshalled object
       klass = hash["___class___"]
       if klass.nil? or Config::ENABLE_MARSHALLING == false
         hash
       else
         begin
           mod = Module
-          #nodyna <ID:const_get-26> <CG COMPLEX (array)>
+          #nodyna <const_get-2010> <CG COMPLEX (array)>
           klass.split("::").each {|const| mod = mod.const_get(const.strip)}
 
           obj = mod.allocate
 
           hash.delete "___class___"
           hash.each {|key, value|
+            #nodyna <instance_variable_set-2011> <not yet classified>
             obj.instance_variable_set("@#{ key }", value) if key =~ /^([a-zA-Z_]\w*)$/
           }
           obj
@@ -163,15 +131,6 @@ module XMLRPC # :nodoc:
       end
     end
 
-    # Converts the given +hash+ to an XMLRPC::FaultException object by passing
-    # the +faultCode+ and +faultString+ attributes of the Hash to
-    # XMLRPC::FaultException.new
-    #
-    # Raises an Exception if the given +hash+ doesn't meet the requirements.
-    # Those requirements being:
-    # * 2 keys
-    # * <code>'faultCode'</code> key is an Integer
-    # * <code>'faultString'</code> key is a String
     def self.fault(hash)
       if hash.kind_of? Hash and hash.size == 2 and
         hash.has_key? "faultCode" and hash.has_key? "faultString" and
@@ -185,7 +144,6 @@ module XMLRPC # :nodoc:
 
   end # module Convert
 
-  # Parser for XML-RPC call and response
   module XMLParser
 
     class AbstractTreeParser
@@ -200,15 +158,12 @@ module XMLRPC # :nodoc:
 
       private
 
-      # Removes all whitespaces but in the tags i4, i8, int, boolean....
-      # and all comments
       def removeWhitespacesAndComments(node)
         remove = []
         childs = node.childNodes.to_a
         childs.each do |nd|
           case _nodeType(nd)
           when :TEXT
-            # TODO: add nil?
             unless %w(i4 i8 int boolean string double dateTime.iso8601 base64).include? node.nodeName
 
                if node.nodeName == "value"
@@ -247,7 +202,6 @@ module XMLRPC # :nodoc:
         node
       end
 
-      # Returns, when successfully the only child-node
       def hasOnlyOneChild(node, name=nil)
         if node.childNodes.to_a.size != 1
           raise "wrong xml-rpc (size)"
@@ -264,7 +218,6 @@ module XMLRPC # :nodoc:
         end
       end
 
-      # The node `node` has empty string or string
       def text_zero_one(node)
         nodes = node.childNodes.to_a.size
 
@@ -279,8 +232,6 @@ module XMLRPC # :nodoc:
 
 
       def integer(node)
-        #TODO: check string for float because to_i returnsa
-        #      0 when wrong string
          nodeMustBe(node, %w(i4 i8 int))
         hasOnlyOneChild(node)
 
@@ -306,8 +257,6 @@ module XMLRPC # :nodoc:
       end
 
       def double(node)
-        #TODO: check string for float because to_f returnsa
-        #      0.0 when wrong string
         nodeMustBe(node, "double")
         hasOnlyOneChild(node)
 
@@ -323,7 +272,6 @@ module XMLRPC # :nodoc:
 
       def base64(node)
         nodeMustBe(node, "base64")
-        #hasOnlyOneChild(node)
 
         Convert.base64(text_zero_one(node))
       end
@@ -337,7 +285,6 @@ module XMLRPC # :nodoc:
 
       def name(node)
         nodeMustBe(node, "name")
-        #hasOnlyOneChild(node)
         text_zero_one(node)
       end
 
@@ -405,7 +352,6 @@ module XMLRPC # :nodoc:
 
 
 
-      # _nodeType is defined in the subclass
       def text(node)
         assert( _nodeType(node) == :TEXT )
         assert( node.hasChildNodes == false )
@@ -487,10 +433,8 @@ module XMLRPC # :nodoc:
         parser.parse(str)
         raise "No valid method response!" if parser.method_name != nil
         if parser.fault != nil
-          # is a fault structure
           [false, parser.fault]
         else
-          # is a normal return value
           raise "Missing return value!" if parser.params.size == 0
           raise "Too many return values. Only one allowed!" if parser.params.size > 1
           [true, parser.params[0]]
@@ -627,7 +571,6 @@ module XMLRPC # :nodoc:
             case ele
             when NQXML::Text
               @data = ele.text
-              #character(ele.text)
             when NQXML::Tag
               if ele.isTagEnd
                 endElement(ele.name)
@@ -646,18 +589,16 @@ module XMLRPC # :nodoc:
       def initialize
         require "xmltreebuilder"
 
-        # The new XMLParser library (0.6.2+) uses a slightly different DOM implementation.
-        # The following code removes the differences between both versions.
         if defined? XML::DOM::Builder
           return if defined? XML::DOM::Node::DOCUMENT # code below has been already executed
           klass = XML::DOM::Node
-          #nodyna <ID:const_set-25> <CS TRIVIAL (static values)>
+          #nodyna <const_set-2012> <CS TRIVIAL (static values)>
           klass.const_set(:DOCUMENT, klass::DOCUMENT_NODE)
-          #nodyna <ID:const_set-26> <CS TRIVIAL (static values)>
+          #nodyna <const_set-2013> <CS TRIVIAL (static values)>
           klass.const_set(:TEXT, klass::TEXT_NODE)
-          #nodyna <ID:const_set-27> <CS TRIVIAL (static values)>
+          #nodyna <const_set-2014> <CS TRIVIAL (static values)>
           klass.const_set(:COMMENT, klass::COMMENT_NODE)
-          #nodyna <ID:const_set-28> <CS TRIVIAL (static values)>
+          #nodyna <const_set-2015> <CS TRIVIAL (static values)>
           klass.const_set(:ELEMENT, klass::ELEMENT_NODE)
         end
       end
@@ -740,7 +681,6 @@ module XMLRPC # :nodoc:
         alias :cdata :character
 
         def method_missing(*a)
-          # ignore
         end
 
         def parse(str)
@@ -810,11 +750,6 @@ module XMLRPC # :nodoc:
         def method_missing(*a)
         end
 
-        # TODO: call/implement?
-        # valid_name?
-        # valid_chardata?
-        # valid_char?
-        # parse_error
 
       end
     end
@@ -858,7 +793,6 @@ module XMLRPC # :nodoc:
                REXMLStreamParser, XMLScanStreamParser,
                LibXMLStreamParser]
 
-    # yields an instance of each installed parser
     def self.each_installed_parser
       XMLRPC::XMLParser::Classes.each do |klass|
         begin

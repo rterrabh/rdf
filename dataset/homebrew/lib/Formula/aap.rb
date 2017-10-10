@@ -13,12 +13,10 @@ class Aap < Formula
   depends_on :python if MacOS.version <= :snow_leopard
 
   def install
-    # Aap is designed to install using itself
     system "./aap", "install", "PREFIX=#{prefix}", "MANSUBDIR=share/man"
   end
 
   test do
-    # A dummy target definition
     (testpath/"main.aap").write("dummy:\n\t:print OK\n")
     system "#{bin}/aap", "dummy"
   end

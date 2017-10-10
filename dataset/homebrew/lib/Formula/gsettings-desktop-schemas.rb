@@ -28,7 +28,6 @@ class GsettingsDesktopSchemas < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gdesktop-enums.h>
 
       int main(int argc, char *argv[]) {
         return 0;
@@ -39,7 +38,6 @@ class GsettingsDesktopSchemas < Formula
   end
 
   def post_install
-    # manual schema compile step
     system "#{Formula["glib"].opt_bin}/glib-compile-schemas", "#{HOMEBREW_PREFIX}/share/glib-2.0/schemas"
   end
 end

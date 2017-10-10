@@ -41,7 +41,6 @@ class Jsoncpp < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <json/json.h>
       int main() {
         Json::Value root;
         Json::Reader reader;

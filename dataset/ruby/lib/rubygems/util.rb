@@ -1,12 +1,8 @@
-##
-# This module contains various utility methods as module methods.
 
 module Gem::Util
 
   @silent_mutex = nil
 
-  ##
-  # Zlib::GzipReader wrapper that unzips +data+.
 
   def self.gunzip(data)
     require 'zlib'
@@ -18,8 +14,6 @@ module Gem::Util
     unzipped
   end
 
-  ##
-  # Zlib::GzipWriter wrapper that zips +data+.
 
   def self.gzip(data)
     require 'zlib'
@@ -32,18 +26,12 @@ module Gem::Util
     zipped.string
   end
 
-  ##
-  # A Zlib::Inflate#inflate wrapper
 
   def self.inflate(data)
     require 'zlib'
     Zlib::Inflate.inflate data
   end
 
-  ##
-  # This calls IO.popen where it accepts an array for a +command+ (Ruby 1.9+)
-  # and implements an IO.popen-like behavior where it does not accept an array
-  # for a command.
 
   def self.popen *command
     IO.popen command, &:read
@@ -68,8 +56,6 @@ module Gem::Util
 
   NULL_DEVICE = defined?(IO::NULL) ? IO::NULL : Gem.win_platform? ? 'NUL' : '/dev/null'
 
-  ##
-  # Invokes system, but silences all output.
 
   def self.silent_system *command
     opt = {:out => NULL_DEVICE, :err => [:child, :out]}
@@ -105,8 +91,6 @@ module Gem::Util
     end
   end
 
-  ##
-  # Enumerates the parents of +directory+.
 
   def self.traverse_parents directory
     return enum_for __method__, directory unless block_given?

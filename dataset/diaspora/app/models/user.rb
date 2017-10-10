@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class User < ActiveRecord::Base
   include Encryptor::Private
@@ -89,7 +86,6 @@ class User < ActiveRecord::Base
     ConversationVisibility.where(person_id: self.person_id).sum(:unread)
   end
 
-  #@deprecated
   def ugly_accept_invitation_code
     begin
       self.invitations_to_me.first.sender.invitation_code
@@ -156,8 +152,6 @@ class User < ActiveRecord::Base
     self.hidden_shareables[share_type].present?
   end
 
-  # Copy the method provided by Devise to be able to call it later
-  # from a Sidekiq job
   alias_method :send_reset_password_instructions!, :send_reset_password_instructions
 
   def send_reset_password_instructions
@@ -198,9 +192,6 @@ class User < ActiveRecord::Base
     self.language = I18n.locale.to_s if self.language.blank?
   end
 
-  # This override allows a user to enter either their email address or their username into the username field.
-  # @return [User] The user that matches the username/email condition.
-  # @return [nil] if no user matches that condition.
   def self.find_for_database_authentication(conditions={})
     conditions = conditions.dup
     conditions[:username] = conditions[:username].downcase
@@ -216,13 +207,11 @@ class User < ActiveRecord::Base
     save
   end
 
-  ######### Aspects ######################
   def add_contact_to_aspect(contact, aspect)
     return true if AspectMembership.exists?(:contact_id => contact.id, :aspect_id => aspect.id)
     contact.aspect_memberships.create!(:aspect => aspect)
   end
 
-  ######## Posting ########
   def build_post(class_name, opts={})
     opts[:author] = self.person
     opts[:diaspora_handle] = opts[:author].diaspora_handle
@@ -267,8 +256,6 @@ class User < ActiveRecord::Base
     Salmon::EncryptedSlap.create_by_user_and_activity(self, post.to_diaspora_xml)
   end
 
-  # Check whether the user has liked a post.
-  # @param [Post] post
   def liked?(target)
     if target.likes.loaded?
       if self.like_for(target)
@@ -281,9 +268,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Get the user's like of a post, if there is one.
-  # @param [Post] post
-  # @return [Like]
   def like_for(target)
     if target.likes.loaded?
       return target.likes.detect{ |like| like.author_id == self.person.id }
@@ -292,7 +276,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  ######### Data export ##################
   mount_uploader :export, ExportedUser
 
   def queue_export
@@ -314,7 +297,6 @@ class User < ActiveRecord::Base
     ActiveSupport::Gzip.compress Diaspora::Exporter.new(self).execute
   end
 
-  ######### Photos export ##################
   mount_uploader :exported_photos_file, ExportedPhotos
 
   def queue_export_photos
@@ -353,7 +335,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  ######### Mailer #######################
   def mail(job, *args)
     pref = job.to_s.gsub('Workers::Mail::', '').underscore
     if(self.disable_mail == false && !self.user_preferences.exists?(:email_type => pref))
@@ -366,7 +347,6 @@ class User < ActiveRecord::Base
     Workers::Mail::ConfirmEmail.perform_async(id)
   end
 
-  ######### Posts and Such ###############
   def retract(target, opts={})
     if target.respond_to?(:relayable?) && target.relayable?
       retraction = RelayableRetraction.build(self, target)
@@ -389,7 +369,6 @@ class User < ActiveRecord::Base
     retraction
   end
 
-  ########### Profile ######################
   def update_profile(params)
     if photo = params.delete(:photo)
       photo.update_attributes(:pending => false) if photo.pending
@@ -416,7 +395,6 @@ class User < ActiveRecord::Base
     Postzord::Dispatcher.build(self, profile).post
   end
 
-  ###Helpers############
   def self.build(opts = {})
     u = User.new(opts.except(:person, :id))
     u.setup(opts)
@@ -502,7 +480,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Generate public/private keys for User and associated Person
   def generate_keys
     key_size = (Rails.env == 'test' ? 512 : 4096)
 
@@ -513,10 +490,6 @@ class User < ActiveRecord::Base
     end
   end
 
-  # Sometimes we access the person in a strange way and need to do this
-  # @note we should make this method depricated.
-  #
-  # @return [Person]
   def save_person!
     self.person.save if self.person && self.person.changed?
     self.person
@@ -567,7 +540,6 @@ class User < ActiveRecord::Base
   end
 
   def flag_for_removal(remove_after)
-    # flag inactive user for future removal
     if AppConfig.settings.maintenance.remove_old_users.enable?
       self.remove_after = remove_after
       self.save
@@ -575,7 +547,6 @@ class User < ActiveRecord::Base
   end
 
   def after_database_authentication
-    # remove any possible remove_after timestamp flag set by maintenance.remove_old_users
     unless self.remove_after.nil?
       self.remove_after = nil
       self.save

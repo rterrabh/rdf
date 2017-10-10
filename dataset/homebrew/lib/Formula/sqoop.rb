@@ -24,7 +24,6 @@ class Sqoop < Formula
     libexec.install Dir["*.jar"]
     bin.write_exec_script Dir["#{libexec}/bin/*"]
 
-    # Install a sqoop-env.sh file
     envs = libexec/"conf/sqoop-env.sh"
     envs.write(spoop_envs) unless envs.exist?
   end

@@ -47,7 +47,6 @@ class Fzf < Formula
 
   def caveats; <<-EOS.undent
     To install useful keybindings and fuzzy completion:
-      #{prefix}/install
 
     To use fzf in Vim, add the following line to your .vimrc:
       set rtp+=#{prefix}

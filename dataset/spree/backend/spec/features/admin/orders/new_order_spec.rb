@@ -10,7 +10,6 @@ describe "New Order", :type => :feature do
   stub_authorization!
 
   before do
-    # create default store
     create(:store)
     visit spree.new_admin_order_path
   end
@@ -79,7 +78,6 @@ describe "New Order", :type => :feature do
     end
   end
 
-  # Regression test for #3958
   context "without a delivery step", js: true do
     before do
       allow(Spree::Order).to receive_messages checkout_step_names: [:address, :payment, :confirm, :complete]
@@ -102,7 +100,6 @@ describe "New Order", :type => :feature do
     end
   end
 
-  # Regression test for #3336
   context "start by customer address" do
     it "completes order fine", js: true do
       click_on "Customer"
@@ -129,7 +126,6 @@ describe "New Order", :type => :feature do
     end
   end
 
-  # Regression test for #5327
   context "customer with default credit card", js: true do
     before do
       create(:credit_card, default: true, user: user)

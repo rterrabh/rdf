@@ -15,7 +15,6 @@ class Avra < Formula
   depends_on "automake" => :build
 
   def install
-    # build fails if these don't exist
     touch "NEWS"
     touch "ChangeLog"
     cd "src" do

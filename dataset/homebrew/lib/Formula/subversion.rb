@@ -36,35 +36,22 @@ class Subversion < Formula
   depends_on "pkg-config" => :build
   depends_on :apr => :build
 
-  # Always build against Homebrew versions instead of system versions for consistency.
   depends_on "sqlite"
   depends_on :python => :optional
 
-  # Bindings require swig
   depends_on "swig" if build.with?("perl") || build.with?("python") || build.with?("ruby")
 
-  # For Serf
   depends_on "scons" => :build
   depends_on "openssl"
 
-  # Other optional dependencies
   depends_on "gpg-agent" => :optional
   depends_on :java => :optional
 
-  # Fix #23993 by stripping flags swig can't handle from SWIG_CPPFLAGS
-  # Prevent "-arch ppc" from being pulled in from Perl's $Config{ccflags}
-  # Prevent linking into a Python Framework
   patch :DATA
 
   if build.with?("perl") || build.with?("ruby")
-    # If building bindings, allow non-system interpreters
-    # Currently the serf -> scons dependency forces stdenv, so this isn't
-    # strictly necessary
     env :userpaths
 
-    # When building Perl or Ruby bindings, need to use a compiler that
-    # recognizes GCC-style switches, since that's what the system languages
-    # were compiled against.
     fails_with :clang do
       build 318
       cause "core.c:1: error: bad value (native) for -march= switch"
@@ -72,10 +59,6 @@ class Subversion < Formula
   end
 
   def install
-    # OS X's Python is built universally and can't link with Homebrew's deps
-    # unless Homebrew's deps are universal as well.
-    # https://github.com/Homebrew/homebrew-versions/issues/777
-    # https://github.com/Homebrew/homebrew/issues/34119
     if build.with?("python") && (which "python").universal?
       unless build.universal?
         raise <<-EOS.undent
@@ -88,14 +71,9 @@ class Subversion < Formula
     serf_prefix = libexec+"serf"
 
     resource("serf").stage do
-      # SConstruct merges in gssapi linkflags using scons's MergeFlags,
-      # but that discards duplicate values - including the duplicate
-      # values we want, like multiple -arch values for a universal build.
-      # Passing 0 as the `unique` kwarg turns this behaviour off.
       inreplace "SConstruct", "unique=1", "unique=0"
 
       ENV.universal_binary if build.universal?
-      # scons ignores our compiler and flags unless explicitly passed
       args = %W[PREFIX=#{serf_prefix} GSSAPI=/usr CC=#{ENV.cc}
                 CFLAGS=#{ENV.cflags} LINKFLAGS=#{ENV.ldflags}
                 OPENSSL=#{Formula["openssl"].opt_prefix}]
@@ -122,8 +100,6 @@ class Subversion < Formula
     end
 
     if build.with? "java"
-      # Java support doesn't build correctly in parallel:
-      # https://github.com/Homebrew/homebrew/issues/20415
       ENV.deparallelize
 
       unless build.universal?
@@ -137,9 +113,6 @@ class Subversion < Formula
 
     ENV.universal_binary if build.universal?
 
-    # Use existing system zlib
-    # Use dep-provided other libraries
-    # Don't mess with Apache modules (since we're not sudo)
     args = ["--disable-debug",
             "--prefix=#{prefix}",
             "--with-zlib=/usr",
@@ -164,12 +137,9 @@ class Subversion < Formula
 
     if build.with? "ruby"
       args << "--with-ruby-sitedir=#{lib}/ruby"
-      # Peg to system Ruby
       args << "RUBY=/usr/bin/ruby"
     end
 
-    # The system Python is built with llvm-gcc, so we override this
-    # variable to prevent failures due to incompatible CFLAGS
     ENV["ac_cv_python_compile"] = ENV.cc
 
     inreplace "Makefile.in",
@@ -191,9 +161,7 @@ class Subversion < Formula
     end
 
     if build.with? "perl"
-      # In theory SWIG can be built in parallel, in practice...
       ENV.deparallelize
-      # Remove hard-coded ppc target, add appropriate ones
       if build.universal?
         arches = Hardware::CPU.universal_archs.as_arch_flags
       elsif MacOS.version <= :leopard
@@ -214,8 +182,6 @@ class Subversion < Formula
       system "make", "swig-pl"
       system "make", "install-swig-pl", "DESTDIR=#{prefix}"
 
-      # Some of the libraries get installed into the wrong place, they end up having the
-      # prefix in the directory name twice.
 
       lib.install Dir["#{prefix}/#{lib}/*"]
     end
@@ -226,7 +192,6 @@ class Subversion < Formula
     end
 
     if build.with? "ruby"
-      # Peg to system Ruby
       system "make", "swig-rb", "EXTRA_SWIG_LDFLAGS=-L/usr/lib"
       system "make", "install-swig-rb"
     end
@@ -240,14 +205,12 @@ class Subversion < Formula
   def caveats
     s = <<-EOS.undent
       svntools have been installed to:
-        #{opt_libexec}
     EOS
 
     if build.with? "perl"
       s += <<-EOS.undent
 
         The perl bindings are located in various subdirectories of:
-          #{prefix}/Library/Perl
       EOS
     end
 
@@ -255,7 +218,6 @@ class Subversion < Formula
       s += <<-EOS.undent
 
         You may need to add the Ruby bindings to your RUBYLIB from:
-          #{HOMEBREW_PREFIX}/lib/ruby
       EOS
     end
 
@@ -317,5 +279,4 @@ index 29a6c0a..dd1a5a8 100644
 -  if fwdir and fwdir != "no-framework":
 +  if fwdir and fwdir != "no-framework" and sys.platform != 'darwin':
 
-     # Setup the framework prefix
      fwprefix = sysconfig.get_config_var('PYTHONFRAMEWORKPREFIX')

@@ -7,10 +7,6 @@ class Simh < Formula
 
   head "https://github.com/simh/simh.git"
 
-  # After 3.9-0 the project moves to https://github.com/simh/simh
-  # It doesn't actually fail, but the makefile queries llvm-gcc -v --help a lot
-  # to determine what flags to throw.  It is simply not designed for clang.
-  # Remove at the next revision that will support clang (see github site).
   fails_with :clang do
     build 421
     cause "The program is closely tied to gcc & llvm-gcc in this revision."

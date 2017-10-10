@@ -19,9 +19,6 @@ class Cmake < Formula
 
   depends_on :python => :build if MacOS.version <= :snow_leopard && build.with?("docs")
 
-  # The `with-qt` GUI option was removed due to circular dependencies if
-  # CMake is built with Qt support and Qt is built with MySQL support as MySQL uses CMake.
-  # For the GUI application please instead use brew install caskroom/cask/cmake.
 
   resource "sphinx_rtd_theme" do
     url "https://pypi.python.org/packages/source/s/sphinx_rtd_theme/sphinx_rtd_theme-0.1.8.tar.gz"
@@ -87,8 +84,6 @@ class Cmake < Formula
         end
       end
 
-      # There is an existing issue around OS X & Python locale setting
-      # See http://bugs.python.org/issue18378#msg215215 for explanation
       ENV["LC_ALL"] = "en_US.UTF-8"
     end
 

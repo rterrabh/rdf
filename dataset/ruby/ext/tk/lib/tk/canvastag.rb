@@ -1,6 +1,3 @@
-#
-# tk/canvastag.rb - methods for treating canvas tags
-#
 require 'tk'
 require 'tk/tagfont'
 
@@ -21,12 +18,7 @@ module TkcTagAccess
     @c.bbox(@id)
   end
 
-  #def bind(seq, cmd=Proc.new, *args)
-  #  @c.itembind(@id, seq, cmd, *args)
-  #  self
-  #end
   def bind(seq, *args)
-    # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -36,12 +28,7 @@ module TkcTagAccess
     self
   end
 
-  #def bind_append(seq, cmd=Proc.new, *args)
-  #  @c.itembind_append(@id, seq, cmd, *args)
-  #  self
-  #end
   def bind_append(seq, *args)
-    # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -74,9 +61,6 @@ module TkcTagAccess
     @c.itemconfigure(@id, key, value)
     self
   end
-#  def configure(keys)
-#    @c.itemconfigure @id, keys
-#  end
 
   def configinfo(key=nil)
     @c.itemconfiginfo(@id, key)
@@ -120,7 +104,6 @@ module TkcTagAccess
   end
 
   def imove(idx, x, y)
-    # Tcl/Tk 8.6 or later
     @c.imove(@id, idx, x, y)
     self
   end
@@ -146,7 +129,6 @@ module TkcTagAccess
   end
 
   def moveto(x, y)
-    # Tcl/Tk 8.6 or later
     @c.moveto(@id, x, y)
     self
   end
@@ -163,7 +145,6 @@ module TkcTagAccess
   end
 
   def rchars(first, last, str_or_coords)
-    # Tcl/Tk 8.6 or later
     @c.rchars(@id, first, last, str_or_coords)
     self
   end
@@ -187,13 +168,6 @@ module TkcTagAccess
     @c.itemtype(@id)
   end
 
-  # Following operators support logical expressions of canvas tags
-  # (for Tk8.3+).
-  # If tag1.path is 't1' and tag2.path is 't2', then
-  #      ltag = tag1 & tag2; ltag.path => "(t1)&&(t2)"
-  #      ltag = tag1 | tag2; ltag.path => "(t1)||(t2)"
-  #      ltag = tag1 ^ tag2; ltag.path => "(t1)^(t2)"
-  #      ltag = - tag1;      ltag.path => "!(t1)"
   def & (tag)
     if tag.kind_of? TkObject
       TkcTagString.new(@c, '(' + @id + ')&&(' + tag.path + ')')
@@ -228,7 +202,7 @@ class TkcTag<TkObject
 
   CTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-34> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1887> <IEV MODERATE (method definition)>
   (Tk_CanvasTag_ID = ['ctag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -251,13 +225,9 @@ class TkcTag<TkObject
   end
 
   def initialize(parent, mode=nil, *args)
-    #unless parent.kind_of?(TkCanvas)
-    #  fail ArgumentError, "expect TkCanvas for 1st argument"
-    #end
     @c = parent
     @cpath = parent.path
     Tk_CanvasTag_ID.mutex.synchronize{
-      # @path = @id = Tk_CanvasTag_ID.join('')
       @path = @id = Tk_CanvasTag_ID.join(TkCore::INTERP._ip_id_)
       Tk_CanvasTag_ID[1].succ!
     }
@@ -341,8 +311,7 @@ class TkcTagString<TkcTag
       if CTagID_TBL[parent.path] && CTagID_TBL[parent.path][name]
         obj = CTagID_TBL[parent.path][name]
       else
-        # super(parent, name, *args)
-        #nodyna <ID:instance_eval-35> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1888> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @c = parent
           @cpath = parent.path
@@ -359,11 +328,7 @@ class TkcTagString<TkcTag
   end
 
   def initialize(parent, name, mode=nil, *args)
-    # dummy:: not called by 'new' method
 
-    #unless parent.kind_of?(TkCanvas)
-    #  fail ArgumentError, "expect TkCanvas for 1st argument"
-    #end
     @c = parent
     @cpath = parent.path
     @path = @id = name
@@ -381,9 +346,6 @@ class TkcTagAll<TkcTagString
   end
 =begin
   def initialize(parent)
-    #unless parent.kind_of?(TkCanvas)
-    #  fail ArgumentError, "expect TkCanvas for 1st argument"
-    #end
     @c = parent
     @cpath = parent.path
     @path = @id = 'all'
@@ -401,9 +363,6 @@ class TkcTagCurrent<TkcTagString
   end
 =begin
   def initialize(parent)
-    #unless parent.kind_of?(TkCanvas)
-    #  fail ArgumentError, "expect TkCanvas for 1st argument"
-    #end
     @c = parent
     @cpath = parent.path
     @path = @id = 'current'
@@ -416,22 +375,17 @@ class TkcTagCurrent<TkcTagString
 end
 
 class TkcGroup<TkcTag
-  #nodyna <ID:instance_eval-36> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1889> <IEV MODERATE (method definition)>
   (Tk_cGroup_ID = ['tkcg'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
     freeze
   }
 
-  #def create_self(parent, *args)
   def initialize(parent, *args)
-    #unless parent.kind_of?(TkCanvas)
-    #  fail ArgumentError, "expect TkCanvas for 1st argument"
-    #end
     @c = parent
     @cpath = parent.path
     Tk_cGroup_ID.mutex.synchronize{
-      # @path = @id = Tk_cGroup_ID.join('')
       @path = @id = Tk_cGroup_ID.join(TkCore::INTERP._ip_id_)
       Tk_cGroup_ID[1].succ!
     }
@@ -441,11 +395,9 @@ class TkcGroup<TkcTag
     }
     include(*args) if args != []
   end
-  #private :create_self
 
   def include(*tags)
     for i in tags
-      #i.addtag(@id)
       @c.addtag_withtag(@id, i)
     end
     self
@@ -454,7 +406,6 @@ class TkcGroup<TkcTag
 
   def exclude(*tags)
     for i in tags
-      #i.dtag(@id)
       @c.dtag(i, @id)
     end
     self

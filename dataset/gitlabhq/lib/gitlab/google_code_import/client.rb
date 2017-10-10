@@ -36,7 +36,6 @@ module Gitlab
           next unless repo.valid? && repo.issues
 
           repo.issues.each do |raw_issue|
-            # Touching is enough to add the entry and masked email.
             user_map[raw_issue["author"]["name"]]
 
             raw_issue["comments"]["items"].each do |raw_comment|

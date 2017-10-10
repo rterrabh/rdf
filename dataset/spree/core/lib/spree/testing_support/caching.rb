@@ -10,7 +10,6 @@ module Spree
           fail %Q{Expected to find #{key} in the cache, but didn't.
 
   Cache writes:
-  #{@cache_write_events.join("\n")}
           }
         end
       end

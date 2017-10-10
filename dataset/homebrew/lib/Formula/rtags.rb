@@ -18,7 +18,6 @@ class Rtags < Formula
   depends_on "openssl"
 
   def install
-    # Homebrew llvm libc++.dylib doesn't correctly reexport libc++abi
     ENV.append("LDFLAGS", "-lc++abi")
 
     mkdir "build" do

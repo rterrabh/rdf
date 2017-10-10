@@ -5,7 +5,6 @@ class Pgtap < Formula
   sha256 "c590ce9edb19a95dbd7caef84f677ff433fd87eaa68effdc4a7ac0fdf29be4cc"
   head "https://github.com/theory/pgtap.git"
 
-  # Not :postgresql, because we need to install into its share directory.
   depends_on "postgresql"
 
   skip_clean "share"
@@ -21,7 +20,6 @@ class Pgtap < Formula
   end
 
   def install
-    # Make sure modules can find just-installed dependencies.
     arch  = `perl -MConfig -E 'print $Config{archname}'`
     plib  = "#{lib}/perl5"
     ENV["PERL5LIB"] = "#{plib}:#{plib}/#{arch}:#{lib}:#{lib}/#{arch}"

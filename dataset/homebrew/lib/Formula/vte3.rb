@@ -32,7 +32,6 @@ class Vte3 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <vte/vte.h>
 
       int main(int argc, char *argv[]) {
         guint v = vte_get_major_version();

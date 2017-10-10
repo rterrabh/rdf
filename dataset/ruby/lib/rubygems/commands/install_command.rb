@@ -5,10 +5,6 @@ require 'rubygems/local_remote_options'
 require 'rubygems/validator'
 require 'rubygems/version_option'
 
-##
-# Gem installer command line tool
-#
-# See `gem help install`
 
 class Gem::Commands::InstallCommand < Gem::Command
 
@@ -312,8 +308,6 @@ to write the specification by hand.  For example:
     exit_code
   end
 
-  ##
-  # Loads post-install hooks
 
   def load_hooks # :nodoc:
     if options[:install_as_default]

@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/combobox.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -52,7 +48,6 @@ class Tk::Iwidgets::Combobox
     self
   end
 
-  # listbox methods
   def size
     tk_send_without_enc('size').to_i
   end
@@ -76,7 +71,6 @@ class Tk::Iwidgets::Combobox
     self
   end
 
-  # scrolledlistbox methods
   def get_curselection
     tk_call(@path, 'getcurselection')
   end
@@ -85,7 +79,6 @@ class Tk::Iwidgets::Combobox
     self
   end
   def sort(*params, &b)
-    # see 'lsort' man page about params
     if b
       tk_call(@path, 'sort', '-command', proc(&b), *params)
     else

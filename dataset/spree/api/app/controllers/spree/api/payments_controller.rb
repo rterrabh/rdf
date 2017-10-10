@@ -68,7 +68,7 @@ module Spree
 
         def perform_payment_action(action, *args)
           authorize! action, Spree::Payment
-          #nodyna <ID:send-7> <SD MODERATE (change-prone variables)>
+          #nodyna <send-2410> <SD MODERATE (change-prone variables)>
           @payment.send("#{action}!", *args)
           respond_with(@payment, default_template: :show)
         end

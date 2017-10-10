@@ -17,9 +17,6 @@ class Wv < Formula
                           "--mandir=#{man}"
     system "make"
     ENV.deparallelize
-    # the makefile generated does not create the file structure when installing
-    # till it is fixed upstream, create the target directories here.
-    # http://www.abisource.com/mailinglists/abiword-dev/2011/Jun/0108.html
 
     bin.mkpath
     (lib/"pkgconfig").mkpath

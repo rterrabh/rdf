@@ -13,18 +13,12 @@ class Xmlto < Formula
 
   depends_on "docbook"
   depends_on "docbook-xsl"
-  # Doesn't strictly depend on GNU getopt, but OS X system getopt(1)
-  # does not support longopts in the optstring, so use GNU getopt.
   depends_on "gnu-getopt"
 
-  # xmlto forces --nonet on xsltproc, which causes it to fail when
-  # DTDs/entities aren't available locally.
   patch :DATA
 
   def install
-    # GNU getopt is keg-only, so point configure to it
     ENV["GETOPT"] = Formula["gnu-getopt"].opt_prefix/"bin/getopt"
-    # Find our docbook catalog
     ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog"
 
     ENV.deparallelize
@@ -40,9 +34,7 @@ __END__
 @@ -209,7 +209,7 @@
  export VERBOSE
  
- # Disable network entities
 -XSLTOPTS="$XSLTOPTS --nonet"
 +#XSLTOPTS="$XSLTOPTS --nonet"
  
- # The names parameter for the XSLT stylesheet
  XSLTPARAMS=""

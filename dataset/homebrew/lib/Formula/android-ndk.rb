@@ -6,7 +6,6 @@ class AndroidNdk < Formula
 
   version "r10e"
 
-  # As of r10e, only a 64-bit version is provided
   depends_on :arch => :x86_64
   depends_on "android-sdk" => :recommended
 
@@ -16,13 +15,10 @@ class AndroidNdk < Formula
     chmod 0755, "./android-ndk-#{version}-darwin-x86_64.bin"
     system "./android-ndk-#{version}-darwin-x86_64.bin"
 
-    # Now we can install both 64-bit and 32-bit targeting toolchains
     prefix.install Dir["android-ndk-#{version}/*"]
 
-    # Create a dummy script to launch the ndk apps
     ndk_exec = prefix+"ndk-exec.sh"
     ndk_exec.write <<-EOS.undent
-      #!/bin/sh
       BASENAME=`basename $0`
       EXEC="#{prefix}/$BASENAME"
       test -f "$EXEC" && exec "$EXEC" "$@"
@@ -42,7 +38,6 @@ class AndroidNdk < Formula
     https://developer.android.com/sdk/ndk/index.html#requirements
 
     For more documentation on Android NDK, please check:
-      #{prefix}/docs
     EOS
   end
 end

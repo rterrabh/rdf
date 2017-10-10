@@ -20,7 +20,6 @@ class Libmemcached < Formula
     depends_on "memcached"
   end
 
-  # https://bugs.launchpad.net/libmemcached/+bug/1245562
   patch :DATA
 
   def install
@@ -65,7 +64,6 @@ index fdfa021..8c03d35 100644
 --- a/example/byteorder.cc
 +++ b/example/byteorder.cc
 @@ -42,27 +42,59 @@
- #include <example/byteorder.h>
 
  /* Byte swap a 64-bit number. */
 -#ifndef swap64
@@ -128,7 +126,6 @@ index fdfa021..8c03d35 100644
 +#  define htonll(x) bswap_64(x)
 +#  define ntohll(x) bswap_64(x)
 +# endif
- #else
 -  /* big-endian machines don't need byte swapping */
 -  return in;
 -#endif // WORDS_BIGENDIAN
@@ -136,7 +133,6 @@ index fdfa021..8c03d35 100644
 +# define htonll(x) (x)
 +# define ntohll(x) (x)
 +#endif
- #endif
 -
 -#ifdef HAVE_HTONLL
 
@@ -165,23 +161,16 @@ index bc16e73..dcee395 100644
 --- a/libmemcached-1.0/memcached.h
 +++ b/libmemcached-1.0/memcached.h
 @@ -43,7 +43,11 @@
- #endif
 
- #ifdef __cplusplus
 +#ifdef _LIBCPP_VERSION
- #  include <cinttypes>
 +#else
 +#  include <tr1/cinttypes>
 +#endif
- #  include <cstddef>
- #  include <cstdlib>
- #else
 diff --git a/libmemcached/byteorder.cc b/libmemcached/byteorder.cc
 index 9f11aa8..f167822 100644
 --- a/libmemcached/byteorder.cc
 +++ b/libmemcached/byteorder.cc
 @@ -39,41 +39,66 @@
- #include "libmemcached/byteorder.h"
 
  /* Byte swap a 64-bit number. */
 -#ifndef swap64
@@ -244,7 +233,6 @@ index 9f11aa8..f167822 100644
 +#  define htonll(x) bswap_64(x)
 +#  define ntohll(x) bswap_64(x)
 +# endif
- #else
 -  /* big-endian machines don't need byte swapping */
 -  return in;
 -#endif // WORDS_BIGENDIAN
@@ -252,7 +240,6 @@ index 9f11aa8..f167822 100644
 +# define htonll(x) (x)
 +# define ntohll(x) (x)
 +#endif
- #endif
 -
 
  uint64_t memcached_ntohll(uint64_t value)

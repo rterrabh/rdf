@@ -1,16 +1,11 @@
-#
-#  tk/event.rb - module for event
-#
 
 module TkEvent
 end
 
-########################
 
 require 'tkutil'
 require 'tk' unless Object.const_defined? :TkComm
 
-########################
 
 module TkEvent
   class Event < TkUtil::CallbackSubst
@@ -50,9 +45,6 @@ module TkEvent
     end
 
     type_data = [
-      #-----+-------------------+------------------+-----------------------#
-      #  ID |  const            |  group_flag      |  context_name         #
-      #-----+-------------------+------------------+-----------------------#
       [  2,  :KeyPress,          Grp::KEY,         'KeyPress',    'Key'    ],
       [  3,  :KeyRelease,        Grp::KEY,         'KeyRelease'            ],
       [  4,  :ButtonPress,       Grp::BUTTON,      'ButtonPress', 'Button' ],
@@ -101,7 +93,7 @@ module TkEvent
     TYPE_GROUP_TBL = Hash.new
 
     type_data.each{|id, c_name, g_flag, *t_names|
-      #nodyna <ID:const_set-21> <CS MEDIUM (array)>
+      #nodyna <const_set-1803> <CS MEDIUM (array)>
       TypeNum.const_set(c_name, id)
       t_names.each{|t_name| t_name.freeze; TYPE_NAME_TBL[t_name] = id }
       TYPE_ID_TBL[id]    = t_names
@@ -123,7 +115,6 @@ module TkEvent
       TYPE_GROUP_TBL[id] || 0
     end
 
-    #############################################
 
     module StateMask
       ShiftMask      =        (1<<0)
@@ -150,10 +141,8 @@ module TkEvent
       OptionMask     =  Mod2Mask
     end
 
-    #############################################
 
     FIELD_FLAG = {
-      # key  =>  flag
       'above'       => Grp::CONFIG,
       'borderwidth' => (Grp::CREATE|Grp::CONFIG),
       'button'      => Grp::BUTTON,
@@ -213,7 +202,6 @@ module TkEvent
       'window' => proc{|val| nil}
     }
 
-    #-------------------------------------------
 
     def valid_fields(group_flag=nil)
       group_flag = self.class.group_flag(self.type) unless group_flag
@@ -226,7 +214,6 @@ module TkEvent
         rescue
           next
         end
-        # next if !val || val == '??'
         next if !val || (val == '??' && (flag & Grp::STRING_DATA))
         fields[key] = val
       }
@@ -280,9 +267,6 @@ module TkEvent
       if group_flag != Grp::KEY
         Tk.event_generate(win, type_name, opts)
       else
-        # If type is KEY event, focus should be set to target widget.
-        # If not set, original widget will get the same event.
-        # That will make infinite loop.
         w = Tk.tk_call_without_enc('focus')
         begin
           Tk.tk_call_without_enc('focus', win)
@@ -293,75 +277,45 @@ module TkEvent
       end
     end
 
-    #############################################
 
-    # [ <'%' subst-key char>, <proc type char>, <instance var (accessor) name>]
     KEY_TBL = [
       [ ?#, ?n, :serial ],
       [ ?a, ?s, :above ],
       [ ?b, ?n, :num ],
       [ ?c, ?n, :count ],
       [ ?d, ?s, :detail ],
-      # ?e
       [ ?f, ?b, :focus ],
-      # ?g
       [ ?h, ?n, :height ],
       [ ?i, ?s, :win_hex ],
-      # ?j
       [ ?k, ?n, :keycode ],
-      # ?l
       [ ?m, ?s, :mode ],
-      # ?n
       [ ?o, ?b, :override ],
       [ ?p, ?s, :place ],
-      # ?q
-      # ?r
       [ ?s, ?x, :state ],
       [ ?t, ?n, :time ],
-      # ?u
       [ ?v, ?n, :value_mask ],
       [ ?w, ?n, :width ],
       [ ?x, ?n, :x ],
       [ ?y, ?n, :y ],
-      # ?z
       [ ?A, ?s, :char ],
       [ ?B, ?n, :borderwidth ],
-      # ?C
       [ ?D, ?n, :wheel_delta ],
       [ ?E, ?b, :send_event ],
-      # ?F
-      # ?G
-      # ?H
-      # ?I
-      # ?J
       [ ?K, ?s, :keysym ],
-      # ?L
-      # ?M
       [ ?N, ?n, :keysym_num ],
-      # ?O
       [ ?P, ?s, :property ],
-      # ?Q
       [ ?R, ?s, :rootwin_id ],
       [ ?S, ?s, :subwindow ],
       [ ?T, ?n, :type ],
-      # ?U
-      # ?V
       [ ?W, ?w, :widget ],
       [ ?X, ?n, :x_root ],
       [ ?Y, ?n, :y_root ],
-      # ?Z
       nil
     ]
 
-    # [ <'%' subst-key str>, <proc type char>, <instance var (accessor) name>]
-    #   the subst-key string will be converted to a bytecode (128+idx).
     LONGKEY_TBL = [
-      # for example, for %CTT and %CST subst-key on tkdnd-2.0
-      # ['CTT', ?l, :drop_target_type],
-      # ['CST', ?l, :drop_source_type],
     ]
 
-    # [ <proc type char>, <proc/method to convert tcl-str to ruby-obj>]
     PROC_TBL = [
       [ ?n, TkComm.method(:num_or_str) ],
       [ ?s, TkComm.method(:string) ],
@@ -381,7 +335,6 @@ module TkEvent
     ]
 
 =begin
-    # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
     KEY_TBL.map!{|inf|
       if inf.kind_of?(Array)
         inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -398,33 +351,9 @@ module TkEvent
     }
 =end
 
-    # setup tables to be used by scan_args, _get_subst_key, _get_all_subst_keys
-    #
-    #     _get_subst_key() and _get_all_subst_keys() generates key-string
-    #     which describe how to convert callback arguments to ruby objects.
-    #     When binding parameters are given, use _get_subst_key().
-    #     But when no parameters are given, use _get_all_subst_keys() to
-    #     create a Event class object as a callback parameter.
-    #
-    #     scan_args() is used when doing callback. It convert arguments
-    #     ( which are Tcl strings ) to ruby objects based on the key string
-    #     that is generated by _get_subst_key() or _get_all_subst_keys().
-    #
     _setup_subst_table(KEY_TBL, PROC_TBL)
-    # _setup_subst_table(KEY_TBL, LONGKEY_TBL, PROC_TBL) # if use longname-keys
 
-    #
-    # NOTE: The order of parameters which passed to callback procedure is
-    #        <extra_arg>, <extra_arg>, ... , <subst_arg>, <subst_arg>, ...
-    #
 
-    # If you need support extra arguments given by Tcl/Tk,
-    # please override _get_extra_args_tbl
-    #
-    #def self._get_extra_args_tbl
-    #  # return an array of convert procs
-    #  []
-    #end
 
 =begin
     alias button num
@@ -453,7 +382,6 @@ module TkEvent
 
   end
 
-  ###############################################
 
   def install_bind_for_event_class(klass, cmd, *args)
     extra_args_tbl = klass._get_extra_args_tbl
@@ -477,7 +405,6 @@ module TkEvent
             if TkCore::INTERP.kind_of?(TclTkIp)
               fail e
             else
-              # MultiTkIp
               fail Exception, "#{e.class}: #{e.message.dup}"
             end
           end
@@ -497,7 +424,6 @@ module TkEvent
                              if TkCore::INTERP.kind_of?(TclTkIp)
                                fail e
                              else
-                               # MultiTkIp
                                fail Exception, "#{e.class}: #{e.message.dup}"
                              end
                            end
@@ -520,7 +446,6 @@ module TkEvent
             if TkCore::INTERP.kind_of?(TclTkIp)
               fail e
             else
-              # MultiTkIp
               fail Exception, "#{e.class}: #{e.message.dup}"
             end
           end
@@ -531,7 +456,6 @@ module TkEvent
     if TkCore::INTERP.kind_of?(TclTkIp)
       id + ' ' + args
     else
-      # MultiTkIp
       "if {[set st [catch {#{id} #{args}} ret]] != 0} {
          if {$st == 4} {
            return -code continue $ret

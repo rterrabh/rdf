@@ -11,8 +11,6 @@ class Libxmp < Formula
     sha256 "404246eba6c82c4768baef86453a8317fb4ec911619cd74e391332675c62d45e" => :mountain_lion
   end
 
-  # CC BY-NC-ND licensed set of five mods by Keith Baylis/Vim! for testing purposes
-  # Mods from Mod Soul Brother: http://web.archive.org/web/20120215215707/http://www.mono211.com/modsoulbrother/vim.html
   resource "demo_mods" do
     url "https://files.scene.org/get:us-http/mirrors/modsoulbrother/vim/vim-best-of.zip"
     sha256 "df8fca29ba116b10485ad4908cea518e0f688850b2117b75355ed1f1db31f580"
@@ -34,8 +32,6 @@ class Libxmp < Formula
   test do
     test_mod = share/"libxmp/give-me-an-om.mod"
     (testpath/"libxmp_test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include "xmp.h"
 
       int main(int argc, char** argv)
       {

@@ -137,6 +137,7 @@ describe Spree::Order, :type => :model do
       order.finalize!
     end
 
+    #nodyna <send-2484> <not yet classified>
     it "should send an order confirmation email" do
       mail_message = double "Mail::Message"
       expect(Spree::OrderMailer).to receive(:confirm_email).with(order.id).and_return mail_message
@@ -150,6 +151,7 @@ describe Spree::Order, :type => :model do
       expect(order.confirmation_delivered?).to be true
     end
 
+    #nodyna <send-2485> <not yet classified>
     it "should not send duplicate confirmation emails" do
       allow(order).to receive_messages(:confirmation_delivered? => true)
       expect(Spree::OrderMailer).not_to receive(:confirm_email)
@@ -157,8 +159,6 @@ describe Spree::Order, :type => :model do
     end
 
     it "should freeze all adjustments" do
-      # Stub this method as it's called due to a callback
-      # and it's irrelevant to this test
       allow(order).to receive :has_available_shipment
       allow(Spree::OrderMailer).to receive_message_chain :confirm_email, :deliver_later
       adjustments = [double]
@@ -342,7 +342,6 @@ describe Spree::Order, :type => :model do
 
   context "#confirmation_required?" do
 
-    # Regression test for #4117
     it "is required if the state is currently 'confirm'" do
       order = Spree::Order.new
       assert !order.confirmation_required?
@@ -380,6 +379,7 @@ describe Spree::Order, :type => :model do
 
   context "add_update_hook" do
     before do
+      #nodyna <class_eval-2486> <not yet classified>
       Spree::Order.class_eval do
         register_update_hook :add_awesome_sauce
       end
@@ -438,7 +438,6 @@ describe Spree::Order, :type => :model do
     end
   end
 
-  # Regression tests for #4072
   context "#state_changed" do
     let(:order) { FactoryGirl.create(:order) }
 
@@ -460,7 +459,6 @@ describe Spree::Order, :type => :model do
     end
   end
 
-  # Regression test for #4199
   context "#available_payment_methods" do
     it "includes frontend payment methods" do
       payment_method = Spree::PaymentMethod.create!({
@@ -534,7 +532,6 @@ describe Spree::Order, :type => :model do
       end
 
       after do
-        # reset to avoid test pollution
         Spree::Order.line_item_comparison_hooks = Set.new
       end
 
@@ -805,7 +802,6 @@ describe Spree::Order, :type => :model do
     end
   end
 
-  # Regression test for #4923
   context "locking" do
     let(:order) { Spree::Order.create } # need a persisted in order to test locking
 
@@ -826,7 +822,6 @@ describe Spree::Order, :type => :model do
   end
 
   describe '#quantity' do
-    # Uses a persisted record, as the quantity is retrieved via a DB count
     let(:order) { create :order_with_line_items, line_items_count: 3 }
 
     it 'sums the quantity of all line items' do
@@ -923,11 +918,9 @@ describe Spree::Order, :type => :model do
 
     context "the order had no inventory-related cost" do
       before do
-        # discount the cost of the line items
         allow(order).to receive(:adjustment_total) { -5 }
         allow(line_item).to receive(:adjustment_total) { -5 }
 
-        # but leave some shipment payment amount
         allow(shipment).to receive(:adjustment_total) { 0 }
       end
 
@@ -937,12 +930,9 @@ describe Spree::Order, :type => :model do
 
     context "the order had inventory-related cost" do
       before do
-        # partially discount the cost of the line item
         allow(order).to receive(:adjustment_total) { 0 }
         allow(line_item).to receive(:adjustment_total) { -5 }
 
-        # and partially discount the cost of the shipment so the total
-        # discount matches the item total for test completeness
         allow(shipment).to receive(:adjustment_total) { -5 }
       end
 

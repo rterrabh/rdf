@@ -21,14 +21,8 @@ class Libcaca < Formula
   end
 
   def install
-    # Some people can't compile when Java is enabled. See:
-    # https://github.com/Homebrew/homebrew/issues/issue/2049
 
-    # Don't build csharp bindings
-    # Don't build ruby bindings; fails for adamv w/ Homebrew Ruby 1.9.2
 
-    # Fix --destdir issue.
-    #   ../.auto/py-compile: Missing argument to --destdir.
     inreplace "python/Makefile.in", '$(am__py_compile) --destdir "$(DESTDIR)"', "$(am__py_compile) --destdir \"$(cacadir)\""
 
     args = ["--disable-dependency-tracking",
@@ -39,7 +33,6 @@ class Libcaca < Formula
             "--disable-csharp",
             "--disable-ruby"]
 
-    # fix missing x11 header check: https://github.com/Homebrew/homebrew/issues/28291
     args << "--disable-x11" if build.without? "imlib2"
 
     system "./configure", *args

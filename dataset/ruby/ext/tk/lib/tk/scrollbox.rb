@@ -1,19 +1,10 @@
-#
-#               tk/scrollbox.rb - Tk Listbox with Scrollbar
-#                                 as an example of Composite Widget
-#                       by Yukihiro Matsumoto <matz@netlab.co.jp>
-#
 require 'tk'
 require 'tk/listbox'
 
 class TkScrollbox<Tk::Listbox
   include TkComposite
   def initialize_composite(keys=nil)
-    #list = Tk::Listbox.new(@frame)
-    # -> use current TkListbox class
     list = TkListbox.new(@frame)
-    #scroll = Tk::Scrollbar.new(@frame)
-    # -> use current TkScrollbar class
     scroll = TkScrollbar.new(@frame)
     @path = list.path
 

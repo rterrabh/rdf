@@ -31,12 +31,6 @@ class Rinetd < Formula
     conf = etc/"rinetd.conf"
     unless conf.exist?
       conf.write <<-EOS.undent
-        # forwarding rules go here
-        #
-        # you may specify allow and deny rules after a specific forwarding rule
-        # to apply to only that forwarding rule
-        #
-        # bindadress bindport connectaddress connectport
       EOS
     end
   end

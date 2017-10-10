@@ -1,4 +1,3 @@
-# The system versions are too old to build ld64
 class CctoolsHeaders < Formula
   desc "cctools-headers via Apple"
   homepage "https://opensource.apple.com/"
@@ -13,13 +12,10 @@ class CctoolsHeaders < Formula
   end
 
   def install
-    # only supports DSTROOT, not PREFIX
     inreplace "include/Makefile", "/usr/include", "/include"
     system "make", "installhdrs", "DSTROOT=#{prefix}", "RC_ProjectSourceVersion=#{version}"
-    # installs some headers we don't need to DSTROOT/usr/local/include
     (prefix/"usr").rmtree
 
-    # ld64 requires an updated mach/machine.h to build
     resource("headers").stage { (include/"mach").install "osfmk/mach/machine.h" }
   end
 end

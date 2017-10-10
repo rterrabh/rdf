@@ -17,7 +17,6 @@ class Pyqwt < Formula
   depends_on "sip"
   depends_on "pyqt"
 
-  # Patch to build system to allow for specific installation directories.
   patch :p0, :DATA
 
   def install
@@ -49,7 +48,6 @@ __END__
 -        [sip_files, os.path.join(configuration.pyqt_sip_dir, 'Qwt5')])
 +        [sip_files, os.path.join(options.sip_install_path, 'Qwt5')])
  
-     # designer
      if configuration.qt_version > 0x03ffff:
          plugin_source_path = os.path.join(
              os.pardir, 'qt4lib', 'PyQt4', 'uic', 'widget-plugins') 

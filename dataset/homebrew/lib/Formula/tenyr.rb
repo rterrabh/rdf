@@ -32,7 +32,6 @@ index c000640..289e4da 100644
 @@ -13,6 +13,7 @@
  int tdbg_error(YYLTYPE *locp, struct debugger_data *dd, const char *s);
 
- #define YYLEX_PARAM (dd->scanner)
 +void *yyscanner;
 
  %}
@@ -44,7 +43,6 @@ index 6eb4dd1..e3f23df 100644
 @@ -40,6 +40,7 @@ static int check_immediate_size(struct parse_data *pd, YYLTYPE *locp, uint32_t
          imm);
 
- #define YYLEX_PARAM (pd->scanner)
 +void *yyscanner;
 
  struct symbol *symbol_find(struct symbol_list *list, const char *name);

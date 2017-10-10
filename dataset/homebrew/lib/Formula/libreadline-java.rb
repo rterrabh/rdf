@@ -15,15 +15,11 @@ class LibreadlineJava < Formula
   depends_on "readline"
   depends_on :java => "1.6"
 
-  # Fix "non-void function should return a value"-Error
-  # https://sourceforge.net/tracker/?func=detail&atid=453822&aid=3566332&group_id=48669
   patch :DATA
 
   def install
     java_home = ENV["JAVA_HOME"]
 
-    # Current Oracle JDKs put the jni.h and jni_md.h in a different place than the
-    # original Apple/Sun JDK used to.
     if File.exist? "#{java_home}/include/jni.h"
       ENV["JAVAINCLUDE"] = "#{java_home}/include"
       ENV["JAVANATINC"]  = "#{java_home}/include/darwin"
@@ -32,9 +28,6 @@ class LibreadlineJava < Formula
       ENV["JAVANATINC"]  = "/System/Library/Frameworks/JavaVM.framework/Versions/Current/Headers/"
     end
 
-    # Take care of some hard-coded paths,
-    # adjust postfix of jni libraries,
-    # adjust gnu install parameters to bsd install
     inreplace "Makefile" do |s|
       s.change_make_var! "PREFIX", prefix
       s.change_make_var! "JAVALIBDIR", "$(PREFIX)/share/libreadline-java"
@@ -44,9 +37,6 @@ class LibreadlineJava < Formula
       s.gsub! "install -D", "install -c"
     end
 
-    # Take care of some hard-coded paths,
-    # adjust CC variable,
-    # adjust postfix of jni libraries
     inreplace "src/native/Makefile" do |s|
       readline = Formula["readline"]
       s.change_make_var! "INCLUDES", "-I $(JAVAINCLUDE) -I $(JAVANATINC) -I #{readline.opt_include}"
@@ -71,7 +61,6 @@ class LibreadlineJava < Formula
     EOS
   end
 
-  # Testing libreadline-java (can we execute and exit libreadline without exceptions?)
   test do
     assert /Exception/ !~ pipe_output("java -Djava.library.path=#{lib} -cp #{share}/libreadline-java/libreadline-java.jar test.ReadlineTest", "exit")
   end

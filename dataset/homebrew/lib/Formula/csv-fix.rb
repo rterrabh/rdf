@@ -7,8 +7,6 @@ class CsvFix < Formula
   needs :cxx11
 
   def install
-    # clang on Mt. Lion will try to build against libstdc++,
-    # despite -std=gnu++0x
     ENV.libcxx
 
     system "make", "lin"

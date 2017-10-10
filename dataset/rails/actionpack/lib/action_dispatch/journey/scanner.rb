@@ -34,7 +34,6 @@ module ActionDispatch
 
         def scan
           case
-            # /
           when text = @ss.scan(/\//)
             [:SLASH, text]
           when text = @ss.scan(/\*\w+/)
@@ -51,7 +50,6 @@ module ActionDispatch
             [:SYMBOL, text]
           when text = @ss.scan(/(?:[\w%\-~!$&'*+,;=@]|\\:|\\\(|\\\))+/)
             [:LITERAL, text.tr('\\', '')]
-            # any char
           when text = @ss.scan(/./)
             [:LITERAL, text]
           end

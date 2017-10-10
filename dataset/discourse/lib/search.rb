@@ -10,8 +10,6 @@ class Search
     50
   end
 
-  # Sometimes we want more topics than are returned due to exclusion of dupes. This is the
-  # factor of extra results we'll ask for.
   def self.burst_factor
     3
   end
@@ -21,11 +19,6 @@ class Search
   end
 
   def self.long_locale
-    # if adding a language see:
-    # /usr/share/postgresql/9.3/tsearch_data for possible options
-    # Do not add languages that are missing without amending the
-    # base docker config
-    #
     case SiteSetting.default_locale.to_sym
       when :da     then 'danish'
       when :de     then 'german'
@@ -52,7 +45,6 @@ class Search
               )', SiteSetting.default_locale).limit(10000)
 
     posts.each do |post|
-      # force indexing
       post.cooked += " "
       SearchObserver.index(post)
     end
@@ -65,7 +57,6 @@ class Search
               )', SiteSetting.default_locale).limit(10000)
 
     posts.each do |post|
-      # force indexing
       post.cooked += " "
       SearchObserver.index(post)
     end
@@ -75,7 +66,6 @@ class Search
 
   def self.prepare_data(search_data)
     data = search_data.squish
-    # TODO rmmseg is designed for chinese, we need something else for Korean / Japanese
     if ['zh_TW', 'zh_CN', 'ja', 'ko'].include?(SiteSetting.default_locale)
       unless defined? RMMSeg
         require 'rmmseg'
@@ -124,13 +114,11 @@ class Search
     self.new(term, opts).execute
   end
 
-  # Query a term
   def execute
     if @term.blank? || @term.length < (@opts[:min_search_term_length] || SiteSetting.min_search_term_length)
       return nil unless @filters.present?
     end
 
-    # If the term is a number or url to a topic, just include that topic
     if @opts[:search_for_id] && @results.type_filter == 'topic'
       if @term =~ /^\d+$/
         single_topic(@term.to_i)
@@ -287,7 +275,7 @@ class Search
 
       if @results.type_filter.present?
         raise Discourse::InvalidAccess.new("invalid type filter") unless Search.facets.include?(@results.type_filter)
-        #nodyna <ID:send-20> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-342> <SD COMPLEX (change-prone variables)>
         send("#{@results.type_filter}_search")
       else
         @limit = Search.per_facet + 1
@@ -301,11 +289,8 @@ class Search
       add_more_topics_if_expected
       @results
     rescue ActiveRecord::StatementInvalid
-      # In the event of a PG:Error return nothing, it is likely they used a foreign language whose
-      # locale is not supported by postgres
     end
 
-    # Add more topics if we expected them
     def add_more_topics_if_expected
       expected_topics = 0
       expected_topics = Search.facets.size unless @results.type_filter.present?
@@ -322,7 +307,6 @@ class Search
       end
     end
 
-    # If we're searching for a single topic
     def single_topic(id)
       post = Post.find_by(topic_id: id, post_number: 1)
       return nil unless @guardian.can_see?(post)
@@ -337,10 +321,6 @@ class Search
     end
 
     def category_search
-      # scope is leaking onto Category, this is not good and probably a bug in Rails
-      # the secure_category_ids will invoke the same method on User, it calls Category.where
-      # however the scope from the query below is leaking in to Category, this works around
-      # the issue while we figure out what is up in Rails
       secure_category_ids
 
       categories = Category.includes(:category_search_data)
@@ -403,15 +383,14 @@ class Search
 
       @filters.each do |block, match|
         if block.arity == 1
-          #nodyna <ID:instance_exec-1> <IEX COMPLEX (block with parameters)>
+          #nodyna <instance_exec-343> <IEX COMPLEX (block with parameters)>
           posts = instance_exec(posts, &block) || posts
         else
-          #nodyna <ID:instance_exec-2> <IEX COMPLEX (block with parameters)>
+          #nodyna <instance_exec-344> <IEX COMPLEX (block with parameters)>
           posts = instance_exec(posts, match, &block) || posts
         end
       end if @filters
 
-      # If we have a search context, prioritize those posts first
       if @search_context.present?
 
         if @search_context.is_a?(User)
@@ -501,7 +480,6 @@ class Search
         .group('topics.id')
         .to_sql
 
-      # double wrapping so we get correct row numbers
       post_sql = "SELECT *, row_number() over() row_number FROM (#{post_sql}) xxx"
 
       posts = Post.includes(:topic => :category)

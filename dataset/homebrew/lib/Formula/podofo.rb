@@ -13,7 +13,6 @@ class Podofo < Formula
 
   def install
     mkdir "build" do
-      # Build shared to simplify linking for other programs.
       system "cmake", "..",
                       "-DPODOFO_BUILD_SHARED:BOOL=TRUE",
                       "-DFREETYPE_INCLUDE_DIR_FT2BUILD=#{Formula["freetype"].include}/freetype2",

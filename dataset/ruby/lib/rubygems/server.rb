@@ -5,26 +5,6 @@ require 'erb'
 require 'rubygems'
 require 'rubygems/rdoc'
 
-##
-# Gem::Server and allows users to serve gems for consumption by
-# `gem --remote-install`.
-#
-# gem_server starts an HTTP server on the given port and serves the following:
-# * "/" - Browsing of gem spec files for installed gems
-# * "/specs.#{Gem.marshal_version}.gz" - specs name/version/platform index
-# * "/latest_specs.#{Gem.marshal_version}.gz" - latest specs
-#   name/version/platform index
-# * "/quick/" - Individual gemspecs
-# * "/gems" - Direct access to download the installable gems
-# * "/rdoc?q=" - Search for installed rdoc documentation
-#
-# == Usage
-#
-#   gem_server = Gem::Server.new Gem.dir, 8089, false
-#   gem_server.run
-#
-#--
-# TODO Refactor into a real WEBrick servlet to remove code duplication.
 
 class Gem::Server
 
@@ -128,7 +108,6 @@ class Gem::Server
   </html>
   DOC_TEMPLATE
 
-  # CSS is copy & paste from rdoc-style.css, RDoc V1.0.1 - 20041108
   RDOC_CSS = <<-RDOC_CSS
 body {
     font-family: Verdana,Arial,Helvetica,sans-serif;
@@ -499,9 +478,6 @@ div.method-source-code pre { color: #ffdead; overflow: hidden; }
     end
   end
 
-  ##
-  # Creates server sockets based on the addresses option.  If no addresses
-  # were given a server socket for all interfaces is created.
 
   def listen addresses = @addresses
     addresses = [nil] unless addresses
@@ -620,7 +596,6 @@ div.method-source-code pre { color: #ffdead; overflow: hidden; }
       deps = deps.sort_by { |dep| [dep["name"].downcase, dep["version"]] }
       deps.last["is_last"] = true unless deps.empty?
 
-      # executables
       executables = spec.executables.sort.collect { |exec| {"executable" => exec} }
       executables = nil if executables.empty?
       executables.last["is_last"] = true if executables
@@ -661,7 +636,6 @@ div.method-source-code pre { color: #ffdead; overflow: hidden; }
     specs = specs.sort_by { |spec| [spec["name"].downcase, spec["version"]] }
     specs.last["is_last"] = true
 
-    # tag all specs with first_name_entry
     last_spec = nil
     specs.each do |spec|
       is_first = last_spec.nil? || (last_spec["name"].downcase != spec["name"].downcase)
@@ -669,53 +643,18 @@ div.method-source-code pre { color: #ffdead; overflow: hidden; }
       last_spec = spec
     end
 
-    # create page from template
     template = ERB.new(DOC_TEMPLATE)
     res['content-type'] = 'text/html'
 
     values = { "gem_count" => specs.size.to_s, "specs" => specs,
                "total_file_count" => total_file_count.to_s }
 
-    # suppress 1.9.3dev warning about unused variable
     values = values
 
     result = template.result binding
     res.body = result
   end
 
-  ##
-  # Can be used for quick navigation to the rdoc documentation.  You can then
-  # define a search shortcut for your browser.  E.g. in Firefox connect
-  # 'shortcut:rdoc' to http://localhost:8808/rdoc?q=%s template. Then you can
-  # directly open the ActionPack documentation by typing 'rdoc actionp'. If
-  # there are multiple hits for the search term, they are presented as a list
-  # with links.
-  #
-  # Search algorithm aims for an intuitive search:
-  # 1. first try to find the gems and documentation folders which name
-  #    starts with the search term
-  # 2. search for entries, that *contain* the search term
-  # 3. show all the gems
-  #
-  # If there is only one search hit, user is immediately redirected to the
-  # documentation for the particular gem, otherwise a list with results is
-  # shown.
-  #
-  # === Additional trick - install documentation for Ruby core
-  #
-  # Note: please adjust paths accordingly use for example 'locate yaml.rb' and
-  # 'gem environment' to identify directories, that are specific for your
-  # local installation
-  #
-  # 1. install Ruby sources
-  #      cd /usr/src
-  #      sudo apt-get source ruby
-  #
-  # 2. generate documentation
-  #      rdoc -o /usr/lib/ruby/gems/1.8/doc/core/rdoc \
-  #        /usr/lib/ruby/1.8 ruby1.8-1.8.7.72
-  #
-  # By typing 'rdoc core' you can now access the core documentation
 
   def rdoc(req, res)
     query = req.query['q']
@@ -728,20 +667,11 @@ div.method-source-code pre { color: #ffdead; overflow: hidden; }
     res.body = template.result binding
   end
 
-  ##
-  # Updates the server to use the latest installed gems.
 
   def reset_gems # :nodoc:
     Gem::Specification.dirs = @gem_dirs
   end
 
-  ##
-  # Returns true and prepares http response, if rdoc for the requested gem
-  # name pattern was found.
-  #
-  # The search is based on the file system content, not on the gems metadata.
-  # This allows additional documentation folders like 'core' for the Ruby core
-  # documentation - just put it underneath the main doc folder.
 
   def show_rdoc_for_pattern(pattern, res)
     found_gems = Dir.glob("{#{@gem_dirs.join ','}}/doc/#{pattern}").select {|path|
@@ -858,7 +788,6 @@ div.method-source-code pre { color: #ffdead; overflow: hidden; }
   def launch
     listeners = @server.listeners.map{|l| l.addr[2] }
 
-    # TODO: 0.0.0.0 == any, not localhost.
     host = listeners.any?{|l| l == '0.0.0.0'} ? 'localhost' : listeners.first
 
     say "Launching browser to http://#{host}:#{@port}"

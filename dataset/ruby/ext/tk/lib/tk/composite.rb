@@ -1,6 +1,3 @@
-#
-# tk/composite.rb :
-#
 require 'tk'
 
 module TkComposite
@@ -33,54 +30,37 @@ module TkComposite
     klass = WidgetClassNames[self.class::WidgetClassName]
 
     if klass
-      # WidgetClassName is a known class
-      #if klass <= TkFrame || klass < TkComposite
       if klass <= TkFrame || klass < Tk::Frame || klass < TkComposite
-        # klass is valid for the base frame
         if self.class <= klass
-          # use my classname
           base_class_name = self.class.name
           if base_class_name == ''
-            # anonymous class -> use ancestor's name
             base_class_name = klass.name
           end
         else
-          # not subclass -> use WidgetClassName
           base_class_name = klass.name
         end
 
       else
-        # klass is invalid for the base frame
-        #if self.class < TkFrame || self.class.superclass < TkComposite
         if self.class < TkFrame || self.class.superclass < Tk::Frame || self.class.superclass < TkComposite
-          # my class name is valid for the base frame -> use my classname
           base_class_name = self.class.name
           if base_class_name == ''
-            # anonymous class -> use TkFrame
             base_class_name = nil
           end
         else
-          # no idea for the base frame -> use TkFrame
           base_class_name = nil
         end
       end
 
     elsif self.class::WidgetClassName && ! self.class::WidgetClassName.empty?
-      # unknown WidgetClassName is defined -> use it for the base frame
       base_class_name = self.class::WidgetClassName
 
     else
-      # no valid WidgetClassName
-      #if self.class < TkFrame || self.class.superclass < TkComposite
       if self.class < TkFrame || self.class.superclass < Tk::Frame || self.class.superclass < TkComposite
-        # my class name is valid for the base frame -> use my classname
         base_class_name = self.class.name
         if base_class_name == ''
-          # anonymous class -> use TkFrame
           base_class_name = nil
         end
       else
-        # no idea for the base frame -> use TkFrame
         base_class_name = nil
       end
     end
@@ -89,7 +69,6 @@ module TkComposite
   end
   private :_choice_classname_of_baseframe
 
-  # def initialize(parent=nil, *args)
   def initialize(*args)
     @delegates = {}
     @option_methods = {}
@@ -111,12 +90,8 @@ module TkComposite
     end
 
     if base_class_name
-      # @frame = Tk::Frame.new(parent, :class=>base_class_name)
-      # --> use current TkFrame class
       @frame = TkFrame.new(parent, :class=>base_class_name)
     else
-      # @frame = Tk::Frame.new(parent)
-      # --> use current TkFrame class
       @frame = TkFrame.new(parent)
     end
     @path = @epath = @frame.path
@@ -157,7 +132,6 @@ module TkComposite
 
   def option_methods(*opts)
     if opts.size == 1 && opts[0].kind_of?(Hash)
-      # {name => [m_set, m_cget, m_info], name => method} style
       opts[0].each{|name, arg|
         m_set, m_cget, m_info = _get_opt_method_list(arg)
         @option_methods[name.to_s] = {
@@ -165,7 +139,6 @@ module TkComposite
         }
       }
     else
-      # [m_set, m_cget, m_info] or method style
       opts.each{|arg|
         m_set, m_cget, m_info = _get_opt_method_list(arg)
         @option_methods[m_set] = {
@@ -222,7 +195,6 @@ module TkComposite
         opt, wins = tbl[-1]
         opt = slot if opt == 'DEFAULT'
         if wins && wins[-1]
-          # return wins[-1].cget(opt)
           return wins[-1].cget_strict(opt)
         end
       end

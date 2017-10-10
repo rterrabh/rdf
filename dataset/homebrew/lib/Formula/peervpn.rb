@@ -24,7 +24,6 @@ class Peervpn < Formula
 
   def caveats; <<-EOS.undent
     To configure PeerVPN, edit:
-      #{etc}/peervpn.conf
     EOS
   end
 
@@ -39,9 +38,6 @@ index 209666a..0a6c2cf 100644
 --- a/platform/io.c
 +++ b/platform/io.c
 @@ -24,6 +24,16 @@
- #if defined(__FreeBSD__)
- #define IO_BSD
- #elif defined(__APPLE__)
 +size_t strnlen(const char *s, size_t maxlen)
 +{
 +        size_t len;
@@ -52,6 +48,3 @@ index 209666a..0a6c2cf 100644
 +        }
 +        return (len);
 +}
- #define IO_BSD
- #define IO_USE_SELECT
- #elif defined(WIN32)

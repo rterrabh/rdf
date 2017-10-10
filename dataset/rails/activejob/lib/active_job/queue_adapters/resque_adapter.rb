@@ -14,17 +14,6 @@ end
 
 module ActiveJob
   module QueueAdapters
-    # == Resque adapter for Active Job
-    #
-    # Resque (pronounced like "rescue") is a Redis-backed library for creating
-    # background jobs, placing those jobs on multiple queues, and processing
-    # them later.
-    #
-    # Read more about Resque {here}[https://github.com/resque/resque].
-    #
-    # To use Resque set the queue_adapter config to +:resque+.
-    #
-    #   Rails.application.config.active_job.queue_adapter = :resque
     class ResqueAdapter
       class << self
         def enqueue(job) #:nodoc:

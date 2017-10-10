@@ -29,7 +29,6 @@ class Admin::GroupsController < Admin::AdminController
   def update
     group = Group.find(params[:id])
 
-    # group rename is ignored for automatic groups
     group.name = params[:name] if params[:name] && !group.automatic
     save_group(group)
   end

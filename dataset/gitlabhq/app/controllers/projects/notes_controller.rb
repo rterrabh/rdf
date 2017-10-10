@@ -1,5 +1,4 @@
 class Projects::NotesController < Projects::ApplicationController
-  # Authorize
   before_action :authorize_read_note!
   before_action :authorize_create_note!, only: [:create]
   before_action :authorize_admin_note!, only: [:update, :destroy]

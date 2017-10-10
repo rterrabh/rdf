@@ -13,6 +13,7 @@ module RSS
       end
 
       def self.install_image_item(klass)
+        #nodyna <module_eval-2060> <not yet classified>
         klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           class ImageItem < ImageItemBase
             DublinCoreModel.install_dublin_core(self)
@@ -57,6 +58,7 @@ EOC
       end
 
       def self.install_image_favicon(klass)
+        #nodyna <module_eval-2061> <not yet classified>
         klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           class ImageFavicon < ImageFaviconBase
             DublinCoreModel.install_dublin_core(self)
@@ -95,6 +97,7 @@ EOC
     end
 
     makers.each do |maker|
+      #nodyna <module_eval-2062> <not yet classified>
       maker.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         class Channel
           ImageFaviconModel.install_image_favicon(self)

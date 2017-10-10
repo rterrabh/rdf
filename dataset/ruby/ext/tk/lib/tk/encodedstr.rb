@@ -1,17 +1,10 @@
-#
-# tk/encodedstr.rb : Tk::EncodedString class
-#
 require 'tk'
 
-###########################################
-#  string with Tcl's encoding
-###########################################
 module Tk
   class EncodedString < String
     Encoding = nil
 
     def self.subst_utf_backslash(str)
-      # str.gsub(/\\u([0-9A-Fa-f]{1,4})/){[$1.hex].pack('U')}
       TclTkLib._subst_UTF_backslash(str)
     end
     def self.utf_backslash(str)
@@ -67,9 +60,6 @@ module Tk
 
     def initialize(str, enc = nil)
       super(str)
-      # @encoding = ( enc ||
-      #              ((self.class::Encoding)?
-      #                  self.class::Encoding : Tk.encoding_system) )
       enc ||= (self.class::Encoding)?
                          self.class::Encoding :
                          ((Tk.encoding)? Tk.encoding : Tk.encoding_system)
@@ -97,12 +87,15 @@ module Tk
     end
 
     if TkCore::WITH_ENCODING
-      # wrapper methods for compatibility
+      #nodyna <instance_variable_get-1845> <not yet classified>
       alias __instance_variable_get instance_variable_get
+      #nodyna <instance_variable_set-1846> <not yet classified>
       alias __instance_variable_set instance_variable_set
+      #nodyna <instance_eval-1847> <not yet classified>
       alias __instance_eval         instance_eval
       alias __instance_variables    instance_variables
 
+      #nodyna <instance_variable_get-1848> <not yet classified>
       def instance_variable_get(key)
         if (key.to_s == '@encoding')
           self.encoding
@@ -111,6 +104,7 @@ module Tk
         end
       end
 
+      #nodyna <instance_variable_set-1849> <not yet classified>
       def instance_variable_set(key, value)
         if (key.to_s == '@encoding')
           if value
@@ -124,6 +118,7 @@ module Tk
         end
       end
 
+      #nodyna <instance_eval-1850> <not yet classified>
       def instance_eval(*args, &b)
         old_enc = @encoding = self.encoding
 
@@ -131,17 +126,14 @@ module Tk
 
         if @encoding
           if @encoding != old_enc
-            # modified by user
             self.force_encoding(@encoding)
           end
           remove_instance_variable(:@encoding)
         else
           begin
             remove_instance_variable(:@encoding)
-            # user sets to nil -> use current default
             self.force_encoding(Tk.encoding)
           rescue NameError
-            # removed by user -> ignore, because user don't use @encoding
           end
         end
         ret
@@ -154,20 +146,12 @@ module Tk
       ret
     end
   end
-  # def Tk.EncodedString(str, enc = nil)
-  #   Tk::EncodedString.new(str, enc)
-  # end
 
-  ##################################
 
   class BinaryString < EncodedString
     Encoding = 'binary'.freeze
   end
-  # def Tk.BinaryString(str)
-  #   Tk::BinaryString.new(str)
-  # end
 
-  ##################################
 
   class UTF8_String < EncodedString
     Encoding = 'utf-8'.freeze
@@ -180,8 +164,5 @@ module Tk
     end
     alias to_backslash to_backslash_sequence
   end
-  # def Tk.UTF8_String(str)
-  #   Tk::UTF8_String.new(str)
-  # end
 
 end

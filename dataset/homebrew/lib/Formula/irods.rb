@@ -23,14 +23,12 @@ class Irods < Formula
     cd "iRODS" do
       system "./scripts/configure"
 
-      # include PAM authentication by default
       inreplace "config/config.mk", "# PAM_AUTH = 1", "PAM_AUTH = 1"
       inreplace "config/config.mk", "# USE_SSL = 1", "USE_SSL = 1"
 
       system "make"
       bin.install Dir["clients/icommands/bin/*"].select { |f| File.executable? f }
 
-      # patch in order to use osxfuse
       if build.with? "osxfuse"
         inreplace "config/config.mk" do |s|
           s.gsub! "# IRODS_FS = 1", "IRODS_FS = 1"

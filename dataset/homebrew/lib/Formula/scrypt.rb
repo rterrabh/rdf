@@ -20,13 +20,14 @@ class Scrypt < Formula
 
   test do
     (testpath/"test.sh").write <<-EOS.undent
-      #!/usr/bin/expect -f
       set timeout -1
       spawn #{bin}/scrypt enc homebrew.txt homebrew.txt.enc
       expect -exact "Please enter passphrase: "
+      #nodyna <send-566> <not yet classified>
       send -- "Testing\n"
       expect -exact "\r
       Please confirm passphrase: "
+      #nodyna <send-567> <not yet classified>
       send -- "Testing\n"
       expect eof
     EOS

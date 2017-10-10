@@ -24,7 +24,6 @@ class Ctorrent < Formula
     agent_string = "Enhanced-CTorrent/dnh#{version}"
     test_url     = "http://example.com/test"
 
-    # Arbitrary content
     (testpath/"test").write "Test\n"
 
     system "#{bin}/ctorrent", "-tpu", test_url, "-s", "test.meta", "test"

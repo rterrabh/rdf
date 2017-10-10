@@ -4,9 +4,6 @@ class Mcpp < Formula
   url "https://downloads.sourceforge.net/project/mcpp/mcpp/V.2.7.2/mcpp-2.7.2.tar.gz"
   sha256 "3b9b4421888519876c4fc68ade324a3bbd81ceeb7092ecdbbc2055099fcb8864"
 
-  # stpcpy is a macro on OS X; trying to define it as an extern is invalid.
-  # Patch from ZeroC fixing EOL comment parsing
-  # http://www.zeroc.com/forums/bug-reports/5309-mishap-slice-compilers.html#post23231
   patch :DATA
 
   def install
@@ -32,13 +29,10 @@ index 5e1c19f..39aff8c 100644
  
  /* main.c   */
 @@ -557,6 +559,6 @@ extern void     init_system( void);
- #endif
- #endif
  
 -#if HOST_HAVE_STPCPY
 +#if HOST_HAVE_STPCPY && !defined(stpcpy)
  extern char *   stpcpy( char * dest, const char * src);
- #endif
 diff --git a/src/main.c b/src/main.c
 index a438894..8da4b58 100644
 --- a/src/main.c
@@ -113,7 +107,6 @@ index 4759469..4e008fa 100644
      fullname = set_fname( fullname);    /* Search or append to fnamelist[]  */
 @@ -3858,6 +3884,9 @@ static int  chk_dirp(
  }
- #endif
  
 +FILEINFO*       sh_file;
 +int             sh_line;

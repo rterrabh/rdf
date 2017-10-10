@@ -1,6 +1,4 @@
 module ActiveAdmin
-  # This is a container for resources, which acts much like a Hash.
-  # It's assumed that an added resource responds to `resource_name`.
   class ResourceCollection
     include Enumerable
     extend Forwardable
@@ -19,7 +17,6 @@ module ActiveAdmin
       end
     end
 
-    # Changes `each` to pass in the value, instead of both the key and value.
     def each(&block)
       values.each &block
     end
@@ -30,7 +27,6 @@ module ActiveAdmin
 
     private
 
-    # Finds a resource based on the resource name, resource class, or base class.
     def find_resource(obj)
       resources.detect do |r|
         r.resource_name.to_s == obj.to_s || r.resource_class.to_s == obj.to_s

@@ -7,12 +7,10 @@ module Spree
         Spree::Backend::Config = Spree::BackendConfiguration.new
       end
 
-      # filter sensitive information during logging
       initializer "spree.params.filter" do |app|
         app.config.filter_parameters += [:password, :password_confirmation, :number]
       end
 
-      # sets the manifests / assets to be precompiled, even when initialize_on_precompile is false
       initializer "spree.assets.precompile", :group => :all do |app|
         app.config.assets.paths << "#{Rails.root}/app/assets/fonts"
         app.config.assets.precompile << /\.(?:svg|eot|woff|ttf)$/

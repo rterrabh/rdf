@@ -12,7 +12,6 @@ class WildflyAs < Formula
 
   def caveats; <<-EOS.undent
     The home of WildFly Application Server 9 is:
-      #{opt_libexec}
     You may want to add the following to your .bash_profile:
       export JBOSS_HOME=#{opt_libexec}
       export PATH=${PATH}:${JBOSS_HOME}/bin

@@ -18,9 +18,7 @@ class Autoconf < Formula
   def install
     ENV["PERL"] = "/usr/bin/perl"
 
-    # force autoreconf to look for and use our glibtoolize
     inreplace "bin/autoreconf.in", "libtoolize", "glibtoolize"
-    # also touch the man page so that it isn't rebuilt
     inreplace "man/autoreconf.1", "libtoolize", "glibtoolize"
     system "./configure", "--prefix=#{prefix}"
     system "make", "install"

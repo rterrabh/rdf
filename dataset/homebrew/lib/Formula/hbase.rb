@@ -19,7 +19,6 @@ class Hbase < Formula
 
   def caveats; <<-EOS.undent
     You must edit the configs in:
-      #{libexec}/conf
     to reflect your environment.
 
     For more details:

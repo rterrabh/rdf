@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 class RelayableRetraction < SignedRetraction
   xml_name :relayable_retraction
   xml_attr :parent_author_signature
@@ -13,8 +10,6 @@ class RelayableRetraction < SignedRetraction
     super - ['parent_author_signature']
   end
 
-  # @param sender [User]
-  # @param target [Object]
   def self.build(sender, target)
     retraction = super
     retraction.parent_author_signature = retraction.sign_with_key(sender.encryption_key) if defined?(target.parent) && sender.person == target.parent.author
@@ -32,7 +27,6 @@ class RelayableRetraction < SignedRetraction
   def perform receiving_user
     logger.debug "Performing relayable retraction for #{target_guid}"
     if not self.parent_author_signature.nil? or self.parent.author.remote?
-      # Don't destroy a relayable unless the top-level owner has received it, otherwise it may not get relayed
       self.target.destroy
       logger.info "event=relayable_retraction status=complete target_type=#{target_type} guid=#{target_guid}"
     end
@@ -44,12 +38,10 @@ class RelayableRetraction < SignedRetraction
                   "target_guid=#{target_guid}"
       return
     elsif self.parent.author == recipient.person && self.target_author_signature_valid?
-      #this is a retraction from the downstream object creator, and the recipient is the upstream owner
       self.parent_author_signature = self.sign_with_key(recipient.encryption_key)
       Postzord::Dispatcher.build(recipient, self).post
       self.perform(recipient)
     elsif self.parent_author_signature_valid?
-      #this is a retraction from the upstream owner
       self.perform(recipient)
     else
       logger.warn "event=receive status=abort reason='object signature not valid' " \

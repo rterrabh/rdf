@@ -3,16 +3,15 @@ require 'active_support/deprecation/proxy_wrappers'
 module Rails
   class DeprecatedConstant < ActiveSupport::Deprecation::DeprecatedConstantProxy
     def self.deprecate(old, current)
-      # double assignment is used to avoid "assigned but unused variable" warning
       constant = constant = new(old, current)
-      #nodyna <ID:eval-5> <EV COMPLEX (variable definition)>
+      #nodyna <eval-1167> <EV COMPLEX (variable definition)>
       eval "::#{old} = constant"
     end
 
     private
 
     def target
-      #nodyna <ID:eval-6> <EV COMPLEX (change-prone variables)>
+      #nodyna <eval-1168> <EV COMPLEX (change-prone variables)>
       ::Kernel.eval @new_const.to_s
     end
   end

@@ -8,18 +8,14 @@ class Kestrel < Formula
     inreplace "scripts/kestrel.sh" do |s|
       s.change_make_var! "APP_HOME", libexec
 
-      # Fix var paths.
       s.gsub! "/var/", "/#{var}/"
 
-      # Fix path to script in help message.
       s.gsub! "Usage: /etc/init.d/${APP_NAME}.sh", "Usage: kestrel"
 
-      # Don't call ulimit as not root.
       s.gsub! "ulimit -", "# ulimit -"
     end
 
     inreplace "config/production.scala" do |s|
-      # Fix var paths.
       s.gsub! "/var/", "/#{var}/"
     end
 
@@ -32,7 +28,6 @@ class Kestrel < Formula
     (var/"spool/kestrel").mkpath
 
     (bin/"kestrel").write <<-EOS.undent
-      #!/bin/bash
       exec "#{libexec}/scripts/kestrel.sh" "$@"
     EOS
   end

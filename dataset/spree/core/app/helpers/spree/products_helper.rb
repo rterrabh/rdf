@@ -1,6 +1,5 @@
 module Spree
   module ProductsHelper
-    # returns the formatted price for the specified variant as a full price or a difference depending on configuration
     def variant_price(variant)
       if Spree::Config[:show_variant_full_price]
         variant_full_price(variant)
@@ -9,7 +8,6 @@ module Spree
       end
     end
 
-    # returns the formatted price for the specified variant as a difference from product price
     def variant_price_diff(variant)
       variant_amount = variant.amount_in(current_currency)
       product_amount = variant.product.amount_in(current_currency)
@@ -20,7 +18,6 @@ module Spree
       "(#{Spree.t(label)}: #{amount})".html_safe
     end
 
-    # returns the formatted full price for the variant, if at least one variant price differs from product price
     def variant_full_price(variant)
       product = variant.product
       unless product.variants.active(current_currency).all? { |v| v.price == product.price }
@@ -28,7 +25,6 @@ module Spree
       end
     end
 
-    # converts line breaks in product description into <p> tags (for html display purposes)
     def product_description(product)
       if Spree::Config[:show_raw_product_description]
         raw(product.description)

@@ -1,26 +1,16 @@
-#
-#  BLT support
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/variable'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/blt/setup.rb'
 
-# load all image format handlers
-#TkPackage.require('BLT', '2.4')
 TkPackage.require('BLT')
 
 module Tk
   module BLT
     TkComm::TkExtlibAutoloadModule.unshift(self)
-    # Require autoload-symbols which is a same name as widget classname.
-    # Those are used at  TkComm._genobj_for_tkwidget method.
 
     extend TkCore
 
@@ -54,7 +44,6 @@ module Tk
       end
     end
 
-    ####################################################
 
     def self.beep(percent = 50)
       tk_call('::blt::beep', percent)
@@ -109,7 +98,6 @@ module Tk
       tk_call_without_enc('::blt::crc32', '-data', dat)
     end
 
-    ####################################################
 
     def self.active_legend(graph)
       tk_call_without_enc('Blt_ActiveLegend', graph)
@@ -150,7 +138,6 @@ module Tk
       end
     end
 
-    ####################################################
 
     autoload :PlotComponent,'tkextlib/blt/component.rb'
 
@@ -173,17 +160,14 @@ module Tk
     autoload :Tree,         'tkextlib/blt/tree.rb'
     autoload :TreeView,     'tkextlib/blt/treeview.rb'
     autoload :Hiertable,    'tkextlib/blt/treeview.rb'
-    # Hierbox is obsolete
     autoload :Vector,       'tkextlib/blt/vector.rb'
     autoload :VectorAccess, 'tkextlib/blt/vector.rb'
     autoload :Watch,        'tkextlib/blt/watch.rb'
     autoload :Winop,        'tkextlib/blt/winop.rb'
     autoload :WinOp,        'tkextlib/blt/winop.rb'
 
-    # Unix only
     autoload :DnD,          'tkextlib/blt/unix_dnd.rb'
 
-    # Windows only
     autoload :Printer,      'tkextlib/blt/win_printer.rb'
   end
 end

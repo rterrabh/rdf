@@ -23,7 +23,6 @@ class InstallTests < Homebrew::TestCase
       keg.unlink
       keg.uninstall
       formula.clear_cache
-      # there will be log files when sandbox is enable.
       formula.logs.rmtree if formula.logs.directory?
     end
 
@@ -33,7 +32,6 @@ class InstallTests < Homebrew::TestCase
 
   def test_a_basic_install
     temporary_install(Testball.new) do |f|
-      # Test that things made it into the Keg
       assert_predicate f.bin, :directory?
       assert_equal 3, f.bin.children.length
 
@@ -42,7 +40,6 @@ class InstallTests < Homebrew::TestCase
 
       refute_predicate f.prefix+"main.c", :exist?
 
-      # Test that things make it into the Cellar
       keg = Keg.new f.prefix
       keg.link
 

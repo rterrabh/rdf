@@ -21,9 +21,6 @@ class Src < Formula
   depends_on "rcs"
 
   def install
-    # OSX doesn't provide a /usr/bin/python2. Upstream has been notified but
-    # cannot fix the issue. See:
-    #   https://github.com/Homebrew/homebrew/pull/34165#discussion_r22342214
     inreplace "src", "#!/usr/bin/env python2", "#!/usr/bin/env python"
 
     ENV["XML_CATALOG_FILES"] = "#{etc}/xml/catalog" if build.head?

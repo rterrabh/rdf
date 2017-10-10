@@ -1,5 +1,3 @@
-# encoding: utf-8
-# source: https://github.com/svenfuchs/i18n/blob/master/test/test_data/locales/plurals.rb
 
 {
   :af => { :i18n => { :plural => { :keys => [:one, :other], :rule => lambda { |n| n == 1 ? :one : :other } } } },

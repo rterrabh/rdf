@@ -1,4 +1,3 @@
-# Searches for a user by username or full text or name (if enabled in SiteSettings)
 class UserSearch
 
   def initialize(term, opts={})
@@ -17,7 +16,6 @@ class UserSearch
       users = users.not_suspended
     end
 
-    # Only show users who have access to private topic
     if @topic_id && @topic_allowed_users == "true"
       topic = Topic.find_by(id: @topic_id)
 
@@ -53,7 +51,6 @@ class UserSearch
   def search_ids
     users = Set.new
 
-    # 1. exact username matches
     if @term.present?
       scoped_users.where(username_lower: @term.downcase)
                   .pluck(:id)
@@ -63,7 +60,6 @@ class UserSearch
 
     return users.to_a if users.length == @limit
 
-    # 2. in topic
     if @topic_id
       filtered_by_term_users.where('users.id in (SELECT p.user_id FROM posts p WHERE topic_id = ?)', @topic_id)
                             .order('last_seen_at DESC')
@@ -74,7 +70,6 @@ class UserSearch
 
     return users.to_a if users.length == @limit
 
-    # 3. global matches
     filtered_by_term_users.order('last_seen_at DESC')
                             .limit(@limit - users.length)
                             .pluck(:id)

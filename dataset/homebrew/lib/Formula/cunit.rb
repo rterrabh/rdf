@@ -23,9 +23,6 @@ class Cunit < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <string.h>
-      #include "CUnit/Basic.h"
 
       int noop(void) { return 0; }
 

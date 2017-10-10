@@ -4,7 +4,6 @@ class NotesFinder
   def execute(project, current_user, params)
     target_type = params[:target_type]
     target_id   = params[:target_id]
-    # Default to 0 to remain compatible with old clients
     last_fetched_at = Time.at(params.fetch(:last_fetched_at, 0).to_i)
 
     notes =
@@ -21,7 +20,6 @@ class NotesFinder
         raise 'invalid target_type'
       end
 
-    # Use overlapping intervals to avoid worrying about race conditions
     notes.where('updated_at > ?', last_fetched_at - FETCH_OVERLAP).fresh
   end
 end

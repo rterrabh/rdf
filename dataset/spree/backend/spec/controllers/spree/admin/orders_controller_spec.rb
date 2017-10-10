@@ -2,7 +2,6 @@ require 'spec_helper'
 require 'cancan'
 require 'spree/testing_support/bar_ability'
 
-# Ability to test access to specific model instances
 class OrderSpecificAbility
   include CanCan::Ability
 
@@ -19,7 +18,6 @@ describe Spree::Admin::OrdersController, type: :controller do
     before do
       request.env["HTTP_REFERER"] = "http://localhost:3000"
 
-      # ensure no respond_overrides are in effect
       if Spree::BaseController.spree_responders[:OrdersController].present?
         Spree::BaseController.spree_responders[:OrdersController].clear
       end
@@ -74,7 +72,6 @@ describe Spree::Admin::OrdersController, type: :controller do
       end
     end
 
-    # Test for #3346
     context "#new" do
       it "a new order has the current user assigned as a creator" do
         spree_get :new
@@ -82,7 +79,6 @@ describe Spree::Admin::OrdersController, type: :controller do
       end
     end
 
-    # Regression test for #3684
     context "#edit" do
       it "does not refresh rates if the order is completed" do
         allow(order).to receive_messages completed?: true
@@ -97,7 +93,6 @@ describe Spree::Admin::OrdersController, type: :controller do
       end
     end
 
-    # Test for #3919
     context "search" do
       let(:user) { create(:user) }
 

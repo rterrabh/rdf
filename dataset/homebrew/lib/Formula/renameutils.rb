@@ -14,12 +14,6 @@ class Renameutils < Formula
   depends_on "readline" # Use instead of system libedit
   depends_on "coreutils"
 
-  # Use the GNU versions of certain system utilities. See:
-  # https://trac.macports.org/ticket/24525
-  # Patches rewritten at version 0.12.0 to handle file changes.
-  # The fourth patch is new and fixes a Makefile syntax error that causes
-  # make install to fail.  Reported upstream via email and fixed in HEAD.
-  # Remove patch #4 at version > 0.12.0.  The first three should persist.
   patch :DATA
 
   def install
@@ -56,8 +50,6 @@ __END__
 --- a/src/icmd.c
 +++ b/src/icmd.c
 @@ -45,8 +45,8 @@
- #include "common/string-utils.h"
- #include "common/common.h"
  
 -#define MV_COMMAND "mv"
 -#define CP_COMMAND "cp"

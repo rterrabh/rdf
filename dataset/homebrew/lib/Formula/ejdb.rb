@@ -24,7 +24,6 @@ class Ejdb < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <ejdb/ejdb.h>
 
       static EJDB *jb;
       int main() {

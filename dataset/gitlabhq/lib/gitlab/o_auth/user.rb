@@ -1,8 +1,3 @@
-# OAuth extension for User model
-#
-# * Find GitLab user based on omniauth uid and provider
-# * Create new user from omniauth data
-#
 module Gitlab
   module OAuth
     class SignupDisabledError < StandardError; end
@@ -62,13 +57,9 @@ module Gitlab
       def find_or_create_ldap_user
         return unless ldap_person
 
-        # If a corresponding person exists with same uid in a LDAP server,
-        # set up a Gitlab user with dual LDAP and Omniauth identities.
         if user = Gitlab::LDAP::User.find_by_uid_and_provider(ldap_person.dn.downcase, ldap_person.provider)
-          # Case when a LDAP user already exists in Gitlab. Add the Omniauth identity to existing account.
           user.identities.build(extern_uid: auth_hash.uid, provider: auth_hash.provider)
         else
-          # No account in Gitlab yet: create it and add the LDAP identity
           user = build_new_user
           user.identities.new(provider: ldap_person.provider, extern_uid: ldap_person.dn)
         end
@@ -87,7 +78,6 @@ module Gitlab
       def ldap_person
         return @ldap_person if defined?(@ldap_person)
 
-        # Look for a corresponding person with same uid in any of the configured LDAP providers
         Gitlab::LDAP::Config.providers.each do |provider|
           adapter = Gitlab::LDAP::Adapter.new(provider)
           @ldap_person = Gitlab::LDAP::Person.find_by_uid(auth_hash.uid, adapter)
@@ -133,7 +123,6 @@ module Gitlab
       end
 
       def user_attributes
-        # Give preference to LDAP for sensitive information when creating a linked account
         if creating_linked_ldap_user?
           username = ldap_person.username
           email = ldap_person.email.first

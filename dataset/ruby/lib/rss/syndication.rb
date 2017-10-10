@@ -1,9 +1,7 @@
 require "rss/1.0"
 
 module RSS
-  # The prefix for the Syndication XML namespace.
   SY_PREFIX = 'sy'
-  # The URI of the Syndication specification.
   SY_URI = "http://purl.org/rss/1.0/modules/syndication/"
 
   RDF.install_ns(SY_PREFIX, SY_URI)
@@ -18,6 +16,7 @@ module RSS
       super
 
       klass.install_must_call_validator(SY_PREFIX, SY_URI)
+      #nodyna <module_eval-2094> <not yet classified>
       klass.module_eval do
         [
           ["updatePeriod"],
@@ -35,6 +34,7 @@ module RSS
         end
       end
 
+      #nodyna <module_eval-2095> <not yet classified>
       klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         alias_method(:_sy_updatePeriod=, :sy_updatePeriod=)
         def sy_updatePeriod=(new_value)

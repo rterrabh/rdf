@@ -19,20 +19,15 @@ module Spree
         handle_payment_preconditions { process_authorization }
       end
 
-      # Captures the entire amount of a payment.
       def purchase!
         handle_payment_preconditions { process_purchase }
       end
 
-      # Takes the amount in cents to capture.
-      # Can be used to capture partial amounts of a payment, and will create
-      # a new pending payment record for the remaining amount to capture later.
       def capture!(amount = nil)
         return true if completed?
         amount ||= money.money.cents
         started_processing!
         protect_from_connection_error do
-          # Standard ActiveMerchant capture usage
           response = payment_method.capture(
             amount,
             response_code,
@@ -50,11 +45,8 @@ module Spree
         protect_from_connection_error do
 
           if payment_method.payment_profiles_supported?
-            # Gateways supporting payment profiles will need access to credit card object because this stores the payment profile information
-            # so supply the authorization itself as well as the credit card, rather than just the authorization code
             response = payment_method.void(self.response_code, source, gateway_options)
           else
-            # Standard ActiveMerchant void usage
             response = payment_method.void(self.response_code, gateway_options)
           end
           record_response(response)
@@ -88,7 +80,6 @@ module Spree
       def process_purchase
         started_processing!
         result = gateway_action(source, :purchase, :complete)
-        # This won't be called if gateway_action raises a GatewayError
         capture_events.create!(amount: amount)
       end
 
@@ -115,7 +106,7 @@ module Spree
 
       def gateway_action(source, action, success_state)
         protect_from_connection_error do
-          #nodyna <ID:send-97> <SD MODERATE (change-prone variables)>
+          #nodyna <send-2516> <SD MODERATE (change-prone variables)>
           response = payment_method.send(action, money.money.cents,
                                          source,
                                          gateway_options)
@@ -136,10 +127,10 @@ module Spree
               self.cvv_response_message = response.cvv_result['message']
             end
           end
-          #nodyna <ID:send-98> <SD MODERATE (change-prone variables)>
+          #nodyna <send-2517> <SD MODERATE (change-prone variables)>
           self.send("#{success_state}!")
         else
-          #nodyna <ID:send-99> <SD MODERATE (change-prone variables)>
+          #nodyna <send-2518> <SD MODERATE (change-prone variables)>
           self.send(failure_state)
           gateway_error(response)
         end

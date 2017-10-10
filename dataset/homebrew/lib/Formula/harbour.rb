@@ -17,8 +17,6 @@ class Harbour < Formula
   depends_on "pcre"
   depends_on :x11 => :optional
 
-  # Missing a header that was deprecated by libcurl @ version 7.12.0 and
-  # deleted sometime after Harbour 3.0.0 release.
   stable do
     patch :DATA
   end
@@ -58,7 +56,6 @@ index 00caaa8..53618ed 100644
 @@ -53,8 +53,12 @@
   */
 
- #include <curl/curl.h>
 -#include <curl/types.h>
 -#include <curl/easy.h>
 +#if LIBCURL_VERSION_NUM < 0x070A03
@@ -68,5 +65,3 @@ index 00caaa8..53618ed 100644
 +#  include <curl/types.h>
 +#endif
 
- #include "hbapi.h"
- #include "hbapiitm.h"

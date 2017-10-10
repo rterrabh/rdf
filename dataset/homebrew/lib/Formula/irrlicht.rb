@@ -5,7 +5,6 @@ class Irrlicht < Formula
   url "https://downloads.sourceforge.net/irrlicht/irrlicht-1.8.1.zip"
   sha256 "814bb90116d5429449ba1d169e2cbff881c473b7eada4c2447132bc4f4a6e97b"
 
-  # may be removed when https://sourceforge.net/p/irrlicht/patches/297/ applied
   head do
     patch do
       url "https://gist.githubusercontent.com/neoascetic/7487c936a3c5858ad762/raw/4f572fdca4cd7a3ae4bb3893d50821cee48e3236/trunk.diff"

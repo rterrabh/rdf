@@ -1,25 +1,12 @@
-##
-# Specifies a Specification object that should be activated.  Also contains a
-# dependency that was used to introduce this activation.
 
 class Gem::Resolver::ActivationRequest
 
-  ##
-  # The parent request for this activation request.
 
   attr_reader :request
 
-  ##
-  # The specification to be activated.
 
   attr_reader :spec
 
-  ##
-  # Creates a new ActivationRequest that will activate +spec+.  The parent
-  # +request+ is used to provide diagnostics in case of conflicts.
-  #
-  # +others_possible+ indicates that other specifications may also match this
-  # activation request.
 
   def initialize spec, request, others_possible = true
     @spec = spec
@@ -38,15 +25,11 @@ class Gem::Resolver::ActivationRequest
     end
   end
 
-  ##
-  # Is this activation request for a development dependency?
 
   def development?
     @request.development?
   end
 
-  ##
-  # Downloads a gem at +path+ and returns the file path.
 
   def download path
     if @spec.respond_to? :source
@@ -60,15 +43,11 @@ class Gem::Resolver::ActivationRequest
     source.download full_spec, path
   end
 
-  ##
-  # The full name of the specification to be activated.
 
   def full_name
     @spec.full_name
   end
 
-  ##
-  # The Gem::Specification for this activation request.
 
   def full_spec
     Gem::Specification === @spec ? @spec : @spec.spec
@@ -93,8 +72,6 @@ class Gem::Resolver::ActivationRequest
     ]
   end
 
-  ##
-  # True if the requested gem has already been installed.
 
   def installed?
     case @spec
@@ -109,16 +86,11 @@ class Gem::Resolver::ActivationRequest
     end
   end
 
-  ##
-  # The name of this activation request's specification
 
   def name
     @spec.name
   end
 
-  ##
-  # Indicate if this activation is one of a set of possible
-  # requests for the same Dependency request.
 
   def others_possible?
     case @others_possible
@@ -129,9 +101,6 @@ class Gem::Resolver::ActivationRequest
     end
   end
 
-  ##
-  # Return the ActivationRequest that contained the dependency
-  # that we were activated for.
 
   def parent
     @request.requester
@@ -161,8 +130,6 @@ class Gem::Resolver::ActivationRequest
     end
   end
 
-  ##
-  # The version of this activation request's specification
 
   def version
     @spec.version

@@ -15,7 +15,6 @@ class LanguageModuleRequirement < Requirement
   def message; <<-EOS.undent
     Unsatisfied dependency: #{@module_name}
     Homebrew does not provide #{@language.to_s.capitalize} dependencies; install with:
-      #{command_line} #{@module_name}
     EOS
   end
 

@@ -21,7 +21,6 @@ class Pushpin < Formula
   depends_on "mongrel2"
   depends_on "zurl"
 
-  # MacOS versions prior to Yosemite need the latest setuptools in order to compile dependencies
   resource "setuptools" do
     url "https://pypi.python.org/packages/source/s/setuptools/setuptools-17.0.tar.gz"
     sha256 "561b33819ef3da2bff89cc8b05fd9b5ea3caeb31ad588b53fdf06f886ac3d200"

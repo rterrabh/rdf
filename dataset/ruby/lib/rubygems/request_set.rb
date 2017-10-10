@@ -1,24 +1,10 @@
 require 'tsort'
 
-##
-# A RequestSet groups a request to activate a set of dependencies.
-#
-#   nokogiri = Gem::Dependency.new 'nokogiri', '~> 1.6'
-#   pg = Gem::Dependency.new 'pg', '~> 0.14'
-#
-#   set = Gem::RequestSet.new nokogiri, pg
-#
-#   requests = set.resolve
-#
-#   p requests.map { |r| r.full_name }
-#   #=> ["nokogiri-1.6.0", "mini_portile-0.5.1", "pg-0.17.0"]
 
 class Gem::RequestSet
 
   include TSort
 
-  ##
-  # Array of gems to install even if already installed
 
   attr_accessor :always_install
 
@@ -26,64 +12,37 @@ class Gem::RequestSet
 
   attr_accessor :development
 
-  ##
-  # Errors fetching gems during resolution.
 
   attr_reader :errors
 
-  ##
-  # Set to true if you want to install only direct development dependencies.
 
   attr_accessor :development_shallow
 
-  ##
-  # The set of git gems imported via load_gemdeps.
 
   attr_reader :git_set # :nodoc:
 
-  ##
-  # When true, dependency resolution is not performed, only the requested gems
-  # are installed.
 
   attr_accessor :ignore_dependencies
 
   attr_reader :install_dir # :nodoc:
 
-  ##
-  # If true, allow dependencies to match prerelease gems.
 
   attr_accessor :prerelease
 
-  ##
-  # When false no remote sets are used for resolving gems.
 
   attr_accessor :remote
 
   attr_reader :resolver # :nodoc:
 
-  ##
-  # Sets used for resolution
 
   attr_reader :sets # :nodoc:
 
-  ##
-  # Treat missing dependencies as silent errors
 
   attr_accessor :soft_missing
 
-  ##
-  # The set of vendor gems imported via load_gemdeps.
 
   attr_reader :vendor_set # :nodoc:
 
-  ##
-  # Creates a RequestSet for a list of Gem::Dependency objects, +deps+.  You
-  # can then #resolve and #install the resolved list of dependencies.
-  #
-  #   nokogiri = Gem::Dependency.new 'nokogiri', '~> 1.6'
-  #   pg = Gem::Dependency.new 'pg', '~> 0.14'
-  #
-  #   set = Gem::RequestSet.new nokogiri, pg
 
   def initialize *deps
     @dependencies = deps
@@ -109,8 +68,6 @@ class Gem::RequestSet
     yield self if block_given?
   end
 
-  ##
-  # Declare that a gem of name +name+ with +reqs+ requirements is needed.
 
   def gem name, *reqs
     if dep = @dependency_names[name] then
@@ -122,19 +79,11 @@ class Gem::RequestSet
     end
   end
 
-  ##
-  # Add +deps+ Gem::Dependency objects to the set.
 
   def import deps
     @dependencies.concat deps
   end
 
-  ##
-  # Installs gems for this RequestSet using the Gem::Installer +options+.
-  #
-  # If a +block+ is given an activation +request+ and +installer+ are yielded.
-  # The +installer+ will be +nil+ if a gem matching the request was already
-  # installed.
 
   def install options, &block # :yields: request, installer
     if dir = options[:install_dir]
@@ -189,12 +138,6 @@ class Gem::RequestSet
     end unless Gem.done_installing_hooks.empty?
   end
 
-  ##
-  # Installs from the gem dependencies files in the +:gemdeps+ option in
-  # +options+, yielding to the +block+ as in #install.
-  #
-  # If +:without_groups+ is given in the +options+, those groups in the gem
-  # dependencies file are not used.  See Gem::Installer for other +options+.
 
   def install_from_gemdeps options, &block
     gemdeps = options[:gemdeps]
@@ -266,8 +209,6 @@ class Gem::RequestSet
     ENV['GEM_HOME'] = gem_home
   end
 
-  ##
-  # Load a dependency management file.
 
   def load_gemdeps path, without_groups = [], installing = false
     @git_set    = Gem::Resolver::GitSet.new
@@ -326,9 +267,6 @@ class Gem::RequestSet
     end
   end
 
-  ##
-  # Resolve the requested dependencies and return an Array of Specification
-  # objects to be activated.
 
   def resolve set = Gem::Resolver::BestSet.new
     @sets << set
@@ -362,9 +300,6 @@ class Gem::RequestSet
     @requests
   end
 
-  ##
-  # Resolve the requested dependencies against the gems available via Gem.path
-  # and return an Array of Specification objects to be activated.
 
   def resolve_current
     resolve Gem::Resolver::CurrentSet.new

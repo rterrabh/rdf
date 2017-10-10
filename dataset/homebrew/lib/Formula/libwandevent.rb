@@ -19,8 +19,6 @@ class Libwandevent < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <sys/time.h>
-      #include <libwandevent.h>
 
       int main() {
         wand_event_init();

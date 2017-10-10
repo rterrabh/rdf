@@ -1,22 +1,3 @@
-# PRODUCTS
-# Products represent an entity for sale in a store.
-# Products can have variations, called variants
-# Products properties include description, permalink, availability,
-#   shipping category, etc. that do not change by variant.
-#
-# MASTER VARIANT
-# Every product has one master variant, which stores master price and sku, size and weight, etc.
-# The master variant does not have option values associated with it.
-# Price, SKU, size, weight, etc. are all delegated to the master variant.
-# Contains on_hand inventory levels only when there are no variants for the product.
-#
-# VARIANTS
-# All variants can access the product properties directly (via reverse delegation).
-# Inventory units are tied to Variant.
-# The master variant can have inventory units, but not option values.
-# All other variants have option values and may have inventory units.
-# Sum of on_hand each variant's inventory level determine "on_hand" level for the product.
-#
 
 module Spree
   class Product < Spree::Base
@@ -102,7 +83,6 @@ module Spree
     self.whitelisted_ransackable_associations = %w[stores variants_including_master master variants]
     self.whitelisted_ransackable_attributes = %w[slug]
 
-    # the master variant is not a member of the variants array
     def has_variants?
       variants.any?
     end
@@ -115,13 +95,11 @@ module Spree
       end
     end
 
-    # Adding properties and option types on creation based on a chosen prototype
     attr_reader :prototype_id
     def prototype_id=(value)
       @prototype_id = value.to_i
     end
 
-    # Ensures option_types and product_option_types exist for keys in option_values_hash
     def ensure_option_types_exist_for_values_hash
       return if option_values_hash.nil?
       option_values_hash.keys.map(&:to_i).each do |id|
@@ -130,29 +108,19 @@ module Spree
       end
     end
 
-    # for adding products which are closely related to existing ones
-    # define "duplicate_extra" for site-specific actions, eg for additional fields
     def duplicate
       duplicator = ProductDuplicator.new(self)
       duplicator.duplicate
     end
 
-    # use deleted? rather than checking the attribute directly. this
-    # allows extensions to override deleted? if they want to provide
-    # their own definition.
     def deleted?
       !!deleted_at
     end
 
-    # determine if product is available.
-    # deleted products and products with nil or future available_on date
-    # are not available
     def available?
       !(available_on.nil? || available_on.future?) && !deleted?
     end
 
-    # split variants list into hash which shows mapping of opt value onto matching variants
-    # eg categorise_variants_from_option(color) => {"red" -> [...], "blue" -> [...]}
     def categorise_variants_from_option(opt_type)
       return {} unless option_types.include?(opt_type)
       variants.active.group_by { |v| v.option_values.detect { |o| o.option_type == opt_type} }
@@ -166,11 +134,6 @@ module Spree
       }.inject(:or)
     end
 
-    # Suitable for displaying only variants that has at least one option value.
-    # There may be scenarios where an option type is removed and along with it
-    # all option values. At that point all variants associated with only those
-    # values should not be displayed to frontend users. Otherwise it breaks the
-    # idea of having variants
     def variants_and_option_values(current_currency = nil)
       variants.includes(:option_values).active(current_currency).select do |variant|
         variant.option_values.any?
@@ -190,7 +153,6 @@ module Spree
 
     def set_property(property_name, property_value)
       ActiveRecord::Base.transaction do
-        # Works around spree_i18n #301
         property = if Property.exists?(name: property_name)
           Property.where(name: property_name).first
         else
@@ -215,9 +177,6 @@ module Spree
       end
     end
 
-    # Master variant may be deleted (i.e. when the product is deleted)
-    # which would make AR's default finder return nil.
-    # This is a stopgap for that little problem.
     def master
       super || variants_including_master.with_deleted.where(is_master: true).first
     end
@@ -242,7 +201,6 @@ module Spree
       end
     end
 
-    # Builds variants from a hash of option types & values
     def build_variants_from_option_values_hash
       ensure_option_types_exist_for_values_hash
       values = option_values_hash.values
@@ -267,7 +225,6 @@ module Spree
     end
 
     def punch_slug
-      # punch slug with date prefix to allow reuse of original
       update_column :slug, "#{Time.now.to_i}_#{slug}"[0..254] unless frozen?
     end
 
@@ -297,9 +254,6 @@ module Spree
       )
     end
 
-    # there's a weird quirk with the delegate stuff that does not automatically save the delegate object
-    # when saving so we force a save using a hook
-    # Fix for issue #5306
     def save_master
       if master_updated?
         master.save!
@@ -307,11 +261,7 @@ module Spree
       end
     end
 
-    # If the master cannot be saved, the Product object will get its errors
-    # and will be destroyed
     def validate_master
-      # We call master.default_price here to ensure price is initialized.
-      # Required to avoid Variant#check_price validation failing on create.
       unless master.default_price && master.valid?
         master.errors.each do |att, error|
           self.errors.add(att, error)
@@ -319,12 +269,10 @@ module Spree
       end
     end
 
-    # ensures the master variant is flagged as such
     def set_master_variant_defaults
       master.is_master = true
     end
 
-    # Try building a slug based on the following fields in increasing order of specificity.
     def slug_candidates
       [
         :name,
@@ -340,12 +288,10 @@ module Spree
       taxons.map(&:self_and_ancestors).flatten.uniq
     end
 
-    # Get the taxonomy ids of all taxons assigned to this product and their ancestors.
     def taxonomy_ids
       taxon_and_ancestors.map(&:taxonomy_id).flatten.uniq
     end
 
-    # Iterate through this products taxons and taxonomies and touch their timestamps in a batch
     def touch_taxons
       Spree::Taxon.where(id: taxon_and_ancestors.map(&:id)).update_all(updated_at: Time.current)
       Spree::Taxonomy.where(id: taxonomy_ids).update_all(updated_at: Time.current)

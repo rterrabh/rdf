@@ -2,104 +2,9 @@ require 'action_controller/model_naming'
 
 module ActionDispatch
   module Routing
-    # Polymorphic URL helpers are methods for smart resolution to a named route call when
-    # given an Active Record model instance. They are to be used in combination with
-    # ActionController::Resources.
-    #
-    # These methods are useful when you want to generate correct URL or path to a RESTful
-    # resource without having to know the exact type of the record in question.
-    #
-    # Nested resources and/or namespaces are also supported, as illustrated in the example:
-    #
-    #   polymorphic_url([:admin, @article, @comment])
-    #
-    # results in:
-    #
-    #   admin_article_comment_url(@article, @comment)
-    #
-    # == Usage within the framework
-    #
-    # Polymorphic URL helpers are used in a number of places throughout the \Rails framework:
-    #
-    # * <tt>url_for</tt>, so you can use it with a record as the argument, e.g.
-    #   <tt>url_for(@article)</tt>;
-    # * ActionView::Helpers::FormHelper uses <tt>polymorphic_path</tt>, so you can write
-    #   <tt>form_for(@article)</tt> without having to specify <tt>:url</tt> parameter for the form
-    #   action;
-    # * <tt>redirect_to</tt> (which, in fact, uses <tt>url_for</tt>) so you can write
-    #   <tt>redirect_to(post)</tt> in your controllers;
-    # * ActionView::Helpers::AtomFeedHelper, so you don't have to explicitly specify URLs
-    #   for feed entries.
-    #
-    # == Prefixed polymorphic helpers
-    #
-    # In addition to <tt>polymorphic_url</tt> and <tt>polymorphic_path</tt> methods, a
-    # number of prefixed helpers are available as a shorthand to <tt>action: "..."</tt>
-    # in options. Those are:
-    #
-    # * <tt>edit_polymorphic_url</tt>, <tt>edit_polymorphic_path</tt>
-    # * <tt>new_polymorphic_url</tt>, <tt>new_polymorphic_path</tt>
-    #
-    # Example usage:
-    #
-    #   edit_polymorphic_path(@post)              # => "/posts/1/edit"
-    #   polymorphic_path(@post, format: :pdf)  # => "/posts/1.pdf"
-    #
-    # == Usage with mounted engines
-    #
-    # If you are using a mounted engine and you need to use a polymorphic_url
-    # pointing at the engine's routes, pass in the engine's route proxy as the first
-    # argument to the method. For example:
-    #
-    #   polymorphic_url([blog, @post])  # calls blog.post_path(@post)
-    #   form_for([blog, @post])         # => "/blog/posts/1"
-    #
     module PolymorphicRoutes
       include ActionController::ModelNaming
 
-      # Constructs a call to a named RESTful route for the given record and returns the
-      # resulting URL string. For example:
-      #
-      #   # calls post_url(post)
-      #   polymorphic_url(post) # => "http://example.com/posts/1"
-      #   polymorphic_url([blog, post]) # => "http://example.com/blogs/1/posts/1"
-      #   polymorphic_url([:admin, blog, post]) # => "http://example.com/admin/blogs/1/posts/1"
-      #   polymorphic_url([user, :blog, post]) # => "http://example.com/users/1/blog/posts/1"
-      #   polymorphic_url(Comment) # => "http://example.com/comments"
-      #
-      # ==== Options
-      #
-      # * <tt>:action</tt> - Specifies the action prefix for the named route:
-      #   <tt>:new</tt> or <tt>:edit</tt>. Default is no prefix.
-      # * <tt>:routing_type</tt> - Allowed values are <tt>:path</tt> or <tt>:url</tt>.
-      #   Default is <tt>:url</tt>.
-      #
-      # Also includes all the options from <tt>url_for</tt>. These include such
-      # things as <tt>:anchor</tt> or <tt>:trailing_slash</tt>. Example usage
-      # is given below:
-      #
-      #   polymorphic_url([blog, post], anchor: 'my_anchor')
-      #     # => "http://example.com/blogs/1/posts/1#my_anchor"
-      #   polymorphic_url([blog, post], anchor: 'my_anchor', script_name: "/my_app")
-      #     # => "http://example.com/my_app/blogs/1/posts/1#my_anchor"
-      #
-      # For all of these options, see the documentation for <tt>url_for</tt>.
-      #
-      # ==== Functionality
-      #
-      #   # an Article record
-      #   polymorphic_url(record)  # same as article_url(record)
-      #
-      #   # a Comment record
-      #   polymorphic_url(record)  # same as comment_url(record)
-      #
-      #   # it recognizes new records and maps to the collection
-      #   record = Comment.new
-      #   polymorphic_url(record)  # same as comments_url()
-      #
-      #   # the class of a record will also map to the collection
-      #   polymorphic_url(Comment) # same as comments_url()
-      #
       def polymorphic_url(record_or_hash_or_array, options = {})
         if Hash === record_or_hash_or_array
           options = record_or_hash_or_array.merge(options)
@@ -118,8 +23,6 @@ module ActionDispatch
                                                opts
       end
 
-      # Returns the path component of a URL for the given record. It uses
-      # <tt>polymorphic_url</tt> with <tt>routing_type: :path</tt>.
       def polymorphic_path(record_or_hash_or_array, options = {})
         if Hash === record_or_hash_or_array
           options = record_or_hash_or_array.merge(options)
@@ -140,6 +43,7 @@ module ActionDispatch
 
 
       %w(edit new).each do |action|
+        #nodyna <module_eval-1279> <not yet classified>
         module_eval <<-EOT, __FILE__, __LINE__ + 1
           def #{action}_polymorphic_url(record_or_hash, options = {})
             polymorphic_url_for_action("#{action}", record_or_hash, options)
@@ -217,10 +121,10 @@ module ActionDispatch
 
 
           if options.empty?
-            #nodyna <ID:send-85> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1280> <SD COMPLEX (change-prone variables)>
             recipient.send(method, *args)
           else
-            #nodyna <ID:send-86> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1281> <SD COMPLEX (change-prone variables)>
             recipient.send(method, *args, options)
           end
         end
@@ -238,7 +142,7 @@ module ActionDispatch
         end
 
         def handle_string_call(target, str)
-          #nodyna <ID:send-87> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1282> <SD COMPLEX (change-prone variables)>
           target.send get_method_for_string str
         end
 
@@ -247,7 +151,7 @@ module ActionDispatch
         end
 
         def handle_class_call(target, klass)
-          #nodyna <ID:send-88> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1283> <SD COMPLEX (change-prone variables)>
           target.send get_method_for_class klass
         end
 
@@ -269,7 +173,7 @@ module ActionDispatch
 
         def handle_model_call(target, model)
           method, args = handle_model model
-          #nodyna <ID:send-89> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1284> <SD COMPLEX (change-prone variables)>
           target.send(method, *args)
         end
 

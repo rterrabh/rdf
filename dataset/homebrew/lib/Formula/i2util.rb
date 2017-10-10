@@ -20,8 +20,6 @@ class I2util < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <I2util/util.h>
-      #include <string.h>
       int main() {
         uint8_t buf[2];
         if (!I2HexDecode("beef", buf, sizeof(buf))) return 1;

@@ -10,9 +10,6 @@ class Bash < Formula
     sha256 "afc687a28e0e24dc21b988fa159ff9dbcf6b7caa92ade8645cc6d5605cd024d4"
     version "4.3.42"
 
-    # Vendor the patches. The mirrors are unreliable for getting the patches,
-    # and the more patches there are, the more unreliable they get. Upstream
-    # patches can be found in: http://git.savannah.gnu.org/cgit/bash.git
     patch do
       url "https://gist.githubusercontent.com/dunn/a8986687991b57eb3b25/raw/76dd864812e821816f4b1c18e3333c8fced3919b/bash-4.3.42.diff"
       sha256 "2eeb9b3ed71f1e13292c2212b6b8036bc258c58ec9c82eec7a86a091b05b15d2"
@@ -28,12 +25,6 @@ class Bash < Formula
   depends_on "readline"
 
   def install
-    # When built with SSH_SOURCE_BASHRC, bash will source ~/.bashrc when
-    # it's non-interactively from sshd.  This allows the user to set
-    # environment variables prior to running the command (e.g. PATH).  The
-    # /bin/bash that ships with Mac OS X defines this, and without it, some
-    # things (e.g. git+ssh) will break if the user sets their default shell to
-    # Homebrew's bash instead of /bin/bash.
     ENV.append_to_cflags "-DSSH_SOURCE_BASHRC"
 
     system "./configure", "--prefix=#{prefix}", "--with-installed-readline"

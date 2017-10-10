@@ -27,7 +27,6 @@ class Vpnc < Formula
     build 2334
   end
 
-  # Patch from user @Imagesafari to enable compilation on Lion
   patch :DATA if MacOS.version >= :lion
 
   def install
@@ -69,12 +68,8 @@ __END__
 --- vpnc/sysdep.h	2008-11-19 15:36:12.000000000 -0500
 +++ vpnc.patched/sysdep.h	2011-07-14 12:49:18.000000000 -0400
 @@ -109,6 +109,8 @@
- #define HAVE_FGETLN    1
- #define HAVE_UNSETENV  1
- #define HAVE_SETENV    1
 +#define HAVE_GETLINE   1
 +#define NEW_TUN        1
- #endif
  
  /***************************************************************************/
 diff -u vpnc.patched/vpnc-script vpnc/vpnc-script
@@ -88,7 +83,6 @@ diff -u vpnc.patched/vpnc-script vpnc/vpnc-script
 +					d.add ServerAddresses * $INTERNAL_IP4_DNS $INTERNAL_IP6_DNS
 					set State:/Network/Service/$TUNDEV/DNS
 					d.init
-					# next line overrides the default gateway and breaks split routing
 @@ -598,7 +598,7 @@
 			fi
 			i=`expr $i + 1`

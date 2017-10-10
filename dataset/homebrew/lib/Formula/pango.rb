@@ -7,9 +7,6 @@ class Pango < Formula
     url "https://download.gnome.org/sources/pango/1.36/pango-1.36.8.tar.xz"
     sha256 "18dbb51b8ae12bae0ab7a958e7cf3317c9acfc8a1e1103ec2f147164a0fc2d07"
 
-    # [coretext] NULL check in ct_font_descriptor_get_weight()
-    # This fixes crashes when displaying certain Unicode characters.
-    # See: https://bugzilla.gnome.org/show_bug.cgi?id=736697
     patch do
       url "https://bug736697.bugzilla-attachments.gnome.org/attachment.cgi?id=286234"
       sha256 "08d803ddedfa98d99b1897c22a61b908cff05bd0e43982f3063f0d77e05ddb17"
@@ -67,7 +64,6 @@ class Pango < Formula
   test do
     system "#{bin}/pango-querymodules", "--version"
     (testpath/"test.c").write <<-EOS.undent
-      #include <pango/pangocairo.h>
 
       int main(int argc, char *argv[]) {
         PangoFontMap *fontmap;

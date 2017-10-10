@@ -49,7 +49,6 @@ class Notification < ActiveRecord::Base
                            ELSE 3
                       END, created_at DESC").to_a
 
-    # Remove any duplicates by type and topic
     if result.present?
       seen = {}
       to_remove = Set.new
@@ -68,13 +67,10 @@ class Notification < ActiveRecord::Base
     result
   end
 
-  # Clean up any notifications the user can no longer see. For example, if a topic was previously
-  # public then turns private.
   def self.remove_for(user_id, topic_id)
     Notification.where(user_id: user_id, topic_id: topic_id).delete_all
   end
 
-  # Be wary of calling this frequently. O(n) JSON parsing can suck.
   def data_hash
     @data_hash ||= begin
       return nil if data.blank?
@@ -143,23 +139,3 @@ class Notification < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: notifications
-#
-#  id                :integer          not null, primary key
-#  notification_type :integer          not null
-#  user_id           :integer          not null
-#  data              :string(1000)     not null
-#  read              :boolean          default(FALSE), not null
-#  created_at        :datetime         not null
-#  updated_at        :datetime         not null
-#  topic_id          :integer
-#  post_number       :integer
-#  post_action_id    :integer
-#
-# Indexes
-#
-#  index_notifications_on_post_action_id          (post_action_id)
-#  index_notifications_on_user_id_and_created_at  (user_id,created_at)
-#

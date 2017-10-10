@@ -24,7 +24,6 @@ class Aescrypt < Formula
     Open3.popen3("#{bin}/aescrypt", "-k", testpath/"key") do |stdin, stdout, _|
       stdin.write("hello")
       stdin.close
-      # we can't predict the output
       stdout.read.length > 0
     end
   end

@@ -24,7 +24,6 @@ class Glm < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <glm/vec2.hpp>// glm::vec2
       int main()
       {
         std::size_t const VertexCount = 4;

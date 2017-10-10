@@ -7,7 +7,6 @@ require_dependency "file_store/local_store"
 class OptimizedImage < ActiveRecord::Base
   belongs_to :upload
 
-  # BUMP UP if optimized image algorithm changes
   VERSION = 1
 
   def self.create_for(upload, width, height, opts={})
@@ -15,19 +14,15 @@ class OptimizedImage < ActiveRecord::Base
     return if upload.try(:sha1).blank?
 
     DistributedMutex.synchronize("optimized_image_#{upload.id}_#{width}_#{height}") do
-      # do we already have that thumbnail?
       thumbnail = find_by(upload_id: upload.id, width: width, height: height)
 
-      # make sure we have an url
       if thumbnail && thumbnail.url.blank?
         thumbnail.destroy
         thumbnail = nil
       end
 
-      # return the previous thumbnail if any
       return thumbnail unless thumbnail.nil?
 
-      # create the thumbnail otherwise
       original_path = Discourse.store.path_for(upload)
       if original_path.blank?
         external_copy = Discourse.store.download(upload) rescue nil
@@ -37,7 +32,6 @@ class OptimizedImage < ActiveRecord::Base
       if original_path.blank?
         Rails.logger.error("Could not find file in the store located at url: #{upload.url}")
       else
-        # create a temp file with the same extension as the original
         extension = File.extname(original_path)
         temp_file = Tempfile.new(["discourse-thumbnail", extension])
         temp_path = temp_file.path
@@ -58,7 +52,6 @@ class OptimizedImage < ActiveRecord::Base
             height: height,
             url: "",
           )
-          # store the optimized image and update its url
           File.open(temp_path) do |file|
             url = Discourse.store.store_optimized_image(file, thumbnail)
             if url.present?
@@ -72,11 +65,9 @@ class OptimizedImage < ActiveRecord::Base
           Rails.logger.error("Failed to create optimized image #{width}x#{height} for #{upload.url}")
         end
 
-        # close && remove temp file
         temp_file.close!
       end
 
-      # make sure we remove the cached copy from external stores
       if Discourse.store.external?
         external_copy.try(:close!) rescue nil
       end
@@ -97,10 +88,8 @@ class OptimizedImage < ActiveRecord::Base
   end
 
   def self.resize_instructions(from, to, dimensions, opts={})
-    # NOTE: ORDER is important!
     %W{
       convert
-      #{from}[0]
       -gravity center
       -background transparent
       -thumbnail #{dimensions}^
@@ -108,14 +97,12 @@ class OptimizedImage < ActiveRecord::Base
       -interpolate bicubic
       -unsharp 2x0.5+0.7+0
       -quality 98
-      #{to}
     }
   end
 
   def self.resize_instructions_animated(from, to, dimensions, opts={})
     %W{
       gifsicle
-      #{from}
       --colors=256
       --resize-fit #{dimensions}
       --optimize=3
@@ -126,11 +113,9 @@ class OptimizedImage < ActiveRecord::Base
   def self.downsize_instructions(from, to, dimensions, opts={})
     %W{
       convert
-      #{from}[0]
       -gravity center
       -background transparent
       -resize #{dimensions}#{!!opts[:force_aspect_ratio] ? "\\!" : "\\>"}
-      #{to}
     }
   end
 
@@ -153,7 +138,7 @@ class OptimizedImage < ActiveRecord::Base
   def self.optimize(operation, from, to, dimensions, opts={})
     method_name = "#{operation}_instructions"
     method_name += "_animated" if !!opts[:allow_animation] && from =~ /\.GIF$/i
-    #nodyna <ID:send-214> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-394> <SD COMPLEX (change-prone variables)>
     instructions = self.send(method_name.to_sym, from, to, dimensions, opts)
     convert_with(instructions, to)
   end
@@ -182,11 +167,8 @@ class OptimizedImage < ActiveRecord::Base
                     .order(id: :desc)
                     .each do |optimized_image|
         begin
-          # keep track of the url
           previous_url = optimized_image.url.dup
-          # where is the file currently stored?
           external = previous_url =~ /^\/\//
-          # download if external
           if external
             url = SiteSetting.scheme + ":" + previous_url
             file = FileHelper.download(url, max_file_size_kb, "discourse", true) rescue nil
@@ -195,27 +177,21 @@ class OptimizedImage < ActiveRecord::Base
             path = local_store.path_for(optimized_image)
             file = File.open(path)
           end
-          # compute SHA if missing
           if optimized_image.sha1.blank?
             optimized_image.sha1 = Digest::SHA1.file(path).hexdigest
           end
-          # optimize if image
           ImageOptim.new.optimize_image!(path)
-          # store to new location & update the filesize
           File.open(path) do |f|
             optimized_image.url = Discourse.store.store_optimized_image(f, optimized_image)
             optimized_image.save
           end
-          # remap the URLs
           DbHelper.remap(UrlHelper.absolute(previous_url), optimized_image.url) unless external
           DbHelper.remap(previous_url, optimized_image.url)
-          # remove the old file (when local)
           unless external
             FileUtils.rm(path, force: true) rescue nil
           end
         rescue => e
           problems << { optimized_image: optimized_image, ex: e }
-          # just ditch the optimized image if there was any errors
           optimized_image.destroy
         ensure
           file.try(:unlink) rescue nil
@@ -229,20 +205,3 @@ class OptimizedImage < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: optimized_images
-#
-#  id        :integer          not null, primary key
-#  sha1      :string(40)       not null
-#  extension :string(10)       not null
-#  width     :integer          not null
-#  height    :integer          not null
-#  upload_id :integer          not null
-#  url       :string(255)      not null
-#
-# Indexes
-#
-#  index_optimized_images_on_upload_id                       (upload_id)
-#  index_optimized_images_on_upload_id_and_width_and_height  (upload_id,width,height) UNIQUE
-#

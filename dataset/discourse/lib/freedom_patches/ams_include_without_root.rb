@@ -1,13 +1,5 @@
-# Just ignore included associations that are to be embedded in the root instead of
-# throwing an exception in AMS 0.8.x.
-#
-# The 0.9.0 branch does exactly this, see:
-# https://github.com/rails-api/active_model_serializers/issues/377
 module ActiveModel
   class Serializer
-    # This method is copied over verbatim from the AMS version, except for silently
-    # ignoring associations that cannot be embedded without a root instead of
-    # raising an exception.
     def include!(name, options={})
       unique_values =
         if hash = options[:hash]
@@ -47,7 +39,6 @@ module ActiveModel
         node[association.key] = association.serialize_ids
 
         if association.embed_in_root? && hash.nil?
-          # Don't raise an error!
         elsif association.embed_in_root? && association.embeddable?
           merge_association hash, association.root, association.serializables, unique_values
         end

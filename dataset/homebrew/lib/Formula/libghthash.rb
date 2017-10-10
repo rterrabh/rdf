@@ -27,10 +27,6 @@ class Libghthash < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <string.h>
-      #include <stdio.h>
-      #include <stdlib.h>
-      #include <ght_hash_table.h>
 
       int main(int argc, char *argv[])
       {

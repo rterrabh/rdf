@@ -1,21 +1,3 @@
-#
-# purpose:
-#  Profile memory usage of each tests.
-#
-# usage:
-#   RUBY_TEST_ALL_PROFILE=[file] make test-all
-#
-# output:
-#   [file] specified by RUBY_TEST_ALL_PROFILE
-#   If [file] is 'true', then it is ./test_all_profile
-#
-# collected information:
-#   - ObjectSpace.memsize_of_all
-#   - GC.stat
-#   - /proc/meminfo     (some fields, if exists)
-#   - /proc/self/status (some fields, if exists)
-#   - /proc/self/statm  (if exists)
-#
 
 require 'objspace'
 
@@ -50,15 +32,12 @@ class MiniTest::Unit::TestCase
   def self.add_proc_meminfo file, fields
     return unless FileTest.exist?(file)
     regexp = /(#{fields.join("|")}):\s*(\d+) kB/
-    # check = {}; fields.each{|e| check[e] = true}
     add *fields do |result, *|
       text = File.read(file)
       text.scan(regexp){
-        # check.delete $1
         result << $2
         ''
       }
-      # raise check.inspect unless check.empty?
     end
   end
 

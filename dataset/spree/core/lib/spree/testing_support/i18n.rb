@@ -1,12 +1,3 @@
-# This file exists solely to test whether or not there are missing translations
-# within the code that Spree's test suite covers.
-#
-# If there is a translation referenced which has no corresponding key within the
-# .yml file, then there will be a message output at the end of the suite showing
-# that.
-#
-# If there is a translation within the locale file which *isn't* used in the
-# test, this will also be shown at the end of the suite run.
 module Spree
   class << self
     attr_accessor :used_translations, :missing_translation_messages,
@@ -70,13 +61,12 @@ module Spree
   end
 
   def self.translations
-    #nodyna <ID:send-2> <SD TRIVIAL (public methods)>
+    #nodyna <send-2554> <SD TRIVIAL (public methods)>
     @translations ||= I18n.backend.send(:translations)[I18n.locale][:spree]
   end
 end
 
 RSpec.configure do |config|
-  # Need to check here again because this is used in i18n_spec too.
   if ENV['CHECK_TRANSLATIONS']
     config.after :suite do
       Spree.check_missing_translations

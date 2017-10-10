@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 module AnalyticsHelper
   def include_mixpanel
@@ -64,7 +61,7 @@ module AnalyticsHelper
   end
 
   def configured?(service)
-    #nodyna <ID:send-226> <SD MODERATE (change-prone variables)>
+    #nodyna <send-230> <SD MODERATE (change-prone variables)>
     AppConfig.privacy.send("#{service}_uid").present?
   end
 end

@@ -16,10 +16,6 @@ class Submarine < Formula
   depends_on "libarchive"
 
   def install
-    # Because configure is looking for libgee-0.6 which provided
-    # pkg-config viled numbered 1.0.
-    #
-    # See https://github.com/rastersoft/submarine/pull/1
     inreplace "configure.ac", "gee-1.0", "gee-0.8"
     system "./autogen.sh"
     system "./configure", "--disable-dependency-tracking",

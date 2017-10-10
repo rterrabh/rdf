@@ -19,17 +19,14 @@ class Yara < Formula
   depends_on "pcre"
   depends_on "openssl"
 
-  # fixes a variable redefinition error with clang
   patch do
     url "https://github.com/plusvic/yara/pull/261.diff"
     sha256 "6b5c135b577a71ca1c1a5f0a15e512f5157b13dfbd08710f9679fb4cd0b47dba"
   end
 
   def install
-    # Use of "inline" requires gnu89 semantics
     ENV.append "CFLAGS", "-std=gnu89" if ENV.compiler == :clang
 
-    # find Homebrew's libpcre
     ENV.append "LDFLAGS", "-L#{Formula["pcre"].opt_lib} -lpcre"
 
     system "./bootstrap.sh"

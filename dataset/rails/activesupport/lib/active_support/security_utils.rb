@@ -1,11 +1,5 @@
 module ActiveSupport
   module SecurityUtils
-    # Constant time string comparison.
-    #
-    # The values compared should be of fixed length, such as strings
-    # that have already been processed by HMAC. This should not be used
-    # on variable length plaintext strings because it could leak length info
-    # via timing attacks.
     def secure_compare(a, b)
       return false unless a.bytesize == b.bytesize
 

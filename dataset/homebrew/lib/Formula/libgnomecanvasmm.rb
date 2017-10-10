@@ -23,7 +23,6 @@ class Libgnomecanvasmm < Formula
   end
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libgnomecanvasmm.h>
 
       int main(int argc, char *argv[]) {
         Gnome::Canvas::init();

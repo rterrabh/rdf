@@ -15,7 +15,6 @@ class Ispell < Formula
     ENV.deparallelize
     ENV.no_optimization
 
-    # No configure script, so do this all manually
     cp "local.h.macos", "local.h"
     chmod 0644, "local.h"
     inreplace "local.h" do |s|

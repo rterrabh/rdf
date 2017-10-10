@@ -6,7 +6,6 @@ require 'active_support/core_ext/time/acts_like'
 
 module ActiveModel
   module Serializers
-    # == Active Model XML Serializer
     module Xml
       extend ActiveSupport::Concern
       include ActiveModel::Serialization
@@ -114,13 +113,12 @@ module ActiveModel
         end
 
         def add_includes
-          #nodyna <ID:send-9> <SD EASY (private methods)>
+          #nodyna <send-975> <SD EASY (private methods)>
           @serializable.send(:serializable_add_includes, options) do |association, records, opts|
             add_associations(association, records, opts)
           end
         end
 
-        # TODO: This can likely be cleaned up to simple use ActiveSupport::XmlMini.to_tag as well.
         def add_associations(association, records, opts)
           merged_options = opts.merge(options.slice(:builder, :indent))
           merged_options[:skip_instruct] = true
@@ -177,59 +175,10 @@ module ActiveModel
         end
       end
 
-      # Returns XML representing the model. Configuration can be
-      # passed through +options+.
-      #
-      # Without any +options+, the returned XML string will include all the
-      # model's attributes.
-      #
-      #   user = User.find(1)
-      #   user.to_xml
-      #
-      #   <?xml version="1.0" encoding="UTF-8"?>
-      #   <user>
-      #     <id type="integer">1</id>
-      #     <name>David</name>
-      #     <age type="integer">16</age>
-      #     <created-at type="dateTime">2011-01-30T22:29:23Z</created-at>
-      #   </user>
-      #
-      # The <tt>:only</tt> and <tt>:except</tt> options can be used to limit the
-      # attributes included, and work similar to the +attributes+ method.
-      #
-      # To include the result of some method calls on the model use <tt>:methods</tt>.
-      #
-      # To include associations use <tt>:include</tt>.
-      #
-      # For further documentation, see <tt>ActiveRecord::Serialization#to_xml</tt>
       def to_xml(options = {}, &block)
         Serializer.new(self, options).serialize(&block)
       end
 
-      # Sets the model +attributes+ from an XML string. Returns +self+.
-      #
-      #   class Person
-      #     include ActiveModel::Serializers::Xml
-      #
-      #     attr_accessor :name, :age, :awesome
-      #
-      #     def attributes=(hash)
-      #       hash.each do |key, value|
-      #         instance_variable_set("@#{key}", value)
-      #       end
-      #     end
-      #
-      #     def attributes
-      #       instance_values
-      #     end
-      #   end
-      #
-      #   xml = { name: 'bob', age: 22, awesome:true }.to_xml
-      #   person = Person.new
-      #   person.from_xml(xml) # => #<Person:0x007fec5e3b3c40 @age=22, @awesome=true, @name="bob">
-      #   person.name          # => "bob"
-      #   person.age           # => 22
-      #   person.awesome       # => true
       def from_xml(xml)
         self.attributes = Hash.from_xml(xml).values.first
         self

@@ -2,8 +2,6 @@ require 'active_admin/base_controller/authorization'
 require 'active_admin/base_controller/menu'
 
 module ActiveAdmin
-  # BaseController for ActiveAdmin.
-  # It implements ActiveAdmin controllers core features.
   class BaseController < ::InheritedResources::Base
     helper ::ActiveAdmin::ViewHelpers
     helper_method :env
@@ -14,17 +12,11 @@ module ActiveAdmin
     before_filter :authenticate_active_admin_user
 
     class << self
-      # Ensure that this method is available for the DSL
       public :actions
 
-      # Reference to the Resource object which initialized
-      # this controller
       attr_accessor :active_admin_config
     end
 
-    # By default Rails will render un-implemented actions when the view exists. Because Active
-    # Admin allows you to not render any of the actions by using the #actions method, we need
-    # to check if they are implemented.
     def only_render_implemented_actions
       raise AbstractController::ActionNotFound unless action_methods.include?(params[:action])
     end
@@ -34,14 +26,13 @@ module ActiveAdmin
 
     private
 
-    # Calls the authentication method as defined in ActiveAdmin.authentication_method
     def authenticate_active_admin_user
-      #nodyna <ID:send-56> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-114> <SD COMPLEX (change-prone variables)>
       send(active_admin_namespace.authentication_method) if active_admin_namespace.authentication_method
     end
 
     def current_active_admin_user
-      #nodyna <ID:send-57> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-115> <SD COMPLEX (change-prone variables)>
       send(active_admin_namespace.current_user_method) if active_admin_namespace.current_user_method
     end
     helper_method :current_active_admin_user
@@ -64,13 +55,6 @@ module ActiveAdmin
 
     ACTIVE_ADMIN_ACTIONS = [:index, :show, :new, :create, :edit, :update, :destroy]
 
-    # Determine which layout to use.
-    #
-    #   1.  If we're rendering a standard Active Admin action, we want layout(false)
-    #       because these actions are subclasses of the Base page (which implements
-    #       all the required layout code)
-    #   2.  If we're rendering a custom action, we'll use the active_admin layout so
-    #       that users can render any template inside Active Admin.
     def determine_active_admin_layout
       ACTIVE_ADMIN_ACTIONS.include?(params[:action].to_sym) ? false : 'active_admin'
     end

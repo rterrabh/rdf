@@ -7,7 +7,6 @@ class PostRevision < ActiveRecord::Base
   serialize :modifications, Hash
 
   def self.ensure_consistency!
-    # 1 - fix the numbers
     PostRevision.exec_sql <<-SQL
       UPDATE post_revisions
          SET number = pr.rank
@@ -16,7 +15,6 @@ class PostRevision < ActiveRecord::Base
          AND post_revisions.number <> pr.rank
     SQL
 
-    # 2 - fix the versions on the posts
     PostRevision.exec_sql <<-SQL
       UPDATE posts
          SET version = 1 + (SELECT COUNT(*) FROM post_revisions WHERE post_id = posts.id),
@@ -36,21 +34,3 @@ class PostRevision < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: post_revisions
-#
-#  id            :integer          not null, primary key
-#  user_id       :integer
-#  post_id       :integer
-#  modifications :text
-#  number        :integer
-#  created_at    :datetime         not null
-#  updated_at    :datetime         not null
-#  hidden        :boolean          default(FALSE), not null
-#
-# Indexes
-#
-#  index_post_revisions_on_post_id             (post_id)
-#  index_post_revisions_on_post_id_and_number  (post_id,number)
-#

@@ -20,7 +20,6 @@ class Amap < Formula
     system "./configure", "--prefix=#{prefix}"
     system "make"
 
-    # --prefix doesn't work as we want it to so install manually
     bin.install "amap", "amap6", "amapcrap"
     man1.install "amap.1"
   end

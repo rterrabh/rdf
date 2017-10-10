@@ -13,7 +13,6 @@ class Liblinear < Formula
     sha256 "f6c2546bb3b2716c08c5acc80fcbb7b333460209db5c8debd9983c906d30e067" => :mountain_lion
   end
 
-  # Fix sonames
   patch :p0 do
     url "https://trac.macports.org/export/94156/trunk/dports/math/liblinear/files/patch-Makefile.diff"
     sha256 "ffb5206f0a6c15832574ec77863cda12eb2012e0f052bacebfe1ad722d31ea22"

@@ -37,7 +37,6 @@ class Gcc < Formula
   option "with-nls", "Build with native language support (localization)"
   option "with-jit", "Build the jit compiler"
   option "without-fortran", "Build without the gfortran compiler"
-  # enabling multilib on a host that can't run 64-bit results in build failures
   option "without-multilib", "Build without multilib support" if MacOS.prefer_64_bit?
 
   depends_on "gmp"
@@ -47,19 +46,14 @@ class Gcc < Formula
   depends_on "ecj" if build.with?("java") || build.with?("all-languages")
 
   if MacOS.version < :leopard
-    # The as that comes with Tiger isn't capable of dealing with the
-    # PPC asm that comes in libitm
     depends_on "cctools" => :build
   end
 
   fails_with :gcc_4_0
   fails_with :llvm
 
-  # GCC bootstraps itself, so it is OK to have an incompatible C++ stdlib
   cxxstdlib_check :skip
 
-  # The bottles are built on systems with the CLT installed, and do not work
-  # out of the box on Xcode-only systems due to an incorrect sysroot.
   def pour_bottle?
     MacOS::CLT.installed?
   end
@@ -68,12 +62,9 @@ class Gcc < Formula
     version.to_s.slice(/\d/)
   end
 
-  # Fix for libgccjit.so linkage on Darwin
-  # https://gcc.gnu.org/bugzilla/show_bug.cgi?id=64089
   patch :DATA
 
   def install
-    # GCC will suffer build errors if forced to use a particular linker.
     ENV.delete "LD"
 
     if MacOS.version < :leopard
@@ -81,12 +72,8 @@ class Gcc < Formula
     end
 
     if build.with? "all-languages"
-      # Everything but Ada, which requires a pre-existing GCC Ada compiler
-      # (gnat) to bootstrap. GCC 4.6.0 adds go as a language option, but it is
-      # currently only compilable on Linux.
       languages = %w[c c++ objc obj-c++ fortran java jit]
     else
-      # C, C++, ObjC compilers are always built
       languages = %w[c c++ objc obj-c++]
 
       languages << "fortran" if build.with? "fortran"
@@ -99,7 +86,6 @@ class Gcc < Formula
       "--prefix=#{prefix}",
       "--libdir=#{lib}/gcc/#{version_suffix}",
       "--enable-languages=#{languages.join(",")}",
-      # Make most executables versioned to avoid conflicts.
       "--program-suffix=-#{version_suffix}",
       "--with-gmp=#{Formula["gmp"].opt_prefix}",
       "--with-mpfr=#{Formula["mpfr"].opt_prefix}",
@@ -110,20 +96,14 @@ class Gcc < Formula
       "--enable-stage1-checking",
       "--enable-checking=release",
       "--enable-lto",
-      # Use 'bootstrap-debug' build configuration to force stripping of object
-      # files prior to comparison during bootstrap (broken by Xcode 6.3).
       "--with-build-config=bootstrap-debug",
       "--disable-werror",
       "--with-pkgversion=Homebrew #{name} #{pkg_version} #{build.used_options*" "}".strip,
       "--with-bugurl=https://github.com/Homebrew/homebrew/issues"
     ]
 
-    # "Building GCC with plugin support requires a host that supports
-    # -fPIC, -shared, -ldl and -rdynamic."
     args << "--enable-plugin" if MacOS.version > :tiger
 
-    # Otherwise make fails during comparison at stage 3
-    # See: http://gcc.gnu.org/bugzilla/show_bug.cgi?id=45248
     args << "--with-dwarf2" if MacOS.version < :leopard
 
     args << "--disable-nls" if build.without? "nls"
@@ -140,14 +120,10 @@ class Gcc < Formula
 
     args << "--enable-host-shared" if build.with?("jit") || build.with?("all-languages")
 
-    # Ensure correct install names when linking against libgcc_s;
-    # see discussion in https://github.com/Homebrew/homebrew/pull/34303
     inreplace "libgcc/config/t-slibgcc-darwin", "@shlib_slibdir@", "#{HOMEBREW_PREFIX}/lib/gcc/#{version_suffix}"
 
     mkdir "build" do
       unless MacOS::CLT.installed?
-        # For Xcode-only systems, we need to tell the sysroot path.
-        # "native-system-headers" will be appended
         args << "--with-native-system-header-dir=/usr/include"
         args << "--with-sysroot=#{MacOS.sdk_path}"
       end
@@ -161,16 +137,9 @@ class Gcc < Formula
       end
     end
 
-    # Handle conflicts between GCC formulae and avoid interfering
-    # with system compilers.
-    # Since GCC 4.8 libffi stuff are no longer shipped.
-    # Rename man7.
     Dir.glob(man7/"*.7") { |file| add_suffix file, version_suffix }
-    # Even when suffixes are appended, the info pages conflict when
-    # install-info is run. TODO fix this.
     info.rmtree
 
-    # Rename java properties
     if build.with?("java") || build.with?("all-languages")
       config_files = [
         "#{lib}/gcc/#{version_suffix}/logging.properties",
@@ -203,7 +172,6 @@ class Gcc < Formula
 
   test do
     (testpath/"hello-c.c").write <<-EOS.undent
-      #include <stdio.h>
       int main()
       {
         puts("Hello, world!");
@@ -214,7 +182,6 @@ class Gcc < Formula
     assert_equal "Hello, world!\n", `./hello-c`
 
     (testpath/"hello-cc.cc").write <<-EOS.undent
-      #include <iostream>
       int main()
       {
         std::cout << "Hello, world!" << std::endl;

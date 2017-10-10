@@ -1,45 +1,21 @@
-# = uri/generic.rb
-#
-# Author:: Akira Yamada <akira@ruby-lang.org>
-# License:: You can redistribute it and/or modify it under the same term as Ruby.
-# Revision:: $Id$
-#
-# See URI for general documentation
-#
 
 require 'uri/common'
 
 module URI
 
-  #
-  # Base class for all URI classes.
-  # Implements generic URI syntax as per RFC 2396.
-  #
   class Generic
     include URI
 
-    #
-    # A Default port of nil for URI::Generic
-    #
     DEFAULT_PORT = nil
 
-    #
-    # Returns default port
-    #
     def self.default_port
       self::DEFAULT_PORT
     end
 
-    #
-    # Returns default port
-    #
     def default_port
       self.class.default_port
     end
 
-    #
-    # An Array of the available components for URI::Generic
-    #
     COMPONENT = [
       :scheme,
       :userinfo, :host, :port, :registry,
@@ -48,9 +24,6 @@ module URI
       :fragment
     ].freeze
 
-    #
-    # Components of the URI in the order.
-    #
     def self.component
       self::COMPONENT
     end
@@ -61,18 +34,6 @@ module URI
       self::USE_REGISTRY
     end
 
-    #
-    # == Synopsis
-    #
-    # See #new
-    #
-    # == Description
-    #
-    # At first, tries to create a new URI::Generic instance using
-    # URI::Generic::build. But, if exception URI::InvalidComponentError is raised,
-    # then it URI::Escape.escape all URI components and tries again.
-    #
-    #
     def self.build2(args)
       begin
         return self.build(args)
@@ -99,18 +60,6 @@ module URI
       end
     end
 
-    #
-    # == Synopsis
-    #
-    # See #new
-    #
-    # == Description
-    #
-    # Creates a new URI::Generic instance from components of URI::Generic
-    # with check.  Components are: scheme, userinfo, host, port, registry, path,
-    # opaque, query and fragment. You can provide arguments either by an Array or a Hash.
-    # See #new for hash keys to use or for order of array items.
-    #
     def self.build(args)
       if args.kind_of?(Array) &&
           args.size == ::URI::Generic::COMPONENT.size
@@ -133,36 +82,6 @@ module URI
       tmp << true
       return self.new(*tmp)
     end
-    #
-    # == Args
-    #
-    # +scheme+::
-    #   Protocol scheme, i.e. 'http','ftp','mailto' and so on.
-    # +userinfo+::
-    #   User name and password, i.e. 'sdmitry:bla'
-    # +host+::
-    #   Server host name
-    # +port+::
-    #   Server port
-    # +registry+::
-    #   Registry of naming authorities.
-    # +path+::
-    #   Path on server
-    # +opaque+::
-    #   Opaque part
-    # +query+::
-    #   Query data
-    # +fragment+::
-    #   A part of URI after '#' sign
-    # +parser+::
-    #   Parser for internal use [URI::DEFAULT_PARSER by default]
-    # +arg_check+::
-    #   Check arguments [false by default]
-    #
-    # == Description
-    #
-    # Creates a new URI::Generic instance from ``generic'' components without check.
-    #
     def initialize(scheme,
                    userinfo, host, port, registry,
                    path, opaque,
@@ -210,79 +129,24 @@ module URI
       self.set_port(self.default_port) if self.default_port && !@port
     end
 
-    #
-    # returns the scheme component of the URI.
-    #
-    #   URI("http://foo/bar/baz").scheme #=> "http"
-    #
     attr_reader :scheme
 
-    # returns the host component of the URI.
-    #
-    #   URI("http://foo/bar/baz").host #=> "foo"
-    #
-    # It returns nil if no host component.
-    #
-    #   URI("mailto:foo@example.org").host #=> nil
-    #
-    # The component doesn't contains the port number.
-    #
-    #   URI("http://foo:8080/bar/baz").host #=> "foo"
-    #
-    # Since IPv6 addresses are wrapped by brackets in URIs,
-    # this method returns IPv6 addresses wrapped by brackets.
-    # This form is not appropriate to pass socket methods such as TCPSocket.open.
-    # If unwrapped host names are required, use "hostname" method.
-    #
-    #   URI("http://[::1]/bar/baz").host #=> "[::1]"
-    #   URI("http://[::1]/bar/baz").hostname #=> "::1"
-    #
     attr_reader :host
 
-    # returns the port component of the URI.
-    #
-    #   URI("http://foo/bar/baz").port #=> "80"
-    #
-    #   URI("http://foo:8080/bar/baz").port #=> "8080"
-    #
     attr_reader :port
 
     def registry # :nodoc:
       nil
     end
 
-    # returns the path component of the URI.
-    #
-    #   URI("http://foo/bar/baz").path #=> "/bar/baz"
-    #
     attr_reader :path
 
-    # returns the query component of the URI.
-    #
-    #   URI("http://foo/bar/baz?search=FooBar").query #=> "search=FooBar"
-    #
     attr_reader :query
 
-    # returns the opaque part of the URI.
-    #
-    #   URI("mailto:foo@example.org").opaque #=> "foo@example.org"
-    #
-    # Portion of the path that does make use of the slash '/'.
-    # The path typically refers to the absolute path and the opaque part.
-    #  (see RFC2396 Section 3 and 5.2)
-    #
     attr_reader :opaque
 
-    # returns the fragment component of the URI.
-    #
-    #   URI("http://foo/bar/baz?search=FooBar#ponies").fragment #=> "ponies"
-    #
     attr_reader :fragment
 
-    # returns the parser to be used.
-    #
-    # Unless a URI::Parser is defined, then DEFAULT_PARSER is used.
-    #
     def parser
       if !defined?(@parser) || !@parser
         DEFAULT_PARSER
@@ -291,7 +155,6 @@ module URI
       end
     end
 
-    # replace self by other URI object
     def replace!(oth)
       if self.class != oth.class
         raise ArgumentError, "expected #{self.class} object"
@@ -303,16 +166,10 @@ module URI
     end
     private :replace!
 
-    #
-    # Components of the URI in the order.
-    #
     def component
       self.class.component
     end
 
-    #
-    # check the scheme +v+ component against the URI::Parser Regexp for :SCHEME
-    #
     def check_scheme(v)
       if v && parser.regexp[:SCHEME] !~ v
         raise InvalidComponentError,
@@ -323,53 +180,17 @@ module URI
     end
     private :check_scheme
 
-    # protected setter for the scheme component +v+
-    #
-    # see also URI::Generic.scheme=
-    #
     def set_scheme(v)
       @scheme = v ? v.downcase : v
     end
     protected :set_scheme
 
-    #
-    # == Args
-    #
-    # +v+::
-    #    String
-    #
-    # == Description
-    #
-    # public setter for the scheme component +v+.
-    # (with validation)
-    #
-    # see also URI::Generic.check_scheme
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://my.example.com")
-    #   uri.scheme = "https"
-    #   # =>  "https"
-    #   uri
-    #   #=> #<URI::HTTP:0x000000008e89e8 URL:https://my.example.com>
-    #
     def scheme=(v)
       check_scheme(v)
       set_scheme(v)
       v
     end
 
-    #
-    # check the +user+ and +password+.
-    #
-    # If +password+ is not provided, then +user+ is
-    # split, using URI::Generic.split_userinfo, to
-    # pull +user+ and +password.
-    #
-    # see also URI::Generic.check_user, URI::Generic.check_password
-    #
     def check_userinfo(user, password = nil)
       if !password
         user, password = split_userinfo(user)
@@ -381,13 +202,6 @@ module URI
     end
     private :check_userinfo
 
-    #
-    # check the user +v+ component for RFC2396 compliance
-    # and against the URI::Parser Regexp for :USERINFO
-    #
-    # Can not have a registry or opaque component defined,
-    # with a user component defined.
-    #
     def check_user(v)
       if @opaque
         raise InvalidURIError,
@@ -405,13 +219,6 @@ module URI
     end
     private :check_user
 
-    #
-    # check the password +v+ component for RFC2396 compliance
-    # and against the URI::Parser Regexp for :USERINFO
-    #
-    # Can not have a registry or opaque component defined,
-    # with a user component defined.
-    #
     def check_password(v, user = @user)
       if @opaque
         raise InvalidURIError,
@@ -433,81 +240,24 @@ module URI
     end
     private :check_password
 
-    #
-    # Sets userinfo, argument is string like 'name:pass'
-    #
     def userinfo=(userinfo)
       if userinfo.nil?
         return nil
       end
       check_userinfo(*userinfo)
       set_userinfo(*userinfo)
-      # returns userinfo
     end
 
-    #
-    # == Args
-    #
-    # +v+::
-    #    String
-    #
-    # == Description
-    #
-    # public setter for the +user+ component.
-    # (with validation)
-    #
-    # see also URI::Generic.check_user
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://john:S3nsit1ve@my.example.com")
-    #   uri.user = "sam"
-    #   # =>  "sam"
-    #   uri
-    #   #=> #<URI::HTTP:0x00000000881d90 URL:http://sam:V3ry_S3nsit1ve@my.example.com>
-    #
     def user=(user)
       check_user(user)
       set_user(user)
-      # returns user
     end
 
-    #
-    # == Args
-    #
-    # +v+::
-    #    String
-    #
-    # == Description
-    #
-    # public setter for the +password+ component.
-    # (with validation)
-    #
-    # see also URI::Generic.check_password
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://john:S3nsit1ve@my.example.com")
-    #   uri.password = "V3ry_S3nsit1ve"
-    #   # =>  "V3ry_S3nsit1ve"
-    #   uri
-    #   #=> #<URI::HTTP:0x00000000881d90 URL:http://john:V3ry_S3nsit1ve@my.example.com>
-    #
     def password=(password)
       check_password(password)
       set_password(password)
-      # returns password
     end
 
-    # protect setter for the +user+ component, and +password+ if available.
-    # (with validation)
-    #
-    # see also URI::Generic.userinfo=
-    #
     def set_userinfo(user, password = nil)
       unless password
         user, password = split_userinfo(user)
@@ -519,28 +269,17 @@ module URI
     end
     protected :set_userinfo
 
-    # protected setter for the user component +v+
-    #
-    # see also URI::Generic.user=
-    #
     def set_user(v)
       set_userinfo(v, @password)
       v
     end
     protected :set_user
 
-    # protected setter for the password component +v+
-    #
-    # see also URI::Generic.password=
-    #
     def set_password(v)
       @password = v
-      # returns v
     end
     protected :set_password
 
-    # returns the userinfo +ui+ as user, password
-    # if properly formatted as 'user:password'
     def split_userinfo(ui)
       return nil, nil unless ui
       user, password = ui.split(':'.freeze, 2)
@@ -549,13 +288,11 @@ module URI
     end
     private :split_userinfo
 
-    # escapes 'user:password' +v+ based on RFC 1738 section 3.1
     def escape_userpass(v)
       parser.escape(v, /[@:\/]/o) # RFC 1738 section 3.1 #/
     end
     private :escape_userpass
 
-    # returns the userinfo, either as 'user' or 'user:password'
     def userinfo
       if @user.nil?
         nil
@@ -566,23 +303,14 @@ module URI
       end
     end
 
-    # returns the user component
     def user
       @user
     end
 
-    # returns the password component
     def password
       @password
     end
 
-    #
-    # check the host +v+ component for RFC2396 compliance
-    # and against the URI::Parser Regexp for :HOST
-    #
-    # Can not have a registry or opaque component defined,
-    # with a host component defined.
-    #
     def check_host(v)
       return v unless v
 
@@ -598,83 +326,27 @@ module URI
     end
     private :check_host
 
-    # protected setter for the host component +v+
-    #
-    # see also URI::Generic.host=
-    #
     def set_host(v)
       @host = v
     end
     protected :set_host
 
-    #
-    # == Args
-    #
-    # +v+::
-    #    String
-    #
-    # == Description
-    #
-    # public setter for the host component +v+.
-    # (with validation)
-    #
-    # see also URI::Generic.check_host
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://my.example.com")
-    #   uri.host = "foo.com"
-    #   # =>  "foo.com"
-    #   uri
-    #   #=> #<URI::HTTP:0x000000008e89e8 URL:http://foo.com>
-    #
     def host=(v)
       check_host(v)
       set_host(v)
       v
     end
 
-    # extract the host part of the URI and unwrap brackets for IPv6 addresses.
-    #
-    # This method is same as URI::Generic#host except
-    # brackets for IPv6 (and future IP) addresses are removed.
-    #
-    # u = URI("http://[::1]/bar")
-    # p u.hostname      #=> "::1"
-    # p u.host          #=> "[::1]"
-    #
     def hostname
       v = self.host
       /\A\[(.*)\]\z/ =~ v ? $1 : v
     end
 
-    # set the host part of the URI as the argument with brackets for IPv6 addresses.
-    #
-    # This method is same as URI::Generic#host= except
-    # the argument can be bare IPv6 address.
-    #
-    # u = URI("http://foo/bar")
-    # p u.to_s                  #=> "http://foo/bar"
-    # u.hostname = "::1"
-    # p u.to_s                  #=> "http://[::1]/bar"
-    #
-    # If the argument seems IPv6 address,
-    # it is wrapped by brackets.
-    #
     def hostname=(v)
       v = "[#{v}]" if /\A\[.*\]\z/ !~ v && /:/ =~ v
       self.host = v
     end
 
-    #
-    # check the port +v+ component for RFC2396 compliance
-    # and against the URI::Parser Regexp for :PORT
-    #
-    # Can not have a registry or opaque component defined,
-    # with a port component defined.
-    #
     def check_port(v)
       return v unless v
 
@@ -690,39 +362,12 @@ module URI
     end
     private :check_port
 
-    # protected setter for the port component +v+
-    #
-    # see also URI::Generic.port=
-    #
     def set_port(v)
       v = v.empty? ? nil : v.to_i unless !v || v.kind_of?(Fixnum)
       @port = v
     end
     protected :set_port
 
-    #
-    # == Args
-    #
-    # +v+::
-    #    String
-    #
-    # == Description
-    #
-    # public setter for the port component +v+.
-    # (with validation)
-    #
-    # see also URI::Generic.check_port
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://my.example.com")
-    #   uri.port = 8080
-    #   # =>  8080
-    #   uri
-    #   #=> #<URI::HTTP:0x000000008e89e8 URL:http://my.example.com:8080>
-    #
     def port=(v)
       check_port(v)
       set_port(v)
@@ -743,25 +388,12 @@ module URI
       raise InvalidURIError, "can not set registry"
     end
 
-    #
-    # check the path +v+ component for RFC2396 compliance
-    # and against the URI::Parser Regexp
-    # for :ABS_PATH and :REL_PATH
-    #
-    # Can not have a opaque component defined,
-    # with a path component defined.
-    #
     def check_path(v)
-      # raise if both hier and opaque are not nil, because:
-      # absoluteURI   = scheme ":" ( hier_part | opaque_part )
-      # hier_part     = ( net_path | abs_path ) [ "?" query ]
       if v && @opaque
         raise InvalidURIError,
           "path conflicts with opaque"
       end
 
-      # If scheme is ftp, path may be relative.
-      # See RFC 1738 section 3.2.2, and RFC 2396.
       if @scheme && @scheme != "ftp".freeze
         if v && v != ''.freeze && parser.regexp[:ABS_PATH] !~ v
           raise InvalidComponentError,
@@ -779,64 +411,17 @@ module URI
     end
     private :check_path
 
-    # protected setter for the path component +v+
-    #
-    # see also URI::Generic.path=
-    #
     def set_path(v)
       @path = v
     end
     protected :set_path
 
-    #
-    # == Args
-    #
-    # +v+::
-    #    String
-    #
-    # == Description
-    #
-    # public setter for the path component +v+.
-    # (with validation)
-    #
-    # see also URI::Generic.check_path
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://my.example.com/pub/files")
-    #   uri.path = "/faq/"
-    #   # =>  "/faq/"
-    #   uri
-    #   #=> #<URI::HTTP:0x000000008e89e8 URL:http://my.example.com/faq/>
-    #
     def path=(v)
       check_path(v)
       set_path(v)
       v
     end
 
-    #
-    # == Args
-    #
-    # +v+::
-    #    String
-    #
-    # == Description
-    #
-    # public setter for the query component +v+.
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://my.example.com/?id=25")
-    #   uri.query = "id=1"
-    #   # =>  "id=1"
-    #   uri
-    #   #=> #<URI::HTTP:0x000000008e89e8 URL:http://my.example.com/?id=1>
-    #
     def query=(v)
       return @query = nil unless v
       raise InvalidURIError, "query conflicts with opaque" if @opaque
@@ -851,19 +436,9 @@ module URI
       @query = v
     end
 
-    #
-    # check the opaque +v+ component for RFC2396 compliance and
-    # against the URI::Parser Regexp for :OPAQUE
-    #
-    # Can not have a host, port, user or path component defined,
-    # with an opaque component defined.
-    #
     def check_opaque(v)
       return v unless v
 
-      # raise if both hier and opaque are not nil, because:
-      # absoluteURI   = scheme ":" ( hier_part | opaque_part )
-      # hier_part     = ( net_path | abs_path ) [ "?" query ]
       if @host || @port || @user || @path  # userinfo = @user + ':' + @password
         raise InvalidURIError,
           "can not set opaque with host, port, userinfo or path"
@@ -876,58 +451,17 @@ module URI
     end
     private :check_opaque
 
-    # protected setter for the opaque component +v+
-    #
-    # see also URI::Generic.opaque=
-    #
     def set_opaque(v)
       @opaque = v
     end
     protected :set_opaque
 
-    #
-    # == Args
-    #
-    # +v+::
-    #    String
-    #
-    # == Description
-    #
-    # public setter for the opaque component +v+.
-    # (with validation)
-    #
-    # see also URI::Generic.check_opaque
-    #
     def opaque=(v)
       check_opaque(v)
       set_opaque(v)
       v
     end
 
-    #
-    # check the fragment +v+ component against the URI::Parser Regexp for :FRAGMENT
-    #
-    #
-    # == Args
-    #
-    # +v+::
-    #    String
-    #
-    # == Description
-    #
-    # public setter for the fragment component +v+.
-    # (with validation)
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://my.example.com/?id=25#time=1305212049")
-    #   uri.fragment = "time=1305212086"
-    #   # =>  "time=1305212086"
-    #   uri
-    #   #=> #<URI::HTTP:0x000000007a81f8 URL:http://my.example.com/?id=25#time=1305212086>
-    #
     def fragment=(v)
       return @fragment = nil unless v
 
@@ -941,9 +475,6 @@ module URI
       @fragment = v
     end
 
-    #
-    # Checks if URI has a path
-    #
     def hierarchical?
       if @path
         true
@@ -952,9 +483,6 @@ module URI
       end
     end
 
-    #
-    # Checks if URI is an absolute one
-    #
     def absolute?
       if @scheme
         true
@@ -964,33 +492,20 @@ module URI
     end
     alias absolute absolute?
 
-    #
-    # Checks if URI is relative
-    #
     def relative?
       !absolute?
     end
 
-    #
-    # returns an Array of the path split on '/'
-    #
     def split_path(path)
       path.split(%r{/+}, -1)
     end
     private :split_path
 
-    #
-    # Merges a base path +base+, with relative path +rel+,
-    # returns a modified base path.
-    #
     def merge_path(base, rel)
 
-      # RFC2396, Section 5.2, 5)
-      # RFC2396, Section 5.2, 6)
       base_path = split_path(base)
       rel_path  = split_path(rel)
 
-      # RFC2396, Section 5.2, 6), a)
       base_path << '' if base_path.last == '..'
       while i = base_path.index('..')
         base_path.slice!(i - 1, 2)
@@ -1001,12 +516,9 @@ module URI
         rel_path.shift
       end
 
-      # RFC2396, Section 5.2, 6), c)
-      # RFC2396, Section 5.2, 6), d)
       rel_path.push('') if rel_path.last == '.' || rel_path.last == '..'
       rel_path.delete('.')
 
-      # RFC2396, Section 5.2, 6), e)
       tmp = []
       rel_path.each do |x|
         if x == '..' &&
@@ -1025,15 +537,8 @@ module URI
       end
       while x = tmp.shift
         if x == '..'
-          # RFC2396, Section 4
-          # a .. or . in an absolute path has no special meaning
           base_path.pop if base_path.size > 1
         else
-          # if x == '..'
-          #   valid absolute (but abnormal) path "/../..."
-          # else
-          #   valid absolute path
-          # end
           base_path << x
           tmp.each {|t| base_path << t}
           add_trailer_slash = false
@@ -1046,25 +551,6 @@ module URI
     end
     private :merge_path
 
-    #
-    # == Args
-    #
-    # +oth+::
-    #    URI or String
-    #
-    # == Description
-    #
-    # Destructive form of #merge
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://my.example.com")
-    #   uri.merge!("/main.rbx?page=1")
-    #   p uri
-    #   # =>  #<URI::HTTP:0x2021f3b0 URL:http://my.example.com/main.rbx?page=1>
-    #
     def merge!(oth)
       t = merge(oth)
       if self == t
@@ -1075,24 +561,6 @@ module URI
       end
     end
 
-    #
-    # == Args
-    #
-    # +oth+::
-    #    URI or String
-    #
-    # == Description
-    #
-    # Merges two URI's.
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://my.example.com")
-    #   p uri.merge("/main.rbx?page=1")
-    #   # =>  #<URI::HTTP:0x2021f3b0 URL:http://my.example.com/main.rbx?page=1>
-    #
     def merge(oth)
       begin
         base, rel = merge0(oth)
@@ -1106,7 +574,6 @@ module URI
 
       authority = rel.userinfo || rel.host || rel.port
 
-      # RFC2396, Section 5.2, 2)
       if (rel.path.nil? || rel.path.empty?) && !authority && !rel.query
         base.fragment=(rel.fragment) if rel.fragment
         return base
@@ -1115,15 +582,12 @@ module URI
       base.query = nil
       base.fragment=(nil)
 
-      # RFC2396, Section 5.2, 4)
       if !authority
         base.set_path(merge_path(base.path, rel.path)) if base.path && rel.path
       else
-        # RFC2396, Section 5.2, 4)
         base.set_path(rel.path) if rel.path
       end
 
-      # RFC2396, Section 5.2, 7)
       base.set_userinfo(rel.userinfo) if rel.userinfo
       base.set_host(rel.host)         if rel.host
       base.set_port(rel.port)         if rel.port
@@ -1134,10 +598,8 @@ module URI
     end # merge
     alias + merge
 
-    # return base and rel.
-    # you can modify `base', but can not `rel'.
     def merge0(oth)
-      #nodyna <ID:send-117> <SD EASY (private methods)>
+      #nodyna <send-2236> <SD EASY (private methods)>
       oth = parser.send(:convert_to_uri, oth)
 
       if self.relative? && oth.relative?
@@ -1146,9 +608,6 @@ module URI
       end
 
       if self.absolute? && oth.absolute?
-        #raise BadURIError,
-        #  "both URI are absolute"
-        # hmm... should return oth for usability?
         return oth, oth
       end
 
@@ -1160,22 +619,17 @@ module URI
     end
     private :merge0
 
-    # :stopdoc:
     def route_from_path(src, dst)
       case dst
       when src
-        # RFC2396, Section 4.2
         return ''
       when %r{(?:\A|/)\.\.?(?:/|\z)}
-        # dst has abnormal absolute path,
-        # like "/./", "/../", "/x/../", ...
         return dst.dup
       end
 
       src_path = src.scan(%r{(?:\A|[^/]+)/})
       dst_path = dst.scan(%r{(?:\A|[^/]+)/?})
 
-      # discard same parts
       while !dst_path.empty? && dst_path.first == src_path.first
         src_path.shift
         dst_path.shift
@@ -1183,7 +637,6 @@ module URI
 
       tmp = dst_path.join
 
-      # calculate
       if src_path.empty?
         if tmp.empty?
           return './'
@@ -1197,11 +650,9 @@ module URI
       return '../' * src_path.size + tmp
     end
     private :route_from_path
-    # :startdoc:
 
-    # :stopdoc:
     def route_from0(oth)
-      #nodyna <ID:send-118> <SD EASY (private methods)>
+      #nodyna <send-2237> <SD EASY (private methods)>
       oth = parser.send(:convert_to_uri, oth)
       if self.relative?
         raise BadURIError,
@@ -1245,32 +696,11 @@ module URI
         return rel, rel
       end
 
-      # you can modify `rel', but can not `oth'.
       return oth, rel
     end
     private :route_from0
-    # :startdoc:
 
-    #
-    # == Args
-    #
-    # +oth+::
-    #    URI or String
-    #
-    # == Description
-    #
-    # Calculates relative path from oth to self
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse('http://my.example.com/main.rbx?page=1')
-    #   p uri.route_from('http://my.example.com')
-    #   #=> #<URI::Generic:0x20218858 URL:/main.rbx?page=1>
-    #
     def route_from(oth)
-      # you can modify `rel', but can not `oth'.
       begin
         oth, rel = route_from0(oth)
       rescue
@@ -1282,7 +712,6 @@ module URI
 
       rel.set_path(route_from_path(oth.path, self.path))
       if rel.path == './' && self.query
-        # "./?foo" -> "?foo"
         rel.set_path('')
       end
 
@@ -1291,41 +720,17 @@ module URI
 
     alias - route_from
 
-    #
-    # == Args
-    #
-    # +oth+::
-    #    URI or String
-    #
-    # == Description
-    #
-    # Calculates relative path to oth from self
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse('http://my.example.com')
-    #   p uri.route_to('http://my.example.com/main.rbx?page=1')
-    #   #=> #<URI::Generic:0x2020c2f6 URL:/main.rbx?page=1>
-    #
     def route_to(oth)
-      #nodyna <ID:send-119> <SD EASY (private methods)>
+      #nodyna <send-2238> <SD EASY (private methods)>
       parser.send(:convert_to_uri, oth).route_from(self)
     end
 
-    #
-    # Returns normalized URI
-    #
     def normalize
       uri = dup
       uri.normalize!
       uri
     end
 
-    #
-    # Destructive version of #normalize
-    #
     def normalize!
       if path && path.empty?
         set_path('/')
@@ -1338,9 +743,6 @@ module URI
       end
     end
 
-    #
-    # Constructs String from URI
-    #
     def to_s
       str = ''
       if @scheme
@@ -1378,9 +780,6 @@ module URI
       str
     end
 
-    #
-    # Compares to URI's
-    #
     def ==(oth)
       if self.class == oth.class
         self.normalize.component_ary == oth.normalize.component_ary
@@ -1404,44 +803,23 @@ module URI
 --- URI::Generic#===(oth)
 
 =end
-#    def ===(oth)
-#      raise NotImplementedError
-#    end
 
 =begin
 =end
 
 
-    # returns an Array of the components defined from the COMPONENT Array
     def component_ary
       component.collect do |x|
-        #nodyna <ID:send-120> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2239> <SD COMPLEX (change-prone variables)>
         self.send(x)
       end
     end
     protected :component_ary
 
-    # == Args
-    #
-    # +components+::
-    #    Multiple Symbol arguments defined in URI::HTTP
-    #
-    # == Description
-    #
-    # Selects specified components from URI
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse('http://myuser:mypass@my.example.com/test.rbx')
-    #   p uri.select(:userinfo, :host, :path)
-    #   # => ["myuser:mypass", "my.example.com", "/test.rbx"]
-    #
     def select(*components)
       components.collect do |c|
         if component.include?(c)
-          #nodyna <ID:send-121> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-2240> <SD COMPLEX (change-prone variables)>
           self.send(c)
         else
           raise ArgumentError,
@@ -1454,25 +832,6 @@ module URI
       "#<#{self.class} #{self}>"
     end
 
-    #
-    # == Args
-    #
-    # +v+::
-    #    URI or String
-    #
-    # == Description
-    #
-    #  attempt to parse other URI +oth+
-    #  return [parsed_oth, self]
-    #
-    # == Usage
-    #
-    #   require 'uri'
-    #
-    #   uri = URI.parse("http://my.example.com")
-    #   uri.coerce("http://foo.com")
-    #   #=> [#<URI::HTTP:0x00000000bcb028 URL:http://foo.com/>, #<URI::HTTP:0x00000000d92178 URL:http://my.example.com>]
-    #
     def coerce(oth)
       case oth
       when String
@@ -1484,27 +843,11 @@ module URI
       return oth, self
     end
 
-    # returns a proxy URI.
-    # The proxy URI is obtained from environment variables such as http_proxy,
-    # ftp_proxy, no_proxy, etc.
-    # If there is no proper proxy, nil is returned.
-    #
-    # Note that capitalized variables (HTTP_PROXY, FTP_PROXY, NO_PROXY, etc.)
-    # are examined too.
-    #
-    # But http_proxy and HTTP_PROXY is treated specially under CGI environment.
-    # It's because HTTP_PROXY may be set by Proxy: header.
-    # So HTTP_PROXY is not used.
-    # http_proxy is not used too if the variable is case insensitive.
-    # CGI_HTTP_PROXY can be used instead.
     def find_proxy
       raise BadURIError, "relative URI: #{self}" if self.relative?
       name = self.scheme.downcase + '_proxy'
       proxy_uri = nil
       if name == 'http_proxy' && ENV.include?('REQUEST_METHOD') # CGI?
-        # HTTP_PROXY conflicts with *_proxy for proxy settings and
-        # HTTP_* for header information in CGI.
-        # So it should be careful to use it.
         pairs = ENV.reject {|k, v| /\Ahttp_proxy\z/i !~ k }
         case pairs.length
         when 0 # no proxy setting anyway.
@@ -1512,7 +855,6 @@ module URI
         when 1
           k, _ = pairs.shift
           if k == 'http_proxy' && ENV[k.upcase] == nil
-            # http_proxy is safe to use because ENV is case sensitive.
             proxy_uri = ENV[name]
           else
             proxy_uri = nil
@@ -1521,7 +863,6 @@ module URI
           proxy_uri = ENV.to_hash[name]
         end
         if !proxy_uri
-          # Use CGI_HTTP_PROXY.  cf. libwww-perl.
           proxy_uri = ENV["CGI_#{name.upcase}"]
         end
       elsif name == 'http_proxy'

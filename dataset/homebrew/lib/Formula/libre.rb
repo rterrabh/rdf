@@ -20,7 +20,6 @@ class Libre < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <re/re.h>
       int main() {
         return libre_init();
       }

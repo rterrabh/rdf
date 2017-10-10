@@ -16,7 +16,7 @@ module Psych
         if target.respond_to?(:encode_with)
           dump_coder target
         else
-          #nodyna <ID:send-6> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1474> <SD COMPLEX (change-prone variables)>
           send(@dispatch_cache[target.class], target)
         end
       end

@@ -33,8 +33,6 @@ class Libsodium < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <assert.h>
-      #include <sodium.h>
 
       int main()
       {

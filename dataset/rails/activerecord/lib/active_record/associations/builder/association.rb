@@ -1,22 +1,10 @@
 require 'active_support/core_ext/module/attribute_accessors'
 
-# This is the parent Association class which defines the variables
-# used by all associations.
-#
-# The hierarchy is defined as follows:
-#  Association
-#    - SingularAssociation
-#      - BelongsToAssociation
-#      - HasOneAssociation
-#    - CollectionAssociation
-#      - HasManyAssociation
 
 module ActiveRecord::Associations::Builder
   class Association #:nodoc:
     class << self
       attr_accessor :extensions
-      # TODO: This class accessor is needed to make activerecord-deprecated_finders work.
-      # We can move it to a constant in 5.0.
       attr_accessor :valid_options
     end
     self.extensions = []
@@ -48,13 +36,11 @@ module ActiveRecord::Associations::Builder
     end
 
     def initialize(model, name, scope, options)
-      # TODO: Move this to create_builder as soon we drop support to activerecord-deprecated_finders.
       if scope.is_a?(Hash)
         options = scope
         scope   = nil
       end
 
-      # TODO: Remove this model argument as soon we drop support to activerecord-deprecated_finders.
       @name    = name
       @scope   = scope
       @options = options
@@ -62,7 +48,7 @@ module ActiveRecord::Associations::Builder
       validate_options
 
       if scope && scope.arity == 0
-        #nodyna <ID:instance_exec-9> <IEX COMPLEX (block without parameters)>
+        #nodyna <instance_exec-893> <IEX COMPLEX (block without parameters)>
         @scope = proc { instance_exec(&scope) }
       end
     end
@@ -97,12 +83,6 @@ module ActiveRecord::Associations::Builder
       end
     end
 
-    # Defines the setter and getter methods for the association
-    # class Post < ActiveRecord::Base
-    #   has_many :comments
-    # end
-    #
-    # Post.first.comments and Post.first.comments= methods are defined by this method...
     def self.define_accessors(model, reflection)
       mixin = model.generated_association_methods
       name = reflection.name
@@ -111,6 +91,7 @@ module ActiveRecord::Associations::Builder
     end
 
     def self.define_readers(mixin, name)
+      #nodyna <class_eval-894> <not yet classified>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}(*args)
           association(:#{name}).reader(*args)
@@ -119,6 +100,7 @@ module ActiveRecord::Associations::Builder
     end
 
     def self.define_writers(mixin, name)
+      #nodyna <class_eval-895> <not yet classified>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}=(value)
           association(:#{name}).writer(value)
@@ -127,7 +109,6 @@ module ActiveRecord::Associations::Builder
     end
 
     def self.define_validations(model, reflection)
-      # noop
     end
 
     def self.valid_dependent_options

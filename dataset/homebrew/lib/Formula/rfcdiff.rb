@@ -26,7 +26,6 @@ class Rfcdiff < Formula
   end
 
   def install
-    # replace hard-coded paths
     inreplace "Makefile.common", "/usr/share/man/man1", man1
 
     bin.mkpath

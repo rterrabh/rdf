@@ -6,16 +6,6 @@ class Binwalk < Formula
     url "https://github.com/devttys0/binwalk/archive/v2.0.1.tar.gz"
     sha256 "90ee8426d71e91b62dfe4a1446c457bc7835b475b28717859e275a0494403959"
 
-    # Fixes OS-X-specific issues no longer relevant in HEAD:
-    #
-    # * Fixes OS X bug in 'setup.py':
-    #   * See <https://github.com/devttys0/binwalk/commit/8278229cae4c2c354ffc5bfc3bcef0fd1d9bf2b3>
-    #     and <https://github.com/devttys0/binwalk/commit/76ff729a19552e6e58505ca64b1d4ce2325e7ac0>.
-    # * Fixes library lookup for non-standard Homebrew installations:
-    #   * See upstream issue <https://github.com/devttys0/binwalk/issues/130>
-    #     for the details.
-    #   * The fix is Homebrew-specific as it uses HOMEBREW_PREFIX, that is
-    #     implicitly replace with the actual Homebrew prefix, in the patch.
     patch :DATA
   end
 
@@ -97,7 +87,6 @@ index b5fbf54..660091d 100755
 +++ b/setup.py
 @@ -134,7 +134,7 @@ if "install" in sys.argv or "build" in sys.argv:
 
- # The data files to install along with the module
  data_dirs = ["magic", "config", "plugins", "modules", "core"]
 -install_data_files = [os.path.join("libs", "*.so")]
 +install_data_files = [os.path.join("libs", "*.so"), os.path.join("libs", "*.dylib")]

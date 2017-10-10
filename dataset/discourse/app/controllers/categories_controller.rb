@@ -76,10 +76,8 @@ class CategoriesController < ApplicationController
       cat.move_to(category_params[:position].to_i) if category_params[:position]
 
       if category_params.key? :email_in and category_params[:email_in].length == 0
-        # properly null the value so the database constrain doesn't catch us
         category_params[:email_in] = nil
       elsif category_params.key? :email_in and existing_category = Category.find_by(email_in: category_params[:email_in]) and existing_category.id != @category.id
-        # check if email_in address is already in use for other category
         return render_json_error I18n.t('category.errors.email_in_already_exist', {email_in: category_params[:email_in], category_name: existing_category.name})
       end
 

@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/toolbar.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * toolbar widget
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::toolbar', '1.2')
 TkPackage.require('widget::toolbar')
 
 module Tk::Tcllib
@@ -61,7 +53,6 @@ class Tk::Tcllib::Widget::ToolbarItem < TkObject
     @tpath = parent.path
 
     @path = @id = @t.tk_send('add', *args)
-    # A same id is rejected by the Tcl function.
 
     ToolbarItemID_TBL.mutex.synchronize{
       ToolbarItemID_TBL[@id] = self

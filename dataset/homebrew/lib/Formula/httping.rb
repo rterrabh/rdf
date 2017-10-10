@@ -10,7 +10,6 @@ class Httping < Formula
   depends_on "fftw" => :optional
 
   def install
-    # Reported upstream, see: https://github.com/Homebrew/homebrew/pull/28653
     inreplace %w[configure Makefile], "ncursesw", "ncurses"
     ENV.append "LDFLAGS", "-lintl"
     inreplace "Makefile", "cp nl.mo $(DESTDIR)/$(PREFIX)/share/locale/nl/LC_MESSAGES/httping.mo", ""

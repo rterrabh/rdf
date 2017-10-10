@@ -7,8 +7,6 @@ end
 require 'json/common'
 
 module JSON
-  # This module holds all the modules/classes that implement JSON's
-  # functionality as C extensions.
   module Ext
     require 'json/ext/parser'
     require 'json/ext/generator'

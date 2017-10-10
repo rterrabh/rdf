@@ -18,11 +18,9 @@ class S3Helper
 
   def remove(unique_filename, copy_to_tombstone=false)
     bucket = s3_bucket
-    # copy the file in tombstone
     if copy_to_tombstone && @tombstone_prefix.present?
       bucket.object(@tombstone_prefix + unique_filename).copy_from(copy_source: "#{@s3_bucket}/#{unique_filename}")
     end
-    # delete the file
     bucket.object(unique_filename).delete
   rescue Aws::S3::Errors::NoSuchKey
   end
@@ -30,7 +28,6 @@ class S3Helper
   def update_tombstone_lifecycle(grace_period)
     return if @tombstone_prefix.blank?
 
-    # cf. http://docs.aws.amazon.com/AmazonS3/latest/dev/object-lifecycle-mgmt.html
     s3_resource.client.put_bucket_lifecycle({
       bucket: @s3_bucket,
       lifecycle_configuration: {

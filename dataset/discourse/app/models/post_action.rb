@@ -84,8 +84,6 @@ class PostAction < ActiveRecord::Base
 
   def self.lookup_for(user, topics, post_action_type_id)
     return if topics.blank?
-    # in critical path 2x faster than AR
-    #
     topic_ids = topics.map(&:id)
     map = {}
         builder = SqlBuilder.new <<SQL
@@ -144,7 +142,6 @@ SQL
     actions.each do |action|
       action.agreed_at = Time.zone.now
       action.agreed_by_id = moderator.id
-      # so callback is called
       action.save
       action.add_moderator_post_if_needed(moderator, :agreed, delete_post)
       @trigger_spam = true if action.post_action_type_id == PostActionType.types[:spam]
@@ -156,7 +153,6 @@ SQL
   end
 
   def self.clear_flags!(post, moderator)
-    # -1 is the automatic system cleary
     action_type_ids = moderator.id == -1 ?
         PostActionType.auto_action_flag_types.values :
         PostActionType.flag_types.values
@@ -167,12 +163,10 @@ SQL
     actions.each do |action|
       action.disagreed_at = Time.zone.now
       action.disagreed_by_id = moderator.id
-      # so callback is called
       action.save
       action.add_moderator_post_if_needed(moderator, :disagreed)
     end
 
-    # reset all cached counters
     f = action_type_ids.map { |t| ["#{PostActionType.types[t]}_count", 0] }
     Post.with_deleted.where(id: post.id).update_all(Hash[*f.flatten])
 
@@ -187,7 +181,6 @@ SQL
     actions.each do |action|
       action.deferred_at = Time.zone.now
       action.deferred_by_id = moderator.id
-      # so callback is called
       action.save
       action.add_moderator_post_if_needed(moderator, :deferred, delete_post)
     end
@@ -232,8 +225,6 @@ SQL
       opts[:target_usernames] = if post_action_type == :notify_user
                                   post.user.username
                                 elsif post_action_type != :notify_moderators
-                                  # this is a hack to allow a PM with no recipients, we should think through
-                                  # a cleaner technique, a PM with myself is valid for flagging
                                   'x'
                                 end
     end
@@ -262,7 +253,6 @@ SQL
       targets_topic: !!targets_topic
     }
 
-    # First try to revive a trashed record
     post_action = PostAction.where(where_attrs)
                             .with_deleted
                             .where("deleted_at IS NOT NULL")
@@ -270,7 +260,7 @@ SQL
 
     if post_action
       post_action.recover!
-      #nodyna <ID:send-173> <SD MODERATE (array)>
+      #nodyna <send-383> <SD MODERATE (array)>
       action_attrs.each { |attr, val| post_action.send("#{attr}=", val) }
       post_action.save
     else
@@ -280,18 +270,14 @@ SQL
       end
     end
 
-    # agree with other flags
     if staff_took_action
       PostAction.agree_flags!(post, user)
 
-      # update counters
       post_action.try(:update_counters)
     end
 
     post_action
   rescue ActiveRecord::RecordNotUnique
-    # can happen despite being .create
-    # since already bookmarked
     PostAction.where(where_attrs).first
   end
 
@@ -306,9 +292,6 @@ SQL
 
   def remove_act!(user)
     trash!(user)
-    # NOTE: save is called to ensure all callbacks are called
-    # trash will not trigger callbacks, and triggering after_commit
-    # is not trivial
     save
   end
 
@@ -329,20 +312,19 @@ SQL
     post_action_type_id == PostActionType.types[:notify_moderators]
   end
 
-  # A custom rate limiter for this model
   def post_action_rate_limiter
     return unless is_flag? || is_bookmark? || is_like?
 
     return @rate_limiter if @rate_limiter.present?
 
     %w(like flag bookmark).each do |type|
-      #nodyna <ID:send-174> <SD MODERATE (array)>
+      #nodyna <send-384> <SD MODERATE (array)>
       if send("is_#{type}?")
-        #nodyna <ID:send-175> <SD MODERATE (array)>
+        #nodyna <send-385> <SD MODERATE (array)>
         limit = SiteSetting.send("max_#{type}s_per_day")
 
         if is_like? && user && user.trust_level >= 2
-          #nodyna <ID:send-176> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-386> <SD COMPLEX (change-prone variables)>
           multiplier = SiteSetting.send("tl#{user.trust_level}_additional_likes_per_day_multiplier").to_f
           multiplier = 1.0 if multiplier < 1.0
 
@@ -366,8 +348,6 @@ SQL
                                     .exists?
   end
 
-  # Returns the flag counts for a post, taking into account that some users
-  # can weigh flags differently.
   def self.flag_counts_for(post_id)
     flag_counts = exec_sql("SELECT SUM(CASE
                                          WHEN pa.disagreed_at IS NULL AND pa.staff_took_action THEN :flags_required_to_hide_post
@@ -396,19 +376,15 @@ SQL
   end
 
   def update_counters
-    # Update denormalized counts
     column = "#{post_action_type_key}_count"
     count = PostAction.where(post_id: post_id)
                       .where(post_action_type_id: post_action_type_id)
                       .count
 
-    # We probably want to refactor this method to something cleaner.
     case post_action_type_key
     when :vote
-      # Voting also changes the sort_order
       Post.where(id: post_id).update_all ["vote_count = :count, sort_order = :max - :count", count: count, max: Topic.max_sort_order]
     when :like
-      # 'like_score' is weighted higher for staff accounts
       score = PostAction.joins(:user)
                         .where(post_id: post_id)
                         .sum("CASE WHEN users.moderator OR users.admin THEN #{SiteSetting.staff_like_weight} ELSE 1 END")
@@ -420,7 +396,6 @@ SQL
 
     topic_id = Post.with_deleted.where(id: post_id).pluck(:topic_id).first
 
-    # topic_user
     if [:like,:bookmark].include? post_action_type_key
       TopicUser.update_post_action_cache(user_id: user_id,
                                          topic_id: topic_id,
@@ -462,12 +437,9 @@ SQL
                       .group("post_actions.user_id")
                       .pluck("post_actions.user_id, COUNT(post_id)")
 
-    # we need a minimum number of unique flaggers
     return if flags.count < SiteSetting.num_flaggers_to_close_topic
-    # we need a minimum number of flags
     return if flags.sum { |f| f[1] } < SiteSetting.num_flags_to_close_topic
 
-    # the threshold has been reached, we will close the topic waiting for intervention
     message = I18n.t("temporarily_closed_due_to_flags")
     topic.update_status("closed", true, Discourse.system_user, message: message)
   end
@@ -503,7 +475,6 @@ SQL
     Post.where(id: post.id).update_all(["hidden = true, hidden_at = ?, hidden_reason_id = COALESCE(hidden_reason_id, ?)", Time.now, reason])
     Topic.where("id = :topic_id AND NOT EXISTS(SELECT 1 FROM POSTS WHERE topic_id = :topic_id AND NOT hidden)", topic_id: post.topic_id).update_all(visible: false)
 
-    # inform user
     if post.user
       options = {
         url: post.url,
@@ -531,31 +502,3 @@ SQL
 
 end
 
-# == Schema Information
-#
-# Table name: post_actions
-#
-#  id                  :integer          not null, primary key
-#  post_id             :integer          not null
-#  user_id             :integer          not null
-#  post_action_type_id :integer          not null
-#  deleted_at          :datetime
-#  created_at          :datetime         not null
-#  updated_at          :datetime         not null
-#  deleted_by_id       :integer
-#  related_post_id     :integer
-#  staff_took_action   :boolean          default(FALSE), not null
-#  deferred_by_id      :integer
-#  targets_topic       :boolean          default(FALSE), not null
-#  agreed_at           :datetime
-#  agreed_by_id        :integer
-#  deferred_at         :datetime
-#  disagreed_at        :datetime
-#  disagreed_by_id     :integer
-#
-# Indexes
-#
-#  idx_unique_actions             (user_id,post_action_type_id,post_id,targets_topic) UNIQUE
-#  idx_unique_flags               (user_id,post_id,targets_topic) UNIQUE
-#  index_post_actions_on_post_id  (post_id)
-#

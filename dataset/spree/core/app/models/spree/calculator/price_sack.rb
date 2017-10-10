@@ -11,7 +11,6 @@ module Spree
       Spree.t(:price_sack)
     end
 
-    # as object we always get line items, as calculable we have Coupon, ShippingMethod
     def compute(object)
       if object.is_a?(Array)
         base = object.map { |o| o.respond_to?(:amount) ? o.amount : BigDecimal(o.to_s) }.sum

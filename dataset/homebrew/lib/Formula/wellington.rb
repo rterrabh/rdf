@@ -56,7 +56,6 @@ class Wellington < Formula
     end
     system "bin/godep", "restore"
 
-    # Build libsass from source for head build
     if build.head?
       ENV.cxx11
       ENV["PKG_CONFIG_PATH"] = buildpath/"src/github.com/wellington/go-libsass/lib/pkgconfig"
@@ -67,7 +66,6 @@ class Wellington < Formula
       end
     end
 
-    # symlink into $GOPATH so builds work
     mkdir_p buildpath/"src/github.com/wellington"
     ln_s buildpath, buildpath/"src/github.com/wellington/wellington"
 

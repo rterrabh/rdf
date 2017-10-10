@@ -55,7 +55,6 @@ module RailsAdmin
             }
           end
 
-          # virtual class
           def resource_url
             fail('not implemented')
           end

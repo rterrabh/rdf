@@ -1,7 +1,3 @@
-#
-#   tk/namespace.rb : methods to manipulate Tcl/Tk namespace
-#                           by Hidetoshi Nagai <nagai@ai.kyutech.ac.jp>
-#
 require 'tk'
 
 class TkNamespace < TkObject
@@ -13,7 +9,7 @@ class TkNamespace < TkObject
 
   Tk_Namespace_ID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-19> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1753> <IEV MODERATE (method definition)>
   (Tk_Namespace_ID = ["ns".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -33,7 +29,6 @@ class TkNamespace < TkObject
     }
   end
 
-  #####################################
 
   class Ensemble < TkObject
     def __cget_cmd
@@ -150,29 +145,25 @@ class TkNamespace < TkObject
     end
   end
 
-  #####################################
 
   class ScopeArgs < Array
     include Tk
 
-    # alias __tk_call             tk_call
-    # alias __tk_call_without_enc tk_call_without_enc
-    # alias __tk_call_with_enc    tk_call_with_enc
     def tk_call(*args)
-      #super('namespace', 'eval', @namespace, *args)
       args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
+      #nodyna <eval-1754> <not yet classified>
       super('namespace', 'eval', @namespace,
             TkCore::INTERP._merge_tklist(*args))
     end
     def tk_call_without_enc(*args)
-      #super('namespace', 'eval', @namespace, *args)
       args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
+      #nodyna <eval-1755> <not yet classified>
       super('namespace', 'eval', @namespace,
             TkCore::INTERP._merge_tklist(*args))
     end
     def tk_call_with_enc(*args)
-      #super('namespace', 'eval', @namespace, *args)
       args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
+      #nodyna <eval-1756> <not yet classified>
       super('namespace', 'eval', @namespace,
             TkCore::INTERP._merge_tklist(*args))
     end
@@ -184,7 +175,6 @@ class TkNamespace < TkObject
     end
   end
 
-  #####################################
 
   class NsCode < TkObject
     def initialize(scope, use_obj_id = false)
@@ -206,7 +196,6 @@ class TkNamespace < TkObject
     end
   end
 
-  #####################################
 
   def install_cmd(cmd)
     lst = tk_split_simplelist(super(cmd), false, false)
@@ -222,20 +211,20 @@ class TkNamespace < TkObject
   alias __tk_call_without_enc tk_call_without_enc
   alias __tk_call_with_enc    tk_call_with_enc
   def tk_call(*args)
-    #super('namespace', 'eval', @fullname, *args)
     args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
+    #nodyna <eval-1757> <not yet classified>
     super('namespace', 'eval', @fullname,
           TkCore::INTERP._merge_tklist(*args))
   end
   def tk_call_without_enc(*args)
-    #super('namespace', 'eval', @fullname, *args)
     args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
+    #nodyna <eval-1758> <not yet classified>
     super('namespace', 'eval', @fullname,
           TkCore::INTERP._merge_tklist(*args))
   end
   def tk_call_with_enc(*args)
-    #super('namespace', 'eval', @fullname, *args)
     args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
+    #nodyna <eval-1759> <not yet classified>
     super('namespace', 'eval', @fullname,
           TkCore::INTERP._merge_tklist(*args))
   end
@@ -246,7 +235,6 @@ class TkNamespace < TkObject
   def initialize(name = nil, parent = nil)
     unless name
       Tk_Namespace_ID.mutex.synchronize{
-        # name = Tk_Namespace_ID.join('')
         name = Tk_Namespace_ID.join(TkCore::INTERP._ip_id_)
         Tk_Namespace_ID[1].succ!
       }
@@ -281,7 +269,7 @@ class TkNamespace < TkObject
     @parent = __tk_call('namespace', 'qualifiers', @fullname)
     @name = __tk_call('namespace', 'tail', @fullname)
 
-    # create namespace
+    #nodyna <eval-1760> <not yet classified>
     __tk_call('namespace', 'eval', @fullname, '')
 
     Tk_Namespace_ID_TBL.mutex.synchronize{
@@ -290,10 +278,7 @@ class TkNamespace < TkObject
   end
 
   def self.children(*args)
-    # args ::= [<namespace>] [<pattern>]
-    # <pattern> must be glob-style pattern
     tk_split_simplelist(tk_call('namespace', 'children', *args)).collect{|ns|
-      # ns is fullname
       Tk_Namespace_ID_TBL.mutex.synchronize{
         if Tk_Namespace_ID_TBL.key?(ns)
           Tk_Namespace_ID_TBL[ns]
@@ -313,8 +298,10 @@ class TkNamespace < TkObject
 =begin
   def code(script = Proc.new)
     if script.kind_of?(String)
+      #nodyna <instance_eval-1761> <not yet classified>
       cmd = proc{|*args| ScopeArgs.new(@fullname,*args).instance_eval(script)}
     elsif script.kind_of?(Proc)
+      #nodyna <instance_eval-1762> <not yet classified>
       cmd = proc{|*args| ScopeArgs.new(@fullname,*args).instance_eval(&script)}
     else
       fail ArgumentError, "String or Proc is expected"
@@ -326,7 +313,7 @@ class TkNamespace < TkObject
   def code(script = Proc.new)
     if script.kind_of?(String)
       cmd = proc{|*args|
-        #nodyna <ID:instance_eval-22> <IEV COMPLEX (private access)>
+        #nodyna <instance_eval-1763> <IEV COMPLEX (private access)>
         ret = ScopeArgs.new(@fullname,*args).instance_eval(script)
         id = ret.object_id
         TkNamespace::Tk_NsCode_RetObjID_TBL[id] = ret
@@ -336,10 +323,10 @@ class TkNamespace < TkObject
       cmd = proc{|*args|
         if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
           obj = ScopeArgs.new(@fullname,*args)
-          #nodyna <ID:instance_exec-1> <IEX COMPLEX (block with parameters)>
+          #nodyna <instance_exec-1764> <IEX COMPLEX (block with parameters)>
           ret = obj.instance_exec(obj, &script)
         else
-          #nodyna <ID:instance_eval-23> <IEV COMPLEX (block execution)>
+          #nodyna <instance_eval-1765> <IEV COMPLEX (block execution)>
           ret = ScopeArgs.new(@fullname,*args).instance_eval(&script)
         end
         id = ret.object_id
@@ -372,8 +359,6 @@ class TkNamespace < TkObject
     }
   end
   def current_namespace
-    # ns_tk_call('namespace', 'current')
-    # @fullname
     self
   end
   alias current current_namespace
@@ -417,22 +402,21 @@ class TkNamespace < TkObject
     bool(tk_call('namespace', 'ensemble', 'exists', cmd))
   end
 
+  #nodyna <eval-1766> <not yet classified>
   def self.eval(namespace, cmd = Proc.new, *args)
-    #tk_call('namespace', 'eval', namespace, cmd, *args)
-    #nodyna <ID:eval-30> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1767> <EV COMPLEX (change-prone variables)>
     TkNamespace.new(namespace).eval(cmd, *args)
   end
 =begin
+  #nodyna <eval-1768> <not yet classified>
   def eval(cmd = Proc.new, *args)
-    #TkNamespace.eval(@fullname, cmd, *args)
-    #ns_tk_call(cmd, *args)
     code_obj = code(cmd)
     ret = code_obj.call(*args)
-    # uninstall_cmd(TkCore::INTERP._split_tklist(code_obj.path)[-1])
     uninstall_cmd(_fromUTF8(TkCore::INTERP._split_tklist(_toUTF8(code_obj.path))[-1]))
     tk_tcl2ruby(ret)
   end
 =end
+  #nodyna <eval-1769> <not yet classified>
   def eval(cmd = Proc.new, *args)
     code_obj = code(cmd)
     ret = code_obj.call(*args)

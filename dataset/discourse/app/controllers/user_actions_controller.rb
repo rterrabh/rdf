@@ -16,7 +16,6 @@ class UserActionsController < ApplicationController
              guardian: guardian,
              ignore_private_messages: params[:filter] ? false : true }
 
-    # Pending is restricted
     stream = if opts[:action_types].include?(UserAction::PENDING)
       guardian.ensure_can_see_notifications!(user)
       UserAction.stream_queued(opts)
@@ -33,7 +32,6 @@ class UserActionsController < ApplicationController
   end
 
   def private_messages
-    # DO NOT REMOVE
   end
 
 end

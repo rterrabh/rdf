@@ -8,7 +8,6 @@ class SiscScheme < Formula
     prefix.install_metafiles
     libexec.install Dir["*"]
     (bin/"sisc").write <<-EOS.undent
-      #!/bin/sh
       SISC_HOME=#{libexec}
       exec #{libexec}/sisc "$@"
     EOS

@@ -18,8 +18,6 @@ class Lcrack < Formula
     system "make"
     bin.install "lcrack"
 
-    # This prevents installing slightly generic names (regex)
-    # and also mimics Debian's installation of lcrack.
     %w[mktbl mkword regex].each do |prog|
       bin.install prog => "lcrack_#{prog}"
     end

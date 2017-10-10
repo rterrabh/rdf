@@ -34,7 +34,6 @@ class ConversationsController < ApplicationController
   def create
     contact_ids = params[:contact_ids]
 
-    # Can't split nil
     if contact_ids
       contact_ids = contact_ids.split(',') if contact_ids.is_a? String
       person_ids = current_user.contacts.where(id: contact_ids).pluck(:person_id)

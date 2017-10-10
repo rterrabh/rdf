@@ -7,8 +7,6 @@ class Mimms < Formula
   depends_on :python if MacOS.version <= :snow_leopard
   depends_on "libmms"
 
-  # Switch shared library loading to Mach-O naming convention (.dylib)
-  # Matching upstream bug report: http://savannah.nongnu.org/bugs/?29684
   patch :DATA
 
   def install
@@ -34,5 +32,4 @@ index fb59207..ac42ba4 100644
 -libmms = cdll.LoadLibrary("libmms.so.0")
 +libmms = cdll.LoadLibrary("libmms.0.dylib")
  
- # opening and closing the stream
  libmms.mmsx_connect.argtypes = [c_void_p, c_void_p, c_char_p, c_int]

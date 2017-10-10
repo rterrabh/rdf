@@ -5,7 +5,6 @@ class Chcase < Formula
   version "2.0"
   sha256 "386e6f294157957adbd433a10591d9d78cd54d13e1347fb15a19e70f03319ed3"
 
-  # add a shebang so that brew properly sets it executable
   patch :DATA
 
   def install
@@ -24,6 +23,6 @@ index 689fc79..93efae8
 +++ b/chcase
 @@ -1,3 +1,4 @@
 +#!/bin/sh -- # -*- perl -*-
+ #nodyna <eval-583> <not yet classified>
  eval 'exec perl $0 ${1+"$@"}'
  if 0;
- # don't modify below here

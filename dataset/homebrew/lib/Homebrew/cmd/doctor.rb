@@ -12,13 +12,11 @@ class Volumes
   def which(path)
     vols = get_mounts path
 
-    # no volume found
     if vols.empty?
       return -1
     end
 
     vol_index = @volumes.index(vols[0])
-    # volume not found in volume list
     if vol_index.nil?
       return -1
     end
@@ -27,7 +25,6 @@ class Volumes
 
   def get_mounts(path = nil)
     vols = []
-    # get the volume of path, if path is nil returns all volumes
 
     args = %w[/bin/df -P]
     args << path if path
@@ -35,7 +32,6 @@ class Volumes
     Utils.popen_read(*args) do |io|
       io.each_line do |line|
         case line.chomp
-          # regex matches: /dev/disk0s2   489562928 440803616  48247312    91%    /
         when /^.+\s+[0-9]+\s+[0-9]+\s+[0-9]+\s+[0-9]{1,3}%\s+(.+)/
           vols << $1
         end
@@ -46,10 +42,6 @@ class Volumes
 end
 
 class Checks
-  ############# HELPERS
-  # Finds files in HOMEBREW_PREFIX *and* /usr/local.
-  # Specify paths relative to a prefix eg. "include/foo.h".
-  # Sets @found for your convenience.
   def find_relative_paths(*relative_paths)
     @found = %W[#{HOMEBREW_PREFIX} /usr/local].uniq.inject([]) do |found, prefix|
       found + relative_paths.map { |f| File.join(prefix, f) }.select { |f| File.exist? f }
@@ -60,17 +52,11 @@ class Checks
     list.inject(str) { |s, f| s << "    #{f}\n" }
   end
 
-  # Git will always be on PATH because of the wrapper script in
-  # Library/ENV/scm, so we check if there is a *real*
-  # git here to avoid multiple warnings.
   def git?
     return @git if instance_variable_defined?(:@git)
     @git = system "git --version >/dev/null 2>&1"
   end
-  ############# END HELPERS
 
-  # Sorry for the lack of an indent here, the diff would have been unreadable.
-  # See https://github.com/Homebrew/homebrew/pull/9986
   def check_path_for_trailing_slashes
     bad_paths = ENV["PATH"].split(File::PATH_SEPARATOR).select { |p| p[-1..-1] == "/" }
     return if bad_paths.empty?
@@ -83,8 +69,6 @@ class Checks
     s
   end
 
-  # Installing MacGPG2 interferes with Homebrew in a big way
-  # https://github.com/GPGTools/MacGPG2
   def check_for_macgpg2
     return if File.exist? "/usr/local/MacGPG2/share/gnupg/VERSION"
 
@@ -113,8 +97,6 @@ class Checks
   end
 
   def check_for_stray_dylibs
-    # Dylibs which are generally OK should be added to this list,
-    # with a short description of the software they come with.
     white_list = [
       "libfuse.2.dylib", # MacFuse
       "libfuse_ino64.2.dylib", # MacFuse
@@ -138,8 +120,6 @@ class Checks
   end
 
   def check_for_stray_static_libs
-    # Static libs which are generally OK should be added to this list,
-    # with a short description of the software they come with.
     white_list = [
       "libsecurity_agent_client.a", # OS X 10.8.2 Supplemental Update
       "libsecurity_agent_server.a", # OS X 10.8.2 Supplemental Update
@@ -158,8 +138,6 @@ class Checks
   end
 
   def check_for_stray_pcs
-    # Package-config files which are generally OK should be added to this list,
-    # with a short description of the software they come with.
     white_list = [
       "fuse.pc", # OSXFuse/MacFuse
       "macfuse.pc", # OSXFuse MacFuse compatibility layer
@@ -221,7 +199,6 @@ class Checks
     unless ponk.empty?
       <<-EOS.undent
       You have MacPorts or Fink installed:
-        #{ponk.join(", ")}
 
       This can cause trouble. You don't have to uninstall them, but you may want to
       temporarily move them out of the way, e.g.
@@ -244,7 +221,6 @@ class Checks
     end
     unless broken_symlinks.empty? then <<-EOS.undent
     Broken symlinks were found. Remove them with `brew prune`:
-      #{broken_symlinks * "\n      "}
     EOS
     end
   end
@@ -258,7 +234,6 @@ class Checks
     end
   end
 
-  # TODO: distill down into single method definition a la BuildToolsError
   if MacOS.version >= "10.9"
     def check_for_installed_developer_tools
       unless MacOS::Xcode.installed? || MacOS::CLT.installed? then <<-EOS.undent
@@ -269,7 +244,6 @@ class Checks
       end
     end
 
-    # TODO: remove when 10.11 is released
     if MacOS.version >= "10.11"
       def check_xcode_up_to_date
         if MacOS::Xcode.installed? && MacOS::Xcode.outdated?
@@ -377,13 +351,10 @@ class Checks
   end
 
   def check_for_stray_developer_directory
-    # if the uninstaller script isn't there, it's a good guess neither are
-    # any troublesome leftover Xcode files
     uninstaller = Pathname.new("/Developer/Library/uninstall-developer-folder")
     if MacOS::Xcode.version >= "4.3" && uninstaller.exist? then <<-EOS.undent
     You have leftover files from an older version of Xcode.
     You should delete them using:
-      #{uninstaller}
     EOS
     end
   end
@@ -393,7 +364,6 @@ class Checks
 
     libs = Pathname.new("/usr/bin/install_name_tool").dynamically_linked_libraries
 
-    # otool may not work, for example if the Xcode license hasn't been accepted yet
     return if libs.empty?
 
     unless libs.include? "/usr/lib/libxcselect.dylib" then <<-EOS.undent
@@ -458,18 +428,16 @@ class Checks
   def check_tmpdir_sticky_bit
     world_writable = HOMEBREW_TEMP.stat.mode & 0777 == 0777
     if world_writable && !HOMEBREW_TEMP.sticky? then <<-EOS.undent
-    #{HOMEBREW_TEMP} is world-writable but does not have the sticky bit set.
     Please run "Repair Disk Permissions" in Disk Utility.
   EOS
     end
   end
 
   (Keg::TOP_LEVEL_DIRECTORIES + ["lib/pkgconfig"]).each do |d|
-    #nodyna <ID:define_method-9> <DM MODERATE (array)>
+    #nodyna <define_method-612> <DM MODERATE (array)>
     define_method("check_access_#{d.sub("/", "_")}") do
       dir = HOMEBREW_PREFIX.join(d)
       if dir.exist? && !dir.writable_real? then <<-EOS.undent
-      #{dir} isn't writable.
 
       This can happen if you "sudo make install" software that isn't managed by
       by Homebrew. If a formula tries to write a file to this directory, the
@@ -484,7 +452,6 @@ class Checks
   def check_access_site_packages
     if Language::Python.homebrew_site_packages.exist? && !Language::Python.homebrew_site_packages.writable_real?
       <<-EOS.undent
-      #{Language::Python.homebrew_site_packages} isn't writable.
       This can happen if you "sudo pip install" software that isn't managed
       by Homebrew. If you install a formula with Python modules, the install
       will fail during the link step.
@@ -497,7 +464,6 @@ class Checks
   def check_access_logs
     if HOMEBREW_LOGS.exist? && !HOMEBREW_LOGS.writable_real?
       <<-EOS.undent
-      #{HOMEBREW_LOGS} isn't writable.
       Homebrew writes debugging logs to this location.
       You should probably `chown` #{HOMEBREW_LOGS}
     EOS
@@ -507,7 +473,6 @@ class Checks
   def check_access_cache
     if HOMEBREW_CACHE.exist? && !HOMEBREW_CACHE.writable_real?
       <<-EOS.undent
-      #{HOMEBREW_CACHE} isn't writable.
       This can happen if you run `brew install` or `brew fetch` as another user.
       Homebrew caches downloaded files to this location.
       You should probably `chown` #{HOMEBREW_CACHE}
@@ -518,7 +483,6 @@ class Checks
   def check_access_cellar
     if HOMEBREW_CELLAR.exist? && !HOMEBREW_CELLAR.writable_real?
       <<-EOS.undent
-      #{HOMEBREW_CELLAR} isn't writable.
       You should `chown` #{HOMEBREW_CELLAR}
     EOS
     end
@@ -528,7 +492,6 @@ class Checks
     opt = HOMEBREW_PREFIX.join("opt")
     if opt.exist? && !opt.writable_real?
       <<-EOS.undent
-      #{opt} isn't writable.
       You should `chown` #{opt}
     EOS
     end
@@ -572,7 +535,6 @@ class Checks
     unless prefix.exist?
       <<-EOS.undent
       The directory Xcode is reportedly installed to doesn't exist:
-        #{prefix}
       You may need to `xcode-select` the proper path if you have moved Xcode.
     EOS
     end
@@ -600,8 +562,6 @@ class Checks
       case p
       when "/usr/bin"
         unless $seen_prefix_bin
-          # only show the doctor message if there are any conflicts
-          # rationale: a default install should not trigger any brew doctor messages
           conflicts = Dir["#{HOMEBREW_PREFIX}/bin/*"].
                       map { |fn| File.basename fn }.
                       select { |bn| File.exist? "/usr/bin/#{bn}" }
@@ -612,7 +572,6 @@ class Checks
             This means that system-provided programs will be used instead of those
             provided by Homebrew. The following tools exist at both paths:
 
-                #{conflicts * "\n                "}
 
             Consider setting your PATH so that #{HOMEBREW_PREFIX}/bin
             occurs before /usr/bin. Here is a one-liner:
@@ -640,7 +599,6 @@ class Checks
   end
 
   def check_user_path_3
-    # Don't complain about sbin not being in the path if it doesn't exist
     sbin = (HOMEBREW_PREFIX+"sbin")
     if sbin.directory? && sbin.children.length > 0
       unless $seen_prefix_sbin
@@ -676,7 +634,6 @@ class Checks
   end
 
   def check_for_unsupported_curl_vars
-    # Support for SSL_CERT_DIR seemed to be removed in the 10.10.5 update.
     if MacOS.version >= :yosemite && !ENV["SSL_CERT_DIR"].nil? then <<-EOS.undent
       SSL_CERT_DIR support was removed from Apple's curl.
       If fetching formulae fails you should:
@@ -703,7 +660,6 @@ class Checks
     EOS
     elsif binary.to_s != "#{HOMEBREW_PREFIX}/bin/pkg-config" then <<-EOS.undent
     You have a non-Homebrew 'pkg-config' in your PATH:
-      #{binary}
 
     `./configure` may have problems finding brew-installed packages using
     this other pkg-config.
@@ -718,7 +674,6 @@ class Checks
 
     return if @found.empty?
 
-    # Our gettext formula will be caught by check_linked_keg_only_brews
     f = Formulary.factory("gettext") rescue nil
     return if f && f.linked_keg.directory? && @found.all? do |path|
       Pathname.new(path).realpath.to_s.start_with? "#{HOMEBREW_CELLAR}/gettext"
@@ -765,7 +720,6 @@ class Checks
     whitelist = %W[
       /usr/bin /usr/sbin
       /usr/X11/bin /usr/X11R6/bin /opt/X11/bin
-      #{HOMEBREW_PREFIX}/bin #{HOMEBREW_PREFIX}/sbin
       /Applications/Server.app/Contents/ServerRoot/usr/bin
       /Applications/Server.app/Contents/ServerRoot/usr/sbin
     ].map(&:downcase)
@@ -839,7 +793,6 @@ class Checks
     return unless HOMEBREW_CELLAR.exist?
     volumes = Volumes.new
 
-    # Find the volumes for the TMP folder & HOMEBREW_CELLAR
     real_cellar = HOMEBREW_CELLAR.realpath
 
     tmp = Pathname.new(Dir.mktmpdir("doctor", HOMEBREW_TEMP))
@@ -864,13 +817,6 @@ class Checks
   def check_filesystem_case_sensitive
     volumes = Volumes.new
     case_sensitive_vols = [HOMEBREW_PREFIX, HOMEBREW_REPOSITORY, HOMEBREW_CELLAR, HOMEBREW_TEMP].select do |dir|
-      # We select the dir as being case-sensitive if either the UPCASED or the
-      # downcased variant is missing.
-      # Of course, on a case-insensitive fs, both exist because the os reports so.
-      # In the rare situation when the user has indeed a downcased and an upcased
-      # dir (e.g. /TMP and /tmp) this check falsely thinks it is case-insensitive
-      # but we don't care beacuse: 1. there is more than one dir checked, 2. the
-      # check is not vital and 3. we would have to touch files otherwise.
       upcased = Pathname.new(dir.to_s.upcase)
       downcased = Pathname.new(dir.to_s.downcase)
       dir.exist? && !(upcased.exist? && downcased.exist?)
@@ -883,7 +829,6 @@ class Checks
   end
 
   def __check_git_version
-    # https://help.github.com/articles/https-cloning-errors
     `git --version`.chomp =~ /git version ((?:\d+\.?)+)/
 
     if $1 && Version.new($1) < Version.new("1.7.10")
@@ -946,7 +891,6 @@ class Checks
 
       With a non-standard origin, Homebrew won't pull updates from
       the main repository. The current git origin is:
-        #{origin}
 
       Unless you have compelling reasons, consider setting the
       origin remote to point at the main repository, located at:
@@ -963,7 +907,6 @@ class Checks
     safe_autoconfs = %w[/usr/bin/autoconf /Developer/usr/bin/autoconf]
     unless autoconf.nil? || safe_autoconfs.include?(autoconf.to_s) then <<-EOS.undent
     An "autoconf" in your path blocks the Xcode-provided version at:
-      #{autoconf}
 
     This custom autoconf may cause some Homebrew formulae to fail to compile.
     EOS
@@ -1009,13 +952,11 @@ class Checks
   end
 
   def check_for_other_frameworks
-    # Other frameworks that are known to cause problems when present
     %w[expat.framework libexpat.framework libcurl.framework].
       map { |frmwrk| "/Library/Frameworks/#{frmwrk}" }.
       select { |frmwrk| File.exist? frmwrk }.
       map do |frmwrk|
         <<-EOS.undent
-      #{frmwrk} detected
       This can be picked up by CMake's build system and likely cause the build to
       fail. You may need to move this file out of the way to compile CMake.
       EOS
@@ -1104,7 +1045,6 @@ class Checks
   def check_for_bad_python_symlink
     return unless which "python"
     `python -V 2>&1` =~ /Python (\d+)\./
-    # This won't be the right warning if we matched nothing at all
     return if $1.nil?
     unless $1 == "2" then <<-EOS.undent
     python is symlinked to python#{$1}
@@ -1186,14 +1126,11 @@ class Checks
     Leaving kegs unlinked can lead to build-trouble and cause brews that depend on
     those kegs to fail to run properly once built. Run `brew link` on these:
 
-        #{unlinked * "\n        "}
     EOS
     end
   end
 
   def check_xcode_license_approved
-    # If the user installs Xcode-only, they have to approve the
-    # license or no "xc*" tool will work.
     if `/usr/bin/xcrun clang 2>&1` =~ /license/ && !$?.success? then <<-EOS.undent
       You have not agreed to the Xcode license.
       Builds will fail! Agree to the license by opening Xcode.app or running:
@@ -1292,7 +1229,7 @@ module Homebrew
     first_warning = true
     methods.each do |method|
       begin
-        #nodyna <ID:send-13> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-613> <SD COMPLEX (change-prone variables)>
         out = checks.send(method)
       rescue NoMethodError
         Homebrew.failed = true
@@ -1302,7 +1239,6 @@ module Homebrew
       unless out.nil? || out.empty?
         if first_warning
           puts <<-EOS.undent
-            #{Tty.white}Please note that these warnings are just used to help the Homebrew maintainers
             with debugging if you file an issue. If everything you use Homebrew for is
             working fine: please don't worry and just ignore them. Thanks!#{Tty.reset}
           EOS
@@ -1320,6 +1256,7 @@ module Homebrew
 
   def inject_dump_stats(checks)
     checks.extend Module.new {
+      #nodyna <send-614> <not yet classified>
       def send(method, *)
         time = Time.now
         super

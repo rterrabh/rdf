@@ -1,14 +1,9 @@
-# encoding: utf-8
 
 class MockExpectationError < StandardError; end # :nodoc:
 
-##
-# A simple and clean mock object framework.
 
 module MiniTest # :nodoc:
 
-  ##
-  # All mock objects are an instance of Mock
 
   class Mock
     alias :__respond_to? :respond_to?
@@ -24,30 +19,6 @@ module MiniTest # :nodoc:
       @actual_calls   = Hash.new { |calls, name| calls[name] = [] }
     end
 
-    ##
-    # Expect that method +name+ is called, optionally with +args+ or a
-    # +blk+, and returns +retval+.
-    #
-    #   @mock.expect(:meaning_of_life, 42)
-    #   @mock.meaning_of_life # => 42
-    #
-    #   @mock.expect(:do_something_with, true, [some_obj, true])
-    #   @mock.do_something_with(some_obj, true) # => true
-    #
-    #   @mock.expect(:do_something_else, true) do |a1, a2|
-    #     a1 == "buggs" && a2 == :bunny
-    #   end
-    #
-    # +args+ is compared to the expected args using case equality (ie, the
-    # '===' operator), allowing for less specific expectations.
-    #
-    #   @mock.expect(:uses_any_string, true, [String])
-    #   @mock.uses_any_string("foo") # => true
-    #   @mock.verify  # => true
-    #
-    #   @mock.expect(:uses_one_string, true, ["foo"]
-    #   @mock.uses_one_string("bar") # => true
-    #   @mock.verify  # => raises MockExpectationError
 
     def expect(name, retval, args=[], &blk)
       if block_given?
@@ -69,10 +40,6 @@ module MiniTest # :nodoc:
       end
     end
 
-    ##
-    # Verify that all methods were called as expected. Raises
-    # +MockExpectationError+ if the mock object was not called as
-    # expected.
 
     def verify
       @expected_calls.each do |name, calls|
@@ -113,7 +80,6 @@ module MiniTest # :nodoc:
         raise MockExpectationError, "mocked method %p failed block w/ %p" %
           [sym, args] unless val_block.call(args)
 
-        # keep "verify" happy
         @actual_calls[sym] << expected_call
         return retval
       end
@@ -149,21 +115,6 @@ end
 
 class Object # :nodoc:
 
-  ##
-  # Add a temporary stubbed method replacing +name+ for the duration
-  # of the +block+. If +val_or_callable+ responds to #call, then it
-  # returns the result of calling it, otherwise returns the value
-  # as-is. Cleans up the stub at the end of the +block+. The method
-  # +name+ must exist before stubbing.
-  #
-  #     def test_stale_eh
-  #       obj_under_test = Something.new
-  #       refute obj_under_test.stale?
-  #
-  #       Time.stub :now, Time.at(0) do
-  #         assert obj_under_test.stale?
-  #       end
-  #     end
 
   def stub name, val_or_callable, &block
     new_name = "__minitest_stub__#{name}"
@@ -171,18 +122,18 @@ class Object # :nodoc:
     metaclass = class << self; self; end
 
     if respond_to? name and not methods.map(&:to_s).include? name.to_s then
-      #nodyna <ID:send-143> <SD MODERATE (private methods)>
-      #nodyna <ID:define_method-45> <DM COMPLEX (events)>
+      #nodyna <send-1432> <SD MODERATE (private methods)>
+      #nodyna <define_method-1433> <DM COMPLEX (events)>
       metaclass.send :define_method, name do |*args|
         super(*args)
       end
     end
 
-    #nodyna <ID:send-144> <SD MODERATE (private methods)>
+    #nodyna <send-1434> <SD MODERATE (private methods)>
     metaclass.send :alias_method, new_name, name
 
-    #nodyna <ID:send-145> <SD MODERATE (private methods)>
-    #nodyna <ID:define_method-46> <DM COMPLEX (events)>
+    #nodyna <send-1435> <SD MODERATE (private methods)>
+    #nodyna <define_method-1436> <DM COMPLEX (events)>
     metaclass.send :define_method, name do |*args|
       if val_or_callable.respond_to? :call then
         val_or_callable.call(*args)
@@ -193,11 +144,11 @@ class Object # :nodoc:
 
     yield self
   ensure
-    #nodyna <ID:send-146> <SD MODERATE (private methods)>
+    #nodyna <send-1437> <SD MODERATE (private methods)>
     metaclass.send :undef_method, name
-    #nodyna <ID:send-147> <SD MODERATE (private methods)>
+    #nodyna <send-1438> <SD MODERATE (private methods)>
     metaclass.send :alias_method, name, new_name
-    #nodyna <ID:send-148> <SD MODERATE (private methods)>
+    #nodyna <send-1439> <SD MODERATE (private methods)>
     metaclass.send :undef_method, new_name
   end
 end

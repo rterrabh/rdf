@@ -11,8 +11,6 @@ class Mvptree < Formula
     sha1 "4cfffe6141a3f2f7e3a2a01fb966580ecaa5b6d1" => :lion
   end
 
-  # Patch submitted to upstream by mail
-  # Fixes a "permission denied" problem in the Makefile
   patch :DATA
 
   def install
@@ -23,8 +21,6 @@ class Mvptree < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <mvptree.h>
       int main() {
         MVPDP *pt = dp_alloc(MVP_BYTEARRAY);
         dp_free(pt, (MVPFreeFunc)0);

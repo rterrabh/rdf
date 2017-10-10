@@ -12,7 +12,6 @@ class Psutils < Formula
   end
 
   def install
-    # This is required, because the makefile expects that its man folder exists
     man1.mkpath
     system "make", "-f", "Makefile.unix",
                          "PERL=/usr/bin/perl",

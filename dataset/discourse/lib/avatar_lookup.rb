@@ -4,7 +4,6 @@ class AvatarLookup
     @user_ids = user_ids.tap(&:compact!).tap(&:uniq!).tap(&:flatten!)
   end
 
-  # Lookup a user by id
   def [](user_id)
     users[user_id]
   end
@@ -23,7 +22,6 @@ class AvatarLookup
   end
 
   def user_lookup_hash
-    # adding tap here is a personal taste thing
     hash = {}
     User.where(:id => @user_ids)
         .select(AvatarLookup.lookup_columns)

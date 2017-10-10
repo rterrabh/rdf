@@ -5,7 +5,6 @@ require 'rexml/text'
 
 module REXML
   module Parsers
-    # SAX2Parser
     class SAX2Parser
       def initialize source
         @parser = BaseParser.new(source)
@@ -25,36 +24,6 @@ module REXML
         @parser.add_listener( listener )
       end
 
-      # Listen arguments:
-      #
-      # Symbol, Array, Block
-      #         Listen to Symbol events on Array elements
-      # Symbol, Block
-      #   Listen to Symbol events
-      # Array, Listener
-      #         Listen to all events on Array elements
-      # Array, Block
-      #         Listen to :start_element events on Array elements
-      # Listener
-      #         Listen to All events
-      #
-      # Symbol can be one of: :start_element, :end_element,
-      # :start_prefix_mapping, :end_prefix_mapping, :characters,
-      # :processing_instruction, :doctype, :attlistdecl, :elementdecl,
-      # :entitydecl, :notationdecl, :cdata, :xmldecl, :comment
-      #
-      # There is an additional symbol that can be listened for: :progress.
-      # This will be called for every event generated, passing in the current
-      # stream position.
-      #
-      # Array contains regular expressions or strings which will be matched
-      # against fully qualified element names.
-      #
-      # Listener must implement the methods in SAX2Listener
-      #
-      # Block will be passed the same arguments as a SAX2Listener method would
-      # be, where the method name is the same as the matched Symbol.
-      # See the SAX2Listener for more information.
       def listen( *args, &blok )
         if args[0].kind_of? Symbol
           if args.size == 2
@@ -100,19 +69,15 @@ module REXML
             context = context[1]
           when :start_element
             @tag_stack.push(event[1])
-            # find the observers for namespaces
             procs = get_procs( :start_prefix_mapping, event[1] )
             listeners = get_listeners( :start_prefix_mapping, event[1] )
             if procs or listeners
-              # break out the namespace declarations
-              # The attributes live in event[2]
               event[2].each {|n, v| event[2][n] = @parser.normalize(v)}
               nsdecl = event[2].find_all { |n, value| n =~ /^xmlns(:|$)/ }
               nsdecl.collect! { |n, value| [ n[6..-1], value ] }
               @namespace_stack.push({})
               nsdecl.each do |n,v|
                 @namespace_stack[-1][n] = v
-                # notify observers of namespaces
                 procs.each { |ob| ob.call( n, v ) } if procs
                 listeners.each { |ob| ob.start_prefix_mapping(n, v) } if listeners
               end
@@ -121,10 +86,8 @@ module REXML
             prefix = $1
             local = $2
             uri = get_namespace(prefix)
-            # find the observers for start_element
             procs = get_procs( :start_element, event[1] )
             listeners = get_listeners( :start_element, event[1] )
-            # notify observers
             procs.each { |ob| ob.call( uri, local, event[1], event[2] ) } if procs
             listeners.each { |ob|
               ob.start_element( uri, local, event[1], event[2] )
@@ -135,29 +98,23 @@ module REXML
             prefix = $1
             local = $2
             uri = get_namespace(prefix)
-            # find the observers for start_element
             procs = get_procs( :end_element, event[1] )
             listeners = get_listeners( :end_element, event[1] )
-            # notify observers
             procs.each { |ob| ob.call( uri, local, event[1] ) } if procs
             listeners.each { |ob|
               ob.end_element( uri, local, event[1] )
             } if listeners
 
             namespace_mapping = @namespace_stack.pop
-            # find the observers for namespaces
             procs = get_procs( :end_prefix_mapping, event[1] )
             listeners = get_listeners( :end_prefix_mapping, event[1] )
             if procs or listeners
               namespace_mapping.each do |ns_prefix, ns_uri|
-                # notify observers of namespaces
                 procs.each { |ob| ob.call( ns_prefix ) } if procs
                 listeners.each { |ob| ob.end_prefix_mapping(ns_prefix) } if listeners
               end
             end
           when :text
-            #normalized = @parser.normalize( event[1] )
-            #handle( :characters, normalized )
             copy = event[1].clone
 
             esub = proc { |match|
@@ -190,10 +147,9 @@ module REXML
         tag = @tag_stack[-1]
         procs = get_procs( symbol, tag )
         listeners = get_listeners( symbol, tag )
-        # notify observers
         procs.each { |ob| ob.call( *arguments ) } if procs
         listeners.each { |l|
-          #nodyna <ID:send-102> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1979> <SD COMPLEX (change-prone variables)>
           l.send( symbol.to_s, *arguments )
         } if listeners
       end
@@ -225,8 +181,6 @@ module REXML
         handle( event[0], event[1..-1] )
       end
 
-      # The following methods are duplicates, but it is faster than using
-      # a helper
       def get_procs( symbol, name )
         return nil if @procs.size == 0
         @procs.find_all do |sym, match, block|

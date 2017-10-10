@@ -1,9 +1,4 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
-#TODO: THIS FILE SHOULD NOT EXIST, EVIL SQL SHOULD BE ENCAPSULATED IN EvilQueries,
-#throwing all of this stuff in user violates demeter like WHOA
 module User::Querying
   def find_visible_shareable_by_id(klass, id, opts={} )
     key = (opts.delete(:key) || :id)
@@ -21,7 +16,6 @@ module User::Querying
     visible_ids_from_sql(klass, opts)
   end
 
-  # @return [Array<Integer>]
   def visible_ids_from_sql(klass, opts={})
     opts = prep_opts(klass, opts)
     opts[:klass] = klass
@@ -70,8 +64,6 @@ module User::Querying
   def construct_public_followings_sql(opts)
     logger.debug "[EVIL-QUERY] user.construct_public_followings_sql"
 
-    # For PostgreSQL and MySQL/MariaDB we use a different query
-    # see issue: https://github.com/diaspora/diaspora/issues/5014
     if AppConfig.postgres?
       query = opts[:klass].where(:author_id => Person.in_aspects(opts[:by_members_of]).select("people.id"), :public => true, :pending => false)
     else
@@ -119,8 +111,6 @@ module User::Querying
     Contact.where(:user_id => self.id, :person_id => person_id).includes(:person => :profile).first
   end
 
-  # @param [Person] person
-  # @return [Boolean] whether person is a contact of this user
   def has_contact_for?(person)
     Contact.exists?(:user_id => self.id, :person_id => person.id)
   end
@@ -156,7 +146,6 @@ module User::Querying
 
   protected
 
-  # @return [Hash]
   def prep_opts(klass, opts)
     defaults = {
         :order => 'created_at DESC',

@@ -1,4 +1,3 @@
-# for ruby-1.8.0
 
 module DRb # :nodoc: all
   class DRbServer

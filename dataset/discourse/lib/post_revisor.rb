@@ -2,10 +2,6 @@ require "edit_rate_limiter"
 
 class PostRevisor
 
-  # Helps us track changes to a topic.
-  #
-  # It's passed to `track_topic_fields` callbacks so they can record if they
-  # changed a value or not. This is needed for things like custom fields.
   class TopicChanges
     attr_reader :topic, :user
 
@@ -55,13 +51,11 @@ class PostRevisor
   def self.track_topic_field(field, &block)
     tracked_topic_fields[field] = block
 
-    # Define it in the serializer unless it already has been defined
     unless PostRevisionSerializer.instance_methods(false).include?("#{field}_changes".to_sym)
       PostRevisionSerializer.add_compared_field(field)
     end
   end
 
-  # Fields we want to record revisions for by default
   track_topic_field(:title) do |tc, title|
     tc.record_change('title', tc.topic.title, title)
     tc.topic.title = title
@@ -72,12 +66,6 @@ class PostRevisor
     tc.check_result(tc.topic.change_category_to_id(category_id))
   end
 
-  # AVAILABLE OPTIONS:
-  # - revised_at: changes the date of the revision
-  # - force_new_version: bypass ninja-edit window
-  # - bypass_rate_limiter:
-  # - bypass_bump: do not bump the topic, even if last post
-  # - skip_validations: ask ActiveRecord to skip validations
   def revise!(editor, fields, opts={})
     @editor = editor
     @fields = fields.with_indifferent_access
@@ -85,12 +73,10 @@ class PostRevisor
 
     @topic_changes = TopicChanges.new(@topic, editor)
 
-    # some normalization
     @fields[:raw] = cleanup_whitespaces(@fields[:raw]) if @fields.has_key?(:raw)
     @fields[:user_id] = @fields[:user_id].to_i if @fields.has_key?(:user_id)
     @fields[:category_id] = @fields[:category_id].to_i if @fields.has_key?(:category_id)
 
-    # always reset edit_reason unless provided
     @fields[:edit_reason] = nil unless @fields[:edit_reason].present?
 
     return false unless should_revise?
@@ -114,21 +100,12 @@ class PostRevisor
     Post.transaction do
       revise_post
 
-      # TODO: these callbacks are being called in a transaction
-      # it is kind of odd, because the callback is called "before_edit"
-      # but the post is already edited at this point
-      # Trouble is that much of the logic of should I edit? is deeper
-      # down so yanking this in front of the transaction will lead to
-      # false positive.
       plugin_callbacks
 
       revise_topic
       advance_draft_sequence
     end
 
-    # WARNING: do not pull this into the transaction
-    # it can fire events in sidekiq before the post is done saving
-    # leading to corrupt state
     post_process_post
 
     update_topic_word_counts
@@ -152,7 +129,7 @@ class PostRevisor
 
   def post_changed?
     POST_TRACKED_FIELDS.each do |field|
-      #nodyna <ID:send-69> <SD MODERATE (array)>
+      #nodyna <send-247> <SD MODERATE (array)>
       return true if @fields.has_key?(field) && @fields[field] != @post.send(field)
     end
     false
@@ -210,7 +187,6 @@ class PostRevisor
       prev_owner = User.find(@post.user_id)
       new_owner = User.find(@fields["user_id"])
 
-      # UserActionObserver will create new UserAction records for the new owner
 
       UserAction.where(target_post_id: @post.id)
                 .where(user_id: prev_owner.id)
@@ -226,7 +202,7 @@ class PostRevisor
     end
 
     POST_TRACKED_FIELDS.each do |field|
-      #nodyna <ID:send-70> <SD MODERATE (array)>
+      #nodyna <send-248> <SD MODERATE (array)>
       @post.send("#{field}=", @fields[field]) if @fields.has_key?(field)
     end
 
@@ -241,7 +217,6 @@ class PostRevisor
     @post_successfully_saved = @post.save(validate: @validate_post)
     @post.save_reply_relationships
 
-    # post owner changed
     if prev_owner && new_owner && prev_owner != new_owner
       likes = UserAction.where(target_post_id: @post.id)
                         .where(user_id: prev_owner.id)
@@ -298,7 +273,6 @@ class PostRevisor
   end
 
   def create_or_update_revision
-    # don't create an empty revision if something failed
     return unless successfully_saved_post_and_topic
     @version_changed ? create_revision : update_revision
   end
@@ -330,7 +304,6 @@ class PostRevisor
         revision.modifications[field] = modifications[field]
       end
     end
-    # should probably do this before saving the post!
     if revision.modifications.empty?
       revision.destroy
       @post.version -= 1

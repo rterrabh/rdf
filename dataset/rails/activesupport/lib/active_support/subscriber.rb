@@ -1,35 +1,9 @@
 require 'active_support/per_thread_registry'
 
 module ActiveSupport
-  # ActiveSupport::Subscriber is an object set to consume
-  # ActiveSupport::Notifications. The subscriber dispatches notifications to
-  # a registered object based on its given namespace.
-  #
-  # An example would be Active Record subscriber responsible for collecting
-  # statistics about queries:
-  #
-  #   module ActiveRecord
-  #     class StatsSubscriber < ActiveSupport::Subscriber
-  #       def sql(event)
-  #         Statsd.timing("sql.#{event.payload[:name]}", event.duration)
-  #       end
-  #     end
-  #   end
-  #
-  # And it's finally registered as:
-  #
-  #   ActiveRecord::StatsSubscriber.attach_to :active_record
-  #
-  # Since we need to know all instance methods before attaching the log
-  # subscriber, the line above should be called after your subscriber definition.
-  #
-  # After configured, whenever a "sql.active_record" notification is published,
-  # it will properly dispatch the event (ActiveSupport::Notifications::Event) to
-  # the +sql+ method.
   class Subscriber
     class << self
 
-      # Attach the subscriber to a namespace.
       def attach_to(namespace, subscriber=new, notifier=ActiveSupport::Notifications)
         @namespace  = namespace
         @subscriber = subscriber
@@ -37,17 +11,12 @@ module ActiveSupport
 
         subscribers << subscriber
 
-        # Add event subscribers for all existing methods on the class.
         subscriber.public_methods(false).each do |event|
           add_event_subscriber(event)
         end
       end
 
-      # Adds event subscribers for all new methods added to the class.
       def method_added(event)
-        # Only public methods are added as subscribers, and only if a notifier
-        # has been set up. This means that subscribers will only be set up for
-        # classes that call #attach_to.
         if public_method_defined?(event) && notifier
           add_event_subscriber(event)
         end
@@ -66,7 +35,6 @@ module ActiveSupport
 
         pattern = "#{event}.#{namespace}"
 
-        # don't add multiple subscribers (eg. if methods are redefined)
         return if subscriber.patterns.include?(pattern)
 
         subscriber.patterns << pattern
@@ -97,7 +65,7 @@ module ActiveSupport
       event.payload.merge!(payload)
 
       method = name.split('.').first
-      #nodyna <ID:send-238> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-983> <SD COMPLEX (change-prone variables)>
       send(method, event)
     end
 
@@ -108,10 +76,6 @@ module ActiveSupport
       end
   end
 
-  # This is a registry for all the event stacks kept for subscribers.
-  #
-  # See the documentation of <tt>ActiveSupport::PerThreadRegistry</tt>
-  # for further details.
   class SubscriberQueueRegistry # :nodoc:
     extend PerThreadRegistry
 

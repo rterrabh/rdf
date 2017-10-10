@@ -4,11 +4,8 @@ module Spree
       respond_to :json
       layout false
 
-      # http://spreecommerce.com/blog/2010/11/02/json-hijacking-vulnerability/
       before_action :check_json_authenticity, only: :index
 
-      # TODO: Clean this up by moving searching out to user_class_extensions
-      # And then JSON building with something like Active Model Serializers
       def users
         if params[:ids]
           @users = Spree.user_class.where(id: params[:ids].split(',').flatten)

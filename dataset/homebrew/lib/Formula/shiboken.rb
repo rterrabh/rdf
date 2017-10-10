@@ -17,18 +17,14 @@ class Shiboken < Formula
   depends_on "cmake" => :build
   depends_on "qt"
 
-  # don't use depends_on :python because then bottles install Homebrew's python
   option "without-python", "Build without python 2 support"
   depends_on :python => :recommended if MacOS.version <= :snow_leopard
   depends_on :python3 => :optional
 
   def install
-    # As of 1.1.1 the install fails unless you do an out of tree build and put
-    # the source dir last in the args.
     Language::Python.each_python(build) do |python, version|
       mkdir "macbuild#{version}" do
         args = std_cmake_args
-        # Building the tests also runs them.
         args << "-DBUILD_TESTS=ON"
         if python == "python3" && Formula["python3"].installed?
           python_framework = (Formula["python3"].opt_prefix)/"Frameworks/Python.framework/Versions/#{version}"

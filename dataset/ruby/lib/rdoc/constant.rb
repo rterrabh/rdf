@@ -1,32 +1,20 @@
-##
-# A constant
 
 class RDoc::Constant < RDoc::CodeObject
 
   MARSHAL_VERSION = 0 # :nodoc:
 
-  ##
-  # Sets the module or class this is constant is an alias for.
 
   attr_writer :is_alias_for
 
-  ##
-  # The constant's name
 
   attr_accessor :name
 
-  ##
-  # The constant's value
 
   attr_accessor :value
 
-  ##
-  # The constant's visibility
 
   attr_accessor :visibility
 
-  ##
-  # Creates a new constant with +name+, +value+ and +comment+
 
   def initialize(name, value, comment)
     super()
@@ -40,8 +28,6 @@ class RDoc::Constant < RDoc::CodeObject
     self.comment = comment
   end
 
-  ##
-  # Constants are ordered by name
 
   def <=> other
     return unless self.class === other
@@ -49,8 +35,6 @@ class RDoc::Constant < RDoc::CodeObject
     [parent_name, name] <=> [other.parent_name, other.name]
   end
 
-  ##
-  # Constants are equal when their #parent and #name is the same
 
   def == other
     self.class == other.class and
@@ -58,9 +42,6 @@ class RDoc::Constant < RDoc::CodeObject
       @name == other.name
   end
 
-  ##
-  # A constant is documented if it has a comment, or is an alias
-  # for a documented class or module.
 
   def documented?
     return true if super
@@ -74,15 +55,11 @@ class RDoc::Constant < RDoc::CodeObject
     @is_alias_for.documented?
   end
 
-  ##
-  # Full constant name including namespace
 
   def full_name
     @full_name ||= "#{parent_name}::#{@name}"
   end
 
-  ##
-  # The module or class this constant is an alias for
 
   def is_alias_for
     case @is_alias_for
@@ -102,8 +79,6 @@ class RDoc::Constant < RDoc::CodeObject
     ]
   end
 
-  ##
-  # Dumps this Constant for use by ri.  See also #marshal_load
 
   def marshal_dump
     alias_name = case found = is_alias_for
@@ -124,12 +99,6 @@ class RDoc::Constant < RDoc::CodeObject
     ]
   end
 
-  ##
-  # Loads this Constant from +array+.  For a loaded Constant the following
-  # methods will return cached values:
-  #
-  # * #full_name
-  # * #parent_name
 
   def marshal_load array
     initialize array[1], nil, array[5]
@@ -137,8 +106,6 @@ class RDoc::Constant < RDoc::CodeObject
     @full_name     = array[2]
     @visibility    = array[3]
     @is_alias_for  = array[4]
-    #                      5 handled above
-    #                      6 handled below
     @parent_name   = array[7]
     @parent_class  = array[8]
     @section_title = array[9]
@@ -146,8 +113,6 @@ class RDoc::Constant < RDoc::CodeObject
     @file = RDoc::TopLevel.new array[6]
   end
 
-  ##
-  # Path to this constant for use with HTML generator output.
 
   def path
     "#{@parent.path}##{@name}"
@@ -164,8 +129,6 @@ class RDoc::Constant < RDoc::CodeObject
     end
   end
 
-  ##
-  # Sets the store for this class or module and its contained code objects.
 
   def store= store
     super

@@ -2,7 +2,6 @@ require_dependency 'email/sender'
 
 module Jobs
 
-  # Asynchronously send an email
   class InviteEmail < Jobs::Base
 
     def execute(args)
@@ -10,6 +9,7 @@ module Jobs
 
       invite = Invite.find_by(id: args[:invite_id])
       message = InviteMailer.send_invite(invite)
+      #nodyna <send-415> <not yet classified>
       Email::Sender.new(message, :invite).send
     end
 

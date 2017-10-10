@@ -6,8 +6,6 @@ class BoostPython < Formula
   head "https://github.com/boostorg/boost.git"
 
   stable do
-    # don't explicitly link a Python framework
-    # https://github.com/boostorg/build/pull/78
     patch do
       url "https://gist.githubusercontent.com/tdsmith/9026da299ac1bfd3f419/raw/b73a919c38af08941487ca37d46e711864104c4d/boost-python.diff"
       sha256 "9f374761ada11eecd082e7f9d5b80efeb387039d3a290f45b61f0730bce3801a"
@@ -41,7 +39,6 @@ class BoostPython < Formula
   def install
     ENV.universal_binary if build.universal?
 
-    # "layout" should be synchronized with boost
     args = ["--prefix=#{prefix}",
             "--libdir=#{lib}",
             "-d2",
@@ -53,9 +50,6 @@ class BoostPython < Formula
 
     args << "address-model=32_64" << "architecture=x86" << "pch=off" if build.universal?
 
-    # Build in C++11 mode if boost was built in C++11 mode.
-    # Trunk starts using "clang++ -x c" to select C compiler which breaks C++11
-    # handling using ENV.cxx11. Using "cxxflags" and "linkflags" still works.
     if build.cxx11?
       args << "cxxflags=-std=c++11"
       if ENV.compiler == :clang
@@ -65,15 +59,12 @@ class BoostPython < Formula
       odie "boost was built in C++11 mode so boost-python must be built with --c++11."
     end
 
-    # disable python detection in bootstrap.sh; it guesses the wrong include directory
-    # for Python 3 headers, so we configure python manually in user-config.jam below.
     inreplace "bootstrap.sh", "using python", "#using python"
 
     Language::Python.each_python(build) do |python, version|
       py_prefix = `#{python} -c "from __future__ import print_function; import sys; print(sys.prefix)"`.strip
       py_include = `#{python} -c "from __future__ import print_function; import distutils.sysconfig; print(distutils.sysconfig.get_python_inc(True))"`.strip
       open("user-config.jam", "w") do |file|
-        # Force boost to compile with the desired compiler
         file.write "using darwin : : #{ENV.cxx} ;\n"
         file.write <<-EOS.undent
           using python : #{version}
@@ -96,7 +87,6 @@ class BoostPython < Formula
 
   test do
     (testpath/"hello.cpp").write <<-EOS.undent
-      #include <boost/python.hpp>
       char const* greet() {
         return "Hello, world!";
       }

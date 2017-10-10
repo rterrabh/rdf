@@ -23,20 +23,16 @@ class Dnsmasq < Formula
   def install
     ENV.deparallelize
 
-    # Fix etc location
     inreplace "src/config.h", "/etc/dnsmasq.conf", "#{etc}/dnsmasq.conf"
 
-    # Optional IDN support
     if build.with? "libidn"
       inreplace "src/config.h", "/* #define HAVE_IDN */", "#define HAVE_IDN"
     end
 
-    # Optional DNSSEC support
     if build.with? "dnssec"
       inreplace "src/config.h", "/* #define HAVE_DNSSEC */", "#define HAVE_DNSSEC"
     end
 
-    # Fix compilation on Lion
     ENV.append_to_cflags "-D__APPLE_USE_RFC_3542" if MacOS.version >= :lion
     inreplace "Makefile" do |s|
       s.change_make_var! "CFLAGS", ENV.cflags

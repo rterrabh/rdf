@@ -31,13 +31,11 @@ class Smpeg < Formula
       args << "--disable-gtktest"
     end
 
-    # Skip glmovie to avoid OpenGL error
     args << "--disable-opengl-player"
 
     system "./autogen.sh"
     system "./configure", *args
     system "make"
-    # Install script is not +x by default for some reason
     chmod 0755, "./install-sh"
     system "make", "install"
 

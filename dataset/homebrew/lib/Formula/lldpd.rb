@@ -57,7 +57,6 @@ class Lldpd < Formula
       <key>ProgramArguments</key>
       <array>
         <string>#{opt_sbin}/lldpd</string>
-        #{additional_args}
       </array>
       <key>RunAtLoad</key><true/>
       <key>KeepAlive</key><true/>

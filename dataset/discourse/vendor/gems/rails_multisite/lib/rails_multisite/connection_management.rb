@@ -14,7 +14,6 @@ module RailsMultisite
 
     def self.establish_connection(opts)
       if opts[:db] == DEFAULT && (!defined?(@@default_spec) || !@@default_spec)
-        # don't do anything .. handled implicitly
       else
         spec = connection_spec(opts) || @@default_spec
         handler = nil
@@ -40,7 +39,6 @@ module RailsMultisite
     def self.with_hostname(hostname)
 
       unless defined? @@db_spec_cache
-        # just fake it for non multisite
         yield hostname
         return
       end
@@ -167,7 +165,6 @@ module RailsMultisite
       host = self.class.host(env)
       begin
 
-        #TODO: add a callback so users can simply go to a domain to register it, or something
         return [404, {}, ["not found"]] unless @@host_spec_cache[host]
 
         ActiveRecord::Base.connection_handler.clear_active_connections!

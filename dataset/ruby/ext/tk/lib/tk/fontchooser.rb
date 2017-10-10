@@ -1,6 +1,3 @@
-#
-# tk/fontchooser.rb -- "tk fontchooser" support (Tcl/Tk8.6 or later)
-#
 require 'tk'
 require 'tk/font'
 
@@ -151,7 +148,6 @@ class << TkFont::Chooser
         }
       }
     elsif target.kind_of? Hash
-      # key=>value list or OptionObj
       fnt = target[:font] rescue ''
       fnt = fnt.actual_hash if fnt.kind_of?(TkFont)
       configs = {

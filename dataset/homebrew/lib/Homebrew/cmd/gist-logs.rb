@@ -40,7 +40,6 @@ module Homebrew
     puts url if url
   end
 
-  # Hack for ruby < 1.9.3
   def noecho_gets
     system "stty -echo"
     result = $stdin.gets

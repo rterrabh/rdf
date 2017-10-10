@@ -26,7 +26,6 @@ class Libglademm < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libglademm.h>
 
       int main(int argc, char *argv[]) {
         try {

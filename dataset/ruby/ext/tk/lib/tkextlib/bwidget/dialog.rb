@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/dialog.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/frame'
@@ -125,7 +121,6 @@ class Tk::BWidget::Dialog
     if tagOrId.kind_of?(Tk::Button)
       return index(tagOrId[:text])
     end
-    # index(tagOrId.to_s)
     index(_get_eval_string(tagOrId))
   end
 
@@ -133,10 +128,10 @@ class Tk::BWidget::Dialog
     win = window(tk_send('add', *hash_kv(keys)))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-10> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1621> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-111> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1622> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -147,10 +142,10 @@ class Tk::BWidget::Dialog
     win = window(tk_send('getframe'))
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-11> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1623> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-112> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1624> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end
@@ -161,10 +156,10 @@ class Tk::BWidget::Dialog
     win = window(@path + '.bbox')
     if b
       if TkCore::WITH_RUBY_VM  ### Ruby 1.9 !!!!
-        #nodyna <ID:instance_exec-12> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1625> <IEX COMPLEX (block with parameters)>
         win.instance_exec(self, &b)
       else
-        #nodyna <ID:instance_eval-113> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1626> <IEV COMPLEX (block execution)>
         win.instance_eval(&b)
       end
     end

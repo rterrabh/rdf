@@ -1,0 +1,113 @@
+jane_website_agent:
+  type: Agents::WebsiteAgent
+  user: jane
+  events_count: 1
+  schedule: "5pm"
+  name: "ZKCD"
+  guid: <%= SecureRandom.hex %>
+  options: <%= {
+                 :url => "http://trailers.apple.com/trailers/home/rss/newtrailers.rss",
+                 :expected_update_period_in_days => 2,
+                 :mode => :on_change,
+                 :extract => {
+                     :title => {:css => "item title", :value => './/text()'},
+                     :url => {:css => "item link", :value => './/text()'}
+                 }
+               }.to_json.inspect %>
+
+bob_website_agent:
+  type: Agents::WebsiteAgent
+  user: bob
+  events_count: 1
+  schedule: "midnight"
+  name: "ZKCD"
+  guid: <%= SecureRandom.hex %>
+  options: <%= {
+                 :url => "http://xkcd.com",
+                 :expected_update_period_in_days => 2,
+                 :mode => :on_change,
+                 :extract => {
+                   :url => {:css => "#comic img", :value => "@src"},
+                   :title => {:css => "#comic img", :value => "@title"}
+                 }
+               }.to_json.inspect %>
+
+bob_weather_agent:
+  type: Agents::WeatherAgent
+  user: bob
+  schedule: "midnight"
+  name: "SF Weather"
+  guid: <%= SecureRandom.hex %>
+  keep_events_for: <%= 45.days %>
+  options: <%= { :location => 94102, :lat => 37.779329, :lng => -122.41915, :api_key => 'test' }.to_json.inspect %>
+
+jane_weather_agent:
+  type: Agents::WeatherAgent
+  user: jane
+  schedule: "midnight"
+  name: "SF Weather"
+  guid: <%= SecureRandom.hex %>
+  keep_events_for: <%= 30.days %>
+  options: <%= { :location => 94103, :lat => 37.779329, :lng => -122.41915, :api_key => 'test' }.to_json.inspect %>
+
+jane_rain_notifier_agent:
+  type: Agents::TriggerAgent
+  user: jane
+  name: "Jane's Rain Watcher"
+  guid: <%= SecureRandom.hex %>
+  options: <%= {
+                 :expected_receive_period_in_days => "2",
+                 :rules => [{
+                   :type => "regex",
+                   :value => "rain",
+                   :path => "conditions"
+                 }],
+                 :message => "Just so you know, it looks like '{{conditions}}' tomorrow in {{location}}"
+               }.to_json.inspect %>
+
+bob_rain_notifier_agent:
+  type: Agents::TriggerAgent
+  user: bob
+  name: "Bob's Rain Watcher"
+  guid: <%= SecureRandom.hex %>
+  options: <%= {
+                 :expected_receive_period_in_days => "2",
+                 :rules => [{
+                   :type => "regex",
+                   :value => "rain",
+                   :path => "conditions"
+                  }],
+                 :message => "Just so you know, it looks like '{{conditions}}' tomorrow in {{location}}"
+               }.to_json.inspect %>
+
+bob_twitter_user_agent:
+  type: Agents::TwitterUserAgent
+  user: bob
+  name: "Bob's Twitter User Watcher"
+  guid: <%= SecureRandom.hex %>
+  options: <%= {
+      :username => "tectonic",
+      :expected_update_period_in_days => "2",
+      :consumer_key => "---",
+      :consumer_secret => "---",
+      :oauth_token => "---",
+      :oauth_token_secret => "---"
+    }.to_json.inspect %>
+
+bob_manual_event_agent:
+  type: Agents::ManualEventAgent
+  user: bob
+  name: "Bob's event testing agent"
+  guid: <%= SecureRandom.hex %>
+
+bob_basecamp_agent:
+  type: Agents::BasecampAgent
+  user: bob
+  service: generic
+  guid: <%= SecureRandom.hex %>
+
+jane_basecamp_agent:
+  type: Agents::BasecampAgent
+  user: jane
+  service: generic
+  guid: <%= SecureRandom.hex %>

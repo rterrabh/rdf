@@ -7,30 +7,25 @@ module Spree::Preferences
       default = options[:default]
       default = ->{ options[:default] } unless default.is_a?(Proc)
 
-      # cache_key will be nil for new objects, then if we check if there
-      # is a pending preference before going to default
-      #nodyna <ID:define_method-6> <DM MODERATE (events)>
+      #nodyna <define_method-2512> <DM MODERATE (events)>
       define_method preference_getter_method(name) do
         preferences.fetch(name) do
           default.call
         end
       end
 
-      #nodyna <ID:define_method-7> <DM MODERATE (events)>
+      #nodyna <define_method-2513> <DM MODERATE (events)>
       define_method preference_setter_method(name) do |value|
         value = convert_preference_value(value, type)
         preferences[name] = value
 
-        # If this is an activerecord object, we need to inform
-        # ActiveRecord::Dirty that this value has changed, since this is an
-        # in-place update to the preferences hash.
         preferences_will_change! if respond_to?(:preferences_will_change!)
       end
 
-      #nodyna <ID:define_method-8> <DM COMPLEX (events)>
+      #nodyna <define_method-2514> <DM COMPLEX (events)>
       define_method preference_default_getter_method(name), &default
 
-      #nodyna <ID:define_method-9> <DM MODERATE (events)>
+      #nodyna <define_method-2515> <DM MODERATE (events)>
       define_method preference_type_getter_method(name) do
         type
       end

@@ -7,8 +7,6 @@ class Gem::Request
 
   include Gem::UserInteraction
 
-  ###
-  # Legacy.  This is used in tests.
   def self.create_with_proxy uri, request_class, last_modified, proxy # :nodoc:
     cert_files = get_cert_files
     proxy ||= get_proxy_from_env(uri.scheme)
@@ -77,9 +75,6 @@ class Gem::Request
             'Unable to require openssl, install OpenSSL and rebuild ruby (preferred) or use non-HTTPS sources')
   end
 
-  ##
-  # Creates or an HTTP connection based on +uri+, or retrieves an existing
-  # connection, using a proxy if needed.
 
   def connection_for(uri)
     @connection_pool.checkout
@@ -109,9 +104,6 @@ class Gem::Request
     perform_request request
   end
 
-  ##
-  # Returns a proxy URI for the given +scheme+ if one is set in the
-  # environment variables.
 
   def self.get_proxy_from_env scheme = 'http'
     _scheme = scheme.downcase
@@ -148,7 +140,6 @@ class Gem::Request
       verbose "#{request.method} #{@uri}"
 
       file_name = File.basename(@uri.path)
-      # perform download progress reporter only for gems
       if request.response_body_permitted? && file_name =~ /\.gem$/
         reporter = ui.download_reporter
         response = connection.request(request) do |incomplete_response|
@@ -166,6 +157,7 @@ class Gem::Request
             if incomplete_response.respond_to? :body=
               incomplete_response.body = data
             else
+              #nodyna <instance_variable_set-2321> <not yet classified>
               incomplete_response.instance_variable_set(:@body, data)
             end
           end
@@ -185,9 +177,6 @@ class Gem::Request
 
       bad_response = true
       retry
-    # HACK work around EOFError bug in Net::HTTP
-    # NOTE Errno::ECONNABORTED raised a lot on Windows, and make impossible
-    # to install gems.
     rescue EOFError, Timeout::Error,
            Errno::ECONNABORTED, Errno::ECONNRESET, Errno::EPIPE
 
@@ -207,8 +196,6 @@ class Gem::Request
     @connection_pool.checkin connection
   end
 
-  ##
-  # Resets HTTP connection +connection+.
 
   def reset(connection)
     @requests.delete connection.object_id

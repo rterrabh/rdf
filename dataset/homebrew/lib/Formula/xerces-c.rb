@@ -19,8 +19,6 @@ class XercesC < Formula
                           "--disable-silent-rules",
                           "--prefix=#{prefix}"
     system "make", "install"
-    # Remove a sample program that conflicts with libmemcached
-    # on case-insensitive file systems
     (bin/"MemParse").unlink
   end
 

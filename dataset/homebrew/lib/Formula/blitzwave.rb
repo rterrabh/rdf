@@ -9,8 +9,6 @@ class Blitzwave < Formula
   depends_on "libtool" => :build
   depends_on "blitz"
 
-  # an automake tweak to fix compiling
-  # reported upstream: https://github.com/oschulz/blitzwave/issues/2
   patch :DATA
 
   def install

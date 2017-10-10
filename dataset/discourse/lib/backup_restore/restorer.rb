@@ -37,7 +37,6 @@ module BackupRestore
       extract_dump
       restore_dump
 
-      ### READ-ONLY / START ###
       enable_readonly_mode
 
       pause_sidekiq
@@ -45,7 +44,6 @@ module BackupRestore
 
       switch_schema!
 
-      # TOFIX: MessageBus is busted...
 
       migrate_database
       reconnect_database
@@ -53,7 +51,6 @@ module BackupRestore
       clear_emoji_cache
 
       disable_readonly_mode
-      ### READ-ONLY / END ###
 
       extract_uploads
     rescue SystemExit
@@ -84,7 +81,6 @@ module BackupRestore
     def ensure_we_have_a_user
       user = User.find_by(id: @user_id)
       raise Discourse::InvalidParameters.new(:user_id) unless user
-      # keep some user data around to check them against the newly restored database
       @user_info = { id: user.id, username: user.username, email: user.email }
     end
 
@@ -206,14 +202,12 @@ module BackupRestore
             logs << line
           end
         rescue EOFError
-          # finished reading...
         ensure
           psql_running = false
           logs << ""
         end
       end
 
-      # psql does not return a valid exit code when an error happens
       raise "psql failed" if has_error
     end
 
@@ -301,6 +295,7 @@ module BackupRestore
           SystemMessage.create_from_system_user(user, :restore_failed, logs: @logs.join("\n"))
         end
       else
+        #nodyna <send-282> <not yet classified>
         log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
       end
     end

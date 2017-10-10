@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/entryfield.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -23,12 +19,10 @@ class Tk::Iwidgets::Entryfield
   end
   private :__font_optkeys
 
-  ####################################
 
   include Tk::ValidateConfigure
 
   class EntryfieldValidate < TkValidateCommand
-    #class CalCmdArgs < TkUtil::CallbackSubst
     class ValidateArgs < TkUtil::CallbackSubst
       KEY_TBL  = [
         [ ?c, ?s, :char ],
@@ -44,7 +38,6 @@ class Tk::Iwidgets::Entryfield
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -96,7 +89,6 @@ class Tk::Iwidgets::Entryfield
   end
 =end
 
-  ####################################
 
   def clear
     tk_call(@path, 'clear')
@@ -121,7 +113,6 @@ class Tk::Iwidgets::Entryfield
 
   def cursor=(index)
     tk_send_without_enc('icursor', index)
-    #self
     index
   end
   alias icursor cursor=
@@ -167,7 +158,6 @@ class Tk::Iwidgets::Entryfield
     self
   end
 
-  # based on tk/scrollable.rb
   def xview(*index)
     if index.size == 0
       list(tk_send_without_enc('xview'))

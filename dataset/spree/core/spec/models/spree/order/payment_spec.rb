@@ -7,7 +7,6 @@ module Spree
 
     context "processing payments" do
       before do
-        # So that Payment#purchase! is called during processing
         Spree::Config[:auto_capture] = true
 
         allow(order).to receive_message_chain(:line_items, :empty?).and_return(false)
@@ -54,7 +53,6 @@ module Spree
     end
 
     context "ensure source attributes stick around" do
-      # For the reason of this test, please see spree/spree_gateway#132
       it "does not have inverse_of defined" do
         expect(Spree::Order.reflections['payments'].options[:inverse_of]).to be_nil
       end
@@ -102,7 +100,6 @@ module Spree
         expect(order.process_payments!).to be_truthy
       end
 
-      # Regression spec for https://github.com/spree/spree/issues/5436
       it 'should raise an error if there are no payments to process' do
         allow(order).to receive_messages unprocessed_payments: []
         expect(payment).to_not receive(:process!)
@@ -162,19 +159,13 @@ module Spree
         expect(order.outstanding_balance).to be_within(0.001).of(-2.00)
       end
       it 'should incorporate refund reimbursements' do
-        # Creates an order w/total 10
         reimbursement = create :reimbursement
-        # Set the payment amount to actually be the order total of 10
         reimbursement.order.payments.first.update_column :amount, 10
-        # Creates a refund of 10
         create :refund, amount: 10,
                         payment: reimbursement.order.payments.first,
                         reimbursement: reimbursement
         order = reimbursement.order.reload
-        # Update the order totals so payment_total goes to 0 reflecting the refund..
         order.update!
-        # Order Total - (Payment Total + Reimbursed)
-        # 10 - (0 + 10) = 0
         expect(order.outstanding_balance).to eq 0
       end
     end

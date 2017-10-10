@@ -3,7 +3,6 @@ module RailsAdmin
     module Fields
       module Types
         class Boolean < RailsAdmin::Config::Fields::Base
-          # Register field type for the type loader
           RailsAdmin::Config::Fields::Types.register(self)
 
           register_instance_option :view_helper do
@@ -29,7 +28,6 @@ module RailsAdmin
             :form_boolean
           end
 
-          # Accessor for field's help text displayed below input field.
           def generic_help
             ''
           end

@@ -18,14 +18,12 @@ class Libwps < Formula
 
   def install
     system "./configure", "--disable-debug", "--disable-dependency-tracking",
-                          # Installing Doxygen docs trips up make install
                           "--prefix=#{prefix}", "--without-docs"
     system "make", "install"
   end
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libwps/libwps.h>
       int main() {
         return libwps::WPS_OK;
       }

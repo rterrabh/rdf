@@ -1,9 +1,4 @@
 module MergeRequests
-  # AutoMergeService class
-  #
-  # Do git merge in satellite and in case of success
-  # mark merge request as merged and execute all hooks and notifications
-  # Called when you do merge via GitLab UI
   class AutoMergeService < BaseMergeService
     def execute(merge_request, commit_message)
       merge_request.lock_mr

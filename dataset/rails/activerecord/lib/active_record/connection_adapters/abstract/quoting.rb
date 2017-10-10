@@ -3,10 +3,7 @@ require 'active_support/core_ext/big_decimal/conversions'
 module ActiveRecord
   module ConnectionAdapters # :nodoc:
     module Quoting
-      # Quotes the column value to help prevent
-      # {SQL injection attacks}[http://en.wikipedia.org/wiki/SQL_injection].
       def quote(value, column = nil)
-        # records are quoted as their primary key
         return value.quoted_id if value.respond_to?(:quoted_id)
 
         if column
@@ -16,9 +13,6 @@ module ActiveRecord
         _quote(value)
       end
 
-      # Cast a +value+ to a type that the database understands. For example,
-      # SQLite does not understand dates, so this method will convert a Date
-      # to a String.
       def type_cast(value, column)
         if value.respond_to?(:quoted_id) && value.respond_to?(:id)
           return value.id
@@ -34,30 +28,18 @@ module ActiveRecord
         raise TypeError, "can't cast #{value.class}#{to_type}"
       end
 
-      # Quotes a string, escaping any ' (single quote) and \ (backslash)
-      # characters.
       def quote_string(s)
         s.gsub(/\\/, '\&\&').gsub(/'/, "''") # ' (for ruby-mode)
       end
 
-      # Quotes the column name. Defaults to no quoting.
       def quote_column_name(column_name)
         column_name
       end
 
-      # Quotes the table name. Defaults to column name quoting.
       def quote_table_name(table_name)
         quote_column_name(table_name)
       end
 
-      # Override to return the quoted table name for assignment. Defaults to
-      # table quoting.
-      #
-      # This works for mysql and mysql2 where table.column can be used to
-      # resolve ambiguity.
-      #
-      # We override this in the sqlite3 and postgresql adapters to use only
-      # the column name (as per syntax requirements).
       def quote_table_name_for_assignment(table, attr)
         quote_table_name("#{table}.#{attr}")
       end
@@ -83,7 +65,7 @@ module ActiveRecord
           zone_conversion_method = ActiveRecord::Base.default_timezone == :utc ? :getutc : :getlocal
 
           if value.respond_to?(zone_conversion_method)
-            #nodyna <ID:send-139> <SD MODERATE (change-prone variables)>
+            #nodyna <send-915> <SD MODERATE (change-prone variables)>
             value = value.send(zone_conversion_method)
           end
         end
@@ -104,7 +86,6 @@ module ActiveRecord
         when true       then quoted_true
         when false      then quoted_false
         when nil        then "NULL"
-        # BigDecimals need to be put in a non-normalized form and quoted.
         when BigDecimal then value.to_s('F')
         when Numeric, ActiveSupport::Duration then value.to_s
         when Date, Time then "'#{quoted_date(value)}'"
@@ -121,7 +102,6 @@ module ActiveRecord
           value.to_s
         when true       then unquoted_true
         when false      then unquoted_false
-        # BigDecimals need to be put in a non-normalized form and quoted.
         when BigDecimal then value.to_s('F')
         when Date, Time then quoted_date(value)
         when *types_which_need_no_typecasting

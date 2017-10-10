@@ -1,24 +1,3 @@
-##
-# Provides a single method +deprecate+ to be used to declare when
-# something is going away.
-#
-#     class Legacy
-#       def self.klass_method
-#         # ...
-#       end
-#
-#       def instance_method
-#         # ...
-#       end
-#
-#       extend Gem::Deprecate
-#       deprecate :instance_method, "X.z", 2011, 4
-#
-#       class << self
-#         extend Gem::Deprecate
-#         deprecate :klass_method, :none, 2011, 4
-#       end
-#     end
 
 module Gem::Deprecate
 
@@ -30,8 +9,6 @@ module Gem::Deprecate
     @skip = v
   end
 
-  ##
-  # Temporarily turn off warnings. Intended for tests only.
 
   def skip_during
     Gem::Deprecate.skip, original = true, Gem::Deprecate.skip
@@ -40,17 +17,13 @@ module Gem::Deprecate
     Gem::Deprecate.skip = original
   end
 
-  ##
-  # Simple deprecation method that deprecates +name+ by wrapping it up
-  # in a dummy method. It warns on each call to the dummy method
-  # telling the user of +repl+ (unless +repl+ is :none) and the
-  # year/month that it is planned to go away.
 
   def deprecate name, repl, year, month
+    #nodyna <class_eval-2315> <not yet classified>
     class_eval {
       old = "_deprecated_#{name}"
       alias_method old, name
-      #nodyna <ID:define_method-18> <DM COMPLEX (events)>
+      #nodyna <define_method-2316> <DM COMPLEX (events)>
       define_method name do |*args, &block|
         klass = self.kind_of? Module
         target = klass ? "#{self}." : "#{self.class}#"
@@ -60,7 +33,7 @@ module Gem::Deprecate
           "\n#{target}#{name} called from #{Gem.location_of_caller.join(":")}",
         ]
         warn "#{msg.join}." unless Gem::Deprecate.skip
-        #nodyna <ID:send-50> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2317> <SD COMPLEX (change-prone variables)>
         send old, *args, &block
       end
     }

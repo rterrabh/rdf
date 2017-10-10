@@ -6,8 +6,6 @@ class Nvi < Formula
 
   depends_on "berkeley-db4"
 
-  # Patches per MacPorts
-  # The first corrects usage of BDB flags.
   patch :p0 do
     url "https://trac.macports.org/export/108622/trunk/dports/editors/nvi/files/patch-common__db.h"
     sha256 "d6c67a129cec0108a0c90fd649d79de65099dc627b10967a1fad51656f519800"

@@ -18,7 +18,6 @@ class Hashpump < Formula
   depends_on :python => :recommended if MacOS.version <= :snow_leopard
   depends_on :python3 => :optional
 
-  # Remove on next release
   patch do
     url "https://patch-diff.githubusercontent.com/raw/bwall/HashPump/pull/14.diff"
     sha256 "47236fed281000726942740002e44ef8bb90b05f55b2e7deeb183d9f708906c1"

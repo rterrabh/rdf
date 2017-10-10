@@ -19,7 +19,6 @@ class Yaws < Formula
   depends_on "libtool" => :build
   depends_on "erlang"
 
-  # the default config expects these folders to exist
   skip_clean "var/log/yaws"
   skip_clean "lib/yaws/examples/ebin"
   skip_clean "lib/yaws/examples/include"
@@ -31,7 +30,6 @@ class Yaws < Formula
 
     system "autoreconf", "-fvi"
     system "./configure", "--prefix=#{prefix}",
-                          # Ensure pam headers are found on Xcode-only installs
                           "--with-extrainclude=#{MacOS.sdk_path}/usr/include/security"
     system "make", "install"
 
@@ -42,7 +40,6 @@ class Yaws < Formula
       end
     end
 
-    # the default config expects these folders to exist
     (lib/"yaws/examples/ebin").mkpath
     (lib/"yaws/examples/include").mkpath
 

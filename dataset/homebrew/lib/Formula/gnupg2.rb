@@ -25,8 +25,6 @@ class Gnupg2 < Formula
   depends_on "readline" => :optional
 
   def install
-    # Adjust package name to fit our scheme of packaging both gnupg 1.x and
-    # 2.x, and gpg-agent separately, and adjust tests to fit this scheme
     inreplace "configure" do |s|
       s.gsub! "PACKAGE_NAME='gnupg'", "PACKAGE_NAME='gnupg2'"
       s.gsub! "PACKAGE_TARNAME='gnupg'", "PACKAGE_TARNAME='gnupg2'"
@@ -66,8 +64,6 @@ class Gnupg2 < Formula
     system "make", "check"
     system "make", "install"
 
-    # Conflicts with a manpage from the 1.x formula, and
-    # gpg-zip isn't installed by this formula anyway
     rm_f man1/"gpg-zip.1"
   end
 

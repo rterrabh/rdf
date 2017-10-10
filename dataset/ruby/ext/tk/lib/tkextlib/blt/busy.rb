@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/busy.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/itemconfig.rb'
@@ -14,7 +10,6 @@ module Tk::BLT
 
     TkCommandNames = ['::blt::busy'.freeze].freeze
 
-    ###########################
 
     class Shield < TkWindow
       def self.shield_path(win)
@@ -50,7 +45,6 @@ class << Tk::BLT::Busy
   alias current_configinfo current_itemconfiginfo
   private :itemconfigure, :itemconfiginfo, :current_itemconfiginfo
 
-  ##################################
 
   def hold(win, keys={})
     tk_call('::blt::busy', 'hold', win, *hash_kv(keys))

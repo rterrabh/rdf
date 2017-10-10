@@ -1,20 +1,7 @@
-# coding: US-ASCII
 
-##
-# This class is a wrapper around File IO and Encoding that helps RDoc load
-# files and convert them to the correct encoding.
 
 module RDoc::Encoding
 
-  ##
-  # Reads the contents of +filename+ and handles any encoding directives in
-  # the file.
-  #
-  # The content will be converted to the +encoding+.  If the file cannot be
-  # converted a warning will be printed and nil will be returned.
-  #
-  # If +force_transcode+ is true the document will be transcoded and any
-  # unknown character in the target encoding will be replaced with '?'
 
   def self.read_file filename, encoding, force_transcode = false
     content = open filename, "rb" do |f| f.read end
@@ -35,12 +22,10 @@ module RDoc::Encoding
           content.force_encoding Encoding::UTF_8
           content.encode! encoding
         else
-          # assume the content is in our output encoding
           content.force_encoding encoding
         end
 
         unless content.valid_encoding? then
-          # revert and try to transcode
           content.force_encoding orig_encoding
           content.encode! encoding
         end
@@ -73,8 +58,6 @@ module RDoc::Encoding
     nil
   end
 
-  ##
-  # Sets the encoding of +string+ based on the magic comment
 
   def self.set_encoding string
     string =~ /\A(?:#!.*\n)?(.*\n)/

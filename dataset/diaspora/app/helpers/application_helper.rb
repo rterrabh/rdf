@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 module ApplicationHelper
   def pod_name
@@ -45,8 +42,6 @@ module ApplicationHelper
     without_close_html + link_to('&times;'.html_safe, "#", :class => 'close')
   end
 
-  # Require jQuery from CDN if possible, falling back to vendored copy, and require
-  # vendored jquery_ujs
   def jquery_include_tag
     buf = []
     if AppConfig.privacy.jquery_cdn?

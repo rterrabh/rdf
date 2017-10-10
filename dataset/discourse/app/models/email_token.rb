@@ -9,7 +9,6 @@ class EmailToken < ActiveRecord::Base
   end
 
   after_create do
-    # Expire the previous tokens
     EmailToken.where(['user_id = ? and id != ?', self.user_id, self.id]).update_all 'expired = true'
   end
 
@@ -51,7 +50,6 @@ class EmailToken < ActiveRecord::Base
     User.transaction do
       row_count = EmailToken.where(id: email_token.id, expired: false).update_all 'confirmed = true'
       if row_count == 1
-        # If we are activating the user, send the welcome message
         user.send_welcome_message = !user.active?
 
         user.active = true
@@ -59,29 +57,9 @@ class EmailToken < ActiveRecord::Base
         user.save!
       end
     end
-    # redeem invite, if available
     return User.find_by(email: Email.downcase(user.email)) if Invite.redeem_from_email(user.email).present?
     user
   rescue ActiveRecord::RecordInvalid
-    # If the user's email is already taken, just return nil (failure)
   end
 end
 
-# == Schema Information
-#
-# Table name: email_tokens
-#
-#  id         :integer          not null, primary key
-#  user_id    :integer          not null
-#  email      :string(255)      not null
-#  token      :string(255)      not null
-#  confirmed  :boolean          default(FALSE), not null
-#  expired    :boolean          default(FALSE), not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_email_tokens_on_token    (token) UNIQUE
-#  index_email_tokens_on_user_id  (user_id)
-#

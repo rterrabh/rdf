@@ -20,7 +20,6 @@ class Librasterlite < Formula
   depends_on "sqlite"
 
   def install
-    # Ensure Homebrew SQLite libraries are found before the system SQLite
     sqlite = Formula["sqlite"]
     ENV.append "LDFLAGS", "-L#{sqlite.opt_lib} -lsqlite3"
     system "./configure", "--disable-dependency-tracking",

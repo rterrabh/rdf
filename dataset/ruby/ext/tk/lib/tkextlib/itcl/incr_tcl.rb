@@ -1,14 +1,8 @@
-#
-#  tkextlib/itk/incr_tcl.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 
-# call setup script
 require 'tkextlib/itcl.rb'
 
-# TkPackage.require('Itcl', '3.2')
 TkPackage.require('Itcl')
 
 module Tk
@@ -35,12 +29,11 @@ module Tk
       end
     end
 
-    ##############################################
 
     class ItclObject < TkObject
       ITCL_CLASSNAME = ''.freeze
 
-      #nodyna <ID:instance_eval-140> <IEV MODERATE (method definition)>
+      #nodyna <instance_eval-1648> <IEV MODERATE (method definition)>
       (ITCL_OBJ_ID = ['itclobj'.freeze, TkUtil.untrust('00000')]).instance_eval{
         @mutex = Mutex.new
         def mutex; @mutex; end
@@ -107,7 +100,6 @@ module Tk
       end
     end
 
-    ##############################################
 
     def self.body(klass, func, args, body)
       tk_call('::itcl::body', "#{klass}::#{func}", args, body)
@@ -128,7 +120,7 @@ module Tk
     def self.create_itcl_class(name, body)
       TkCore::INTERP._invoke('::itcl::class', name, body)
       klass = Class.new(Tk::Itcl::ItclObject)
-      #nodyna <ID:const_set-22> <CS TRIVIAL (static values)>
+      #nodyna <const_set-1649> <CS TRIVIAL (static values)>
       klass.const_set('ITCL_CLASSNAME', name.dup.freeze)
       klass
     end

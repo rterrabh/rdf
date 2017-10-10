@@ -9,11 +9,6 @@ class Libodbcxx < Formula
     sha1 "2bbe061284cc6a3188e776c8bb9544fad672862e" => :mountain_lion
   end
 
-  # Two patches are included:
-  # The first: Fixes a compilation error on 64bit machines:
-  # http://sourceforge.net/tracker/?func=detail&aid=3590196&group_id=19075&atid=319075
-  # The second: Fixes a memory corruption error on 64bit systems:
-  # https://sourceforge.net/tracker/?func=detail&aid=3601361&group_id=19075&atid=319075
   patch :DATA
 
   def install
@@ -30,13 +25,9 @@ index b281ec5..18a04da 100644
 +++ b/src/dtconv.h
 @@ -113,7 +113,7 @@ namespace odbc {
      snprintf(buf,LONG_STR_LEN,
- # endif
- # if defined(PRId64)
 -             ODBCXX_STRING_PERCENT PRId64
 +             "%" PRId64
- # elif ODBCXX_SIZEOF_LONG==8
               ODBCXX_STRING_CONST("%ld")
- # else
 diff --git a/src/statement.cpp b/src/statement.cpp
 index 809278b..e5f0e5d 100644
 --- a/src/statement.cpp
@@ -49,4 +40,3 @@ index 809278b..e5f0e5d 100644
 +  SQLULEN res;
    SQLRETURN r;
 
- #if ODBCVER < 0x0300

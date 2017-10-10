@@ -13,7 +13,6 @@ describe "Rabl Cache", :type => :request, :caching => true do
     get "/api/variants", :token => user.spree_api_key
     expect(response.status).to eq(200)
 
-    # Make sure we get a non master variant
     variant_a = JSON.parse(response.body)['variants'].select do |v|
       !v['is_master']
     end.first

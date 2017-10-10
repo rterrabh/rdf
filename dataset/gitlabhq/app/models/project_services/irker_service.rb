@@ -1,22 +1,3 @@
-# == Schema Information
-#
-# Table name: services
-#
-#  id                    :integer          not null, primary key
-#  type                  :string(255)
-#  title                 :string(255)
-#  project_id            :integer
-#  created_at            :datetime
-#  updated_at            :datetime
-#  active                :boolean          default(FALSE), not null
-#  properties            :text
-#  template              :boolean          default(FALSE)
-#  push_events           :boolean          default(TRUE)
-#  issues_events         :boolean          default(TRUE)
-#  merge_requests_events :boolean          default(TRUE)
-#  tag_push_events       :boolean          default(TRUE)
-#  note_events           :boolean          default(TRUE), not null
-#
 
 require 'uri'
 
@@ -108,7 +89,6 @@ class IrkerService < Service
   def format_channel(recipient)
     uri = nil
 
-    # Try to parse the chan as a full URI
     begin
       uri = consider_uri(URI.parse(recipient))
     rescue URI::InvalidURIError
@@ -129,15 +109,10 @@ class IrkerService < Service
   def consider_uri(uri)
     return nil if uri.scheme.nil?
 
-    # Authorize both irc://domain.com/#chan and irc://domain.com/chan
     if uri.is_a?(URI) && uri.scheme[/^ircs?\z/] && !uri.path.nil?
-      # Do not authorize irc://domain.com/
       if uri.fragment.nil? && uri.path.length > 1
         uri.to_s
       else
-        # Authorize irc://domain.com/smthg#chan
-        # The irker daemon will deal with it by concatenating smthg and
-        # chan, thus sending messages on #smthgchan
         uri.to_s
       end
     end

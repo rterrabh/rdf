@@ -19,8 +19,6 @@ class Afflib < Formula
   depends_on :osxfuse => :optional
   depends_on "openssl"
 
-  # This patch fixes a bug reported upstream over there
-  # https://github.com/simsong/AFFLIBv3/issues/4
   patch :DATA
 
   def install
@@ -50,7 +48,6 @@ index 3a7af59..7510933 100755
 @@ -6,7 +6,7 @@
  echo Bootstrap script to create configure script using autoconf
  echo
- # use the installed ones first, not matter what the path says.
 -export PATH=/usr/bin:/usr/sbin:/bin:$PATH
 +#export PATH=/usr/bin:/usr/sbin:/bin:$PATH
  touch NEWS README AUTHORS ChangeLog stamp-h

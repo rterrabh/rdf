@@ -1,12 +1,3 @@
-#   save-history.rb -
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 require "readline"
 
@@ -21,20 +12,10 @@ module IRB
       end
     end
 
-    # A copy of the default <code>IRB.conf[:SAVE_HISTORY]</code>
     def save_history
       IRB.conf[:SAVE_HISTORY]
     end
 
-    # Sets <code>IRB.conf[:SAVE_HISTORY]</code> to the given +val+ and calls
-    # #init_save_history with this context.
-    #
-    # Will store the number of +val+ entries of history in the #history_file
-    #
-    # Add the following to your +.irbrc+ to change the number of history
-    # entries stored to 1000:
-    #
-    #     IRB.conf[:SAVE_HISTORY] = 1000
     def save_history=(val)
       IRB.conf[:SAVE_HISTORY] = val
       if val
@@ -44,12 +25,10 @@ module IRB
       end
     end
 
-    # A copy of the default <code>IRB.conf[:HISTORY_FILE]</code>
     def history_file
       IRB.conf[:HISTORY_FILE]
     end
 
-    # Set <code>IRB.conf[:HISTORY_FILE]</code> to the given +hist+.
     def history_file=(hist)
       IRB.conf[:HISTORY_FILE] = hist
     end
@@ -83,7 +62,6 @@ module IRB
         end
         history_file = IRB.rc_file("_history") unless history_file
 
-        # Change the permission of a file that already exists[BUG #7694]
         begin
           if File.stat(history_file).mode & 066 != 0
             File.chmod(0600, history_file)

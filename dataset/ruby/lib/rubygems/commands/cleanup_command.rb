@@ -158,7 +158,6 @@ If no gems are named all gems in GEM_HOME are cleaned.
       say "\t#{e.class}: #{e.message}"
     end
   ensure
-    # Restore path Gem::Uninstaller may have changed
     Gem.use_paths @original_home, *@original_path
   end
 

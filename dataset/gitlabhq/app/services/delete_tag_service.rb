@@ -5,7 +5,6 @@ class DeleteTagService < BaseService
     repository = project.repository
     tag = repository.find_tag(tag_name)
 
-    # No such tag
     unless tag
       return error('No such tag', 404)
     end

@@ -1,7 +1,3 @@
-#
-#  treeview widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -16,7 +12,6 @@ module Tk::Tile::TreeviewConfig
   include TkItemConfigMethod
 
   def __item_configinfo_struct(id)
-    # maybe need to override
     {:key=>0, :alias=>nil, :db_name=>nil, :db_class=>nil,
       :default_value=>nil, :current_value=>1}
   end
@@ -39,10 +34,8 @@ module Tk::Tile::TreeviewConfig
           case slot
           when /^(#{__tile_specific_item_optkeys(tagid(tagOrId)).join('|')})$/
             begin
-              # On tile-0.7.{2-8}, 'state' options has no '-' at its head.
               val = tk_call(*(__item_confinfo_cmd(tagid(tagOrId)) << slot))
             rescue
-              # Maybe, 'state' option has '-' in future.
               val = tk_call(*(__item_confinfo_cmd(tagid(tagOrId)) << "-#{slot}"))
             end
             return [slot, val]
@@ -131,7 +124,6 @@ module Tk::Tile::TreeviewConfig
               conf[1] = val
 
             when /^(#{__item_strval_optkeys(tagid(tagOrId)).join('|')})$/
-              # do nothing
 
             when /^(#{__item_numval_optkeys(tagid(tagOrId)).join('|')})$/
               begin
@@ -210,10 +202,8 @@ module Tk::Tile::TreeviewConfig
           case slot
           when /^(#{__tile_specific_item_optkeys(tagid(tagOrId)).join('|')})$/
             begin
-              # On tile-0.7.{2-8}, 'state' option has no '-' at its head.
               val = tk_call(*(__item_confinfo_cmd(tagid(tagOrId)) << slot))
             rescue
-              # Maybe, 'state' option has '-' in future.
               val = tk_call(*(__item_confinfo_cmd(tagid(tagOrId)) << "-#{slot}"))
             end
             return {slot => val}
@@ -305,7 +295,6 @@ module Tk::Tile::TreeviewConfig
               conf[1] = val
 
             when /^(#{__item_strval_optkeys(tagid(tagOrId)).join('|')})$/
-              # do nothing
 
             when /^(#{__item_numval_optkeys(tagid(tagOrId)).join('|')})$/
               begin
@@ -373,7 +362,6 @@ module Tk::Tile::TreeviewConfig
     end
   end
 
-  ###################
 
   def __item_cget_cmd(id)
     [self.path, *id]
@@ -526,7 +514,6 @@ module Tk::Tile::TreeviewConfig
   private :__itemcget_tkstring, :__itemcget, :__itemcget_strict
   private :__itemconfigure, :__itemconfiginfo, :__current_itemconfiginfo
 
-  # Treeview Item
   def itemcget_tkstring(tagOrId, option)
     __itemcget_tkstring([:item, tagOrId], option)
   end
@@ -546,7 +533,6 @@ module Tk::Tile::TreeviewConfig
     __current_itemconfiginfo([:item, tagOrId], slot)
   end
 
-  # Treeview Column
   def columncget_tkstring(tagOrId, option)
     __itemcget_tkstring([:column, tagOrId], option)
   end
@@ -572,14 +558,11 @@ module Tk::Tile::TreeviewConfig
   alias column_configinfo columnconfiginfo
   alias current_column_configinfo current_columnconfiginfo
 
-  # Treeview Heading
   def headingcget_tkstring(tagOrId, option)
     if __tile_specific_item_optkeys([:heading, tagOrId]).index(option.to_s)
       begin
-        # On tile-0.7.{2-8}, 'state' options has no '-' at its head.
         tk_call(*(__item_cget_cmd([:heading, tagOrId]) << option.to_s))
       rescue
-        # Maybe, 'state' option has '-' in future.
         tk_call(*(__item_cget_cmd([:heading, tagOrId]) << "-#{option}"))
       end
     else
@@ -589,10 +572,8 @@ module Tk::Tile::TreeviewConfig
   def headingcget_strict(tagOrId, option)
     if __tile_specific_item_optkeys([:heading, tagOrId]).index(option.to_s)
       begin
-        # On tile-0.7.{2-8}, 'state' options has no '-' at its head.
         tk_call(*(__item_cget_cmd([:heading, tagOrId]) << option.to_s))
       rescue
-        # Maybe, 'state' option has '-' in future.
         tk_call(*(__item_cget_cmd([:heading, tagOrId]) << "-#{option}"))
       end
     else
@@ -608,10 +589,8 @@ module Tk::Tile::TreeviewConfig
       rescue => e
         begin
           if current_headingconfiginfo(tagOrId).has_key?(option.to_s)
-            # not tag error & option is known -> error on known option
             fail e
           else
-            # not tag error & option is unknown
             nil
           end
         rescue
@@ -631,10 +610,8 @@ module Tk::Tile::TreeviewConfig
       tk_call(*(__item_config_cmd([:heading, tagOrId]).concat(hash_kv(slot))))
     elsif __tile_specific_item_optkeys([:heading, tagOrId]).index(slot.to_s)
       begin
-        # On tile-0.7.{2-8}, 'state' options has no '-' at its head.
         tk_call(*(__item_cget_cmd([:heading, tagOrId]) << slot.to_s << value))
       rescue
-        # Maybe, 'state' option has '-' in future.
         tk_call(*(__item_cget_cmd([:heading, tagOrId]) << "-#{slot}" << value))
       end
     else
@@ -655,7 +632,6 @@ module Tk::Tile::TreeviewConfig
   alias heading_configinfo headingconfiginfo
   alias current_heading_configinfo current_headingconfiginfo
 
-  # Treeview Tag
   def tagcget_tkstring(tagOrId, option)
     __itemcget_tkstring([:tag, :configure, tagOrId], option)
   end
@@ -682,7 +658,6 @@ module Tk::Tile::TreeviewConfig
   alias current_tag_configinfo current_tagconfiginfo
 end
 
-########################
 
 class Tk::Tile::Treeview::Item < TkObject
   ItemID_TBL = TkCore::INTERP.create_table
@@ -715,7 +690,7 @@ class Tk::Tile::Treeview::Item < TkObject
       end
 
       obj = self.allocate
-      #nodyna <ID:instance_eval-133> <IEV MODERATE (private access)>
+      #nodyna <instance_eval-1584> <IEV MODERATE (private access)>
       obj.instance_eval{
         @parent = @t = tree
         @tpath = tpath
@@ -895,7 +870,6 @@ class Tk::Tile::Treeview::Item < TkObject
   end
 end
 
-########################
 
 class Tk::Tile::Treeview::Root < Tk::Tile::Treeview::Item
   def self.new(tree, keys = {})
@@ -906,8 +880,7 @@ class Tk::Tile::Treeview::Root < Tk::Tile::Treeview::Item
           Tk::Tile::Treeview::Item::ItemID_TBL[tpath]['']
         obj = Tk::Tile::Treeview::Item::ItemID_TBL[tpath]['']
       else
-        #super(tree, keys)
-        #nodyna <ID:instance_eval-134> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1585> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @parent = @t = tree
           @tpath = tree.path
@@ -922,7 +895,6 @@ class Tk::Tile::Treeview::Root < Tk::Tile::Treeview::Item
   end
 
   def initialize(tree, keys = {})
-    # dummy:: not called by 'new' method
     @parent = @t = tree
     @tpath = tree.path
     @path = @id = ''
@@ -933,14 +905,13 @@ class Tk::Tile::Treeview::Root < Tk::Tile::Treeview::Item
   end
 end
 
-########################
 
 class Tk::Tile::Treeview::Tag < TkObject
   include TkTreatTagFont
 
   TagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-135> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1586> <IEV MODERATE (method definition)>
   (Tag_ID = ['tile_treeview_tag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -1054,7 +1025,6 @@ class Tk::Tile::Treeview::Tag < TkObject
   end
 end
 
-########################
 
 class Tk::Tile::Treeview < TkWindow
   include Tk::Tile::TileWidget
@@ -1088,7 +1058,6 @@ class Tk::Tile::Treeview < TkWindow
         id.kind_of?(Tk::Tile::Treeview::Tag)
       id.id
     elsif id.kind_of?(Array)
-      # size is 2 or 3
       id[0..-2] << _get_eval_string(id[-1])
     else
       _get_eval_string(id)
@@ -1139,7 +1108,6 @@ class Tk::Tile::Treeview < TkWindow
   end
 
   def identify(x, y)
-    # tile-0.7.2 or previous
     ret = simplelist(tk_send('identify', x, y))
     case ret[0]
     when 'heading', 'separator'
@@ -1180,25 +1148,10 @@ class Tk::Tile::Treeview < TkWindow
     number(tk_send('index', item))
   end
 
-  # def insert(parent, idx='end', keys={})
-  #   keys = _symbolkey2str(keys)
-  #   id = keys.delete('id')
-  #   if id
-  #     num_or_str(tk_send('insert', parent, idx, '-id', id, *hash_kv(keys)))
-  #   else
-  #     num_or_str(tk_send('insert', parent, idx, *hash_kv(keys)))
-  #   end
-  # end
   def insert(parent, idx='end', keys={})
     Tk::Tile::Treeview::Item.new(self, parent, idx, keys)
   end
 
-  # def instate(spec, cmd=Proc.new)
-  #   tk_send('instate', spec, cmd)
-  # end
-  # def state(spec=None)
-  #   tk_send('state', spec)
-  # end
 
   def move(item, parent, idx)
     tk_send('move', item, parent, idx)
@@ -1253,7 +1206,6 @@ class Tk::Tile::Treeview < TkWindow
   end
 
   def get_directory(item)
-    # tile-0.7+
     ret = []
     lst = simplelist(tk_send('set', item))
     until lst.empty?
@@ -1334,6 +1286,5 @@ class Tk::Tile::Treeview < TkWindow
 
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Treeview, :TkTreeview)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/treeview.rb',
                                    :Ttk, Tk::Tile::Treeview, :TkTreeview)

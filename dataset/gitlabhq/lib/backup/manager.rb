@@ -1,7 +1,6 @@
 module Backup
   class Manager
     def pack
-      # saving additional informations
       s = {}
       s[:db_version]         = "#{ActiveRecord::Migrator.current_version}"
       s[:backup_created_at]  = Time.now
@@ -16,9 +15,7 @@ module Backup
           file << s.to_yaml.gsub(/^---\n/,'')
         end
 
-        # create archive
         $progress.print "Creating backup archive: #{tar_file} ... "
-        # Set file permissions on open to prevent chmod races.
         tar_system_options = {out: [tar_file, 'w', Gitlab.config.backup.archive_permissions]}
         if Kernel.system('tar', '-cf', '-', *backup_contents, tar_system_options)
           $progress.puts "done".green
@@ -69,7 +66,6 @@ module Backup
     end
 
     def remove_old
-      # delete backups
       $progress.print "Deleting old backups ... "
       keep_time = Gitlab.config.backup.keep_time.to_i
 
@@ -97,7 +93,6 @@ module Backup
     def unpack
       Dir.chdir(Gitlab.config.backup.path)
 
-      # check for existing backups in the backup dir
       file_list = Dir.glob("*_gitlab_backup.tar").each.map { |f| f.split(/_/).first.to_i }
       puts "no backups found" if file_list.count == 0
 
@@ -125,7 +120,6 @@ module Backup
 
       ENV["VERSION"] = "#{settings[:db_version]}" if settings[:db_version].to_i > 0
 
-      # restoring mismatching backups can lead to unexpected problems
       if settings[:gitlab_version] != Gitlab::VERSION
         puts "GitLab version mismatch:".red
         puts "  Your current GitLab version (#{Gitlab::VERSION}) differs from the GitLab version in the backup!".red

@@ -16,7 +16,6 @@ class Newt < Formula
   depends_on "s-lang"
   depends_on :python => :optional
 
-  # build dylibs with -dynamiclib; version libraries
   patch :p0 do
     url "https://svn.macports.org/repository/macports/trunk/dports/devel/libnewt/files/patch-Makefile.in.diff", :using => :curl
     mirror "ftp://ftp.ca.freebsd.org/MacPorts/release/ports/devel/libnewt/files/patch-Makefile.in.diff"
@@ -29,14 +28,9 @@ class Newt < Formula
     args << "--without-python" if build.without? "python"
 
     inreplace "Makefile.in" do |s|
-      # name libraries correctly
-      # https://bugzilla.redhat.com/show_bug.cgi?id=1192285
       s.gsub! "libnewt.$(SOEXT).$(SONAME)", "libnewt.$(SONAME).dylib"
       s.gsub! "libnewt.$(SOEXT).$(VERSION)", "libnewt.$(VERSION).dylib"
 
-      # don't link to libpython.dylib
-      # causes https://github.com/Homebrew/homebrew/issues/30252
-      # https://bugzilla.redhat.com/show_bug.cgi?id=1192286
       s.gsub! "`$$pyconfig --ldflags`", '"-undefined dynamic_lookup"'
       s.gsub! "`$$pyconfig --libs`", '""'
     end

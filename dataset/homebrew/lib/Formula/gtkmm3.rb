@@ -22,7 +22,6 @@ class Gtkmm3 < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <gtkmm.h>
       class MyLabel : public Gtk::Label {
         MyLabel(Glib::ustring text) : Gtk::Label(text) {}
       };

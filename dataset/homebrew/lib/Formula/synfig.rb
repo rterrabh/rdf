@@ -39,7 +39,6 @@ class Synfig < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <synfig/version.h>
       int main(int argc, char *argv[])
       {
         const char *version = synfig::get_version();

@@ -1,5 +1,3 @@
-# Use a newer version instead of the upstream tarball:
-# http://livestreamer.tanuki.se/en/latest/issues.html#installed-rtmpdump-does-not-support-jtv-argument
 class Rtmpdump < Formula
   desc "Tool for downloading RTMP streaming media"
   homepage "https://rtmpdump.mplayerhq.hu"

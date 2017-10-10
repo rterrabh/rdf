@@ -39,16 +39,13 @@ class Coreutils < Formula
     system "./configure", *args
     system "make", "install"
 
-    # Symlink all commands into libexec/gnubin without the 'g' prefix
     coreutils_filenames(bin).each do |cmd|
       (libexec/"gnubin").install_symlink bin/"g#{cmd}" => cmd
     end
-    # Symlink all man(1) pages into libexec/gnuman without the 'g' prefix
     coreutils_filenames(man1).each do |cmd|
       (libexec/"gnuman"/"man1").install_symlink man1/"g#{cmd}" => cmd
     end
 
-    # Symlink non-conflicting binaries
     bin.install_symlink "grealpath" => "realpath"
     man1.install_symlink "grealpath.1" => "realpath.1"
   end

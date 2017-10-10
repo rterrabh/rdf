@@ -19,7 +19,7 @@ class GlobalSetting
   def self.database_config
     hash = {"adapter" => "postgresql"}
     %w{pool timeout socket host port username password}.each do |s|
-      #nodyna <ID:send-183> <SD MODERATE (array)>
+      #nodyna <send-374> <SD MODERATE (array)>
       if val = self.send("db_#{s}")
         hash[s] = val
       end

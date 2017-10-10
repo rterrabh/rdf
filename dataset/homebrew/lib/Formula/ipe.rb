@@ -27,13 +27,9 @@ class Ipe < Formula
   end
 
   def install
-    # There's a weird race condition around setting flags for Freetype
-    # If we ever go back to using flags instead of pkg-config be wary of that.
     ENV.deparallelize
 
     cd "src" do
-      # Comment this out so we can make use of pkg-config.
-      # Upstream have said they will *never* support OS X, so we have free reign.
       inreplace "config.mak" do |s|
         s.gsub! "ifndef MACOS", "ifdef MACOS"
         s.gsub! "moc-qt4", "moc"

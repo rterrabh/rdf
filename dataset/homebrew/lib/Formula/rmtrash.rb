@@ -13,9 +13,7 @@ class Rmtrash < Formula
   end
 
   def install
-    # don't install as root
     inreplace "Makefile", "-o root -g wheel", ""
-    # install manpages under share/man/
     inreplace "Makefile", "${DESTDIR}/man", "${DESTDIR}/share/man"
 
     bin.mkpath

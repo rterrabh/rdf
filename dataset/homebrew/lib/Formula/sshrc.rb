@@ -11,7 +11,6 @@ class Sshrc < Formula
   test do
     touch testpath/".sshrc"
     (testpath/"ssh").write <<-EOS.undent
-      #!/bin/sh
       true
     EOS
     chmod 0755, testpath/"ssh"

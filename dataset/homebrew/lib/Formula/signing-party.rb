@@ -61,14 +61,12 @@ class SigningParty < Formula
     sha256 "8f1622c5ebbfbcd519ead81df7917e48cb16cc527b1c46737b0459c3908a023f"
   end
 
-  # prerequisite MooX::late 0.014
   resource "MooX::late" do
     url "https://cpan.metacpan.org/authors/id/T/TO/TOBYINK/MooX-late-0.014.tar.gz"
     mirror "http://search.cpan.org/CPAN/authors/id/T/TO/TOBYINK/MooX-late-0.014.tar.gz"
     sha256 "7bc00d77a720319b1baf7fbde99d42beac87de256cee44d2f32be25014a5e707"
   end
 
-  # prerequisite MooX::HandlesVia 0.001004
   resource "MooX::HandlesVia" do
     url "https://cpan.metacpan.org/authors/id/M/MA/MATTP/MooX-HandlesVia-0.001004.tar.gz"
     mirror "http://search.cpan.org/CPAN/authors/id/M/MA/MATTP/MooX-HandlesVia-0.001004.tar.gz"
@@ -87,14 +85,9 @@ class SigningParty < Formula
     sha256 "8cd3e2ce06032f6e5ae79b329735c9aa6f01cadba07c5cfe692e35e43b38eb04"
   end
 
-  # gpgparticipants data on OS X behaves differently from linux version
-  # https://github.com/Homebrew/homebrew/pull/21628
   patch :DATA
 
   def install
-    # gpgdir and gpgwrap are not included as they have their own homepages
-    # springraph is not included because it depends on the 'GD' perl module
-    # which has its own dependency issues
 
     ENV.prepend_create_path "PERL5LIB", libexec+"lib/perl5"
     resources.each do |r|
@@ -154,8 +147,6 @@ class SigningParty < Formula
       inreplace "Makefile", "automake-1.11 --add-missing && automake-1.11", "autoreconf -fvi"
       system "make"
       if build.with? "rename-pgpring"
-        # Install pgpring as pgppubring to avoid conflicting with Mutt.
-        # Reflect the installed name in manpages.
         inreplace %w[keyanalyze.1 pgpring/pgpring.1 process_keys.1], /pgpring/, "pgppubring"
         bin.install "pgpring/pgpring" => "pgppubring"
         man1.install "pgpring/pgpring.1" => "pgppubring.1"
@@ -195,9 +186,6 @@ index aaf97bb..7a6bd38 100755
 @@ -65,7 +65,7 @@ title=$(echo "$5"|tr a-z A-Z|sed 's/\(.\)/\1 /g')
  [ "$output" = - ] && output=/path/to/ksp-file.txt || { exec > "$output"; }
 
- # Date of event
 -LC_ALL=C date --date="$date" +"%A, %B %e, %Y;  %H:%M"
 +LC_ALL=C date -j -f "%Y%m%d %H%M" "$date" +"%A, %B %e, %Y;  %H:%M"
- # Organiser contact
  printf "%80s\n\n\n" "$org"
- # Title

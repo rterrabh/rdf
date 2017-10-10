@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/scrolledcanvas.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/canvas'
@@ -19,7 +15,6 @@ class Tk::Iwidgets::Scrolledcanvas
   WidgetClassName = 'Scrolledcanvas'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ################################
 
   def __boolval_optkeys
     super() << 'autoresize'
@@ -44,7 +39,6 @@ class Tk::Iwidgets::Scrolledcanvas
     end
   end
 
-  ################################
 
   def child_site
     window(tk_call(@path, 'childsite'))
@@ -55,7 +49,6 @@ class Tk::Iwidgets::Scrolledcanvas
     self
   end
 
-  ##########################
   include TkCanvasItemConfig
 
   def tagid(tag)
@@ -69,12 +62,10 @@ class Tk::Iwidgets::Scrolledcanvas
   end
   private :tagid
 
-  # create a canvas item without creating a TkcItem object
   def create(type, *args)
     type.create(self, *args)
   end
 
-  #######################
 
   def addtag(tag, mode, *args)
     tk_send_without_enc('addtag', tagid(tag), mode, *args)
@@ -107,12 +98,7 @@ class Tk::Iwidgets::Scrolledcanvas
                              *tags.collect{|t| tagid(t)}))
   end
 
-  #def itembind(tag, context, cmd=Proc.new, *args)
-  #  _bind([path, "bind", tagid(tag)], context, cmd, *args)
-  #  self
-  #end
   def itembind(tag, context, *args)
-    # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -122,12 +108,7 @@ class Tk::Iwidgets::Scrolledcanvas
     self
   end
 
-  #def itembind_append(tag, context, cmd=Proc.new, *args)
-  #  _bind_append([path, "bind", tagid(tag)], context, cmd, *args)
-  #  self
-  #end
   def itembind_append(tag, context, *args)
-    # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -147,11 +128,9 @@ class Tk::Iwidgets::Scrolledcanvas
   end
 
   def canvasx(screen_x, *args)
-    #tk_tcl2ruby(tk_send_without_enc('canvasx', screen_x, *args))
     number(tk_send_without_enc('canvasx', screen_x, *args))
   end
   def canvasy(screen_y, *args)
-    #tk_tcl2ruby(tk_send_without_enc('canvasy', screen_y, *args))
     number(tk_send_without_enc('canvasy', screen_y, *args))
   end
 

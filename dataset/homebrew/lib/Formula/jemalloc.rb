@@ -17,7 +17,6 @@ class Jemalloc < Formula
     system "./configure", "--disable-debug", "--prefix=#{prefix}", "--with-jemalloc-prefix="
     system "make", "install"
 
-    # This otherwise conflicts with google-perftools
     mv "#{bin}/pprof", "#{bin}/jemalloc-pprof"
   end
 end

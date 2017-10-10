@@ -1,13 +1,3 @@
-#
-#   irb/locale.rb - internationalization module
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 module IRB # :nodoc:
   class Locale
 
@@ -128,21 +118,15 @@ module IRB # :nodoc:
     def real_load(path, priv)
       src = MagicFile.open(path){|f| f.read}
       if priv
-        #nodyna <ID:eval-97> <EV COMPLEX (scope)>
-        #nodyna <ID:eval-98> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-2176> <EV COMPLEX (scope)>
+        #nodyna <eval-2177> <EV COMPLEX (change-prone variables)>
         eval("self", TOPLEVEL_BINDING).extend(Module.new {eval(src, nil, path)})
       else
-        #nodyna <ID:eval-99> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-2178> <EV COMPLEX (change-prone variables)>
         eval(src, TOPLEVEL_BINDING, path)
       end
     end
 
-    # @param paths load paths in which IRB find a localized file.
-    # @param dir directory
-    # @param file basename to be localized
-    #
-    # typically, for the parameters and a <path> in paths, it searches
-    #   <path>/<dir>/<locale>/<file>
     def search_file(lib_paths, dir, file)
       each_localized_path(dir, file) do |lc_path|
         lib_paths.each do |libpath|

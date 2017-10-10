@@ -1,4 +1,3 @@
-# API to wrap up plugin store rows
 class PluginStore
   def self.get(plugin_name, key)
     if row = PluginStoreRow.find_by(plugin_name: plugin_name, key: key)
@@ -11,7 +10,6 @@ class PluginStore
     row = PluginStoreRow.find_by(hash) || PluginStoreRow.new(hash)
 
     row.type_name = determine_type(value)
-    # nil are stored as nil
     row.value =
       if row.type_name == "JSON"
         value.to_json

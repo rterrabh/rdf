@@ -28,8 +28,6 @@ class Curl < Formula
   deprecated_option "with-ssh" => "with-libssh2"
   deprecated_option "with-ares" => "with-c-ares"
 
-  # HTTP/2 support requires OpenSSL 1.0.2+ or LibreSSL 2.1.3+ for ALPN Support
-  # which is currently not supported by Secure Transport (DarwinSSL).
   if MacOS.version < :mountain_lion || (build.with?("nghttp2") && build.without?("libressl"))
     depends_on "openssl"
   else
@@ -47,8 +45,6 @@ class Curl < Formula
   depends_on "nghttp2" => :optional
 
   def install
-    # Throw an error if someone actually tries to rock both SSL choices.
-    # Long-term, make this singular-ssl-option-only a requirement.
     if build.with?("libressl") && build.with?("openssl")
       ohai <<-EOS.undent
       --with-openssl and --with-libressl are both specified and
@@ -63,9 +59,6 @@ class Curl < Formula
       --prefix=#{prefix}
     ]
 
-    # cURL has a new firm desire to find ssl with PKG_CONFIG_PATH instead of using
-    # "--with-ssl" any more. "when possible, set the PKG_CONFIG_PATH environment
-    # variable instead of using this option". Multi-SSL choice breaks w/o using it.
     if build.with? "libressl"
       ENV.prepend_path "PKG_CONFIG_PATH", "#{Formula["libressl"].opt_prefix}/lib/pkgconfig"
       args << "--with-ssl=#{Formula["libressl"].opt_prefix}"
@@ -95,8 +88,6 @@ class Curl < Formula
   end
 
   test do
-    # Fetch the curl tarball and see that the checksum matches.
-    # This requires a network connection, but so does Homebrew in general.
     filename = (testpath/"test.tar.gz")
     system "#{bin}/curl", "-L", stable.url, "-o", filename
     filename.verify_checksum stable.checksum

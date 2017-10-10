@@ -8,10 +8,8 @@ class Admin::ImpersonateController < Admin::AdminController
 
     guardian.ensure_can_impersonate!(user)
 
-    # log impersonate
     StaffActionLogger.new(current_user).log_impersonate(user)
 
-    # Log on as the user
     log_on_user(user)
 
     render nothing: true

@@ -53,8 +53,6 @@ module Spree
       end
 
       it "update order adjustments" do
-        # A line item will not have both additional and included tax,
-        # so please just humour me for now.
         order.line_items.first.update_columns({
           adjustment_total: 10.05,
           additional_tax_total: 0.05,

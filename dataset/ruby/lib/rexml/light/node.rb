@@ -1,22 +1,10 @@
 require 'rexml/xmltokens'
 
-# [ :element, parent, name, attributes, children* ]
-  # a = Node.new
-  # a << "B"            # => <a>B</a>
-  # a.b                 # => <a>B<b/></a>
-  # a.b[1]                      # => <a>B<b/><b/><a>
-  # a.b[1]["x"] = "y"   # => <a>B<b/><b x="y"/></a>
-  # a.b[0].c            # => <a>B<b><c/></b><b x="y"/></a>
-  # a.b.c << "D"                # => <a>B<b><c>D</c></b><b x="y"/></a>
 module REXML
   module Light
-    # Represents a tagged XML element.  Elements are characterized by
-    # having children, attributes, and names, and can themselves be
-    # children.
     class Node
       NAMESPLIT = /^(?:(#{XMLTokens::NCNAME_STR}):)?(#{XMLTokens::NCNAME_STR})/u
       PARENTS = [ :element, :document, :doctype ]
-      # Create a new element.
       def initialize node=nil
         @node = node
         if node.kind_of? String
@@ -98,7 +86,6 @@ module REXML
         XPath.match( self, path )
       end
 
-      # Doesn't handle namespaces yet
       def []=( reference, ns, value=nil )
         if reference.kind_of? String
           value = ns unless value
@@ -114,10 +101,6 @@ module REXML
         end
       end
 
-      # Append a child to this element, optionally under a provided namespace.
-      # The namespace argument is ignored if the element argument is an Element
-      # object.  Otherwise, the element argument is a string, the namespace (if
-      # provided) is the namespace the element is created in.
       def << element
         if node_type() == :text
           at(-1) << element

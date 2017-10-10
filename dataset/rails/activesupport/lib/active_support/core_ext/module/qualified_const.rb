@@ -1,8 +1,5 @@
 require 'active_support/core_ext/string/inflections'
 
-#--
-# Allows code reuse in the methods below without polluting Module.
-#++
 module QualifiedConstUtils
   def self.raise_if_absolute(path)
     raise NameError.new("wrong constant name #$&") if path =~ /\A::[^:]+/
@@ -13,22 +10,13 @@ module QualifiedConstUtils
   end
 end
 
-##
-# Extends the API for constants to be able to deal with qualified names. Arguments
-# are assumed to be relative to the receiver.
-#
-#--
-# Qualified names are required to be relative because we are extending existing
-# methods that expect constant names, ie, relative paths of length 1. For example,
-# Object.const_get('::String') raises NameError and so does qualified_const_get.
-#++
 class Module
   def qualified_const_defined?(path, search_parents=true)
     QualifiedConstUtils.raise_if_absolute(path)
 
     QualifiedConstUtils.names(path).inject(self) do |mod, name|
       return unless mod.const_defined?(name, search_parents)
-      #nodyna <ID:const_get-13> <CG COMPLEX (array)>
+      #nodyna <const_get-1043> <CG COMPLEX (array)>
       mod.const_get(name)
     end
     return true
@@ -38,7 +26,7 @@ class Module
     QualifiedConstUtils.raise_if_absolute(path)
 
     QualifiedConstUtils.names(path).inject(self) do |mod, name|
-      #nodyna <ID:const_get-14> <CG COMPLEX (array)>
+      #nodyna <const_get-1044> <CG COMPLEX (array)>
       mod.const_get(name)
     end
   end
@@ -49,7 +37,7 @@ class Module
     const_name = path.demodulize
     mod_name = path.deconstantize
     mod = mod_name.empty? ? self : qualified_const_get(mod_name)
-    #nodyna <ID:const_set-9> <CS COMPLEX (change-prone variable)>
+    #nodyna <const_set-1045> <CS COMPLEX (change-prone variable)>
     mod.const_set(const_name, value)
   end
 end

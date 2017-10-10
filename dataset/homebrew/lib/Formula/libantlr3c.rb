@@ -32,7 +32,6 @@ class Libantlr3c < Formula
 
   test do
     (testpath/"hello.c").write <<-EOS.undent
-      #include <antlr3.h>
       int main() {
         if (0) {
           antlr3GenericSetupStream(NULL);

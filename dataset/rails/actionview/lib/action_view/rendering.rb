@@ -1,8 +1,6 @@
 require "action_view/view_paths"
 
 module ActionView
-  # This is a class to fix I18n global state. Whenever you provide I18n.locale during a request,
-  # it will trigger the lookup_context and consequently expire the cache.
   class I18nProxy < ::I18n::Config #:nodoc:
     attr_reader :original_config, :lookup_context
 
@@ -24,7 +22,6 @@ module ActionView
     extend ActiveSupport::Concern
     include ActionView::ViewPaths
 
-    # Overwrite process to setup I18n proxy.
     def process(*) #:nodoc:
       old_config, I18n.config = I18n.config, I18nProxy.new(I18n.config, lookup_context)
       super
@@ -59,21 +56,10 @@ module ActionView
       @_view_context_class ||= self.class.view_context_class
     end
 
-    # An instance of a view class. The default view class is ActionView::Base
-    #
-    # The view class must have the following methods:
-    # View.new[lookup_context, assigns, controller]
-    #   Create a new ActionView instance for a controller and we can also pass the arguments.
-    # View#render(option)
-    #   Returns String with the rendered template
-    #
-    # Override this method in a module to change the default behavior.
     def view_context
       view_context_class.new(view_renderer, view_assigns, self)
     end
 
-    # Returns an object that is able to render templates.
-    # :api: private
     def view_renderer
       @_view_renderer ||= ActionView::Renderer.new(lookup_context)
     end
@@ -89,8 +75,6 @@ module ActionView
 
     private
 
-      # Find and render a template based on the options given.
-      # :api: private
       def _render_template(options) #:nodoc:
         variant = options[:variant]
 
@@ -100,16 +84,12 @@ module ActionView
         view_renderer.render(view_context, options)
       end
 
-      # Assign the rendered format to lookup context.
       def _process_format(format, options = {}) #:nodoc:
         super
         lookup_context.formats = [format.to_sym]
         lookup_context.rendered_format = lookup_context.formats.first
       end
 
-      # Normalize args by converting render "foo" to render :action => "foo" and
-      # render "foo/bar" to render :template => "foo/bar".
-      # :api: private
       def _normalize_args(action=nil, options={})
         options = super(action, options)
         case action
@@ -127,8 +107,6 @@ module ActionView
         options
       end
 
-      # Normalize options.
-      # :api: private
       def _normalize_options(options)
         options = super(options)
         if options[:partial] == true

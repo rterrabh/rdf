@@ -7,7 +7,6 @@ class WrkTrello < Formula
   conflicts_with "wrk", :because => "both install `wrk` binaries"
 
   def script; <<-EOS.undent
-    #!/bin/sh
     export WRK_HOME="#{libexec}"
     exec "#{libexec}/bin/wrk" "$@"
     EOS

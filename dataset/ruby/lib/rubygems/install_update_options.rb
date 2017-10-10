@@ -1,28 +1,17 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
 require 'rubygems'
 
-# forward-declare
 
 module Gem::Security # :nodoc:
   class Policy # :nodoc:
   end
 end
 
-##
-# Mixin methods for install and update options for Gem::Commands
 
 module Gem::InstallUpdateOptions
 
-  ##
-  # Add the install/update options to the option parser.
 
   def add_install_update_options
-    # TODO: use @parser.accept
     OptionParser.accept Gem::Security::Policy do |value|
       require 'rubygems/security'
 
@@ -175,8 +164,6 @@ module Gem::InstallUpdateOptions
     end
   end
 
-  ##
-  # Default options for the gem install command.
 
   def install_update_defaults_str
     '--document=rdoc,ri --wrappers'

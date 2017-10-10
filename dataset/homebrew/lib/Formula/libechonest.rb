@@ -24,8 +24,6 @@ class Libechonest < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <echonest/Genre.h>
-      #include <echonest/Artist.h>
       int main() {
         Echonest::Genre test;
         test.setName(QLatin1String("ambient trance"));

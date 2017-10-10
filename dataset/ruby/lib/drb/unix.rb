@@ -6,13 +6,8 @@ raise(LoadError, "UNIXServer is required") unless defined?(UNIXServer)
 
 module DRb
 
-  # Implements DRb over a UNIX socket
-  #
-  # DRb UNIX socket URIs look like <code>drbunix:<path>?<option></code>.  The
-  # option is optional.
 
   class DRbUNIXSocket < DRbTCPSocket
-    # :stopdoc:
     def self.parse_uri(uri)
       if /^drbunix:(.*?)(\?(.*))?$/ =~ uri
         filename = $1
@@ -66,7 +61,6 @@ module DRb
       @acl = nil
     end
 
-    # import from tempfile.rb
     Max_try = 10
     private
     def self.temp_server
@@ -82,7 +76,6 @@ module DRb
           end
         rescue
           raise "cannot generate tempfile `%s'" % tmpname if n >= Max_try
-          #sleep(1)
         end
         n += 1
       end
@@ -113,5 +106,4 @@ module DRb
   end
 
   DRbProtocol.add_protocol(DRbUNIXSocket)
-  # :startdoc:
 end

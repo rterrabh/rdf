@@ -10,13 +10,10 @@ class Projects::MergeRequestsController < Projects::ApplicationController
   before_action :validates_merge_request, only: [:show, :diffs, :commits]
   before_action :define_show_vars, only: [:show, :diffs, :commits]
 
-  # Allow read any merge_request
   before_action :authorize_read_merge_request!
 
-  # Allow write(create) merge_request
   before_action :authorize_create_merge_request!, only: [:new, :create]
 
-  # Allow modify merge_request
   before_action :authorize_update_merge_request!, only: [:close, :edit, :update, :sort]
 
   def index
@@ -159,7 +156,6 @@ class Projects::MergeRequestsController < Projects::ApplicationController
   end
 
   def branch_from
-    #This is always source
     @source_project = @merge_request.nil? ? @project : @merge_request.source_project
     @commit = @repository.commit(params[:ref]) if params[:ref].present?
   end
@@ -231,16 +227,11 @@ class Projects::MergeRequestsController < Projects::ApplicationController
   end
 
   def validates_merge_request
-    # If source project was removed (Ex. mr from fork to origin)
     return invalid_mr unless @merge_request.source_project
 
-    # Show git not found page
-    # if there is no saved commits between source & target branch
     if @merge_request.commits.blank?
-      # and if target branch doesn't exist
       return invalid_mr unless @merge_request.target_branch_exists?
 
-      # or if source branch doesn't exist
       return invalid_mr unless @merge_request.source_branch_exists?
     end
   end
@@ -248,14 +239,11 @@ class Projects::MergeRequestsController < Projects::ApplicationController
   def define_show_vars
     @participants = @merge_request.participants(current_user, @project)
 
-    # Build a note object for comment form
     @note = @project.notes.new(noteable: @merge_request)
     @notes = @merge_request.mr_and_commit_notes.inc_author.fresh
     @discussions = Note.discussions_from_notes(@notes)
     @noteable = @merge_request
 
-    # Get commits from repository
-    # or from cache if already merged
     @commits = @merge_request.commits
 
     @merge_request_diff = @merge_request.merge_request_diff
@@ -268,7 +256,6 @@ class Projects::MergeRequestsController < Projects::ApplicationController
   end
 
   def invalid_mr
-    # Render special view for MR with removed source or target branch
     render 'invalid'
   end
 

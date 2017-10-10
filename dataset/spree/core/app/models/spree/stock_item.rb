@@ -49,7 +49,6 @@ module Spree
       self.count_on_hand > 0
     end
 
-    # Tells whether it's available to be included in a shipment
     def available?
       self.in_stock? || self.backorderable?
     end
@@ -71,9 +70,6 @@ module Spree
         write_attribute(:count_on_hand, value)
       end
 
-      # Process backorders based on amount of stock received
-      # If stock was -20 and is now -15 (increase of 5 units), then we should process 5 inventory orders.
-      # If stock was -20 but then was -25 (decrease of 5 units), do nothing.
       def process_backorders(number)
         if number > 0
           backordered_inventory_units.first(number).each do |unit|
@@ -83,7 +79,6 @@ module Spree
       end
 
       def conditional_variant_touch
-        # the variant_id changes from nil when a new stock location is added
         stock_changed = (count_on_hand_changed? && count_on_hand_change.any?(&:zero?)) || variant_id_changed?
 
         if !Spree::Config.binary_inventory_cache || stock_changed

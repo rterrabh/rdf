@@ -6,7 +6,6 @@ Dir["#{Rails.root}/lib/onebox/engine/*_onebox.rb"].each {|f|
 module Oneboxer
 
 
-  # keep reloaders happy
   unless defined? Oneboxer::Result
     Result = Struct.new(:doc, :changed) do
       def to_html
@@ -59,7 +58,6 @@ module Oneboxer
     Rails.cache.delete(onebox_cache_key(url))
   end
 
-  # Parse URLs out of HTML, returning the document when finished.
   def self.each_onebox_link(string_or_doc)
     doc = string_or_doc
     doc = Nokogiri::HTML::fragment(doc) if doc.is_a?(String)
@@ -87,7 +85,6 @@ module Oneboxer
         parsed_onebox = Nokogiri::HTML::fragment(onebox)
         next unless parsed_onebox.children.count > 0
 
-        # special logic to strip empty p elements
         if  element.parent &&
             element.parent.node_name.downcase == "p" &&
             element.parent.children.count == 1
@@ -107,7 +104,6 @@ module Oneboxer
   end
 
   def self.add_discourse_whitelists
-    # Add custom domain whitelists
     if SiteSetting.onebox_domains_whitelist.present?
       domains = SiteSetting.onebox_domains_whitelist.split('|')
       whitelist = Onebox::Engine::WhitelistedGenericOnebox.whitelist
@@ -118,7 +114,6 @@ module Oneboxer
 
   def self.onebox_raw(url)
     Rails.cache.fetch(onebox_cache_key(url), expires_in: 1.day){
-      # This might be able to move to whenever the SiteSetting changes?
       Oneboxer.add_discourse_whitelists
 
       r = Onebox.preview(url, cache: {}, max_width: 695)
@@ -128,11 +123,8 @@ module Oneboxer
       }
     }
   rescue => e
-    # no point warning here, just cause we have an issue oneboxing a url
-    # we can later hunt for failed oneboxes by searching logs if needed
     Rails.logger.info("Failed to onebox #{url} #{e} #{e.backtrace}")
 
-    # return a blank hash, so rest of the code works
     {preview: "", onebox: ""}
   end
 

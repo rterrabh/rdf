@@ -2,7 +2,6 @@ require 'rexml/encoding'
 require 'rexml/source'
 
 module REXML
-  # NEEDS DOCUMENTATION
   class XMLDecl < Child
     include Encoding
 
@@ -37,12 +36,6 @@ module REXML
       XMLDecl.new(self)
     end
 
-    # indent::
-    #   Ignored.  There must be no whitespace before an XML declaration
-    # transitive::
-    #   Ignored
-    # ie_hack::
-    #   Ignored
     def write(writer, indent=-1, transitive=false, ie_hack=false)
       return nil unless @writethis or writer.kind_of? Output
       writer << START.sub(/\\/u, '')
@@ -81,11 +74,6 @@ module REXML
       self.dowrite
     end
 
-    # Only use this if you do not want the XML declaration to be written;
-    # this object is ignored by the XML writer.  Otherwise, instantiate your
-    # own XMLDecl and add it to the document.
-    #
-    # Note that XML 1.1 documents *must* include an XML declaration
     def XMLDecl.default
       rv = XMLDecl.new( "1.0" )
       rv.nowrite

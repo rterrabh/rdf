@@ -126,32 +126,24 @@ class Smlnj < Formula
     sha256 "2d48e6466314c7563f7f7b07700f3d93430c8082199874de0b1ff25d1a536821"
   end
 
-  # Pings `unname -r` to determine OS X version & panics that
-  # it doesn't recognise El Capitan. Already fixed upstream, but
-  # patch doesn't apply cleanly from trunk.
-  # http://smlnj-gforge.cs.uchicago.edu/scm/viewvc.php?view=rev&root=smlnj&revision=4073
   patch :DATA
 
   def install
     ENV.deparallelize
     ENV.m32 # does not build 64-bit
 
-    # Build in place
     root = prefix/"SMLNJ_HOME"
     cd ".."
     root.install "config"
     cd root
 
-    # Rewrite targets list (default would be too minimalistic)
     rm "config/targets"
     Pathname.new("config/targets").write targets
 
-    # Download and extract all the sources for the base system
     %w[cm compiler runtime system].each do |name|
       resource(name).stage { cp_r pwd, root/"base" }
     end
 
-    # Download the remaining packages that go directly into the root
     %w[
       bootstrap mlrisc lib ckit nlffi
       cml exene ml-lpt ml-lex ml-yacc ml-burg pgraph
@@ -162,7 +154,6 @@ class Smlnj < Formula
 
     inreplace root/"base/runtime/objs/mk.x86-darwin", "/usr/bin/as", "as"
 
-    # Orrrr, don't mess with our PATH. Superenv carefully sets that up.
     inreplace root/"base/runtime/config/gen-posix-names.sh", "PATH=/bin:/usr/bin", "# do not hardcode the path"
     inreplace root/"base/runtime/config/gen-posix-names.sh", "/usr/include", "#{MacOS.sdk_path}/usr/include" unless MacOS::CLT.installed?
 

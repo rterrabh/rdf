@@ -8,7 +8,6 @@ class Ogmtools < Formula
   depends_on "libvorbis"
   depends_on "libdvdread" => :optional
 
-  # Borrow patch from MacPorts
   patch :p0 do
     url "https://trac.macports.org/export/87593/trunk/dports/multimedia/ogmtools/files/common.h.diff"
     sha256 "2dd18dea6de0d2820221bde8dfea163101d0037196cb2e94cd910808d10119c0"
@@ -21,7 +20,6 @@ class Ogmtools < Formula
     system "make", "install"
   end
 
-  # Borrow warning from MacPorts
   def caveats; <<-EOS.undent
     Ogmtools has not been updated since 2004 and is no longer being developed,
     maintained or supported. There are several issues, especially on 64-bit

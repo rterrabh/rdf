@@ -15,7 +15,6 @@ class ScoreCalculator
     @weightings = weightings || ScoreCalculator.default_score_weights
   end
 
-  # Calculate the score for all posts based on the weightings
   def calculate(min_topic_age=nil)
 
     update_posts_score(min_topic_age)

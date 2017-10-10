@@ -1,6 +1,5 @@
 module Demon; end
 
-# intelligent fork based demonizer
 class Demon::Base
 
   def self.demons
@@ -62,7 +61,6 @@ class Demon::Base
   def stop
     @started = false
     if @pid
-      # TODO configurable stop signal
       Process.kill("HUP",@pid)
 
       wait_for_stop = lambda {
@@ -114,7 +112,6 @@ class Demon::Base
     return if @pid || @started
 
     if existing = already_running?
-      # should not happen ... so kill violently
       STDERR.puts "Attempting to kill pid #{existing}"
       Process.kill("TERM",existing)
     end
@@ -198,12 +195,10 @@ class Demon::Base
       begin
         delete_pid_file
       ensure
-        # TERM is way cleaner than exit
         Process.kill("TERM", Process.pid)
       end
     end
 
-    # keep stuff simple for now
     $stdout.reopen("/dev/null", "w") if suppress_stdout
     $stderr.reopen("/dev/null", "w") if suppress_stderr
   end

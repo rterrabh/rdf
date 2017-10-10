@@ -1,12 +1,3 @@
-#
-# https.rb -- SSL/TLS enhancement for HTTPServer
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2001 GOTOU Yuuzou
-# Copyright (c) 2002 Internet Programming with Ruby writers. All rights
-# reserved.
-#
-# $IPR: https.rb,v 1.15 2003/07/22 19:20:42 gotoyuzo Exp $
 
 require 'webrick/ssl'
 
@@ -15,28 +6,18 @@ module WEBrick
     HTTP.update(SSL)
   end
 
-  ##
-  #--
-  # Adds SSL functionality to WEBrick::HTTPRequest
 
   class HTTPRequest
 
-    ##
-    # HTTP request SSL cipher
 
     attr_reader :cipher
 
-    ##
-    # HTTP request server certificate
 
     attr_reader :server_cert
 
-    ##
-    # HTTP request client certificate
 
     attr_reader :client_cert
 
-    # :stopdoc:
 
     alias orig_parse parse
 
@@ -81,6 +62,5 @@ module WEBrick
       meta
     end
 
-    # :startdoc:
   end
 end

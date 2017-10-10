@@ -15,7 +15,6 @@ class Mosquitto < Formula
   depends_on "c-ares"
   depends_on "libwebsockets" => :recommended
 
-  # mosquitto requires OpenSSL >=1.0 for TLS support
   depends_on "openssl"
 
   def install
@@ -25,7 +24,6 @@ class Mosquitto < Formula
     system "cmake", ".", *args
     system "make", "install"
 
-    # Create the working directory
     (var/"mosquitto").mkpath
   end
 
@@ -37,7 +35,6 @@ class Mosquitto < Formula
   def caveats; <<-EOD.undent
     mosquitto has been installed with a default configuration file.
     You can make changes to the configuration by editing:
-        #{etc}/mosquitto/mosquitto.conf
     EOD
   end
 

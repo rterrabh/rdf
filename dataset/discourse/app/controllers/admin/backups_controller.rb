@@ -42,7 +42,6 @@ class Admin::BackupsController < Admin::AdminController
     render json: success_json
   end
 
-  # download
   def show
     filename = params.fetch(:id)
     if backup = Backup[filename]
@@ -98,9 +97,7 @@ class Admin::BackupsController < Admin::AdminController
     chunk_number       = params.fetch(:resumableChunkNumber)
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
 
-    # path to chunk file
     chunk = Backup.chunk_path(identifier, filename, chunk_number)
-    # check chunk upload status
     status = HandleChunkUpload.check_chunk(chunk, current_chunk_size: current_chunk_size)
 
     render nothing: true, status: status
@@ -119,15 +116,11 @@ class Admin::BackupsController < Admin::AdminController
     chunk_size         = params.fetch(:resumableChunkSize).to_i
     current_chunk_size = params.fetch(:resumableCurrentChunkSize).to_i
 
-    # path to chunk file
     chunk = Backup.chunk_path(identifier, filename, chunk_number)
-    # upload chunk
     HandleChunkUpload.upload_chunk(chunk, file: file)
 
     uploaded_file_size = chunk_number * chunk_size
-    # when all chunks are uploaded
     if uploaded_file_size + current_chunk_size >= total_size
-      # merge all the chunks in a background thread
       Jobs.enqueue(:backup_chunks_merger, filename: filename, identifier: identifier, chunks: chunk_number)
     end
 

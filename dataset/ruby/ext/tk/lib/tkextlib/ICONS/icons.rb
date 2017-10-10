@@ -1,17 +1,10 @@
-#
-#  tkextlib/ICONS/icons.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/ICONS/setup.rb'
 
-# TkPackage.require('icons', '1.0')
 TkPackage.require('icons')
 
 module Tk
@@ -73,7 +66,6 @@ module Tk
       end . map{|inf| list(inf) }
     end
 
-    ##########################################
 
     class << self
       alias _new new
@@ -93,7 +85,6 @@ module Tk
       end
     end
 
-    ##########################################
 
     def initialize(name, keys=nil)
       if name.kind_of?(String) && name =~ /^::icon::(.+)$/

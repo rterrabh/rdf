@@ -1,4 +1,3 @@
-# Links any Applications (.app) found in installed prefixes to /Applications
 require "keg"
 require "formula"
 

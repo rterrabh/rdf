@@ -7,16 +7,11 @@ require 'sqlite3'
 
 module ActiveRecord
   module ConnectionHandling # :nodoc:
-    # sqlite3 adapter reuses sqlite_connection.
     def sqlite3_connection(config)
-      # Require database.
       unless config[:database]
         raise ArgumentError, "No database file specified. Missing argument: database"
       end
 
-      # Allow database path relative to Rails.root, but only if the database
-      # path is not the special path that tells sqlite to build a database only
-      # in memory.
       if ':memory:' != config[:database]
         config[:database] = File.expand_path(config[:database], Rails.root) if defined?(Rails.root)
         dirname = File.dirname(config[:database])
@@ -50,12 +45,6 @@ module ActiveRecord
       end
     end
 
-    # The SQLite3 adapter works SQLite 3.6.16 or newer
-    # with the sqlite3-ruby drivers (available as gem from https://rubygems.org/gems/sqlite3).
-    #
-    # Options:
-    #
-    # * <tt>:database</tt> - Path to the database file.
     class SQLite3Adapter < AbstractAdapter
       ADAPTER_NAME = 'SQLite'.freeze
       include Savepoints
@@ -150,13 +139,10 @@ module ActiveRecord
         sqlite_version >= '3.8.0'
       end
 
-      # Returns true, since this connection adapter supports prepared statement
-      # caching.
       def supports_statement_cache?
         true
       end
 
-      # Returns true, since this connection adapter supports migrations.
       def supports_migrations? #:nodoc:
         true
       end
@@ -177,15 +163,12 @@ module ActiveRecord
         @active != false
       end
 
-      # Disconnects from the database if already connected. Otherwise, this
-      # method does nothing.
       def disconnect!
         super
         @active = false
         @connection.close rescue nil
       end
 
-      # Clears the prepared statements cache.
       def clear_cache!
         @statements.clear
       end
@@ -194,9 +177,6 @@ module ActiveRecord
         true
       end
 
-      # Returns 62. SQLite supports index names up to 64
-      # characters. The rest is used by rails internally to perform
-      # temporary rename operations
       def allowed_index_name_length
         index_name_length - 2
       end
@@ -205,7 +185,6 @@ module ActiveRecord
         NATIVE_DATABASE_TYPES
       end
 
-      # Returns the current database encoding format as a string, eg: 'UTF-8'
       def encoding
         @connection.encoding.to_s
       end
@@ -214,7 +193,6 @@ module ActiveRecord
         true
       end
 
-      # QUOTING ==================================================
 
       def _quote(value) # :nodoc:
         case value
@@ -252,8 +230,6 @@ module ActiveRecord
         %Q("#{name.to_s.gsub('"', '""')}")
       end
 
-      # Quote date/time values for use in SQL input. Includes microseconds
-      # if the value is a Time responding to usec.
       def quoted_date(value) #:nodoc:
         if value.respond_to?(:usec)
           "#{super}.#{sprintf("%06d", value.usec)}"
@@ -262,9 +238,6 @@ module ActiveRecord
         end
       end
 
-      #--
-      # DATABASE STATEMENTS ======================================
-      #++
 
       def explain(arel, binds = [])
         sql = "EXPLAIN QUERY PLAN #{to_sql(arel, binds)}"
@@ -272,12 +245,6 @@ module ActiveRecord
       end
 
       class ExplainPrettyPrinter
-        # Pretty prints the result of a EXPLAIN QUERY PLAN in a way that resembles
-        # the output of the SQLite shell:
-        #
-        #   0|0|0|SEARCH TABLE users USING INTEGER PRIMARY KEY (rowid=?) (~1 rows)
-        #   0|1|1|SCAN TABLE posts (~100000 rows)
-        #
         def pp(result) # :nodoc:
           result.rows.map do |row|
             row.join('|')
@@ -291,7 +258,6 @@ module ActiveRecord
         }
 
         log(sql, name, type_casted_binds) do
-          # Don't cache statements if they are not prepared
           if without_prepared_statement?(binds)
             stmt    = @connection.prepare(sql)
             begin
@@ -361,7 +327,6 @@ module ActiveRecord
         log('rollback transaction',nil) { @connection.rollback }
       end
 
-      # SCHEMA STATEMENTS ========================================
 
       def tables(name = nil, table_name = nil) #:nodoc:
         sql = <<-SQL
@@ -380,7 +345,6 @@ module ActiveRecord
         table_name && tables(nil, table_name).any?
       end
 
-      # Returns an array of +Column+ objects for the table specified by +table_name+.
       def columns(table_name) #:nodoc:
         table_structure(table_name).map do |field|
           case field["dflt_value"]
@@ -398,7 +362,6 @@ module ActiveRecord
         end
       end
 
-      # Returns an array of indexes for the given table.
       def indexes(table_name, name = nil) #:nodoc:
         exec_query("PRAGMA index_list(#{quote_table_name(table_name)})", 'SCHEMA').map do |row|
           sql = <<-SQL
@@ -433,17 +396,11 @@ module ActiveRecord
         exec_query "DROP INDEX #{quote_column_name(index_name)}"
       end
 
-      # Renames a table.
-      #
-      # Example:
-      #   rename_table('octopuses', 'octopi')
       def rename_table(table_name, new_name)
         exec_query "ALTER TABLE #{quote_table_name(table_name)} RENAME TO #{quote_table_name(new_name)}"
         rename_table_indexes(table_name, new_name)
       end
 
-      # See: http://www.sqlite.org/lang_altertable.html
-      # SQLite has an additional restriction on the ALTER TABLE statement
       def valid_alter_table_type?(type)
         type.to_sym != :primary_key
       end
@@ -482,7 +439,7 @@ module ActiveRecord
       def change_column(table_name, column_name, type, options = {}) #:nodoc:
         alter_table(table_name) do |definition|
           include_default = options_include_default?(options)
-          #nodyna <ID:instance_eval-3> <IEV COMPLEX (private access)>
+          #nodyna <instance_eval-910> <IEV COMPLEX (private access)>
           definition[column_name].instance_eval do
             self.type    = type
             self.limit   = options[:limit] if options.include?(:limit)
@@ -570,7 +527,6 @@ module ActiveRecord
             end
 
             unless columns.empty?
-              # index name can't be the same
               opts = { name: name.gsub(/(^|_)(#{from})_/, "\\1#{to}_"), internal: true }
               opts[:unique] = true if index.unique
               add_index(to, columns, opts)
@@ -608,10 +564,6 @@ module ActiveRecord
 
         def translate_exception(exception, message)
           case exception.message
-          # SQLite 3.8.2 returns a newly formatted error message:
-          #   UNIQUE constraint failed: *table_name*.*column_name*
-          # Older versions of SQLite return:
-          #   column *column_name* is not unique
           when /column(s)? .* (is|are) not unique/, /UNIQUE constraint failed: .*/
             RecordNotUnique.new(message, exception)
           else

@@ -1,7 +1,3 @@
-#
-#  style commands
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -20,26 +16,12 @@ class << Tk::Tile::Style
   if Tk::Tile::TILE_SPEC_VERSION_ID < 8
     TkCommandNames = ['style'.freeze].freeze
 
-    # --- Tk::Tile::Style.__define_wrapper_proc_for_compatibility__! ---
-    # On Ttk (Tile) extension, 'style' command has incompatible changes
-    # depend on the version of the extension. It requires modifying the
-    # Tcl/Tk scripts to define local styles. The rule for modification
-    # is a simple one. But, if users want to keep compatibility between
-    # versions of the extension, they will have to contrive to do that.
-    # It may be troublesome, especially for Ruby/Tk users.
-    # This method may help such work. This method make some definitions
-    # on the Tcl/Tk interpreter to work with different version of style
-    # command format. Please give attention to use this method. It may
-    # conflict with some definitions on Tcl/Tk scripts.
     if Tk::Tile::TILE_SPEC_VERSION_ID < 7
       def __define_wrapper_proc_for_compatibility__!
         __define_themes_and_setTheme_proc__!
 
         unless Tk.info(:commands, '::ttk::style').empty?
-          # fail RuntimeError,
-          #      "can't define '::ttk::style' command (already exist)"
 
-          # do nothing !!!
           warn "Warning: can't define '::ttk::style' command (already exist)" if $DEBUG
           return
         end
@@ -49,25 +31,19 @@ class << Tk::Tile::Style
             set spec [lindex $args 4]
             set map  [lrange $spec 1 end]
             if [llength $map] {
-              # return [eval [concat [list ::style element create [lindex $args 2] image [lindex $spec 0] -map $map] [lrange $args 5 end]]]
               return [uplevel 1 [list ::style element create [lindex $args 2] image [lindex $spec 0] -map $map] [lrange $args 5 end]]
             }
           }
         }
-        # return [eval "::style $args"]
         return [uplevel 1 ::style $args]
       EOS
-        #########################
       end
     else ### TILE_SPEC_VERSION_ID == 7
       def __define_wrapper_proc_for_compatibility__!
         __define_themes_and_setTheme_proc__!
 
         unless Tk.info(:commands, '::ttk::style').empty?
-          # fail RuntimeError,
-          #     "can't define '::ttk::style' command (already exist)"
 
-          # do nothing !!!
           warn "Warning: can't define '::ttk::style' command (already exist)" if $DEBUG
           return
         end
@@ -77,18 +53,14 @@ class << Tk::Tile::Style
             set spec [lindex $args 4]
             set map  [lrange $spec 1 end]
             if [llength $map] {
-              # return [eval [concat [list ::style element create [lindex $args 2] image [lindex $spec 0] -map $map] [lrange $args 5 end]]]
               return [uplevel 1 [list ::style element create [lindex $args 2] image [lindex $spec 0] -map $map] [lrange $args 5 end]]]
             }
           }
         } elseif [string equal [lindex $args 0] default] {
-          # return [eval "::style [lreplace $args 0 0 configure]"]
           return [uplevel 1 ::style [lreplace $args 0 0 configure]]
         }
-        # return [eval "::style $args"]
         return [uplevel 1 ::style $args]
       EOS
-        #########################
       end
     end
   else ### TILE_SPEC_VERSION_ID >= 8
@@ -98,9 +70,7 @@ class << Tk::Tile::Style
       __define_themes_and_setTheme_proc__!
 
       unless Tk.info(:commands, '::style').empty?
-        # fail RuntimeError, "can't define '::style' command (already exist)"
 
-        # do nothing !!!
         warn "Warning: can't define '::style' command (already exist)" if $DEBUG
         return
       end
@@ -111,24 +81,19 @@ class << Tk::Tile::Style
             set opts [lrange $args 5 end]
             set idx [lsearch $opts -map]
             if {$idx >= 0 && [expr $idx % 2 == 0]} {
-             # return [eval [concat [list ::ttk::style element create [lindex $args 2] image [concat $name [lindex $opts [expr $idx + 1]]]] [lreplace $opts $idx [expr $idx + 1]]]]
               return [uplevel 1 [list ::ttk::style element create [lindex $args 2] image [concat $name [lindex $opts [expr $idx + 1]]]] [lreplace $opts $idx [expr $idx + 1]]]
             }
           }
         } elseif [string equal [lindex $args 0] default] {
-          # return [eval "::ttk::style [lreplace $args 0 0 configure]"]
           return [uplevel 1 ::ttk::style [lreplace $args 0 0 configure]]
         }
-        # return [eval "::ttk::style $args"]
         return [uplevel 1 ::ttk::style $args]
       EOS
-      #########################
     end
   end
 
   def __define_themes_and_setTheme_proc__!
     TkCore::INTERP.add_tk_procs('::ttk::themes', '{ptn *}', <<-'EOS')
-      #set themes [list]
       set themes [::ttk::style theme names]
       foreach pkg [lsearch -inline -all -glob [package names] ttk::theme::$ptn] {
           set theme [namespace tail $pkg]
@@ -144,7 +109,6 @@ class << Tk::Tile::Style
       }
       return $themes
     EOS
-    #########################
     TkCore::INTERP.add_tk_procs('::ttk::setTheme', 'theme', <<-'EOS')
       variable currentTheme
       if {[lsearch -exact [::ttk::style theme names] $theme] < 0} {
@@ -252,7 +216,6 @@ class << Tk::Tile::Style
     fail ArgumentError, 'too many arguments' unless args.empty?
 
     if spec.kind_of?(Array)
-      # probably, command format is tile 0.8+ (Tcl/Tk8.5+) style
       if Tk::Tile::TILE_SPEC_VERSION_ID >= 8
         if opts
           tk_call(TkCommandNames[0],
@@ -268,7 +231,6 @@ class << Tk::Tile::Style
                 'element', 'create', name, 'image', base, opts)
       end
     else
-      # probably, command format is tile 0.7.8 or older style
       if Tk::Tile::TILE_SPEC_VERSION_ID >= 8
         spec = [spec, *(opts.delete('map'))] if opts.key?('map')
       end
@@ -282,9 +244,7 @@ class << Tk::Tile::Style
   end
 
   def element_create_vsapi(name, class_name, part_id, *args)
-    # supported on Tcl/Tk 8.6 or later
 
-    # argument check
     if (state_map = args.shift || None)
       if state_map.kind_of?(Hash)
         opts = _symbolkey2str(state_map)
@@ -294,7 +254,6 @@ class << Tk::Tile::Style
     opts = args.shift || None
     fail ArgumentError, "too many arguments" unless args.empty?
 
-    # define a Microsoft Visual Styles element
     tk_call(TkCommandNames[0], 'element', 'create', name, 'vsapi',
             class_name, part_id, state_map, opts)
   end

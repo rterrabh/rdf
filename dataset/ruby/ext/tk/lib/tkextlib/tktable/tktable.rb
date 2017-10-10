@@ -1,18 +1,11 @@
-#
-#  tkextlib/tktable/tktable.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/validation'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/tktable/setup.rb'
 
-# TkPackage.require('Tktable', '2.8')
 TkPackage.require('Tktable')
 
 module Tk
@@ -124,14 +117,13 @@ module Tk::TkTable::ConfigMethod
   private :itemconfigure, :itemconfiginfo, :current_itemconfiginfo
 end
 
-#####################################################
 
 class Tk::TkTable::CellTag
   include TkTreatTagFont
 
   CellTagID_TBL = TkCore::INTERP.create_table
 
-  #nodyna <ID:instance_eval-64> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1543> <IEV MODERATE (method definition)>
   (CellTag_ID = ['tktbl:celltag'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -231,8 +223,7 @@ class Tk::TkTable::NamedCellTag < Tk::TkTable::CellTag
       if CellTagID_TBL[parent.path] && CellTagID_TBL[parent.path][name]
         obj = CellTagID_TBL[parent.path][name]
       else
-        #super(parent, name, keys)
-        #nodyna <ID:instance_eval-65> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1544> <IEV MODERATE (private access)>
         (obj = self.allocate).instance_eval{
           @parent = @t = parent
           @tpath = parent.path
@@ -247,7 +238,6 @@ class Tk::TkTable::NamedCellTag < Tk::TkTable::CellTag
   end
 
   def initialize(parent, name, keys=nil)
-    # dummy:: not called by 'new' method
     @parent = @t = parent
     @tpath = parent.path
     @path = @id = name
@@ -259,7 +249,6 @@ class Tk::TkTable::NamedCellTag < Tk::TkTable::CellTag
   end
 end
 
-#####################################################
 
 class Tk::TkTable
   TkCommandNames = ['table'.freeze].freeze
@@ -288,7 +277,6 @@ class Tk::TkTable
   private :__strval_optkeys
 
 
-  #################################
 
   class BrowseCommand < TkValidateCommand
     class ValidateArgs < TkUtil::CallbackSubst
@@ -312,7 +300,6 @@ class Tk::TkTable
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -340,7 +327,6 @@ class Tk::TkTable
       ['browsecommand', 'browsecmd']
     end
   end
-  #--------------------------------
   class CellCommand < TkValidateCommand
     class ValidateArgs < TkUtil::CallbackSubst
       KEY_TBL = [
@@ -363,7 +349,6 @@ class Tk::TkTable
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -391,7 +376,6 @@ class Tk::TkTable
       ['command']
     end
   end
-  #--------------------------------
   class SelectionCommand < TkValidateCommand
     class ValidateArgs < TkUtil::CallbackSubst
       KEY_TBL = [
@@ -412,7 +396,6 @@ class Tk::TkTable
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -440,7 +423,6 @@ class Tk::TkTable
       ['selectioncommand', 'selcmd']
     end
   end
-  #--------------------------------
   class ValidateCommand < TkValidateCommand
     class ValidateArgs < TkUtil::CallbackSubst
       KEY_TBL = [
@@ -464,7 +446,6 @@ class Tk::TkTable
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -489,7 +470,6 @@ class Tk::TkTable
     end
   end
 
-  #################################
 
   def __validation_class_list
     super() <<
@@ -501,7 +481,6 @@ class Tk::TkTable
   Tk::ValidateConfigure.__def_validcmd(binding, SelectionCommand)
   Tk::ValidateConfigure.__def_validcmd(binding, ValidateCommand)
 
-  #################################
 
   def activate(idx)
     tk_send('activate', tagid(idx))
@@ -667,9 +646,6 @@ class Tk::TkTable
     self
   end
 
-  # def postscript(*args)
-  #   tk_send('postscript', *args)
-  # end
 
   def reread
     tk_send('reread')
@@ -742,12 +718,10 @@ class Tk::TkTable
 =begin
   def set(*pairs) # idx, val, idx, val, ...  OR [idx, val], [idx, val], ...
     if pairs[0].kind_of?(Array)
-      # [idx, val], [idx, val], ...
       args = []
       pairs.each{|idx, val| args << tagid(idx) << val }
       tk_send('set', *args)
     else
-      # idx, val, idx, val, ...
       args = []
       0.step(pairs.size-1, 2){|i|
         args << tagid(pairs[i])
@@ -759,12 +733,10 @@ class Tk::TkTable
   end
   def set_row(*pairs)
     if pairs[0].kind_of?(Array)
-      # [idx, val], [idx, val], ...
       args = []
       pairs.each{|idx, val| args << tagid(idx) << val }
       tk_send('set', 'row', *args)
     else
-      # idx, val, idx, val, ...
       args = []
       0.step(pairs.size-1, 2){|i|
         args << tagid(pairs[i])
@@ -776,12 +748,10 @@ class Tk::TkTable
   end
   def set_col(*pairs)
     if pairs[0].kind_of?(Array)
-      # [idx, val], [idx, val], ...
       args = []
       pairs.each{|idx, val| args << idx << val }
       tk_send('set', 'col', *args)
     else
-      # idx, val, idx, val, ...
       args = []
       0.step(pairs.size-1, 2){|i|
         args << tagid(pairs[i])
@@ -809,7 +779,6 @@ class Tk::TkTable
     [idx [rows, cols]]
   end
   def set_spans(*pairs)
-    # idx, val, idx, val, ...
     args = []
     0.step(pairs.size-1, 2){|i|
       args << tagid(pairs[i])
@@ -826,7 +795,6 @@ class Tk::TkTable
 =begin
   def set_spans(*pairs)
     if pairs[0].kind_of?(Array)
-      # [idx, val], [idx, val], ...
       args = []
       pairs.each{|idx, val|
         args << tagid(idx)
@@ -838,7 +806,6 @@ class Tk::TkTable
       }
       tk_send('spans', *args)
     else
-      # idx, val, idx, val, ...
       args = []
       0.step(pairs.size-1, 2){|i|
         args << tagid(pairs[i])
@@ -860,7 +827,6 @@ class Tk::TkTable
       tag.id
     elsif tag.kind_of?(Array)
       if tag[0].kind_of?(Integer) && tag[1].kind_of?(Integer)
-        # [row, col]
         tag.join(',')
       else
         tag

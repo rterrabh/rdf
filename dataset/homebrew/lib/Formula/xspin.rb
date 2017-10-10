@@ -15,7 +15,6 @@ class Xspin < Formula
   end
 end
 
-# manual patching is required by the spin install process
 __END__
 diff --git a/xspin525.tcl b/xspin525.tcl
 old mode 100644
@@ -26,7 +25,6 @@ index 73fc6bf..444b0ad
 @@ -1,8 +1,9 @@
 -#!/bin/sh
 +#!/usr/bin/wish -f
- # the next line restarts using wish \
 -exec wish c:/cygwin/bin/xspin -- $*
 +exec wish CELLAR/bin/xspin -- $*
 +
@@ -34,5 +32,3 @@ index 73fc6bf..444b0ad
  
 -# cd	;# enable to cd to home directory by default
  
- # on PCs:
- # adjust the first argument to wish above with the name and

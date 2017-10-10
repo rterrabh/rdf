@@ -1,5 +1,4 @@
 module ActiveRecord
-  # = Active Record Through Association
   module Associations
     module ThroughAssociation #:nodoc:
 
@@ -7,10 +6,6 @@ module ActiveRecord
 
       protected
 
-        # We merge in these scopes for two reasons:
-        #
-        #   1. To get the default_scope conditions for any of the other reflections in the chain
-        #   2. To get the type conditions for any STI models in the chain
         def target_scope
           scope = super
           reflection.chain.drop(1).each do |reflection|
@@ -24,18 +19,6 @@ module ActiveRecord
 
       private
 
-        # Construct attributes for :through pointing to owner and associate. This is used by the
-        # methods which create and delete records on the association.
-        #
-        # We only support indirectly modifying through associations which has a belongs_to source.
-        # This is the "has_many :tags, through: :taggings" situation, where the join model
-        # typically has a belongs_to on both side. In other words, associations which could also
-        # be represented as has_and_belongs_to_many associations.
-        #
-        # We do not support creating/deleting records on the association where the source has
-        # some other type, because this opens up a whole can of worms, and in basically any
-        # situation it is more natural for the user to just create or modify their join records
-        # directly as required.
         def construct_join_attributes(*records)
           ensure_mutable
 
@@ -45,7 +28,7 @@ module ActiveRecord
             join_attributes = {
               source_reflection.foreign_key =>
                 records.map { |record|
-                  #nodyna <ID:send-110> <SD COMPLEX (change-prone variables)>
+                  #nodyna <send-898> <SD COMPLEX (change-prone variables)>
                   record.send(source_reflection.association_primary_key(reflection.klass))
                 }
             }
@@ -63,8 +46,6 @@ module ActiveRecord
           end
         end
 
-        # Note: this does not capture all cases, for example it would be crazy to try to
-        # properly support stale-checking for nested associations.
         def stale_state
           if through_reflection.belongs_to?
             owner[through_reflection.foreign_key] && owner[through_reflection.foreign_key].to_s

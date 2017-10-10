@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class SignedRetraction
   include Diaspora::Federated::Base
@@ -18,7 +15,6 @@ class SignedRetraction
                 :target_author_signature,
                 :sender
 
-  #NOTE(fix this hack -- go through the app and make sure we only call RelayableRetraction in a unified way)
   def author
     if sender.is_a?(User)
       sender.person
@@ -90,7 +86,6 @@ class SignedRetraction
                   "target_guid=#{target_guid}"
       return
     elsif self.target_author_signature_valid?
-      #this is a retraction from the upstream owner
       self.perform(recipient)
     else
       logger.warn "event=receive status=abort reason='object signature not valid' " \

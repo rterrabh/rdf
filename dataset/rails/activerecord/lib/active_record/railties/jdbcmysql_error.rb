@@ -1,4 +1,3 @@
-#FIXME Remove if ArJdbcMysql will give.
 module ArJdbcMySQL #:nodoc:
   class Error < StandardError #:nodoc:
     attr_accessor :error_number, :sql_state
@@ -9,7 +8,6 @@ module ArJdbcMySQL #:nodoc:
       @sql_state    = nil
     end
 
-    # Mysql gem compatibility
     alias_method :errno, :error_number
     alias_method :error, :message
   end

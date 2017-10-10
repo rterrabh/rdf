@@ -17,7 +17,6 @@ class Zbackup < Formula
   depends_on "xz" # get liblzma compression algorithm library from XZutils
   depends_on "lzo"
 
-  # These fixes are upstream and can be removed in version 1.5+
   patch do
     url "https://github.com/zbackup/zbackup/commit/7e6adda6b1df9c7b955fc06be28fe6ed7d8125a2.diff"
     sha256 "564c494b02be7b159b21f1cfcc963df29350061e050e66b7b3d96ed829552351"

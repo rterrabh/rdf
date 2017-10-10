@@ -1,13 +1,3 @@
-#
-# httpproxy.rb -- HTTPProxy Class
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2002 GOTO Kentaro
-# Copyright (c) 2002 Internet Programming with Ruby writers. All rights
-# reserved.
-#
-# $IPR: httpproxy.rb,v 1.18 2003/03/08 18:58:10 gotoyuzo Exp $
-# $kNotwork: straw.rb,v 1.3 2002/02/12 15:13:07 gotoken Exp $
 
 require "webrick/httpserver"
 require "net/http"
@@ -32,53 +22,10 @@ module WEBrick
     end
   end
 
-  # :startdoc:
 
-  ##
-  # An HTTP Proxy server which proxies GET, HEAD and POST requests.
-  #
-  # To create a simple proxy server:
-  #
-  #   require 'webrick'
-  #   require 'webrick/httpproxy'
-  #
-  #   proxy = WEBrick::HTTPProxyServer.new Port: 8000
-  #
-  #   trap 'INT'  do proxy.shutdown end
-  #   trap 'TERM' do proxy.shutdown end
-  #
-  #   proxy.start
-  #
-  # See ::new for proxy-specific configuration items.
-  #
-  # == Modifying proxied responses
-  #
-  # To modify content the proxy server returns use the +:ProxyContentHandler+
-  # option:
-  #
-  #   handler = proc do |req, res|
-  #     if res['content-type'] == 'text/plain' then
-  #       res.body << "\nThis content was proxied!\n"
-  #     end
-  #   end
-  #
-  #   proxy =
-  #     WEBrick::HTTPProxyServer.new Port: 8000, ProxyContentHandler: handler
 
   class HTTPProxyServer < HTTPServer
 
-    ##
-    # Proxy server configurations.  The proxy server handles the following
-    # configuration items in addition to those supported by HTTPServer:
-    #
-    # :ProxyAuthProc:: Called with a request and response to authorize a
-    #                  request
-    # :ProxyVia:: Appended to the via header
-    # :ProxyURI:: The proxy server's URI
-    # :ProxyContentHandler:: Called with a request and response and allows
-    #                        modification of the response
-    # :ProxyTimeout:: Sets the proxy timeouts to 30 seconds for open and 60
-    #                 seconds for read operations
 
     def initialize(config={}, default=Config::HTTP)
       super(config, default)
@@ -86,7 +33,6 @@ module WEBrick
       @via = "#{c[:HTTPVersion]} #{c[:ServerName]}:#{c[:Port]}"
     end
 
-    # :stopdoc:
     def service(req, res)
       if req.request_method == "CONNECT"
         do_CONNECT(req, res)
@@ -105,16 +51,14 @@ module WEBrick
     end
 
     def proxy_uri(req, res)
-      # should return upstream proxy server's URI
       return @config[:ProxyURI]
     end
 
     def proxy_service(req, res)
-      # Proxy Authentication
       proxy_auth(req, res)
 
       begin
-        #nodyna <ID:send-70> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2225> <SD COMPLEX (change-prone variables)>
         self.send("do_#{req.request_method}", req, res)
       rescue NoMethodError
         raise HTTPStatus::MethodNotAllowed,
@@ -124,14 +68,12 @@ module WEBrick
         raise HTTPStatus::ServiceUnavailable, err.message
       end
 
-      # Process contents
       if handler = @config[:ProxyContentHandler]
         handler.call(req, res)
       end
     end
 
     def do_CONNECT(req, res)
-      # Proxy Authentication
       proxy_auth(req, res)
 
       ua = Thread.current[:WEBrickSocket]  # User-Agent
@@ -139,7 +81,6 @@ module WEBrick
         "[BUG] cannot get socket" unless ua
 
       host, port = req.unparsed_uri.split(":", 2)
-      # Proxy authentication for upstream proxy server
       if proxy = proxy_uri(req, res)
         proxy_request_line = "CONNECT #{host}:#{port} HTTP/1.0"
         if proxy.userinfo
@@ -185,8 +126,6 @@ module WEBrick
         res.send_response(ua)
         access_log(@config, req, res)
 
-        # Should clear request-line not to send the response twice.
-        # see: HTTPServer#run
         req.parse(NullReader) rescue nil
       end
 
@@ -234,7 +173,6 @@ module WEBrick
 
     private
 
-    # Some header fields should not be transferred.
     HopByHop = %w( connection keep-alive proxy-authenticate upgrade
                    proxy-authorization te trailers transfer-encoding )
     ShouldNotTransfer = %w( set-cookie proxy-connection )
@@ -254,8 +192,6 @@ module WEBrick
       }
     end
 
-    # Net::HTTP is stupid about the multiple header fields.
-    # Here is workaround:
     def set_cookie(src, dst)
       if str = src['set-cookie']
         cookies = []
@@ -283,7 +219,6 @@ module WEBrick
     end
 
     def setup_proxy_header(req, res)
-      # Choose header fields to transfer
       header = Hash.new
       choose_header(req, header)
       set_via(header)
@@ -312,20 +247,15 @@ module WEBrick
       http = Net::HTTP.new(uri.host, uri.port, upstream.host, upstream.port)
       http.start do
         if @config[:ProxyTimeout]
-          ##################################   these issues are
           http.open_timeout = 30   # secs  #   necessary (maybe because
           http.read_timeout = 60   # secs  #   Ruby's bug, but why?)
-          ##################################
         end
         response = yield(http, path, header)
       end
 
-      # Persistent connection requirements are mysterious for me.
-      # So I will close the connection in every response.
       res['proxy-connection'] = "close"
       res['connection'] = "close"
 
-      # Convert Net::HTTP::HTTPResponse to WEBrick::HTTPResponse
       res.status = response.code.to_i
       choose_header(response, res)
       set_cookie(response, res)
@@ -333,6 +263,5 @@ module WEBrick
       res.body = response.body
     end
 
-    # :stopdoc:
   end
 end

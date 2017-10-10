@@ -1,4 +1,3 @@
-# encoding: UTF-8
 require 'spec_helper'
 
 describe 'Product Details', type: :feature, js: true do
@@ -47,7 +46,6 @@ describe 'Product Details', type: :feature, js: true do
     end
   end
 
-  # Regression test for #3385
   context "deleting a product" do
     it "is still able to find the master variant" do
       create(:product)

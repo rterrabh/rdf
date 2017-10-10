@@ -20,8 +20,6 @@ class Mcrypt < Formula
     sha256 "e4eb6c074bbab168ac47b947c195ff8cef9d51a211cdd18ca9c9ef34d27a373e"
   end
 
-  # Patch to correct inclusion of malloc function on OSX.
-  # Upstream: https://sourceforge.net/p/mcrypt/patches/14/
   patch :DATA
 
   def install
@@ -55,15 +53,9 @@ index 5a1f296..aeb501c 100644
 --- a/src/rfc2440.c
 +++ b/src/rfc2440.c
 @@ -23,7 +23,12 @@
- #include <zlib.h>
- #endif
- #include <stdio.h>
 +
 +#ifdef __APPLE__
 +#include <malloc/malloc.h>
 +#else
- #include <malloc.h>
 +#endif
 
- #include "xmalloc.h"
- #include "keys.h"

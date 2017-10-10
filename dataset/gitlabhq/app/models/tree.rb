@@ -23,8 +23,6 @@ class Tree
       return @readme = nil
     end
 
-    # Take the first previewable readme, or the first available readme, if we
-    # can't preview any of them
     readme_tree = available_readmes.find do |readme|
       previewable?(readme.name)
     end || available_readmes.first

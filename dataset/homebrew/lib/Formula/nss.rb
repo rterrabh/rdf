@@ -31,15 +31,11 @@ class Nss < Formula
     ]
     args << "USE_64=1" if MacOS.prefer_64_bit?
 
-    # Remove the broken (for anyone but Firefox) install_name
     inreplace "coreconf/Darwin.mk", "-install_name @executable_path", "-install_name #{lib}"
     inreplace "lib/freebl/config.mk", "@executable_path", lib
 
     system "make", "all", *args
 
-    # We need to use cp here because all files get cross-linked into the dist
-    # hierarchy, and Homebrew's Pathname.install moves the symlink into the keg
-    # rather than copying the referenced file.
     cd "../dist"
     bin.mkpath
     Dir.glob("Darwin*/bin/*") do |file|
@@ -59,7 +55,6 @@ class Nss < Formula
         cp file, lib
       end
     end
-    # resolves conflict with openssl, see #28258
     rm lib/"libssl.a"
 
     (bin+"nss-config").write config_file
@@ -67,16 +62,12 @@ class Nss < Formula
   end
 
   test do
-    # See: https://developer.mozilla.org/docs/Mozilla/Projects/NSS/tools/NSS_Tools_certutil
     (testpath/"passwd").write("It's a secret to everyone.")
     system "#{bin}/certutil", "-N", "-d", pwd, "-f", "passwd"
     system "#{bin}/certutil", "-L", "-d", pwd
   end
 
-  # A very minimal nss-config for configuring firefox etc. with this nss,
-  # see https://bugzil.la/530672 for the progress of upstream inclusion.
   def config_file; <<-EOS.undent
-    #!/bin/sh
     for opt; do :; done
     case "$opt" in
       --version) opt="--modversion";;

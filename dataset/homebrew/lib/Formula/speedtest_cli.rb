@@ -8,7 +8,6 @@ class SpeedtestCli < Formula
 
   def install
     bin.install "speedtest_cli.py" => "speedtest-cli"
-    # Previous versions of the formula used "speedtest_cli"
     bin.install_symlink "speedtest-cli" => "speedtest_cli"
     man1.install "speedtest-cli.1"
   end

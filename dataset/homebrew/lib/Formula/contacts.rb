@@ -1,6 +1,3 @@
-# Use a sha1 instead of a tag, as the author has not provided a tag for
-# this release. In fact, the author no longer uses this software, so it
-# is a candidate for removal if no new maintainer is found.
 class Contacts < Formula
   desc "Command-line tool to access OS X's Contacts (formerly 'Address Book')"
   homepage "http://www.gnufoo.org/contacts/contacts.html"

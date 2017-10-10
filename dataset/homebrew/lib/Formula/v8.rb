@@ -1,5 +1,3 @@
-# Track Chrome stable.
-# https://omahaproxy.appspot.com/
 class V8 < Formula
   desc "Google's JavaScript engine"
   homepage "https://code.google.com/p/v8/"
@@ -16,8 +14,6 @@ class V8 < Formula
 
   option "with-readline", "Use readline instead of libedit"
 
-  # not building on Snow Leopard:
-  # https://github.com/Homebrew/homebrew/issues/21426
   depends_on :macos => :lion
 
   depends_on :python => :build # gyp doesn't run under 2.6 or lower
@@ -25,7 +21,6 @@ class V8 < Formula
 
   needs :cxx11
 
-  # Update from "DEPS" file in tarball.
   resource "gyp" do
     url "https://chromium.googlesource.com/external/gyp.git",
         :revision => "5122240c5e5c4d8da12c543d82b03d6089eb77c5"
@@ -57,13 +52,9 @@ class V8 < Formula
   end
 
   def install
-    # Bully GYP into correctly linking with c++11
     ENV.cxx11
     ENV["GYP_DEFINES"] = "clang=1 mac_deployment_target=#{MacOS.version}"
 
-    # fix up libv8.dylib install_name
-    # https://github.com/Homebrew/homebrew/issues/36571
-    # https://code.google.com/p/v8/issues/detail?id=3871
     inreplace "tools/gyp/v8.gyp",
               "'OTHER_LDFLAGS': ['-dynamiclib', '-all_load']",
               "\\0, 'DYLIB_INSTALL_NAME_BASE': '#{opt_lib}'"

@@ -6,7 +6,7 @@ class UserSerializer < BasicUserSerializer
   def self.staff_attributes(*attrs)
     attributes(*attrs)
     attrs.each do |attr|
-      #nodyna <ID:define_method-26> <DM MODERATE (array)>
+      #nodyna <define_method-468> <DM MODERATE (array)>
       define_method "include_#{attr}?" do
         scope.is_staff?
       end
@@ -16,21 +16,20 @@ class UserSerializer < BasicUserSerializer
   def self.private_attributes(*attrs)
     attributes(*attrs)
     attrs.each do |attr|
-      #nodyna <ID:define_method-27> <DM MODERATE (array)>
+      #nodyna <define_method-469> <DM MODERATE (array)>
       define_method "include_#{attr}?" do
         can_edit
       end
     end
   end
 
-  # attributes that are hidden for TL0 users when seen by anonymous
   def self.untrusted_attributes(*attrs)
     attrs.each do |attr|
       method_name = "include_#{attr}?"
-      #nodyna <ID:define_method-28> <DM MODERATE (events)>
+      #nodyna <define_method-470> <DM MODERATE (events)>
       define_method(method_name) do
         return false if scope.restrict_user_fields?(object)
-        #nodyna <ID:send-133> <SD MODERATE (change-prone variables)>
+        #nodyna <send-471> <SD MODERATE (change-prone variables)>
         send(attr).present?
       end
     end
@@ -114,9 +113,6 @@ class UserSerializer < BasicUserSerializer
                        :profile_background,
                        :card_background
 
-  ###
-  ### ATTRIBUTES
-  ###
 
   def include_email?
     object.id && object.id == scope.user.try(:id)
@@ -143,13 +139,10 @@ class UserSerializer < BasicUserSerializer
     discourse_host = Discourse.current_hostname
     return if website_host.nil?
     if website_host == discourse_host
-      # example.com == example.com
       website_host + URI(website.to_s).path
     elsif (website_host.split('.').length == discourse_host.split('.').length) && discourse_host.split('.').length > 2
-      # www.example.com == forum.example.com
       website_host.split('.')[1..-1].join('.') == discourse_host.split('.')[1..-1].join('.') ? website_host + URI(website.to_s).path : website_host
     else
-      # example.com == forum.example.com
       discourse_host.ends_with?("." << website_host) ? website_host + URI(website.to_s).path : website_host
     end
   end
@@ -210,8 +203,6 @@ class UserSerializer < BasicUserSerializer
     UserAction.stats(object.id, scope)
   end
 
-  # Needed because 'send_private_message_to_user' will always return false
-  # when the current user is being serialized
   def can_send_private_messages
     scope.can_send_private_message?(Discourse.system_user)
   end
@@ -232,9 +223,6 @@ class UserSerializer < BasicUserSerializer
     object.suspended?
   end
 
-  ###
-  ### STAFF ATTRIBUTES
-  ###
 
   def post_count
     object.user_stat.try(:post_count)
@@ -248,9 +236,6 @@ class UserSerializer < BasicUserSerializer
     scope.can_delete_all_posts?(object)
   end
 
-  ###
-  ### PRIVATE ATTRIBUTES
-  ###
 
   def auto_track_topics_after_msecs
     object.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs

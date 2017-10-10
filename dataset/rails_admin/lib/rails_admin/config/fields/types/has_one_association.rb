@@ -5,16 +5,14 @@ module RailsAdmin
     module Fields
       module Types
         class HasOneAssociation < RailsAdmin::Config::Fields::Association
-          # Register field type for the type loader
           RailsAdmin::Config::Fields::Types.register(self)
 
           register_instance_option :partial do
             nested_form ? :form_nested_one : :form_filtering_select
           end
 
-          # Accessor for field's formatted value
           register_instance_option :formatted_value do
-            #nodyna <ID:send-17> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1349> <SD COMPLEX (change-prone variables)>
             (o = value) && o.send(associated_model_config.object_label_method)
           end
 

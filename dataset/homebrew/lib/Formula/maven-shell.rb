@@ -5,7 +5,6 @@ class MavenShell < Formula
   sha256 "584008d726bf6f90271f4ccd03b549773cbbe62ba7e92bf131e67df3ac5a41ac"
 
   def install
-    # Remove windows files.
     rm_f Dir["bin/*.bat"]
 
     prefix.install_metafiles

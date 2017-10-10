@@ -1,29 +1,18 @@
-##
-# A PO entry in PO
 
 class RDoc::Generator::POT::POEntry
 
-  # The msgid content
   attr_reader :msgid
 
-  # The msgstr content
   attr_reader :msgstr
 
-  # The comment content created by translator (PO editor)
   attr_reader :translator_comment
 
-  # The comment content extracted from source file
   attr_reader :extracted_comment
 
-  # The locations where the PO entry is extracted
   attr_reader :references
 
-  # The flags of the PO entry
   attr_reader :flags
 
-  ##
-  # Creates a PO entry for +msgid+. Other valus can be specified by
-  # +options+.
 
   def initialize msgid, options = {}
     @msgid = msgid
@@ -34,8 +23,6 @@ class RDoc::Generator::POT::POEntry
     @flags = options[:flags] || []
   end
 
-  ##
-  # Returns the PO entry in PO format.
 
   def to_s
     entry = ''
@@ -49,8 +36,6 @@ msgstr #{format_message(@msgstr)}
     ENTRY
   end
 
-  ##
-  # Merges the PO entry with +other_entry+.
 
   def merge other_entry
     options = {

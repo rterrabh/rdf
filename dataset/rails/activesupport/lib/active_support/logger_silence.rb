@@ -8,7 +8,6 @@ module LoggerSilence
     self.silencer = true
   end
 
-  # Silences the logger for the duration of the block.
   def silence(temporary_level = Logger::ERROR)
     if silencer
       begin

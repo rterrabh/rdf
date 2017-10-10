@@ -11,7 +11,6 @@ class Afio < Formula
     sha1 "68ecadc2fc7e8dd268ac9e6a63fc12927d60f897" => :lion
   end
 
-  # Note - The Freecode website is being no longer being updated and alternative links should be found from now on.
 
   option "bzip2", "Use bzip2(1) instead of gzip(1) for compression/decompression"
 

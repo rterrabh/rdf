@@ -15,7 +15,6 @@ class Pwsafe < Formula
   depends_on "openssl"
   depends_on "readline"
 
-  # A password database for testing is provided upstream. How nice!
   resource "test-pwsafe-db" do
     url "http://nsd.dyndns.org/pwsafe/test.dat"
     sha256 "7ecff955871e6e58e55e0794d21dfdea44a962ff5925c2cd0683875667fbcc79"

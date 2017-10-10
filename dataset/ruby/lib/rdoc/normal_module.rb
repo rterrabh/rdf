@@ -1,5 +1,3 @@
-##
-# A normal module, like NormalClass
 
 class RDoc::NormalModule < RDoc::ClassModule
 
@@ -14,15 +12,11 @@ class RDoc::NormalModule < RDoc::ClassModule
     ]
   end
 
-  ##
-  # The definition of this module, <tt>module MyModuleName</tt>
 
   def definition
     "module #{full_name}"
   end
 
-  ##
-  # This is a module, returns true
 
   def module?
     true
@@ -62,8 +56,6 @@ class RDoc::NormalModule < RDoc::ClassModule
     end
   end
 
-  ##
-  # Modules don't have one, raises NoMethodError
 
   def superclass
     raise NoMethodError, "#{full_name} is a module"

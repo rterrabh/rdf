@@ -36,10 +36,8 @@ module Projects
     private
 
     def remove_repository(path)
-      # Skip repository removal. We use this flag when remove user or group
       return true if params[:skip_repo] == true
 
-      # There is a possibility project does not have repository or wiki
       return true unless gitlab_shell.exists?(path + '.git')
 
       new_path = removal_path(path)
@@ -56,12 +54,6 @@ module Projects
       raise DestroyError.new(message)
     end
 
-    # Build a path for removing repositories
-    # We use `+` because its not allowed by GitLab so user can not create
-    # project with name cookies+119+deleted and capture someone stalled repository
-    #
-    # gitlab/cookies.git -> gitlab/cookies+119+deleted.git
-    #
     def removal_path(path)
       "#{path}+#{project.id}#{DELETED_FLAG}"
     end

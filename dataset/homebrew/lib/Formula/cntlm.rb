@@ -7,7 +7,6 @@ class Cntlm < Formula
   def install
     system "./configure"
     system "make", "CC=#{ENV.cc}", "SYSCONFDIR=#{etc}"
-    # install target fails - @adamv
     bin.install "cntlm"
     man1.install "doc/cntlm.1"
     etc.install "doc/cntlm.conf"

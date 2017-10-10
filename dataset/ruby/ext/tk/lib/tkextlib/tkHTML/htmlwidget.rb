@@ -1,17 +1,10 @@
-#
-#  tkextlib/tkHTML/htmlwidget.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/tkHTML/setup.rb'
 
-# TkPackage.require('Tkhtml', '2.0')
 TkPackage.require('Tkhtml')
 
 module Tk
@@ -118,9 +111,6 @@ class Tk::HTML_Widget
   end
   private :__strval_optkeys
 
-  ###################################
-  #  class methods
-  ###################################
   def self.reformat(src, dst, txt)
     tk_call('html', 'reformat', src, dst, txt)
   end
@@ -177,9 +167,6 @@ class Tk::HTML_Widget
     tk_call('html', 'crc32', data)
   end
 
-  ###################################
-  #  instance methods
-  ###################################
   def clipping_window
     ClippingWindow.new(self)
   end

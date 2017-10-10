@@ -41,7 +41,6 @@ class UserNotifications < ActionMailer::Base
     build_email( user.email, template: "user_notifications.account_created", email_token: opts[:email_token])
   end
 
-  # On error, use english
   def short_date(dt)
     I18n.l(dt, format: :short)
   rescue I18n::MissingTranslationData
@@ -59,10 +58,8 @@ class UserNotifications < ActionMailer::Base
     @header_color = ColorScheme.hex_for_name('header_background')
     @last_seen_at = short_date(@user.last_seen_at || @user.created_at)
 
-    # A list of topics to show the user
     @featured_topics = Topic.for_digest(user, min_date, limit: SiteSetting.digest_topics, top_order: true).to_a
 
-    # Don't send email unless there is content in it
     if @featured_topics.present?
       featured_topic_ids = @featured_topics.map(&:id)
 
@@ -126,7 +123,6 @@ class UserNotifications < ActionMailer::Base
     opts[:add_re_to_subject] = true
     opts[:show_category_in_subject] = false
 
-    # We use the 'user_posted' event when you are emailed a post in a PM.
     opts[:notification_type] = 'posted'
 
     notification_email(user, opts)
@@ -238,12 +234,10 @@ class UserNotifications < ActionMailer::Base
     notification_type = opts[:notification_type]
     user = opts[:user]
 
-    # category name
     category = Topic.find_by(id: post.topic_id).category
     if opts[:show_category_in_subject] && post.topic_id && category && !category.uncategorized?
       show_category_in_subject = category.name
 
-      # subcategory case
       if !category.parent_category_id.nil?
         show_category_in_subject = "#{Category.find_by(id: category.parent_category_id).name}/#{show_category_in_subject}"
       end
@@ -255,7 +249,6 @@ class UserNotifications < ActionMailer::Base
     tu = TopicUser.get(post.topic_id, user)
     context_posts = self.class.get_context_posts(post, tu)
 
-    # make .present? cheaper
     context_posts = context_posts.to_a
 
     if context_posts.present?
@@ -306,7 +299,6 @@ class UserNotifications < ActionMailer::Base
       style: :notification
     }
 
-    # If we have a display name, change the from address
     email_opts[:from_alias] = from_alias if from_alias.present?
 
     TopicUser.change(user.id, post.topic_id, last_emailed_post_number: post.post_number)

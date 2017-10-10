@@ -35,7 +35,6 @@ class Yamcha < Formula
     narrow    VB   I-VP
     to        TO   B-PP
     only      RB   B-NP
-    #         #    I-NP
     1.8       CD   I-NP
     billion   CD   I-NP
     in        IN   B-PP

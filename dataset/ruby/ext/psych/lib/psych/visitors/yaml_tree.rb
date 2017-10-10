@@ -4,13 +4,6 @@ require 'psych/class_loader'
 
 module Psych
   module Visitors
-    ###
-    # YAMLTree builds a YAML ast given a Ruby object.  For example:
-    #
-    #   builder = Psych::Visitors::YAMLTree.new
-    #   builder << { :foo => 'bar' }
-    #   builder.tree # => #<Psych::Nodes::Stream .. }
-    #
     class YAMLTree < Psych::Visitors::Visitor
       class Registrar # :nodoc:
         def initialize
@@ -119,7 +112,6 @@ module Psych
       alias :<< :push
 
       def accept target
-        # return any aliases we find
         if @st.key? target
           oid         = @st.id_for target
           node        = @st.node_for target
@@ -141,15 +133,13 @@ module Psych
               end
             end
           rescue
-            # public_method or source_location might be overridden,
-            # and it's OK to skip it since it's only to emit a warning
           end
         end
 
         if target.respond_to?(:encode_with)
           dump_coder target
         else
-          #nodyna <ID:send-7> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-1469> <SD COMPLEX (change-prone variables)>
           send(@dispatch_cache[target.class], target)
         end
       end
@@ -307,7 +297,6 @@ module Psych
         if binary?(o)
           str   = [o].pack('m').chomp
           tag   = '!binary' # FIXME: change to below when syck is removed
-          #tag   = 'tag:yaml.org,2002:binary'
           style = Nodes::Scalar::LITERAL
           plain = false
           quote = false
@@ -427,7 +416,6 @@ module Psych
       end
 
       private
-      # FIXME: Remove the index and count checks in Psych 3.0
       NULL         = "\x00"
       BINARY_RANGE = "\x00-\x7F"
       WS_RANGE     = "^ -~\t\r\n"
@@ -449,17 +437,16 @@ module Psych
           node = @emitter.start_mapping(nil, tag, false, Nodes::Sequence::BLOCK)
           register o, node
 
-          # Dump the internal list
           accept 'internal'
           @emitter.start_sequence(nil, nil, true, Nodes::Sequence::BLOCK)
           o.each { |c| accept c }
           @emitter.end_sequence
 
-          # Dump the ivars
           accept 'ivars'
           @emitter.start_mapping(nil, nil, true, Nodes::Sequence::BLOCK)
           o.instance_variables.each do |ivar|
             accept ivar
+            #nodyna <instance_variable_get-1470> <not yet classified>
             accept o.instance_variable_get ivar
           end
           @emitter.end_mapping
@@ -471,7 +458,6 @@ module Psych
       def dump_list o
       end
 
-      # '%:z' was no defined until 1.9.3
       if RUBY_VERSION < '1.9.3'
         def format_time time
           formatted = time.strftime("%Y-%m-%d %H:%M:%S.%9N")
@@ -495,7 +481,6 @@ module Psych
         end
       end
 
-      # FIXME: remove this method once "to_yaml_properties" is removed
       def find_ivars target
         begin
           loc = target.method(:to_yaml_properties).source_location.first
@@ -506,8 +491,6 @@ module Psych
             return target.to_yaml_properties
           end
         rescue
-          # public_method or source_location might be overridden,
-          # and it's OK to skip it since it's only to emit a warning.
         end
 
         target.instance_variables
@@ -558,6 +541,7 @@ module Psych
 
         ivars.each do |iv|
           @emitter.scalar("#{iv.to_s.sub(/^@/, '')}", nil, nil, true, false, Nodes::Scalar::ANY)
+          #nodyna <instance_variable_get-1471> <not yet classified>
           accept target.instance_variable_get(iv)
         end
       end

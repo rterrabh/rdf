@@ -1,5 +1,4 @@
 FactoryGirl.define do
-  # must use build()
   factory :stock_packer, class: Spree::Stock::Packer do
     transient do
       stock_location { build(:stock_location) }

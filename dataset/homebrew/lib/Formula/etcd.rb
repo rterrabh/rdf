@@ -34,7 +34,6 @@ class Etcd < Formula
       etcd_pid = fork do
         exec "etcd", "--force-new-cluster", "--data-dir=#{testpath}"
       end
-      # sleep to let etcd get its wits about it
       sleep 10
       etcd_uri = "http://127.0.0.1:4001/v2/keys/brew_test"
       system "curl", "--silent", "-L", etcd_uri, "-XPUT", "-d", "value=#{test_string}"
@@ -42,7 +41,6 @@ class Etcd < Formula
       response_hash = Utils::JSON.load(curl_output)
       assert_match(test_string, response_hash.fetch("node").fetch("value"))
     ensure
-      # clean up the etcd process before we leave
       Process.kill("HUP", etcd_pid)
     end
   end

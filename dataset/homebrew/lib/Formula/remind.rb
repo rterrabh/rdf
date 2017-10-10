@@ -12,7 +12,6 @@ class Remind < Formula
   end
 
   def install
-    # Remove unnecessary sleeps when running on Apple
     inreplace "configure", "sleep 1", "true"
     inreplace "src/init.c" do |s|
       s.gsub! "sleep(5);", ""

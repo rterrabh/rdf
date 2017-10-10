@@ -1,29 +1,17 @@
-#
-#   tk/macpkg.rb : methods for Tcl/Tk packages for Macintosh
-#                     2000/11/22 by Hidetoshi Nagai <nagai@ai.kyutech.ac.jp>
-#
-#     ATTENTION !!
-#         This is NOT TESTED. Because I have no test-environment.
-#
-#
 require 'tk'
 
 module Tk
   def Tk.load_tclscript_rsrc(resource_name, file=None)
-    # Mac only
     tk_call('source', '-rsrc', resource_name, file)
   end
 
   def Tk.load_tclscript_rsrcid(resource_id, file=None)
-    # Mac only
     tk_call('source', '-rsrcid', resource_id, file)
   end
 end
 
 module Tk::MacResource
 end
-#TkMacResource = Tk::MacResource
-#Tk.__set_toplevel_aliases__(:Tk, Tk::MacResource, :TkMacResource)
 Tk.__set_loaded_toplevel_aliases__('tk/macpkg.rb', :Tk, Tk::MacResource,
                                    :TkMacResource)
 

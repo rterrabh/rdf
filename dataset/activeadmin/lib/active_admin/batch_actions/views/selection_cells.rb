@@ -3,7 +3,6 @@ require 'active_admin/component'
 module ActiveAdmin
   module BatchActions
 
-    # Creates the toggle checkbox used to toggle the collection selection on/off
     class ResourceSelectionToggleCell < ActiveAdmin::Component
       builder_method :resource_selection_toggle_cell
 
@@ -12,7 +11,6 @@ module ActiveAdmin
       end
     end
 
-    # Creates the checkbox used to select a resource in the collection selection
     class ResourceSelectionCell < ActiveAdmin::Component
       builder_method :resource_selection_cell
 
@@ -21,7 +19,6 @@ module ActiveAdmin
       end
     end
 
-    # Creates a wrapper panel for all index pages, except for the table, as the table has the checkbox in the thead
     class ResourceSelectionTogglePanel < ActiveAdmin::Component
       builder_method :resource_selection_toggle_panel
 

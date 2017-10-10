@@ -23,7 +23,6 @@ class HttpParser < Formula
   end
 
   test do
-    # Set HTTP_PARSER_STRICT=0 to bypass "tab in URL" test on OS X
     system ENV.cc, share/"test.c", "-o", "test", "-lhttp_parser", "-DHTTP_PARSER_STRICT=0"
     system "./test"
   end

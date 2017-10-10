@@ -1,4 +1,3 @@
-# Hack to load json gem first so we can overwrite its to_json.
 require 'json'
 require 'bigdecimal'
 require 'active_support/core_ext/big_decimal/conversions' # for #to_s
@@ -11,29 +10,13 @@ require 'active_support/core_ext/date_time/conversions'
 require 'active_support/core_ext/date/conversions'
 require 'active_support/core_ext/module/aliasing'
 
-# The JSON gem adds a few modules to Ruby core classes containing :to_json definition, overwriting
-# their default behavior. That said, we need to define the basic to_json method in all of them,
-# otherwise they will always use to_json gem implementation, which is backwards incompatible in
-# several cases (for instance, the JSON implementation for Hash does not work) with inheritance
-# and consequently classes as ActiveSupport::OrderedHash cannot be serialized to json.
-#
-# On the other hand, we should avoid conflict with ::JSON.{generate,dump}(obj). Unfortunately, the
-# JSON gem's encoder relies on its own to_json implementation to encode objects. Since it always
-# passes a ::JSON::State object as the only argument to to_json, we can detect that and forward the
-# calls to the original to_json method.
-#
-# It should be noted that when using ::JSON.{generate,dump} directly, ActiveSupport's encoder is
-# bypassed completely. This means that as_json won't be invoked and the JSON gem will simply
-# ignore any options it does not natively understand. This also means that ::JSON.{generate,dump}
-# should give exactly the same results with or without active support.
 [Enumerable, Object, Array, FalseClass, Float, Hash, Integer, NilClass, String, TrueClass].each do |klass|
+  #nodyna <class_eval-1095> <not yet classified>
   klass.class_eval do
     def to_json_with_active_support_encoder(options = nil) # :nodoc:
       if options.is_a?(::JSON::State)
-        # Called from JSON.{generate,dump}, forward it to JSON gem's to_json
         self.to_json_without_active_support_encoder(options)
       else
-        # to_json is being invoked directly, use ActiveSupport's encoder
         ActiveSupport::JSON.encode(self, options)
       end
     end
@@ -95,23 +78,12 @@ class Numeric
 end
 
 class Float
-  # Encoding Infinity or NaN to JSON should return "null". The default returns
-  # "Infinity" or "NaN" which are not valid JSON.
   def as_json(options = nil) #:nodoc:
     finite? ? self : nil
   end
 end
 
 class BigDecimal
-  # A BigDecimal would be naturally represented as a JSON number. Most libraries,
-  # however, parse non-integer JSON numbers directly as floats. Clients using
-  # those libraries would get in general a wrong number and no way to recover
-  # other than manually inspecting the string with the JSON code itself.
-  #
-  # That's why a JSON string is returned. The JSON literal is not numeric, but
-  # if the other end knows by contract that the data is supposed to be a
-  # BigDecimal, it still has the chance to post-process the string and get the
-  # real value.
   def as_json(options = nil) #:nodoc:
     finite? ? to_s : nil
   end
@@ -143,7 +115,6 @@ end
 
 class Hash
   def as_json(options = nil) #:nodoc:
-    # create a subset of the hash by applying :only or :except
     subset = if options
       if attrs = options[:only]
         slice(*Array(attrs))

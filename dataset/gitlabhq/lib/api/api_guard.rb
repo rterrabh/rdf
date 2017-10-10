@@ -1,4 +1,3 @@
-# Guard API with OAuth 2.0 Access Token
 
 require 'rack/oauth2'
 
@@ -6,11 +5,8 @@ module APIGuard
   extend ActiveSupport::Concern
 
   included do |base|
-    # OAuth2 Resource Server Authentication
     use Rack::OAuth2::Server::Resource::Bearer, 'The API' do |request|
-      # The authenticator only fetches the raw token string
 
-      # Must yield access token to store it in the env
       request.access_token
     end
 
@@ -19,26 +15,7 @@ module APIGuard
     install_error_responders(base)
   end
 
-  # Helper Methods for Grape Endpoint
   module HelperMethods
-    # Invokes the doorkeeper guard.
-    #
-    # If token is presented and valid, then it sets @current_user.
-    #
-    # If the token does not have sufficient scopes to cover the requred scopes,
-    # then it raises InsufficientScopeError.
-    #
-    # If the token is expired, then it raises ExpiredError.
-    #
-    # If the token is revoked, then it raises RevokedError.
-    #
-    # If the token is not found (nil), then it raises TokenNotFoundError.
-    #
-    # Arguments:
-    #
-    #   scopes: (optional) scopes required for this guard.
-    #           Defaults to empty array.
-    #
     def doorkeeper_guard!(scopes: [])
       if (access_token = find_access_token).nil?
         raise TokenNotFoundError
@@ -94,13 +71,6 @@ module APIGuard
   end
 
   module ClassMethods
-    # Installs the doorkeeper guard on the whole Grape API endpoint.
-    #
-    # Arguments:
-    #
-    #   scopes: (optional) scopes required for this guard.
-    #           Defaults to empty array.
-    #
     def guard_all!(scopes: [])
       before do
         guard! scopes: scopes
@@ -112,7 +82,7 @@ module APIGuard
       error_classes = [ MissingTokenError, TokenNotFoundError,
                         ExpiredError, RevokedError, InsufficientScopeError]
 
-      #nodyna <ID:send-6> <SD EASY (private methods)>
+      #nodyna <send-495> <SD EASY (private methods)>
       base.send :rescue_from, *error_classes, oauth2_bearer_token_error_handler
     end
 
@@ -139,8 +109,6 @@ module APIGuard
               "Token was revoked. You have to re-authorize from the user.")
 
           when InsufficientScopeError
-            # FIXME: ForbiddenError (inherited from Bearer::Forbidden of Rack::Oauth2)
-            # does not include WWW-Authenticate header, which breaks the standard.
             Rack::OAuth2::Server::Resource::Bearer::Forbidden.new(
               :insufficient_scope,
               Rack::OAuth2::Server::Resource::ErrorMethods::DEFAULT_DESCRIPTION[:insufficient_scope],
@@ -152,9 +120,6 @@ module APIGuard
     end
   end
 
-  #
-  # Exceptions
-  #
 
   class MissingTokenError < StandardError; end
 

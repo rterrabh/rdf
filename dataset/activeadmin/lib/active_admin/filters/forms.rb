@@ -1,12 +1,9 @@
 module ActiveAdmin
   module Filters
-    # This form builder defines methods to build filter forms such
-    # as the one found in the sidebar of the index page of a standard resource.
     class FormBuilder < ::ActiveAdmin::FormBuilder
       include ::ActiveAdmin::Filters::FormtasticAddons
       self.input_namespaces = [::Object, ::ActiveAdmin::Inputs::Filters, ::ActiveAdmin::Inputs, ::Formtastic::Inputs]
 
-      # TODO: remove input class finders after formtastic 4 (where it will be default)
       self.input_class_finder = ::Formtastic::InputClassFinder
 
       def filter(method, options = {})
@@ -17,8 +14,6 @@ module ActiveAdmin
 
       protected
 
-      # Returns the default filter type for a given attribute. If you want
-      # to use a custom search method, you have to specify the type yourself.
       def default_input_type(method, options = {})
         if method =~ /_(eq|equals|cont|contains|start|starts_with|end|ends_with)\z/
           :string
@@ -42,10 +37,8 @@ module ActiveAdmin
     end
 
 
-    # This module is included into the view
     module ViewHelper
 
-      # Helper method to render a filter form
       def active_admin_filters_form_for(search, filters, options = {})
         defaults = { builder: ActiveAdmin::Filters::FormBuilder,
                      url: collection_path,

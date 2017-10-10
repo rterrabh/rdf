@@ -23,11 +23,6 @@ class Geoip < Formula
   def install
     ENV.universal_binary if build.universal?
 
-    # Fixes a build error on Lion when configure does a variant of autoreconf
-    # that results in a botched Makefile, causing this error:
-    # No rule to make target '../libGeoIP/libGeoIP.la', needed by 'geoiplookup'
-    # This works on Snow Leopard also when it tries but fails to run autoreconf.
-    # Also fixes the tests by downloading required data file
     system "./bootstrap"
 
     system "./configure", "--disable-dependency-tracking",
@@ -42,7 +37,6 @@ class Geoip < Formula
     geoip_data = Pathname.new "#{var}/GeoIP"
     geoip_data.mkpath
 
-    # Since default data directory moved, copy existing DBs
     legacy_data = Pathname.new "#{HOMEBREW_PREFIX}/share/GeoIP"
     cp Dir["#{legacy_data}/*"], geoip_data if legacy_data.exist?
 

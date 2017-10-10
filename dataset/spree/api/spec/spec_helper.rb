@@ -1,5 +1,4 @@
 if ENV["COVERAGE"]
-  # Run Coverage report
   require 'simplecov'
   SimpleCov.start do
     add_group 'Controllers', 'app/controllers'
@@ -11,7 +10,6 @@ if ENV["COVERAGE"]
   end
 end
 
-# This file is copied to spec/ when you run 'rails generate rspec:install'
 ENV["RAILS_ENV"] ||= 'test'
 
 begin
@@ -24,8 +22,6 @@ end
 require 'rspec/rails'
 require 'ffaker'
 
-# Requires supporting ruby files with custom matchers and macros, etc,
-# in spec/support/ and its subdirectories.
 Dir[File.dirname(__FILE__) + "/support/**/*.rb"].each {|f| require f}
 
 require 'spree/testing_support/factories'

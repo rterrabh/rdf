@@ -146,7 +146,6 @@ describe Spree::CreditCard, type: :model do
     end
   end
 
-  # Regression test for #3847 & #3896
   context "#expiry=" do
     it "can set with a 2-digit month and year" do
       credit_card.expiry = '04 / 14'
@@ -188,7 +187,6 @@ describe Spree::CreditCard, type: :model do
       expect { credit_card.expiry = '' }.not_to raise_error
     end
 
-    # Regression test for #4725
     it "does not blow up when passed one number" do
       expect { credit_card.expiry = '12' }.not_to raise_error
     end

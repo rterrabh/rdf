@@ -17,7 +17,6 @@ class Pup < Formula
 
   depends_on "go" => :build
 
-  # required by gox
   go_resource "github.com/mitchellh/iochan" do
     url "https://github.com/mitchellh/iochan.git",
         :revision => "b584a329b193e206025682ae6c10cdbe03b0cd77"
@@ -28,8 +27,6 @@ class Pup < Formula
     :tag => "v0.3.0", :revision => "54b619477e8932bbb6314644c867e7e6db7a9c71"
   end
 
-  # discovered via
-  # find . -name "*.go" -exec head -20 "{}" ";" | grep ".*\..*/" | sort | uniq
   go_resource "github.com/fatih/color" do
     url "https://github.com/fatih/color.git",
         :revision => "b8f08a5598ffe40b0e3f45d483d3cfe3c1dc4964"
@@ -52,10 +49,8 @@ class Pup < Formula
   end
 
   def install
-    # For the gox buildtool
     ENV.append_path "PATH", buildpath
 
-    # fake our install so gox will see it
     repo_dir = homepage.downcase.gsub /^https:../, ""
     my_pkg = buildpath / "src/#{repo_dir}"
     prefix.install "LICENSE"
@@ -77,7 +72,6 @@ class Pup < Formula
         "-output", "bin/pup-{{.Dir}}",
         "./..."
       bin.install "bin/pup-pup" => "pup"
-      # regrettably, there is no manual :-(
     end
   end
 

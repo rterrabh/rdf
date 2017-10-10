@@ -23,7 +23,6 @@ class Leiningen < Formula
       libexec.install "leiningen-#{version}-standalone.zip" => jar
     end
 
-    # bin/lein autoinstalls and autoupdates, which doesn't work too well for us
     inreplace "bin/lein-pkg" do |s|
       s.change_make_var! "LEIN_JAR", libexec/jar
     end

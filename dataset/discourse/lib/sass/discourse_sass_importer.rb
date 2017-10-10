@@ -1,12 +1,6 @@
-# This custom importer is used for site customizations. This is similar to the
-# Sprockets::SassImporter implementation provided in sass-rails since that is used
-# during asset precompilation.
 class DiscourseSassImporter < Sass::Importers::Filesystem
   GLOB = /\*|\[.+\]/ unless defined? GLOB
 
-  # Depending upon where this is passed we might either be passed a string as the
-  # first argument or a sprockets context. If the first argument is a sprockets
-  # context we store it and use it to mark dependencies.
   def initialize(*args)
     @context = args.first unless args.first.is_a? String
     @root = Rails.root.join('app', 'assets', 'stylesheets').to_s

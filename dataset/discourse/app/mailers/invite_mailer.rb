@@ -4,18 +4,14 @@ class InviteMailer < ActionMailer::Base
   include Email::BuildEmailHelper
 
   def send_invite(invite)
-    # Find the first topic they were invited to
     first_topic = invite.topics.order(:created_at).first
 
-    # get invitee name (based on site setting)
     invitee_name = invite.invited_by.username
     if SiteSetting.enable_names && invite.invited_by.name.present?
       invitee_name = "#{invite.invited_by.name} (#{invite.invited_by.username})"
     end
 
-    # If they were invited to a topic
     if first_topic.present?
-      # get topic excerpt
       topic_excerpt = ""
       if first_topic.excerpt
         topic_excerpt = first_topic.excerpt.gsub("\n", " ")

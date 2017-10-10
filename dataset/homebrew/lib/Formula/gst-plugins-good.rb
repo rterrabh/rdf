@@ -32,8 +32,6 @@ class GstPluginsGood < Formula
 
   depends_on :x11 => :optional
 
-  # The set of optional dependencies is based on the intersection of
-  # gst-plugins-good-0.10.30/REQUIREMENTS and Homebrew formulae
   depends_on "orc" => :optional
   depends_on "gtk+" => :optional
   depends_on "aalib" => :optional

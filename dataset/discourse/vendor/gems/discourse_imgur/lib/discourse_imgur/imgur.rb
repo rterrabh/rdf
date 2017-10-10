@@ -1,9 +1,5 @@
 require 'rest_client'
 
-# /!\ WARNING /!\
-# This plugin has been extracted from the Discourse source code and has not been tested.
-# It really needs some love <3
-# /!\ WARNING /!\
 
 
 module Imgur

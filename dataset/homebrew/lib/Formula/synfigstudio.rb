@@ -27,7 +27,6 @@ class Synfigstudio < Formula
   end
 
   test do
-    # executable doesnt take options that will stop the gui from spawning
     assert (share/"appdata/synfigstudio.appdata.xml").exist?
   end
 end

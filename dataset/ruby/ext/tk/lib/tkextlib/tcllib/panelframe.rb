@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/panelframe.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Create PanelFrame widgets.
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::panelframe', '1.0')
 TkPackage.require('widget::panelframe')
 
 module Tk::Tcllib
@@ -49,9 +41,6 @@ class Tk::Tcllib::Widget::PanelFrame
     window(tk_send('add', *args))
   end
 
-  #def get_frame
-  #  window(tk_send('getframe'))
-  #end
 
   def set_widget(widget)
     tk_send('setwidget', widget)

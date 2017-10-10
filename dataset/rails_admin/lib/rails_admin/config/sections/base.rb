@@ -7,7 +7,6 @@ require 'rails_admin/config/has_description'
 module RailsAdmin
   module Config
     module Sections
-      # Configuration of the show view for a new object
       class Base
         include RailsAdmin::Config::Proxyable
         include RailsAdmin::Config::Configurable
@@ -29,6 +28,7 @@ module RailsAdmin
         def inspect
           "#<#{self.class.name} #{
             instance_variables.collect do |v|
+              #nodyna <instance_variable_get-1421> <not yet classified>
               value = instance_variable_get(v)
               if [:@parent, :@root, :@abstract_model].include? v
                 if value.respond_to? :name

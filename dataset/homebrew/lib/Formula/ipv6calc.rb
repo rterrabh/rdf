@@ -5,7 +5,6 @@ class Ipv6calc < Formula
   sha256 "3bd73fd92c1d971fadea41b39830975b4a20bbcd26587dfb2835964b33de4040"
 
   def install
-    # This needs --mandir, otherwise it tries to install to /share/man/man8.
     system "./configure", "--prefix=#{prefix}", "--mandir=#{man}"
     system "make", "install"
   end

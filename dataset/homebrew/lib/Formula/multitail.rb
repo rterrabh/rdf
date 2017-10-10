@@ -12,8 +12,6 @@ class Multitail < Formula
     sha256 "e7cec6d4f503c7332274c27613ab5f1667a2077abc604bfd09cb80849e43f90b" => :mountain_lion
   end
 
-  # Upstream pull request to fix compilation issues on OS X
-  # https://github.com/flok99/multitail/pull/13
   patch do
     url "https://github.com/flok99/multitail/pull/13.diff"
     sha256 "056036fb76a56eb388ef9d32bfd4e1c7aca161b3f3c60f4c542ff1134f57d71f"

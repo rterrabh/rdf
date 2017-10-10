@@ -28,11 +28,8 @@ class Pianobar < Formula
   end
 
   def install
-    # Discard Homebrew's CFLAGS as Pianobar reportedly doesn't like them
     ENV["CFLAGS"] = "-O2 -DNDEBUG " +
-                    # Or it doesn't build at all
                     "-std=c99 " +
-                    # build if we aren't /usr/local'
                     "#{ENV.cppflags} #{ENV.ldflags}"
     system "make", "PREFIX=#{prefix}"
     system "make", "install", "PREFIX=#{prefix}"

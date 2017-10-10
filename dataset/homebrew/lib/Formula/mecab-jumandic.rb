@@ -11,7 +11,6 @@ class MecabJumandic < Formula
     sha256 "b61b60c146c415bde98046beecbbf1e7f64c12f072ad2610de6876b93d13a3b0" => :mountain_lion
   end
 
-  # Via ./configure --help, valid choices are utf8 (default), euc-jp, sjis
   option "charset=", "Select charset: utf8 (default), euc-jp, or sjis"
 
   depends_on "mecab"

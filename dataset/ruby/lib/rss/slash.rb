@@ -1,9 +1,7 @@
 require 'rss/1.0'
 
 module RSS
-  # The prefix for the Slash XML namespace.
   SLASH_PREFIX = 'slash'
-  # The URI of the Slash specification.
   SLASH_URI = "http://purl.org/rss/1.0/modules/slash/"
 
   RDF.install_ns(SLASH_PREFIX, SLASH_URI)
@@ -31,6 +29,7 @@ module RSS
                                      full_name, type, name)
         end
 
+        #nodyna <module_eval-2054> <not yet classified>
         klass.module_eval do
           alias_method(:slash_hit_parades, :slash_hit_parade)
           undef_method(:slash_hit_parade)

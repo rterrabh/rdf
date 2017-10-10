@@ -23,7 +23,6 @@ class Djvulibre < Formula
 
   def install
     system "./autogen.sh" if build.head?
-    # Don't build X11 GUI apps, Spotlight Importer or QuickLook plugin
     system "./configure", "--prefix=#{prefix}", "--disable-desktopfiles"
     system "make"
     system "make", "install"

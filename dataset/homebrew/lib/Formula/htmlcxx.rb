@@ -4,8 +4,6 @@ class Htmlcxx < Formula
   url "https://downloads.sourceforge.net/project/htmlcxx/htmlcxx/0.85/htmlcxx-0.85.tar.gz"
   sha256 "ab02a0c4addc82f82d564f7d163fe0cc726179d9045381c288f5b8295996bae5"
 
-  # Don't try to use internal GCC headers; rely on standards-compliant header
-  # Reported upstream: https://sourceforge.net/p/htmlcxx/bugs/18/
   patch :DATA
 
   def install
@@ -20,8 +18,6 @@ index 61ed462..e461469 100644
 --- a/html/ci_string.h
 +++ b/html/ci_string.h
 @@ -4,16 +4,7 @@
- #include <cctype>
- #include <string>
  
 -#if __GNUC__ >= 3
 -#include <bits/char_traits.h>

@@ -2,7 +2,6 @@ require "action_view"
 require "rails"
 
 module ActionView
-  # = Action View Railtie
   class Railtie < Rails::Railtie # :nodoc:
     config.action_view = ActiveSupport::OrderedOptions.new
     config.action_view.embed_authenticity_token_in_remote_forms = false
@@ -23,7 +22,7 @@ module ActionView
     initializer "action_view.set_configs" do |app|
       ActiveSupport.on_load(:action_view) do
         app.config.action_view.each do |k,v|
-          #nodyna <ID:send-64> <SD COMPLEX (array)>
+          #nodyna <send-1199> <SD COMPLEX (array)>
           send "#{k}=", v
         end
       end
@@ -39,7 +38,7 @@ module ActionView
 
     initializer "action_view.setup_action_pack" do |app|
       ActiveSupport.on_load(:action_controller) do
-        #nodyna <ID:send-65> <SD TRIVIAL (public methods)>
+        #nodyna <send-1200> <SD TRIVIAL (public methods)>
         ActionView::RoutingUrlFor.send(:include, ActionDispatch::Routing::UrlFor)
       end
     end

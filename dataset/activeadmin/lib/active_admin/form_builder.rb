@@ -1,4 +1,3 @@
-# Provides an intuitive way to build has_many associated records in the same form.
 module Formtastic
   module Inputs
     module Base
@@ -15,7 +14,6 @@ module ActiveAdmin
   class FormBuilder < ::Formtastic::FormBuilder
     self.input_namespaces = [::Object, ::ActiveAdmin::Inputs, ::Formtastic::Inputs]
 
-    # TODO: remove both class finders after formtastic 4 (where it will be default)
     self.input_class_finder = ::Formtastic::InputClassFinder
     self.action_class_finder = ::Formtastic::ActionClassFinder
 
@@ -33,7 +31,6 @@ module ActiveAdmin
     end
 
     def has_many(assoc, options = {}, &block)
-      # remove options that should not render as attributes
       custom_settings = :new_record, :allow_destroy, :heading, :sortable, :sortable_start
       builder_options = {new_record: true}.merge! options.slice  *custom_settings
       options         = {for: assoc      }.merge! options.except *custom_settings
@@ -101,9 +98,9 @@ module ActiveAdmin
     end
 
     def sorted_children(assoc, column)
-      #nodyna <ID:send-24> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-35> <SD COMPLEX (change-prone variables)>
       object.public_send(assoc).sort_by do |o|
-        #nodyna <ID:send-25> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-36> <SD COMPLEX (change-prone variables)>
         attribute = o.public_send column
         [attribute.nil? ? Float::INFINITY : attribute, o.id || Float::INFINITY]
       end
@@ -121,7 +118,6 @@ module ActiveAdmin
       html
     end
 
-    # Capture the ADD JS
     def js_for_has_many(assoc, form_block, template, new_record, class_string)
       assoc_reflection = object.class.reflect_on_association assoc
       assoc_name       = assoc_reflection.klass.model_name

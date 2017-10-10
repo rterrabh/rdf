@@ -8,13 +8,11 @@ class Apollo < Formula
   option "no-bdb", "Install without bdb store support"
   option "no-mqtt", "Install without MQTT protocol support"
 
-  # http://www.oracle.com/technetwork/database/berkeleydb/overview/index-093405.html
   resource "bdb-je" do
     url "http://download.oracle.com/maven/com/sleepycat/je/5.0.34/je-5.0.34.jar"
     sha256 "025afa4954ed4e6f926af6e9015aa109528b0f947fcb3790b7bace639fe558fa"
   end
 
-  # https://github.com/fusesource/fuse-extra/tree/master/fusemq-apollo/fusemq-apollo-mqtt
   resource "mqtt" do
     url "http://repo.fusesource.com/nexus/content/repositories/public/org/fusesource/fuse-extra/fusemq-apollo-mqtt/1.3/fusemq-apollo-mqtt-1.3-uber.jar"
     mirror "http://repo1.maven.org/maven2/org/fusesource/fuse-extra/fusemq-apollo-mqtt/1.3/fusemq-apollo-mqtt-1.3-uber.jar"
@@ -36,7 +34,6 @@ class Apollo < Formula
 
   def caveats; <<-EOS.undent
     To create the broker:
-        #{bin}/apollo create #{var}/apollo
     EOS
   end
 

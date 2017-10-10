@@ -5,7 +5,6 @@ class Languagetool < Formula
   sha256 "2d4d38dc6aeab828654fbb6bd805253c22c1c463c2adcfd2379879c9dfa026f3"
 
   def server_script(server_jar); <<-EOS.undent
-    #!/bin/bash
     exec java -cp #{server_jar} org.languagetool.server.HTTPServer "$@"
     EOS
   end

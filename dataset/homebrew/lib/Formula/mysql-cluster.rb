@@ -9,7 +9,6 @@ class MysqlCluster < Formula
     sha1 "694d4b6cf56ae7ac7e35315bfe6d20d3d0d1f9fd" => :mountain_lion
   end
 
-  # Fix me: if you can get this to build on Yosemite, send a pull request!
   depends_on MaximumMacOSRequirement => :mavericks
 
   depends_on :java => "1.7+"
@@ -35,11 +34,8 @@ class MysqlCluster < Formula
   end
 
   def install
-    # Build without compiler or CPU specific optimization flags to facilitate
-    # compilation of gems and other software that queries `mysql-config`.
     ENV.minimal_optimization
 
-    # Make sure the var/mysql-cluster directory exists
     (var+"mysql-cluster").mkpath
 
     args = [".",
@@ -48,49 +44,39 @@ class MysqlCluster < Formula
             "-DINSTALL_MANDIR=#{man}",
             "-DINSTALL_DOCDIR=#{doc}",
             "-DINSTALL_INFODIR=#{info}",
-            # CMake prepends prefix, so use share.basename
             "-DINSTALL_MYSQLSHAREDIR=#{share.basename}/mysql",
             "-DWITH_SSL=yes",
             "-DDEFAULT_CHARSET=utf8",
             "-DDEFAULT_COLLATION=utf8_general_ci",
             "-DSYSCONFDIR=#{etc}"]
 
-    # To enable unit testing at build, we need to download the unit testing suite
     if build.with? "tests"
       args << "-DENABLE_DOWNLOADS=ON"
     else
       args << "-DWITH_UNIT_TESTS=OFF"
     end
 
-    # Build the embedded server
     args << "-DWITH_EMBEDDED_SERVER=ON" if build.with? "embedded"
 
-    # Compile with readline unless libedit is explicitly chosen
     args << "-DWITH_READLINE=yes" if build.without? "libedit"
 
-    # Compile with ARCHIVE engine enabled if chosen
     args << "-DWITH_ARCHIVE_STORAGE_ENGINE=1" if build.with? "archive-storage-engine"
 
-    # Compile with BLACKHOLE engine enabled if chosen
     args << "-DWITH_BLACKHOLE_STORAGE_ENGINE=1" if build.with? "blackhole-storage-engine"
 
-    # Make universal for binding to universal applications
     if build.universal?
       ENV.universal_binary
       args << "-DCMAKE_OSX_ARCHITECTURES=#{Hardware::CPU.universal_archs.as_cmake_arch_flags}"
     end
 
-    # Build with local infile loading support
     args << "-DENABLED_LOCAL_INFILE=1" if build.include? "enable-local-infile"
 
-    # Build with debug support
     args << "-DWITH_DEBUG=1" if build.include? "enable-debug"
 
     system "cmake", *args
     system "make"
     system "make", "install"
 
-    # Create default directories and configuration files
     (var+"mysql-cluster/ndb_data").mkpath
     (var+"mysql-cluster/mysqld_data").mkpath
     (var+"mysql-cluster/conf").mkpath
@@ -104,21 +90,15 @@ class MysqlCluster < Formula
     plist_path("mysqld").write mysqld_startup_plist("mysqld")
     plist_path("mysqld").chmod 0644
 
-    # Don"t create databases inside of the prefix!
-    # See: https://github.com/Homebrew/homebrew/issues/4975
     rm_rf prefix+"data"
 
-    # Link the setup script into bin
     bin.install_symlink prefix/"scripts/mysql_install_db"
-    # Fix up the control script and link into bin
     inreplace "#{prefix}/support-files/mysql.server" do |s|
       s.gsub!(/^(PATH=".*)(")/, "\\1:#{HOMEBREW_PREFIX}/bin\\2")
-      # pidof can be replaced with pgrep from proctools on Mountain Lion
       s.gsub!(/pidof/, "pgrep") if MacOS.version >= :mountain_lion
     end
     bin.install_symlink prefix/"support-files/mysql.server"
 
-    # Move mysqlaccess to libexec
     libexec.mkpath
     libexec.install "#{bin}/mysqlaccess", "#{bin}/mysqlaccess.conf",
                     "#{bin}/mcc_config.py"
@@ -129,7 +109,6 @@ class MysqlCluster < Formula
       http://dev.mysql.com/downloads/cluster/
 
     Default configuration files have been created inside:
-      #{var}/mysql-cluster
     Note that in a production system there are other parameters
     that you would set to tune the configuration.
 
@@ -191,12 +170,10 @@ class MysqlCluster < Formula
     EOCNF
   end
 
-  # Override Formula#plist_name
   def plist_name(extra = nil)
     (extra) ? super()+"-"+extra : super()+"-ndb_mgmd"
   end
 
-  # Override Formula#plist_path
   def plist_path(extra = nil)
     (extra) ? super().dirname+(plist_name(extra)+".plist") : super()
   end

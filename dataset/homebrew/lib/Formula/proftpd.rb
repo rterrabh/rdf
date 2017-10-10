@@ -4,7 +4,6 @@ class Proftpd < Formula
   url "ftp://ftp.proftpd.org/distrib/source/proftpd-1.3.4d.tar.gz"
   sha256 "c198b53991ce641eae6b3237e856e59f0bfe8330794145b49cae33f85b6f5370"
 
-  # fixes unknown group 'nogroup'
   patch :DATA
 
   def install
@@ -45,7 +44,6 @@ class Proftpd < Formula
 
   def caveats; <<-EOS.undent
     The config file is in:
-       #{HOMEBREW_PREFIX}/etc/proftpd.conf
 
     proftpd may need to be run as root, depending on configuration
     EOS
@@ -57,10 +55,7 @@ __END__
 +++ b/sample-configurations/basic.conf
 @@ -27,7 +27,7 @@
 
- # Set the user and group under which the server will run.
  User				nobody
 -Group				nogroup
 +Group				nobody
 
- # To cause every FTP user to be "jailed" (chrooted) into their home
- # directory, uncomment this line.

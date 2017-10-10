@@ -16,8 +16,6 @@ class Distcc < Formula
   depends_on PythonWithoutPPCRequirement
 
   def install
-    # Make sure python stuff is put into the Cellar.
-    # --root triggers a bug and installs into HOMEBREW_PREFIX/lib/python2.7/site-packages instead of the Cellar.
     inreplace "Makefile.in", '--root="$$DESTDIR"', ""
 
     system "./configure", "--prefix=#{prefix}"

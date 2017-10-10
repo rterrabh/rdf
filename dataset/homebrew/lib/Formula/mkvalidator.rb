@@ -11,8 +11,6 @@ class Mkvalidator < Formula
     sha256 "4884199ce61f84e24d2c2ab09723c3ca46ef31afac5d561093bc11ebedaa442d" => :mountain_lion
   end
 
-  # see https://sourceforge.net/p/matroska/bugs/9/
-  # and https://sourceforge.net/p/matroska/patches/3/
   if MacOS.prefer_64_bit?
     patch do
       url "https://sourceforge.net/p/matroska/patches/_discuss/thread/8899370c/81cc/attachment/mkvalidator-0.3.7.gcc_osx_x64.build.diff"

@@ -13,8 +13,6 @@ class DiscourseSassCompiler
     self.new(scss, target).compile(opts)
   end
 
-  # Takes a Sass::SyntaxError and generates css that will show the
-  # error at the bottom of the page.
   def self.error_as_css(sass_error, label)
     error = sass_error.sass_backtrace_str(label)
     error.gsub!("\n", '\A ')
@@ -30,22 +28,16 @@ class DiscourseSassCompiler
     @target = target
 
     unless Sass::Script::Functions < Sprockets::SassFunctions
-      #nodyna <ID:send-41> <SD TRIVIAL (public methods)>
+      #nodyna <send-254> <SD TRIVIAL (public methods)>
       Sass::Script::Functions.send :include, Sprockets::SassFunctions
     end
   end
 
-  # Compiles the given scss and output the css as a string.
-  #
-  # Options:
-  #   safe: (boolean) if true, theme and plugin stylesheets will not be included. Default is false.
   def compile(opts={})
     env = Rails.application.assets
 
-    # In production Rails.application.assets is a Sprockets::Index
-    #  instead of Sprockets::Environment, there is no cleaner way
-    #  to get the environment from the index.
     if env.is_a?(Sprockets::Index)
+      #nodyna <instance_variable_get-255> <not yet classified>
       env = env.instance_variable_get('@environment')
     end
 
@@ -54,7 +46,6 @@ class DiscourseSassCompiler
 
     debug_opts = Rails.env.production? ? {} : {
       line_numbers: true,
-      # debug_info: true, # great with Firebug + FireSass, but not helpful elsewhere
       style: :expanded
     }
 

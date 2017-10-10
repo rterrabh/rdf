@@ -25,7 +25,7 @@ module Spree
     end
 
     def self.default(user = nil, kind = "bill")
-      #nodyna <ID:send-106> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-2529> <SD COMPLEX (change-prone variables)>
       if user && user_address = user.send(:"#{kind}_address")
         user_address.clone
       else
@@ -33,10 +33,6 @@ module Spree
       end
     end
 
-    # Can modify an address if it's not been used in an order (but checkouts controller has finer control)
-    # def editable?
-    #   new_record? || (shipments.empty? && checkouts.empty?)
-    # end
 
     def full_name
       "#{firstname} #{lastname}".strip
@@ -74,7 +70,6 @@ module Spree
       attributes.except('id', 'created_at', 'updated_at', 'order_id', 'country_id').all? { |_, v| v.nil? }
     end
 
-    # Generates an ActiveMerchant compatible address hash
     def active_merchant_hash
       {
         name: full_name,
@@ -98,12 +93,9 @@ module Spree
 
     private
       def state_validate
-        # Skip state validation without country (also required)
-        # or when disabled by preference
         return if country.blank? || !Spree::Config[:address_requires_state]
         return unless country.states_required
 
-        # ensure associated state belongs to country
         if state.present?
           if state.country == country
             self.state_name = nil #not required as we have a valid state and country combo
@@ -116,7 +108,6 @@ module Spree
           end
         end
 
-        # ensure state_name belongs to country without states, or that it matches a predefined state name/abbr
         if state_name.present?
           if country.states.present?
             states = country.states.find_all_by_name_or_abbr(state_name)
@@ -130,7 +121,6 @@ module Spree
           end
         end
 
-        # ensure at least one state field is populated
         errors.add :state, :blank if state.blank? && state_name.blank?
       end
 

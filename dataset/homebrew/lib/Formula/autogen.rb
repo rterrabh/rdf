@@ -21,7 +21,6 @@ class Autogen < Formula
                           "--disable-silent-rules",
                           "--prefix=#{prefix}"
 
-    # make and install must be separate steps for this formula
     system "make"
     system "make", "install"
   end

@@ -80,7 +80,6 @@ class Strongswan < Formula
   def caveats
     msg = <<-EOS.undent
       strongSwan's configuration files are placed in:
-        #{etc}
 
       You will have to run both "ipsec" and "charon-cmd" with "sudo".
     EOS

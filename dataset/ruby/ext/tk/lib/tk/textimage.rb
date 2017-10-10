@@ -1,6 +1,3 @@
-#
-# tk/textimage.rb - treat Tk text image object
-#
 require 'tk'
 require 'tk/text'
 
@@ -8,9 +5,6 @@ class TkTextImage<TkObject
   include Tk::Text::IndexModMethods
 
   def initialize(parent, index, keys)
-    #unless parent.kind_of?(Tk::Text)
-    #  fail ArgumentError, "expect Tk::Text for 1st argument"
-    #end
     @t = parent
     if index == 'end' || index == :end
       @path = TkTextMark.new(@t, tk_call(@t.path, 'index', 'end - 1 chars'))
@@ -60,9 +54,6 @@ class TkTextImage<TkObject
     @t.image_configure(@index, slot, value)
     self
   end
-#  def configure(slot, value)
-#    tk_call @t.path, 'image', 'configure', @index, "-#{slot}", value
-#  end
 
   def configinfo(slot = nil)
     @t.image_configinfo(@index, slot)
@@ -80,7 +71,6 @@ class TkTextImage<TkObject
   def image=(value)
     tk_call_without_enc(@t.path, 'image', 'configure', @index, '-image',
                         _get_eval_enc_str(value))
-    #self
     value
   end
 end

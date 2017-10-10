@@ -1,37 +1,21 @@
-##
-# Outputs RDoc markup as paragraphs with inline markup only.
 
 class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
 
-  ##
-  # After this many characters the input will be cut off.
 
   attr_reader :character_limit
 
-  ##
-  # The number of characters seen so far.
 
   attr_reader :characters # :nodoc:
 
-  ##
-  # The attribute bitmask
 
   attr_reader :mask
 
-  ##
-  # After this many paragraphs the input will be cut off.
 
   attr_reader :paragraph_limit
 
-  ##
-  # Count of paragraphs found
 
   attr_reader :paragraphs
 
-  ##
-  # Creates a new ToHtmlSnippet formatter that will cut off the input on the
-  # next word boundary after the given number of +characters+ or +paragraphs+
-  # of text have been encountered.
 
   def initialize options, characters = 100, paragraphs = 3, markup = nil
     super options, markup
@@ -46,8 +30,6 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     @markup.add_special RDoc::CrossReference::CROSSREF_REGEXP, :CROSSREF
   end
 
-  ##
-  # Adds +heading+ to the output as a paragraph
 
   def accept_heading heading
     @res << "<p>#{to_html heading.text}\n"
@@ -55,13 +37,9 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     add_paragraph
   end
 
-  ##
-  # Raw sections are untrusted and ignored
 
   alias accept_raw ignore
 
-  ##
-  # Rules are ignored
 
   alias accept_rule ignore
 
@@ -75,21 +53,15 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     add_paragraph
   end
 
-  ##
-  # Finishes consumption of +list_item+
 
   def accept_list_item_end list_item
   end
 
-  ##
-  # Prepares the visitor for consuming +list_item+
 
   def accept_list_item_start list_item
     @res << list_item_start(list_item, @list.last)
   end
 
-  ##
-  # Prepares the visitor for consuming +list+
 
   def accept_list_start list
     @list << list.type
@@ -97,8 +69,6 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     @in_list_entry.push ''
   end
 
-  ##
-  # Adds +verbatim+ to the output
 
   def accept_verbatim verbatim
     throw :done if @characters >= @character_limit
@@ -112,8 +82,6 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     add_paragraph
   end
 
-  ##
-  # Prepares the visitor for HTML snippet generation
 
   def start_accepting
     super
@@ -121,23 +89,17 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     @characters = 0
   end
 
-  ##
-  # Removes escaping from the cross-references in +special+
 
   def handle_special_CROSSREF special
     special.text.sub(/\A\\/, '')
   end
 
-  ##
-  # +special+ is a <code><br></code>
 
   def handle_special_HARD_BREAK special
     @characters -= 4
     '<br>'
   end
 
-  ##
-  # Lists are paragraphs, but notes and labels have a separator
 
   def list_item_start list_item, list_type
     throw :done if @characters >= @character_limit
@@ -160,9 +122,6 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     end
   end
 
-  ##
-  # Returns just the text of +link+, +url+ is only used to determine the link
-  # type.
 
   def gen_url url, text
     if url =~ /^rdoc-label:([^:]*)(?::(.*))?/ then
@@ -181,15 +140,11 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     end
   end
 
-  ##
-  # In snippets, there are no lists
 
   def html_list_name list_type, open_tag
     ''
   end
 
-  ##
-  # Throws +:done+ when paragraph_limit paragraphs have been encountered
 
   def add_paragraph
     @paragraphs += 1
@@ -197,8 +152,6 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     throw :done if @paragraphs >= @paragraph_limit
   end
 
-  ##
-  # Marks up +content+
 
   def convert content
     catch :done do
@@ -208,8 +161,6 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     end_accepting
   end
 
-  ##
-  # Converts flow items +flow+
 
   def convert_flow flow
     throw :done if @characters >= @character_limit
@@ -243,9 +194,6 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     res.join
   end
 
-  ##
-  # Maintains a bitmask to allow HTML elements to be closed properly.  See
-  # RDoc::Markup::Formatter.
 
   def on_tags res, item
     @mask ^= item.turn_on
@@ -253,9 +201,6 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     super
   end
 
-  ##
-  # Maintains a bitmask to allow HTML elements to be closed properly.  See
-  # RDoc::Markup::Formatter.
 
   def off_tags res, item
     @mask ^= item.turn_off
@@ -263,8 +208,6 @@ class RDoc::Markup::ToHtmlSnippet < RDoc::Markup::ToHtml
     super
   end
 
-  ##
-  # Truncates +text+ at the end of the first word after the character_limit.
 
   def truncate text
     length = text.length

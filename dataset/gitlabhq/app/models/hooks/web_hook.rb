@@ -1,20 +1,3 @@
-# == Schema Information
-#
-# Table name: web_hooks
-#
-#  id                    :integer          not null, primary key
-#  url                   :string(255)
-#  project_id            :integer
-#  created_at            :datetime
-#  updated_at            :datetime
-#  type                  :string(255)      default("ProjectHook")
-#  service_id            :integer
-#  push_events           :boolean          default(TRUE), not null
-#  issues_events         :boolean          default(FALSE), not null
-#  merge_requests_events :boolean          default(FALSE), not null
-#  tag_push_events       :boolean          default(FALSE)
-#  note_events           :boolean          default(FALSE), not null
-#
 
 class WebHook < ActiveRecord::Base
   include Sortable
@@ -26,7 +9,6 @@ class WebHook < ActiveRecord::Base
   default_value_for :merge_requests_events, false
   default_value_for :tag_push_events, false
 
-  # HTTParty timeout
   default_timeout Gitlab.config.gitlab.webhook_timeout
 
   validates :url, presence: true,

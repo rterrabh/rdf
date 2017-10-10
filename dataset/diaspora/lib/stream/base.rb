@@ -10,12 +10,10 @@ class Stream::Base
     self.publisher = Publisher.new(self.user, publisher_opts)
   end
 
-  #requied to implement said stream
   def link(opts={})
     'change me in lib/base_stream.rb!'
   end
 
-  # @return [Boolean]
   def can_comment?(post)
     return true if post.author.local?
     post_is_from_contact?(post)
@@ -25,52 +23,42 @@ class Stream::Base
     []
   end
 
-  # @return [String]
   def title
     'a title'
   end
 
-  # @return [ActiveRecord::Relation<Post>]
   def posts
     Post.all
   end
 
-  # @return [Array<Post>]
   def stream_posts
     self.posts.for_a_stream(max_time, order, self.user).tap do |posts|
       like_posts_for_stream!(posts) #some sql person could probably do this with joins.
     end
   end
 
-  # @return [ActiveRecord::Association<Person>] AR association of people within stream's given aspects
   def people
     people_ids = self.stream_posts.map{|x| x.author_id}
     Person.where(:id => people_ids).
       includes(:profile)
   end
 
-  # @return [String] def contacts_title 'change me in lib/base_stream.rb!'
   def contacts_title
     'change me in lib/base_stream.rb!'
   end
 
-  # @return [String]
   def contacts_link
     Rails.application.routes.url_helpers.contacts_path
   end
 
-  # @return [Boolean]
   def for_all_aspects?
     true
   end
 
-  #NOTE: MBS bad bad methods the fact we need these means our views are foobared. please kill them and make them
-  #private methods on the streams that need them
   def aspects
     user.aspects
   end
 
-  # @return [Aspect] The first aspect in #aspects
   def aspect
     aspects.first
   end
@@ -90,7 +78,6 @@ class Stream::Base
   end
 
   protected
-  # @return [void]
   def like_posts_for_stream!(posts)
     return posts unless @user
 
@@ -106,20 +93,14 @@ class Stream::Base
     end
   end
 
-  # @return [Hash]
   def publisher_opts
     {}
   end
 
-  # Memoizes all Contacts present in the Stream
-  #
-  # @return [Array<Contact>]
   def contacts_in_stream
     @contacts_in_stream ||= Contact.where(:user_id => user.id, :person_id => people.map(&:id)).load
   end
 
-  # @param post [Post]
-  # @return [Boolean]
   def post_is_from_contact?(post)
     @can_comment_cache ||= {}
     @can_comment_cache[post.id] ||= contacts_in_stream.find{|contact| contact.person_id == post.author.id}.present?

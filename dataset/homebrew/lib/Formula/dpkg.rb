@@ -16,14 +16,8 @@ class Dpkg < Formula
   depends_on "xz" # For LZMA
 
   def install
-    # We need to specify a recent gnutar, otherwise various dpkg C programs will
-    # use the system "tar", which will fail because it lacks certain switches.
     ENV["TAR"] = Formula["gnu-tar"].opt_bin/"gtar"
 
-    # Theoretically, we could reinsert a patch here submitted upstream previously
-    # but the check for PERL_LIB remains in place and incompatible with Homebrew.
-    # Using an env and scripting is a solution less likely to break over time.
-    # Both variables need to be set. One is compile-time, the other run-time.
     ENV["PERL_LIBDIR"] = libexec/"lib/perl5"
     ENV.prepend_create_path "PERL5LIB", libexec+"lib/perl5"
 
@@ -54,8 +48,6 @@ class Dpkg < Formula
   end
 
   test do
-    # Do not remove the empty line from the end of the control file
-    # All deb control files MUST end with an empty line
     (testpath/"test/data/homebrew.txt").write <<-EOS.undent
       Homebrew was here.
     EOS

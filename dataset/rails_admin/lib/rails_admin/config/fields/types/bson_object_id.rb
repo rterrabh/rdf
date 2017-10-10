@@ -5,7 +5,6 @@ module RailsAdmin
     module Fields
       module Types
         class BsonObjectId < RailsAdmin::Config::Fields::Types::String
-          # Register field type for the type loader
           RailsAdmin::Config::Fields::Types.register(self)
 
           register_instance_option :label do

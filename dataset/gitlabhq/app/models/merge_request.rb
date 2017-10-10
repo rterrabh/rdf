@@ -1,25 +1,3 @@
-# == Schema Information
-#
-# Table name: merge_requests
-#
-#  id                :integer          not null, primary key
-#  target_branch     :string(255)      not null
-#  source_branch     :string(255)      not null
-#  source_project_id :integer          not null
-#  author_id         :integer
-#  assignee_id       :integer
-#  title             :string(255)
-#  created_at        :datetime
-#  updated_at        :datetime
-#  milestone_id      :integer
-#  state             :string(255)
-#  merge_status      :string(255)
-#  target_project_id :integer          not null
-#  iid               :integer
-#  description       :text
-#  position          :integer          default(0)
-#  locked_at         :datetime
-#
 
 require Rails.root.join("app/models/commit")
 require Rails.root.join("lib/static_model")
@@ -43,12 +21,8 @@ class MergeRequest < ActiveRecord::Base
 
   attr_accessor :should_remove_source_branch
 
-  # When this attribute is true some MR validation is ignored
-  # It allows us to close or modify broken merge requests
   attr_accessor :allow_broken
 
-  # Temporary fields to store compare vars
-  # when creating new merge request
   attr_accessor :can_be_created, :compare_failed,
     :compare_commits, :compare_diffs
 
@@ -138,13 +112,9 @@ class MergeRequest < ActiveRecord::Base
     '!'
   end
 
-  # Pattern used to extract `!123` merge request references from text
-  #
-  # This pattern supports cross-project references.
   def self.reference_pattern
     %r{
       (#{Project.reference_pattern})?
-      #{Regexp.escape(reference_prefix)}(?<merge_request>\d+)
     }x
   end
 
@@ -181,8 +151,6 @@ class MergeRequest < ActiveRecord::Base
     if target_project == source_project
       true
     else
-      # If source and target projects are different
-      # we should check if source project is actually a fork of target project
       if source_project.forked_from?(target_project)
         true
       else
@@ -253,7 +221,6 @@ class MergeRequest < ActiveRecord::Base
   end
 
   def mr_and_commit_notes
-    # Fetch comments only from last 100 commits
     commits_for_notes_limit = 100
     commit_ids = commits.last(commits_for_notes_limit).map(&:id)
 
@@ -267,16 +234,10 @@ class MergeRequest < ActiveRecord::Base
     )
   end
 
-  # Returns the raw diff for this merge request
-  #
-  # see "git diff"
   def to_diff(current_user)
     Gitlab::Satellite::MergeAction.new(current_user, self).diff_in_satellite
   end
 
-  # Returns the commit as a series of email patches.
-  #
-  # see "git format-patch"
   def to_patch(current_user)
     Gitlab::Satellite::MergeAction.new(current_user, self).format_patch
   end
@@ -303,7 +264,6 @@ class MergeRequest < ActiveRecord::Base
     target_project
   end
 
-  # Return the set of issues that will be closed if this merge request is accepted.
   def closes_issues(current_user = self.author)
     if target_branch == project.default_branch
       issues = commits.flat_map { |c| c.closes_issues(current_user) }
@@ -359,14 +319,6 @@ class MergeRequest < ActiveRecord::Base
     self.target_project.repository.branch_names.include?(self.target_branch)
   end
 
-  # Reset merge request events cache
-  #
-  # Since we do cache @event we need to reset cache in special cases:
-  # * when a merge request is updated
-  # Events cache stored like  events/23-20130109142513.
-  # The cache key includes updated_at timestamp.
-  # Thus it will automatically generate a new fragment
-  # when the event is updated because the key changes.
   def reset_events_cache
     Event.reset_event_cache_for(self)
   end
@@ -382,8 +334,6 @@ class MergeRequest < ActiveRecord::Base
     message
   end
 
-  # Return array of possible target branches
-  # depends on target project of MR
   def target_branches
     if target_project.nil?
       []
@@ -392,8 +342,6 @@ class MergeRequest < ActiveRecord::Base
     end
   end
 
-  # Return array of possible source branches
-  # depends on source project of MR
   def source_branches
     if source_project.nil?
       []

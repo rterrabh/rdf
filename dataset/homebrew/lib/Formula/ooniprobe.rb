@@ -17,8 +17,6 @@ class Ooniprobe < Formula
   depends_on "tor"
   depends_on :python if MacOS.version <= :snow_leopard
 
-  # these 4 need to come first or else cryptography will let setuptools
-  # easy_install them (which is bad)
   resource "cffi" do
     url "https://pypi.python.org/packages/source/c/cffi/cffi-0.9.2.tar.gz"
     sha256 "1988ce7ff9c64ecd5077776175e90fd8f0a8c827cb241a23647175ce08126bb2"
@@ -38,7 +36,6 @@ class Ooniprobe < Formula
     url "https://pypi.python.org/packages/source/p/pycparser/pycparser-2.10.tar.gz"
     sha256 "957d98b661c0b64b580ab6f94b125e09b6714154ee51de40bca16d3f0076b86c"
   end
-  # end "these 4"
 
   resource "characteristic" do
     url "https://pypi.python.org/packages/source/c/characteristic/characteristic-14.3.0.tar.gz"
@@ -129,17 +126,13 @@ class Ooniprobe < Formula
       end
     end
 
-    # namespace package hint
     touch libexec/"vendor/lib/python2.7/site-packages/zope/__init__.py"
 
     inreplace "requirements.txt" do |s|
-      # provided by libdnet
       s.gsub! "pydumbnet", ""
-      # don't expect the pypi version of scapy
       s.gsub! /scapy-real.*/, "scapy>=2.3.1"
     end
 
-    # force a distutils install
     inreplace "setup.py", "def run(", "def norun("
     (buildpath/"ooni/settings.ini").atomic_write <<-EOS.undent
       [directories]

@@ -13,7 +13,6 @@ class Validators::StrippedLengthValidator < ActiveModel::EachValidator
   end
 
   def validate_each(record, attribute, value)
-    # the `in` parameter might be a lambda when the range is dynamic
     range = options[:in].lambda? ? options[:in].call : options[:in]
     self.class.validate(record, attribute, value, range)
   end

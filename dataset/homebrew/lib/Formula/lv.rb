@@ -12,8 +12,6 @@ class Lv < Formula
   end
 
   def install
-    # zcat doesn't handle gzip'd data on OSX.
-    # Reported upstream to nrt@ff.iij4u.or.jp
     inreplace "src/stream.c", 'gz_filter = "zcat"', 'gz_filter = "gzcat"'
 
     cd "build" do

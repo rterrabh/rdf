@@ -25,12 +25,6 @@ class Cppcms < Formula
 
   test do
     (testpath/"hello.cpp").write <<-EOS.undent
-      #include <cppcms/application.h>
-      #include <cppcms/applications_pool.h>
-      #include <cppcms/service.h>
-      #include <cppcms/http_response.h>
-      #include <iostream>
-      #include <string>
 
       class hello : public cppcms::application {
           public:

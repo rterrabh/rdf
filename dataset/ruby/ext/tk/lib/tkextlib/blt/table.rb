@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/table.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/itemconfig.rb'
@@ -126,7 +122,6 @@ module Tk::BLT
 end
 
 
-############################################
 class << Tk::BLT::Table
   def __item_cget_cmd(id) # id := [ container, item ]
     win = (id[0].kind_of?(TkWindow))? id[0].path: id[0].to_s
@@ -166,10 +161,8 @@ class << Tk::BLT::Table
     if tag.kind_of?(Array)
       case tag[0]
       when Integer
-        # [row, col]
         tag.join(',')
       when :c, :C, 'c', 'C', :r, :R, 'r', 'R'
-        # c0 or r1 or C*, and so on
         tag.collect{|elem| elem.to_s}.join('')
       else
         tag
@@ -185,7 +178,6 @@ class << Tk::BLT::Table
     tagid
   end
 
-  ############################################
 
   def cget_tkstring(container, option)
     __itemcget_tkstring([container], option)
@@ -221,14 +213,12 @@ class << Tk::BLT::Table
 
   def itemconfigure(container, *args)
     if args[-1].kind_of?(Hash)
-      # container, item, item, ... , hash_optkeys
       keys = args.pop
       fail ArgumentError, 'no item is given' if args.empty?
       id = [container]
       args.each{|item| id << tagid(item)}
       __itemconfigure(id, keys)
     else
-      # container, item, item, ... , option, value
       val = args.pop
       opt = args.pop
       fail ArgumentError, 'no item is given' if args.empty?
@@ -244,10 +234,8 @@ class << Tk::BLT::Table
     if slot.kind_of?(String) || slot.kind_of?(Symbol)
       slot = slot.to_s
       if slot[0] == ?. || slot =~ /^\d+,\d+$/ || slot =~ /^(c|C|r|R)(\*|\d+)/
-        #   widget     ||    row,col          ||    Ci or Ri
         slot = nil
       else
-        # option
         slot = args.pop
       end
     else
@@ -266,10 +254,8 @@ class << Tk::BLT::Table
     if slot.kind_of?(String) || slot.kind_of?(Symbol)
       slot = slot.to_s
       if slot[0] == ?. || slot =~ /^\d+,\d+$/ || slot =~ /^(c|C|r|R)(\*|\d+)/
-        #   widget     ||    row,col          ||    Ci or Ri
         slot = nil
       else
-        # option
         slot = args.pop
       end
     else
@@ -313,7 +299,6 @@ class << Tk::BLT::Table
     ret
   end
 
-  ############################################
 
   def create_container(container)
     tk_call('::blt::table', container)

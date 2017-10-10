@@ -25,7 +25,6 @@ class Gource < Formula
   depends_on "glm" => :build
   depends_on "freetype"
 
-  # boost failing on lion
   depends_on :macos => :mountain_lion
 
   if MacOS.version < :mavericks
@@ -43,8 +42,6 @@ class Gource < Formula
   needs :cxx11
 
   def install
-    # clang on Mt. Lion will try to build against libstdc++,
-    # despite -std=gnu++0x
     ENV.libcxx
 
     system "autoreconf", "-f", "-i" if build.head?

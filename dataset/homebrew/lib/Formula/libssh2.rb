@@ -48,7 +48,6 @@ class Libssh2 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <libssh2.h>
 
       int main(void)
       {

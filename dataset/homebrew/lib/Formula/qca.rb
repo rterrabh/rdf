@@ -7,7 +7,6 @@ class Qca < Formula
     url "http://delta.affinix.com/download/qca/2.0/qca-2.1.0.tar.gz"
     sha256 "226dcd76138c3738cdc15863607a96b3758a4c3efd3c47295939bcea4e7a9284"
 
-    # Fixes build with Qt 5.5 by adding a missing include (already fixed in HEAD).
     patch do
       url "http://quickgit.kde.org/?p=qca.git&a=commitdiff&h=7207e6285e932044cd66d49d0dc484666cfb0092&o=plain"
       sha256 "b3ab2eb010f4a16f85349e4b858d0ee17a84ba2927311b79aeeff1bb2465cd3d"
@@ -28,7 +27,6 @@ class Qca < Formula
   depends_on "qt" => :recommended
   depends_on "qt5" => :optional
 
-  # Plugins (QCA needs at least one plugin to do anything useful)
   depends_on "openssl" # qca-ossl
   depends_on "botan" => :optional # qca-botan
   depends_on "libgcrypt" => :optional # qca-gcrypt
@@ -48,7 +46,6 @@ class Qca < Formula
     args << "-DQT4_BUILD=#{build.with?("qt5") ? "OFF" : "ON"}"
     args << "-DBUILD_TESTS=OFF"
 
-    # Plugins (qca-ossl, qca-cyrus-sasl, qca-logger, qca-softstore always built)
     args << "-DWITH_botan_PLUGIN=#{build.with?("botan") ? "YES" : "NO"}"
     args << "-DWITH_gcrypt_PLUGIN=#{build.with?("libgcrypt") ? "YES" : "NO"}"
     args << "-DWITH_gnupg_PLUGIN=#{build.with?("gnupg") ? "YES" : "NO"}"

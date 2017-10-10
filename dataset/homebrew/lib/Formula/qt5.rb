@@ -9,30 +9,18 @@ class OracleHomeVarRequirement < Requirement
   end
 end
 
-# Patches for Qt5 must be at the very least submitted to Qt's Gerrit codereview
-# rather than their bug-report Jira. The latter is rarely reviewed by Qt.
 class Qt5 < Formula
   desc "Version 5 of the Qt framework"
   homepage "https://www.qt.io/"
   head "https://code.qt.io/qt/qt5.git", :branch => "5.5", :shallow => false
 
   stable do
-    # 5.5.0 has a compile-breaking pkg-config error when projects use that to find libs.
-    # https://bugreports.qt.io/browse/QTBUG-47162
-    # This is known to impact Wireshark & Poppler optional Qt5 usage in the core.
     url "https://download.qt.io/official_releases/qt/5.5/5.5.0/single/qt-everywhere-opensource-src-5.5.0.tar.xz"
     mirror "https://www.mirrorservice.org/sites/download.qt-project.org/official_releases/qt/5.5/5.5.0/single/qt-everywhere-opensource-src-5.5.0.tar.xz"
     sha256 "7ea2a16ecb8088e67db86b0835b887d5316121aeef9565d5d19be3d539a2c2af"
 
-    # Apple's 3.6.0svn based clang doesn't support -Winconsistent-missing-override
-    # https://bugreports.qt.io/browse/QTBUG-46833
-    # This is fixed in 5.5 branch and below patch should be removed
-    # when this formula is updated to 5.5.1
     patch :DATA
 
-    # Upstream commit to fix the fatal build error on OS X El Capitan.
-    # https://codereview.qt-project.org/#/c/121545/
-    # Should land in the 5.5.1 release.
     if MacOS.version >= :el_capitan
       patch do
         url "https://raw.githubusercontent.com/DomT4/scripts/2107043e8/Homebrew_Resources/Qt5/qt5_el_capitan.diff"
@@ -58,8 +46,6 @@ class Qt5 < Formula
   deprecated_option "developer" => "with-developer"
   deprecated_option "qtdbus" => "with-d-bus"
 
-  # Snow Leopard is untested and support has been removed in 5.4
-  # https://qt.gitorious.org/qt/qtbase/commit/5be81925d7be19dd0f1022c3cfaa9c88624b1f08
   depends_on :macos => :lion
   depends_on "pkg-config" => :build
   depends_on "d-bus" => :optional
@@ -117,18 +103,12 @@ class Qt5 < Formula
       system "make", "install_docs"
     end
 
-    # Some config scripts will only find Qt in a "Frameworks" folder
     frameworks.install_symlink Dir["#{lib}/*.framework"]
 
-    # The pkg-config files installed suggest that headers can be found in the
-    # `include` directory. Make this so by creating symlinks from `include` to
-    # the Frameworks' Headers folders.
     Pathname.glob("#{lib}/*.framework/Headers") do |path|
       include.install_symlink path => path.parent.basename(".framework")
     end
 
-    # configure saved PKG_CONFIG_LIBDIR set up by superenv; remove it
-    # see: https://github.com/Homebrew/homebrew/issues/27184
     inreplace prefix/"mkspecs/qconfig.pri", /\n\n# pkgconfig/, ""
     inreplace prefix/"mkspecs/qconfig.pri", /\nPKG_CONFIG_.*=.*$/, ""
 
@@ -153,8 +133,6 @@ class Qt5 < Formula
     EOS
 
     (testpath/"main.cpp").write <<-EOS.undent
-      #include <QCoreApplication>
-      #include <QDebug>
 
       int main(int argc, char *argv[])
       {
@@ -179,10 +157,5 @@ index 7ff1b67..060af29 100644
 +++ b/qtbase/src/corelib/global/qcompilerdetection.h
 @@ -155,7 +155,7 @@
  /* Clang also masquerades as GCC */
- #    if defined(__apple_build_version__)
- #      /* http://en.wikipedia.org/wiki/Xcode#Toolchain_Versions */
 -#      if __apple_build_version__ >= 6020049
 +#      if __apple_build_version__ >= 7000053
- #        define Q_CC_CLANG 306
- #      elif __apple_build_version__ >= 6000051
- #        define Q_CC_CLANG 305

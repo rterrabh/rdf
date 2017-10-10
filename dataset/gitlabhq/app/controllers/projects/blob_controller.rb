@@ -1,9 +1,7 @@
-# Controller for viewing a file's blame
 class Projects::BlobController < Projects::ApplicationController
   include ExtractsPath
   include ActionView::Helpers::SanitizeHelper
 
-  # Raised when given an invalid file path
   class InvalidPathError < StandardError; end
 
   before_action :require_non_empty_project, except: [:new, :create]
@@ -153,7 +151,6 @@ class Projects::BlobController < Projects::ApplicationController
   end
 
   def from_merge_request
-    # If blob edit was initiated from merge request page
     @from_merge_request ||= MergeRequest.find_by(id: params[:from_merge_request_id])
   end
 

@@ -20,7 +20,6 @@ class Virtuoso < Formula
     depends_on "libtool" => :build
   end
 
-  # If gawk isn't found, make fails deep into the process.
   depends_on "gawk" => :build
   depends_on "openssl"
 

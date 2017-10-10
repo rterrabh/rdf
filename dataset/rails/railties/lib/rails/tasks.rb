@@ -1,4 +1,3 @@
-# Load Rails Rakefile extensions
 %w(
   annotations
   documentation

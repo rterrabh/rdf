@@ -1,14 +1,3 @@
-#
-#   nop.rb -
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
-# :stopdoc:
 module IRB
   module ExtendCommand
     class Nop
@@ -30,9 +19,7 @@ module IRB
       end
 
       def execute(*opts)
-        #nop
       end
     end
   end
 end
-# :startdoc:

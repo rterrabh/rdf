@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/cutbuffer.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'

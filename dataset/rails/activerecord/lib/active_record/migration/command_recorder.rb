@@ -1,18 +1,5 @@
 module ActiveRecord
   class Migration
-    # <tt>ActiveRecord::Migration::CommandRecorder</tt> records commands done during
-    # a migration and knows how to reverse those commands. The CommandRecorder
-    # knows how to invert the following commands:
-    #
-    # * add_column
-    # * add_index
-    # * add_timestamps
-    # * create_table
-    # * create_join_table
-    # * remove_timestamps
-    # * rename_column
-    # * rename_index
-    # * rename_table
     class CommandRecorder
       include JoinTable
 
@@ -24,13 +11,6 @@ module ActiveRecord
         @reverting = false
       end
 
-      # While executing the given block, the recorded will be in reverting mode.
-      # All commands recorded will end up being recorded reverted
-      # and in reverse order.
-      # For example:
-      #
-      #   recorder.revert{ recorder.record(:rename_table, [:old, :new]) }
-      #   # same effect as recorder.record(:rename_table, [:new, :old])
       def revert
         @reverting = !@reverting
         previous = @commands
@@ -41,10 +21,6 @@ module ActiveRecord
         @reverting = !@reverting
       end
 
-      # record +command+. +command+ should be a method name and arguments.
-      # For example:
-      #
-      #   recorder.record(:method_name, [:arg1, :arg2])
       def record(*command, &block)
         if @reverting
           @commands << inverse_of(*command, &block)
@@ -53,17 +29,10 @@ module ActiveRecord
         end
       end
 
-      # Returns the inverse of the given command. For example:
-      #
-      #   recorder.inverse_of(:rename_table, [:old, :new])
-      #   # => [:rename_table, [:new, :old]]
-      #
-      # This method will raise an +IrreversibleMigration+ exception if it cannot
-      # invert the +command+.
       def inverse_of(command, args, &block)
         method = :"invert_#{command}"
         raise IrreversibleMigration unless respond_to?(method, true)
-        #nodyna <ID:send-145> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-768> <SD COMPLEX (change-prone variables)>
         send(method, args, &block)
       end
 
@@ -77,8 +46,8 @@ module ActiveRecord
         :drop_join_table, :drop_table, :execute_block, :enable_extension,
         :change_column, :execute, :remove_columns, :change_column_null,
         :add_foreign_key, :remove_foreign_key
-       # irreversible methods need to be here too
       ].each do |method|
+        #nodyna <class_eval-769> <not yet classified>
         class_eval <<-EOV, __FILE__, __LINE__ + 1
           def #{method}(*args, &block)          # def create_table(*args, &block)
             record(:"#{method}", args, &block)  #   record(:create_table, args, &block)
@@ -106,6 +75,7 @@ module ActiveRecord
           enable_extension:  :disable_extension
         }.each do |cmd, inv|
           [[inv, cmd], [cmd, inv]].uniq.each do |method, inverse|
+            #nodyna <class_eval-770> <not yet classified>
             class_eval <<-EOV, __FILE__, __LINE__ + 1
               def invert_#{method}(args, &block)    # def invert_create_table(args, &block)
                 [:#{inverse}, args, block]          #   [:drop_table, args, block]
@@ -185,10 +155,9 @@ module ActiveRecord
         [:remove_foreign_key, [from_table, options]]
       end
 
-      # Forwards any missing method call to the \target.
       def method_missing(method, *args, &block)
         if @delegate.respond_to?(method)
-          #nodyna <ID:send-146> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-771> <SD COMPLEX (change-prone variables)>
           @delegate.send(method, *args, &block)
         else
           super

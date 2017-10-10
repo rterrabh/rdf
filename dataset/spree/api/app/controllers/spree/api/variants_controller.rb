@@ -19,9 +19,6 @@ module Spree
         respond_with(@variant, status: 204)
       end
 
-      # The lazyloaded associations here are pretty much attached to which nodes
-      # we render on the view so we better update it any time a node is included
-      # or removed from the views.
       def index
         @variants = scope.includes({ option_values: :option_type }, :product, :default_price, :images, { stock_items: :stock_location })
           .ransack(params[:q]).result.page(params[:page]).per(params[:per_page])

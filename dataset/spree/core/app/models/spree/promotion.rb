@@ -61,18 +61,12 @@ module Spree
 
       payload[:promotion] = self
 
-      # Track results from actions to see if any action has been taken.
-      # Actions should return nil/false if no action has been taken.
-      # If an action returns true, then an action has been taken.
       results = actions.map do |action|
         action.perform(payload)
       end
-      # If an action has been taken, report back to whatever activated this promotion.
       action_taken = results.include?(true)
 
       if action_taken
-      # connect to the order
-      # create the join_table entry.
         self.orders << order
         self.save
       end
@@ -80,17 +74,12 @@ module Spree
       return action_taken
     end
 
-    # called anytime order.update! happens
     def eligible?(promotable)
       return false if expired? || usage_limit_exceeded?(promotable) || blacklisted?(promotable)
       !!eligible_rules(promotable, {})
     end
 
-    # eligible_rules returns an array of promotion rules where eligible? is true for the promotable
-    # if there are no such rules, an empty array is returned
-    # if the rules make this promotable ineligible, then nil is returned (i.e. this promotable is not eligible)
     def eligible_rules(promotable, options = {})
-      # Promotions without rules are eligible by default.
       return [] if rules.none?
       eligible = lambda { |r| r.eligible?(promotable, options) }
       specific_rules = rules.select { |rule| rule.applicable?(promotable) }
@@ -101,8 +90,6 @@ module Spree
       end]
 
       if match_all?
-        # If there are rules for this promotion, but no rules for this
-        # particular promotable, then the promotion is ineligible by default.
         unless rule_eligibility.values.all?
           @eligibility_errors = specific_rules.map(&:eligibility_errors).detect(&:present?)
           return nil
@@ -145,7 +132,7 @@ module Spree
         if rules.blank?
           true
         else
-          #nodyna <ID:send-94> <SD TRIVIAL (public methods)>
+          #nodyna <send-2500> <SD TRIVIAL (public methods)>
           rules.send(match_all? ? :all? : :any?) do |rule|
             rule.actionable? line_item
           end

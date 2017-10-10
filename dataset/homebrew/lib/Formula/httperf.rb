@@ -12,7 +12,6 @@ class Httperf < Formula
     sha1 "cc699648d2c48f2a9a8fa94da42831c3551e8475" => :mountain_lion
   end
 
-  # Upstream actually recommend using head over stable now.
   head do
     url "http://httperf.googlecode.com/svn/trunk/"
 
@@ -35,8 +34,6 @@ class Httperf < Formula
 
     if build.head?
       cd "httperf"
-      # Shipped permissions = Access to configure.ac denied.
-      # Probably no chance of this being fixed upstream.
       chmod 0755, "configure.ac"
       system "autoreconf", "-i"
     end

@@ -2,48 +2,11 @@ require 'active_support/core_ext/hash/keys'
 
 module ActionDispatch
   class Request < Rack::Request
-    # Access the contents of the flash. Use <tt>flash["notice"]</tt> to
-    # read a notice you put there or <tt>flash["notice"] = "hello"</tt>
-    # to put a new one.
     def flash
       @env[Flash::KEY] ||= Flash::FlashHash.from_session_value(session["flash"])
     end
   end
 
-  # The flash provides a way to pass temporary primitive-types (String, Array, Hash) between actions. Anything you place in the flash will be exposed
-  # to the very next action and then cleared out. This is a great way of doing notices and alerts, such as a create
-  # action that sets <tt>flash[:notice] = "Post successfully created"</tt> before redirecting to a display action that can
-  # then expose the flash to its template. Actually, that exposure is automatically done.
-  #
-  #   class PostsController < ActionController::Base
-  #     def create
-  #       # save post
-  #       flash[:notice] = "Post successfully created"
-  #       redirect_to @post
-  #     end
-  #
-  #     def show
-  #       # doesn't need to assign the flash notice to the template, that's done automatically
-  #     end
-  #   end
-  #
-  #   show.html.erb
-  #     <% if flash[:notice] %>
-  #       <div class="notice"><%= flash[:notice] %></div>
-  #     <% end %>
-  #
-  # Since the +notice+ and +alert+ keys are a common idiom, convenience accessors are available:
-  #
-  #   flash.alert = "You must be logged in"
-  #   flash.notice = "Post successfully created"
-  #
-  # This example places a string in the flash. And of course, you can put as many as you like at a time too. If you want to pass
-  # non-primitive types, you will have to handle that in your application. Example: To show messages with links, you will have to
-  # use sanitize helper.
-  #
-  # Just remember: They'll be gone by the time the next action has been performed.
-  #
-  # See docs on the FlashHash class for more details about the flash.
   class Flash
     KEY = 'action_dispatch.request.flash_hash'.freeze
 
@@ -65,12 +28,10 @@ module ActionDispatch
         @flash[k.to_s]
       end
 
-      # Convenience accessor for <tt>flash.now[:alert]=</tt>.
       def alert=(message)
         self[:alert] = message
       end
 
-      # Convenience accessor for <tt>flash.now[:notice]=</tt>.
       def notice=(message)
         self[:notice] = message
       end
@@ -82,6 +43,8 @@ module ActionDispatch
       def self.from_session_value(value) #:nodoc:
         flash = case value
                 when FlashHash # Rails 3.1, 3.2
+                  #nodyna <instance_variable_get-1235> <not yet classified>
+                  #nodyna <instance_variable_get-1236> <not yet classified>
                   new(value.instance_variable_get(:@flashes), value.instance_variable_get(:@used))
                 when Hash # Rails 4.0
                   new(value['flashes'], value['discard'])
@@ -92,9 +55,6 @@ module ActionDispatch
         flash.tap(&:sweep)
       end
       
-      # Builds a hash containing the discarded values and the hashes
-      # representing the flashes.
-      # If there are no values in @flashes, returns nil.
       def to_session_value #:nodoc:
         return nil if empty?
         {'discard' => @discard.to_a, 'flashes' => @flashes}
@@ -170,72 +130,39 @@ module ActionDispatch
         self
       end
 
-      # Sets a flash that will not be available to the next action, only to the current.
-      #
-      #     flash.now[:message] = "Hello current action"
-      #
-      # This method enables you to use the flash as a central messaging system in your app.
-      # When you need to pass an object to the next action, you use the standard flash assign (<tt>[]=</tt>).
-      # When you need to pass an object to the current action, you use <tt>now</tt>, and your object will
-      # vanish when the current action is done.
-      #
-      # Entries set via <tt>now</tt> are accessed the same way as standard entries: <tt>flash['my-key']</tt>.
-      #
-      # Also, brings two convenience accessors:
-      #
-      #   flash.now.alert = "Beware now!"
-      #   # Equivalent to flash.now[:alert] = "Beware now!"
-      #
-      #   flash.now.notice = "Good luck now!"
-      #   # Equivalent to flash.now[:notice] = "Good luck now!"
       def now
         @now ||= FlashNow.new(self)
       end
 
-      # Keeps either the entire current flash or a specific flash entry available for the next action:
-      #
-      #    flash.keep            # keeps the entire flash
-      #    flash.keep(:notice)   # keeps only the "notice" entry, the rest of the flash is discarded
       def keep(k = nil)
         k = k.to_s if k
         @discard.subtract Array(k || keys)
         k ? self[k] : self
       end
 
-      # Marks the entire flash or a single flash entry to be discarded by the end of the current action:
-      #
-      #     flash.discard              # discard the entire flash at the end of the current action
-      #     flash.discard(:warning)    # discard only the "warning" entry at the end of the current action
       def discard(k = nil)
         k = k.to_s if k
         @discard.merge Array(k || keys)
         k ? self[k] : self
       end
 
-      # Mark for removal entries that were kept, and delete unkept ones.
-      #
-      # This method is called automatically by filters, so you generally don't need to care about it.
       def sweep #:nodoc:
         @discard.each { |k| @flashes.delete k }
         @discard.replace @flashes.keys
       end
 
-      # Convenience accessor for <tt>flash[:alert]</tt>.
       def alert
         self[:alert]
       end
 
-      # Convenience accessor for <tt>flash[:alert]=</tt>.
       def alert=(message)
         self[:alert] = message
       end
 
-      # Convenience accessor for <tt>flash[:notice]</tt>.
       def notice
         self[:notice]
       end
 
-      # Convenience accessor for <tt>flash[:notice]=</tt>.
       def notice=(message)
         self[:notice] = message
       end

@@ -24,8 +24,6 @@ class GstPluginsUgly < Formula
   depends_on "gettext"
   depends_on "gst-plugins-base"
 
-  # The set of optional dependencies is based on the intersection of
-  # gst-plugins-ugly-0.10.17/REQUIREMENTS and Homebrew formulae
   depends_on "dirac" => :optional
   depends_on "mad" => :optional
   depends_on "jpeg" => :optional
@@ -47,7 +45,6 @@ class GstPluginsUgly < Formula
   depends_on "libmms" => :optional
   depends_on "x264" => :optional
   depends_on "opencore-amr" => :optional
-  # Does not work with libcdio 0.9
 
   def install
     args = %W[
@@ -63,8 +60,6 @@ class GstPluginsUgly < Formula
     end
 
     if build.with? "opencore-amr"
-      # Fixes build error, missing includes.
-      # https://github.com/Homebrew/homebrew/issues/14078
       nbcflags = `pkg-config --cflags opencore-amrnb`.chomp
       wbcflags = `pkg-config --cflags opencore-amrwb`.chomp
       ENV["AMRNB_CFLAGS"] = nbcflags + "-I#{HOMEBREW_PREFIX}/include/opencore-amrnb"

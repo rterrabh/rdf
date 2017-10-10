@@ -8,7 +8,6 @@ describe Spree::Promotion::Actions::CreateAdjustment, type: :model do
 
   it_behaves_like 'an adjustment source'
 
-  # From promotion spec:
   context "#perform" do
     before do
       action.calculator = Spree::Calculator::FlatRate.new(preferred_amount: 10)
@@ -16,7 +15,6 @@ describe Spree::Promotion::Actions::CreateAdjustment, type: :model do
       allow(action).to receive_messages(promotion: promotion)
     end
 
-    # Regression test for #3966
     it "does not apply an adjustment if the amount is 0" do
       action.calculator.preferred_amount = 0
       action.perform(payload)

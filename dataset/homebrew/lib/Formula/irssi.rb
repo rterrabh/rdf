@@ -31,9 +31,6 @@ class Irssi < Formula
 
   def install
     if build.stable?
-      # Make paths in man page Homebrew-specific
-      # (https://github.com/irssi/irssi/issues/251); can be removed in
-      # next stable release
       inreplace "docs/irssi.1" do |s|
         s.gsub! "/usr/share", "#{HOMEBREW_PREFIX}/share"
         s.gsub! "/etc/irssi.conf", "#{HOMEBREW_PREFIX}/etc/irssi.conf"
@@ -59,8 +56,6 @@ class Irssi < Formula
       args << "--with-perl=no"
     end
 
-    # confuses Perl library path configuration
-    # https://github.com/Homebrew/homebrew/issues/34685
     ENV.delete "PERL_MM_OPT"
 
     args << "--disable-ssl" if build.without? "openssl"
@@ -70,7 +65,6 @@ class Irssi < Formula
     else
       system "./configure", *args
     end
-    # "make" and "make install" must be done separately on some systems
     system "make"
     system "make", "install"
   end

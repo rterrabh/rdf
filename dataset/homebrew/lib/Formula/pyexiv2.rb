@@ -10,18 +10,15 @@ class Pyexiv2 < Formula
   depends_on "boost"
   depends_on "boost-python"
 
-  # Patch to use Framework Python
   patch :DATA
 
   def install
-    # this build script ignores CPPFLAGS, but it honors CXXFLAGS
     ENV.append "CXXFLAGS", ENV.cppflags
     ENV.append "CXXFLAGS", "-I#{Formula["boost"].include}"
     ENV.append "CXXFLAGS", "-I#{Formula["exiv2"].include}"
 
     scons "BOOSTLIB=boost_python-mt"
 
-    # let's install manually
     mv "build/libexiv2python.dylib", "build/libexiv2python.so"
     (lib+"python2.7/site-packages").install "build/libexiv2python.so", "src/pyexiv2"
   end
@@ -40,6 +37,5 @@ index f4b3e8c..748cad0 100644
 +if env['PLATFORM'] == 'darwin':
 +	env['FRAMEWORKS'] += ['Python']
 +
- # Build shared library libpyexiv2
  cpp_sources = ['exiv2wrapper.cpp', 'exiv2wrapper_python.cpp']
  libpyexiv2 = env.SharedLibrary('exiv2python', cpp_sources)

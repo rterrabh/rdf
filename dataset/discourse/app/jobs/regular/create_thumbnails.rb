@@ -9,7 +9,6 @@ module Jobs
       raise Discourse::InvalidParameters.new(:type) if type.blank?
       raise Discourse::InvalidParameters.new(:upload_id) if upload_id.blank?
 
-      # only need to generate thumbnails for avatars
       return if type != "avatar"
 
       upload = Upload.find(upload_id)
@@ -17,7 +16,7 @@ module Jobs
       user_id = args[:user_id] || upload.user_id
       user = User.find(user_id)
 
-      #nodyna <ID:send-158> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-412> <SD COMPLEX (change-prone variables)>
       self.send("create_thumbnails_for_#{type}", upload, user)
     end
 

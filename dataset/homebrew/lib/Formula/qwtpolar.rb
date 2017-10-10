@@ -10,8 +10,6 @@ class Qwtpolar < Formula
   depends_on "qt"
   depends_on "qwt"
 
-  # Update designer plugin linking back to qwtpolar framework/lib after install
-  # See: https://sourceforge.net/p/qwtpolar/patches/2/
   patch :DATA
 
   def install
@@ -19,7 +17,6 @@ class Qwtpolar < Formula
       doc.install "html"
       man3.install Dir["man/man3/{q,Q}wt*"]
     end
-    # Remove leftover doxygen files, so they don't get installed
     rm_r "doc"
 
     libexec.install Dir["examples/*"] if build.with? "examples"
@@ -28,12 +25,10 @@ class Qwtpolar < Formula
       s.gsub! /^(\s*)QWT_POLAR_INSTALL_PREFIX\s*=\s*(.*)$/,
               "\\1QWT_POLAR_INSTALL_PREFIX=#{prefix}"
       s.sub! /\+(=\s*QwtPolarDesigner)/, "-\\1" if build.without? "plugin"
-      # Don't build examples now, since linking flawed until qwtpolar installed
       s.sub! /\+(=\s*QwtPolarExamples)/, "-\\1"
     end
 
     args = %W[-config release -spec]
-    # On Mavericks we want to target libc++, this requires a unsupported/macx-clang-libc++ flag
     if ENV.compiler == :clang && MacOS.version >= :mavericks
       args << "unsupported/macx-clang-libc++"
     else
@@ -45,7 +40,6 @@ class Qwtpolar < Formula
     system "make"
     system "make", "install"
 
-    # symlink Qt Designer plugin (note: not removed on qwtpolar formula uninstall)
     ln_sf prefix/"plugins/designer/libqwt_polar_designer_plugin.dylib",
           Formula["qt"].opt_prefix/"plugins/designer/" if build.with? "plugin"
   end

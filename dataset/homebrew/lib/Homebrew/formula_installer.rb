@@ -23,8 +23,8 @@ class FormulaInstaller
     private(*names)
     names.each do |name|
       predicate = "#{name}?"
-      #nodyna <ID:send-26> <SD MODERATE (change-prone variables)>
-      #nodyna <ID:define_method-11> <DM MODERATE (array)>
+      #nodyna <send-662> <SD MODERATE (change-prone variables)>
+      #nodyna <define_method-663> <DM MODERATE (array)>
       define_method(predicate) { !!send(name) }
       private(predicate)
     end
@@ -58,9 +58,6 @@ class FormulaInstaller
     @pour_failed   = false
   end
 
-  # When no build tools are available and build flags are passed through ARGV,
-  # it's necessary to interrupt the user before any sort of installation
-  # can proceed. Only invoked when the user has no developer tools.
   def self.prevent_build_flags
     build_flags = ARGV.collect_build_flags
 
@@ -145,13 +142,8 @@ class FormulaInstaller
   end
 
   def install
-    # not in initialize so upgrade can unlink the active keg before calling this
-    # function but after instantiating this class so that it can avoid having to
-    # relink the active keg if possible (because it is slow).
     if formula.linked_keg.directory?
-      # some other version is already installed *and* linked
       raise CannotInstallFormulaError, <<-EOS.undent
-        #{formula.name}-#{formula.linked_keg.resolved_path.basename} already installed
         To install this version, first `brew unlink #{formula.name}'
       EOS
     end
@@ -224,9 +216,6 @@ class FormulaInstaller
       begin
         f = Formulary.factory(c.name)
       rescue TapFormulaUnavailableError
-        # If the formula name is in full-qualified name. Let's silently
-        # ignore it as we don't care about things used in taps that aren't
-        # currently tapped.
         false
       else
         f.linked_keg.exist? && f.opt_prefix.exist?
@@ -236,8 +225,6 @@ class FormulaInstaller
     raise FormulaConflictError.new(formula, conflicts) unless conflicts.empty?
   end
 
-  # Compute and collect the dependencies needed by the formula currently
-  # being installed.
   def compute_dependencies
     req_map, req_deps = expand_requirements
     check_requirements(req_map)
@@ -246,9 +233,6 @@ class FormulaInstaller
     deps
   end
 
-  # Check that each dependency in deps has a bottle available, terminating
-  # abnormally with a BuildToolsError if one or more don't.
-  # Only invoked when the user has no developer tools.
   def check_dependencies_bottled(deps)
     unbottled = deps.select do |dep, _|
       formula = dep.to_formula
@@ -361,10 +345,6 @@ class FormulaInstaller
     @show_header = true unless deps.empty?
   end
 
-  # Installs the relocation tools (as provided by the cctools formula) as a hard
-  # dependency for every formula installed from a bottle when the user has no
-  # developer tools. Invoked unless the formula explicitly sets
-  # :any_skip_relocation in its bottle DSL.
   def install_relocation_tools
     cctools = CctoolsRequirement.new
     dependency = cctools.to_dependency
@@ -528,16 +508,11 @@ class FormulaInstaller
 
     @start_time = Time.now
 
-    # 1. formulae can modify ENV, so we must ensure that each
-    #    installation has a pristine ENV when it starts, forking now is
-    #    the easiest way to do this
     args = %W[
       nice #{RUBY_PATH}
       -W0
       -I #{HOMEBREW_LOAD_PATH}
       --
-      #{HOMEBREW_LIBRARY_PATH}/build.rb
-      #{formula.path}
     ].concat(build_argv)
 
     if Sandbox.available? && ARGV.sandbox?
@@ -549,7 +524,6 @@ class FormulaInstaller
     end
 
     Utils.safe_fork do
-      # Invalidate the current sudo timestamp in case a build script calls sudo
       system "/usr/bin/sudo", "-k"
 
       if Sandbox.available? && ARGV.sandbox? && !Sandbox.auto_disable?
@@ -570,7 +544,6 @@ class FormulaInstaller
 
   rescue Exception
     ignore_interrupts do
-      # any exceptions must leave us with nothing installed
       formula.prefix.rmtree if formula.prefix.directory?
       formula.rack.rmdir_if_possible
     end

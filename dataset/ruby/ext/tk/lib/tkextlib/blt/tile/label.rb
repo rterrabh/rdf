@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/tile/label.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/label'

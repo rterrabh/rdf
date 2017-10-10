@@ -1,7 +1,5 @@
 require "base64"
 
-# This class is used to build image URL to
-# check if it is a new version for update
 class VersionCheck
   def data
     { version: Gitlab::VERSION }

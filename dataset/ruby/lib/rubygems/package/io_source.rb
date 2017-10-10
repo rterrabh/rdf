@@ -1,10 +1,3 @@
-##
-# Supports reading and writing gems from/to a generic IO object.  This is
-# useful for other applications built on top of rubygems, such as
-# rubygems.org.
-#
-# This is a private class, do not depend on it directly. Instead, pass an IO
-# object to `Gem::Package.new`.
 
 class Gem::Package::IOSource < Gem::Package::Source # :nodoc: all
 

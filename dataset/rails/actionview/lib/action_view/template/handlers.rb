@@ -1,5 +1,4 @@
 module ActionView #:nodoc:
-  # = Action View Template Handlers
   class Template
     module Handlers #:nodoc:
       autoload :ERB, 'action_view/template/handlers/erb'
@@ -20,10 +19,6 @@ module ActionView #:nodoc:
         @@template_extensions ||= @@template_handlers.keys
       end
 
-      # Register an object that knows how to handle template files with the given
-      # extensions. This can be used to implement new template types.
-      # The handler must respond to +:call+, which will be passed the template
-      # and should return the rendered template as a String.
       def register_template_handler(*extensions, handler)
         raise(ArgumentError, "Extension is required") if extensions.empty?
         extensions.each do |extension|
@@ -32,7 +27,6 @@ module ActionView #:nodoc:
         @@template_extensions = nil
       end
 
-      # Opposite to register_template_handler.
       def unregister_template_handler(*extensions)
         extensions.each do |extension|
           handler = @@template_handlers.delete extension.to_sym

@@ -1,22 +1,3 @@
-# == Schema Information
-#
-# Table name: services
-#
-#  id                    :integer          not null, primary key
-#  type                  :string(255)
-#  title                 :string(255)
-#  project_id            :integer
-#  created_at            :datetime
-#  updated_at            :datetime
-#  active                :boolean          default(FALSE), not null
-#  properties            :text
-#  template              :boolean          default(FALSE)
-#  push_events           :boolean          default(TRUE)
-#  issues_events         :boolean          default(TRUE)
-#  merge_requests_events :boolean          default(TRUE)
-#  tag_push_events       :boolean          default(TRUE)
-#  note_events           :boolean          default(TRUE), not null
-#
 
 class BambooService < CiService
   include HTTParty
@@ -97,10 +78,8 @@ class BambooService < CiService
     build_info(sha) if @response.nil? || !@response.code
 
     if @response.code != 200 || @response['results']['results']['size'] == '0'
-      # If actual build link can't be determined, send user to build summary page.
       "#{bamboo_url}/browse/#{build_key}"
     else
-      # If actual build link is available, go to build result page.
       result_key = @response['results']['results']['result']['planResultKey']['key']
       "#{bamboo_url}/browse/#{result_key}"
     end
@@ -130,7 +109,6 @@ class BambooService < CiService
   def execute(data)
     return unless supported_events.include?(data[:object_kind])
 
-    # Bamboo requires a GET and does not take any data.
     self.class.get("#{bamboo_url}/updateAndBuild.action?buildKey=#{build_key}",
                    verify: false)
   end

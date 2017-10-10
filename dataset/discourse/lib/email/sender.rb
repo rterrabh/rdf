@@ -1,11 +1,3 @@
-#
-# A helper class to send an email. It will also handle a nil message, which it considers
-# to be "do nothing". This is because some Mailers will decide not to do work for some
-# reason. For example, emailing a user too frequently. A nil to address is also considered
-# "do nothing"
-#
-# It also adds an HTML part for the plain text body
-#
 require_dependency 'email/renderer'
 require 'uri'
 require 'net/smtp'
@@ -21,6 +13,7 @@ module Email
       @user = user
     end
 
+    #nodyna <send-357> <not yet classified>
     def send
       return if SiteSetting.disable_emails
       return skip(I18n.t('email_log.message_blank')) if @message.blank?
@@ -49,16 +42,12 @@ module Email
 
       @message.parts[0].body = @message.parts[0].body.to_s.gsub(/\[\/?email-indent\]/, '')
 
-      # Fix relative (ie upload) HTML links in markdown which do not work well in plain text emails.
-      # These are the links we add when a user uploads a file or image.
-      # Ideally we would parse general markdown into plain text, but that is almost an intractable problem.
       url_prefix = Discourse.base_url
       @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<a class="attachment" href="(\/uploads\/default\/[^"]+)">([^<]*)<\/a>/, '[\2]('+url_prefix+'\1)')
       @message.parts[0].body = @message.parts[0].body.to_s.gsub(/<img src="(\/uploads\/default\/[^"]+)"([^>]*)>/, '![]('+url_prefix+'\1)')
 
       @message.text_part.content_type = 'text/plain; charset=UTF-8'
 
-      # Set up the email log
       email_log = EmailLog.new(email_type: @email_type,
                                to_address: to_address,
                                user_id: @user.try(:id))
@@ -70,7 +59,6 @@ module Email
       post_id = header_value('X-Discourse-Post-Id')
       reply_key = header_value('X-Discourse-Reply-Key')
 
-      # always set a default Message ID from the host
       uuid = SecureRandom.uuid
       @message.header['Message-ID'] = "<#{uuid}@#{host}>"
 
@@ -85,11 +73,9 @@ module Email
 
         topic = Topic.where(id: topic_id).first
 
-        # http://www.ietf.org/rfc/rfc2919.txt
         if topic && topic.category && !topic.category.uncategorized?
           list_id = "<#{topic.category.name.downcase}.#{host}>"
 
-          # subcategory case
           if !topic.category.parent_category_id.nil?
             parent_category_name = Category.find_by(id: topic.category.parent_category_id).name
             list_id = "<#{topic.category.name.downcase}.#{parent_category_name.downcase}.#{host}>"
@@ -101,7 +87,6 @@ module Email
 
         @message.header['List-Archive'] = topic.url if topic
 
-        # http://www.ietf.org/rfc/rfc3834.txt
         @message.header['Precedence'] = 'list'
       end
 
@@ -116,12 +101,10 @@ module Email
       email_log.post_id = post_id if post_id.present?
       email_log.reply_key = reply_key if reply_key.present?
 
-      # Remove headers we don't need anymore
       @message.header['X-Discourse-Topic-Id'] = nil if topic_id.present?
       @message.header['X-Discourse-Post-Id'] = nil if post_id.present?
       @message.header['X-Discourse-Reply-Key'] = nil if reply_key.present?
 
-      # Suppress images from short emails
       if SiteSetting.strip_images_from_short_emails && @message.html_part.body.to_s.bytesize <= SiteSetting.short_email_length && @message.html_part.body =~ /<img[^>]+>/
         style = Email::Styles.new(@message.html_part.body.to_s)
         @message.html_part.body = style.strip_avatars_and_emojis
@@ -133,7 +116,6 @@ module Email
         return skip(e.message)
       end
 
-      # Save and return the email log
       email_log.save!
       email_log
     end

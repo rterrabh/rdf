@@ -1,73 +1,6 @@
 require 'active_support/core_ext/object/deep_dup'
 
 module ActiveRecord
-  # Declare an enum attribute where the values map to integers in the database,
-  # but can be queried by name. Example:
-  #
-  #   class Conversation < ActiveRecord::Base
-  #     enum status: [ :active, :archived ]
-  #   end
-  #
-  #   # conversation.update! status: 0
-  #   conversation.active!
-  #   conversation.active? # => true
-  #   conversation.status  # => "active"
-  #
-  #   # conversation.update! status: 1
-  #   conversation.archived!
-  #   conversation.archived? # => true
-  #   conversation.status    # => "archived"
-  #
-  #   # conversation.update! status: 1
-  #   conversation.status = "archived"
-  #
-  #   # conversation.update! status: nil
-  #   conversation.status = nil
-  #   conversation.status.nil? # => true
-  #   conversation.status      # => nil
-  #
-  # Scopes based on the allowed values of the enum field will be provided
-  # as well. With the above example:
-  #
-  #   Conversation.active
-  #   Conversation.archived
-  #
-  # You can set the default value from the database declaration, like:
-  #
-  #   create_table :conversations do |t|
-  #     t.column :status, :integer, default: 0
-  #   end
-  #
-  # Good practice is to let the first declared status be the default.
-  #
-  # Finally, it's also possible to explicitly map the relation between attribute and
-  # database integer with a +Hash+:
-  #
-  #   class Conversation < ActiveRecord::Base
-  #     enum status: { active: 0, archived: 1 }
-  #   end
-  #
-  # Note that when an +Array+ is used, the implicit mapping from the values to database
-  # integers is derived from the order the values appear in the array. In the example,
-  # <tt>:active</tt> is mapped to +0+ as it's the first element, and <tt>:archived</tt>
-  # is mapped to +1+. In general, the +i+-th element is mapped to <tt>i-1</tt> in the
-  # database.
-  #
-  # Therefore, once a value is added to the enum array, its position in the array must
-  # be maintained, and new values should only be added to the end of the array. To
-  # remove unused values, the explicit +Hash+ syntax should be used.
-  #
-  # In rare circumstances you might need to access the mapping directly.
-  # The mappings are exposed through a class method with the pluralized attribute
-  # name:
-  #
-  #   Conversation.statuses # => { "active" => 0, "archived" => 1 }
-  #
-  # Use that class method when you need to know the ordinal value of an enum:
-  #
-  #   Conversation.where("status <> ?", Conversation.statuses[:archived])
-  #
-  # Where conditions on an enum attribute must use the ordinal value of an enum.
   module Enum
     def self.extended(base) # :nodoc:
       base.class_attribute(:defined_enums)
@@ -82,64 +15,54 @@ module ActiveRecord
     def enum(definitions)
       klass = self
       definitions.each do |name, values|
-        # statuses = { }
         enum_values = ActiveSupport::HashWithIndifferentAccess.new
         name        = name.to_sym
 
-        # def self.statuses statuses end
         detect_enum_conflict!(name, name.to_s.pluralize, true)
-        #nodyna <ID:send-186> <SD COMPLEX (private methods)>
-        #nodyna <ID:define_method-25> <DM COMPLEX (events)>
+        #nodyna <send-779> <SD COMPLEX (private methods)>
+        #nodyna <define_method-780> <DM COMPLEX (events)>
         klass.singleton_class.send(:define_method, name.to_s.pluralize) { enum_values }
 
+        #nodyna <module_eval-781> <not yet classified>
         _enum_methods_module.module_eval do
-          # def status=(value) self[:status] = statuses[value] end
-          #nodyna <ID:send-187> <SD EASY (private methods)>
+          #nodyna <send-782> <SD EASY (private methods)>
           klass.send(:detect_enum_conflict!, name, "#{name}=")
-          #nodyna <ID:define_method-26> <DM COMPLEX (events)>
+          #nodyna <define_method-783> <DM COMPLEX (events)>
           define_method("#{name}=") { |value|
             if enum_values.has_key?(value) || value.blank?
               self[name] = enum_values[value]
             elsif enum_values.has_value?(value)
-              # Assigning a value directly is not a end-user feature, hence it's not documented.
-              # This is used internally to make building objects from the generated scopes work
-              # as expected, i.e. +Conversation.archived.build.archived?+ should be true.
               self[name] = value
             else
               raise ArgumentError, "'#{value}' is not a valid #{name}"
             end
           }
 
-          # def status() statuses.key self[:status] end
-          #nodyna <ID:send-188> <SD EASY (private methods)>
+          #nodyna <send-784> <SD EASY (private methods)>
           klass.send(:detect_enum_conflict!, name, name)
-          #nodyna <ID:define_method-27> <DM COMPLEX (events)>
+          #nodyna <define_method-785> <DM COMPLEX (events)>
           define_method(name) { enum_values.key self[name] }
 
-          # def status_before_type_cast() statuses.key self[:status] end
-          #nodyna <ID:send-189> <SD EASY (private methods)>
+          #nodyna <send-786> <SD EASY (private methods)>
           klass.send(:detect_enum_conflict!, name, "#{name}_before_type_cast")
-          #nodyna <ID:define_method-28> <DM COMPLEX (events)>
+          #nodyna <define_method-787> <DM COMPLEX (events)>
           define_method("#{name}_before_type_cast") { enum_values.key self[name] }
 
           pairs = values.respond_to?(:each_pair) ? values.each_pair : values.each_with_index
           pairs.each do |value, i|
             enum_values[value] = i
 
-            # def active?() status == 0 end
-            #nodyna <ID:send-190> <SD EASY (private methods)>
+            #nodyna <send-788> <SD EASY (private methods)>
             klass.send(:detect_enum_conflict!, name, "#{value}?")
-            #nodyna <ID:define_method-29> <DM COMPLEX (events)>
+            #nodyna <define_method-789> <DM COMPLEX (events)>
             define_method("#{value}?") { self[name] == i }
 
-            # def active!() update! status: :active end
-            #nodyna <ID:send-191> <SD EASY (private methods)>
+            #nodyna <send-790> <SD EASY (private methods)>
             klass.send(:detect_enum_conflict!, name, "#{value}!")
-            #nodyna <ID:define_method-30> <DM COMPLEX (events)>
+            #nodyna <define_method-791> <DM COMPLEX (events)>
             define_method("#{value}!") { update! name => value }
 
-            # scope :active, -> { where status: 0 }
-            #nodyna <ID:send-192> <SD EASY (private methods)>
+            #nodyna <send-792> <SD EASY (private methods)>
             klass.send(:detect_enum_conflict!, name, value, true)
             klass.scope value, -> { klass.where name => i }
           end

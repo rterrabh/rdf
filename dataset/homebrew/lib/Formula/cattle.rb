@@ -11,7 +11,6 @@ class Cattle < Formula
     sha256 "798aa25810d5dbfa2526cf0edf9117798b311c6ae6ce42b3a05c0bc90d087125" => :mountain_lion
   end
 
-  # https://github.com/andreabolognani/cattle/issues/2
   patch do
     url "https://github.com/andreabolognani/cattle/pull/3.diff"
     sha256 "876802fd965050d95e9cd7836b71a3cac5cd2508bf7f45b17192803a6fe19c17"

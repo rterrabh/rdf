@@ -19,7 +19,6 @@ module Homebrew
       exit 2
     end
 
-    # Does the target version exist?
     unless (rack+version).directory?
       onoe "#{name} does not have a version \"#{version}\" in the Cellar."
 
@@ -29,7 +28,6 @@ module Homebrew
       exit 3
     end
 
-    # Unlink all existing versions
     rack.subdirs.each do |v|
       keg = Keg.new(v)
       puts "Cleaning #{keg}"
@@ -38,7 +36,6 @@ module Homebrew
 
     keg = Keg.new(rack+version)
 
-    # Link new version, if not keg-only
     if keg_only?(rack)
       keg.optlink
       puts "Opt link created for #{keg}"

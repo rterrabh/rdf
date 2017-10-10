@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class RegistrationsController < Devise::RegistrationsController
   before_action :check_registrations_open_or_valid_invite!, :check_valid_invite!

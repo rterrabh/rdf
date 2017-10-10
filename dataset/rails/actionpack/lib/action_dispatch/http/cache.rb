@@ -34,9 +34,6 @@ module ActionDispatch
           end
         end
 
-        # Check response freshness (Last-Modified and ETag) against request
-        # If-Modified-Since and If-None-Match conditions. If both headers are
-        # supplied, both must match, or the request is not considered fresh.
         def fresh?(response)
           last_modified = if_modified_since
           etag          = if_none_match

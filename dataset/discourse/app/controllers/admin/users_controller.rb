@@ -145,7 +145,7 @@ class Admin::UsersController < Admin::AdminController
     level = params[:level].to_i
 
 
-    #nodyna <ID:send-96> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-449> <SD COMPLEX (change-prone variables)>
     if !@user.trust_level_locked && [0,1,2].include?(level) && Promotion.send("tl#{level+1}_met?", @user)
       @user.trust_level_locked = true
       @user.save
@@ -266,7 +266,6 @@ class Admin::UsersController < Admin::AdminController
     params.require(:ip)
     ip = params[:ip]
 
-    # should we cache results in redis?
     location = Excon.get("http://ipinfo.io/#{ip}/json", read_timeout: 30, connect_timeout: 30).body rescue nil
 
     render json: location

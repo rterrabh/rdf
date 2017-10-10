@@ -1,7 +1,3 @@
-#
-#               tk/canvas.rb - Tk canvas classes
-#                       by Yukihiro Matsumoto <matz@caelum.co.jp>
-#
 require 'tk'
 require 'tk/canvastag'
 require 'tk/itemconfig'
@@ -11,7 +7,6 @@ module TkCanvasItemConfig
   include TkItemConfigMethod
 
   def __item_strval_optkeys(id)
-    # maybe need to override
     super(id) + [
       'fill', 'activefill', 'disabledfill',
       'outline', 'activeoutline', 'disabledoutline'
@@ -54,14 +49,6 @@ class Tk::Canvas<TkWindow
     TkcItem::CItemID_TBL.delete(@path)
   end
 
-  #def create_self(keys)
-  #  if keys and keys != None
-  #    tk_call_without_enc('canvas', @path, *hash_kv(keys, true))
-  #  else
-  #    tk_call_without_enc('canvas', @path)
-  #  end
-  #end
-  #private :create_self
 
   def __numval_optkeys
     super() + ['closeenough']
@@ -83,10 +70,8 @@ class Tk::Canvas<TkWindow
   private :tagid
 
 
-  # create a canvas item without creating a TkcItem object
   def create(type, *args)
     if type.kind_of?(Class) && type < TkcItem
-      # do nothing
     elsif TkcItem.type2class(type.to_s)
       type = TkcItem.type2class(type.to_s)
     else
@@ -130,12 +115,7 @@ class Tk::Canvas<TkWindow
                              *tags.collect{|t| tagid(t)}))
   end
 
-  #def itembind(tag, context, cmd=Proc.new, *args)
-  #  _bind([path, "bind", tagid(tag)], context, cmd, *args)
-  #  self
-  #end
   def itembind(tag, context, *args)
-    # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -145,12 +125,7 @@ class Tk::Canvas<TkWindow
     self
   end
 
-  #def itembind_append(tag, context, cmd=Proc.new, *args)
-  #  _bind_append([path, "bind", tagid(tag)], context, cmd, *args)
-  #  self
-  #end
   def itembind_append(tag, context, *args)
-    # if args[0].kind_of?(Proc) || args[0].kind_of?(Method)
     if TkComm._callback_entry?(args[0]) || !block_given?
       cmd = args.shift
     else
@@ -170,11 +145,9 @@ class Tk::Canvas<TkWindow
   end
 
   def canvasx(screen_x, *args)
-    #tk_tcl2ruby(tk_send_without_enc('canvasx', screen_x, *args))
     number(tk_send_without_enc('canvasx', screen_x, *args))
   end
   def canvasy(screen_y, *args)
-    #tk_tcl2ruby(tk_send_without_enc('canvasy', screen_y, *args))
     number(tk_send_without_enc('canvasy', screen_y, *args))
   end
   alias canvas_x canvasx
@@ -303,13 +276,11 @@ class Tk::Canvas<TkWindow
     when 'text', 'label', 'show', 'data', 'file', 'maskdata', 'maskfile'
       _fromUTF8(tk_send_without_enc('itemcget', tagid(tagOrId), "-#{option}"))
     when 'font', 'kanjifont'
-      #fnt = tk_tcl2ruby(tk_send('itemcget', tagid(tagOrId), "-#{option}"))
       fnt = tk_tcl2ruby(_fromUTF8(tk_send_with_enc('itemcget', tagid(tagOrId), '-font')))
       unless fnt.kind_of?(TkFont)
         fnt = tagfontobj(tagid(tagOrId), fnt)
       end
       if option.to_s == 'kanjifont' && JAPANIZED_TK && TK_VERSION =~ /^4\.*/
-        # obsolete; just for compatibility
         fnt.kanji_font
       else
         fnt
@@ -353,16 +324,6 @@ class Tk::Canvas<TkWindow
     end
     self
   end
-#  def itemconfigure(tagOrId, key, value=None)
-#    if key.kind_of? Hash
-#      tk_send 'itemconfigure', tagid(tagOrId), *hash_kv(key)
-#    else
-#      tk_send 'itemconfigure', tagid(tagOrId), "-#{key}", value
-#    end
-#  end
-#  def itemconfigure(tagOrId, keys)
-#    tk_send 'itemconfigure', tagid(tagOrId), *hash_kv(keys)
-#  end
 
   def itemconfiginfo(tagOrId, key=nil)
     if TkComm::GET_CONFIGINFO_AS_ARRAY
@@ -544,7 +505,6 @@ class Tk::Canvas<TkWindow
   end
 
   def moveto(tag, x, y)
-    # Tcl/Tk 8.6 or later
     tk_send_without_enc('moveto', tagid(tag), x, y)
     self
   end
@@ -564,7 +524,6 @@ class Tk::Canvas<TkWindow
   end
 
   def rchars(tag, first, last, str_or_coords)
-    # Tcl/Tk 8.6 or later
     str_or_coords = str_or_coords.flatten if str_or_coords.kinad_of? Array
     tk_send_without_enc('rchars', tagid(tag), first, last, str_or_coords)
     self
@@ -617,15 +576,15 @@ class Tk::Canvas<TkWindow
     typename = tk_send('type', id)
     unless type = TkcItem.type2class(typename)
       (itemclass = typename.dup)[0,1] = typename[0,1].upcase
-      #nodyna <ID:const_set-13> <CS COMPLEX (change-prone variable)>
+      #nodyna <const_set-1783> <CS COMPLEX (change-prone variable)>
       type = TkcItem.const_set(itemclass, Class.new(TkcItem))
-      #nodyna <ID:const_set-14> <CS TRIVIAL (static values)>
+      #nodyna <const_set-1784> <CS TRIVIAL (static values)>
       type.const_set("CItemTypeName", typename.freeze)
       TkcItem::CItemTypeToClass[typename] = type
     end
 
     canvas = self
-    #nodyna <ID:instance_eval-31> <IEV MODERATE (private access)>
+    #nodyna <instance_eval-1785> <IEV MODERATE (private access)>
     (obj = type.allocate).instance_eval{
       @parent = @c = canvas
       @path = canvas.path
@@ -638,8 +597,6 @@ class Tk::Canvas<TkWindow
   end
 end
 
-#TkCanvas = Tk::Canvas unless Object.const_defined? :TkCanvas
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Canvas, :TkCanvas)
 Tk.__set_loaded_toplevel_aliases__('tk/canvas.rb', :Tk, Tk::Canvas, :TkCanvas)
 
 
@@ -673,7 +630,6 @@ class TkcItem<TkObject
     }
   end
 
-  ########################################
   def self._parse_create_args(args)
     fontkeys = {}
     methodkeys = {}
@@ -686,9 +642,6 @@ class TkcItem<TkObject
         end
       end
 
-      #['font', 'kanjifont', 'latinfont', 'asciifont'].each{|key|
-      #  fontkeys[key] = keys.delete(key) if keys.key?(key)
-      #}
       __item_font_optkeys(nil).each{|key|
         fkey = key.to_s
         fontkeys[fkey] = keys.delete(fkey) if keys.key?(fkey)
@@ -720,7 +673,6 @@ class TkcItem<TkObject
         keys[key] = method.call(keys[key]) if keys.has_key?(key)
       }
 
-      #args = args.flatten.concat(hash_kv(keys))
       args = args.flatten.concat(itemconfig_hash_kv(nil, keys))
     else
       args = args.flatten
@@ -741,12 +693,8 @@ class TkcItem<TkObject
     canvas.itemconfigure(idnum, methodkeys) unless methodkeys.empty?
     idnum.to_i  # 'canvas item id' is an integer number
   end
-  ########################################
 
   def initialize(parent, *args)
-    #unless parent.kind_of?(Tk::Canvas)
-    #  fail ArgumentError, "expect Tk::Canvas for 1st argument"
-    #end
     @parent = @c = parent
     @path = parent.path
 
@@ -840,7 +788,6 @@ class TkcWindow<TkcItem
     if args[-1].kind_of?(Hash)
       keys = _symbolkey2str(args.pop)
       win = keys['window']
-      # keys['window'] = win.epath if win.kind_of?(TkWindow)
       keys['window'] = _epath(win) if win
       args.push(keys)
     end

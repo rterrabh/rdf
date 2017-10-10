@@ -14,7 +14,6 @@ class Groovyserv < Formula
 
   depends_on "go" => :build
 
-  # This fix is upstream and can be removed in the next released version.
   patch do
     url "https://github.com/kobo/groovyserv/commit/4ea88fbfe940b50801be5e0b0bc84cd0ce627530.diff"
     sha256 "b7de43a030f97d8368ad9a9b895bd1242abc53c4ce0f12e7ab2acfc82e97da65"
@@ -23,13 +22,10 @@ class Groovyserv < Formula
   def install
     system "./gradlew", "clean" "executables"
 
-    # Install executables in libexec to avoid conflicts
     libexec.install Dir["build/executables/{bin,lib}"]
 
-    # Remove windows files
     rm_f Dir["#{libexec}/bin/*.bat"]
 
-    # Symlink binaries except _common.sh
     bin.install_symlink Dir["#{libexec}/bin/g*"]
   end
 end

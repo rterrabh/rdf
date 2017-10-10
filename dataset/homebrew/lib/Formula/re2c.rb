@@ -22,7 +22,6 @@ class Re2c < Formula
     (testpath/"test.c").write <<-EOS.undent
       unsigned int stou (const char * s)
       {
-      #   define YYCTYPE char
           const YYCTYPE * YYCURSOR = s;
           unsigned int result = 0;
 

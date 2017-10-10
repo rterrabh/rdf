@@ -6,7 +6,6 @@ class CxxStdlib
   class CompatibilityError < StandardError
     def initialize(formula, dep, stdlib)
       super <<-EOS.undent
-        #{formula.full_name} dependency #{dep.name} was built with a different C++ standard
         library (#{stdlib.type_string} from #{stdlib.compiler}). This may cause problems at runtime.
         EOS
     end
@@ -39,10 +38,6 @@ class CxxStdlib
     @compiler = compiler.to_sym
   end
 
-  # If either package doesn't use C++, all is well
-  # libstdc++ and libc++ aren't ever intercompatible
-  # libstdc++ is compatible across Apple compilers, but
-  # not between Apple and GNU compilers, or between GNU compiler versions
   def compatible_with?(other)
     return true if type.nil? || other.type.nil?
 
@@ -54,8 +49,6 @@ class CxxStdlib
 
   def check_dependencies(formula, deps)
     deps.each do |dep|
-      # Software is unlikely to link against libraries from build-time deps, so
-      # it doesn't matter if they link against different C++ stdlibs.
       next if dep.build?
 
       dep_stdlib = Tab.for_formula(dep.to_formula).cxxstdlib

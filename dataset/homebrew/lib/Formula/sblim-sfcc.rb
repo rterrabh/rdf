@@ -20,10 +20,8 @@ class SblimSfcc < Formula
     system "make", "install"
   end
 
-  # based on the test at #https://github.com/Homebrew/homebrew/blob/master/Library/Formula/tinyxml.rb
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <cimc/cimc.h>
       int main()
       {
         return 0;

@@ -44,7 +44,6 @@ class Czmq < Formula
     system "make", "install"
     rm Dir["#{bin}/*.gsl"]
 
-    # makecert clashes with Mono. Rename it less generically.
     mv bin/"makecert", bin/"czmq-makecert"
   end
 end

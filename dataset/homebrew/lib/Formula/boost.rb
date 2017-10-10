@@ -40,7 +40,6 @@ class Boost < Formula
   needs :cxx11 if build.cxx11?
 
   def install
-    # https://svn.boost.org/trac/boost/ticket/8841
     if build.with?("mpi") && build.with?("single")
       raise <<-EOS.undent
         Building MPI support for both single and multi-threaded flavors
@@ -51,13 +50,11 @@ class Boost < Formula
 
     ENV.universal_binary if build.universal?
 
-    # Force boost to compile with the desired compiler
     open("user-config.jam", "a") do |file|
       file.write "using darwin : : #{ENV.cxx} ;\n"
       file.write "using mpi ;\n" if build.with? "mpi"
     end
 
-    # libdir should be set by --prefix but isn't
     bootstrap_args = ["--prefix=#{prefix}", "--libdir=#{lib}"]
 
     if build.with? "icu4c"
@@ -67,26 +64,18 @@ class Boost < Formula
       bootstrap_args << "--without-icu"
     end
 
-    # Handle libraries that will not be built.
     without_libraries = ["python"]
 
-    # The context library is implemented as x86_64 ASM, so it
-    # won't build on PPC or 32-bit builds
-    # see https://github.com/Homebrew/homebrew/issues/17646
     if Hardware::CPU.ppc? || Hardware::CPU.is_32_bit? || build.universal?
       without_libraries << "context"
-      # The coroutine library depends on the context library.
       without_libraries << "coroutine"
     end
 
-    # Boost.Log cannot be built using Apple GCC at the moment. Disabled
-    # on such systems.
     without_libraries << "log" if ENV.compiler == :gcc || ENV.compiler == :llvm
     without_libraries << "mpi" if build.without? "mpi"
 
     bootstrap_args << "--without-libraries=#{without_libraries.join(",")}"
 
-    # layout should be synchronized with boost-python
     args = ["--prefix=#{prefix}",
             "--libdir=#{lib}",
             "-d2",
@@ -109,8 +98,6 @@ class Boost < Formula
 
     args << "address-model=32_64" << "architecture=x86" << "pch=off" if build.universal?
 
-    # Trunk starts using "clang++ -x c" to select C compiler which breaks C++11
-    # handling using ENV.cxx11. Using "cxxflags" and "linkflags" still works.
     if build.cxx11?
       args << "cxxflags=-std=c++11"
       if ENV.compiler == :clang
@@ -124,8 +111,6 @@ class Boost < Formula
 
   def caveats
     s = ""
-    # ENV.compiler doesn't exist in caveats. Check library availability
-    # instead.
     if Dir["#{lib}/libboost_log*"].empty?
       s += <<-EOS.undent
 
@@ -146,10 +131,6 @@ class Boost < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <boost/algorithm/string.hpp>
-      #include <string>
-      #include <vector>
-      #include <assert.h>
       using namespace boost::algorithm;
       using namespace std;
 

@@ -1,4 +1,3 @@
-# implicitly requires OpenSSL
 module Diaspora
   module Camo
     def self.from_markdown(markdown_text)

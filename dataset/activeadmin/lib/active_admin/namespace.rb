@@ -2,28 +2,6 @@ require 'active_admin/resource_collection'
 
 module ActiveAdmin
 
-  # Namespaces are the basic organizing principle for resources within Active Admin
-  #
-  # Each resource is registered into a namespace which defines:
-  #   * the namespaceing for routing
-  #   * the module to namespace controllers
-  #   * the menu which gets displayed (other resources in the same namespace)
-  #
-  # For example:
-  #
-  #   ActiveAdmin.register Post, namespace: :admin
-  #
-  # Will register the Post model into the "admin" namespace. This will namespace the
-  # urls for the resource to "/admin/posts" and will set the controller to
-  # Admin::PostsController
-  #
-  # You can also register to the "root" namespace, which is to say no namespace at all.
-  #
-  #   ActiveAdmin.register Post, namespace: false
-  #
-  # This will register the resource to an instantiated namespace called :root. The
-  # resource will be accessible from "/posts" and the controller will be PostsController.
-  #
   class Namespace
     RegisterEvent = 'active_admin.namespace.register'.freeze
 
@@ -37,28 +15,21 @@ module ActiveAdmin
       build_menu_collection
     end
 
-    # Register a resource into this namespace. The preffered method to access this is to
-    # use the global registration ActiveAdmin.register which delegates to the proper
-    # namespace instance.
     def register(resource_class, options = {}, &block)
       config = find_or_build_resource(resource_class, options)
 
-      # Register the resource
       register_resource_controller(config)
       parse_registration_block(config, resource_class, &block) if block_given?
       reset_menu!
 
-      # Dispatch a registration event
       ActiveAdmin::Event.dispatch ActiveAdmin::Resource::RegisterEvent, config
 
-      # Return the config
       config
     end
 
     def register_page(name, options = {}, &block)
       config = build_page(name, options)
 
-      # Register the resource
       register_page_controller(config)
       parse_page_registration_block(config, &block) if block_given?
       reset_menu!
@@ -70,34 +41,23 @@ module ActiveAdmin
       name == :root
     end
 
-    # Returns the name of the module if required. Will be nil if none
-    # is required.
-    #
-    # eg:
-    #   Namespace.new(:admin).module_name # => 'Admin'
-    #   Namespace.new(:root).module_name # => nil
-    #
     def module_name
       return nil if root?
       @module_name ||= name.to_s.camelize
     end
 
-    # Unload all the registered resources for this namespace
     def unload!
       unload_resources!
       reset_menu!
     end
 
-    # Returns the first registered ActiveAdmin::Resource instance for a given class
     def resource_for(klass)
 
       resources[klass]
     end
 
-    # Override from ActiveAdmin::Settings to inherit default attributes
-    # from the application
     def read_default_setting(name)
-      #nodyna <ID:send-40> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-15> <SD COMPLEX (change-prone variables)>
       application.public_send name
     end
 
@@ -109,12 +69,6 @@ module ActiveAdmin
       @menus.clear!
     end
 
-    # Add a callback to be ran when we build the menu
-    #
-    # @param [Symbol] name The name of the menu. Default: :default
-    # @param [Proc] block The block to be ran when the menu is built
-    #
-    # @return [void]
     def build_menu(name = DEFAULT_MENU, &block)
       @menus.before_build do |menus|
         menus.menu name do |menu|
@@ -123,12 +77,6 @@ module ActiveAdmin
       end
     end
 
-    # The default logout menu item
-    #
-    # @param [ActiveAdmin::MenuItem] menu The menu to add the logout link to
-    # @param [Fixnum] priority The numeric priority for the order in which it appears
-    # @param [Hash] html_options An options hash to pass along to link_to
-    #
     def add_logout_button_to_menu(menu, priority = 20, html_options = {})
       if logout_link_path
         html_options = html_options.reverse_merge(method: logout_link_method || :get)
@@ -139,12 +87,6 @@ module ActiveAdmin
       end
     end
 
-    # The default user session menu item
-    #
-    # @param [ActiveAdmin::MenuItem] menu The menu to add the logout link to
-    # @param [Fixnum] priority The numeric priority for the order in which it appears
-    # @param [Hash] html_options An options hash to pass along to link_to
-    #
     def add_current_user_to_menu(menu, priority = 10, html_options = {})
       if current_user_method
         menu.add id: 'current_user', priority: priority, html_options: html_options,
@@ -168,7 +110,6 @@ module ActiveAdmin
       end
     end
 
-    # Builds the default utility navigation in top right header with current user & logout button
     def build_default_utility_nav
       return if @menus.exists? :utility_navigation
       @menus.menu :utility_navigation do |menu|
@@ -177,7 +118,6 @@ module ActiveAdmin
       end
     end
 
-    # Either returns an existing Resource instance or builds a new one.
     def find_or_build_resource(resource_class, options)
       resources.add Resource.new(self, resource_class, options)
     end
@@ -186,9 +126,8 @@ module ActiveAdmin
       resources.add Page.new(self, name, options)
     end
 
-    # TODO: replace `eval` with `Class.new`
     def register_page_controller(config)
-      #nodyna <ID:eval-1> <EV COMPLEX (class definition)>
+      #nodyna <eval-16> <EV COMPLEX (class definition)>
       eval "class ::#{config.controller_name} < ActiveAdmin::PageController; end"
       config.controller.active_admin_config = config
     end
@@ -197,10 +136,9 @@ module ActiveAdmin
       resources.each do |resource|
         parent = (module_name || 'Object').constantize
         name   = resource.controller_name.split('::').last
-        #nodyna <ID:send-41> <SD MODERATE (private methods)>
+        #nodyna <send-17> <SD MODERATE (private methods)>
         parent.send(:remove_const, name) if parent.const_defined? name
 
-        # Remove circular references
         resource.controller.active_admin_config = nil
         if resource.is_a?(Resource) && resource.dsl
           resource.dsl.run_registration_block { @config = nil }
@@ -209,17 +147,15 @@ module ActiveAdmin
       @resources = ResourceCollection.new
     end
 
-    # Creates a ruby module to namespace all the classes in if required
     def register_module
       unless Object.const_defined? module_name
-        #nodyna <ID:const_set-1> <CS COMPLEX (change-prone variable)>
+        #nodyna <const_set-18> <CS COMPLEX (change-prone variable)>
         Object.const_set module_name, Module.new
       end
     end
 
-    # TODO replace `eval` with `Class.new`
     def register_resource_controller(config)
-      #nodyna <ID:eval-2> <EV COMPLEX (class definition)>
+      #nodyna <eval-19> <EV COMPLEX (class definition)>
       eval "class ::#{config.controller_name} < ActiveAdmin::ResourceController; end"
       config.controller.active_admin_config = config
     end

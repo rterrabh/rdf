@@ -14,7 +14,6 @@ class Libopendkim < Formula
   depends_on "openssl"
 
   def install
-    # --disable-filter: not needed for the library build
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--disable-silent-rules",

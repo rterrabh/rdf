@@ -1,65 +1,33 @@
-##
-# Manages changes of attributes in a block of text
 
 class RDoc::Markup::AttributeManager
 
-  ##
-  # The NUL character
 
   NULL = "\000".freeze
 
-  #--
-  # We work by substituting non-printing characters in to the text. For now
-  # I'm assuming that I can substitute a character in the range 0..8 for a 7
-  # bit character without damaging the encoded string, but this might be
-  # optimistic
-  #++
 
   A_PROTECT = 004 # :nodoc:
 
-  ##
-  # Special mask character to prevent inline markup handling
 
   PROTECT_ATTR = A_PROTECT.chr # :nodoc:
 
-  ##
-  # The attributes enabled for this markup object.
 
   attr_reader :attributes
 
-  ##
-  # This maps delimiters that occur around words (such as *bold* or +tt+)
-  # where the start and end delimiters and the same. This lets us optimize
-  # the regexp
 
   attr_reader :matching_word_pairs
 
-  ##
-  # And this is used when the delimiters aren't the same. In this case the
-  # hash maps a pattern to the attribute character
 
   attr_reader :word_pair_map
 
-  ##
-  # This maps HTML tags to the corresponding attribute char
 
   attr_reader :html_tags
 
-  ##
-  # A \ in front of a character that would normally be processed turns off
-  # processing. We do this by turning \< into <#{PROTECT}
 
   attr_reader :protectable
 
-  ##
-  # And this maps _special_ sequences to a name. A special sequence is
-  # something like a WikiWord
 
   attr_reader :special
 
-  ##
-  # Creates a new attribute manager that understands bold, emphasized and
-  # teletype text.
 
   def initialize
     @html_tags = {}
@@ -80,24 +48,17 @@ class RDoc::Markup::AttributeManager
     add_html "code", :TT
   end
 
-  ##
-  # Return an attribute object with the given turn_on and turn_off bits set
 
   def attribute(turn_on, turn_off)
     RDoc::Markup::AttrChanger.new turn_on, turn_off
   end
 
-  ##
-  # Changes the current attribute from +current+ to +new+
 
   def change_attribute current, new
     diff = current ^ new
     attribute(new & diff, current & diff)
   end
 
-  ##
-  # Used by the tests to change attributes by name from +current_set+ to
-  # +new_set+
 
   def changed_attribute_by_name current_set, new_set
     current = new = 0
@@ -112,8 +73,6 @@ class RDoc::Markup::AttributeManager
     change_attribute(current, new)
   end
 
-  ##
-  # Copies +start_pos+ to +end_pos+ from the current string
 
   def copy_string(start_pos, end_pos)
     res = @str[start_pos...end_pos]
@@ -121,13 +80,8 @@ class RDoc::Markup::AttributeManager
     res
   end
 
-  ##
-  # Map attributes like <b>text</b>to the sequence
-  # \001\002<char>\001\003<char>, where <char> is a per-attribute specific
-  # character
 
   def convert_attrs(str, attrs)
-    # first do matching ones
     tags = @matching_word_pairs.keys.join("")
 
     re = /(^|\W)([#{tags}])([#\\]?[\w:.\/-]+?\S?)\2(\W|$)/
@@ -138,7 +92,6 @@ class RDoc::Markup::AttributeManager
       $1 + NULL * $2.length + $3 + NULL * $2.length + $4
     end
 
-    # then non-matching
     unless @word_pair_map.empty? then
       @word_pair_map.each do |regexp, attr|
         str.gsub!(regexp) {
@@ -149,8 +102,6 @@ class RDoc::Markup::AttributeManager
     end
   end
 
-  ##
-  # Converts HTML tags to RDoc attributes
 
   def convert_html(str, attrs)
     tags = @html_tags.keys.join '|'
@@ -164,8 +115,6 @@ class RDoc::Markup::AttributeManager
     }
   end
 
-  ##
-  # Converts special sequences to RDoc attributes
 
   def convert_specials str, attrs
     @special.each do |regexp, attribute|
@@ -179,11 +128,8 @@ class RDoc::Markup::AttributeManager
     end
   end
 
-  ##
-  # Escapes special sequences of text to prevent conversion to RDoc
 
   def mask_protected_sequences
-    # protect __send__, __FILE__, etc.
     @str.gsub!(/__([a-z]+)__/i,
       "_#{PROTECT_ATTR}_#{PROTECT_ATTR}\\1_#{PROTECT_ATTR}_#{PROTECT_ATTR}")
     @str.gsub!(/(\A|[^\\])\\([#{Regexp.escape @protectable.join}])/m,
@@ -191,18 +137,11 @@ class RDoc::Markup::AttributeManager
     @str.gsub!(/\\(\\[#{Regexp.escape @protectable.join}])/m, "\\1")
   end
 
-  ##
-  # Unescapes special sequences of text
 
   def unmask_protected_sequences
     @str.gsub!(/(.)#{PROTECT_ATTR}/, "\\1\000")
   end
 
-  ##
-  # Adds a markup class with +name+ for words wrapped in the +start+ and
-  # +stop+ character.  To make words wrapped with "*" bold:
-  #
-  #   am.add_word_pair '*', '*', :BOLD
 
   def add_word_pair(start, stop, name)
     raise ArgumentError, "Word flags may not start with '<'" if
@@ -221,28 +160,16 @@ class RDoc::Markup::AttributeManager
     @protectable.uniq!
   end
 
-  ##
-  # Adds a markup class with +name+ for words surrounded by HTML tag +tag+.
-  # To process emphasis tags:
-  #
-  #   am.add_html 'em', :EM
 
   def add_html(tag, name)
     @html_tags[tag.downcase] = @attributes.bitmap_for name
   end
 
-  ##
-  # Adds a special handler for +pattern+ with +name+.  A simple URL handler
-  # would be:
-  #
-  #   @am.add_special(/((https?:)\S+\w)/, :HYPERLINK)
 
   def add_special pattern, name
     @special << [pattern, @attributes.bitmap_for(name)]
   end
 
-  ##
-  # Processes +str+ converting attributes, HTML and specials
 
   def flow str
     @str = str
@@ -260,8 +187,6 @@ class RDoc::Markup::AttributeManager
     split_into_flow
   end
 
-  ##
-  # Debug method that prints a string along with its attributes
 
   def display_attributes
     puts
@@ -285,8 +210,6 @@ class RDoc::Markup::AttributeManager
     end
   end
 
-  ##
-  # Splits the string into chunks by attribute change
 
   def split_into_flow
     res = []
@@ -294,12 +217,10 @@ class RDoc::Markup::AttributeManager
 
     str_len = @str.length
 
-    # skip leading invisible text
     i = 0
     i += 1 while i < str_len and @str[i].chr == "\0"
     start_pos = i
 
-    # then scan the string, chunking it on attribute changes
     while i < str_len
       new_attr = @attrs[i]
       if new_attr != current_attr
@@ -322,18 +243,15 @@ class RDoc::Markup::AttributeManager
         end
       end
 
-      # move on, skipping any invisible characters
       begin
         i += 1
       end while i < str_len and @str[i].chr == "\0"
     end
 
-    # tidy up trailing text
     if start_pos < str_len
       res << copy_string(start_pos, str_len)
     end
 
-    # and reset to all attributes off
     res << change_attribute(current_attr, 0) if current_attr != 0
 
     res

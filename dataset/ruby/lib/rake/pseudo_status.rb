@@ -1,7 +1,5 @@
 module Rake
 
-  ##
-  # Exit status class for times the system just gives us a nil.
   class PseudoStatus # :nodoc: all
     attr_reader :exitstatus
 

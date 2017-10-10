@@ -39,7 +39,6 @@ class FreeradiusServer < Formula
     ]
 
     if build.stable?
-      # libtool is glibtool on OS X
       inreplace "configure.in", "libtool,,", "glibtool,,"
       inreplace "autogen.sh", "libtool", "glibtool"
 

@@ -1,23 +1,9 @@
-# == Schema Information
-#
-# Table name: merge_request_diffs
-#
-#  id               :integer          not null, primary key
-#  state            :string(255)
-#  st_commits       :text
-#  st_diffs         :text
-#  merge_request_id :integer          not null
-#  created_at       :datetime
-#  updated_at       :datetime
-#
 
 require Rails.root.join("app/models/commit")
 
 class MergeRequestDiff < ActiveRecord::Base
   include Sortable
 
-  # Prevent store of diff
-  # if commits amount more then 200
   COMMITS_SAFE_SIZE = 200
 
   attr_reader :commits, :diffs
@@ -82,8 +68,6 @@ class MergeRequestDiff < ActiveRecord::Base
     end
   end
 
-  # Collect array of Git::Commit objects
-  # between target and source branches
   def unmerged_commits
     commits = compare_result.commits
 
@@ -96,8 +80,6 @@ class MergeRequestDiff < ActiveRecord::Base
     commits
   end
 
-  # Reload all commits related to current merge request from repo
-  # and save it as array of hashes in st_commits db field
   def reload_commits
     commit_objects = unmerged_commits
 
@@ -108,8 +90,6 @@ class MergeRequestDiff < ActiveRecord::Base
     save
   end
 
-  # Reload diffs between branches related to current merge request from repo
-  # and save it as array of hashes in st_diffs db field
   def reload_diffs
     new_diffs = []
 
@@ -142,8 +122,6 @@ class MergeRequestDiff < ActiveRecord::Base
     self.save
   end
 
-  # Collect array of Git::Diff objects
-  # between target and source branches
   def unmerged_diffs
     diffs = compare_result.diffs
     diffs ||= []

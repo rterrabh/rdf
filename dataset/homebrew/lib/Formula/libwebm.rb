@@ -22,7 +22,6 @@ class Libwebm < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <mkvwriter.hpp>
       int main()
       {
         mkvmuxer::MkvWriter writer();

@@ -13,11 +13,8 @@ class Squid < Formula
   depends_on "openssl"
 
   def install
-    # http://stackoverflow.com/questions/20910109/building-squid-cache-on-os-x-mavericks
     ENV.append "LDFLAGS",  "-lresolv"
 
-    # For --disable-eui, see:
-    # http://squid-web-proxy-cache.1019090.n4.nabble.com/ERROR-ARP-MAC-EUI-operations-not-supported-on-this-operating-system-td4659335.html
     args = %W[
       --disable-debug
       --disable-dependency-tracking

@@ -1,120 +1,5 @@
 require 'tsort'
 
-##
-# RDoc::Parser::C attempts to parse C extension files.  It looks for
-# the standard patterns that you find in extensions: <tt>rb_define_class,
-# rb_define_method</tt> and so on.  It tries to find the corresponding
-# C source for the methods and extract comments, but if we fail
-# we don't worry too much.
-#
-# The comments associated with a Ruby method are extracted from the C
-# comment block associated with the routine that _implements_ that
-# method, that is to say the method whose name is given in the
-# <tt>rb_define_method</tt> call. For example, you might write:
-#
-#   /*
-#    * Returns a new array that is a one-dimensional flattening of this
-#    * array (recursively). That is, for every element that is an array,
-#    * extract its elements into the new array.
-#    *
-#    *    s = [ 1, 2, 3 ]           #=> [1, 2, 3]
-#    *    t = [ 4, 5, 6, [7, 8] ]   #=> [4, 5, 6, [7, 8]]
-#    *    a = [ s, t, 9, 10 ]       #=> [[1, 2, 3], [4, 5, 6, [7, 8]], 9, 10]
-#    *    a.flatten                 #=> [1, 2, 3, 4, 5, 6, 7, 8, 9, 10]
-#    */
-#    static VALUE
-#    rb_ary_flatten(ary)
-#        VALUE ary;
-#    {
-#        ary = rb_obj_dup(ary);
-#        rb_ary_flatten_bang(ary);
-#        return ary;
-#    }
-#
-#    ...
-#
-#    void
-#    Init_Array()
-#    {
-#      ...
-#      rb_define_method(rb_cArray, "flatten", rb_ary_flatten, 0);
-#
-# Here RDoc will determine from the rb_define_method line that there's a
-# method called "flatten" in class Array, and will look for the implementation
-# in the method rb_ary_flatten. It will then use the comment from that
-# method in the HTML output. This method must be in the same source file
-# as the rb_define_method.
-#
-# The comment blocks may include special directives:
-#
-# [Document-class: +name+]
-#   Documentation for the named class.
-#
-# [Document-module: +name+]
-#   Documentation for the named module.
-#
-# [Document-const: +name+]
-#   Documentation for the named +rb_define_const+.
-#
-#   Constant values can be supplied on the first line of the comment like so:
-#
-#     /* 300: The highest possible score in bowling */
-#     rb_define_const(cFoo, "PERFECT", INT2FIX(300));
-#
-#   The value can contain internal colons so long as they are escaped with a \
-#
-# [Document-global: +name+]
-#   Documentation for the named +rb_define_global_const+
-#
-# [Document-variable: +name+]
-#   Documentation for the named +rb_define_variable+
-#
-# [Document-method: +method_name+]
-#   Documentation for the named method.  Use this when the method name is
-#   unambiguous.
-#
-# [Document-method: <tt>ClassName::method_name<tt>]
-#   Documentation for a singleton method in the given class.  Use this when
-#   the method name alone is ambiguous.
-#
-# [Document-method: <tt>ClassName#method_name<tt>]
-#   Documentation for a instance method in the given class.  Use this when the
-#   method name alone is ambiguous.
-#
-# [Document-attr: +name+]
-#   Documentation for the named attribute.
-#
-# [call-seq:  <i>text up to an empty line</i>]
-#   Because C source doesn't give descriptive names to Ruby-level parameters,
-#   you need to document the calling sequence explicitly
-#
-# In addition, RDoc assumes by default that the C method implementing a
-# Ruby function is in the same source file as the rb_define_method call.
-# If this isn't the case, add the comment:
-#
-#   rb_define_method(....);  // in filename
-#
-# As an example, we might have an extension that defines multiple classes
-# in its Init_xxx method. We could document them using
-#
-#   /*
-#    * Document-class:  MyClass
-#    *
-#    * Encapsulate the writing and reading of the configuration
-#    * file. ...
-#    */
-#
-#   /*
-#    * Document-method: read_value
-#    *
-#    * call-seq:
-#    *   cfg.read_value(key)            -> value
-#    *   cfg.read_value(key} { |key| }  -> value
-#    *
-#    * Return the value corresponding to +key+ from the configuration.
-#    * In the second form, if the key isn't found, invoke the
-#    * block and return its value.
-#    */
 
 class RDoc::Parser::C < RDoc::Parser
 
@@ -122,46 +7,27 @@ class RDoc::Parser::C < RDoc::Parser
 
   include RDoc::Text
 
-  ##
-  # Maps C variable names to names of Ruby classes or modules
 
   attr_reader :classes
 
-  ##
-  # C file the parser is parsing
 
   attr_accessor :content
 
-  ##
-  # Dependencies from a missing enclosing class to the classes in
-  # missing_dependencies that depend upon it.
 
   attr_reader :enclosure_dependencies
 
-  ##
-  # Maps C variable names to names of Ruby classes (and singleton classes)
 
   attr_reader :known_classes
 
-  ##
-  # Classes found while parsing the C file that were not yet registered due to
-  # a missing enclosing class.  These are processed by do_missing
 
   attr_reader :missing_dependencies
 
-  ##
-  # Maps C variable names to names of Ruby singleton classes
 
   attr_reader :singleton_classes
 
-  ##
-  # The TopLevel items in the parsed file belong to
 
   attr_reader :top_level
 
-  ##
-  # Prepares for parsing a C file.  See RDoc::Parser#initialize for details on
-  # the arguments.
 
   def initialize top_level, file_name, content, options, stats
     super
@@ -173,14 +39,12 @@ class RDoc::Parser::C < RDoc::Parser
     @classes           = load_variable_map :c_class_variables
     @singleton_classes = load_variable_map :c_singleton_class_variables
 
-    # class_variable => { function => [method, ...] }
     @methods = Hash.new { |h, f| h[f] = Hash.new { |i, m| i[m] = [] } }
 
-    # missing variable => [handle_class_module arguments]
     @missing_dependencies = {}
 
-    # missing enclosure variable => [dependent handle_class_module arguments]
     @enclosure_dependencies = Hash.new { |h, k| h[k] = [] }
+    #nodyna <instance_variable_set-2021> <not yet classified>
     @enclosure_dependencies.instance_variable_set :@missing_dependencies,
                                                   @missing_dependencies
 
@@ -209,9 +73,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Removes duplicate call-seq entries for methods using the same
-  # implementation.
 
   def deduplicate_call_seq
     @methods.each do |var_name, functions|
@@ -228,10 +89,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # If two ruby methods share a C implementation (and comment) this
-  # deduplicates the examples in the call_seq for the method to reduce
-  # confusion in the output.
 
   def deduplicate_method_name class_obj, method_name # :nodoc:
     return unless
@@ -250,8 +107,6 @@ class RDoc::Parser::C < RDoc::Parser
     method.call_seq = matching.join "\n"
   end
 
-  ##
-  # Scans #content for rb_define_alias
 
   def do_aliases
     @content.scan(/rb_define_alias\s*\(
@@ -285,8 +140,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_attr and rb_define_attr
 
   def do_attrs
     @content.scan(/rb_attr\s*\(
@@ -308,8 +161,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for boot_defclass
 
   def do_boot_defclass
     @content.scan(/(\w+)\s*=\s*boot_defclass\s*\(\s*"(\w+?)",\s*(\w+?)\s*\)/) do
@@ -319,9 +170,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_define_class, boot_defclass, rb_define_class_under
-  # and rb_singleton_class
 
   def do_classes
     do_boot_defclass
@@ -331,9 +179,6 @@ class RDoc::Parser::C < RDoc::Parser
     do_struct_define_without_accessor
   end
 
-  ##
-  # Scans #content for rb_define_variable, rb_define_readonly_variable,
-  # rb_define_const and rb_define_global_const
 
   def do_constants
     @content.scan(%r%\Wrb_define_
@@ -377,11 +222,8 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_define_class
 
   def do_define_class
-    # The '.' lets us handle SWIG-generated files
     @content.scan(/([\w\.]+)\s* = \s*rb_define_class\s*
               \(
                  \s*"(\w+)",
@@ -391,8 +233,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_define_class_under
 
   def do_define_class_under
     @content.scan(/([\w\.]+)\s* =                  # var_name
@@ -414,8 +254,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_define_module
 
   def do_define_module
     @content.scan(/(\w+)\s* = \s*rb_define_module\s*\(\s*"(\w+)"\s*\)/mx) do
@@ -424,8 +262,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_define_module_under
 
   def do_define_module_under
     @content.scan(/(\w+)\s* = \s*rb_define_module_under\s*
@@ -437,8 +273,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_include_module
 
   def do_includes
     @content.scan(/rb_include_module\s*\(\s*(\w+?),\s*(\w+?)\s*\)/) do |c,m|
@@ -451,10 +285,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_define_method, rb_define_singleton_method,
-  # rb_define_module_function, rb_define_private_method,
-  # rb_define_global_function and define_filetest_function
 
   def do_methods
     @content.scan(%r%rb_define_
@@ -471,7 +301,6 @@ class RDoc::Parser::C < RDoc::Parser
                    (?:;\s*/[*/]\s+in\s+(\w+?\.(?:cpp|c|y)))?
                  %xm) do |type, var_name, meth_name, function, param_count, source_file|
 
-      # Ignore top-object and weird struct.c dynamic stuff
       next if var_name == "ruby_top_self"
       next if var_name == "nstr"
 
@@ -501,9 +330,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Creates classes and module that were missing were defined due to the file
-  # order being different than the declaration order.
 
   def do_missing
     return if @missing_dependencies.empty?
@@ -517,16 +343,12 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for rb_define_module and rb_define_module_under
 
   def do_modules
     do_define_module
     do_define_module_under
   end
 
-  ##
-  # Scans #content for rb_singleton_class
 
   def do_singleton_class
     @content.scan(/([\w\.]+)\s* = \s*rb_singleton_class\s*
@@ -537,8 +359,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Scans #content for struct_define_without_accessor
 
   def do_struct_define_without_accessor
     @content.scan(/([\w\.]+)\s* = \s*rb_struct_define_without_accessor\s*
@@ -553,9 +373,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Finds the comment for an alias on +class_name+ from +new_name+ to
-  # +old_name+
 
   def find_alias_comment class_name, new_name, old_name
     content =~ %r%((?>/\*.*?\*/\s+))
@@ -566,14 +383,6 @@ class RDoc::Parser::C < RDoc::Parser
     RDoc::Comment.new($1 || '', @top_level)
   end
 
-  ##
-  # Finds a comment for rb_define_attr, rb_attr or Document-attr.
-  #
-  # +var_name+ is the C class variable the attribute is defined on.
-  # +attr_name+ is the attribute's name.
-  #
-  # +read+ and +write+ are the read/write flags ('1' or '0').  Either both or
-  # neither must be provided.
 
   def find_attr_comment var_name, attr_name, read = nil, write = nil
     attr_name = Regexp.escape attr_name
@@ -587,12 +396,10 @@ class RDoc::Parser::C < RDoc::Parser
     comment = if @content =~ %r%((?>/\*.*?\*/\s+))
                                 rb_define_attr\((?:\s*#{var_name},)?\s*
                                                 "#{attr_name}"\s*,
-                                                #{rw}\)\s*;%xm then
                 $1
               elsif @content =~ %r%((?>/\*.*?\*/\s+))
                                    rb_attr\(\s*#{var_name}\s*,
                                             \s*#{attr_name}\s*,
-                                            #{rw},.*?\)\s*;%xm then
                 $1
               elsif @content =~ %r%(/\*.*?(?:\s*\*\s*)?)
                                    Document-attr:\s#{attr_name}\s*?\n
@@ -605,8 +412,6 @@ class RDoc::Parser::C < RDoc::Parser
     RDoc::Comment.new comment, @top_level
   end
 
-  ##
-  # Find the C code corresponding to a Ruby method
 
   def find_body class_name, meth_name, meth_obj, file_content, quiet = false
     case file_content
@@ -620,14 +425,8 @@ class RDoc::Parser::C < RDoc::Parser
 
       comment.remove_private if comment
 
-      # try to find the whole body
       body = $& if /#{Regexp.escape body}[^(]*?\{.*?^\}/m =~ file_content
 
-      # The comment block may have been overridden with a 'Document-method'
-      # block. This happens in the interpreter when multiple methods are
-      # vectored through to the same C method but those methods are logically
-      # distinct (for example Kernel.hash and Kernel.object_id share the same
-      # implementation
 
       override_comment = find_override_comment class_name, meth_obj
       comment = override_comment if override_comment
@@ -635,7 +434,6 @@ class RDoc::Parser::C < RDoc::Parser
       comment.normalize
       find_modifiers comment, meth_obj if comment
 
-      #meth_obj.params = params
       meth_obj.start_collecting_tokens
       tk = RDoc::RubyToken::Token.new nil, 1, 1
       tk.set_text body
@@ -665,8 +463,6 @@ class RDoc::Parser::C < RDoc::Parser
 
       body
     when %r%^\s*\#\s*define\s+#{meth_name}\s+(\w+)%m then
-      # with no comment we hope the aliased definition has it and use it's
-      # definition
 
       body = find_body(class_name, $1, meth_obj, file_content, true)
 
@@ -690,8 +486,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Finds a RDoc::NormalClass or RDoc::NormalModule for +raw_name+
 
   def find_class(raw_name, name)
     unless @classes[raw_name]
@@ -707,31 +501,6 @@ class RDoc::Parser::C < RDoc::Parser
     @classes[raw_name]
   end
 
-  ##
-  # Look for class or module documentation above Init_+class_name+(void),
-  # in a Document-class +class_name+ (or module) comment or above an
-  # rb_define_class (or module).  If a comment is supplied above a matching
-  # Init_ and a rb_define_class the Init_ comment is used.
-  #
-  #   /*
-  #    * This is a comment for Foo
-  #    */
-  #   Init_Foo(void) {
-  #       VALUE cFoo = rb_define_class("Foo", rb_cObject);
-  #   }
-  #
-  #   /*
-  #    * Document-class: Foo
-  #    * This is a comment for Foo
-  #    */
-  #   Init_foo(void) {
-  #       VALUE cFoo = rb_define_class("Foo", rb_cObject);
-  #   }
-  #
-  #   /*
-  #    * This is a comment for Foo
-  #    */
-  #   VALUE cFoo = rb_define_class("Foo", rb_cObject);
 
   def find_class_comment class_name, class_mod
     comment = nil
@@ -763,9 +532,6 @@ class RDoc::Parser::C < RDoc::Parser
     class_mod.add_comment comment, @top_level
   end
 
-  ##
-  # Finds a comment matching +type+ and +const_name+ either above the
-  # comment or in the matching Document- section.
 
   def find_const_comment(type, const_name, class_name = nil)
     comment = if @content =~ %r%((?>^\s*/\*.*?\*/\s+))
@@ -775,7 +541,6 @@ class RDoc::Parser::C < RDoc::Parser
                 $1
               elsif class_name and
                     @content =~ %r%Document-(?:const|global|variable):\s
-                                   #{class_name}::#{const_name}
                                    \s*?\n((?>.*?\*/))%xm then
                 "/*\n#{$1}"
               elsif @content =~ %r%Document-(?:const|global|variable):
@@ -789,8 +554,6 @@ class RDoc::Parser::C < RDoc::Parser
     RDoc::Comment.new comment, @top_level
   end
 
-  ##
-  # Handles modifiers in +comment+ and updates +meth_obj+ as appropriate.
 
   def find_modifiers comment, meth_obj
     comment.normalize
@@ -799,8 +562,6 @@ class RDoc::Parser::C < RDoc::Parser
     look_for_directives_in meth_obj, comment
   end
 
-  ##
-  # Finds a <tt>Document-method</tt> override for +meth_obj+ on +class_name+
 
   def find_override_comment class_name, meth_obj
     name = Regexp.escape meth_obj.name
@@ -820,9 +581,6 @@ class RDoc::Parser::C < RDoc::Parser
     RDoc::Comment.new comment, @top_level
   end
 
-  ##
-  # Creates a new RDoc::Attr +attr_name+ on class +var_name+ that is either
-  # +read+, +write+ or both
 
   def handle_attr(var_name, attr_name, read, write)
     rw = ''
@@ -849,9 +607,6 @@ class RDoc::Parser::C < RDoc::Parser
     @stats.add_attribute attr
   end
 
-  ##
-  # Creates a new RDoc::NormalClass or RDoc::NormalModule based on +type+
-  # named +class_name+ in +parent+ which was assigned to the C +var_name+.
 
   def handle_class_module(var_name, type, class_name, parent, in_module)
     parent_name = @known_classes[parent] || parent
@@ -908,15 +663,6 @@ class RDoc::Parser::C < RDoc::Parser
     @store.add_c_enclosure var_name, cm
   end
 
-  ##
-  # Adds constants.  By providing some_value: at the start of the comment you
-  # can override the C value of the comment to give a friendly definition.
-  #
-  #   /* 300: The perfect score in bowling */
-  #   rb_define_const(cFoo, "PERFECT", INT2FIX(300);
-  #
-  # Will override <tt>INT2FIX(300)</tt> with the value +300+ in the output
-  # RDoc.  Values may include quotes and escaped colons (\:).
 
   def handle_constants(type, var_name, const_name, definition)
     class_name = @known_classes[var_name]
@@ -933,9 +679,6 @@ class RDoc::Parser::C < RDoc::Parser
     comment = find_const_comment type, const_name, class_name
     comment.normalize
 
-    # In the case of rb_define_const, the definition and comment are in
-    # "/* definition: comment */" form.  The literal ':' and '\' characters
-    # can be escaped with a backslash.
     if type.downcase == 'const' then
       no_match, new_definition, new_comment = comment.text.split(/(\A.*):/)
 
@@ -966,17 +709,11 @@ class RDoc::Parser::C < RDoc::Parser
     class_obj.add_constant con
   end
 
-  ##
-  # Removes #ifdefs that would otherwise confuse us
 
   def handle_ifdefs_in(body)
     body.gsub(/^#ifdef HAVE_PROTOTYPES.*?#else.*?\n(.*?)#endif.*?\n/m, '\1')
   end
 
-  ##
-  # Adds an RDoc::AnyMethod +meth_name+ defined on a class or module assigned
-  # to +var_name+.  +type+ is the type of method definition function used.
-  # +singleton_method+ and +module_function+ create a singleton method.
 
   def handle_method(type, var_name, meth_name, function, param_count,
                     source_file = nil)
@@ -1035,8 +772,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Registers a singleton class +sclass_var+ as a singleton of +class_var+
 
   def handle_singleton sclass_var, class_var
     class_name = @known_classes[class_var]
@@ -1045,8 +780,6 @@ class RDoc::Parser::C < RDoc::Parser
     @singleton_classes[sclass_var] = class_name
   end
 
-  ##
-  # Normalizes tabs in +body+
 
   def handle_tab_width(body)
     if /\t/ =~ body
@@ -1062,9 +795,6 @@ class RDoc::Parser::C < RDoc::Parser
     end
   end
 
-  ##
-  # Loads the variable map with the given +name+ from the RDoc::Store, if
-  # present.
 
   def load_variable_map map_name
     return {} unless files = @store.cache[map_name]
@@ -1086,14 +816,6 @@ class RDoc::Parser::C < RDoc::Parser
     class_map
   end
 
-  ##
-  # Look for directives in a normal comment block:
-  #
-  #   /*
-  #    * :title: My Awesome Project
-  #    */
-  #
-  # This method modifies the +comment+
 
   def look_for_directives_in context, comment
     @preprocess.handle comment, context do |directive, param|
@@ -1110,9 +832,6 @@ class RDoc::Parser::C < RDoc::Parser
     comment
   end
 
-  ##
-  # Extracts parameters from the +method_body+ and returns a method
-  # parameter string.  Follows 1.9.3dev's scan-arg-spec, see README.EXT
 
   def rb_scan_args method_body
     method_body =~ /rb_scan_args\((.*?)\)/m
@@ -1156,7 +875,6 @@ class RDoc::Parser::C < RDoc::Parser
       format.shift
     end
 
-    # if the format string is not empty there's a bug in the C code, ignore it
 
     args = []
     position = 1
@@ -1193,17 +911,11 @@ class RDoc::Parser::C < RDoc::Parser
     "(#{args.join ', '})"
   end
 
-  ##
-  # Removes lines that are commented out that might otherwise get picked up
-  # when scanning for classes and methods
 
   def remove_commented_out_lines
     @content.gsub!(%r%//.*rb_define_%, '//')
   end
 
-  ##
-  # Extracts the classes, modules, methods, attributes, constants and aliases
-  # from a C file and returns an RDoc::TopLevel for this file
 
   def scan
     remove_commented_out_lines

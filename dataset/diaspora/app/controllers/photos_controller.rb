@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class PhotosController < ApplicationController
   before_action :authenticate_user!, :except => :show
@@ -142,27 +139,19 @@ class PhotosController < ApplicationController
   end
 
   def file_handler(params)
-    # For XHR file uploads, request.params[:qqfile] will be the path to the temporary file
-    # For regular form uploads (such as those made by Opera), request.params[:qqfile] will be an UploadedFile which can be returned unaltered.
     if not request.params[:qqfile].is_a?(String)
       params[:qqfile]
     else
-      ######################## dealing with local files #############
-      # get file name
       file_name = params[:qqfile]
-      # get file content type
       att_content_type = (request.content_type.to_s == "") ? "application/octet-stream" : request.content_type.to_s
-      # create tempora##l file
       file = Tempfile.new(file_name, {:encoding =>  'BINARY'})
-      # put data into this file from raw post request
       file.print request.raw_post.force_encoding('BINARY')
 
-      # create several required methods for this temporal file
-      #nodyna <ID:send-182> <SD MODERATE (private methods)>
-      #nodyna <ID:define_method-1> <DM MODERATE (events)>
+      #nodyna <send-233> <SD MODERATE (private methods)>
+      #nodyna <define_method-234> <DM MODERATE (events)>
       Tempfile.send(:define_method, "content_type") {return att_content_type}
-      #nodyna <ID:send-183> <SD MODERATE (private methods)>
-      #nodyna <ID:define_method-2> <DM MODERATE (events)>
+      #nodyna <send-235> <SD MODERATE (private methods)>
+      #nodyna <define_method-236> <DM MODERATE (events)>
       Tempfile.send(:define_method, "original_filename") {return file_name}
       file
     end

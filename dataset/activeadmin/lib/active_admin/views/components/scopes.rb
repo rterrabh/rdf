@@ -4,8 +4,6 @@ require 'active_admin/view_helpers/method_or_proc_helper'
 module ActiveAdmin
   module Views
 
-    # Renders a collection of ActiveAdmin::Scope objects as a
-    # simple list with a seperator
     class Scopes < ActiveAdmin::Component
       builder_method :scopes_renderer
 
@@ -57,7 +55,6 @@ module ActiveAdmin
         end
       end
 
-      # Return the count for the scope passed in.
       def get_scope_count(scope)
         collection_size(scope_chain(scope, collection_before_scope))
       end

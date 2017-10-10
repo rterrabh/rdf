@@ -33,8 +33,6 @@ class Ant < Formula
     bin.install_symlink Dir["#{libexec}/bin/*"]
     rm bin/"ant"
     (bin/"ant").write <<-EOS.undent
-      #!/bin/sh
-      #{libexec}/bin/ant -lib #{HOMEBREW_PREFIX}/share/ant "$@"
     EOS
     if build.with? "ivy"
       resource("ivy").stage do

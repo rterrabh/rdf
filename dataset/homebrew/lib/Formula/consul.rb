@@ -157,7 +157,6 @@ class Consul < Formula
     consulpath.install Dir["{*,.git}"]
     Language::Go.stage_deps resources, buildpath/"src"
 
-    # build gomdb separately to avoid linker errors
     cd "src/github.com/armon/gomdb" do
       system "go", "install"
     end

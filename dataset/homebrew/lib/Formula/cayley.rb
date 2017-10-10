@@ -20,7 +20,6 @@ class Cayley < Formula
 
   option "without-samples", "Disable installing sample data"
 
-  # Go dependencies
   go_resource "github.com/badgerodon/peg" do
     url "https://github.com/badgerodon/peg.git", :revision => "9e5f7f4d07ca576562618c23e8abadda278b684f"
   end
@@ -69,7 +68,6 @@ class Cayley < Formula
     url "https://github.com/boltdb/bolt.git", :revision => "3b449559cf34cbcc74460b59041a4399d3226e5a"
   end
 
-  # It looks for both unstable and stable mgo in GOPATH during compile.
   go_resource "gopkg.in/mgo.v2" do
     url "https://github.com/go-mgo/mgo.git", :revision => "c6a7dce14133ccac2dcac3793f1d6e2ef048503a"
   end
@@ -83,41 +81,32 @@ class Cayley < Formula
   end
 
   def install
-    # Prepare for Go build
     ENV["GOPATH"] = buildpath
     Language::Go.stage_deps resources, buildpath/"src"
 
-    # To avoid re-downloading Cayley, symlink its source from the tarball so that Go can find it
     mkdir_p "src/github.com/google/"
     ln_s buildpath, "src/github.com/google/cayley"
 
-    # Build
     system "go", "build", "-o", "cayley"
 
-    # Create sample configuration that uses the Homebrew-based directories
     inreplace "cayley.cfg.example", "/tmp/cayley_test", "#{var}/cayley"
 
-    # Install binary and configuration
     bin.install "cayley"
     etc.install "cayley.cfg.example" => "cayley.conf"
 
-    # Copy over the static web assets
     (share/"cayley/assets").install "docs", "static", "templates"
 
     if build.with? "samples"
       system "gzip", "-d", "data/30kmoviedata.nq.gz"
 
-      # Copy over sample data
       (share/"cayley/samples").install "data/testdata.nq", "data/30kmoviedata.nq"
     end
   end
 
   def post_install
     unless File.exist? "#{var}/cayley"
-      # Create data directory
       (var/"cayley").mkpath
 
-      # Initialize the Cayley database
       system "#{bin}/cayley", "init", "--config=#{etc}/cayley.conf"
     end
   end

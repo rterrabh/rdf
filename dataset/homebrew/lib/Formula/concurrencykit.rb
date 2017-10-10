@@ -22,7 +22,6 @@ class Concurrencykit < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <ck_spinlock.h>
       int main()
       {
           return 0;

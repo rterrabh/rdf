@@ -78,8 +78,6 @@ extensions will be restored.
     specs = if options[:all] then
               Gem::Specification.map
 
-            # `--extensions` must be explicitly given to pristine only gems
-            # with extensions.
             elsif options[:extensions_set] and
                   options[:extensions] and options[:args].empty? then
               Gem::Specification.select do |spec|

@@ -1,7 +1,6 @@
 class Mpfr < Formula
   desc "C library for multiple-precision floating-point computations"
   homepage "http://www.mpfr.org/"
-  # Upstream is down a lot, so use mirrors
   url "https://mirrors.kernel.org/debian/pool/main/m/mpfr4/mpfr4_3.1.3.orig.tar.xz"
   mirror "https://ftp.gnu.org/gnu/mpfr/mpfr-3.1.3.tar.xz"
   sha256 "6835a08bd992c8257641791e9a6a2b35b02336c8de26d0a8577953747e514a16"
@@ -13,7 +12,6 @@ class Mpfr < Formula
     sha256 "5a98a6a8dd768c845602cabb31db527a0efecdbae3eaa1148db8010ae5420a97" => :mountain_lion
   end
 
-  # http://www.mpfr.org/mpfr-current/allpatches
   patch do
     url "https://gist.github.com/anonymous/3a7d24cf2c68f21eb940/raw/471e928fcdbfb5c2fa7428cfb496496e6ee469aa/mpfr-3.1.3.diff"
     sha256 "1ca002acc121413b9ce39e9f12bb6efe4bed4ec45cf3f3ffcff122b94f6694de"
@@ -41,8 +39,6 @@ class Mpfr < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gmp.h>
-      #include <mpfr.h>
 
       int main()
       {

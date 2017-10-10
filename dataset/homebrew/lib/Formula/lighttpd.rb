@@ -22,7 +22,6 @@ class Lighttpd < Formula
   depends_on "lua51" => :optional
   depends_on "libev" => :optional
 
-  # default max. file descriptors; this option will be ignored if the server is not started as root
   MAX_FDS = 512
 
   def config_path
@@ -57,11 +56,8 @@ class Lighttpd < Formula
     args << "--with-lua" if build.with? "lua51"
     args << "--with-libev" if build.with? "libev"
 
-    # fixed upstream, should be in next release: http://redmine.lighttpd.net/issues/2517
     inreplace "src/Makefile.am", "$(LDAP_LIB)", "$(SSL_LIB) $(LDAP_LIB)"
 
-    # autogen must be run, otherwise prebuilt configure may complain
-    # about a version mismatch between included automake and Homebrew's
     system "./autogen.sh"
     system "./configure", *args
     system "make", "install"
@@ -78,9 +74,6 @@ class Lighttpd < Formula
         s.sub!(/^server\.port\s*=\s*80$/, "server.port = 8080")
         s.sub!(%r{^server\.document-root\s*=\s*server_root \+ "\/htdocs"$}, "server.document-root = server_root")
 
-        # get rid of "warning: please use server.use-ipv6 only for hostnames, not
-        # without server.bind / empty address; your config will break if the kernel
-        # default for IPV6_V6ONLY changes"
         s.sub!(/^server.use-ipv6\s*=\s*"enable"$/, 'server.use-ipv6 = "disable"')
 
         s.sub!(/^server\.username\s*=\s*".+"$/, 'server.username  = "_www"')
@@ -88,8 +81,6 @@ class Lighttpd < Formula
         s.sub!(/^server\.event-handler\s*=\s*"linux-sysepoll"$/, 'server.event-handler = "select"')
         s.sub!(/^server\.network-backend\s*=\s*"linux-sendfile"$/, 'server.network-backend = "writev"')
 
-        # "max-connections == max-fds/2",
-        # http://redmine.lighttpd.net/projects/1/wiki/Server_max-connectionsDetails
         s.sub!(/^server\.max-connections = .+$/, "server.max-connections = " + (MAX_FDS / 2).to_s)
       end
     end

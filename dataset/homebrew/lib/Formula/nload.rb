@@ -11,8 +11,6 @@ class Nload < Formula
   depends_on "autoconf" => :build
   depends_on "automake" => :build
 
-  # Patching configure.in file to make configure compile on Mac OS.
-  # Patch taken from MacPorts.
   patch :DATA
 
   def install
@@ -20,7 +18,6 @@ class Nload < Formula
     system "./configure", "--disable-debug",
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
-    # Unset LDFLAGS, "-s" causes the linker to crash
     system "make", "install", "LDFLAGS="
   end
 end

@@ -69,7 +69,6 @@ class LeakChecker
         end
         puts "Leaked file descriptor: #{test_name}: #{fd}#{str}"
       }
-      #system("lsof -p #$$") if !fd_leaked.empty?
       h.each {|fd, list|
         next if list.length <= 1
         if 1 < list.count {|io, autoclose, inspect| autoclose }
@@ -95,7 +94,7 @@ class LeakChecker
         super(data)
       end
     }
-    #nodyna <ID:const_set-66> <CS TRIVIAL (static values)>
+    #nodyna <const_set-1457> <CS TRIVIAL (static values)>
     LeakChecker.const_set(:TempfileCounter, m)
 
     class << Tempfile::Remover

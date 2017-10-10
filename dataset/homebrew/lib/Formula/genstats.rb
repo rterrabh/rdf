@@ -7,9 +7,6 @@ class Genstats < Formula
   depends_on :macos => :lion # uses strndup
 
   def install
-    # Tried to make this a patch.  Applying the patch hunk would
-    # fail, even though I used "git diff | pbcopy".  Tried messing
-    # with whitespace, # lines, etc.  Ugh.
     inreplace "br.cpp" do |s|
       s.gsub! /if \(_XOPEN_VERSION >= 600\)/, "if (_XOPEN_VERSION >= 600) && !__APPLE__"
     end

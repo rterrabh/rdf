@@ -1,9 +1,4 @@
 module Rails
-  # This is a class which takes in a rails command and initiates the appropriate
-  # initiation sequence.
-  #
-  # Warning: This class mutates ARGV because some commands require manipulating
-  # it before they are run.
   class CommandsTasks # :nodoc:
     attr_reader :argv
 
@@ -36,7 +31,7 @@ EOT
     def run_command!(command)
       command = parse_command(command)
       if COMMAND_WHITELIST.include?(command)
-        #nodyna <ID:send-287> <SD MODERATE (change-prone variables)>
+        #nodyna <send-1153> <SD MODERATE (change-prone variables)>
         send(command)
       else
         write_error_message(command)
@@ -59,10 +54,8 @@ EOT
       require_command!("console")
       options = Rails::Console.parse_arguments(argv)
 
-      # RAILS_ENV needs to be set before config/application is required
       ENV['RAILS_ENV'] = options[:environment] if options[:environment]
 
-      # shift ARGV so IRB doesn't freak
       shift_argv!
 
       require_application_and_environment!
@@ -74,8 +67,6 @@ EOT
       require_command!("server")
 
       Rails::Server.new.tap do |server|
-        # We need to require application after the server sets environment,
-        # otherwise the --environment option given to the server won't propagate.
         require APP_PATH
         Dir.chdir(Rails.application.root)
         server.start
@@ -131,9 +122,6 @@ EOT
         require_command!(command)
       end
 
-      # Change to the application's path if there is no config.ru file in current directory.
-      # This allows us to run `rails server` from other directories, but still get
-      # the main config.ru and properly set the tmp directory.
       def set_application_directory!
         Dir.chdir(File.expand_path('../../', APP_PATH)) unless File.exist?(File.expand_path("config.ru"))
       end

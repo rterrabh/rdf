@@ -28,10 +28,8 @@ module ProjectsHelper
 
     author_html =  ""
 
-    # Build avatar image tag
     author_html << image_tag(avatar_icon(author.try(:email), opts[:size]), width: opts[:size], class: "avatar avatar-inline #{"s#{opts[:size]}" if opts[:size]}", alt:'') if opts[:avatar]
 
-    # Build name span tag
     author_html << content_tag(:span, sanitize(author.name), class: opts[:author_class]) if opts[:name]
 
     author_html = author_html.html_safe
@@ -161,9 +159,6 @@ module ProjectsHelper
   def repository_size(project = nil)
     "#{(project || @project).repository_size} MB"
   rescue
-    # In order to prevent 500 error
-    # when application cannot allocate memory
-    # to calculate repo size - just show 'Unknown'
     'unknown'
   end
 
@@ -318,7 +313,7 @@ module ProjectsHelper
   private
 
   def filename_path(project, filename)
-    #nodyna <ID:send-130> <SD MODERATE (change-prone variables)>
+    #nodyna <send-529> <SD MODERATE (change-prone variables)>
     if project && blob = project.repository.send(filename)
       namespace_project_blob_path(
           project.namespace,

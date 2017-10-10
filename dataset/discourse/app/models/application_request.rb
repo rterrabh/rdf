@@ -12,17 +12,14 @@ class ApplicationRequest < ActiveRecord::Base
                     page_view_anon_mobile)
 
   cattr_accessor :autoflush, :autoflush_seconds, :last_flush
-  # auto flush if backlog is larger than this
   self.autoflush = 2000
 
-  # auto flush if older than this
   self.autoflush_seconds = 5.minutes
   self.last_flush = Time.now.utc
 
   def self.increment!(type, opts=nil)
     key = redis_key(type)
     val = $redis.incr(key).to_i
-    # 3.days, see: https://github.com/rails/rails/issues/21296
     $redis.expire(key, 259200)
 
     autoflush = (opts && opts[:autoflush]) || self.autoflush
@@ -47,8 +44,6 @@ class ApplicationRequest < ActiveRecord::Base
 
     date = date.to_date
 
-    # this may seem a bit fancy but in so it allows
-    # for concurrent calls without double counting
     req_types.each do |req_type,_|
       key = redis_key(req_type,date)
       val = $redis.get(key).to_i
@@ -58,7 +53,6 @@ class ApplicationRequest < ActiveRecord::Base
       new_val = $redis.incrby(key, -val).to_i
 
       if new_val < 0
-        # undo and flush next time
         $redis.incrby(key, val)
         next
       end
@@ -88,7 +82,6 @@ class ApplicationRequest < ActiveRecord::Base
 
     req_type_id = req_types[req_type]
 
-    # a poor man's upsert
     id = where(date: date, req_type: req_type_id).pluck(:id).first
     id ||= create!(date: date, req_type: req_type_id, count: 0).id
 
@@ -118,16 +111,3 @@ class ApplicationRequest < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: application_requests
-#
-#  id       :integer          not null, primary key
-#  date     :date             not null
-#  req_type :integer          not null
-#  count    :integer          default(0), not null
-#
-# Indexes
-#
-#  index_application_requests_on_date_and_req_type  (date,req_type) UNIQUE
-#

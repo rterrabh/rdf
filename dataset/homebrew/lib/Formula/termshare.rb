@@ -18,13 +18,11 @@ class Termshare < Formula
   def install
     ENV["GOPATH"] = buildpath
 
-    # Install Go dependencies
     system "go", "get", "code.google.com/p/go.net/websocket"
     system "go", "get", "github.com/heroku/hk/term"
     system "go", "get", "github.com/kr/pty"
     system "go", "get", "github.com/nu7hatch/gouuid"
 
-    # Build and install termshare
     system "go", "build", "-o", "termshare"
     bin.install "termshare"
   end

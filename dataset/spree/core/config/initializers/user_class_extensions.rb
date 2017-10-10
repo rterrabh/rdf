@@ -1,5 +1,6 @@
 Spree::Core::Engine.config.to_prepare do
   if Spree.user_class
+    #nodyna <class_eval-2589> <not yet classified>
     Spree.user_class.class_eval do
 
       include Spree::UserApiAuthentication
@@ -24,7 +25,6 @@ Spree::Core::Engine.config.to_prepare do
         %w[id email]
       end
 
-      # has_spree_role? simply needs to return true or false whether a user has a role or not.
       def has_spree_role?(role_in_question)
         spree_roles.where(name: role_in_question.to_s).any?
       end

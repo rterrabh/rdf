@@ -18,7 +18,6 @@ class Burp < Formula
   depends_on "librsync"
   depends_on "openssl"
 
-  # patches to change directories to brew conventions in Makefile and config files
   patch :DATA
 
   def install
@@ -63,7 +62,6 @@ class Burp < Formula
 
   def caveats; <<-EOS.undent
     Before installing the launchd entry you should configure your burp client in
-    #{etc}/burp/burp.conf
     EOS
   end
 end
@@ -120,24 +118,17 @@ index 76fcd8d..9cd7edb 100644
 +++ b/configs/client/burp.conf
 @@ -41,17 +41,17 @@ cross_all_filesystems=0
  
- # Uncomment the following lines to automatically generate a certificate signing
- # request and send it to the server.
 -ca_burp_ca = /usr/sbin/burp_ca
 -ca_csr_dir = /etc/burp/CA-client
 +ca_burp_ca = HOMEBREW_PREFIX/bin/burp_ca
 +ca_csr_dir = HOMEBREW_PREFIX/etc/burp/CA-client
  
- # SSL certificate authority - same file on both server and client
 -ssl_cert_ca = /etc/burp/ssl_cert_ca.pem
 +ssl_cert_ca = HOMEBREW_PREFIX/etc/burp/ssl_cert_ca.pem
  
- # Client SSL certificate
 -ssl_cert = /etc/burp/ssl_cert-client.pem
 +ssl_cert = HOMEBREW_PREFIX/etc/burp/ssl_cert-client.pem
  
- # Client SSL key
 -ssl_key = /etc/burp/ssl_cert-client.key
 +ssl_key = HOMEBREW_PREFIX/etc/burp/ssl_cert-client.key
  
- # Client SSL ciphers
- #ssl_ciphers = 

@@ -1,6 +1,3 @@
-#
-# Connects to a mailbox and checks for replies
-#
 require 'net/pop'
 require_dependency 'email/receiver'
 require_dependency 'email/sender'
@@ -71,13 +68,13 @@ module Jobs
       end
 
       if message_template
-        # inform the user about the rejection
         message = Mail::Message.new(mail_string)
         template_args[:former_title] = message.subject
         template_args[:destination] = message.to
         template_args[:site_name] = SiteSetting.title
 
         client_message = RejectionMailer.send_rejection(message_template, message.from, template_args)
+        #nodyna <send-404> <not yet classified>
         Email::Sender.new(client_message, message_template).send
       else
         Discourse.handle_job_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))

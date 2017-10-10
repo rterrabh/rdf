@@ -39,7 +39,6 @@ class Plplot < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <plplot.h>
 
       int main(int argc, char *argv[]) {
         plparseopts( &argc, argv, PL_PARSE_FULL );

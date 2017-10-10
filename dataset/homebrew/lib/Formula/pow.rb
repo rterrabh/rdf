@@ -9,7 +9,6 @@ class Pow < Formula
   def install
     libexec.install Dir["*"]
     (bin/"pow").write <<-EOS.undent
-      #!/bin/sh
       export POW_BIN="#{bin}/pow"
       exec "#{Formula["node"].opt_bin}/node" "#{libexec}/lib/command.js" "$@"
     EOS

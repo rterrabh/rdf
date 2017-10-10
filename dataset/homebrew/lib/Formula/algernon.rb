@@ -17,8 +17,6 @@ class Algernon < Formula
   depends_on "readline"
   depends_on "go" => :build
 
-  # List of Go dependencies and hashes.
-  # Generated using: https://github.com/samertm/homebrew-go-resources
   %w[
     github.com/bobappleyard/readline a1f23ef6d7c8177f1fe3085d3bf7b40457049f0c
     github.com/boltdb/bolt 5eb31d5821750fbc84284d610c0ce85261662adb
@@ -88,24 +86,19 @@ class Algernon < Formula
       tempdb = "/tmp/_brew_test.db"
       cport = ":45678"
 
-      # Start the server in a fork and retrieve the PID
       algernon_pid = fork do
         exec "#{bin}/algernon", "--quiet", "--httponly", "--server", "--boltdb", tempdb, "--addr", cport
       end
 
-      # Give the server some time to start serving
       sleep(1)
 
-      # Check that the server is responding correctly
       output = `curl -sIm3 -o- http://localhost#{cport}`
       assert output.include?("Server: Algernon")
       assert_equal 0, $?.exitstatus
 
     ensure
-      # Stop the server gracefully
       Process.kill("HUP", algernon_pid)
 
-      # Remove temporary Bolt database
       rm_f tempdb
     end
   end

@@ -49,7 +49,6 @@ class PostReceive
     changes.force_encoding("UTF-8")
     return changes if changes.valid_encoding?
 
-    # Convert non-UTF-8 branch/tag names to UTF-8 so they can be dumped as JSON.
     detection = CharlockHolmes::EncodingDetector.detect(changes)
     return changes unless detection && detection[:encoding]
 

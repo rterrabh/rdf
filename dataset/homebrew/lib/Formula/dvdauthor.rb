@@ -5,8 +5,6 @@ class Dvdauthor < Formula
   sha256 "501fb11b09c6eb9c5a229dcb400bd81e408cc78d34eab6749970685023c51fe9"
   revision 1
 
-  # Dvdauthor will optionally detect ImageMagick or GraphicsMagick, too.
-  # But we don't add either as deps because they are big.
 
   depends_on "pkg-config" => :build
   depends_on "libdvdread"

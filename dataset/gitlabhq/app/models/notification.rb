@@ -1,7 +1,4 @@
 class Notification
-  #
-  # Notification levels
-  #
   N_DISABLED = 0
   N_PARTICIPATING = 1
   N_WATCH = 2

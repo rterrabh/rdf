@@ -22,8 +22,6 @@ class Geoipupdate < Formula
   def install
     ENV.universal_binary if build.universal?
 
-    # Download free databases by default
-    # See https://github.com/maxmind/geoip-api-c#150
     inreplace "conf/GeoIP.conf.default", "YOUR_USER_ID_HERE", "999999"
     inreplace "conf/GeoIP.conf.default", "YOUR_LICENSE_KEY_HERE", "000000000000"
     inreplace "conf/GeoIP.conf.default", /^ProductIds .*$/, "ProductIds 506 533 GeoLite2-City GeoLite2-Country"

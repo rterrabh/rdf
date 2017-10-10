@@ -14,7 +14,6 @@ class Libhid < Formula
   depends_on "libusb"
   depends_on "libusb-compat"
 
-  # Fix compilation error on 10.9
   patch :DATA
 
   def install

@@ -1,8 +1,3 @@
-#
-#   tk/timer.rb : methods for Tcl/Tk after command
-#
-#   $Id$
-#
 require 'tk'
 
 class TkTimer
@@ -11,7 +6,7 @@ class TkTimer
 
   TkCommandNames = ['after'.freeze].freeze
 
-  #nodyna <ID:instance_eval-32> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1840> <IEV MODERATE (method definition)>
   (Tk_CBID = ['a'.freeze, TkUtil.untrust('00000')]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -21,7 +16,7 @@ class TkTimer
   Tk_CBTBL = TkUtil.untrust({})
 
   TkCore::INTERP.add_tk_procs('rb_after', 'id', <<-'EOL')
-    #nodyna <ID:eval-34> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-1841> <EV COMPLEX (change-prone variables)>
     if {[set st [catch {eval {ruby_cmd TkTimer callback} $id} ret]] != 0} {
         return -code $st $ret
     } {
@@ -31,9 +26,6 @@ class TkTimer
 
   DEFAULT_IGNORE_EXCEPTIONS = [ NameError, RuntimeError ].freeze
 
-  ###############################
-  # class methods
-  ###############################
   def self.start(*args, &b)
     self.new(*args, &b).start
   end
@@ -65,9 +57,6 @@ class TkTimer
   end
 
 
-  ###############################
-  # instance methods
-  ###############################
   def do_callback
     @in_callback = true
     @after_id = nil
@@ -113,7 +102,6 @@ class TkTimer
     if @running == false || @proc_max == 0 || @do_loop == 0
       Tk_CBTBL.delete(@id) ;# for GC
       @running = false
-      # @wait_var.value = 0
       __at_end__
       return
     end
@@ -123,7 +111,6 @@ class TkTimer
       else
         Tk_CBTBL.delete(@id) ;# for GC
         @running = false
-        # @wait_var.value = 0
         __at_end__
         return
       end
@@ -131,7 +118,6 @@ class TkTimer
 
     @current_args = args
 
-    # if @sleep_time.kind_of?(Proc)
     if TkComm._callback_entry?(@sleep_time)
       sleep = @sleep_time.call(self)
     else
@@ -148,7 +134,6 @@ class TkTimer
 
   def initialize(*args, &b)
     Tk_CBID.mutex.synchronize{
-      # @id = Tk_CBID.join('')
       @id = Tk_CBID.join(TkCore::INTERP._ip_id_)
       Tk_CBID[1].succ!
     }
@@ -182,12 +167,6 @@ class TkTimer
     @after_script = nil
 
     @cancel_on_exception = DEFAULT_IGNORE_EXCEPTIONS
-    # Unless @cancel_on_exception, Ruby/Tk shows an error dialog box when
-    # an excepsion is raised on TkTimer callback procedure.
-    # If @cancel_on_exception is an array of exception classes and the raised
-    # exception is included in the array, Ruby/Tk cancels executing TkTimer
-    # callback procedures silently (TkTimer#cancel is called and no dialog is
-    # shown).
 
     if b
       case args.size
@@ -247,7 +226,6 @@ class TkTimer
     else
       @cancel_on_exception = false
     end
-    #self
   end
 
   def running?
@@ -260,12 +238,9 @@ class TkTimer
 
   def loop_rest=(rest)
     @do_loop = rest
-    #self
   end
 
   def set_interval(interval)
-    #if interval != 'idle' && interval != :idle \
-    #  && !interval.kind_of?(Integer) && !interval.kind_of?(Proc)
     if interval != 'idle' && interval != :idle \
       && !interval.kind_of?(Integer) && !TkComm._callback_entry?(interval)
       fail ArgumentError, "expect Integer or Proc"
@@ -274,8 +249,6 @@ class TkTimer
   end
 
   def set_procs(interval, loop_exec, *procs)
-    #if interval != 'idle' && interval != :idle \
-    #   && !interval.kind_of?(Integer) && !interval.kind_of?(Proc)
     if interval != 'idle' && interval != :idle \
       && !interval.kind_of?(Integer) && !TkComm._callback_entry?(interval)
       fail ArgumentError, "expect Integer or Proc for 1st argument"
@@ -284,7 +257,6 @@ class TkTimer
 
     @loop_proc = []
     procs.each{|e|
-      # if e.kind_of?(Proc)
       if TkComm._callback_entry?(e)
         @loop_proc.push([e])
       else
@@ -313,7 +285,6 @@ class TkTimer
 
   def add_procs(*procs)
     procs.each{|e|
-      # if e.kind_of?(Proc)
       if TkComm._callback_entry?(e)
         @loop_proc.push([e])
       else
@@ -327,7 +298,6 @@ class TkTimer
 
   def delete_procs(*procs)
     procs.each{|e|
-      # if e.kind_of?(Proc)
       if TkComm._callback_entry?(e)
         @loop_proc.delete([e])
       else
@@ -349,7 +319,6 @@ class TkTimer
   end
 
   def set_start_proc(sleep=nil, init_proc=nil, *init_args, &b)
-    # set parameters for 'restart'
     sleep = @init_sleep unless sleep
 
     if sleep != 'idle' && sleep != :idle && !sleep.kind_of?(Integer)
@@ -396,7 +365,6 @@ class TkTimer
     @current_sleep = @init_sleep
     @running = true
     if @init_proc
-      # if not @init_proc.kind_of?(Proc)
       if !TkComm._callback_entry?(@init_proc)
         fail ArgumentError, "Argument '#{@init_proc}' need to be Proc"
       end
@@ -439,7 +407,6 @@ class TkTimer
 
   def cancel
     @running = false
-    # @wait_var.value = 0
     __at_end__
     tk_call 'after', 'cancel', @after_id if @after_id
     @after_id = nil
@@ -489,7 +456,6 @@ class TkTimer
       if b
         @at_end_proc = b
       else
-        # no proc
         return @at_end_proc
       end
     else
@@ -581,7 +547,6 @@ class TkRTTimer < TkTimer
     size = 0
     d_sec = 0; d_usec = 0
     @offset_list.each_with_index{|offset, idx|
-      # weight = 1
       weight = idx + 1
       size += weight
       d_sec += offset[0] * weight
@@ -597,7 +562,6 @@ class TkRTTimer < TkTimer
     if @running == false || @proc_max == 0 || @do_loop == 0
       Tk_CBTBL.delete(@id) ;# for GC
       @running = false
-      # @wait_var.value = 0
       __at_end__
       return
     end
@@ -607,7 +571,6 @@ class TkRTTimer < TkTimer
       else
         Tk_CBTBL.delete(@id) ;# for GC
         @running = false
-        # @wait_var.value = 0
         __at_end__
         return
       end

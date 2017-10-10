@@ -34,15 +34,12 @@ class Git < Formula
   depends_on "openssl" if build.with? "brewed-openssl"
   depends_on "curl" if build.with? "brewed-curl"
   depends_on "go" => :build if build.with? "persistent-https"
-  # Trigger an install of swig before subversion, as the "swig" doesn't get pulled in otherwise
-  # See https://github.com/Homebrew/homebrew/issues/34554
   if build.with? "brewed-svn"
     depends_on "swig"
     depends_on "subversion" => "with-perl"
   end
 
   def install
-    # If these things are installed, tell Git build system to not use them
     ENV["NO_FINK"] = "1"
     ENV["NO_DARWIN_PORTS"] = "1"
     ENV["V"] = "1" # build verbosely
@@ -56,7 +53,6 @@ class Git < Formula
       ENV["PERLLIB_EXTRA"] = "#{Formula["subversion"].opt_prefix}/Library/Perl/#{perl_version}/darwin-thread-multi-2level"
     elsif MacOS.version >= :mavericks
       ENV["PERLLIB_EXTRA"] = %W[
-        #{MacOS.active_developer_dir}
         /Library/Developer/CommandLineTools
         /Applications/Xcode.app/Contents/Developer
       ].uniq.map do |p|
@@ -88,7 +84,6 @@ class Git < Formula
 
     system "make", "install", *args
 
-    # Install the OS X keychain credential helper
     cd "contrib/credential/osxkeychain" do
       system "make", "CC=#{ENV.cc}",
                      "CFLAGS=#{ENV.cflags}",
@@ -97,7 +92,6 @@ class Git < Formula
       system "make", "clean"
     end
 
-    # Install git-subtree
     cd "contrib/subtree" do
       system "make", "CC=#{ENV.cc}",
                      "CFLAGS=#{ENV.cflags}",
@@ -115,7 +109,6 @@ class Git < Formula
     end
 
     if build.with? "completions"
-      # install the completion script first because it is inside "contrib"
       bash_completion.install "contrib/completion/git-completion.bash"
       bash_completion.install "contrib/completion/git-prompt.sh"
 
@@ -125,26 +118,20 @@ class Git < Formula
 
     (share+"git-core").install "contrib"
 
-    # We could build the manpages ourselves, but the build process depends
-    # on many other packages, and is somewhat crazy, this way is easier.
     man.install resource("man")
     (share+"doc/git-doc").install resource("html")
 
-    # Make html docs world-readable
     chmod 0644, Dir["#{share}/doc/git-doc/**/*.{html,txt}"]
     chmod 0755, Dir["#{share}/doc/git-doc/{RelNotes,howto,technical}"]
 
-    # To avoid this feature hooking into the system OpenSSL, remove it.
-    # If you need it, install git --with-brewed-openssl.
+    #nodyna <send-563> <not yet classified>
     rm "#{libexec}/git-core/git-imap-send" if build.without? "brewed-openssl"
   end
 
   def caveats; <<-EOS.undent
     The OS X keychain credential helper has been installed to:
-      #{HOMEBREW_PREFIX}/bin/git-credential-osxkeychain
 
     The "contrib" directory has been installed to:
-      #{HOMEBREW_PREFIX}/share/git-core/contrib
     EOS
   end
 

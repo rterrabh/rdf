@@ -18,7 +18,6 @@ class Cadaver < Formula
   depends_on "neon"
   depends_on "openssl"
 
-  # enable build with the latest neon
   patch :DATA
 
   def install

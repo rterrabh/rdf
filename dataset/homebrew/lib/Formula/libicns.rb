@@ -20,7 +20,6 @@ class Libicns < Formula
   depends_on "libpng"
 
   def install
-    # Fix for libpng 1.5
     inreplace "icnsutils/png2icns.c",
       "png_set_gray_1_2_4_to_8",
       "png_set_expand_gray_1_2_4_to_8"
@@ -34,8 +33,6 @@ class Libicns < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include "icns.h"
       int main(void)
       {
         int    error = 0;

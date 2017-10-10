@@ -19,7 +19,6 @@ class Gammaray < Formula
   depends_on "qt" if build.with? "qt4"
   depends_on "qt5" if build.without? "qt4"
   depends_on "graphviz" => :recommended
-  # VTK needs to have Qt support, and it needs to match GammaRay's
   depends_on "homebrew/science/vtk" => [:optional, ((build.with? "qt4") ? "with-qt" : "with-qt5")]
 
   def install

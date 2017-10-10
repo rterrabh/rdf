@@ -18,11 +18,9 @@ __END__
 +++ b/Makefile	2012-10-12 23:26:08.000000000 -0700
 @@ -5,8 +5,7 @@
 
- # CC = gcc
  CPPFLAGS=-DVERSION_STR=\"$(VERSION)\" \
 -         -DUUCP_LOCK_DIR=\"$(UUCP_LOCK_DIR)\" \
 -         -DHIGH_BAUD
 +         -DUUCP_LOCK_DIR=\"$(UUCP_LOCK_DIR)\"
  CFLAGS = -Wall -g
 
- # LD = gcc

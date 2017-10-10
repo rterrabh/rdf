@@ -26,10 +26,11 @@ module Homebrew
     ENV.setup_build_environment
 
     if ARGV.switch? "D"
+      #nodyna <module_eval-615> <not yet classified>
       FormulaAuditor.module_eval do
         instance_methods.grep(/audit_/).map do |name|
           method = instance_method(name)
-          #nodyna <ID:define_method-10> <DM COMPLEX (events)>
+          #nodyna <define_method-616> <DM COMPLEX (events)>
           define_method(name) do |*args, &block|
             begin
               time = Time.now
@@ -139,7 +140,7 @@ class FormulaAuditor
     @online = !!options[:online]
     @problems = []
     @text = FormulaText.new(formula.path)
-    #nodyna <ID:send-23> <SD MODERATE (array)>
+    #nodyna <send-617> <SD MODERATE (array)>
     @specs = %w[stable devel head].map { |s| formula.send(s) }.compact
   end
 
@@ -221,7 +222,6 @@ class FormulaAuditor
 
   def audit_formula_name
     return unless @strict
-    # skip for non-official taps
     return if !formula.core_formula? && !formula.tap.to_s.start_with?("homebrew")
 
     name = formula.name
@@ -262,13 +262,10 @@ class FormulaAuditor
 
   def audit_deps
     @specs.each do |spec|
-      # Check for things we don't like to depend on.
-      # We allow non-Homebrew installs whenever possible.
       spec.deps.each do |dep|
         begin
           dep_f = dep.to_formula
         rescue TapFormulaUnavailableError
-          # Don't complain about missing cross-tap dependencies
           next
         rescue FormulaUnavailableError
           problem "Can't find dependency #{dep.name.inspect}."
@@ -303,7 +300,6 @@ class FormulaAuditor
         when *BUILD_TIME_DEPS
           next if dep.build? || dep.run?
           problem <<-EOS.undent
-            #{dep} dependency should be
               depends_on "#{dep}" => :build
             Or if it is indeed a runtime dependency
               depends_on "#{dep}" => :run
@@ -333,7 +329,6 @@ class FormulaAuditor
       begin
         Formulary.factory(c.name)
       rescue TapFormulaUnavailableError
-        # Don't complain about missing cross-tap conflicts.
         next
       rescue FormulaUnavailableError
         problem "Can't find conflicting formula #{c.name.inspect}."
@@ -353,7 +348,6 @@ class FormulaAuditor
   end
 
   def audit_desc
-    # For now, only check the description when using `--strict`
     return unless @strict
 
     desc = formula.desc
@@ -363,7 +357,6 @@ class FormulaAuditor
       return
     end
 
-    # Make sure the formula name plus description is no longer than 80 characters
     linelength = formula.full_name.length + ": ".length + desc.length
     if linelength > 80
       problem <<-EOS.undent
@@ -388,22 +381,14 @@ class FormulaAuditor
       problem "The homepage should start with http or https (URL is #{homepage})."
     end
 
-    # Check for http:// GitHub homepage urls, https:// is preferred.
-    # Note: only check homepages that are repo pages, not *.github.com hosts
     if homepage =~ %r{^http://github\.com/}
       problem "Please use https:// for #{homepage}"
     end
 
-    # Savannah has full SSL/TLS support but no auto-redirect.
-    # Doesn't apply to the download URLs, only the homepage.
     if homepage =~ %r{^http://savannah\.nongnu\.org/}
       problem "Please use https:// for #{homepage}"
     end
 
-    # Freedesktop is complicated to handle - It has SSL/TLS, but only on certain subdomains.
-    # To enable https Freedesktop change the URL from http://project.freedesktop.org/wiki to
-    # https://wiki.freedesktop.org/project_name.
-    # "Software" is redirected to https://wiki.freedesktop.org/www/Software/project_name
     if homepage =~ %r{^http://((?:www|nice|libopenraw|liboil|telepathy|xorg)\.)?freedesktop\.org/(?:wiki/)?}
       if homepage =~ /Software/
         problem "#{homepage} should be styled `https://wiki.freedesktop.org/www/Software/project_name`"
@@ -412,25 +397,18 @@ class FormulaAuditor
       end
     end
 
-    # Google Code homepages should end in a slash
     if homepage =~ %r{^https?://code\.google\.com/p/[^/]+[^/]$}
       problem "#{homepage} should end with a slash"
     end
 
-    # People will run into mixed content sometimes, but we should enforce and then add
-    # exemptions as they are discovered. Treat mixed content on homepages as a bug.
-    # Justify each exemptions with a code comment so we can keep track here.
     if homepage =~ %r{^http://[^/]*github\.io/}
       problem "Please use https:// for #{homepage}"
     end
 
-    # There's an auto-redirect here, but this mistake is incredibly common too.
-    # Only applies to the homepage and subdomains for now, not the FTP URLs.
     if homepage =~ %r{^http://((?:build|cloud|developer|download|extensions|git|glade|help|library|live|nagios|news|people|projects|rt|static|wiki|www)\.)?gnome\.org}
       problem "Please use https:// for #{homepage}"
     end
 
-    # Compact the above into this list as we're able to remove detailed notations, etc over time.
     case homepage
     when %r{^http://[^/]*\.apache\.org},
          %r{^http://packages\.debian\.org},
@@ -491,7 +469,7 @@ class FormulaAuditor
     end
 
     %w[Stable Devel HEAD].each do |name|
-      #nodyna <ID:send-24> <SD MODERATE (array)>
+      #nodyna <send-618> <SD MODERATE (array)>
       next unless spec = formula.send(name.downcase)
 
       ra = ResourceAuditor.new(spec).audit
@@ -508,7 +486,7 @@ class FormulaAuditor
     end
 
     %w[Stable Devel].each do |name|
-      #nodyna <ID:send-25> <SD MODERATE (array)>
+      #nodyna <send-619> <SD MODERATE (array)>
       next unless spec = formula.send(name.downcase)
       version = spec.version
       if version.to_s !~ /\d/
@@ -590,12 +568,10 @@ class FormulaAuditor
       problem "Use a space in class inheritance: class Foo < #{$1}"
     end
 
-    # Commented-out cmake support from default template
     if line =~ /# system "cmake/
       problem "Commented cmake call found"
     end
 
-    # Comments from default template
     if line =~ /# PLEASE REMOVE/
       problem "Please remove default template comments"
     end
@@ -621,28 +597,22 @@ class FormulaAuditor
       problem "Please remove default template comments"
     end
 
-    # FileUtils is included in Formula
-    # encfs modifies a file with this name, so check for some leading characters
     if line =~ /[^'"\/]FileUtils\.(\w+)/
       problem "Don't need 'FileUtils.' before #{$1}."
     end
 
-    # Check for long inreplace block vars
     if line =~ /inreplace .* do \|(.{2,})\|/
       problem "\"inreplace <filenames> do |s|\" is preferred over \"|#{$1}|\"."
     end
 
-    # Check for string interpolation of single values.
     if line =~ /(system|inreplace|gsub!|change_make_var!).*[ ,]"#\{([\w.]+)\}"/
       problem "Don't need to interpolate \"#{$2}\" with #{$1}"
     end
 
-    # Check for string concatenation; prefer interpolation
     if line =~ /(#\{\w+\s*\+\s*['"][^}]+\})/
       problem "Try not to concatenate paths in string interpolation:\n   #{$1}"
     end
 
-    # Prefer formula path shortcuts in Pathname+
     if line =~ %r{\(\s*(prefix\s*\+\s*(['"])(bin|include|libexec|lib|sbin|share|Frameworks)[/'"])}
       problem "\"(#{$1}...#{$2})\" should be \"(#{$3.downcase}+...)\""
     end
@@ -651,7 +621,6 @@ class FormulaAuditor
       problem "\"#{$1}\" should be \"#{$4}\""
     end
 
-    # Prefer formula path shortcuts in strings
     if line =~ %r[(\#\{prefix\}/(bin|include|libexec|lib|sbin|share|Frameworks))]
       problem "\"#{$1}\" should be \"\#{#{$2.downcase}}\""
     end
@@ -672,12 +641,10 @@ class FormulaAuditor
       problem ":#{$1} is deprecated. Usage should be \"#{$1}\""
     end
 
-    # Commented-out depends_on
     if line =~ /#\s*depends_on\s+(.+)\s*$/
       problem "Commented-out dep #{$1}"
     end
 
-    # No trailing whitespace, please
     if line =~ /[\t ]+$/
       problem "#{lineno}: Trailing whitespace was found"
     end
@@ -698,7 +665,6 @@ class FormulaAuditor
       problem "Use \"depends_on :x11\" instead of \"ENV.x11\""
     end
 
-    # Avoid hard-coding compilers
     if line =~ %r{(system|ENV\[.+\]\s?=)\s?['"](/usr/bin/)?(gcc|llvm-gcc|clang)['" ]}
       problem "Use \"\#{ENV.cc}\" instead of hard-coding \"#{$3}\""
     end
@@ -835,13 +801,11 @@ class FormulaAuditor
   end
 
   def audit_reverse_migration
-    # Only enforce for new formula being re-added to core
     return unless @strict
     return unless formula.core_formula?
 
     if TAP_MIGRATIONS.key?(formula.name)
       problem <<-EOS.undent
-       #{formula.name} seems to be listed in tap_migrations.rb!
        Please remove #{formula.name} from present tap & tap_migrations.rb
        before submitting it to Homebrew/homebrew.
       EOS
@@ -1037,12 +1001,10 @@ class ResourceAuditor
   end
 
   def audit_urls
-    # Check GNU urls; doesn't apply to mirrors
     if url =~ %r{^(?:https?|ftp)://(?!alpha).+/gnu/}
       problem "Please use \"http://ftpmirror.gnu.org\" instead of #{url}."
     end
 
-    # GNU's ftpmirror does NOT support SSL/TLS.
     if url =~ %r{^https://ftpmirror\.gnu\.org/}
       problem "Please use http:// for #{url}"
     end
@@ -1053,8 +1015,6 @@ class ResourceAuditor
 
     urls = [url] + mirrors
 
-    # Check a variety of SSL/TLS URLs that don't consistently auto-redirect
-    # or are overly common errors that need to be reduced & fixed over time.
     urls.each do |p|
       case p
       when %r{^http://ftp\.gnu\.org/},
@@ -1076,13 +1036,10 @@ class ResourceAuditor
       end
     end
 
-    # Check SourceForge urls
     urls.each do |p|
-      # Skip if the URL looks like a SVN repo
       next if p =~ %r{/svnroot/}
       next if p =~ /svn\.sourceforge/
 
-      # Is it a sourceforge http(s) URL?
       next unless p =~ %r{^https?://.*\b(sourceforge|sf)\.(com|net)}
 
       if p =~ /(\?|&)use_mirror=/
@@ -1111,40 +1068,31 @@ class ResourceAuditor
       end
     end
 
-    # Check for Google Code download urls, https:// is preferred
-    # Intentionally not extending this to SVN repositories due to certificate
-    # issues.
     urls.grep(%r{^http://.*\.googlecode\.com/files.*}) do |u|
       problem "Please use https:// for #{u}"
     end
 
-    # Check for new-url Google Code download urls, https:// is preferred
     urls.grep(%r{^http://code\.google\.com/}) do |u|
       problem "Please use https:// for #{u}"
     end
 
-    # Check for git:// GitHub repo urls, https:// is preferred.
     urls.grep(%r{^git://[^/]*github\.com/}) do |u|
       problem "Please use https:// for #{u}"
     end
 
-    # Check for git:// Gitorious repo urls, https:// is preferred.
     urls.grep(%r{^git://[^/]*gitorious\.org/}) do |u|
       problem "Please use https:// for #{u}"
     end
 
-    # Check for http:// GitHub repo urls, https:// is preferred.
     urls.grep(%r{^http://github\.com/.*\.git$}) do |u|
       problem "Please use https:// for #{u}"
     end
 
-    # Use new-style archive downloads
     urls.each do |u|
       next unless u =~ %r{https://.*github.*/(?:tar|zip)ball/} && u !~ /\.git$/
       problem "Use /archive/ URLs for GitHub tarballs (url is #{u})."
     end
 
-    # Don't use GitHub .zip files
     urls.each do |u|
       next unless u =~ %r{https://.*github.*/(archive|releases)/.*\.zip$} && u !~ %r{releases/download}
       problem "Use GitHub tarballs rather than zipballs (url is #{u})."

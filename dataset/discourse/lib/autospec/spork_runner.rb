@@ -17,7 +17,6 @@ module Autospec
     end
 
     def running?
-      # launch a thread that will wait for spork to die
       @monitor_thread ||=
         Thread.new do
           Process.wait(@spork_pid)

@@ -23,7 +23,6 @@ class MongoC < Formula
   depends_on "openssl" => :recommended
 
   def install
-    # --enable-sasl=no: https://jira.mongodb.org/browse/CDRIVER-447
     args = ["--prefix=#{prefix}", "--enable-sasl=no"]
 
     if build.head?

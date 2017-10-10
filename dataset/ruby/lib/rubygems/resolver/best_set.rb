@@ -1,13 +1,6 @@
-##
-# The BestSet chooses the best available method to query a remote index.
-#
-# It combines IndexSet and APISet
 
 class Gem::Resolver::BestSet < Gem::Resolver::ComposedSet
 
-  ##
-  # Creates a BestSet for the given +sources+ or Gem::sources if none are
-  # specified.  +sources+ must be a Gem::SourceList.
 
   def initialize sources = Gem.sources
     super()
@@ -15,8 +8,6 @@ class Gem::Resolver::BestSet < Gem::Resolver::ComposedSet
     @sources = sources
   end
 
-  ##
-  # Picks which sets to use for the configured sources.
 
   def pick_sets # :nodoc:
     @sources.each_source do |source|
@@ -50,12 +41,6 @@ class Gem::Resolver::BestSet < Gem::Resolver::ComposedSet
     end
   end
 
-  ##
-  # Replaces a failed APISet for the URI in +error+ with an IndexSet.
-  #
-  # If no matching APISet can be found the original +error+ is raised.
-  #
-  # The calling method must retry the exception to repeat the lookup.
 
   def replace_failed_api_set error # :nodoc:
     uri = error.uri

@@ -44,8 +44,6 @@ class TopicsController < ApplicationController
       flash["referer"] ||= request.referer[0..255]
     end
 
-    # We'd like to migrate the wordpress feed to another url. This keeps up backwards compatibility with
-    # existing installs.
     return wordpress if params[:best].present?
 
     opts = params.slice(:username_filters, :filter, :page, :post_number, :show_deleted)
@@ -89,7 +87,6 @@ class TopicsController < ApplicationController
   rescue Discourse::InvalidAccess => ex
 
     if current_user
-      # If the user can't see the topic, clean up notifications for it.
       Notification.remove_for(current_user.id, params[:topic_id])
     end
 
@@ -167,7 +164,6 @@ class TopicsController < ApplicationController
       success = PostRevisor.new(first_post, topic).revise!(current_user, changes, validate_post: false)
     end
 
-    # this is used to return the title to the client as it may have been changed by "TextCleaner"
     success ? render_serialized(topic, BasicTopicSerializer) : render_json_error(topic)
   end
 

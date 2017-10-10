@@ -16,7 +16,6 @@ class Disco < Formula
   depends_on "simplejson" => :python if MacOS.version <= :leopard
   depends_on "libcmph"
 
-  # Modifies config for single-node operation
   patch :DATA
 
   def install
@@ -28,17 +27,12 @@ class Disco < Formula
       s.change_make_var! "localstatedir", var
     end
 
-    # Disco's "rebar" build tool refuses to build unless it's in a git repo, so
-    # make a dummy one
     system "git init && git add master/rebar && git commit -a -m 'dummy commit'"
 
     system "make"
     system "make", "install"
     prefix.install %w[contrib doc examples]
 
-    # Fix the config file to point at the linked files, not in to cellar
-    # This isn't ideal - if there's a settings.py file left over from a previous disco
-    # installation, it'll issue a Warning
     inreplace "#{etc}/disco/settings.py" do |s|
       s.gsub!("Cellar/disco/"+version+"/", "")
     end
@@ -64,8 +58,6 @@ diff -rupN disco-0.4.5/conf/gen.settings.sh my-edits/disco-0.4.5/conf/gen.settin
 --- disco-0.4.5/conf/gen.settings.sh  2013-03-28 12:21:30.000000000 -0400
 +++ my-edits/disco-0.4.5/conf/gen.settings.sh 2013-04-10 23:10:00.000000000 -0400
 @@ -23,8 +23,11 @@ DISCO_PORT = 8989
- # DISCO_PROXY_ENABLED = "on"
- # DISCO_HTTPD = "/usr/sbin/varnishd -a 0.0.0.0:\$DISCO_PROXY_PORT -f \$DISCO_PROXY_CONFIG -P \$DISCO_PROXY_PID -n/tmp -smalloc"
 
 -DDFS_TAG_MIN_REPLICAS = 3
 -DDFS_TAG_REPLICAS     = 3

@@ -110,11 +110,9 @@ module Gitlab
 
       changes = changes.lines if changes.kind_of?(String)
 
-      # Iterate over all changes to find if user allowed all of them to be applied
       changes.map(&:strip).reject(&:blank?).each do |change|
         status = change_access_check(change)
         unless status.allowed?
-          # If user does not have access to make at least one change - cancel all push
           return status
         end
       end
@@ -129,7 +127,6 @@ module Gitlab
         if project.protected_branch?(branch_name(ref))
           protected_branch_action(oldrev, newrev, branch_name(ref))
         elsif protected_tag?(tag_name(ref))
-          # Prevent any changes to existing git tag unless user has permissions
           :admin_project
         else
           :push_code
@@ -162,11 +159,9 @@ module Gitlab
     private
 
     def protected_branch_action(oldrev, newrev, branch_name)
-      # we dont allow force push to protected branch
       if forced_push?(oldrev, newrev)
         :force_push_code_to_protected_branches
       elsif Gitlab::Git.blank_ref?(newrev)
-        # and we dont allow remove of protected branch
         :remove_protected_branches
       elsif project.developers_can_push_to_protected_branch?(branch_name)
         :push_code

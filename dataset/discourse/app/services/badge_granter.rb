@@ -59,7 +59,6 @@ class BadgeGranter
         StaffActionLogger.new(options[:revoked_by]).log_badge_revoke(user_badge)
       end
 
-      # If the user's title is the same as the badge name, remove their title.
       if user_badge.user.title == user_badge.badge.name
         user_badge.user.title = nil
         user_badge.user.save!
@@ -135,9 +134,6 @@ class BadgeGranter
     "badge_queue".freeze
   end
 
-  # Options:
-  #   :target_posts - whether the badge targets posts
-  #   :trigger - the Badge::Trigger id
   def self.contract_checks!(sql, opts = {})
     return unless sql.present?
     if Badge::Trigger.uses_post_ids?(opts[:trigger])
@@ -152,7 +148,6 @@ class BadgeGranter
       raise "Contract violation:\nQuery is triggered, but does not reference the ':backfill' parameter.\n(Hint: if :backfill is TRUE, you should ignore the :post_ids/:user_ids)" unless sql.match(/:backfill/)
     end
 
-    # TODO these three conditions have a lot of false negatives
     if opts[:target_posts]
       raise "Contract violation:\nQuery targets posts, but does not return a 'post_id' column" unless sql.match(/post_id/)
     end
@@ -161,16 +156,11 @@ class BadgeGranter
     raise "Contract violation:\nQuery ends with a semicolon. Remove the semicolon; your sql will be used in a subquery." if sql.match(/;\s*\z/)
   end
 
-  # Options:
-  #   :target_posts - whether the badge targets posts
-  #   :trigger - the Badge::Trigger id
-  #   :explain - return the EXPLAIN query
   def self.preview(sql, opts = {})
     params = {user_ids: [], post_ids: [], backfill: true}
 
     BadgeGranter.contract_checks!(sql, opts)
 
-    # hack to allow for params, otherwise sanitizer will trigger sprintf
     count_sql = "SELECT COUNT(*) count FROM (#{sql}) q WHERE :backfill = :backfill"
     grant_count = SqlBuilder.map_exec(OpenStruct, count_sql, params).first.count.to_i
 
@@ -192,7 +182,6 @@ class BadgeGranter
      end
 
     query_plan = nil
-    # HACK: active record is weird, force it to go down the sanitization path that cares not for % stuff
     query_plan = ActiveRecord::Base.exec_sql("EXPLAIN #{sql} /*:backfill*/", params) if opts[:explain]
 
     sample = SqlBuilder.map_exec(OpenStruct, grants_sql, params).map(&:to_h)
@@ -221,7 +210,6 @@ class BadgeGranter
     post_ids = opts[:post_ids] if opts
     user_ids = opts[:user_ids] if opts
 
-    # safeguard fall back to full backfill if more than 200
     if (post_ids && post_ids.length > MAX_ITEMS_FOR_DELTA) ||
        (user_ids && user_ids.length > MAX_ITEMS_FOR_DELTA)
       post_ids = nil
@@ -242,7 +230,6 @@ class BadgeGranter
              FROM user_badges ub
              LEFT JOIN ( #{badge.query} ) q
              ON q.user_id = ub.user_id
-              #{post_clause}
              WHERE ub.badge_id = :id AND q.user_id IS NULL
            )"
 
@@ -258,7 +245,6 @@ class BadgeGranter
             FROM ( #{badge.query} ) q
             LEFT JOIN user_badges ub ON
               ub.badge_id = :id AND ub.user_id = q.user_id
-              #{post_clause}
             /*where*/
             RETURNING id, user_id, granted_at
             "
@@ -287,7 +273,6 @@ class BadgeGranter
                                  post_ids: post_ids || [-2],
                                  user_ids: user_ids || [-2]).each do |row|
 
-      # old bronze badges do not matter
       next if badge.badge_type_id == BadgeType::Bronze and row.granted_at < 2.days.ago
 
       notification = Notification.create!(

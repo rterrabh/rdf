@@ -90,14 +90,14 @@ class RequirementTests < Homebrew::TestCase
     const = :FooRequirement
     klass = self.class
 
-    #nodyna <ID:const_set-2> <CS TRIVIAL (static values)>
+    #nodyna <const_set-636> <CS TRIVIAL (static values)>
     klass.const_set(const, Class.new(Requirement))
 
     begin
-      #nodyna <ID:const_get-2> <CG TRIVIAL (static values)>
+      #nodyna <const_get-637> <CG TRIVIAL (static values)>
       assert_equal "foo", klass.const_get(const).new.name
     ensure
-      #nodyna <ID:send-31> <SD MODERATE (private methods)>
+      #nodyna <send-638> <SD MODERATE (private methods)>
       klass.send(:remove_const, const)
     end
   end

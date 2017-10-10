@@ -1,5 +1,3 @@
-# Version is "pre-release", but is what Debian, MacPorts, etc.
-# package, and upstream has not had any movement in a long time.
 class Iftop < Formula
   desc "Display an interface's bandwidth usage"
   homepage "http://www.ex-parrot.com/~pdw/iftop/"

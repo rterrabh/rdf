@@ -12,7 +12,6 @@ class Libcanberra < Formula
   depends_on "gtk+" => :optional
   depends_on "gtk+3" => :optional
 
-  # Remove --as-needed and --gc-sections linker flag as it causes linking to fail
   patch :p0 do
     url "https://trac.macports.org/export/104881/trunk/dports/audio/libcanberra/files/patch-configure.diff"
     sha256 "614084839beb507c705d1b8d32f6ad1fa0c8379d6705fb3c866e6d7c5d3cf0b8"

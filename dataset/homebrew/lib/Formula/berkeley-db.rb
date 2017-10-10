@@ -17,10 +17,7 @@ class BerkeleyDb < Formula
   deprecated_option "enable-sql" => "with-sql"
 
   def install
-    # BerkeleyDB dislikes parallel builds
     ENV.deparallelize
-    # --enable-compat185 is necessary because our build shadows
-    # the system berkeley db 1.x
     args = %W[
       --disable-debug
       --prefix=#{prefix}
@@ -31,12 +28,10 @@ class BerkeleyDb < Formula
     args << "--enable-java" if build.with? "java"
     args << "--enable-sql" if build.with? "sql"
 
-    # BerkeleyDB requires you to build everything from the build_unix subdirectory
     cd "build_unix" do
       system "../dist/configure", *args
       system "make", "install"
 
-      # use the standard docs location
       doc.parent.mkpath
       mv prefix/"docs", doc
     end

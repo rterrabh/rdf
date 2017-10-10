@@ -5,7 +5,6 @@ if RUBY_VERSION < '1.9.3'
     Rails 4 prefers to run on Ruby 2.1 or newer.
 
     You're running
-      #{desc}
 
     Please upgrade to Ruby 1.9.3 or newer to continue.
 

@@ -26,14 +26,6 @@ module ActionDispatch
       @response.redirect_url
     end
 
-    # Shortcut for <tt>Rack::Test::UploadedFile.new(File.join(ActionController::TestCase.fixture_path, path), type)</tt>:
-    #
-    #   post :change_avatar, avatar: fixture_file_upload('files/spongebob.png', 'image/png')
-    #
-    # To upload binary files on Windows, pass <tt>:binary</tt> as the last parameter.
-    # This will not affect other platforms:
-    #
-    #   post :change_avatar, avatar: fixture_file_upload('files/spongebob.png', 'image/png', :binary)
     def fixture_file_upload(path, mime_type = nil, binary = false)
       if self.class.respond_to?(:fixture_path) && self.class.fixture_path
         path = File.join(self.class.fixture_path, path)

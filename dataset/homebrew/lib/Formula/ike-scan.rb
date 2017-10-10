@@ -31,7 +31,6 @@ class IkeScan < Formula
   end
 
   test do
-    # We probably shouldn't probe any host for VPN servers, so let's keep this simple.
     system bin/"ike-scan", "--version"
   end
 end

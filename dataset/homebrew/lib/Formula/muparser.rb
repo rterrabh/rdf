@@ -24,8 +24,6 @@ class Muparser < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
-      #include "muParser.h"
 
       double MySqr(double a_fVal)
       {

@@ -11,6 +11,7 @@ class Nodenv < Formula
 
   def caveats; <<-EOS.undent
     To enable shims and autocompletion add to your profile:
+      #nodyna <eval-554> <not yet classified>
       if which nodenv > /dev/null; then eval "$(nodenv init -)"; fi
     EOS
   end

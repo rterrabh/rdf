@@ -15,7 +15,6 @@ class Scalastyle < Formula
     etc.install resource("default_config")
 
     (bin/"scalastyle").write <<-EOS.undent
-      #!/bin/sh
       java -jar "#{libexec}/scalastyle_2.11-#{version}-batch.jar" --config "#{etc}/scalastyle_config.xml" "$@"
     EOS
   end

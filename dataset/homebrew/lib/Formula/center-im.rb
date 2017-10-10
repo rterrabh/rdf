@@ -17,8 +17,6 @@ class CenterIm < Formula
   depends_on "openssl"
   depends_on "jpeg" => :optional
 
-  # Fix build with clang; 4.22.10 is an outdated release and 5.0 is a rewrite,
-  # so this is not reported upstream
   patch :DATA
 
   patch :p0 do
@@ -33,7 +31,6 @@ class CenterIm < Formula
                           "--with-openssl=#{Formula["openssl"].opt_prefix}"
     system "make", "install"
 
-    # /bin/gawk does not exist on OS X
     inreplace bin/"cimformathistory", "/bin/gawk", "/usr/bin/awk"
   end
 
@@ -48,10 +45,6 @@ index b7509c0..024774f 100644
 --- a/libicq2000/libicq2000/sigslot.h
 +++ b/libicq2000/libicq2000/sigslot.h
 @@ -82,6 +82,7 @@
- #ifndef SIGSLOT_H__
- #define SIGSLOT_H__
  
 +#include <cstdlib>
- #include <set>
- #include <list>
  

@@ -36,7 +36,6 @@ module Spree
       end
 
       def sort_packages
-        # order packages by preferred stock_locations
       end
 
       def prune_packages

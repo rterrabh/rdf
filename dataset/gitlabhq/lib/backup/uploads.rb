@@ -8,12 +8,9 @@ module Backup
       @backup_uploads_dir = File.join(Gitlab.config.backup.path, 'uploads')
     end
 
-    # Copy uploads from public/uploads to backup/uploads
     def dump
       FileUtils.rm_rf(backup_uploads_dir)
-      # Ensure the parent dir of backup_uploads_dir exists
       FileUtils.mkdir_p(Gitlab.config.backup.path)
-      # Fail if somebody raced to create backup_uploads_dir before us
       FileUtils.mkdir(backup_uploads_dir, mode: 0700)
       FileUtils.cp_r(app_uploads_dir, backup_dir)
     end

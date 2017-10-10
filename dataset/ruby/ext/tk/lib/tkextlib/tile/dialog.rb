@@ -1,7 +1,3 @@
-#
-#  ttk::dialog  (tile-0.7+)
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -15,7 +11,6 @@ end
 begin
   TkPackage.require('ttk::dialog') # this may be required.
 rescue RuntimeError
-  # ignore
 end
 
 class Tk::Tile::Dialog
@@ -39,7 +34,6 @@ class Tk::Tile::Dialog
     ['Dialog', *(args.map!{|a| _get_eval_string(a)})].join('.')
   end
 
-  #########################
 
   def initialize(keys={})
     @keys = _symbolkey2str(keys)
@@ -47,7 +41,6 @@ class Tk::Tile::Dialog
   end
 
   def create_self(keys)
-    # dummy
   end
   private :create_self
 

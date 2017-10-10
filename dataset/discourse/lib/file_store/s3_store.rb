@@ -18,31 +18,20 @@ module FileStore
       store_file(file, path, filename: upload.original_filename, content_type: content_type, cache_locally: true)
     end
 
-    # options
-    #   - filename
-    #   - content_type
-    #   - cache_locally
     def store_file(file, path, opts={})
       filename      = opts[:filename].presence
       content_type  = opts[:content_type].presence
-      # cache file locally when needed
       cache_file(file, File.basename(path)) if opts[:cache_locally]
-      # stored uploaded are public by default
       options = { acl: "public-read" }
-      # add a "content disposition" header for "attachments"
       options[:content_disposition] = "attachment; filename=\"#{filename}\"" if filename && !FileHelper.is_image?(filename)
-      # add a "content type" header when provided
       options[:content_type] = content_type if content_type
-      # if this fails, it will throw an exception
       @s3_helper.upload(file, path, options)
-      # return the upload url
       "#{absolute_base_url}/#{path}"
     end
 
     def remove_file(url)
       return unless has_been_uploaded?(url)
       filename = File.basename(url)
-      # copy the removed file to tombstone
       @s3_helper.remove(filename, true)
     end
 
@@ -54,7 +43,6 @@ module FileStore
     end
 
     def absolute_base_url
-      # cf. http://docs.aws.amazon.com/general/latest/gr/rande.html#s3_region
       @absolute_base_url ||= if SiteSetting.s3_region == "us-east-1"
         "//#{s3_bucket}.s3.amazonaws.com"
       else

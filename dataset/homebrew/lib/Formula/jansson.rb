@@ -22,8 +22,6 @@ class Jansson < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <jansson.h>
-      #include <assert.h>
 
       int main()
       {

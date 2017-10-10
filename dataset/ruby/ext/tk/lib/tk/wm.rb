@@ -1,11 +1,7 @@
-#
-# tk/wm.rb : methods for wm command
-#
 require 'tk'
 
 module Tk
   module Wm
-    #include TkComm
     extend TkCore
 
     TkCommandNames = ['wm'.freeze].freeze
@@ -86,7 +82,6 @@ module Tk
         tk_call('wm', 'command', win.epath, value)
         win
       else
-        #procedure(tk_call('wm', 'command', win.epath))
         tk_call('wm', 'command', win.epath)
       end
     end
@@ -123,8 +118,6 @@ module Tk
     TOPLEVEL_METHODCALL_OPTKEYS['focusmodel'] = 'focusmodel'
 
     def Wm.forget(win)
-      # Tcl/Tk 8.5+
-      # work with dockable frames
       tk_call_without_enc('wm', 'forget', win.epath)
       win
     end
@@ -198,7 +191,7 @@ module Tk
 
     def Wm.iconphoto(win, *imgs)
       if imgs.empty?
-        #nodyna <ID:instance_eval-29> <IEV COMPLEX (private access)>
+        #nodyna <instance_eval-1842> <IEV COMPLEX (private access)>
         win.instance_eval{
           @wm_iconphoto = nil unless defined? @wm_iconphoto
           return @wm_iconphoto
@@ -207,7 +200,7 @@ module Tk
 
       imgs = imgs[0] if imgs.length == 1 && imgs[0].kind_of?(Array)
       tk_call_without_enc('wm', 'iconphoto', win.epath, *imgs)
-      #nodyna <ID:instance_eval-30> <IEV COMPLEX (private access)>
+      #nodyna <instance_eval-1843> <IEV COMPLEX (private access)>
       win.instance_eval{ @wm_iconphoto = imgs  }
       win
     end
@@ -299,7 +292,6 @@ module Tk
     TOPLEVEL_METHODCALL_OPTKEYS['iconwindow'] = 'iconwindow'
 
     def Wm.manage(win)
-      # Tcl/Tk 8.5+ feature
       tk_call_without_enc('wm', 'manage', win.epath)
       win
     end
@@ -308,14 +300,6 @@ module Tk
     end
 =begin
     def Wm.manage(win, use_id = nil)
-      # Tcl/Tk 8.5+ feature
-      # --------------------------------------------------------------
-      # In the future release, I want to support to embed the 'win'
-      # into the container which has window-id 'use-id'.
-      # It may give users frexibility on controlling their GUI.
-      # However, it may be difficult for current Tcl/Tk (Tcl/Tk8.5.1),
-      # because it seems to require to modify Tcl/Tk's source code.
-      # --------------------------------------------------------------
       if use_id
         tk_call_without_enc('wm', 'manage', win.epath, '-use', use_id)
       else
@@ -547,7 +531,7 @@ module Tk
   module Wm_for_General
     Wm.instance_methods.each{|m|
       if (m = m.to_s) =~ /^wm_(.*)$/
-        #nodyna <ID:eval-33> <EV COMPLEX (method definition)>
+        #nodyna <eval-1844> <EV COMPLEX (method definition)>
         eval "def #{m}(*args, &b); Tk::Wm.#{$1}(self, *args, &b); end"
       end
     }

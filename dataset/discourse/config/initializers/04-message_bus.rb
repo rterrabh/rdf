@@ -18,7 +18,6 @@ end
 MessageBus.group_ids_lookup do |env|
   user = CurrentUser.lookup_from_env(env)
   if user && user.admin?
-    # special rule, admin is allowed access to all groups
     Group.pluck(:id)
   elsif user
     user.groups.pluck('groups.id')
@@ -33,7 +32,6 @@ MessageBus.on_disconnect do |site_id|
   ActiveRecord::Base.connection_handler.clear_active_connections!
 end
 
-# Point at our redis
 MessageBus.redis_config = GlobalSetting.redis_config
 
 MessageBus.long_polling_enabled = SiteSetting.enable_long_polling
@@ -52,6 +50,5 @@ MessageBus.cache_assets = !Rails.env.development?
 MessageBus.enable_diagnostics
 
 if Rails.env == "test"
-  # disable keepalive in testing
   MessageBus.keepalive_interval = -1
 end

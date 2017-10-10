@@ -1,5 +1,4 @@
 class Projects::RepositoriesController < Projects::ApplicationController
-  # Authorize
   before_action :require_non_empty_project, except: :create
   before_action :authorize_download_code!
   before_action :authorize_admin_project!, only: :create
@@ -18,7 +17,6 @@ class Projects::RepositoriesController < Projects::ApplicationController
     end
 
     if file_path
-      # Send file to user
       response.headers["Content-Length"] = File.open(file_path).size.to_s
       send_file file_path
     else

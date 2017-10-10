@@ -64,6 +64,7 @@ module ActionController
 
     %w(write_fragment read_fragment exist_fragment?
        expire_fragment expire_page write_page).each do |method|
+      #nodyna <class_eval-1301> <not yet classified>
       class_eval <<-METHOD, __FILE__, __LINE__ + 1
         def #{method}(event)
           return unless logger.info?

@@ -108,7 +108,6 @@ class Admin::UsersController < Admin::ApplicationController
         format.html { redirect_to [:admin, user], notice: 'User was successfully updated.' }
         format.json { head :ok }
       else
-        # restore username to keep form action url.
         user.username = params[:id]
         format.html { render "edit" }
         format.json { render json: user.errors, status: :unprocessable_entity }

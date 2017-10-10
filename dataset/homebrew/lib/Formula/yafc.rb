@@ -14,7 +14,6 @@ class Yafc < Formula
   depends_on "libssh" => :recommended
   depends_on "pkg-config" => :build
 
-  # Upstream commit to fix the sed flags for OSX in the bash-completion script
   patch do
     url "https://github.com/sebastinas/yafc/commit/e8e31e4191f252ab1b58a486e85aabfa28c8da65.diff"
     sha256 "55b361e7ff87f85776a0cd4560b3c39a7f7db132a232c71265e567d734f11f25"

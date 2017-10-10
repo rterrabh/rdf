@@ -22,14 +22,12 @@ module DiscourseUpdates
         )
       end
 
-      # replace -commit_count with +commit_count
       if version_info.installed_describe =~ /-(\d+)-/
         version_info.installed_describe = version_info.installed_describe.gsub(/-(\d+)-.*/, " +#{$1}")
       end
 
       if SiteSetting.version_checks?
 
-        # Handle cases when version check data is old so we report something that makes sense
 
         if (version_info.updated_at.nil? or  # never performed a version check
             last_installed_version != Discourse::VERSION::STRING or  # upgraded since the last version check
@@ -47,7 +45,6 @@ module DiscourseUpdates
       version_info
     end
 
-    # last_installed_version is the installed version at the time of the last version check
     def last_installed_version
       $redis.get last_installed_version_key
     end
@@ -74,14 +71,14 @@ module DiscourseUpdates
     end
 
     ['last_installed_version', 'latest_version', 'missing_versions_count', 'critical_updates_available'].each do |name|
-      #nodyna <ID:eval-31> <EV MODERATE (method definition)>
+      #nodyna <eval-286> <EV MODERATE (method definition)>
+      #nodyna <define_method-287> <not yet classified>
       eval "define_method :#{name}= do |arg|
         $redis.set #{name}_key, arg
       end"
     end
 
     def missing_versions=(versions)
-      # delete previous list from redis
       prev_keys = $redis.lrange(missing_versions_list_key, 0, 4)
       if prev_keys
         $redis.del prev_keys
@@ -89,7 +86,6 @@ module DiscourseUpdates
       end
 
       if versions.present?
-        # store the list in redis
         version_keys = []
         versions[0,5].each do |v|
           key = "#{missing_versions_key_prefix}:#{v['version']}"

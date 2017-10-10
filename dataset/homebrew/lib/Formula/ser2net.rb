@@ -7,7 +7,6 @@ class Ser2net < Formula
   def install
     ENV.deparallelize
 
-    # Fix etc location
     inreplace ["ser2net.c", "ser2net.8"], "/etc/ser2net.conf", "#{etc}/ser2net.conf"
 
     system "./configure", "--disable-debug", "--disable-dependency-tracking",

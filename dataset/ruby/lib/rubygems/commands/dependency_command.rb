@@ -183,8 +183,6 @@ use with other commands.
     reverse
   end
 
-  ##
-  # Returns an Array of [specification, dep] that are satisfied by +spec+.
 
   def find_reverse_dependencies spec # :nodoc:
     result = []

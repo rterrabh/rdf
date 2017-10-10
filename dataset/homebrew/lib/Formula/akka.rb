@@ -14,16 +14,13 @@ class Akka < Formula
   end
 
   def install
-    # Remove Windows files
     rm "bin/akka.bat"
 
     chmod 0755, "bin/akka"
     chmod 0755, "bin/akka-cluster"
 
     inreplace ["bin/akka", "bin/akka-cluster"] do |s|
-      # Translate akka script
       s.gsub! /^declare AKKA_HOME=.*$/, "declare AKKA_HOME=#{libexec}"
-      # dos to unix (bug fix for version 2.3.11)
       s.gsub! /\r?/, ""
     end
 

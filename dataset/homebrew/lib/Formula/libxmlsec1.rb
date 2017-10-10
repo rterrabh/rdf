@@ -12,12 +12,10 @@ class Libxmlsec1 < Formula
 
   depends_on "pkg-config" => :build
   depends_on "libxml2" if MacOS.version <= :lion
-  # Yes, it wants both ssl/tls variations.
   depends_on "openssl" => :recommended
   depends_on "gnutls" => :recommended
   depends_on "libgcrypt" if build.with? "gnutls"
 
-  # Add HOMEBREW_PREFIX/lib to dl load path
   patch :DATA
 
   def install
@@ -43,7 +41,6 @@ index 6e8a56a..0e7f06b 100644
 @@ -141,6 +141,7 @@ xmlSecCryptoDLLibraryCreate(const xmlChar* name) {
      }
 
- #ifdef XMLSEC_DL_LIBLTDL
 +    lt_dlsetsearchpath("HOMEBREW_PREFIX/lib");
      lib->handle = lt_dlopenext((char*)lib->filename);
      if(lib->handle == NULL) {

@@ -18,7 +18,6 @@ class FileHelper
       while f.size <= max_file_size && data = downloaded.read(512.kilobytes)
         f.write(data)
       end
-      # tiny files are StringIO, no close! on them
       downloaded.try(:close!) rescue nil
     end
 
@@ -35,13 +34,12 @@ class FileHelper
     @@images_regexp ||= /\.(#{images.to_a.join("|")})$/i
   end
 
-  # HACK to support underscores in URLs
-  # cf. http://stackoverflow.com/a/18938253/11983
   def self.parse_url(url)
     URI.parse(url)
   rescue URI::InvalidURIError
     host = url.match(".+\:\/\/([^\/]+)")[1]
     uri = URI.parse(url.sub(host, 'valid-host'))
+    #nodyna <instance_variable_set-333> <not yet classified>
     uri.instance_variable_set("@host", host)
     uri
   end

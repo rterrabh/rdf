@@ -33,7 +33,6 @@ class CppNetlib < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <boost/network/protocol/http/client.hpp>
       int main(int argc, char *argv[]) {
         using namespace boost::network;
         http::client client;

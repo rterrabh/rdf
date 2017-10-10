@@ -11,8 +11,6 @@ module ActiveSupport
   module XmlMini_NokogiriSAX #:nodoc:
     extend self
 
-    # Class that will build the hash while the XML document
-    # is being parsed using SAX events.
     class HashBuilder < Nokogiri::XML::SAX::Document
 
       CONTENT_KEY   = '__content__'.freeze

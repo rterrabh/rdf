@@ -22,10 +22,6 @@ class Duplicity < Formula
   depends_on "librsync"
   depends_on "gnupg"
 
-  # generated with homebrew-pypi-poet from
-  # for i in boto pyrax dropbox mega.py paramiko pycrypto
-  # lockfile python-swiftclient python-keystoneclient; do poet -r $i >>
-  # resources; done
 
   resource "lockfile" do
     url "https://pypi.python.org/packages/source/l/lockfile/lockfile-0.10.2.tar.gz"

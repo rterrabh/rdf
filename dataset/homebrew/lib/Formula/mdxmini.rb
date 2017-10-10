@@ -18,14 +18,11 @@ class Mdxmini < Formula
 
   depends_on "sdl" if build.without? "lib-only"
 
-  # Include NLG code in libmdxmini
-  # Submitted upstream: https://github.com/BouKiCHi/mdxplayer/pull/6
   patch do
     url "https://github.com/mistydemeo/mdxplayer/commit/ca7bad8f5b74a425765b161a213180c0654f914d.diff"
     sha256 "6d49d632324942bd4901ef1c32d0a2a83a5265fa3ea258fdcef2ed329a6cd1f9"
   end
 
-  # Fix undefined reference to externed variable in libmdxmini
   patch do
     url "https://github.com/mistydemeo/mdxplayer/commit/48075d7e9b136087f2d97d6be4fb2653b5ff66e3.diff"
     sha256 "6aee796397c66b41cc0332545ebd0b1ac8ee35b7647949461d0ad9b51ebd1fed"
@@ -38,7 +35,6 @@ class Mdxmini < Formula
 
   def install
     cd "jni/mdxmini" do
-      # Specify Homebrew's cc
       inreplace "mak/general.mak", "gcc", ENV.cc
       if build.with? "lib-only"
         system "make", "-f", "Makefile.lib"
@@ -46,7 +42,6 @@ class Mdxmini < Formula
         system "make"
       end
 
-      # Makefile doesn't build a dylib
       system ENV.cc, "-dynamiclib", "-install_name", "#{lib}/libmdxmini.dylib", "-o", "libmdxmini.dylib", "-undefined", "dynamic_lookup", *Dir["obj/*"]
 
       bin.install "mdxplay" if build.without? "lib-only"
@@ -58,8 +53,6 @@ class Mdxmini < Formula
   test do
     resource("test_song").stage testpath
     (testpath/"mdxtest.c").write <<-EOS.undent
-    #include <stdio.h>
-    #include "libmdxmini/mdxmini.h"
 
     int main(int argc, char** argv)
     {
@@ -74,7 +67,6 @@ class Mdxmini < Formula
 
     result = `#{testpath}/mdxtest #{testpath}/pop-00.mdx #{testpath}`.chomp
     result.force_encoding("ascii-8bit") if result.respond_to? :force_encoding
-    # Song title is in Shift-JIS
     expected = "\x82\xDB\x82\xC1\x82\xD5\x82\xE9\x83\x81\x83C\x83\x8B         \x83o\x83b\x83N\x83A\x83b\x83v\x8D\xEC\x90\xAC          (C)Falcom 1992 cv.\x82o\x82h. ass.\x82s\x82`\x82o\x81{"
     expected.force_encoding("ascii-8bit") if result.respond_to? :force_encoding
     assert_equal expected, result

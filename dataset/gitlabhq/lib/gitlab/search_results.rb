@@ -2,8 +2,6 @@ module Gitlab
   class SearchResults
     attr_reader :query
 
-    # Limit search results by passed project ids
-    # It allows us to search only for projects user has access to
     attr_reader :limit_project_ids
 
     def initialize(limit_project_ids, query)

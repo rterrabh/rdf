@@ -36,33 +36,22 @@ class Fftw < Formula
 
     ENV.universal_binary if build.universal?
 
-    # single precision
-    # enable-sse2 and enable-avx works for both single and double precision
     system "./configure", "--enable-single", *(args + simd_args)
     system "make", "install"
 
-    # clean up so we can compile the double precision variant
     system "make", "clean"
 
-    # double precision
-    # enable-sse2 and enable-avx works for both single and double precision
     system "./configure", *(args + simd_args)
     system "make", "install"
 
-    # clean up so we can compile the long-double precision variant
     system "make", "clean"
 
-    # long-double precision
-    # no SIMD optimization available
     system "./configure", "--enable-long-double", *args
     system "make", "install"
   end
 
   test do
-    # Adapted from the sample usage provided in the documentation:
-    # http://www.fftw.org/fftw3_doc/Complex-One_002dDimensional-DFTs.html
     (testpath/"fftw.c").write <<-TEST_SCRIPT.undent
-      #include <fftw3.h>
       int main(int argc, char* *argv)
       {
           fftw_complex *in, *out;

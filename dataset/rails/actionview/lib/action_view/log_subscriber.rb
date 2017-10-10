@@ -1,9 +1,6 @@
 require 'active_support/log_subscriber'
 
 module ActionView
-  # = Action View Log Subscriber
-  #
-  # Provides functionality so that Rails can output logs from Action View.
   class LogSubscriber < ActiveSupport::LogSubscriber
     VIEWS_PATTERN = /^app\/views\//
 

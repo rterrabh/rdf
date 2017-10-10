@@ -36,9 +36,6 @@ class Libmongoclient < Formula
       "--full",
       "--use-system-all",
       "--sharedclient",
-      # --osx-version-min is required to override --osx-version-min=10.6 added
-      # by SConstruct which causes "invalid deployment target for -stdlib=libc++"
-      # when using libc++
       "--osx-version-min=#{MacOS.version}"
     ]
 

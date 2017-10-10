@@ -1,16 +1,8 @@
-#
-#  tkextlib/tcllib/ctext.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Overloads the text widget and provides new commands
-#
 
 require 'tk'
 require 'tk/text'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('ctext', '3.1')
 TkPackage.require('ctext')
 
 module Tk

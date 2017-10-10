@@ -1,12 +1,9 @@
-# # your config.ru
-# require 'unicorn_killer'
-# use UnicornKiller::MaxRequests, 1000
-# use UnicornKiller::Oom, 400 * 1024
 
 module UnicornKiller
   module Kill
     def quit
       sec = (Time.now - @process_start).to_i
+      #nodyna <send-201> <not yet classified>
       warn "#{self.class} send SIGQUIT (pid: #{Process.pid})\talive: #{sec} sec"
       Process.kill :QUIT, Process.pid 
     end

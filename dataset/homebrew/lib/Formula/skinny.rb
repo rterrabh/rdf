@@ -28,7 +28,6 @@ class Skinny < Formula
     end
 
     (bin/"skinny").write <<-EOS.undent
-      #!/bin/bash
       export PATH=#{bin}:$PATH
       PREFIX="#{libexec}" exec "#{libexec}/skinny" "$@"
     EOS

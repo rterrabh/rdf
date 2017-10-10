@@ -1,10 +1,3 @@
-# EventCreateService class
-#
-# Used for creating events feed on dashboard after certain user action
-#
-# Ex.
-#   EventCreateService.new.new_issue(issue, current_user)
-#
 class EventCreateService
   def open_issue(issue, current_user)
     create_record_event(issue, current_user, Event::CREATED)

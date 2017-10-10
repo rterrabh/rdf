@@ -4,7 +4,6 @@ class Auth::OAuth2Authenticator < Auth::Authenticator
     @name
   end
 
-  # only option at the moment is :trusted
   def initialize(name, opts={})
     @name = name
     @opts = opts

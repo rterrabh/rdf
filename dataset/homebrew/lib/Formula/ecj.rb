@@ -1,4 +1,3 @@
-# This formula is intended to be used by gcc formulae with java support.
 
 class Ecj < Formula
   desc "Standalone version of the Eclipse Java compiler"

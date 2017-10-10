@@ -1,27 +1,16 @@
-#
-#  Tile theme engin (tile widget set) support
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/ttk_selector'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# library directory
 require 'tkextlib/tile/setup.rb'
 
-# load package
-# TkPackage.require('tile', '0.4')
-# TkPackage.require('tile', '0.6')
-# TkPackage.require('tile', '0.7')
 if Tk::TK_MAJOR_VERSION > 8 ||
     (Tk::TK_MAJOR_VERSION == 8 && Tk::TK_MINOR_VERSION >= 5)
   begin
     TkPackage.require('tile') # for compatibility (version check of 'tile')
   rescue RuntimeError
-    # ignore, even if cannot find package 'tile'
   end
   pkgname = 'Ttk'
 else
@@ -31,7 +20,6 @@ end
 begin
   verstr = TkPackage.require(pkgname)
 rescue RuntimeError
-  # define dummy methods
   module Tk
     module Tile
       CANNOT_FIND_PACKAGE = true
@@ -53,9 +41,7 @@ end
 
 ver = verstr.split('.')
 if ver[0].to_i == 0
-  # Tile extension package
   if ver[1].to_i <= 4
-    # version 0.4 or former
     module Tk
       module Tile
         USE_TILE_NAMESPACE = true
@@ -64,7 +50,6 @@ if ver[0].to_i == 0
       end
     end
   elsif ver[1].to_i <= 6
-    # version 0.5 -- version 0.6
     module Tk
       module Tile
         USE_TILE_NAMESPACE = true
@@ -81,7 +66,6 @@ if ver[0].to_i == 0
       end
     end
   else
-    # version 0.8 or later
     module Tk
       module Tile
         USE_TILE_NAMESPACE = false
@@ -95,7 +79,6 @@ if ver[0].to_i == 0
     PACKAGE_NAME = 'tile'.freeze
   end
 else
-  # Ttk package merged Tcl/Tk core (Tcl/Tk 8.5+)
   module Tk
     module Tile
       USE_TILE_NAMESPACE = false
@@ -107,7 +90,6 @@ else
   end
 end
 
-# autoload
 module Tk
   module Tile
     TkComm::TkExtlibAutoloadModule.unshift(self)
@@ -131,18 +113,6 @@ module Tk
     end
 
     def self.__define_LoadImages_proc_for_compatibility__!
-      # Ttk 8.5 (Tile 0.8) lost 'LoadImages' utility procedure.
-      # So, some old scripts doen't work, because those scripts use the
-      # procedure to define local styles.
-      # Of course, rewriting such Tcl/Tk scripts isn't difficult for
-      # Tcl/Tk users. However, it may be troublesome for Ruby/Tk users
-      # who use such Tcl/Tk scripts as it is.
-      # This method may help Ruby/Tk users who don't want to modify old
-      # Tcl/Tk scripts for the latest version of Ttk (Tile) extension.
-      # This method defines a comaptible 'LoadImages' procedure on the
-      # Tcl/Tk interpreter working under Ruby/Tk.
-      # Please give attention to use this method. It may conflict with
-      # some definitions on Tcl/Tk scripts.
       klass_name = self.name
       proc_name = 'LoadImages'
       if Tk::Tile::USE_TTK_NAMESPACE
@@ -160,13 +130,11 @@ module Tk
       ns_list.each{|ns|
         cmd = "#{ns}::#{proc_name}"
         unless Tk.info(:commands, cmd).empty?
-          #fail RuntimeError, "can't define '#{cmd}' command (already exist)"
 
-          # do nothing !!!
           warn "Warning: can't define '#{cmd}' command (already exist)" if $DEBUG
           next
         end
-        #nodyna <ID:eval-66> <EV COMPLEX (change-prone variables)>
+        #nodyna <eval-1643> <EV COMPLEX (change-prone variables)>
         TkNamespace.eval(ns){
           TkCore::INTERP.add_tk_procs(proc_name, 'imgdir {patterns {*.gif}}',
                                       <<-'EOS')
@@ -328,8 +296,6 @@ module Tk
       include Tk::Tile::ParseStyleLayout
 
       def __val2ruby_optkeys  # { key=>proc, ... }
-        # The method is used to convert a opt-value to a ruby's object.
-        # When get the value of the option "key", "proc.call(value)" is called.
         super().update('style'=>proc{|v| _style_layout(list(v))})
       end
       private :__val2ruby_optkeys
@@ -360,8 +326,6 @@ module Tk
       end
       alias tile_identify ttk_identify
 
-      # remove instate/state/identify method
-      # to avoid the conflict with widget options
       if Tk.const_defined?(:USE_OBSOLETE_TILE_STATE_METHOD) && Tk::USE_OBSOLETE_TILE_STATE_METHOD
         alias instate  ttk_instate
         alias state    ttk_state
@@ -369,7 +333,6 @@ module Tk
       end
     end
 
-    ######################################
 
     autoload :TButton,       'tkextlib/tile/tbutton'
     autoload :Button,        'tkextlib/tile/tbutton'

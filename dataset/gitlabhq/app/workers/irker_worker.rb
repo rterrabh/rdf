@@ -7,7 +7,6 @@ class IrkerWorker
   def perform(project_id, chans, colors, push_data, settings)
     project = Project.find(project_id)
 
-    # Get config parameters
     return false unless init_perform settings, chans, colors
 
     repo_name = push_data['repository']['name']
@@ -19,10 +18,8 @@ class IrkerWorker
       branch = "\x0305#{branch}\x0f"
     end
 
-    # First messages are for branch creation/deletion
     send_branch_updates push_data, project, repo_name, committer, branch
 
-    # Next messages are for commits
     send_commits push_data, project, repo_name, committer, branch
 
     close_connection
@@ -82,16 +79,12 @@ class IrkerWorker
   def send_commits(push_data, project, repo_name, committer, branch)
     return if push_data['total_commits_count'] == 0
 
-    # Next message is for number of commit pushed, if any
     if Gitlab::Git.blank_ref?(push_data['before'])
-      # Tweak on push_data["before"] in order to have a nice compare URL
       push_data['before'] = before_on_new_branch push_data, project
     end
 
     send_commits_count(push_data, project, repo_name, committer, branch)
 
-    # One message per commit, limited by 3 messages (same limit as the
-    # github irc hook)
     commits = push_data['commits'].first(3)
     commits.each do |hook_attrs|
       send_one_commit project, hook_attrs, repo_name, branch
@@ -101,9 +94,7 @@ class IrkerWorker
   def before_on_new_branch(push_data, project)
     commit = commit_from_id project, push_data['commits'][0]['id']
     parents = commit.parents
-    # Return old value if there's no new one
     return push_data['before'] if parents.empty?
-    # Or return the first parent-commit
     parents[0].id
   end
 

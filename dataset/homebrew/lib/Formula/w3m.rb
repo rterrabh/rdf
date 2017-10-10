@@ -15,8 +15,6 @@ class W3m < Formula
 
   def install
     system "./configure", "--prefix=#{prefix}", "--disable-image"
-    # Race condition in build reported in:
-    # https://github.com/Homebrew/homebrew/issues/12854
     ENV.j1 #
     system "make", "install"
   end
@@ -29,7 +27,6 @@ index b421943..865c744 100644
 +++ b/main.c
 @@ -833,7 +833,12 @@ main(int argc, char **argv, char **envp)
      mySignal(SIGPIPE, SigPipe);
- #endif
  
 +#if GC_VERSION_MAJOR >= 7 && GC_VERSION_MINOR >= 2
 +    orig_GC_warn_proc = GC_get_warn_proc();

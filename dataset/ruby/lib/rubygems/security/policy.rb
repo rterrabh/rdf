@@ -1,10 +1,5 @@
 require 'rubygems/user_interaction'
 
-##
-# A Gem::Security::Policy object encapsulates the settings for verifying
-# signed gem files.  This is the base class.  You can either declare an
-# instance of this or use one of the preset security policies in
-# Gem::Security::Policies.
 
 class Gem::Security::Policy
 
@@ -19,9 +14,6 @@ class Gem::Security::Policy
   attr_accessor :verify_root
   attr_accessor :verify_signer
 
-  ##
-  # Create a new Gem::Security::Policy object with the given mode and
-  # options.
 
   def initialize name, policy = {}, opt = {}
     require 'openssl'
@@ -30,7 +22,6 @@ class Gem::Security::Policy
 
     @opt = opt
 
-    # Default to security
     @only_signed   = true
     @only_trusted  = true
     @verify_chain  = true
@@ -50,9 +41,6 @@ class Gem::Security::Policy
     end
   end
 
-  ##
-  # Verifies each certificate in +chain+ has signed the following certificate
-  # and is valid for the given +time+.
 
   def check_chain chain, time
     raise Gem::Security::Exception, 'missing signing chain' unless chain
@@ -69,9 +57,6 @@ class Gem::Security::Policy
     end
   end
 
-  ##
-  # Verifies that +data+ matches the +signature+ created by +public_key+ and
-  # the +digest+ algorithm.
 
   def check_data public_key, digest, signature, data
     raise Gem::Security::Exception, "invalid signature" unless
@@ -80,9 +65,6 @@ class Gem::Security::Policy
     true
   end
 
-  ##
-  # Ensures that +signer+ is valid for +time+ and was signed by the +issuer+.
-  # If the +issuer+ is +nil+ no verification is performed.
 
   def check_cert signer, issuer, time
     raise Gem::Security::Exception, 'missing signing certificate' unless
@@ -107,8 +89,6 @@ class Gem::Security::Policy
     true
   end
 
-  ##
-  # Ensures the public key of +key+ matches the public key in +signer+
 
   def check_key signer, key
     unless signer and key then
@@ -124,9 +104,6 @@ class Gem::Security::Policy
     true
   end
 
-  ##
-  # Ensures the root certificate in +chain+ is self-signed and valid for
-  # +time+.
 
   def check_root chain, time
     raise Gem::Security::Exception, 'missing signing chain' unless chain
@@ -143,9 +120,6 @@ class Gem::Security::Policy
     check_cert root, root, time
   end
 
-  ##
-  # Ensures the root of +chain+ has a trusted certificate in +trust_dir+ and
-  # the digests of the two certificates match according to +digester+
 
   def check_trust chain, digester, trust_dir
     raise Gem::Security::Exception, 'missing signing chain' unless chain
@@ -179,8 +153,6 @@ class Gem::Security::Policy
     true
   end
 
-  ##
-  # Extracts the email or subject from +certificate+
 
   def subject certificate # :nodoc:
     certificate.extensions.each do |extension|
@@ -200,12 +172,6 @@ class Gem::Security::Policy
     ]
   end
 
-  ##
-  # For +full_name+, verifies the certificate +chain+ is valid, the +digests+
-  # match the signatures +signatures+ created by the signer depending on the
-  # +policy+ settings.
-  #
-  # If +key+ is given it is used to validate the signing certificate.
 
   def verify chain, key = nil, digests = {}, signatures = {},
              full_name = '(unknown)'
@@ -214,8 +180,6 @@ class Gem::Security::Policy
         raise Gem::Security::Exception,
           "unsigned gems are not allowed by the #{name} policy"
       elsif digests.empty? then
-        # lack of signatures is irrelevant if there is nothing to check
-        # against
       else
         alert_warning "#{full_name} is not signed"
         return
@@ -251,7 +215,6 @@ class Gem::Security::Policy
     if @only_trusted then
       check_trust chain, digester, trust_dir
     elsif signatures.empty? and digests.empty? then
-      # trust is irrelevant if there's no signatures to verify
     else
       alert_warning "#{subject signer} is not trusted for #{full_name}"
     end
@@ -275,9 +238,6 @@ class Gem::Security::Policy
     true
   end
 
-  ##
-  # Extracts the certificate chain from the +spec+ and calls #verify to ensure
-  # the signatures and certificate chain is valid according to the policy..
 
   def verify_signatures spec, digests, signatures
     chain = spec.cert_chain.map do |cert_pem|

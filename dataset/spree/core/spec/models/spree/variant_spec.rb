@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 require 'spec_helper'
 
@@ -233,13 +232,11 @@ describe Spree::Variant, :type => :model do
     end
   end
 
-  # Regression test for #2432
   describe 'options_text' do
     let!(:variant) { create(:variant, option_values: []) }
     let!(:master) { create(:master_variant) }
 
     before do
-      # Order bar than foo
       variant.option_values << create(:option_value, {name: 'Foo', presentation: 'Foo', option_type: create(:option_type, position: 2, name: 'Foo Type', presentation: 'Foo Type')})
       variant.option_values << create(:option_value, {name: 'Bar', presentation: 'Bar', option_type: create(:option_type, position: 1, name: 'Bar Type', presentation: 'Bar Type')})
     end
@@ -328,7 +325,6 @@ describe Spree::Variant, :type => :model do
 
   end
 
-  # Regression test for #2744
   describe "set_position" do
     it "sets variant position after creation" do
       variant = create(:variant)
@@ -445,7 +441,7 @@ describe Spree::Variant, :type => :model do
     end
 
     it "clears the in_stock cache key" do
-      #nodyna <ID:send-67> <SD EASY (private methods)>
+      #nodyna <send-2444> <SD EASY (private methods)>
       expect(Rails.cache).to receive(:delete).with(variant.send(:in_stock_cache_key))
       variant.touch
     end

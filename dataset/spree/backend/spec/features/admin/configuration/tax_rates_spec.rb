@@ -5,7 +5,6 @@ describe "Tax Rates", type: :feature, js: true do
 
   let!(:tax_rate) { create(:tax_rate, calculator: stub_model(Spree::Calculator)) }
 
-  # Regression test for #1422
   it "can create a new tax rate" do
     visit spree.admin_path
     click_link "Configuration"

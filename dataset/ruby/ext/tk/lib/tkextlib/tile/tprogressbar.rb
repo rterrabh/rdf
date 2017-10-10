@@ -1,7 +1,3 @@
-#
-#  tprogressbar widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -31,9 +27,6 @@ class Tk::Tile::TProgressbar
   def step(amount=None)
     tk_send_without_enc('step', amount).to_f
   end
-  #def step=(amount)
-  #  tk_send_without_enc('step', amount)
-  #end
 
   def start(interval=None)
     if Tk::Tile::TILE_SPEC_VERSION_ID < 5
@@ -52,6 +45,5 @@ class Tk::Tile::TProgressbar
   end
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Progressbar, :TkProgressbar)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tprogressbar.rb',
                                    :Ttk, Tk::Tile::Progressbar, :TkProgressbar)

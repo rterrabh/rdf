@@ -5,7 +5,6 @@ class Naturaldocs < Formula
   sha256 "3f13c99e15778afe6c5555084a083f856e93567b31b08acd1fd81afb10082681"
 
   def install
-    # Remove Windows files
     rm_rf Dir["*.bat"]
 
     libexec.install Dir["*"]

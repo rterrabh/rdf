@@ -7,7 +7,7 @@ class AddNumberToStockTransfer < ActiveRecord::Migration
     add_column :spree_stock_transfers, :number, :string
 
     Spree::StockTransfer.find_each do |transfer|
-      #nodyna <ID:send-19> <SD TRIVIAL (public methods)>
+      #nodyna <send-2543> <SD TRIVIAL (public methods)>
       transfer.send(:generate_stock_transfer_number)
       transfer.save!
     end

@@ -6,8 +6,6 @@ class Zzuf < Formula
 
   conflicts_with "libzzip", :because => "both install `zzcat` binaries"
 
-  # Fix OS X-specific bug in zzuf 0.13; see https://trac.macports.org/ticket/29157
-  # This has been fixed upstream and should be included in the next release.
   patch :p3 do
     url "https://trac.macports.org/export/78051/trunk/dports/security/zzuf/files/patch-src-libzzuf-lib--mem.c.diff"
     sha256 "51692d0bfaa8dd9bc8e24be7f96212a296f1eb779253325e7aaa0300d625cb2a"

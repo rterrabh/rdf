@@ -18,8 +18,6 @@ class Scmpuff < Formula
     ln_s buildpath, buildpath/"src/github.com/mroth/scmpuff"
     ENV["GOPATH"] = buildpath
 
-    # scmpuff's build script normally does version detection which depends on
-    # being checked out via git repo -- instead have homebrew specify version.
     system "go", "build", "-o", "#{bin}/scmpuff", "-ldflags", "-X main.VERSION #{version}"
   end
 

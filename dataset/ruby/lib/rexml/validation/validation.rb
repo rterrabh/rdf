@@ -22,7 +22,6 @@ module REXML
           " but got #{Event.new( event[0], event[1] ).inspect}" ) unless match
         @current = match
 
-        # Check for attributes
         case event[0]
         when :start_element
           @attr_stack << event[2]
@@ -34,7 +33,6 @@ module REXML
               sattr[1] = key
               m = @current.next( sattr )
               if m
-                # If the state has text children...
                 if m.matches?( eattr )
                   @current = m
                 else

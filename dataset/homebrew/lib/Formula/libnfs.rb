@@ -25,7 +25,6 @@ class Libnfs < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <nfsc/libnfs.h>
 
       int main(void)
       {

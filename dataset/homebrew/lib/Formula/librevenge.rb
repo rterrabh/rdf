@@ -16,9 +16,6 @@ class Librevenge < Formula
   depends_on "pkg-config" => :build
   depends_on "boost" => :build
 
-  # Fix build with Boost 1.59
-  # https://sourceforge.net/p/libwpd/tickets/6/
-  # https://sourceforge.net/p/libwpd/librevenge/ci/0beee70d1bf52f0d81b60ee8c373e477991fe546/
   patch :DATA
 
   def install
@@ -33,7 +30,6 @@ class Librevenge < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <librevenge/librevenge.h>
       int main() {
         librevenge::RVNGString str;
         return 0;

@@ -1,12 +1,5 @@
 module ChangesHelper
   MimeFormat = "application/vnd.github.%s+json".freeze
-  # Public: Filters the change items out.  If a version is given, show only the
-  # items related to that version.
-  #
-  # version - Optional String version key.
-  #
-  # Returns an Array of the first 30 Nanoc::Item objects, sorted in reverse
-  # chronological order.
   def api_changes(version = nil)
     changes = @items.select { |item| item[:kind] == 'change' }
     if version
@@ -19,12 +12,10 @@ module ChangesHelper
     end.first(30)
   end
 
-  # Public
   def current_api
     @current_api ||= (api_versions[-2] || api_versions.first).first
   end
 
-  # Public
   def upcoming_api
     @upcoming_api ||= begin
       version, date = api_versions.last
@@ -32,7 +23,6 @@ module ChangesHelper
     end
   end
 
-  # Public
   def current_api?(version)
     @api_current_checks ||= {}
     if @api_current_checks.key?(version)
@@ -42,12 +32,10 @@ module ChangesHelper
     @api_current_checks[version] = version == current_api
   end
 
-  # Public
   def no_current_api_versions?(*versions)
     versions.none? { |v| current_api?(v) }
   end
 
-  # Public
   def api_released_at(version)
     @api_releases ||= {}
     if @api_releases.key?(version)
@@ -62,7 +50,6 @@ module ChangesHelper
     end
   end
 
-  # Public
   def api_mimetype_listing(version)
     version_s = version.to_s
     mime = mimetype_for version_s
@@ -76,12 +63,10 @@ module ChangesHelper
     end
   end
 
-  # Internal
   def mimetype_for(version)
     MimeFormat % version.to_s
   end
 
-  # Internal
   def api_versions
     @api_versions ||= Array(@site.config[:api_versions])
   end

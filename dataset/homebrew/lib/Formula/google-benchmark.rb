@@ -27,8 +27,6 @@ class GoogleBenchmark < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <string>
-      #include <benchmark/benchmark.h>
       static void BM_StringCreation(benchmark::State& state) {
         while (state.KeepRunning())
           std::string empty_string;

@@ -16,7 +16,6 @@ class Frescobaldi < Formula
   depends_on "portmidi" => :optional
   depends_on "homebrew/tex/lilypond" => :optional
 
-  # python-poppler-qt4 dependencies
   depends_on "pkg-config" => :build
   depends_on "poppler" => "with-qt"
   depends_on "pyqt"

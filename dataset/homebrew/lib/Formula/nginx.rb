@@ -19,9 +19,6 @@ class Nginx < Formula
 
   env :userpaths
 
-  # Before submitting more options to this formula please check they aren't
-  # already in Homebrew/homebrew-nginx/nginx-full:
-  # https://github.com/Homebrew/homebrew-nginx/blob/master/nginx-full.rb
   option "with-passenger", "Compile with support for Phusion Passenger module"
   option "with-webdav", "Compile with support for WebDAV module"
   option "with-debug", "Compile with support for debug log"
@@ -34,7 +31,6 @@ class Nginx < Formula
   depends_on "libressl" => :optional
 
   def install
-    # Changes default port to 8080
     inreplace "conf/nginx.conf", "listen       80;", "listen       8080;"
     inreplace "conf/nginx.conf", "    #}\n\n}", "    #}\n    include servers/*;\n}"
 
@@ -99,9 +95,6 @@ class Nginx < Formula
   end
 
   def post_install
-    # nginx's docroot is #{prefix}/html, this isn't useful, so we symlink it
-    # to #{HOMEBREW_PREFIX}/var/www. The reason we symlink instead of patching
-    # is so the user can redirect it easily to something else if they choose.
     html = prefix/"html"
     dst  = var/"www"
 
@@ -115,10 +108,6 @@ class Nginx < Formula
 
     prefix.install_symlink dst => "html"
 
-    # for most of this formula's life the binary has been placed in sbin
-    # and Homebrew used to suggest the user copy the plist for nginx to their
-    # ~/Library/LaunchAgents directory. So we need to have a symlink there
-    # for such cases
     if rack.subdirs.any? { |d| d.join("sbin").directory? }
       sbin.install_symlink bin/"nginx"
     end

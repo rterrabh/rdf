@@ -35,9 +35,6 @@ class RakudoStar < Formula
     system "make"
     system "make", "install"
 
-    # Move the man pages out of the top level into share.
-    # Not all backends seem to generate man pages at this point (moar does not, parrot does),
-    # so we need to check if the directory exists first.
     if File.directory?("#{prefix}/man")
       mv "#{prefix}/man", share
     end

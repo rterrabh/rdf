@@ -23,7 +23,6 @@ class Libprotoident < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libprotoident.h>
 
       int main() {
         lpi_init_library();

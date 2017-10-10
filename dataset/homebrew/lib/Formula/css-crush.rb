@@ -8,7 +8,6 @@ class CssCrush < Formula
   def install
     libexec.install Dir["*"]
     (bin+"csscrush").write <<-EOS.undent
-      #!/bin/sh
       php "#{libexec}/cli.php" "$@"
     EOS
   end

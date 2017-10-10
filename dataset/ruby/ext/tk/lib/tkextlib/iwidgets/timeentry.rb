@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/timeentry.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'

@@ -1,8 +1,4 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
-#TODO: kill me
 class Invitation < ActiveRecord::Base
 
   belongs_to :sender, :class_name => 'User'
@@ -11,7 +7,6 @@ class Invitation < ActiveRecord::Base
 
   before_validation :set_email_as_default_service
 
- # before_create :share_with_exsisting_user, :if => :recipient_id?
   validates :identifier, :presence => true
   validates :service, :presence => true
   validate :valid_identifier?
@@ -22,20 +17,10 @@ class Invitation < ActiveRecord::Base
   validates_uniqueness_of :sender_id, :scope => [:identifier, :service], :unless => :admin?
 
 
-  # @note options hash is passed through to [Invitation.new]
-  # @see [Invitation.new]
-  #
-  # @param [Array<String>] emails
-  # @option opts [User] :sender
-  # @option opts [Aspect] :aspect
-  # @option opts [String] :service
-  # @return [Array<Invitation>] An array of [Invitation] models
-  #   the valid optsnes are saved, and the invalid ones are not.
   def self.batch_invite(emails, opts)
 
     users_on_pod = User.where(:email => emails, :invitation_token => nil)
 
-    #share with anyone whose email you entered who is on the pod
     users_on_pod.each{|u| opts[:sender].share_with(u.person, opts[:aspect])}
 
     emails.map! do |e|
@@ -46,29 +31,19 @@ class Invitation < ActiveRecord::Base
   end
   
   
-  # Downcases the incoming service identifier and assigns it
-  #
-  # @param ident [String] Service identifier
-  # @see super
   def identifier=(ident)
     ident.downcase! if ident
     super
   end
 
-  # Determine if we want to skip emailing the recipient.
-  #
-  # @return [Boolean]
-  # @return [void]
   def skip_email?
     !email_like_identifer
   end
 
-  # Find or create user, and send that resultant User an
-  # invitation.
-  #
-  # @return [Invitation] self
+  #nodyna <send-223> <not yet classified>
   def send!
     if email_like_identifer
+      #nodyna <send-224> <not yet classified>
       EmailInviter.new(self.identifier, sender).send! 
     else
       puts "broken facebook invitation_token"
@@ -77,9 +52,6 @@ class Invitation < ActiveRecord::Base
   end
 
 
-  # converts a personal invitation to an admin invite
-  # used in account deletion
-  # @return [Invitation] self
   def convert_to_admin!
     self.admin = true
     self.sender = nil
@@ -87,12 +59,11 @@ class Invitation < ActiveRecord::Base
     self.save
     self
   end
-  # @return [Invitation] self
   def resend
+    #nodyna <send-225> <not yet classified>
     self.send!
   end
 
-  # @return [String]
   def recipient_identifier
     case self.service
     when 'email'
@@ -102,7 +73,6 @@ class Invitation < ActiveRecord::Base
     end
   end
   
-  # @return [String]
   def email_like_identifer
     case self.service
     when 'email'
@@ -112,19 +82,16 @@ class Invitation < ActiveRecord::Base
     end
   end
 
-  # @note before_save
   def set_email_as_default_service
     self.service ||= 'email'
   end
 
-  # @note Validation
   def ensure_not_inviting_self
     if self.identifier == self.sender.email
       errors[:base] << 'You can not invite yourself.'
     end
   end  
 
-  # @note Validation
   def sender_owns_aspect?
     if self.sender_id != self.aspect.user_id
       errors[:base] << 'You do not own that aspect.'
@@ -139,7 +106,6 @@ class Invitation < ActiveRecord::Base
     end
   end
 
-  # @note Validation
   def valid_identifier?
     return false unless self.identifier
     if self.service == 'email'

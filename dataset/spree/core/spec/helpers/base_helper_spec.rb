@@ -50,10 +50,10 @@ describe Spree::BaseHelper, type: :helper do
     end
   end
 
-  # Regression test for #1436
   context "defining custom image helpers" do
     let(:product) { mock_model(Spree::Product, :images => [], :variant_images => []) }
     before do
+      #nodyna <class_eval-2490> <not yet classified>
       Spree::Image.class_eval do
         attachment_definitions[:attachment][:styles].merge!({:very_strange => '1x1'})
       end
@@ -97,12 +97,8 @@ describe Spree::BaseHelper, type: :helper do
     end
   end
 
-  # Regression test for #2396
   context "meta_data_tags" do
     it "truncates a product description to 160 characters" do
-      # Because the controller_name method returns "test"
-      # controller_name is used by this method to infer what it is supposed
-      # to be generating meta_data_tags for
       text = Faker::Lorem.paragraphs(2).join(" ")
       @test = Spree::Product.new(:description => text)
       tags = Nokogiri::HTML.parse(meta_data_tags)
@@ -111,10 +107,10 @@ describe Spree::BaseHelper, type: :helper do
     end
   end
 
-  # Regression test for #5384
   context "custom image helpers conflict with inproper statements" do
     let(:product) { mock_model(Spree::Product, :images => [], :variant_images => []) }
     before do
+      #nodyna <class_eval-2491> <not yet classified>
       Spree::Image.class_eval do
         attachment_definitions[:attachment][:styles].merge!({:foobar => '1x1'})
       end

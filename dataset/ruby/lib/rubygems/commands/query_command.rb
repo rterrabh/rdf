@@ -119,10 +119,8 @@ is too hard to use.
     end
   end
 
-  #Guts of original execute
   def show_gems name, prerelease
     req = Gem::Requirement.default
-    # TODO: deprecate for real
     dep = Gem::Deprecate.skip_during { Gem::Dependency.new name, req }
     dep.prerelease = prerelease
 
@@ -173,8 +171,6 @@ is too hard to use.
     end
   end
 
-  ##
-  # Check if gem +name+ version +version+ is installed.
 
   def installed?(name, req = Gem::Requirement.default)
     Gem::Specification.any? { |s| s.name =~ name and req =~ s.version }

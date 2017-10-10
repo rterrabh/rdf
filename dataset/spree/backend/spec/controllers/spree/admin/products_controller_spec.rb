@@ -6,7 +6,6 @@ describe Spree::Admin::ProductsController, :type => :controller do
   context "#index" do
     let(:ability_user) { stub_model(Spree::LegacyUser, :has_spree_role? => true) }
 
-    # Regression test for #1259
     it "can find a product by SKU" do
       product = create(:product, :sku => "ABC123")
       spree_get :index, :q => { :sku_start => "ABC123" }
@@ -15,7 +14,6 @@ describe Spree::Admin::ProductsController, :type => :controller do
     end
   end
 
-  # regression test for #1370
   context "adding properties to a product" do
     let!(:product) { create(:product) }
     specify do
@@ -26,7 +24,6 @@ describe Spree::Admin::ProductsController, :type => :controller do
   end
 
 
-  # regression test for #801
   context "destroying a product" do
     let(:product) do
       product = create(:product)

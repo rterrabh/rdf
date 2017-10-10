@@ -13,11 +13,8 @@ class SearchObserver < ActiveRecord::Observer
     table_name = "#{table}_search_data"
     foreign_key = "#{table}_id"
 
-    # for user login and name use "simple" lowercase stemmer
     stemmer = table == "user" ? "simple" : Search.long_locale
 
-    # Would be nice to use AR here but not sure how to execut Postgres functions
-    # when inserting data like this.
     rows = Post.exec_sql_row_count("UPDATE #{table_name}
                                    SET
                                       raw_data = :search_data,
@@ -32,7 +29,6 @@ class SearchObserver < ActiveRecord::Observer
                                     search_data: search_data, id: id, locale: SiteSetting.default_locale)
     end
   rescue
-    # don't allow concurrency to mess up saving a post
   end
 
   def self.update_topics_index(topic_id, title, cooked)

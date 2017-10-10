@@ -74,7 +74,6 @@ class UserBadgesController < ApplicationController
 
   private
 
-    # Get the badge from either the badge name or id specified in the params.
     def fetch_badge_from_params
       badge = nil
 

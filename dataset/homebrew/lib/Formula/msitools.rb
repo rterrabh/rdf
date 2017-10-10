@@ -27,10 +27,8 @@ class Msitools < Formula
   end
 
   test do
-    # wixl-heat: make an xml fragment
     assert_match /<Fragment>/, pipe_output("#{bin}/wixl-heat --prefix test")
 
-    # wixl: build two installers
     1.upto(2) do |i|
       (testpath/"test#{i}.txt").write "abc"
       (testpath/"installer#{i}.wxs").write <<-EOS.undent
@@ -61,29 +59,24 @@ class Msitools < Formula
       assert File.exist?("installer#{i}.msi")
     end
 
-    # msidiff: diff two installers
     lines = `#{bin}/msidiff --list installer1.msi installer2.msi 2>/dev/null`.split("\n")
     assert_equal 0, $?.exitstatus
     assert_equal "-Program Files/test/test1.txt", lines[-2]
     assert_equal "+Program Files/test/test2.txt", lines[-1]
 
-    # msiinfo: show info for an installer
     out = `#{bin}/msiinfo suminfo installer1.msi`
     assert_equal 0, $?.exitstatus
     assert_match /Author: BigCo/, out
 
-    # msiextract: extract files from an installer
     mkdir "files"
     system "#{bin}/msiextract", "--directory", "files", "installer1.msi"
     assert_equal (testpath/"test1.txt").read,
                  (testpath/"files/Program Files/test/test1.txt").read
 
-    # msidump: dump tables from an installer
     mkdir "idt"
     system "#{bin}/msidump", "--directory", "idt", "installer1.msi"
     assert File.exist?("idt/File.idt")
 
-    # msibuild: replace a table in an installer
     system "#{bin}/msibuild", "installer1.msi", "-i", "idt/File.idt"
   end
 end

@@ -39,7 +39,6 @@ module RSS
 
     def xmldecl(version, encoding, standalone)
       super(version, encoding, standalone == "yes")
-      # Encoding is converted to UTF-8 when REXML parse XML.
       @encoding = 'UTF-8'
     end
 

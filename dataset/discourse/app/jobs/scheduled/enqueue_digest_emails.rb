@@ -1,6 +1,5 @@
 module Jobs
 
-  # A daily job that will enqueue digest emails to be sent to users
   class EnqueueDigestEmails < Jobs::Scheduled
     every 6.hours
 
@@ -13,7 +12,6 @@ module Jobs
     end
 
     def target_user_ids
-      # Users who want to receive emails and haven't been emailed in the last day
       query = User.real
                   .where(email_digests: true, active: true)
                   .not_suspended
@@ -21,7 +19,6 @@ module Jobs
                   .where("(COALESCE(last_seen_at, '2010-01-01') <= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * digest_after_days)) AND
                            COALESCE(last_seen_at, '2010-01-01') >= CURRENT_TIMESTAMP - ('1 DAY'::INTERVAL * #{SiteSetting.suppress_digest_email_after_days})")
 
-      # If the site requires approval, make sure the user is approved
       if SiteSetting.must_approve_users?
         query = query.where("approved OR moderator OR admin")
       end

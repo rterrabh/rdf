@@ -75,7 +75,6 @@ You can upgrade or downgrade to the latest release version with:
       @host = gem_data.spec.metadata['default_gem_server']
     end
 
-    # Always include this, even if it's nil
     args << @host
 
     if gem_data.spec.metadata.has_key?('allowed_push_host')

@@ -1,6 +1,3 @@
-##
-# Parse a Markdown format file.  The parsed RDoc::Markup::Document is attached
-# as a file comment.
 
 class RDoc::Parser::Markdown < RDoc::Parser
 
@@ -8,8 +5,6 @@ class RDoc::Parser::Markdown < RDoc::Parser
 
   parse_files_matching(/\.(md|markdown)(?:\.[^.]+)?$/)
 
-  ##
-  # Creates an Markdown-format TopLevel for the given file.
 
   def scan
     comment = RDoc::Comment.new @content, @top_level

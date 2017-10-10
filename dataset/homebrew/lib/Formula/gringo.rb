@@ -18,7 +18,6 @@ class Gringo < Formula
   needs :cxx11
 
   def install
-    # Allow pre-10.9 clangs to build in C++11 mode
     ENV.libcxx
 
     inreplace "SConstruct",

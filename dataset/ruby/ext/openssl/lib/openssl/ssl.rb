@@ -74,13 +74,6 @@ module OpenSSL
         DEFAULT_CERT_STORE.flags = OpenSSL::X509::V_FLAG_CRL_CHECK_ALL
       end
 
-      ##
-      # Sets the parameters for this SSL context to the values in +params+.
-      # The keys in +params+ must be assignment methods on SSLContext.
-      #
-      # If the verify_mode is not VERIFY_NONE and ca_file, ca_path and
-      # cert_store are not set then the system default certificate store is
-      # used.
 
       def set_params(params={})
         params = DEFAULT_PARAMS.merge(params)
@@ -146,7 +139,6 @@ module OpenSSL
             return true if verify_hostname(hostname, san.value)
           when 7 # iPAddress in GeneralName (RFC5280)
             should_verify_common_name = false
-            # follows GENERAL_NAME_print() in x509v3/v3_alt.c
             if san.value.size == 4
               return true if san.value.unpack('C*').join('.') == hostname
             elsif san.value.size == 16
@@ -167,32 +159,17 @@ module OpenSSL
     module_function :verify_certificate_identity
 
     def verify_hostname(hostname, san) # :nodoc:
-      # RFC 5280, IA5String is limited to the set of ASCII characters
       return false unless san.ascii_only?
       return false unless hostname.ascii_only?
 
-      # See RFC 6125, section 6.4.1
-      # Matching is case-insensitive.
       san_parts = san.downcase.split(".")
 
-      # TODO: this behavior should probably be more strict
       return san == hostname if san_parts.size < 2
 
-      # Matching is case-insensitive.
       host_parts = hostname.downcase.split(".")
 
-      # RFC 6125, section 6.4.3, subitem 2.
-      # If the wildcard character is the only character of the left-most
-      # label in the presented identifier, the client SHOULD NOT compare
-      # against anything but the left-most label of the reference
-      # identifier (e.g., *.example.com would match foo.example.com but
-      # not bar.foo.example.com or example.com).
       return false unless san_parts.size == host_parts.size
 
-      # RFC 6125, section 6.4.3, subitem 1.
-      # The client SHOULD NOT attempt to match a presented identifier in
-      # which the wildcard character comprises a label other than the
-      # left-most label (e.g., do not match bar.*.example.net).
       return false unless verify_wildcard(host_parts.shift, san_parts.shift)
 
       san_parts.join(".") == host_parts.join(".")
@@ -205,10 +182,6 @@ module OpenSSL
       return false if parts.size > 2
       return san_component == domain_component if parts.size == 1
 
-      # RFC 6125, section 6.4.3, subitem 3.
-      # The client SHOULD NOT attempt to match a presented identifier
-      # where the wildcard character is embedded within an A-label or
-      # U-label of an internationalized domain name.
       return false if domain_component.start_with?("xn--") && san_component != "*"
 
       parts[0].length + parts[1].length < domain_component.length &&
@@ -222,11 +195,6 @@ module OpenSSL
       include SocketForwarder
       include Nonblock
 
-      ##
-      # Perform hostname verification after an SSL connection is established
-      #
-      # This method MUST be called after calling #connect to ensure that the
-      # hostname of a remote peer has been verified.
       def post_connection_check(hostname)
         if peer_cert.nil?
           msg = "Peer verification enabled, but no certificate received."
@@ -257,21 +225,14 @@ module OpenSSL
       end
     end
 
-    ##
-    # SSLServer represents a TCP/IP server socket with Secure Sockets Layer.
     class SSLServer
       include SocketForwarder
-      # When true then #accept works exactly the same as TCPServer#accept
       attr_accessor :start_immediately
 
-      # Creates a new instance of SSLServer.
-      # * +srv+ is an instance of TCPServer.
-      # * +ctx+ is an instance of OpenSSL::SSL::SSLContext.
       def initialize(svr, ctx)
         @svr = svr
         @ctx = ctx
         unless ctx.session_id_context
-          # see #6137 - session id may not exceed 32 bytes
           prng = ::Random.new($0.hash)
           session_id = prng.bytes(16).unpack('H*')[0]
           @ctx.session_id_context = session_id
@@ -279,26 +240,19 @@ module OpenSSL
         @start_immediately = true
       end
 
-      # Returns the TCPServer passed to the SSLServer when initialized.
       def to_io
         @svr
       end
 
-      # See TCPServer#listen for details.
       def listen(backlog=5)
         @svr.listen(backlog)
       end
 
-      # See BasicSocket#shutdown for details.
       def shutdown(how=Socket::SHUT_RDWR)
         @svr.shutdown(how)
       end
 
-      # Works similar to TCPServer#accept.
       def accept
-        # Socket#accept returns [socket, addrinfo].
-        # TCPServer#accept returns a socket.
-        # The following comma strips addrinfo.
         sock, = @svr.accept
         begin
           ssl = OpenSSL::SSL::SSLSocket.new(sock, @ctx)
@@ -315,7 +269,6 @@ module OpenSSL
         end
       end
 
-      # See IO#close for details.
       def close
         @svr.close
       end

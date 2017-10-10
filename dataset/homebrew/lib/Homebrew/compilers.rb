@@ -1,4 +1,3 @@
-# @private
 module CompilerConstants
   GNU_GCC_VERSIONS = %w[4.3 4.4 4.5 4.6 4.7 4.8 4.9 5]
   GNU_GCC_REGEXP = /^gcc-(4\.[3-9]|5)$/
@@ -17,11 +16,8 @@ class CompilerFailure
   attr_reader :name
   attr_rw :version
 
-  # Allows Apple compiler `fails_with` statements to keep using `build`
-  # even though `build` and `version` are the same internally
   alias_method :build, :version
 
-  # The cause is no longer used so we need not hold a reference to the string
   def cause(_); end
 
   def self.for_standard(standard)
@@ -31,11 +27,9 @@ class CompilerFailure
   end
 
   def self.create(spec, &block)
-    # Non-Apple compilers are in the format fails_with compiler => version
     if spec.is_a?(Hash)
       _, major_version = spec.first
       name = "gcc-#{major_version}"
-      # so fails_with :gcc => '4.8' simply marks all 4.8 releases incompatible
       version = "#{major_version}.999"
     else
       name = spec
@@ -47,7 +41,7 @@ class CompilerFailure
   def initialize(name, version, &block)
     @name = name
     @version = version
-    #nodyna <ID:instance_eval-7> <IEV COMPLEX (block execution)>
+    #nodyna <instance_eval-665> <IEV COMPLEX (block execution)>
     instance_eval(&block) if block_given?
   end
 
@@ -138,7 +132,7 @@ class CompilerSelector
     when GNU_GCC_REGEXP
       versions.non_apple_gcc_version(name)
     else
-      #nodyna <ID:send-27> <SD MODERATE (change-prone variables)>
+      #nodyna <send-666> <SD MODERATE (change-prone variables)>
       versions.send("#{name}_build_version")
     end
   end

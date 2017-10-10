@@ -1,6 +1,3 @@
-#
-# tk/pack.rb : control pack geometry manager
-#
 require 'tk'
 
 module TkPack
@@ -17,15 +14,12 @@ module TkPack
       opts = {}
     end
     params = []
-    # params.push((win.kind_of?(TkObject))? win.epath: win)
     params.push(_epath(win))
     args.each{|win|
-      # params.push((win.kind_of?(TkObject))? win.epath: win)
       params.push(_epath(win))
     }
     opts.each{|k, v|
       params.push("-#{k}")
-      # params.push((v.kind_of?(TkObject))? v.epath: v)
       params.push(_epath(v))
     }
     tk_call_without_enc("pack", 'configure', *params)
@@ -51,14 +45,12 @@ module TkPack
   def forget(*args)
     return '' if args.size == 0
     wins = args.collect{|win|
-      # (win.kind_of?(TkObject))? win.epath: win
       _epath(win)
     }
     tk_call_without_enc('pack', 'forget', *wins)
   end
 
   def info(slave)
-    # slave = slave.epath if slave.kind_of?(TkObject)
     slave = _epath(slave)
     ilist = list(tk_call_without_enc('pack', 'info', slave))
     info = {}
@@ -69,7 +61,6 @@ module TkPack
   end
 
   def propagate(master, mode=None)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     if mode == None
       bool(tk_call_without_enc('pack', 'propagate', master))
@@ -79,7 +70,6 @@ module TkPack
   end
 
   def slaves(master)
-    # master = master.epath if master.kind_of?(TkObject)
     master = _epath(master)
     list(tk_call_without_enc('pack', 'slaves', master))
   end

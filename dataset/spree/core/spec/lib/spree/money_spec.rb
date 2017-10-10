@@ -1,4 +1,3 @@
-# coding: utf-8
 require 'spec_helper'
 
 describe Spree::Money do
@@ -92,7 +91,6 @@ describe Spree::Money do
       end
     end
 
-    # Regression test for #2634
     it "formats as plain by default" do
       money = Spree::Money.new(10, symbol_position: :after)
       expect(money.to_s).to eq("10.00 €")
@@ -100,13 +98,11 @@ describe Spree::Money do
 
     it "formats as HTML if asked (nicely) to" do
       money = Spree::Money.new(10, symbol_position: :after)
-      # The HTML'ified version of "10.00 €"
       expect(money.to_html).to eq("10.00&nbsp;&#x20AC;")
     end
 
     it "formats as HTML with currency" do
       money = Spree::Money.new(10, symbol_position: :after, with_currency: true)
-      # The HTML'ified version of "10.00 €"
       expect(money.to_html).to eq("10.00&nbsp;&#x20AC; <span class=\"currency\">EUR</span>")
     end
   end

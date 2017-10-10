@@ -10,7 +10,6 @@ module Backup
       Project.find_each(batch_size: 1000) do |project|
         $progress.print " * #{project.path_with_namespace} ... "
 
-        # Create namespace dir if missing
         FileUtils.mkdir_p(File.join(backup_repos_path, project.namespace.path)) if project.namespace
 
         if project.empty_repo?
@@ -51,7 +50,6 @@ module Backup
 
     def restore
       if File.exists?(repos_path)
-        # Move repos dir to 'repositories.old' dir
         bk_repos_path = File.join(repos_path, '..', 'repositories.old.' + Time.now.to_i.to_s)
         FileUtils.mv(repos_path, bk_repos_path)
       end
@@ -83,9 +81,6 @@ module Backup
         if File.exists?(path_to_bundle(wiki))
           $progress.print " * #{wiki.path_with_namespace} ... "
 
-          # If a wiki bundle exists, first remove the empty repo
-          # that was initialized with ProjectWiki.new() and then
-          # try to restore with 'git clone --bare'.
           FileUtils.rm_rf(path_to_repo(wiki))
           cmd = %W(git clone --bare #{path_to_bundle(wiki)} #{path_to_repo(wiki)})
 
@@ -130,9 +125,7 @@ module Backup
 
     def prepare
       FileUtils.rm_rf(backup_repos_path)
-      # Ensure the parent dir of backup_repos_path exists
       FileUtils.mkdir_p(Gitlab.config.backup.path)
-      # Fail if somebody raced to create backup_repos_path before us
       FileUtils.mkdir(backup_repos_path, mode: 0700)
     end
 

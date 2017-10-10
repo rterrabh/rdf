@@ -30,21 +30,12 @@ class Netcat6 < Formula
 end
 
 __END__
-# wrap socket-type warnings in very_verbose_mode()
 --- src/network.c	2006-01-19 14:46:23.000000000 -0800
 +++ src/network.c.new	2014-01-17 11:02:10.000000000 -0800
 @@ -21,10 +21,11 @@
   */
- #include "system.h"
- #include "network.h"
- #include "connection.h"
- #include "afindep.h"
 +#include "parser.h"
- #ifdef ENABLE_BLUEZ
- #include "bluez.h"
- #endif/*ENABLE_BLUEZ*/
 
- #include <assert.h>
 @@ -290,17 +291,20 @@
 	assert(sock >= 0);
 

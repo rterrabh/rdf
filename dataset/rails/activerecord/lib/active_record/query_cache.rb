@@ -1,9 +1,6 @@
 module ActiveRecord
-  # = Active Record Query Cache
   class QueryCache
     module ClassMethods
-      # Enable the query cache within the block if Active Record is configured.
-      # If it's not, it will execute the given block.
       def cache(&block)
         if ActiveRecord::Base.connected?
           connection.cache(&block)
@@ -12,8 +9,6 @@ module ActiveRecord
         end
       end
 
-      # Disable the query cache within the block if Active Record is configured.
-      # If it's not, it will execute the given block.
       def uncached(&block)
         if ActiveRecord::Base.connected?
           connection.uncached(&block)

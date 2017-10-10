@@ -10,12 +10,6 @@ class Gdmap < Formula
   depends_on "glib"
   depends_on "gtk+"
 
-  # The code depends on some GTK macros that are flagged as deprecated in the brew version of GTK.
-  # I assume they're not deprecated in normal GTK, because the config file disables deprecated GDK calls.
-  # The first patch turns off this disablement, making the code work fine as intended
-  # The second patch is to remove an unused system header import on one of the files.
-  # This header file doesn't exist in OSX and the program compiles and runs fine without it.
-  # Filed bug upstream as https://sourceforge.net/p/gdmap/bugs/19/
   patch :DATA
 
   def install
@@ -49,10 +43,5 @@ index efe2239..91c2a14 100644
 --- a/src/gui_main.c
 +++ b/src/gui_main.c
 @@ -11,7 +11,6 @@
- #  include <config.h>
- #endif
 
 -#include <sys/vfs.h>
- #include <stdlib.h>
- #include <math.h>
- #include <string.h>

@@ -15,7 +15,6 @@ FactoryGirl.define do
     eligible true
 
     after(:create) do |adjustment|
-      # Set correct tax category, so that adjustment amount is not 0
       if adjustment.adjustable.is_a?(Spree::LineItem)
         adjustment.source.tax_category = adjustment.adjustable.tax_category
         adjustment.source.save

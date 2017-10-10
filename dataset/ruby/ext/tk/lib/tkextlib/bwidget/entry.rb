@@ -1,7 +1,3 @@
-#
-#  tkextlib/bwidget/entry.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/entry'

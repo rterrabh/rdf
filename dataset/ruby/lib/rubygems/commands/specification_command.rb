@@ -131,7 +131,7 @@ Specific fields in the specification can be extracted in YAML format:
     end
 
     specs.each do |s|
-      #nodyna <ID:send-68> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-2318> <SD COMPLEX (change-prone variables)>
       s = s.send field if field
 
       say case options[:format]

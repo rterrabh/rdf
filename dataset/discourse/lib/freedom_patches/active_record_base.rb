@@ -1,9 +1,8 @@
 class ActiveRecord::Base
 
-  # Execute SQL manually
   def self.exec_sql(*args)
     conn = ActiveRecord::Base.connection
-    #nodyna <ID:send-3> <SD COMPLEX (private methods)>
+    #nodyna <send-350> <SD COMPLEX (private methods)>
     sql = ActiveRecord::Base.send(:sanitize_sql_array, args)
     conn.raw_connection.exec(sql)
   end
@@ -13,7 +12,7 @@ class ActiveRecord::Base
   end
 
   def self.sql_fragment(*sql_array)
-    #nodyna <ID:send-4> <SD COMPLEX (private methods)>
+    #nodyna <send-351> <SD COMPLEX (private methods)>
     ActiveRecord::Base.send(:sanitize_sql_array, sql_array)
   end
 
@@ -22,11 +21,6 @@ class ActiveRecord::Base
   end
 
 
-  # Executes the given block +retries+ times (or forever, if explicitly given nil),
-  # catching and retrying SQL Deadlock errors.
-  #
-  # Thanks to: http://stackoverflow.com/a/7427186/165668
-  #
   def self.retry_lock_error(retries=5, &block)
     begin
       yield
@@ -39,8 +33,6 @@ class ActiveRecord::Base
     end
   end
 
-  # Support for psql. If we want to support multiple RDBMs in the future we can
-  # split this.
   def exec_sql_row_count(*args)
     exec_sql(*args).cmd_tuples
   end

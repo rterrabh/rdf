@@ -12,7 +12,6 @@ class Sonar < Formula
   end
 
   def install
-    # Delete native bin directories for other systems
     rm_rf Dir["bin/{aix,hpux,linux,solaris,windows}-*"]
 
     if MacOS.prefer_64_bit?
@@ -21,7 +20,6 @@ class Sonar < Formula
       rm_rf "bin/macosx-universal-64"
     end
 
-    # Delete Windows files
     rm_f Dir["war/*.bat"]
     libexec.install Dir["*"]
 

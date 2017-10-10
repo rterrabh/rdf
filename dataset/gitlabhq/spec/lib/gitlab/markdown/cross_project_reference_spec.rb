@@ -2,7 +2,6 @@ require 'spec_helper'
 
 module Gitlab::Markdown
   describe CrossProjectReference do
-    # context in the html-pipeline sense, not in the rspec sense
     let(:context) do
       {
         current_user: double('user'),

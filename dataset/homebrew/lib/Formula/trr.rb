@@ -19,17 +19,13 @@ class Trr < Formula
     system "make", "clean"
     cp Dir["#{Formula["apel"].share}/emacs/site-lisp/apel/**/*.el"], buildpath
 
-    # The file "CONTENTS" is firstly encoded to EUC-JP.
-    # This encodes it to UTF-8 to avoid garbled characters.
     system "nkf", "-w", "--overwrite", "#{buildpath}/CONTENTS"
 
-    # wrong text filename
     inreplace "#{buildpath}/CONTENTS", "EmacsLisp", "Elisp_programs"
 
     system "make", "clean"
     cp Dir["#{Formula["apel"].share}/emacs/site-lisp/apel/**/*.elc"], buildpath
 
-    # texts for playing trr
     texts = "The_Constitution_Of_JAPAN Constitution_of_the_USA Iccad_90 C_programs Elisp_programs Java_programs Ocaml_programs Python_programs"
 
     inreplace "#{buildpath}/Makefile", "japanese = t", "japanese = nil"

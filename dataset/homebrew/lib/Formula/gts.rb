@@ -11,8 +11,6 @@ class Gts < Formula
   depends_on "glib"
   depends_on "netpbm"
 
-  # Fix for newer netpbm.
-  # This software hasn't been updated in seven years
   patch :DATA
 
   def install
@@ -30,11 +28,5 @@ index 88770a8..11f140d 100644
 --- a/examples/happrox.c
 +++ b/examples/happrox.c
 @@ -21,7 +21,7 @@
- #include <stdlib.h>
- #include <locale.h>
- #include <string.h>
 -#include <pgm.h>
 +#include <netpbm/pgm.h>
- #include "config.h"
- #ifdef HAVE_GETOPT_H
- #  include <getopt.h>

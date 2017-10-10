@@ -29,10 +29,7 @@ class Msgpack < Formula
   end
 
   test do
-    # Reference: http://wiki.msgpack.org/display/MSGPACK/QuickStart+for+C+Language
     (testpath/"test.c").write <<-EOS.undent
-      #include <msgpack.h>
-      #include <stdio.h>
 
       int main(void)
       {

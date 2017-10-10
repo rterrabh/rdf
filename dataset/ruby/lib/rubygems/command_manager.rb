@@ -1,33 +1,7 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
 require 'rubygems/command'
 require 'rubygems/user_interaction'
 
-##
-# The command manager registers and installs all the individual sub-commands
-# supported by the gem command.
-#
-# Extra commands can be provided by writing a rubygems_plugin.rb
-# file in an installed gem.  You should register your command against the
-# Gem::CommandManager instance, like this:
-#
-#   # file rubygems_plugin.rb
-#   require 'rubygems/command_manager'
-#
-#   Gem::CommandManager.instance.register_command :edit
-#
-# You should put the implementation of your command in rubygems/commands.
-#
-#   # file rubygems/commands/edit_command.rb
-#   class Gem::Commands::EditCommand < Gem::Command
-#     # ...
-#   end
-#
-# See Gem::Command for instructions on writing gem commands.
 
 class Gem::CommandManager
 
@@ -67,30 +41,21 @@ class Gem::CommandManager
     :yank,
   ]
 
-  ##
-  # Return the authoritative instance of the command manager.
 
   def self.instance
     @command_manager ||= new
   end
 
-  ##
-  # Returns self. Allows a CommandManager instance to stand
-  # in for the class itself.
 
   def instance
     self
   end
 
-  ##
-  # Reset the authoritative instance of the command manager.
 
   def self.reset
     @command_manager = nil
   end
 
-  ##
-  # Register all the subcommands supported by the gem command.
 
   def initialize
     require 'timeout'
@@ -101,22 +66,16 @@ class Gem::CommandManager
     end
   end
 
-  ##
-  # Register the Symbol +command+ as a gem command.
 
   def register_command(command, obj=false)
     @commands[command] = obj
   end
 
-  ##
-  # Unregister the Symbol +command+ as a gem command.
 
   def unregister_command(command)
     @commands.delete command
   end
 
-  ##
-  # Returns a Command instance for +command_name+
 
   def [](command_name)
     command_name = command_name.intern
@@ -124,15 +83,11 @@ class Gem::CommandManager
     @commands[command_name] ||= load_and_instantiate(command_name)
   end
 
-  ##
-  # Return a sorted list of all command names as strings.
 
   def command_names
     @commands.keys.collect {|key| key.to_s}.sort
   end
 
-  ##
-  # Run the command specified by +args+.
 
   def run(args, build_args=nil)
     process_args(args, build_args)
@@ -205,7 +160,7 @@ class Gem::CommandManager
       rescue LoadError => e
         load_error = e
       end
-      #nodyna <ID:const_get-29> <CG COMPLEX (change-prone variable)>
+      #nodyna <const_get-2314> <CG COMPLEX (change-prone variable)>
       Gem::Commands.const_get(const_name).new
     rescue Exception => e
       e = load_error if load_error

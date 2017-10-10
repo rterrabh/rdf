@@ -1,10 +1,5 @@
 module ActiveRecord
   module ConnectionAdapters # :nodoc:
-    # The goal of this module is to move Adapter specific column
-    # definitions to the Adapter instead of having it in the schema
-    # dumper itself. This code represents the normal case.
-    # We can then redefine how certain data types may be handled in the schema dumper on the
-    # Adapter level by over-writing this code inside the database specific adapters
     module ColumnDumper
       def column_spec(column, types)
         spec = prepare_column_options(column, types)
@@ -12,9 +7,6 @@ module ActiveRecord
         spec
       end
 
-      # This can be overridden on a Adapter level basis to support other
-      # extended datatypes (Example: Adding an array option in the
-      # PostgreSQLAdapter)
       def prepare_column_options(column, types)
         spec = {}
         spec[:name]      = column.name.inspect
@@ -32,7 +24,6 @@ module ActiveRecord
         spec
       end
 
-      # Lists the valid migration options
       def migration_keys
         [:name, :limit, :precision, :scale, :default, :null]
       end

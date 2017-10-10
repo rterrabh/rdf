@@ -95,7 +95,6 @@ class SiteSetting < ActiveRecord::Base
                                   .count
       return true if topics_per_period >= SiteSetting.topics_per_period_in_top_page
     end
-    # nothing
     false
   end
 
@@ -109,14 +108,3 @@ class SiteSetting < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: site_settings
-#
-#  id         :integer          not null, primary key
-#  name       :string(255)      not null
-#  data_type  :integer          not null
-#  value      :text
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#

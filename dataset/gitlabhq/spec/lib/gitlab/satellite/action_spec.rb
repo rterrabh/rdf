@@ -12,11 +12,9 @@ describe 'Gitlab::Satellite::Action' do
     it 'create a repository with a parking branch and one remote: origin' do
       repo = project.satellite.repo
 
-      #now lets dirty it up
 
       starting_remote_count = repo.git.list_remotes.size
       expect(starting_remote_count).to be >= 1
-      #kind of hookey way to add a second remote
       origin_uri = repo.git.remote({ v: true }).split(" ")[1]
 
       repo.git.remote({ raise: true }, 'add', 'another-remote', origin_uri)
@@ -31,15 +29,12 @@ describe 'Gitlab::Satellite::Action' do
       expect(repo.config['user.email']).to eq("#{user.email} -- foo")
 
 
-      #These must happen in the context of the satellite directory...
       satellite_action = Gitlab::Satellite::Action.new(user, project)
       project.satellite.lock do
-        #Now clean it up, use send to get around prepare_satellite! being protected
-        #nodyna <ID:send-1> <SD TRIVIAL (public methods)>
+        #nodyna <send-486> <SD TRIVIAL (public methods)>
         satellite_action.send(:prepare_satellite!, repo)
       end
 
-      #verify it's clean
       heads = repo.heads.map(&:name)
       expect(heads.size).to eq(1)
       expect(heads.include?(Gitlab::Satellite::Satellite::PARKING_BRANCH)).to eq(true)
@@ -57,13 +52,12 @@ describe 'Gitlab::Satellite::Action' do
       repo = project.satellite.repo
       called = false
 
-      #set assumptions
       FileUtils.rm_f(project.satellite.lock_file)
 
       expect(File.exists?(project.satellite.lock_file)).to be_falsey
 
       satellite_action = Gitlab::Satellite::Action.new(user, project)
-      #nodyna <ID:send-2> <SD TRIVIAL (public methods)>
+      #nodyna <send-487> <SD TRIVIAL (public methods)>
       satellite_action.send(:in_locked_and_timed_satellite) do |sat_repo|
         expect(repo).to eq(sat_repo)
         expect(File.exists? project.satellite.lock_file).to be_truthy
@@ -78,13 +72,12 @@ describe 'Gitlab::Satellite::Action' do
       repo = project.satellite.repo
       called = false
 
-      # Set base assumptions
       if File.exists? project.satellite.lock_file
         expect(FileLockStatusChecker.new(project.satellite.lock_file).flocked?).to be_falsey
       end
 
       satellite_action = Gitlab::Satellite::Action.new(user, project)
-      #nodyna <ID:send-3> <SD TRIVIAL (public methods)>
+      #nodyna <send-488> <SD TRIVIAL (public methods)>
       satellite_action.send(:in_locked_and_timed_satellite) do |sat_repo|
         called = true
         expect(repo).to eq(sat_repo)

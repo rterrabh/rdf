@@ -8,7 +8,6 @@ module Autospec
     def self.watch(pattern, &blk); WATCHERS[pattern] = blk; end
     def watchers; WATCHERS; end
 
-    # Discourse specific
     watch(%r{^app/assets/javascripts/discourse/(.+)\.js$}) { |m| "test/javascripts/#{m[1]}_test.js" }
     watch(%r{^app/assets/javascripts/admin/(.+)\.js$})     { |m| "test/javascripts/admin/#{m[1]}_test.js" }
     watch(%r{^test/javascripts/.+\.js$})
@@ -17,7 +16,6 @@ module Autospec
     def self.reload(pattern); RELOADERS << pattern; end
     def reloaders; RELOADERS; end
 
-    # Discourse specific
     reload(%r{^test/javascripts/fixtures/.+_fixtures\.js$})
     reload(%r{^test/javascripts/(helpers|mixins)/.+\.js$})
     reload("test/javascripts/test_helper.js")
@@ -31,14 +29,12 @@ module Autospec
     end
 
     def start
-      # ensure we can launch the rails server
       unless port_available?(port)
         puts "Port #{port} is not available"
         puts "Either kill the process using that port or use the `TEST_SERVER_PORT` environment variable"
         return
       end
 
-      # start rails
       start_rails_server
       @running = true
     end
@@ -89,7 +85,6 @@ module Autospec
     end
 
     def stop
-      # kill phantomjs first
       abort
       stop_rails_server
       @running = false

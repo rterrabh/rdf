@@ -8,7 +8,6 @@ class Bsponmpi < Formula
   depends_on :mpi => [:cc, :cxx]
 
   def install
-    # Don't install 'CVS' folders from tarball
     rm_rf "include/CVS"
     rm_rf "include/tools/CVS"
     scons "-Q", "mode=release"

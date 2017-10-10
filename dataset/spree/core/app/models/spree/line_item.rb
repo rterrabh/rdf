@@ -93,12 +93,10 @@ module Spree
       !sufficient_stock?
     end
 
-    # Remove product default_scope `deleted_at: nil`
     def product
       variant.product
     end
 
-    # Remove variant default_scope `deleted_at: nil`
     def variant
       Spree::Variant.unscoped { super }
     end

@@ -7,93 +7,50 @@ begin
 rescue LoadError
 end
 
-# Resolv is a thread-aware DNS resolver library written in Ruby.  Resolv can
-# handle multiple DNS requests concurrently without blocking the entire Ruby
-# interpreter.
-#
-# See also resolv-replace.rb to replace the libc resolver with Resolv.
-#
-# Resolv can look up various DNS resources using the DNS module directly.
-#
-# Examples:
-#
-#   p Resolv.getaddress "www.ruby-lang.org"
-#   p Resolv.getname "210.251.121.214"
-#
-#   Resolv::DNS.open do |dns|
-#     ress = dns.getresources "www.ruby-lang.org", Resolv::DNS::Resource::IN::A
-#     p ress.map { |r| r.address }
-#     ress = dns.getresources "ruby-lang.org", Resolv::DNS::Resource::IN::MX
-#     p ress.map { |r| [r.exchange.to_s, r.preference] }
-#   end
-#
-#
-# == Bugs
-#
-# * NIS is not supported.
-# * /etc/nsswitch.conf is not supported.
 
 class Resolv
 
-  ##
-  # Looks up the first IP address for +name+.
 
   def self.getaddress(name)
     DefaultResolver.getaddress(name)
   end
 
-  ##
-  # Looks up all IP address for +name+.
 
   def self.getaddresses(name)
     DefaultResolver.getaddresses(name)
   end
 
-  ##
-  # Iterates over all IP addresses for +name+.
 
   def self.each_address(name, &block)
     DefaultResolver.each_address(name, &block)
   end
 
-  ##
-  # Looks up the hostname of +address+.
 
   def self.getname(address)
     DefaultResolver.getname(address)
   end
 
-  ##
-  # Looks up all hostnames for +address+.
 
   def self.getnames(address)
     DefaultResolver.getnames(address)
   end
 
-  ##
-  # Iterates over all hostnames for +address+.
 
   def self.each_name(address, &proc)
     DefaultResolver.each_name(address, &proc)
   end
 
-  ##
-  # Creates a new Resolv using +resolvers+.
 
   def initialize(resolvers=[Hosts.new, DNS.new])
     @resolvers = resolvers
   end
 
-  ##
-  # Looks up the first IP address for +name+.
 
   def getaddress(name)
     each_address(name) {|address| return address}
     raise ResolvError.new("no address for #{name}")
   end
 
-  ##
-  # Looks up all IP address for +name+.
 
   def getaddresses(name)
     ret = []
@@ -101,8 +58,6 @@ class Resolv
     return ret
   end
 
-  ##
-  # Iterates over all IP addresses for +name+.
 
   def each_address(name)
     if AddressRegex =~ name
@@ -119,16 +74,12 @@ class Resolv
     }
   end
 
-  ##
-  # Looks up the hostname of +address+.
 
   def getname(address)
     each_name(address) {|name| return name}
     raise ResolvError.new("no name for #{address}")
   end
 
-  ##
-  # Looks up all hostnames for +address+.
 
   def getnames(address)
     ret = []
@@ -136,8 +87,6 @@ class Resolv
     return ret
   end
 
-  ##
-  # Iterates over all hostnames for +address+.
 
   def each_name(address)
     yielded = false
@@ -150,18 +99,12 @@ class Resolv
     }
   end
 
-  ##
-  # Indicates a failure to resolve a name or address.
 
   class ResolvError < StandardError; end
 
-  ##
-  # Indicates a timeout resolving a name or address.
 
   class ResolvTimeout < Timeout::Error; end
 
-  ##
-  # Resolv::Hosts is a hostname resolver that uses the system hosts file.
 
   class Hosts
     begin
@@ -172,8 +115,6 @@ class Resolv
       DefaultFileName = '/etc/hosts'
     end
 
-    ##
-    # Creates a new Resolv::Hosts, using +filename+ for its data source.
 
     def initialize(filename = DefaultFileName)
       @filename = filename
@@ -212,16 +153,12 @@ class Resolv
       self
     end
 
-    ##
-    # Gets the IP address of +name+ from the hosts file.
 
     def getaddress(name)
       each_address(name) {|address| return address}
       raise ResolvError.new("#{@filename} has no name: #{name}")
     end
 
-    ##
-    # Gets all IP addresses for +name+ from the hosts file.
 
     def getaddresses(name)
       ret = []
@@ -229,8 +166,6 @@ class Resolv
       return ret
     end
 
-    ##
-    # Iterates over all IP addresses for +name+ retrieved from the hosts file.
 
     def each_address(name, &proc)
       lazy_initialize
@@ -239,16 +174,12 @@ class Resolv
       end
     end
 
-    ##
-    # Gets the hostname of +address+ from the hosts file.
 
     def getname(address)
       each_name(address) {|name| return name}
       raise ResolvError.new("#{@filename} has no address: #{address}")
     end
 
-    ##
-    # Gets all hostnames for +address+ from the hosts file.
 
     def getnames(address)
       ret = []
@@ -256,8 +187,6 @@ class Resolv
       return ret
     end
 
-    ##
-    # Iterates over all hostnames for +address+ retrieved from the hosts file.
 
     def each_name(address, &proc)
       lazy_initialize
@@ -267,33 +196,15 @@ class Resolv
     end
   end
 
-  ##
-  # Resolv::DNS is a DNS stub resolver.
-  #
-  # Information taken from the following places:
-  #
-  # * STD0013
-  # * RFC 1035
-  # * ftp://ftp.isi.edu/in-notes/iana/assignments/dns-parameters
-  # * etc.
 
   class DNS
 
-    ##
-    # Default DNS Port
 
     Port = 53
 
-    ##
-    # Default DNS UDP packet size
 
     UDPSize = 512
 
-    ##
-    # Creates a new DNS resolver.  See Resolv::DNS.new for argument details.
-    #
-    # Yields the created DNS resolver to the block, if given, otherwise
-    # returns it.
 
     def self.open(*args)
       dns = new(*args)
@@ -305,30 +216,6 @@ class Resolv
       end
     end
 
-    ##
-    # Creates a new DNS resolver.
-    #
-    # +config_info+ can be:
-    #
-    # nil:: Uses /etc/resolv.conf.
-    # String:: Path to a file using /etc/resolv.conf's format.
-    # Hash:: Must contain :nameserver, :search and :ndots keys.
-    # :nameserver_port can be used to specify port number of nameserver address.
-    #
-    # The value of :nameserver should be an address string or
-    # an array of address strings.
-    # - :nameserver => '8.8.8.8'
-    # - :nameserver => ['8.8.8.8', '8.8.4.4']
-    #
-    # The value of :nameserver_port should be an array of
-    # pair of nameserver address and port number.
-    # - :nameserver_port => [['8.8.8.8', 53], ['8.8.4.4', 53]]
-    #
-    # Example:
-    #
-    #   Resolv::DNS.new(:nameserver => ['210.251.121.21'],
-    #                   :search => ['ruby-lang.org'],
-    #                   :ndots => 1)
 
     def initialize(config_info=nil)
       @mutex = Mutex.new
@@ -336,17 +223,6 @@ class Resolv
       @initialized = nil
     end
 
-    # Sets the resolver timeouts.  This may be a single positive number
-    # or an array of positive numbers representing timeouts in seconds.
-    # If an array is specified, a DNS request will retry and wait for
-    # each successive interval in the array until a successful response
-    # is received.  Specifying +nil+ reverts to the default timeouts:
-    # [ 5, second = 5 * 2 / nameserver_count, 2 * second, 4 * second ]
-    #
-    # Example:
-    #
-    #   dns.timeouts = 3
-    #
     def timeouts=(values)
       @config.timeouts = values
     end
@@ -361,8 +237,6 @@ class Resolv
       self
     end
 
-    ##
-    # Closes the DNS resolver.
 
     def close
       @mutex.synchronize {
@@ -372,22 +246,12 @@ class Resolv
       }
     end
 
-    ##
-    # Gets the IP address of +name+ from the DNS resolver.
-    #
-    # +name+ can be a Resolv::DNS::Name or a String.  Retrieved address will
-    # be a Resolv::IPv4 or Resolv::IPv6
 
     def getaddress(name)
       each_address(name) {|address| return address}
       raise ResolvError.new("DNS result has no information for #{name}")
     end
 
-    ##
-    # Gets all IP addresses for +name+ from the DNS resolver.
-    #
-    # +name+ can be a Resolv::DNS::Name or a String.  Retrieved addresses will
-    # be a Resolv::IPv4 or Resolv::IPv6
 
     def getaddresses(name)
       ret = []
@@ -395,12 +259,6 @@ class Resolv
       return ret
     end
 
-    ##
-    # Iterates over all IP addresses for +name+ retrieved from the DNS
-    # resolver.
-    #
-    # +name+ can be a Resolv::DNS::Name or a String.  Retrieved addresses will
-    # be a Resolv::IPv4 or Resolv::IPv6
 
     def each_address(name)
       each_resource(name, Resource::IN::A) {|resource| yield resource.address}
@@ -419,22 +277,12 @@ class Resolv
     end
     private :use_ipv6?
 
-    ##
-    # Gets the hostname for +address+ from the DNS resolver.
-    #
-    # +address+ must be a Resolv::IPv4, Resolv::IPv6 or a String.  Retrieved
-    # name will be a Resolv::DNS::Name.
 
     def getname(address)
       each_name(address) {|name| return name}
       raise ResolvError.new("DNS result has no information for #{address}")
     end
 
-    ##
-    # Gets all hostnames for +address+ from the DNS resolver.
-    #
-    # +address+ must be a Resolv::IPv4, Resolv::IPv6 or a String.  Retrieved
-    # names will be Resolv::DNS::Name instances.
 
     def getnames(address)
       ret = []
@@ -442,12 +290,6 @@ class Resolv
       return ret
     end
 
-    ##
-    # Iterates over all hostnames for +address+ retrieved from the DNS
-    # resolver.
-    #
-    # +address+ must be a Resolv::IPv4, Resolv::IPv6 or a String.  Retrieved
-    # names will be Resolv::DNS::Name instances.
 
     def each_name(address)
       case address
@@ -463,37 +305,12 @@ class Resolv
       each_resource(ptr, Resource::IN::PTR) {|resource| yield resource.name}
     end
 
-    ##
-    # Look up the +typeclass+ DNS resource of +name+.
-    #
-    # +name+ must be a Resolv::DNS::Name or a String.
-    #
-    # +typeclass+ should be one of the following:
-    #
-    # * Resolv::DNS::Resource::IN::A
-    # * Resolv::DNS::Resource::IN::AAAA
-    # * Resolv::DNS::Resource::IN::ANY
-    # * Resolv::DNS::Resource::IN::CNAME
-    # * Resolv::DNS::Resource::IN::HINFO
-    # * Resolv::DNS::Resource::IN::MINFO
-    # * Resolv::DNS::Resource::IN::MX
-    # * Resolv::DNS::Resource::IN::NS
-    # * Resolv::DNS::Resource::IN::PTR
-    # * Resolv::DNS::Resource::IN::SOA
-    # * Resolv::DNS::Resource::IN::TXT
-    # * Resolv::DNS::Resource::IN::WKS
-    #
-    # Returned resource is represented as a Resolv::DNS::Resource instance,
-    # i.e. Resolv::DNS::Resource::IN::A.
 
     def getresource(name, typeclass)
       each_resource(name, typeclass) {|resource| return resource}
       raise ResolvError.new("DNS result has no information for #{name}")
     end
 
-    ##
-    # Looks up all +typeclass+ DNS resources for +name+.  See #getresource for
-    # argument details.
 
     def getresources(name, typeclass)
       ret = []
@@ -501,9 +318,6 @@ class Resolv
       return ret
     end
 
-    ##
-    # Iterates over all +typeclass+ DNS resources for +name+.  See
-    # #getresource for argument details.
 
     def each_resource(name, typeclass, &proc)
       fetch_resource(name, typeclass) {|reply, reply_name|
@@ -530,13 +344,8 @@ class Resolv
           when RCode::NoError
             if reply.tc == 1 and not Requester::TCP === requester
               requester.close
-              # Retry via TCP:
               requester = make_tcp_requester(nameserver, port)
               senders = {}
-              # This will use TCP for all remaining candidates (assuming the
-              # current candidate does not already respond successfully via
-              # TCP).  This makes sense because we already know the full
-              # response will not fit in an untruncated UDP packet.
               redo
             else
               yield(reply, reply_name)
@@ -669,6 +478,7 @@ class Resolv
         start = Time.now
         timelimit = start + tout
         begin
+          #nodyna <send-1895> <not yet classified>
           sender.send
         rescue Errno::EHOSTUNREACH, # multi-homed IPv6 may generate this
                Errno::ENETUNREACH
@@ -690,8 +500,6 @@ class Resolv
             reply, from = recv_reply(select_result[0])
           rescue Errno::ECONNREFUSED, # GNU/Linux, FreeBSD
                  Errno::ECONNRESET # Windows
-            # No name server running on the server?
-            # Don't wait anymore.
             raise ResolvTimeout
           end
           begin
@@ -702,7 +510,6 @@ class Resolv
           if s = sender_for(from, msg)
             break
           else
-            # unexpected DNS message ignored
           end
         end
         return msg, s.data
@@ -786,9 +593,10 @@ class Resolv
           end
           attr_reader :data
 
+          #nodyna <send-1896> <not yet classified>
           def send
             raise "@sock is nil." if @sock.nil?
-            #nodyna <ID:send-74> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1897> <SD COMPLEX (change-prone variables)>
             @sock.send(@msg, 0, @host, @port)
           end
         end
@@ -830,9 +638,10 @@ class Resolv
         end
 
         class Sender < Requester::Sender # :nodoc:
+          #nodyna <send-1898> <not yet classified>
           def send
             raise "@sock is nil." if @sock.nil?
-            #nodyna <ID:send-76> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1899> <SD COMPLEX (change-prone variables)>
             @sock.send(@msg, 0)
           end
           attr_reader :data
@@ -881,6 +690,7 @@ class Resolv
         end
 
         class Sender < Requester::Sender # :nodoc:
+          #nodyna <send-1900> <not yet classified>
           def send
             @sock.print(@msg)
             @sock.flush
@@ -896,8 +706,6 @@ class Resolv
         end
       end
 
-      ##
-      # Indicates a problem with the DNS request.
 
       class RequestError < StandardError
       end
@@ -1108,14 +916,10 @@ class Resolv
         end
       end
 
-      ##
-      # Indicates no such domain was found.
 
       class NXDomain < ResolvError
       end
 
-      ##
-      # Indicates some other unhandled resolver error was encountered.
 
       class OtherResolvError < ResolvError
       end
@@ -1150,14 +954,10 @@ class Resolv
       BADALG = 21
     end
 
-    ##
-    # Indicates that the DNS response was unable to be decoded.
 
     class DecodeError < StandardError
     end
 
-    ##
-    # Indicates that the DNS request was unable to be encoded.
 
     class EncodeError < StandardError
     end
@@ -1198,16 +998,9 @@ class Resolv
       end
     end
 
-    ##
-    # A representation of a DNS name.
 
     class Name
 
-      ##
-      # Creates a new DNS name from +arg+.  +arg+ can be:
-      #
-      # Name:: returns +arg+.
-      # String:: Creates a new Name.
 
       def self.create(arg)
         case arg
@@ -1237,8 +1030,6 @@ class Resolv
         "#<#{self.class}: #{self}#{@absolute ? '.' : ''}>"
       end
 
-      ##
-      # True if this name is absolute.
 
       def absolute?
         return @absolute
@@ -1252,19 +1043,6 @@ class Resolv
 
       alias eql? == # :nodoc:
 
-      ##
-      # Returns true if +other+ is a subdomain.
-      #
-      # Example:
-      #
-      #   domain = Resolv::DNS::Name.create("y.z")
-      #   p Resolv::DNS::Name.create("w.x.y.z").subdomain_of?(domain) #=> true
-      #   p Resolv::DNS::Name.create("x.y.z").subdomain_of?(domain) #=> true
-      #   p Resolv::DNS::Name.create("y.z").subdomain_of?(domain) #=> false
-      #   p Resolv::DNS::Name.create("z").subdomain_of?(domain) #=> false
-      #   p Resolv::DNS::Name.create("x.y.z.").subdomain_of?(domain) #=> false
-      #   p Resolv::DNS::Name.create("w.z").subdomain_of?(domain) #=> false
-      #
 
       def subdomain_of?(other)
         raise ArgumentError, "not a domain name: #{other.inspect}" unless Name === other
@@ -1290,16 +1068,6 @@ class Resolv
         return @labels[i]
       end
 
-      ##
-      # returns the domain name as a string.
-      #
-      # The domain name doesn't have a trailing dot even if the name object is
-      # absolute.
-      #
-      # Example:
-      #
-      #   p Resolv::DNS::Name.create("x.y.z.").to_s #=> "x.y.z"
-      #   p Resolv::DNS::Name.create("x.y.z").to_s #=> "x.y.z"
 
       def to_s
         return @labels.join('.')
@@ -1633,14 +1401,13 @@ class Resolv
           type, klass, ttl = self.get_unpack('nnN')
           typeclass = Resource.get_class(type, klass)
           res = self.get_length16 { typeclass.decode_rdata self }
+          #nodyna <instance_variable_set-1901> <not yet classified>
           res.instance_variable_set :@ttl, ttl
           return name, ttl, res
         end
       end
     end
 
-    ##
-    # A DNS query abstract class.
 
     class Query
       def encode_rdata(msg) # :nodoc:
@@ -1652,13 +1419,9 @@ class Resolv
       end
     end
 
-    ##
-    # A DNS resource abstract class.
 
     class Resource < Query
 
-      ##
-      # Remaining Time To Live for this Resource.
 
       attr_reader :ttl
 
@@ -1681,7 +1444,9 @@ class Resolv
         o_ivars.sort!
         o_ivars.delete :@ttl
         return s_ivars == o_ivars &&
+          #nodyna <instance_variable_get-1902> <not yet classified>
           s_ivars.collect {|name| self.instance_variable_get name} ==
+            #nodyna <instance_variable_get-1903> <not yet classified>
             o_ivars.collect {|name| other.instance_variable_get name}
       end
 
@@ -1694,6 +1459,7 @@ class Resolv
         vars = self.instance_variables
         vars.delete :@ttl
         vars.each {|name|
+          #nodyna <instance_variable_get-1904> <not yet classified>
           h ^= self.instance_variable_get(name).hash
         }
         return h
@@ -1704,20 +1470,14 @@ class Resolv
                Generic.create(type_value, class_value)
       end
 
-      ##
-      # A generic resource abstract class.
 
       class Generic < Resource
 
-        ##
-        # Creates a new generic resource.
 
         def initialize(data)
           @data = data
         end
 
-        ##
-        # Data for this generic resource.
 
         attr_reader :data
 
@@ -1731,31 +1491,25 @@ class Resolv
 
         def self.create(type_value, class_value) # :nodoc:
           c = Class.new(Generic)
-          #nodyna <ID:const_set-37> <CS TRIVIAL (static values)>
+          #nodyna <const_set-1905> <CS TRIVIAL (static values)>
           c.const_set(:TypeValue, type_value)
-          #nodyna <ID:const_set-38> <CS TRIVIAL (static values)>
+          #nodyna <const_set-1906> <CS TRIVIAL (static values)>
           c.const_set(:ClassValue, class_value)
-          #nodyna <ID:const_set-39> <CS COMPLEX (change-prone variable)>
+          #nodyna <const_set-1907> <CS COMPLEX (change-prone variable)>
           Generic.const_set("Type#{type_value}_Class#{class_value}", c)
           ClassHash[[type_value, class_value]] = c
           return c
         end
       end
 
-      ##
-      # Domain Name resource abstract class.
 
       class DomainName < Resource
 
-        ##
-        # Creates a new DomainName from +name+.
 
         def initialize(name)
           @name = name
         end
 
-        ##
-        # The name of this DomainName.
 
         attr_reader :name
 
@@ -1768,34 +1522,24 @@ class Resolv
         end
       end
 
-      # Standard (class generic) RRs
 
       ClassValue = nil # :nodoc:
 
-      ##
-      # An authoritative name server.
 
       class NS < DomainName
         TypeValue = 2 # :nodoc:
       end
 
-      ##
-      # The canonical name for an alias.
 
       class CNAME < DomainName
         TypeValue = 5 # :nodoc:
       end
 
-      ##
-      # Start Of Authority resource.
 
       class SOA < Resource
 
         TypeValue = 6 # :nodoc:
 
-        ##
-        # Creates a new SOA record.  See the attr documentation for the
-        # details of each argument.
 
         def initialize(mname, rname, serial, refresh, retry_, expire, minimum)
           @mname = mname
@@ -1807,41 +1551,24 @@ class Resolv
           @minimum = minimum
         end
 
-        ##
-        # Name of the host where the master zone file for this zone resides.
 
         attr_reader :mname
 
-        ##
-        # The person responsible for this domain name.
 
         attr_reader :rname
 
-        ##
-        # The version number of the zone file.
 
         attr_reader :serial
 
-        ##
-        # How often, in seconds, a secondary name server is to check for
-        # updates from the primary name server.
 
         attr_reader :refresh
 
-        ##
-        # How often, in seconds, a secondary name server is to retry after a
-        # failure to check for a refresh.
 
         attr_reader :retry
 
-        ##
-        # Time in seconds that a secondary name server is to use the data
-        # before refreshing from the primary name server.
 
         attr_reader :expire
 
-        ##
-        # The minimum number of seconds to be used for TTL values in RRs.
 
         attr_reader :minimum
 
@@ -1860,35 +1587,25 @@ class Resolv
         end
       end
 
-      ##
-      # A Pointer to another DNS name.
 
       class PTR < DomainName
         TypeValue = 12 # :nodoc:
       end
 
-      ##
-      # Host Information resource.
 
       class HINFO < Resource
 
         TypeValue = 13 # :nodoc:
 
-        ##
-        # Creates a new HINFO running +os+ on +cpu+.
 
         def initialize(cpu, os)
           @cpu = cpu
           @os = os
         end
 
-        ##
-        # CPU architecture for this resource.
 
         attr_reader :cpu
 
-        ##
-        # Operating system for this resource.
 
         attr_reader :os
 
@@ -1904,8 +1621,6 @@ class Resolv
         end
       end
 
-      ##
-      # Mailing list or mailbox information.
 
       class MINFO < Resource
 
@@ -1916,13 +1631,9 @@ class Resolv
           @emailbx = emailbx
         end
 
-        ##
-        # Domain name responsible for this mail list or mailbox.
 
         attr_reader :rmailbx
 
-        ##
-        # Mailbox to use for error messages related to the mail list or mailbox.
 
         attr_reader :emailbx
 
@@ -1938,29 +1649,20 @@ class Resolv
         end
       end
 
-      ##
-      # Mail Exchanger resource.
 
       class MX < Resource
 
         TypeValue= 15 # :nodoc:
 
-        ##
-        # Creates a new MX record with +preference+, accepting mail at
-        # +exchange+.
 
         def initialize(preference, exchange)
           @preference = preference
           @exchange = exchange
         end
 
-        ##
-        # The preference for this MX.
 
         attr_reader :preference
 
-        ##
-        # The host of this MX.
 
         attr_reader :exchange
 
@@ -1976,8 +1678,6 @@ class Resolv
         end
       end
 
-      ##
-      # Unstructured text resource.
 
       class TXT < Resource
 
@@ -1987,13 +1687,9 @@ class Resolv
           @strings = [first_string, *rest_strings]
         end
 
-        ##
-        # Returns an Array of Strings for this TXT record.
 
         attr_reader :strings
 
-        ##
-        # Returns the concatenated string from +strings+.
 
         def data
           @strings.join("")
@@ -2009,8 +1705,6 @@ class Resolv
         end
       end
 
-      ##
-      # Location resource
 
       class LOC < Resource
 
@@ -2026,46 +1720,24 @@ class Resolv
           @altitude   = Resolv::LOC::Alt.create(altitude)
         end
 
-        ##
-        # Returns the version value for this LOC record which should always be 00
 
         attr_reader :version
 
-        ##
-        # The spherical size of this LOC
-        # in meters using scientific notation as 2 integers of XeY
 
         attr_reader :ssize
 
-        ##
-        # The horizontal precision using ssize type values
-        # in meters using scientific notation as 2 integers of XeY
-        # for precision use value/2 e.g. 2m = +/-1m
 
         attr_reader :hprecision
 
-        ##
-        # The vertical precision using ssize type values
-        # in meters using scientific notation as 2 integers of XeY
-        # for precision use value/2 e.g. 2m = +/-1m
 
         attr_reader :vprecision
 
-        ##
-        # The latitude for this LOC where 2**31 is the equator
-        # in thousandths of an arc second as an unsigned 32bit integer
 
         attr_reader :latitude
 
-        ##
-        # The longitude for this LOC where 2**31 is the prime meridian
-        # in thousandths of an arc second as an unsigned 32bit integer
 
         attr_reader :longitude
 
-        ##
-        # The altitude of the LOC above a reference sphere whose surface sits 100km below the WGS84 spheroid
-        # in centimeters as an unsigned 32bit integer
 
         attr_reader :altitude
 
@@ -2100,8 +1772,6 @@ class Resolv
         end
       end
 
-      ##
-      # A Query type requesting any RR.
 
       class ANY < Query
         TypeValue = 255 # :nodoc:
@@ -2111,8 +1781,6 @@ class Resolv
         NS, CNAME, SOA, PTR, HINFO, MINFO, MX, TXT, LOC, ANY
       ]
 
-      ##
-      # module IN contains ARPA Internet specific RRs.
 
       module IN
 
@@ -2120,32 +1788,26 @@ class Resolv
 
         ClassInsensitiveTypes.each {|s|
           c = Class.new(s)
-          #nodyna <ID:const_set-40> <CS TRIVIAL (array)>
+          #nodyna <const_set-1908> <CS TRIVIAL (array)>
           c.const_set(:TypeValue, s::TypeValue)
-          #nodyna <ID:const_set-41> <CS TRIVIAL (array)>
+          #nodyna <const_set-1909> <CS TRIVIAL (array)>
           c.const_set(:ClassValue, ClassValue)
           ClassHash[[s::TypeValue, ClassValue]] = c
-          #nodyna <ID:const_set-42> <CS COMPLEX (change-prone variable)>
+          #nodyna <const_set-1910> <CS COMPLEX (change-prone variable)>
           self.const_set(s.name.sub(/.*::/, ''), c)
         }
 
-        ##
-        # IPv4 Address resource
 
         class A < Resource
           TypeValue = 1
           ClassValue = IN::ClassValue
           ClassHash[[TypeValue, ClassValue]] = self # :nodoc:
 
-          ##
-          # Creates a new A for +address+.
 
           def initialize(address)
             @address = IPv4.create(address)
           end
 
-          ##
-          # The Resolv::IPv4 address for this A.
 
           attr_reader :address
 
@@ -2158,8 +1820,6 @@ class Resolv
           end
         end
 
-        ##
-        # Well Known Service resource.
 
         class WKS < Resource
           TypeValue = 11
@@ -2172,23 +1832,12 @@ class Resolv
             @bitmap = bitmap
           end
 
-          ##
-          # The host these services run on.
 
           attr_reader :address
 
-          ##
-          # IP protocol number for these services.
 
           attr_reader :protocol
 
-          ##
-          # A bit map of enabled services on this host.
-          #
-          # If protocol is 6 (TCP) then the 26th bit corresponds to the SMTP
-          # service (port 25).  If this bit is set, then an SMTP server should
-          # be listening on TCP port 25; if zero, SMTP service is not
-          # supported.
 
           attr_reader :bitmap
 
@@ -2206,23 +1855,17 @@ class Resolv
           end
         end
 
-        ##
-        # An IPv6 address record.
 
         class AAAA < Resource
           TypeValue = 28
           ClassValue = IN::ClassValue
           ClassHash[[TypeValue, ClassValue]] = self # :nodoc:
 
-          ##
-          # Creates a new AAAA for +address+.
 
           def initialize(address)
             @address = IPv6.create(address)
           end
 
-          ##
-          # The Resolv::IPv6 address for this AAAA.
 
           attr_reader :address
 
@@ -2235,21 +1878,12 @@ class Resolv
           end
         end
 
-        ##
-        # SRV resource record defined in RFC 2782
-        #
-        # These records identify the hostname and port that a service is
-        # available at.
 
         class SRV < Resource
           TypeValue = 33
           ClassValue = IN::ClassValue
           ClassHash[[TypeValue, ClassValue]] = self # :nodoc:
 
-          # Create a SRV resource record.
-          #
-          # See the documentation for #priority, #weight, #port and #target
-          # for +priority+, +weight+, +port and +target+ respectively.
 
           def initialize(priority, weight, port, target)
             @priority = priority.to_int
@@ -2258,38 +1892,15 @@ class Resolv
             @target = Name.create(target)
           end
 
-          # The priority of this target host.
-          #
-          # A client MUST attempt to contact the target host with the
-          # lowest-numbered priority it can reach; target hosts with the same
-          # priority SHOULD be tried in an order defined by the weight field.
-          # The range is 0-65535.  Note that it is not widely implemented and
-          # should be set to zero.
 
           attr_reader :priority
 
-          # A server selection mechanism.
-          #
-          # The weight field specifies a relative weight for entries with the
-          # same priority. Larger weights SHOULD be given a proportionately
-          # higher probability of being selected. The range of this number is
-          # 0-65535.  Domain administrators SHOULD use Weight 0 when there
-          # isn't any server selection to do, to make the RR easier to read
-          # for humans (less noisy). Note that it is not widely implemented
-          # and should be set to zero.
 
           attr_reader :weight
 
-          # The port on this target host of this service.
-          #
-          # The range is 0-65535.
 
           attr_reader :port
 
-          # The domain name of the target host.
-          #
-          # A target of "." means that the service is decidedly not available
-          # at this domain.
 
           attr_reader :target
 
@@ -2312,13 +1923,9 @@ class Resolv
     end
   end
 
-  ##
-  # A Resolv::DNS IPv4 address.
 
   class IPv4
 
-    ##
-    # Regular expression IPv4 addresses must match.
 
     Regex256 = /0
                |1(?:[0-9][0-9]?)?
@@ -2354,11 +1961,7 @@ class Resolv
       @address = address
     end
 
-    ##
-    # A String representation of this IPv4 address.
 
-    ##
-    # The raw IPv4 address as a String.
 
     attr_reader :address
 
@@ -2370,8 +1973,6 @@ class Resolv
       return "#<#{self.class} #{self}>"
     end
 
-    ##
-    # Turns this IPv4 address into a Resolv::DNS::Name.
 
     def to_name
       return DNS::Name.create(
@@ -2391,36 +1992,26 @@ class Resolv
     end
   end
 
-  ##
-  # A Resolv::DNS IPv6 address.
 
   class IPv6
 
-    ##
-    # IPv6 address format a:b:c:d:e:f:g:h
     Regex_8Hex = /\A
       (?:[0-9A-Fa-f]{1,4}:){7}
          [0-9A-Fa-f]{1,4}
       \z/x
 
-    ##
-    # Compressed IPv6 address format a::b
 
     Regex_CompressedHex = /\A
       ((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?) ::
       ((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?)
       \z/x
 
-    ##
-    # IPv4 mapped IPv6 address format a:b:c:d:e:f:w.x.y.z
 
     Regex_6Hex4Dec = /\A
       ((?:[0-9A-Fa-f]{1,4}:){6,6})
       (\d+)\.(\d+)\.(\d+)\.(\d+)
       \z/x
 
-    ##
-    # Compressed IPv4 mapped IPv6 address format a::b:w.x.y.z
 
     Regex_CompressedHex4Dec = /\A
       ((?:[0-9A-Fa-f]{1,4}(?::[0-9A-Fa-f]{1,4})*)?) ::
@@ -2428,8 +2019,6 @@ class Resolv
       (\d+)\.(\d+)\.(\d+)\.(\d+)
       \z/x
 
-    ##
-    # A composite IPv6 address Regexp.
 
     Regex = /
       (?:#{Regex_8Hex}) |
@@ -2437,11 +2026,6 @@ class Resolv
       (?:#{Regex_6Hex4Dec}) |
       (?:#{Regex_CompressedHex4Dec})/x
 
-    ##
-    # Creates a new IPv6 address from +arg+ which may be:
-    #
-    # IPv6:: returns +arg+.
-    # String:: +arg+ must match one of the IPv6::Regex* constants
 
     def self.create(arg)
       case arg
@@ -2496,8 +2080,6 @@ class Resolv
       @address = address
     end
 
-    ##
-    # The raw IPv6 address as a String.
 
     attr_reader :address
 
@@ -2513,10 +2095,6 @@ class Resolv
       return "#<#{self.class} #{self}>"
     end
 
-    ##
-    # Turns this IPv6 address into a Resolv::DNS::Name.
-    #--
-    # ip6.arpa should be searched too. [RFC3152]
 
     def to_name
       return DNS::Name.new(
@@ -2536,51 +2114,24 @@ class Resolv
     end
   end
 
-  ##
-  # Resolv::MDNS is a one-shot Multicast DNS (mDNS) resolver.  It blindly
-  # makes queries to the mDNS addresses without understanding anything about
-  # multicast ports.
-  #
-  # Information taken form the following places:
-  #
-  # * RFC 6762
 
   class MDNS < DNS
 
-    ##
-    # Default mDNS Port
 
     Port = 5353
 
-    ##
-    # Default IPv4 mDNS address
 
     AddressV4 = '224.0.0.251'
 
-    ##
-    # Default IPv6 mDNS address
 
     AddressV6 = 'ff02::fb'
 
-    ##
-    # Default mDNS addresses
 
     Addresses = [
       [AddressV4, Port],
       [AddressV6, Port],
     ]
 
-    ##
-    # Creates a new one-shot Multicast DNS (mDNS) resolver.
-    #
-    # +config_info+ can be:
-    #
-    # nil::
-    #   Uses the default mDNS addresses
-    #
-    # Hash::
-    #   Must contain :nameserver or :nameserver_port like
-    #   Resolv::DNS#initialize.
 
     def initialize(config_info=nil)
       if config_info then
@@ -2590,13 +2141,6 @@ class Resolv
       end
     end
 
-    ##
-    # Iterates over all IP addresses for +name+ retrieved from the mDNS
-    # resolver, provided name ends with "local".  If the name does not end in
-    # "local" no records will be returned.
-    #
-    # +name+ can be a Resolv::DNS::Name or a String.  Retrieved addresses will
-    # be a Resolv::IPv4 or Resolv::IPv6
 
     def each_address(name)
       name = Resolv::DNS::Name.create(name)
@@ -2615,18 +2159,11 @@ class Resolv
 
   module LOC
 
-    ##
-    # A Resolv::LOC::Size
 
     class Size
 
       Regex = /^(\d+\.*\d*)[m]$/
 
-      ##
-      # Creates a new LOC::Size from +arg+ which may be:
-      #
-      # LOC::Size:: returns +arg+.
-      # String:: +arg+ must match the LOC::Size::Regex constant
 
       def self.create(arg)
         case arg
@@ -2649,8 +2186,6 @@ class Resolv
         @scalar = scalar
       end
 
-      ##
-      # The raw size
 
       attr_reader :scalar
 
@@ -2677,18 +2212,11 @@ class Resolv
 
     end
 
-    ##
-    # A Resolv::LOC::Coord
 
     class Coord
 
       Regex = /^(\d+)\s(\d+)\s(\d+\.\d+)\s([NESW])$/
 
-      ##
-      # Creates a new LOC::Coord from +arg+ which may be:
-      #
-      # LOC::Coord:: returns +arg+.
-      # String:: +arg+ must match the LOC::Coord::Regex constant
 
       def self.create(arg)
         case arg
@@ -2720,12 +2248,9 @@ class Resolv
         @orientation = orientation
       end
 
-      ##
-      # The raw coordinates
 
       attr_reader :coordinates
 
-      ## The orientation of the hemisphere as 'lat' or 'lon'
 
       attr_reader :orientation
 
@@ -2766,18 +2291,11 @@ class Resolv
 
     end
 
-    ##
-    # A Resolv::LOC::Alt
 
     class Alt
 
       Regex = /^([+-]*\d+\.*\d*)[m]$/
 
-      ##
-      # Creates a new LOC::Alt from +arg+ which may be:
-      #
-      # LOC::Alt:: returns +arg+.
-      # String:: +arg+ must match the LOC::Alt::Regex constant
 
       def self.create(arg)
         case arg
@@ -2800,8 +2318,6 @@ class Resolv
         @altitude = altitude
       end
 
-      ##
-      # The raw altitude
 
       attr_reader :altitude
 
@@ -2830,21 +2346,14 @@ class Resolv
 
   end
 
-  ##
-  # Default resolver to use for Resolv class methods.
 
   DefaultResolver = self.new
 
-  ##
-  # Replaces the resolvers in the default resolver with +new_resolvers+.  This
-  # allows resolvers to be changed for resolv-replace.
 
   def DefaultResolver.replace_resolvers new_resolvers
     @resolvers = new_resolvers
   end
 
-  ##
-  # Address Regexp to use for matching IP addresses.
 
   AddressRegex = /(?:#{IPv4::Regex})|(?:#{IPv6::Regex})/
 

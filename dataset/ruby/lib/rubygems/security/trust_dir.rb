@@ -1,25 +1,15 @@
-##
-# The TrustDir manages the trusted certificates for gem signature
-# verification.
 
 class Gem::Security::TrustDir
 
-  ##
-  # Default permissions for the trust directory and its contents
 
   DEFAULT_PERMISSIONS = {
     :trust_dir    => 0700,
     :trusted_cert => 0600,
   }
 
-  ##
-  # The directory where trusted certificates will be stored.
 
   attr_reader :dir
 
-  ##
-  # Creates a new TrustDir using +dir+ where the directory and file
-  # permissions will be checked according to +permissions+
 
   def initialize dir, permissions = DEFAULT_PERMISSIONS
     @dir = dir
@@ -28,15 +18,11 @@ class Gem::Security::TrustDir
     @digester = Gem::Security::DIGEST_ALGORITHM
   end
 
-  ##
-  # Returns the path to the trusted +certificate+
 
   def cert_path certificate
     name_path certificate.subject
   end
 
-  ##
-  # Enumerates trusted certificates.
 
   def each_certificate
     return enum_for __method__ unless block_given?
@@ -54,9 +40,6 @@ class Gem::Security::TrustDir
     end
   end
 
-  ##
-  # Returns the issuer certificate of the given +certificate+ if it exists in
-  # the trust directory.
 
   def issuer_of certificate
     path = name_path certificate.issuer
@@ -66,8 +49,6 @@ class Gem::Security::TrustDir
     load_certificate path
   end
 
-  ##
-  # Returns the path to the trusted certificate with the given ASN.1 +name+
 
   def name_path name
     digest = @digester.hexdigest name.to_s
@@ -75,8 +56,6 @@ class Gem::Security::TrustDir
     File.join @dir, "cert-#{digest}.pem"
   end
 
-  ##
-  # Loads the given +certificate_file+
 
   def load_certificate certificate_file
     pem = File.read certificate_file
@@ -84,8 +63,6 @@ class Gem::Security::TrustDir
     OpenSSL::X509::Certificate.new pem
   end
 
-  ##
-  # Add a certificate to trusted certificate list.
 
   def trust_cert certificate
     verify
@@ -97,10 +74,6 @@ class Gem::Security::TrustDir
     end
   end
 
-  ##
-  # Make sure the trust directory exists.  If it does exist, make sure it's
-  # actually a directory.  If not, then create it with the appropriate
-  # permissions.
 
   def verify
     if File.exist? @dir then

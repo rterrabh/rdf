@@ -8,6 +8,7 @@ module Jobs
 
       if should_notify_ids.size > 0 && last_notified_id.to_i < should_notify_ids.max
         message = PendingQueuedPostsMailer.notify(count: should_notify_ids.size)
+        #nodyna <send-405> <not yet classified>
         Email::Sender.new(message, :pending_queued_posts_reminder).send
         self.last_notified_id = should_notify_ids.max
       end

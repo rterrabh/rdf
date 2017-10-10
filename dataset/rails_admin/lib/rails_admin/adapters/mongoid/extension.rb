@@ -23,14 +23,12 @@ module RailsAdmin
           if attributes.detect { |k, _v| k.to_s == value.to_s }
             read_attribute(value)
           else
-            #nodyna <ID:send-52> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1333> <SD COMPLEX (change-prone variables)>
             send(value)
           end
         end
 
         module ClassMethods
-          # Mongoid accepts_nested_attributes_for does not store options in accessible scope,
-          # so we intercept the call and store it in instance variable which can be accessed from outside
           def accepts_nested_attributes_for_with_rails_admin(*args)
             options = args.extract_options!
             args.each do |arg|

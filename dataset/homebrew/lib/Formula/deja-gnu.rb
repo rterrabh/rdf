@@ -25,7 +25,6 @@ class DejaGnu < Formula
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--mandir=#{man}"
-    # DejaGnu has no compiled code, so go directly to "make check"
     system "make", "check"
     system "make", "install"
   end

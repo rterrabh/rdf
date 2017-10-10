@@ -39,14 +39,11 @@ class Lsh < Formula
       args << "--without-x"
     end
 
-    # Find the sandboxed liboop.
     ENV.append "LDFLAGS", "-L#{libexec}/liboop/lib"
-    # Compile lsh without the 89 flag? Ha, Nope!
     ENV.append_to_cflags "-I#{libexec}/liboop/include -std=gnu89"
 
     system "./configure", *args
     system "make", "install"
-    # To avoid bumping into Homebrew/Dupes' OpenSSH:
     rm "#{man8}/sftp-server.8"
   end
 

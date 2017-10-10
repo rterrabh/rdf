@@ -77,8 +77,6 @@ class Category < ActiveRecord::Base
   }
   delegate :post_template, to: 'self.class'
 
-  # permission is just used by serialization
-  # we may consider wrapping this in another spot
   attr_accessor :displayable_topics, :permission, :subcategory_ids, :notification_level
 
   def self.last_updated_at
@@ -137,15 +135,6 @@ class Category < ActiveRecord::Base
 
 SQL
 
-    # Yes, there are a lot of queries happening below.
-    # Performing a lot of queries is actually faster than using one big update
-    # statement with sub-selects on large databases with many categories,
-    # topics, and posts.
-    #
-    # The old method with the one query is here:
-    # https://github.com/discourse/discourse/blob/5f34a621b5416a53a2e79a145e927fca7d5471e8/app/models/category.rb
-    #
-    # If you refactor this, test performance on a large database.
 
     Category.all.each do |c|
       topics = c.topics.visible
@@ -176,8 +165,6 @@ SQL
   end
 
 
-  # Internal: Generate the text of post prompting to enter category
-  # description.
   def self.post_template
     I18n.t("category.post_template", replace_paragraph: I18n.t("category.replace_paragraph"))
   end
@@ -216,15 +203,12 @@ SQL
     self.name.strip!
 
     if slug.present?
-      # santized custom slug
       self.slug = Slug.sanitize(slug)
       errors.add(:slug, 'is already in use') if duplicate_slug?
     else
-      # auto slug
       self.slug = Slug.for(name, '')
       self.slug = '' if duplicate_slug?
     end
-    # only allow to use category itself id. new_record doesn't have a id.
     unless new_record?
       match_id = /(\d+)-category/.match(self.slug)
       errors.add(:slug, :invalid) if match_id && match_id[1] && match_id[1] != self.id.to_s
@@ -255,7 +239,6 @@ SQL
   end
 
   def group_names=(names)
-    # this line bothers me, destroying in AR can not seem to be queued, thinking of extending it
     category_groups.destroy_all unless new_record?
     ids = Group.where(name: names.split(",")).pluck(:id)
     ids.each do |id|
@@ -263,20 +246,9 @@ SQL
     end
   end
 
-  # will reset permission on a topic to a particular
-  # set.
-  #
-  # Available permissions are, :full, :create_post, :readonly
-  #   hash can be:
-  #
-  # :everyone => :full - everyone has everything
-  # :everyone => :readonly, :staff => :full
-  # 7 => 1  # you can pass a group_id and permission id
   def set_permissions(permissions)
     self.read_restricted, @permissions = Category.resolve_permissions(permissions)
 
-    # Ideally we can just call .clear here, but it runs SQL, we only want to run it
-    # on save.
   end
 
   def permissions=(permissions)
@@ -337,7 +309,6 @@ SQL
     mapped = permissions.map do |group,permission|
       group = group.id if group.is_a?(Group)
 
-      # subtle, using Group[] ensures the group exists in the DB
       group = Group[group.to_sym].id unless group.is_a?(Fixnum)
       permission = CategoryGroup.permission_types[permission] unless permission.is_a?(Fixnum)
 
@@ -380,8 +351,6 @@ SQL
   @@url_cache = DistributedCache.new('category_url')
 
   after_save do
-    # parent takes part in url calculation
-    # any change could invalidate multiples
     @@url_cache.clear
   end
 
@@ -403,8 +372,6 @@ SQL
     url
   end
 
-  # If the name changes, try and update the category definition topic too if it's
-  # an exact match
   def rename_category_definition
     old_name = changed_attributes["name"]
     return unless topic.present?
@@ -418,47 +385,3 @@ SQL
   end
 end
 
-# == Schema Information
-#
-# Table name: categories
-#
-#  id                            :integer          not null, primary key
-#  name                          :string(50)       not null
-#  color                         :string(6)        default("AB9364"), not null
-#  topic_id                      :integer
-#  topic_count                   :integer          default(0), not null
-#  created_at                    :datetime         not null
-#  updated_at                    :datetime         not null
-#  user_id                       :integer          not null
-#  topics_year                   :integer          default(0)
-#  topics_month                  :integer          default(0)
-#  topics_week                   :integer          default(0)
-#  slug                          :string(255)      not null
-#  description                   :text
-#  text_color                    :string(6)        default("FFFFFF"), not null
-#  read_restricted               :boolean          default(FALSE), not null
-#  auto_close_hours              :float
-#  post_count                    :integer          default(0), not null
-#  latest_post_id                :integer
-#  latest_topic_id               :integer
-#  position                      :integer
-#  parent_category_id            :integer
-#  posts_year                    :integer          default(0)
-#  posts_month                   :integer          default(0)
-#  posts_week                    :integer          default(0)
-#  email_in                      :string(255)
-#  email_in_allow_strangers      :boolean          default(FALSE)
-#  topics_day                    :integer          default(0)
-#  posts_day                     :integer          default(0)
-#  logo_url                      :string(255)
-#  background_url                :string(255)
-#  allow_badges                  :boolean          default(TRUE), not null
-#  name_lower                    :string(50)       not null
-#  auto_close_based_on_last_post :boolean          default(FALSE)
-#
-# Indexes
-#
-#  index_categories_on_email_in     (email_in) UNIQUE
-#  index_categories_on_topic_count  (topic_count)
-#  unique_index_categories_on_name  (name) UNIQUE
-#

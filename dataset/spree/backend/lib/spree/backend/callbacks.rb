@@ -41,11 +41,11 @@ module Spree
         callbacks = self.class.callbacks || {}
         return if callbacks[action].nil?
         case callback_type.to_sym
-          #nodyna <ID:send-1> <SD COMPLEX (array)>
+          #nodyna <send-2440> <SD COMPLEX (array)>
           when :before then callbacks[action].before_methods.each {|method| send method }
-          #nodyna <ID:send-2> <SD COMPLEX (array)>
+          #nodyna <send-2441> <SD COMPLEX (array)>
           when :after  then callbacks[action].after_methods.each  {|method| send method }
-          #nodyna <ID:send-3> <SD COMPLEX (array)>
+          #nodyna <send-2442> <SD COMPLEX (array)>
           when :fails  then callbacks[action].fails_methods.each  {|method| send method }
         end
       end

@@ -11,8 +11,6 @@ class Gcab < Formula
   depends_on "glib"
   depends_on "gobject-introspection"
 
-  # work around ld not understanding --version-script argument
-  # upstream bug: https://bugzilla.gnome.org/show_bug.cgi?id=708257
   patch :DATA
 
   def install

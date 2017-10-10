@@ -33,7 +33,6 @@ class Kibana < Formula
 
     (etc/"kibana").install dist_dir/"config/kibana.yml" unless (etc/"kibana/kibana.yml").exist?
 
-    # point to our node
     inreplace dist_dir/"bin/kibana" do |s|
       s.sub! /^NODE=.*$/, "NODE=#{Formula["node"].opt_bin}/node"
     end

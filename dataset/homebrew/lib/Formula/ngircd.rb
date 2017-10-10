@@ -16,8 +16,6 @@ class Ngircd < Formula
   option "with-sniffer", "Enable IRC traffic sniffer (also enables additional debug output)."
   option "with-debug", "Enable additional debug output."
 
-  # Older Formula used the next option by default, so keep it unless
-  # deactivated by the user:
   option "without-ident", "Disable 'IDENT' ('AUTH') protocol support."
 
   depends_on "libident" if build.with? "ident"
@@ -51,7 +49,6 @@ class Ngircd < Formula
   end
 
   test do
-    # Exits non-zero, so test version and match Author's name supplied.
     assert_match /Alexander/, pipe_output("#{sbin}/ngircd -V 2>&1")
   end
 end

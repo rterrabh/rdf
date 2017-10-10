@@ -23,9 +23,6 @@ class Sdl2 < Formula
   option :universal
 
   def install
-    # we have to do this because most build scripts assume that all sdl modules
-    # are installed to the same prefix. Consequently SDL stuff cannot be
-    # keg-only but I doubt that will be needed.
     inreplace %w[sdl2.pc.in sdl2-config.in], "@prefix@", HOMEBREW_PREFIX
 
     ENV.universal_binary if build.universal?
@@ -33,7 +30,6 @@ class Sdl2 < Formula
     system "./autogen.sh" if build.head?
 
     args = %W[--prefix=#{prefix}]
-    # LLVM-based compilers choke on the assembly code packaged with SDL.
     args << "--disable-assembly" if ENV.compiler == :llvm || (ENV.compiler == :clang && MacOS.clang_build_version < 421)
     args << "--without-x"
 

@@ -6,7 +6,6 @@ class CloudbeesSdk < Formula
 
   def shim_script(target)
     <<-EOS.undent
-      #!/bin/bash
       export BEES_HOME=#{libexec}
       "#{libexec}/#{target}" "$@"
     EOS

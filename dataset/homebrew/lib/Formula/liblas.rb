@@ -23,9 +23,6 @@ class Liblas < Formula
 
   def install
     mkdir "macbuild" do
-      # CMake finds boost, but variables like this were set in the last
-      # version of this formula. Now using the variables listed here:
-      #   http://liblas.org/compilation.html
       ENV["Boost_INCLUDE_DIR"] = "#{HOMEBREW_PREFIX}/include"
       ENV["Boost_LIBRARY_DIRS"] = "#{HOMEBREW_PREFIX}/lib"
       args = ["-DWITH_GEOTIFF=ON", "-DWITH_GDAL=ON"] + std_cmake_args

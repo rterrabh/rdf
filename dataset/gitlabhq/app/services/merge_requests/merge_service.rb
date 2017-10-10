@@ -1,10 +1,4 @@
 module MergeRequests
-  # MergeService class
-  #
-  # Mark existing merge request as merged
-  # and execute all hooks and notifications
-  # Called when you do merge via command line and push code
-  # to target branch
   class MergeService < BaseMergeService
     def execute(merge_request, commit_message)
       merge_request.merge

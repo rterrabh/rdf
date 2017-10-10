@@ -18,20 +18,11 @@ module ActiveAdmin
 
       module ClassMethods
 
-        # A ready only of formats to make available in index/paginated
-        # collection view.
-        # @return [Array]
-        # @see add_format for information on adding custom download link
-        # formats
         def formats
           @formats ||= [:csv, :xml, :json]
           @formats.clone
         end
 
-        # Adds a mime type to the list of available formats available for data
-        # export. You must register the extension prior to adding it here.
-        # @param [Symbol] format the mime type to add
-        # @return [Array] A copy of the updated formats array.
         def add_format(format)
           unless Mime::Type.lookup_by_extension format
             raise ArgumentError, "Please register the #{format} mime type with `Mime::Type.register`"

@@ -30,8 +30,6 @@ class Libimobiledevice < Formula
     system "./configure", "--disable-dependency-tracking",
                           "--disable-silent-rules",
                           "--prefix=#{prefix}",
-                          # As long as libplist builds without Cython
-                          # bindings, libimobiledevice must as well.
                           "--without-cython"
     system "make", "install"
   end

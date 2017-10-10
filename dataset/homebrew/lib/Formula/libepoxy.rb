@@ -40,9 +40,6 @@ class Libepoxy < Formula
   test do
     (testpath/"test.c").write <<-EOS.undent
 
-      #include <epoxy/gl.h>
-      #include <OpenGL/CGLContext.h>
-      #include <OpenGL/CGLTypes.h>
       int main()
       {
           CGLPixelFormatAttribute attribs[] = {0};

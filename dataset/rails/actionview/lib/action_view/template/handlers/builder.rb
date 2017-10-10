@@ -1,7 +1,6 @@
 module ActionView
   module Template::Handlers
     class Builder
-      # Default format used by Builder.
       class_attribute :default_format
       self.default_format = :xml
 

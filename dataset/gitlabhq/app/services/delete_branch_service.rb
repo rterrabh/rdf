@@ -5,7 +5,6 @@ class DeleteBranchService < BaseService
     repository = project.repository
     branch = repository.find_branch(branch_name)
 
-    # No such branch
     unless branch
       return error('No such branch', 404)
     end
@@ -14,12 +13,10 @@ class DeleteBranchService < BaseService
       return error('Cannot remove HEAD branch', 405)
     end
 
-    # Dont allow remove of protected branch
     if project.protected_branch?(branch_name)
       return error('Protected branch cant be removed', 405)
     end
 
-    # Dont allow user to remove branch if he is not allowed to push
     unless current_user.can?(:push_code, project)
       return error('You dont have push access to repo', 405)
     end

@@ -5,7 +5,6 @@ class Jsvc < Formula
   version "1.0.15"
   sha256 "e98d96c7c71e02d1a05ce1c417eedb588678ccecc55ba2e9ae2969e4ea910a90"
 
-  # Enable Java 7 JVMs: https://issues.apache.org/jira/browse/DAEMON-281
   patch :DATA
 
   depends_on :java
@@ -48,9 +47,6 @@ diff -r -u a/unix/native/location.c b/unix/native/location.c
 +++ b/unix/native/location.c	2013-05-14 21:50:31.000000000 +0200
 @@ -144,6 +144,7 @@
  char *location_jvm_configured[] = {
- #if defined(OS_DARWIN)
      "$JAVA_HOME/../Libraries/lib$VM_NAME.dylib",
 +    "$JAVA_HOME/jre/lib/$VM_NAME/libjvm.dylib",
- #elif defined(OS_CYGWIN)
      "$JAVA_HOME/jre/bin/$VM_NAME/jvm.dll",              /* Sun JDK 1.3 */
- #elif defined(OS_LINUX) || defined(OS_SOLARIS) || defined(OS_BSD) || defined(OS_FREEBSD) || defined(OS_TRU64)

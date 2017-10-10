@@ -41,7 +41,6 @@ class Clutter < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <clutter/clutter.h>
 
       int main(int argc, char *argv[]) {
         GOptionGroup *group = clutter_get_option_group_without_init();

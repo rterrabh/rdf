@@ -1,18 +1,12 @@
-##
-# Generates a PO format text
 
 class RDoc::Generator::POT::PO
 
-  ##
-  # Creates an object that represents PO format.
 
   def initialize
     @entries = {}
     add_header
   end
 
-  ##
-  # Adds a PO entry to the PO.
 
   def add entry
     existing_entry = @entries[entry.msgid]
@@ -22,8 +16,6 @@ class RDoc::Generator::POT::PO
     @entries[entry.msgid] = entry
   end
 
-  ##
-  # Returns PO format text for the PO.
 
   def to_s
     po = ''
@@ -73,7 +65,6 @@ Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;
     headers, messages = @entries.values.partition do |entry|
       entry.msgid.empty?
     end
-    # TODO: sort by location
     sorted_messages = messages.sort_by do |entry|
       entry.msgid
     end

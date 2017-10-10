@@ -32,16 +32,3 @@ class SiteText < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: site_texts
-#
-#  text_type  :string(255)      not null, primary key
-#  value      :text             not null
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#
-# Indexes
-#
-#  index_site_texts_on_text_type  (text_type) UNIQUE
-#

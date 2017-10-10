@@ -26,10 +26,6 @@ class Curlpp < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <curlpp/cURLpp.hpp>
-      #include <curlpp/Easy.hpp>
-      #include <curlpp/Options.hpp>
-      #include <curlpp/Exception.hpp>
 
       int main() {
         try {

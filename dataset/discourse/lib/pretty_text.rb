@@ -18,13 +18,11 @@ module PrettyText
       end
     end
 
-    # functions here are available to v8
     def avatar_template(username)
       return "" unless username
       user = User.find_by(username_lower: username.downcase)
       return "" unless user.present?
 
-      # TODO: Add support for ES6 and call `avatar-template` directly
       if !user.uploaded_avatar_id
         avatar_template = User.default_template(username)
       else
@@ -53,7 +51,6 @@ module PrettyText
   end
 
   def self.create_new_context
-    # timeout any eval that takes longer that 5 seconds
     ctx = V8::Context.new(timeout: 5000)
 
     ctx["helpers"] = Helpers.new
@@ -67,14 +64,14 @@ module PrettyText
       Rails.configuration.ember.handlebars_location
     )
 
-    #nodyna <ID:eval-1> <EV COMPLEX (variable definition)>
+    #nodyna <eval-264> <EV COMPLEX (variable definition)>
     ctx.eval("var Discourse = {}; Discourse.SiteSettings = {};")
-    #nodyna <ID:eval-2> <EV COMPLEX (variable definition)>
+    #nodyna <eval-265> <EV COMPLEX (variable definition)>
     ctx.eval("var window = {}; window.devicePixelRatio = 2;") # hack to make code think stuff is retina
-    #nodyna <ID:eval-3> <EV COMPLEX (variable definition)>
+    #nodyna <eval-266> <EV COMPLEX (variable definition)>
     ctx.eval("var I18n = {}; I18n.t = function(a,b){ return helpers.t(a,b); }");
 
-    #nodyna <ID:eval-4> <EV COMPLEX (variable definition)>
+    #nodyna <eval-267> <EV COMPLEX (variable definition)>
     ctx.eval("var modules = {};")
 
     decorate_context(ctx)
@@ -92,18 +89,16 @@ module PrettyText
       ctx.load(dialect) unless dialect =~ /\/dialect\.js$/
     end
 
-    # emojis
     emoji = ERB.new(File.read("#{app_root}/app/assets/javascripts/discourse/lib/emoji/emoji.js.erb"))
-    #nodyna <ID:eval-5> <EV COMPLEX (change-prone variables)>
+    #nodyna <eval-268> <EV COMPLEX (change-prone variables)>
     ctx.eval(emoji.result)
 
-    # Load server side javascripts
     if DiscoursePluginRegistry.server_side_javascripts.present?
       DiscoursePluginRegistry.server_side_javascripts.each do |ssjs|
         if(ssjs =~ /\.erb/)
           erb = ERB.new(File.read(ssjs))
           erb.filename = ssjs
-          #nodyna <ID:eval-6> <EV COMPLEX (change-prone variables)>
+          #nodyna <eval-269> <EV COMPLEX (change-prone variables)>
           ctx.eval(erb.result)
         else
           ctx.load(ssjs)
@@ -117,7 +112,6 @@ module PrettyText
   def self.v8
     return @ctx if @ctx
 
-    # ensure we only init one of these
     @ctx_init.synchronize do
       return @ctx if @ctx
       @ctx = create_new_context
@@ -133,16 +127,16 @@ module PrettyText
   end
 
   def self.decorate_context(context)
-    #nodyna <ID:eval-7> <EV COMPLEX (scope)>
+    #nodyna <eval-270> <EV COMPLEX (scope)>
     context.eval("Discourse.CDN = '#{Rails.configuration.action_controller.asset_host}';")
-    #nodyna <ID:eval-8> <EV COMPLEX (scope)>
+    #nodyna <eval-271> <EV COMPLEX (scope)>
     context.eval("Discourse.BaseUrl = '#{RailsMultisite::ConnectionManagement.current_hostname}'.replace(/:[\d]*$/,'');")
-    #nodyna <ID:eval-9> <EV COMPLEX (scope)>
+    #nodyna <eval-272> <EV COMPLEX (scope)>
     context.eval("Discourse.BaseUri = '#{Discourse::base_uri("/")}';")
-    #nodyna <ID:eval-10> <EV COMPLEX (scope)>
+    #nodyna <eval-273> <EV COMPLEX (scope)>
     context.eval("Discourse.SiteSettings = #{SiteSetting.client_settings_json};")
 
-    #nodyna <ID:eval-11> <EV COMPLEX (method definition)>
+    #nodyna <eval-274> <EV COMPLEX (method definition)>
     context.eval("Discourse.getURL = function(url) {
       if (!url) return url;
       if (!/^\\/[^\\/]/.test(url)) return url;
@@ -156,7 +150,7 @@ module PrettyText
       return u + url;
     };")
 
-    #nodyna <ID:eval-12> <EV COMPLEX (method definition)>
+    #nodyna <eval-275> <EV COMPLEX (method definition)>
     context.eval("Discourse.getURLWithCDN = function(url) {
       url = this.getURL(url);
       if (Discourse.CDN && /^\\/[^\\/]/.test(url)) {
@@ -169,13 +163,10 @@ module PrettyText
   end
 
   def self.markdown(text, opts=nil)
-    # we use the exact same markdown converter as the client
-    # TODO: use the same extensions on both client and server (in particular the template for mentions)
     baked = nil
 
     protect do
       context = v8
-      # we need to do this to work in a multi site environment, many sites, many settings
       decorate_context(context)
 
       context_opts = opts || {}
@@ -185,27 +176,25 @@ module PrettyText
 
       if Post.white_listed_image_classes.present?
         Post.white_listed_image_classes.each do |klass|
-          #nodyna <ID:eval-13> <EV COMPLEX (private methods)>
+          #nodyna <eval-276> <EV COMPLEX (private methods)>
           context.eval("Discourse.Markdown.whiteListClass('#{klass}')")
         end
       end
 
-      # custom emojis
       Emoji.custom.each do |emoji|
-        #nodyna <ID:eval-14> <EV COMPLEX (private methods)>
+        #nodyna <eval-277> <EV COMPLEX (private methods)>
         context.eval("Discourse.Dialect.registerEmoji('#{emoji.name}', '#{emoji.url}');")
       end
 
-      #nodyna <ID:eval-15> <EV COMPLEX (scope)>
+      #nodyna <eval-278> <EV COMPLEX (scope)>
       context.eval('opts["mentionLookup"] = function(u){return helpers.is_username_valid(u);}')
-      #nodyna <ID:eval-16> <EV COMPLEX (scope)>
+      #nodyna <eval-279> <EV COMPLEX (scope)>
       context.eval('opts["lookupAvatar"] = function(p){return Discourse.Utilities.avatarImg({size: "tiny", avatarTemplate: helpers.avatar_template(p)});}')
-      #nodyna <ID:eval-17> <EV COMPLEX (private methods)>
+      #nodyna <eval-280> <EV COMPLEX (private methods)>
       baked = context.eval('Discourse.Markdown.markdownConverter(opts).makeHtml(raw)')
     end
 
     if baked.blank? && !(opts || {})[:skip_blank_test]
-      # we may have a js engine issue
       test = markdown("a", skip_blank_test: true)
       if test.blank?
         Rails.logger.warn("Markdown engine appears to have crashed, resetting context")
@@ -220,13 +209,12 @@ module PrettyText
     baked
   end
 
-  # leaving this here, cause it invokes v8, don't want to implement twice
   def self.avatar_img(avatar_template, size)
     protect do
       v8['avatarTemplate'] = avatar_template
       v8['size'] = size
       decorate_context(v8)
-      #nodyna <ID:eval-18> <EV COMPLEX (private methods)>
+      #nodyna <eval-281> <EV COMPLEX (private methods)>
       v8.eval("Discourse.Utilities.avatarImg({ avatarTemplate: avatarTemplate, size: size });")
     end
   end
@@ -234,7 +222,6 @@ module PrettyText
   def self.cook(text, opts={})
     options = opts.dup
 
-    # we have a minor inconsistency
     options[:topicId] = opts[:topic_id]
 
     sanitized = markdown(text.dup, options)
@@ -276,12 +263,10 @@ module PrettyText
            uri.host == site_uri.host ||
            uri.host.ends_with?("." << site_uri.host) ||
            whitelist.any?{|u| uri.host == u || uri.host.ends_with?("." << u)}
-          # we are good no need for nofollow
         else
           l["rel"] = "nofollow"
         end
       rescue URI::InvalidURIError, URI::InvalidComponentError
-        # add a nofollow anyway
         l["rel"] = "nofollow"
       end
     end
@@ -300,17 +285,14 @@ module PrettyText
   def self.extract_links(html)
     links = []
     doc = Nokogiri::HTML.fragment(html)
-    # remove href inside quotes
     doc.css("aside.quote a").each { |l| l["href"] = "" }
 
-    # extract all links from the post
     doc.css("a").each { |l|
       unless l["href"].blank?
         links << DetectedLink.new(l["href"])
       end
     }
 
-    # extract links to quotes
     doc.css("aside.quote[data-topic]").each do |a|
       topic_id = a['data-topic']
 
@@ -326,7 +308,6 @@ module PrettyText
   end
 
   def self.excerpt(html, max_length, options={})
-    # TODO: properly fix this HACK in ExcerptParser without introducing XSS
     doc = Nokogiri::HTML.fragment(html)
     strip_image_wrapping(doc)
     html = doc.to_html
@@ -337,13 +318,11 @@ module PrettyText
   def self.strip_links(string)
     return string if string.blank?
 
-    # If the user is not basic, strip links from their bio
     fragment = Nokogiri::HTML.fragment(string)
     fragment.css('a').each {|a| a.replace(a.inner_html) }
     fragment.to_html
   end
 
-  # Given a Nokogiri doc, convert all links to absolute
   def self.make_all_links_absolute(doc)
     site_uri = nil
     doc.css("a").each do |link|
@@ -353,7 +332,6 @@ module PrettyText
         site_uri ||= URI(Discourse.base_url)
         link["href"] = "#{site_uri}#{link['href']}" unless uri.host.present?
       rescue URI::InvalidURIError, URI::InvalidComponentError
-        # leave it
       end
     end
   end
@@ -386,10 +364,6 @@ module PrettyText
     @mutex.synchronize do
       begin
         rval = yield
-        # This may seem a bit odd, but we don't want to leak out
-        # objects that require locks on the v8 vm, to get a backtrace
-        # you need a lock, if this happens in the wrong spot you can
-        # deadlock a process
       rescue V8::Error => e
         raise JavaScriptError.new(e.message, e.backtrace)
       end

@@ -16,7 +16,6 @@ module ActiveAdmin
           false
         end
 
-        # Can pass proc to filter label option
         def label_from_options
           res = super
           res = res.call if res.is_a? Proc
@@ -27,10 +26,9 @@ module ActiveAdmin
           { class: "filter_form_field filter_#{as}" }
         end
 
-        # Override the standard finder to accept a proc
         def collection_from_options
           if options[:collection].is_a?(Proc)
-            #nodyna <ID:instance_exec-9> <IEX COMPLEX (block without parameters)>
+            #nodyna <instance_exec-65> <IEX COMPLEX (block without parameters)>
             template.instance_exec(&options[:collection])
           else
             super

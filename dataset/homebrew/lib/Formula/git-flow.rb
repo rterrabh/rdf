@@ -2,7 +2,6 @@ class GitFlow < Formula
   desc "Extensions to follow Vincent Driessen's branching model"
   homepage "https://github.com/nvie/gitflow"
 
-  # Use the tag instead of the tarball to get submodules
   url "https://github.com/nvie/gitflow.git", :tag => "0.4.1"
 
   bottle do

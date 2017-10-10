@@ -13,25 +13,11 @@
 require 'stringio'
 
 module OpenSSL
-  ##
-  # = OpenSSL::Config
-  #
-  # Configuration for the openssl library.
-  #
-  # Many system's installation of openssl library will depend on your system
-  # configuration. See the value of OpenSSL::Config::DEFAULT_CONFIG_FILE for
-  # the location of the file for your host.
-  #
-  # See also http://www.openssl.org/docs/apps/config.html
   class Config
     include Enumerable
 
     class << self
 
-      ##
-      # Parses a given +string+ as a blob that contains configuration for openssl.
-      #
-      # If the source of the IO is a file, then consider using #parse_config.
       def parse(string)
         c = new()
         parse_config(StringIO.new(string)).each do |section, hash|
@@ -40,14 +26,8 @@ module OpenSSL
         c
       end
 
-      ##
-      # load is an alias to ::new
       alias load new
 
-      ##
-      # Parses the configuration data read from +io+, see also #parse.
-      #
-      # Raises a ConfigError on invalid configuration data.
       def parse_config(io)
         begin
           parse_config_lines(io)
@@ -103,11 +83,8 @@ module OpenSSL
         data
       end
 
-      # escape with backslash
       QUOTE_REGEXP_SQ = /\A([^'\\]*(?:\\.[^'\\]*)*)'/
-      # escape with backslash and doubled dq
       QUOTE_REGEXP_DQ = /\A([^"\\]*(?:""[^"\\]*|\\.[^"\\]*)*)"/
-      # escaped char map
       ESCAPE_MAP = {
         "r" => "\r",
         "n" => "\n",
@@ -174,11 +151,9 @@ module OpenSSL
       end
 
       def clear_comments(line)
-        # FCOMMENT
         if m = line.match(/\A([\t\n\f ]*);.*\z/)
           return m[1]
         end
-        # COMMENT
         scanned = []
         while m = line.match(/[#'"\\]/)
           scanned << m.pre_match
@@ -230,18 +205,6 @@ module OpenSSL
       end
     end
 
-    ##
-    # Creates an instance of OpenSSL's configuration class.
-    #
-    # This can be used in contexts like OpenSSL::X509::ExtensionFactory.config=
-    #
-    # If the optional +filename+ parameter is provided, then it is read in and
-    # parsed via #parse_config.
-    #
-    # This can raise IO exceptions based on the access, or availability of the
-    # file. A ConfigError exception may be raised depending on the validity of
-    # the data being configured.
-    #
     def initialize(filename = nil)
       @data = {}
       if filename
@@ -253,23 +216,6 @@ module OpenSSL
       end
     end
 
-    ##
-    # Gets the value of +key+ from the given +section+
-    #
-    # Given the following configurating file being loaded:
-    #
-    #   config = OpenSSL::Config.load('foo.cnf')
-    #     #=> #<OpenSSL::Config sections=["default"]>
-    #   puts config.to_s
-    #     #=> [ default ]
-    #     #   foo=bar
-    #
-    # You can get a specific value from the config if you know the +section+
-    # and +key+ like so:
-    #
-    #   config.get_value('default','foo')
-    #     #=> "bar"
-    #
     def get_value(section, key)
       if section.nil?
         raise TypeError.new('nil not allowed')
@@ -278,11 +224,6 @@ module OpenSSL
       get_key_string(section, key)
     end
 
-    ##
-    #
-    # *Deprecated*
-    #
-    # Use #get_value instead
     def value(arg1, arg2 = nil) # :nodoc:
       warn('Config#value is deprecated; use Config#get_value')
       if arg2.nil?
@@ -295,84 +236,20 @@ module OpenSSL
       get_key_string(section, key)
     end
 
-    ##
-    # Set the target +key+ with a given +value+ under a specific +section+.
-    #
-    # Given the following configurating file being loaded:
-    #
-    #   config = OpenSSL::Config.load('foo.cnf')
-    #     #=> #<OpenSSL::Config sections=["default"]>
-    #   puts config.to_s
-    #     #=> [ default ]
-    #     #   foo=bar
-    #
-    # You can set the value of +foo+ under the +default+ section to a new
-    # value:
-    #
-    #   config.add_value('default', 'foo', 'buzz')
-    #     #=> "buzz"
-    #   puts config.to_s
-    #     #=> [ default ]
-    #     #   foo=buzz
-    #
     def add_value(section, key, value)
       check_modify
       (@data[section] ||= {})[key] = value
     end
 
-    ##
-    # Get a specific +section+ from the current configuration
-    #
-    # Given the following configurating file being loaded:
-    #
-    #   config = OpenSSL::Config.load('foo.cnf')
-    #     #=> #<OpenSSL::Config sections=["default"]>
-    #   puts config.to_s
-    #     #=> [ default ]
-    #     #   foo=bar
-    #
-    # You can get a hash of the specific section like so:
-    #
-    #   config['default']
-    #     #=> {"foo"=>"bar"}
-    #
     def [](section)
       @data[section] || {}
     end
 
-    ##
-    # Deprecated
-    #
-    # Use #[] instead
     def section(name) # :nodoc:
       warn('Config#section is deprecated; use Config#[]')
       @data[name] || {}
     end
 
-    ##
-    # Sets a specific +section+ name with a Hash +pairs+
-    #
-    # Given the following configuration being created:
-    #
-    #   config = OpenSSL::Config.new
-    #     #=> #<OpenSSL::Config sections=[]>
-    #   config['default'] = {"foo"=>"bar","baz"=>"buz"}
-    #     #=> {"foo"=>"bar", "baz"=>"buz"}
-    #   puts config.to_s
-    #     #=> [ default ]
-    #     #   foo=bar
-    #     #   baz=buz
-    #
-    # It's important to note that this will essentially merge any of the keys
-    # in +pairs+ with the existing +section+. For example:
-    #
-    #   config['default']
-    #     #=> {"foo"=>"bar", "baz"=>"buz"}
-    #   config['default'] = {"foo" => "changed"}
-    #     #=> {"foo"=>"changed"}
-    #   config['default']
-    #     #=> {"foo"=>"changed", "baz"=>"buz"}
-    #
     def []=(section, pairs)
       check_modify
       @data[section] ||= {}
@@ -381,38 +258,10 @@ module OpenSSL
       end
     end
 
-    ##
-    # Get the names of all sections in the current configuration
     def sections
       @data.keys
     end
 
-    ##
-    # Get the parsable form of the current configuration
-    #
-    # Given the following configuration being created:
-    #
-    #   config = OpenSSL::Config.new
-    #     #=> #<OpenSSL::Config sections=[]>
-    #   config['default'] = {"foo"=>"bar","baz"=>"buz"}
-    #     #=> {"foo"=>"bar", "baz"=>"buz"}
-    #   puts config.to_s
-    #     #=> [ default ]
-    #     #   foo=bar
-    #     #   baz=buz
-    #
-    # You can parse get the serialized configuration using #to_s and then parse
-    # it later:
-    #
-    #   serialized_config = config.to_s
-    #   # much later...
-    #   new_config = OpenSSL::Config.parse(serialized_config)
-    #     #=> #<OpenSSL::Config sections=["default"]>
-    #   puts new_config
-    #     #=> [ default ]
-    #         foo=bar
-    #         baz=buz
-    #
     def to_s
       ary = []
       @data.keys.sort.each do |section|
@@ -425,15 +274,6 @@ module OpenSSL
       ary.join
     end
 
-    ##
-    # For a block.
-    #
-    # Receive the section and its pairs for the current configuration.
-    #
-    #   config.each do |section, key, value|
-    #     # ...
-    #   end
-    #
     def each
       @data.each do |section, hash|
         hash.each do |key, value|
@@ -442,9 +282,6 @@ module OpenSSL
       end
     end
 
-    ##
-    # String representation of this configuration object, including the class
-    # name and its sections.
     def inspect
       "#<#{self.class.name} sections=#{sections.inspect}>"
     end

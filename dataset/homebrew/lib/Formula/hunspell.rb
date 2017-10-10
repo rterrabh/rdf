@@ -6,8 +6,6 @@ class Hunspell < Formula
 
   depends_on "readline"
 
-  # hunspell does not prepend $HOME to all USEROODIRs
-  # http://sourceforge.net/p/hunspell/bugs/236/
   patch :p0, :DATA
 
   def install
@@ -34,12 +32,9 @@ __END__
 --- src/tools/hunspell.cxx.old	2013-08-02 18:21:49.000000000 +0200
 +++ src/tools/hunspell.cxx	2013-08-02 18:20:27.000000000 +0200
 @@ -28,7 +28,7 @@
- #ifdef WIN32
  
- #define LIBDIR "C:\\Hunspell\\"
 -#define USEROOODIR "Application Data\\OpenOffice.org 2\\user\\wordbook"
 +#define USEROOODIR { "Application Data\\OpenOffice.org 2\\user\\wordbook" }
- #define OOODIR \
      "C:\\Program files\\OpenOffice.org 2.4\\share\\dict\\ooo\\;" \
      "C:\\Program files\\OpenOffice.org 2.3\\share\\dict\\ooo\\;" \
 @@ -65,11 +65,11 @@
@@ -56,7 +51,6 @@ __END__
 +    ".openoffice.org2/user/wordbook:", \
 +    ".openoffice.org2.0/user/wordbook:", \
 +    "Library/Spelling" }
- #define OOODIR \
      "/opt/openoffice.org/basis3.0/share/dict/ooo:" \
      "/usr/lib/openoffice.org/basis3.0/share/dict/ooo:" \
 @@ -1664,7 +1664,10 @@

@@ -20,12 +20,6 @@ class Plowshare < Formula
   depends_on "spidermonkey"
   depends_on "tesseract"
 
-  # This patch makes sure GNUtools are used on OSX.
-  # gnu-getopt is keg-only hence the backtick expansion.
-  # These aliases only exist for the duration of plowshare,
-  # inside the plowshare shells. Normal operation of bash is
-  # unaffected - getopt will still find the version supplied
-  # by OSX in other shells, for example.
   patch :DATA
 
   def install
@@ -37,12 +31,8 @@ __END__
 --- a/src/core.sh
 +++ b/src/core.sh
 @@ -1,4 +1,8 @@
- #!/usr/bin/env bash
 +shopt -s expand_aliases
 +alias sed='gsed'
 +alias getopt='`brew --prefix gnu-getopt`/bin/getopt'
 +alias head='ghead'
- #
- # Common set of functions used by modules
- # Copyright (c) 2010 - 2011 Plowshare team
 

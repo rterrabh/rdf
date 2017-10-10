@@ -1,26 +1,21 @@
 module RailsAdmin
   module Config
-    # Defines a visibility configuration
     module Hideable
-      # Visibility defaults to true.
       def self.included(klass)
         klass.register_instance_option :visible? do
           !root.try :excluded?
         end
       end
 
-      # Reader whether object is hidden.
       def hidden?
         !visible
       end
 
-      # Writer to hide object.
       def hide(&block)
-        #nodyna <ID:instance_eval-10> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-1407> <IEV COMPLEX (block execution)>
         visible block ? proc { false == (instance_eval(&block)) } : false
       end
 
-      # Writer to show field.
       def show(&block)
         visible block || true
       end

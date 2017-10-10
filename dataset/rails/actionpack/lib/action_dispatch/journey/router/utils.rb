@@ -2,16 +2,6 @@ module ActionDispatch
   module Journey # :nodoc:
     class Router # :nodoc:
       class Utils # :nodoc:
-        # Normalizes URI path.
-        #
-        # Strips off trailing slash and ensures there is a leading slash.
-        # Also converts downcase url encoded string to uppercase.
-        #
-        #   normalize_path("/foo")  # => "/foo"
-        #   normalize_path("/foo/") # => "/foo"
-        #   normalize_path("foo")   # => "/foo"
-        #   normalize_path("")      # => "/"
-        #   normalize_path("/%ab")  # => "/%AB"
         def self.normalize_path(path)
           path = "/#{path}"
           path.squeeze!('/')
@@ -21,8 +11,6 @@ module ActionDispatch
           path
         end
 
-        # URI path and fragment escaping
-        # http://tools.ietf.org/html/rfc3986
         class UriEncoder # :nodoc:
           ENCODE   = "%%%02X".freeze
           US_ASCII = Encoding::US_ASCII

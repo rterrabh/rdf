@@ -21,9 +21,6 @@ class Libb2 < Formula
 
   test do
     (testpath/"blake2test.c").write <<-EOS.undent
-      #include <blake2.h>
-      #include <stdio.h>
-      #include <string.h>
 
       int main(void) {
           uint8_t out[64];

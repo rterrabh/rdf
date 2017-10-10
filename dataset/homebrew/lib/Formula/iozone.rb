@@ -11,8 +11,6 @@ class Iozone < Formula
     sha1 "e43bdf632913d693aec55f89426cf38b67d792cc" => :mountain_lion
   end
 
-  # Patch by @nijotz, adds O_DIRECT support when using -I flag.
-  # See: https://github.com/Homebrew/homebrew/pull/10585
   patch :DATA
 
   def install
@@ -37,8 +35,6 @@ __END__
 +++ b/src/current/iozone.c      2012-02-28 16:57:58.000000000 -0800
 @@ -1820,7 +1810,7 @@
  			break;
- #endif
- #if ! defined(DONT_HAVE_O_DIRECT)
 -#if defined(linux) || defined(__AIX__) || defined(IRIX) || defined(IRIX64) || defined(Windows) || defined(__FreeBSD__) || defined(solaris)
 +#if defined(linux) || defined(__AIX__) || defined(IRIX) || defined(IRIX64) || defined(Windows) || defined(__FreeBSD__) || defined(solaris) || defined(macosx)
  			direct_flag++;

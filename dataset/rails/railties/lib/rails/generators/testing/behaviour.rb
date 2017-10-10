@@ -14,52 +14,24 @@ module Rails
         included do
           class_attribute :destination_root, :current_path, :generator_class, :default_arguments
 
-          # Generators frequently change the current path using +FileUtils.cd+.
-          # So we need to store the path at file load and revert back to it after each test.
           self.current_path = File.expand_path(Dir.pwd)
           self.default_arguments = []
         end
 
         module ClassMethods
-          # Sets which generator should be tested:
-          #
-          #   tests AppGenerator
           def tests(klass)
             self.generator_class = klass
           end
 
-          # Sets default arguments on generator invocation. This can be overwritten when
-          # invoking it.
-          #
-          #   arguments %w(app_name --skip-active-record)
           def arguments(array)
             self.default_arguments = array
           end
 
-          # Sets the destination of generator files:
-          #
-          #   destination File.expand_path("../tmp", File.dirname(__FILE__))
           def destination(path)
             self.destination_root = path
           end
         end
 
-        # Runs the generator configured for this class. The first argument is an array like
-        # command line arguments:
-        #
-        #   class AppGeneratorTest < Rails::Generators::TestCase
-        #     tests AppGenerator
-        #     destination File.expand_path("../tmp", File.dirname(__FILE__))
-        #     setup :prepare_destination
-        #
-        #     test "database.yml is not created when skipping Active Record" do
-        #       run_generator %w(myapp --skip-active-record)
-        #       assert_no_file "config/database.yml"
-        #     end
-        #   end
-        #
-        # You can provide a configuration hash as second argument. This method returns the output
-        # printed by the generator.
         def run_generator(args=self.default_arguments, config={})
           capture(:stdout) do
             args += ['--skip-bundle'] unless args.include? '--dev'
@@ -67,15 +39,10 @@ module Rails
           end
         end
 
-        # Instantiate the generator.
         def generator(args=self.default_arguments, options={}, config={})
           @generator ||= self.generator_class.new(args, options, config.reverse_merge(destination_root: destination_root))
         end
 
-        # Create a Rails::Generators::GeneratedAttribute by supplying the
-        # attribute type and, optionally, the attribute name:
-        #
-        #   create_generated_attribute(:string, 'name')
         def create_generated_attribute(attribute_type, name = 'test', index = nil)
           Rails::Generators::GeneratedAttribute.parse([name, attribute_type, index].compact.join(':'))
         end
@@ -104,7 +71,7 @@ module Rails
           def capture(stream)
             stream = stream.to_s
             captured_stream = Tempfile.new(stream)
-            #nodyna <ID:eval-7> <EV COMPLEX (change-prone variables)>
+            #nodyna <eval-1165> <EV COMPLEX (change-prone variables)>
             stream_io = eval("$#{stream}")
             origin_stream = stream_io.dup
             stream_io.reopen(captured_stream)

@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 require 'spec_helper'
 require Rails.root.join("spec", "shared_behaviors", "relayable")
@@ -46,6 +43,7 @@ describe RelayableRetraction do
       @comment= @local_luke.comment!(@local_parent, "yo")
       @retraction= @local_luke.retract(@comment)
 
+      #nodyna <instance_variable_set-121> <not yet classified>
       @retraction.instance_variable_set(:@target, nil)
       @retraction.target_guid = '135245'
       expect(@retraction).not_to receive(:perform)

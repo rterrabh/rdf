@@ -22,11 +22,9 @@ class Libnids < Formula
   depends_on "libnet" => :recommended
   depends_on "glib" => :recommended
 
-  # Patch fixes -soname and .so shared library issues. Unreported.
   patch :DATA
 
   def install
-    # autoreconf the old 2005 era code for sanity.
     system "autoreconf", "-ivf"
     args = ["--prefix=#{prefix}", "--mandir=#{man}", "--enable-shared"]
     args << "--disable-libnet" if build.without? "libnet"

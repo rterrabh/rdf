@@ -11,11 +11,9 @@ class EmacsClangCompleteAsync < Formula
   depends_on "llvm" => "with-clang"
 
   stable do
-    # https://github.com/Golevka/emacs-clang-complete-async/issues/65
     patch :DATA
   end
 
-  # https://github.com/Golevka/emacs-clang-complete-async/pull/59
   patch do
     url "https://github.com/yocchi/emacs-clang-complete-async/commit/5ce197b15d7b8c9abfc862596bf8d902116c9efe.diff"
     sha256 "6f638c473781a8f86a0ab970303579256f49882744863e36924748c010e7c1ed"
@@ -34,7 +32,6 @@ __END__
 @@ -3,6 +3,7 @@
 
 
- #include <clang-c/Index.h>
 +#include <stdio.h>
 
 

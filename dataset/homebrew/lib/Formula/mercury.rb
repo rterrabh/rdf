@@ -27,13 +27,10 @@ class Mercury < Formula
 
     system "./configure", *args
 
-    # The build system doesn't quite honour the mandir/infodir autoconf
-    # parameters.
     system "make", "install", "PARALLEL=-j",
                               "INSTALL_MAN_DIR=#{man}",
                               "INSTALL_INFO_DIR=#{info}"
 
-    # Remove batch files for windows.
     rm Dir.glob("#{bin}/*.bat")
   end
 

@@ -23,7 +23,6 @@ class Cgrep < Formula
   setup_ghc_compilers
 
   def install
-    # The "--allow-newer" is a hack for GHC 7.10.1, remove when possible.
     install_cabal_package "--allow-newer"
   end
 
@@ -31,7 +30,6 @@ class Cgrep < Formula
     test_string = "String in"
     path = testpath/"test.rb"
     path.write <<-EOS.undent
-      # puts #{test_string} comment.
       puts "#{test_string} literal."
     EOS
 

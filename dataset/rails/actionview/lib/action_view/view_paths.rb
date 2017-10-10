@@ -29,8 +29,6 @@ module ActionView
 
       private
 
-      # Override this method in your controller if you want to change paths prefixes for finding views.
-      # Prefixes defined here will still be added to parents' <tt>._prefixes</tt>.
       def local_prefixes
         [controller_path]
       end
@@ -47,14 +45,10 @@ module ActionView
       end
     end
 
-    # The prefixes used in render "foo" shortcuts.
     def _prefixes # :nodoc:
       self.class._prefixes
     end
 
-    # LookupContext is the object responsible to hold all information required to lookup
-    # templates, i.e. view paths and details. Check ActionView::LookupContext for more
-    # information.
     def lookup_context
       @_lookup_context ||=
         ActionView::LookupContext.new(self.class._view_paths, details_for_lookup, _prefixes)
@@ -73,36 +67,18 @@ module ActionView
     end
 
     module ClassMethods
-      # Append a path to the list of view paths for this controller.
-      #
-      # ==== Parameters
-      # * <tt>path</tt> - If a String is provided, it gets converted into
-      #   the default view path. You may also provide a custom view path
-      #   (see ActionView::PathSet for more information)
       def append_view_path(path)
         self._view_paths = view_paths + Array(path)
       end
 
-      # Prepend a path to the list of view paths for this controller.
-      #
-      # ==== Parameters
-      # * <tt>path</tt> - If a String is provided, it gets converted into
-      #   the default view path. You may also provide a custom view path
-      #   (see ActionView::PathSet for more information)
       def prepend_view_path(path)
         self._view_paths = ActionView::PathSet.new(Array(path) + view_paths)
       end
 
-      # A list of all of the default view paths for this controller.
       def view_paths
         _view_paths
       end
 
-      # Set the view paths.
-      #
-      # ==== Parameters
-      # * <tt>paths</tt> - If a PathSet is provided, use that;
-      #   otherwise, process the parameter into a PathSet.
       def view_paths=(paths)
         self._view_paths = ActionView::PathSet.new(Array(paths))
       end

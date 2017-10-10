@@ -24,7 +24,6 @@ class SharedMimeInfo < Formula
   depends_on "glib"
 
   def install
-    # Disable the post-install update-mimedb due to crash
     args = %W[
       --disable-dependency-tracking
       --prefix=#{prefix}

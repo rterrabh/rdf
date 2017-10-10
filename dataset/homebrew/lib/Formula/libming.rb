@@ -21,17 +21,9 @@ class Libming < Formula
   depends_on :python => :optional
   depends_on "giflib" => :optional
 
-  # Helps us find libgif.dylib, not libungif.dylib which is retired.
   patch :DATA
 
   def install
-    # TODO: Libming also includes scripting front-ends for Perl, Python, TCL
-    # and PHP. These are disabled by default. Figure out what it would take to
-    # enable them.
-    # - python works if we tell it to use our giflib not ungif.
-    # - perl works without any change
-    # - php builds, but tries to install to /usr/lib/php/extensions
-    # - tcl does not work, might need an older tcl, missing symbols.
     args = %W[
       --disable-dependency-tracking
       --disable-silent-rules
@@ -44,7 +36,6 @@ class Libming < Formula
     system "./configure", *args
     system "make"
 
-    # Won't install in parallel for some reason.
     ENV.deparallelize
     system "make", "install"
   end

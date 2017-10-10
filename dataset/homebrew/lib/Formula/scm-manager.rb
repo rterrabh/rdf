@@ -26,7 +26,6 @@ class ScmManager < Formula
     libexec.install Dir["*"]
 
     (bin/"scm-server").write <<-EOS.undent
-      #!/bin/bash
       BASEDIR="#{libexec}"
       REPO="#{libexec}/lib"
       export JAVA_HOME=$(/usr/libexec/java_home -v 1.6)
@@ -39,7 +38,6 @@ class ScmManager < Formula
 
     scmCliClient = bin+"scm-cli-client"
     scmCliClient.write <<-EOS.undent
-      #!/bin/bash
       java -jar "#{tools}/scm-cli-client-#{version}-jar-with-dependencies.jar" "$@"
     EOS
     chmod 0755, scmCliClient

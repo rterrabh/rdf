@@ -30,8 +30,6 @@ class Eigen < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
-      #include <Eigen/Dense>
       using Eigen::MatrixXd;
       int main()
       {

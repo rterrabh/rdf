@@ -1,13 +1,8 @@
-#
-# Helps us find topics. Returns a TopicList object containing the topics
-# found.
-#
 require_dependency 'topic_list'
 require_dependency 'suggested_topics_builder'
 require_dependency 'topic_query_sql'
 
 class TopicQuery
-  # Could be rewritten to %i if Ruby 1.9 is no longer supported
   VALID_OPTIONS = %w(except_topic_ids
                      exclude_category
                      limit
@@ -30,7 +25,6 @@ class TopicQuery
                      q
                      ).map(&:to_sym)
 
-  # Maps `order` to a columns in `topics`
   SORTABLE_MAPPING = {
     'likes' => 'like_count',
     'op_likes' => 'op_likes',
@@ -52,11 +46,9 @@ class TopicQuery
     (list || Topic).joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{@user.id.to_i})")
   end
 
-  # Return a list of suggested topics for a topic
   def list_suggested_for(topic)
     builder = SuggestedTopicsBuilder.new(topic)
 
-    # When logged in we start with different results
     if @user
       builder.add_results(unread_results(topic: topic, per_page: builder.results_left), :high)
       builder.add_results(new_results(topic: topic, per_page: builder.category_results_left)) unless builder.full?
@@ -66,7 +58,6 @@ class TopicQuery
     create_list(:suggested, {unordered: true}, builder.results)
   end
 
-  # The latest view of topics
   def list_latest
     create_list(:latest, {}, latest_results)
   end
@@ -211,8 +202,6 @@ class TopicQuery
   end
 
   def new_results(options={})
-    # TODO does this make sense or should it be ordered on created_at
-    #  it is ordering on bumped_at now
     result = TopicQuery.new_filter(default_results(options.reverse_merge(:unordered => true)), @user.treat_as_new_topic_start_date)
     result = remove_muted_categories(result, @user, exclude: options[:category])
     suggested_ordering(result, options)
@@ -229,7 +218,6 @@ class TopicQuery
       options = @options
       options.reverse_merge!(per_page: per_page_setting)
 
-      # Start with a list of all topics
       result = Topic.includes(:allowed_users)
                     .where("topics.id IN (SELECT topic_id FROM topic_allowed_users WHERE user_id = #{user.id.to_i})")
                     .joins("LEFT OUTER JOIN topic_users AS tu ON (topics.id = tu.topic_id AND tu.user_id = #{user.id.to_i})")
@@ -246,20 +234,14 @@ class TopicQuery
       sort_column = SORTABLE_MAPPING[options[:order]] || 'default'
       sort_dir = (options[:ascending] == "true") ? "ASC" : "DESC"
 
-      # If we are sorting in the default order desc, we should consider including pinned
-      # topics. Otherwise, just use bumped_at.
       if sort_column == 'default'
         if sort_dir == 'DESC'
-          # If something requires a custom order, for example "unread" which sorts the least read
-          # to the top, do nothing
           return result if options[:unordered]
         end
         sort_column = 'bumped_at'
       end
 
-      # If we are sorting by category, actually use the name
       if sort_column == 'category_id'
-        # TODO forces a table scan, slow
         return result.references(:categories).order(TopicQuerySQL.order_by_category_sql(sort_dir))
       end
 
@@ -278,16 +260,13 @@ class TopicQuery
     end
 
 
-    # Create results based on a bunch of default options
     def default_results(options={})
       options.reverse_merge!(@options)
       options.reverse_merge!(per_page: per_page_setting)
 
-      # Whether to return visible topics
       options[:visible] = true if @user.nil? || @user.regular?
       options[:visible] = false if @user && @user.id == options[:filtered_to_user]
 
-      # Start with a list of all topics
       result = Topic.unscoped
 
       if @user
@@ -310,7 +289,6 @@ class TopicQuery
       result = result.listable_topics.includes(:category)
       result = result.where('categories.name is null or categories.name <> ?', options[:exclude_category]).references(:categories) if options[:exclude_category]
 
-      # Don't include the category topics if excluded
       if options[:no_definitions]
         result = result.where('COALESCE(categories.topic_id, 0) <> topics.id')
       end
@@ -329,8 +307,6 @@ class TopicQuery
         result = result.where("topics.id in (select pp.topic_id from post_search_data pd join posts pp on pp.id = pd.post_id where pd.search_data @@ #{Search.ts_query(search.to_s)})")
       end
 
-      # NOTE protect against SYM attack can be removed with Ruby 2.2
-      #
       state = options[:state]
       if @user && state &&
           TopicUser.notification_levels.keys.map(&:to_s).include?(state)
@@ -419,17 +395,10 @@ class TopicQuery
 
       result = remove_muted_categories(result, @user)
 
-      # If we are in a category, prefer it for the random results
       if topic.category_id
         result = result.order("CASE WHEN topics.category_id = #{topic.category_id.to_i} THEN 0 ELSE 1 END")
       end
 
-      # Best effort, it over selects, however if you have a high number
-      # of muted categories there is tiny chance we will not select enough
-      # in particular this can happen if current category is empty and tons
-      # of muted, big edge case
-      #
-      # we over select in case cache is stale
       max = (count*1.3).to_i
       ids = RandomTopicSelector.next(max) + RandomTopicSelector.next(max, topic.category)
 
@@ -437,7 +406,6 @@ class TopicQuery
     end
 
     def suggested_ordering(result, options)
-      # Prefer unread in the same category
       if options[:topic] && options[:topic].category_id
         result = result.order("CASE WHEN topics.category_id = #{options[:topic].category_id.to_i} THEN 0 ELSE 1 END")
       end

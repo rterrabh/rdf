@@ -28,7 +28,6 @@ INFO
         end
       end
 
-      # Initialize the logger early in the stack in case we need to log some deprecation.
       initializer :initialize_logger, group: :all do
         Rails.logger ||= config.logger || begin
           path = config.paths["log"].first
@@ -67,11 +66,10 @@ INFO
            "   config.log_level = :info\n\n"
         end
 
-        #nodyna <ID:const_get-23> <CG COMPLEX (change-prone variable)>
+        #nodyna <const_get-1180> <CG COMPLEX (change-prone variable)>
         Rails.logger.level = ActiveSupport::Logger.const_get(config.log_level.to_s.upcase)
       end
 
-      # Initialize cache early in the stack so railties can make use of it.
       initializer :initialize_cache, group: :all do
         unless Rails.cache
           Rails.cache = ActiveSupport::Cache.lookup_store(config.cache_store)
@@ -82,7 +80,6 @@ INFO
         end
       end
 
-      # Sets the dependency loading mechanism.
       initializer :initialize_dependency_mechanism, group: :all do
         ActiveSupport::Dependencies.mechanism = config.cache_classes ? :require : :load
       end

@@ -1,9 +1,5 @@
 require "rubygems/deprecate"
 
-##
-# Available list of platforms for targeting Gem installations.
-#
-# See `gem help platform` for information on platform matching.
 
 class Gem::Platform
 
@@ -96,7 +92,6 @@ class Gem::Platform
                       when /netbsdelf/ then             [ 'netbsdelf', nil ]
                       when /openbsd(\d+\.\d+)?/ then    [ 'openbsd',   $1  ]
                       when /solaris(\d+\.\d+)?/ then    [ 'solaris',   $1  ]
-                      # test
                       when /^(\w+_platform)(\d+)?/ then [ $1,          $2  ]
                       else                              [ 'unknown',   nil ]
                       end
@@ -121,9 +116,6 @@ class Gem::Platform
     to_a.compact.join '-'
   end
 
-  ##
-  # Is +other+ equal to this platform?  Two platforms are equal if they have
-  # the same CPU, OS and version.
 
   def ==(other)
     self.class === other and to_a == other.to_a
@@ -135,37 +127,23 @@ class Gem::Platform
     to_a.hash
   end
 
-  ##
-  # Does +other+ match this platform?  Two platforms match if they have the
-  # same CPU, or either has a CPU of 'universal', they have the same OS, and
-  # they have the same version, or either has no version.
-  #
-  # Additionally, the platform will match if the local CPU is 'arm' and the
-  # other CPU starts with "arm" (for generic ARM family support).
 
   def ===(other)
     return nil unless Gem::Platform === other
 
-    # cpu
     (@cpu == 'universal' or other.cpu == 'universal' or @cpu == other.cpu or
      (@cpu == 'arm' and other.cpu =~ /\Aarm/)) and
 
-    # os
     @os == other.os and
 
-    # version
     (@version.nil? or other.version.nil? or @version == other.version)
   end
 
-  ##
-  # Does +other+ match this platform?  If +other+ is a String it will be
-  # converted to a Gem::Platform first.  See #=== for matching rules.
 
   def =~(other)
     case other
     when Gem::Platform then # nop
     when String then
-      # This data is from http://gems.rubyforge.org/gems/yaml on 19 Aug 2007
       other = case other
               when /^i686-darwin(\d)/     then ['x86',       'darwin',  $1    ]
               when /^i\d86-linux/         then ['x86',       'linux',   nil   ]
@@ -189,15 +167,9 @@ class Gem::Platform
     self === other
   end
 
-  ##
-  # A pure-Ruby gem that may use Gem::Specification#extensions to build
-  # binary files.
 
   RUBY = 'ruby'
 
-  ##
-  # A platform-specific gem that is built for the packaging Ruby's platform.
-  # This will be replaced with Gem::Platform::local.
 
   CURRENT = 'current'
 end

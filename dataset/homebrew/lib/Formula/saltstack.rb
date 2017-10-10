@@ -1,10 +1,6 @@
 class Saltstack < Formula
   desc "Dynamic infrastructure communication bus"
   homepage "http://www.saltstack.org"
-  # please use sdists published as release downloads
-  # (URLs starting with https://github.com/saltstack/salt/releases/download)
-  # github tag archives will report wrong version number
-  # https://github.com/Homebrew/homebrew/issues/43493
   url "https://github.com/saltstack/salt/releases/download/v2015.5.5/salt-2015.5.5.tar.gz"
   sha256 "5cd8d317616abab691a83f7fd3f8bcf9ad8aecaa95fcfdc0f6d788de87f0beeb"
   head "https://github.com/saltstack/salt.git", :branch => "develop", :shallow => false
@@ -21,12 +17,8 @@ class Saltstack < Formula
   depends_on "libyaml"
   depends_on "openssl" # For M2Crypto
 
-  # For vendored Swig
   depends_on "pcre" => :build
 
-  # Homebrew's swig breaks M2Crypto due to upstream's undermaintained status.
-  # https://github.com/swig/swig/issues/344
-  # https://github.com/martinpaljak/M2Crypto/issues/60
   resource "swig304" do
     url "https://downloads.sourceforge.net/project/swig/swig/swig-3.0.4/swig-3.0.4.tar.gz"
     sha256 "410ffa80ef5535244b500933d70c1b65206333b546ca5a6c89373afb65413795"
@@ -72,13 +64,11 @@ class Saltstack < Formula
     sha256 "bfcc581c9dbbf07cc2f951baf30c3249a57e20dcbd60f7e6ffc43ab3cc614794"
   end
 
-  # Required by tornado
   resource "certifi" do
     url "https://pypi.python.org/packages/source/c/certifi/certifi-2015.04.28.tar.gz"
     sha256 "99785e6cf715cdcde59dee05a676e99f04835a71e7ced201ca317401c322ba96"
   end
 
-  # Required by tornado
   resource "backports.ssl_match_hostname" do
     url "https://pypi.python.org/packages/source/b/backports.ssl_match_hostname/backports.ssl_match_hostname-3.4.0.2.tar.gz"
     sha256 "07410e7fb09aab7bdaf5e618de66c3dac84e2e3d628352814dc4c37de321d6ae"
@@ -107,7 +97,6 @@ class Saltstack < Formula
       end
     end
 
-    # M2Crypto always has to be done individually as we have to inreplace OpenSSL path
     resource("m2crypto").stage do
       inreplace "setup.py", "self.openssl = '/usr'", "self.openssl = '#{Formula["openssl"].opt_prefix}'"
       system "python", *Language::Python.setup_install_args(libexec/"vendor")
@@ -118,7 +107,6 @@ class Saltstack < Formula
     man1.install Dir["doc/man/*.1"]
     man7.install Dir["doc/man/*.7"]
 
-    # Install sample configuration files
     (etc/"saltstack").install Dir["conf/*"]
 
     bin.install Dir["#{libexec}/bin/*"]

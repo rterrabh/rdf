@@ -6,8 +6,6 @@ class Protobuf < Formula
     url "https://github.com/google/protobuf/releases/download/v2.6.1/protobuf-2.6.1.tar.bz2"
     sha256 "ee445612d544d885ae240ffbcbf9267faa9f593b7b101f21d58beceb92661910"
 
-    # Fixes the unexpected identifier error when compiling software against protobuf:
-    # https://github.com/google/protobuf/issues/549
     patch :p1, :DATA
   end
 
@@ -28,7 +26,6 @@ class Protobuf < Formula
     sha256 "2861639d01fdf0cb8fc70194bde36fd0f16010022c1f2c72e6236aad48fdf522" => :mountain_lion
   end
 
-  # this will double the build time approximately if enabled
   option "with-check", "Run build-time check"
 
   option :universal
@@ -67,9 +64,6 @@ class Protobuf < Formula
   end
 
   def install
-    # Don't build in debug mode. See:
-    # https://github.com/Homebrew/homebrew/issues/9279
-    # http://code.google.com/p/protobuf/source/browse/trunk/configure.ac#61
     ENV.prepend "CXXFLAGS", "-DNDEBUG"
     ENV.universal_binary if build.universal?
     ENV.cxx11 if build.cxx11?
@@ -82,19 +76,15 @@ class Protobuf < Formula
     system "make", "check" if build.with? "check" || build.bottle?
     system "make", "install"
 
-    # Install editor support and examples
     doc.install "editors", "examples"
 
     if build.with? "python"
-      # google-apputils is a build-time dependency
       ENV.prepend_create_path "PYTHONPATH", buildpath/"homebrew/lib/python2.7/site-packages"
       %w[six python-dateutil pytz python-gflags google-apputils].each do |package|
         resource(package).stage do
           system "python", *Language::Python.setup_install_args(buildpath/"homebrew")
         end
       end
-      # google is a namespace package and .pth files aren't processed from
-      # PYTHONPATH
       touch buildpath/"homebrew/lib/python2.7/site-packages/google/__init__.py"
       chdir "python" do
         ENV.append_to_cflags "-I#{include}"
@@ -139,7 +129,6 @@ class Protobuf < Formula
 
   def caveats; <<-EOS.undent
     Editor support and examples have been installed to:
-      #{doc}
     EOS
   end
 end
@@ -150,8 +139,6 @@ index 67afc77..504d5fe 100644
 --- a/src/google/protobuf/descriptor.h
 +++ b/src/google/protobuf/descriptor.h
 @@ -59,6 +59,9 @@
- #include <vector>
- #include <google/protobuf/stubs/common.h>
 
 +#ifdef TYPE_BOOL
 +#undef TYPE_BOOL

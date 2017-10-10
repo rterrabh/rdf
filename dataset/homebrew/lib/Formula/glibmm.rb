@@ -21,7 +21,6 @@ class Glibmm < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <glibmm.h>
 
       int main(int argc, char *argv[])
       {

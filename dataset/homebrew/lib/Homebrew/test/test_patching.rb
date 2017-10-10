@@ -11,6 +11,7 @@ class PatchingTests < Homebrew::TestCase
     super do
       url "file://#{TEST_DIRECTORY}/tarballs/testball-0.1.tbz"
       sha1 "482e737739d946b7c8cbaf127d9ee9c148b999f5"
+      #nodyna <class_eval-634> <not yet classified>
       class_eval(&block)
     end
   end
@@ -134,7 +135,6 @@ index bfdda4c..e08d8f4 100755
 --- a/libexec/NOOP
 +++ b/libexec/NOOP
 @@ -1,2 +1,2 @@
- #!/bin/bash
 -echo NOOP
 \ No newline at end of file
 +echo ABCD

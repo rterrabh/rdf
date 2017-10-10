@@ -1,4 +1,3 @@
-# OptionParser internal utility
 
 class << OptionParser
   def show_version(*pkgs)
@@ -13,7 +12,7 @@ class << OptionParser
       end
       [:Release, :RELEASE].find do |rel|
         if klass.const_defined?(rel)
-          #nodyna <ID:const_get-31> <CG MODERATE (array)>
+          #nodyna <const_get-2241> <CG MODERATE (array)>
           str << " (#{klass.const_get(rel)})"
         end
       end
@@ -29,14 +28,14 @@ class << OptionParser
     else
       pkgs.each do |pkg|
         begin
-          #nodyna <ID:const_get-32> <CG COMPLEX (array)>
+          #nodyna <const_get-2242> <CG COMPLEX (array)>
           pkg = pkg.split(/::|\//).inject(::Object) {|m, c| m.const_get(c)}
           v = case
               when pkg.const_defined?(:Version)
-                #nodyna <ID:const_get-33> <CG TRIVIAL (static values)>
+                #nodyna <const_get-2243> <CG TRIVIAL (static values)>
                 pkg.const_get(n = :Version)
               when pkg.const_defined?(:VERSION)
-                #nodyna <ID:const_get-34> <CG TRIVIAL (static values)>
+                #nodyna <const_get-2244> <CG TRIVIAL (static values)>
                 pkg.const_get(n = :VERSION)
               else
                 n = nil
@@ -55,7 +54,7 @@ class << OptionParser
       raise NameError, path unless Module === klass
       klass.constants.grep(/#{name}/i) do |c|
         klass.const_defined?(c) or next
-        #nodyna <ID:const_get-35> <CG COMPLEX (array)>
+        #nodyna <const_get-2245> <CG COMPLEX (array)>
         klass.const_get(c)
       end
     end
@@ -66,7 +65,7 @@ class << OptionParser
     while klass = klasses.shift
       klass.constants.each do |cname|
         klass.const_defined?(cname) or next
-        #nodyna <ID:const_get-36> <CG COMPLEX (array)>
+        #nodyna <const_get-2246> <CG COMPLEX (array)>
         const = klass.const_get(cname)
         yield klass, cname, const if name === cname
         klasses << const if Module === const and const != ::Object

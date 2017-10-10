@@ -1,15 +1,12 @@
 require 'tmpdir'
 
 module ActionMailer
-  # This module handles everything related to mail delivery, from registering
-  # new delivery methods to configuring the mail object to be sent.
   module DeliveryMethods
     extend ActiveSupport::Concern
 
     included do
       class_attribute :delivery_methods, :delivery_method
 
-      # Do not make this inheritable, because we always want it to propagate
       cattr_accessor :raise_delivery_errors
       self.raise_delivery_errors = true
 
@@ -38,20 +35,12 @@ module ActionMailer
       add_delivery_method :test, Mail::TestMailer
     end
 
-    # Helpers for creating and wrapping delivery behavior, used by DeliveryMethods.
     module ClassMethods
-      # Provides a list of emails that have been delivered by Mail::TestMailer
       delegate :deliveries, :deliveries=, to: Mail::TestMailer
 
-      # Adds a new delivery method through the given class using the given
-      # symbol as alias and the default options supplied.
-      #
-      #   add_delivery_method :sendmail, Mail::Sendmail,
-      #     location:  '/usr/sbin/sendmail',
-      #     arguments: '-i -t'
       def add_delivery_method(symbol, klass, default_options={})
         class_attribute(:"#{symbol}_settings") unless respond_to?(:"#{symbol}_settings")
-        #nodyna <ID:send-4> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1187> <SD COMPLEX (change-prone variables)>
         send(:"#{symbol}_settings=", default_options)
         self.delivery_methods = delivery_methods.merge(symbol.to_sym => klass).freeze
       end
@@ -65,7 +54,7 @@ module ActionMailer
           raise "Delivery method cannot be nil"
         when Symbol
           if klass = delivery_methods[method]
-            #nodyna <ID:send-5> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1188> <SD COMPLEX (change-prone variables)>
             mail.delivery_method(klass, (send(:"#{method}_settings") || {}).merge(options || {}))
           else
             raise "Invalid delivery method #{method.inspect}"

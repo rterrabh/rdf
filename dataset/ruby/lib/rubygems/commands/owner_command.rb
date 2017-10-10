@@ -90,7 +90,6 @@ permission to.
 
         with_response response, "#{action} #{owner}"
       rescue
-        # ignore
       end
     end
   end

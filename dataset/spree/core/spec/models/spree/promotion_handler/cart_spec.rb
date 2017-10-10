@@ -38,7 +38,6 @@ module Spree
           let!(:rule) { Promotion::Rules::ItemTotal.create(preferred_operator_min: 'gt', preferred_amount_min: 50, preferred_operator_max: 'lt', preferred_amount_max: 150, promotion: promotion) }
 
           before do
-            # Makes the order eligible for this promotion
             order.item_total = 100
             order.save
           end
@@ -61,7 +60,6 @@ module Spree
 
         context "promotion with no rules" do
           before do
-            # Gives the calculator something to discount
             order.item_total = 10
             order.save
           end
@@ -74,7 +72,6 @@ module Spree
           let!(:rule) { Promotion::Rules::ItemTotal.create(preferred_operator_min: 'gt', preferred_amount_min: 50, preferred_operator_max: 'lt', preferred_amount_max: 150, promotion: promotion) }
 
           before do
-            # Makes the order eligible for this promotion
             order.item_total = 100
             order.save
           end

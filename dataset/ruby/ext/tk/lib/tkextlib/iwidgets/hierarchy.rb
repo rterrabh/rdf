@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/hierarchy.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tk/text'
@@ -22,7 +18,6 @@ class Tk::Iwidgets::Hierarchy
   WidgetClassName = 'Hierarchy'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ####################################
 
   include Tk::ValidateConfigure
 
@@ -32,7 +27,6 @@ class Tk::Iwidgets::Hierarchy
       PROC_TBL = [ [?s, TkComm.method(:string) ], nil ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -57,7 +51,6 @@ class Tk::Iwidgets::Hierarchy
     end
 
     def self._config_keys
-      # array of config-option key (string or symbol)
       ['querycommand']
     end
   end
@@ -77,7 +70,6 @@ class Tk::Iwidgets::Hierarchy
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -102,7 +94,6 @@ class Tk::Iwidgets::Hierarchy
     end
 
     def self._config_keys
-      # array of config-option key (string or symbol)
       ['iconcommand', 'icondblcommand', 'imagedblcommand']
     end
   end
@@ -117,7 +108,6 @@ class Tk::Iwidgets::Hierarchy
       PROC_TBL = [ [ ?s, TkComm.method(:string) ], nil ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -142,7 +132,6 @@ class Tk::Iwidgets::Hierarchy
     end
 
     def self._config_keys
-      # array of config-option key (string or symbol)
       ['dblclickcommand', 'imagecommand', 'selectcommand']
     end
   end
@@ -155,7 +144,6 @@ class Tk::Iwidgets::Hierarchy
   Tk::ValidateConfigure.__def_validcmd(binding, IndicatorCommand)
   Tk::ValidateConfigure.__def_validcmd(binding, IconCommand)
 
-  ####################################
 
   def __boolval_optkeys
     super() << 'alwaysquery' << 'expanded' << 'filter'
@@ -189,7 +177,6 @@ class Tk::Iwidgets::Hierarchy
   def draw(mode=None)
     case mode
     when None
-      # do nothing
     when 'now', :now
       mode = '-now'
     when 'eventually', :eventually
@@ -263,7 +250,6 @@ class Tk::Iwidgets::Hierarchy
     self
   end
 
-  # based on Tk::Text widget
 
   def bbox(index)
     list(tk_send_without_enc('bbox', _get_eval_enc_str(index)))
@@ -279,7 +265,6 @@ class Tk::Iwidgets::Hierarchy
   end
   def debug=(boolean)
     tk_send_without_enc('debug', boolean)
-    #self
     boolean
   end
 
@@ -302,7 +287,6 @@ class Tk::Iwidgets::Hierarchy
 
   def insert(index, chars, *tags)
     if tags[0].kind_of? Array
-      # multiple chars-taglist argument :: str, [tag,...], str, [tag,...], ...
       args = [chars]
       while tags.size > 0
         args << tags.shift.collect{|x|_get_eval_string(x)}.join(' ')  # taglist
@@ -310,7 +294,6 @@ class Tk::Iwidgets::Hierarchy
       end
       super(index, *args)
     else
-      # single chars-taglist argument :: str, tag, tag, ...
       if tags.size == 0
         super(index, chars)
       else
@@ -332,7 +315,6 @@ class Tk::Iwidgets::Hierarchy
     self
   end
 
-  # based on tk/scrollable.rb
   def xview(*index)
     if index.size == 0
       list(tk_send_without_enc('xview'))

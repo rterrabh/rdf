@@ -24,8 +24,6 @@ class Mozjpeg < Formula
 
   keg_only "mozjpeg is not linked to prevent conflicts with the standard libjpeg."
 
-  # https://github.com/mozilla/mozjpeg/issues/175
-  # https://github.com/Homebrew/homebrew/issues/39939
   resource "nasm" do
     url "http://www.nasm.us/pub/nasm/releasebuilds/2.11.06/nasm-2.11.06.tar.xz"
     sha256 "90f60d95a15b8a54bf34d87b9be53da89ee3d6213ea739fb2305846f4585868a"

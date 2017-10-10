@@ -15,13 +15,11 @@ class Icecream < Formula
     url "https://github.com/icecc/icecream/archive/1.0.1.tar.gz"
     sha256 "10f85e172c5c435d81e7c05595c5ae9a9ffa83490dded7eefa95f9ad401fb31b"
 
-    # fixes --without-man
     patch do
       url "https://github.com/icecc/icecream/commit/641b039ecaa126fbb3bdfa716ce3060f624bb68e.diff"
       sha256 "f92bf6b619f6322a030e17b3561f0fb33a87cf2b0b60a6ca55777a4237ad886a"
     end
 
-    # these fix docbook2X detection
     patch do
       url "https://github.com/icecc/icecream/commit/df212c10336b6369ab244d9c888263774c9087dc.diff"
       sha256 "0df0ea51f9435faaa51924037979c714663f3e8bfd87122850483a72b5743344"
@@ -65,7 +63,6 @@ class Icecream < Formula
 
   def caveats; <<-EOS.undent
     To override the toolset with icecc, add to your path:
-      #{opt_libexec}/bin/icecc
 
     To have launchd start the icecc daemo at login:
       cp #{opt_prefix}/org.opensuse.icecc.plist ~/Library/LaunchAgents/
@@ -113,7 +110,6 @@ class Icecream < Formula
 
   test do
     (testpath/"hello-c.c").write <<-EOS.undent
-      #include <stdio.h>
       int main()
       {
         puts("Hello, world!");
@@ -124,7 +120,6 @@ class Icecream < Formula
     assert_equal "Hello, world!\n", `./hello-c`
 
     (testpath/"hello-cc.cc").write <<-EOS.undent
-      #include <iostream>
       int main()
       {
         std::cout << "Hello, world!" << std::endl;
@@ -136,7 +131,6 @@ class Icecream < Formula
 
     if build.with? "clang-wrappers"
       (testpath/"hello-clang.c").write <<-EOS.undent
-        #include <stdio.h>
         int main()
         {
           puts("Hello, world!");
@@ -147,7 +141,6 @@ class Icecream < Formula
       assert_equal "Hello, world!\n", `./hello-clang`
 
       (testpath/"hello-cclang.cc").write <<-EOS.undent
-        #include <iostream>
         int main()
         {
           std::cout << "Hello, world!" << std::endl;

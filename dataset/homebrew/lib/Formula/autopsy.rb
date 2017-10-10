@@ -8,40 +8,30 @@ class Autopsy < Formula
   depends_on "afflib" => :optional
   depends_on "libewf" => :optional
 
-  # fixes weird configure script that wouldn't work nicely with homebrew
   patch :DATA
 
   def autcfg; <<-EOS.undent
-    # Autopsy configuration settings
 
-    # when set to 1, the server will stop after it receives no
-    # connections for STIMEOUT seconds.
     $USE_STIMEOUT = 0;
     $STIMEOUT = 3600;
 
-    # number of seconds that child waits for input from client
     $CTIMEOUT = 15;
 
-    # set to 1 to save the cookie value in a file (for scripting)
     $SAVE_COOKIE = 1;
 
     $INSTALLDIR = '#{prefix}';
 
 
-    # System Utilities
     $GREP_EXE = '/usr/bin/grep';
     $FILE_EXE = '/usr/bin/file';
     $MD5_EXE = '/sbin/md5';
     $SHA1_EXE = '/usr/bin/shasum';
 
 
-    # Directories
     $TSKDIR = '/usr/local/bin/';
 
-    # Homebrew users can install NSRL database and change this variable later
     $NSRLDB = '';
 
-    # Evidence locker location
     $LOCKDIR = '#{var}/lib/autopsy';
     EOS
   end
@@ -59,7 +49,6 @@ class Autopsy < Formula
 
   def caveats; <<-EOS.undent
     By default, the evidence locker is in:
-      #{var}/lib/autopsy
     EOS
   end
 end
@@ -73,6 +62,3 @@ index 3b3bbdc..a0d2632 100644
 +#!/usr/bin/perl -wT
 +use lib '/tmp/autopsy/';
 +use lib '/tmp/autopsy/libexec/';
- #
- # autopsy gui server
- # Autopsy Forensic Browser

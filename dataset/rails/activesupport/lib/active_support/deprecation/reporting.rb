@@ -1,16 +1,9 @@
 module ActiveSupport
   class Deprecation
     module Reporting
-      # Whether to print a message (silent mode)
       attr_accessor :silenced
-      # Name of gem where method is deprecated
       attr_accessor :gem_name
 
-      # Outputs a deprecation warning to the output configured by
-      # <tt>ActiveSupport::Deprecation.behavior</tt>.
-      #
-      #   ActiveSupport::Deprecation.warn('something broke!')
-      #   # => "DEPRECATION WARNING: something broke! (called from your_code.rb:1)"
       def warn(message = nil, callstack = nil)
         return if silenced
 
@@ -20,15 +13,6 @@ module ActiveSupport
         end
       end
 
-      # Silence deprecation warnings within the block.
-      #
-      #   ActiveSupport::Deprecation.warn('something broke!')
-      #   # => "DEPRECATION WARNING: something broke! (called from your_code.rb:1)"
-      #
-      #   ActiveSupport::Deprecation.silence do
-      #     ActiveSupport::Deprecation.warn('something broke!')
-      #   end
-      #   # => nil
       def silence
         old_silenced, @silenced = @silenced, true
         yield
@@ -44,14 +28,6 @@ module ActiveSupport
       end
 
       private
-        # Outputs a deprecation warning message
-        #
-        #   ActiveSupport::Deprecation.deprecated_method_warning(:method_name)
-        #   # => "method_name is deprecated and will be removed from Rails #{deprecation_horizon}"
-        #   ActiveSupport::Deprecation.deprecated_method_warning(:method_name, :another_method)
-        #   # => "method_name is deprecated and will be removed from Rails #{deprecation_horizon} (use another_method instead)"
-        #   ActiveSupport::Deprecation.deprecated_method_warning(:method_name, "Optional message")
-        #   # => "method_name is deprecated and will be removed from Rails #{deprecation_horizon} (Optional message)"
         def deprecated_method_warning(method_name, message = nil)
           warning = "#{method_name} is deprecated and will be removed from #{gem_name} #{deprecation_horizon}"
           case message

@@ -47,8 +47,6 @@ class Smali < Formula
   end
 
   test do
-    # From examples/HelloWorld/HelloWorld.smali in Smali project repo.
-    # See https://bitbucket.org/JesusFreke/smali/src/2d8cbfe6bc2d8ff2fcd7a0bf432cc808d842da4a/examples/HelloWorld/HelloWorld.smali?at=master
     (testpath/"input.smali").write <<-EOS.undent
     .class public LHelloWorld;
     .super Ljava/lang/Object;

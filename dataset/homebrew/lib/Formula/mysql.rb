@@ -42,17 +42,12 @@ class Mysql < Formula
   end
 
   def install
-    # Don't hard-code the libtool path. See:
-    # https://github.com/Homebrew/homebrew/issues/20185
     inreplace "cmake/libutils.cmake",
       "COMMAND /usr/bin/libtool -static -o ${TARGET_LOCATION}",
       "COMMAND libtool -static -o ${TARGET_LOCATION}"
 
-    # Build without compiler or CPU specific optimization flags to facilitate
-    # compilation of gems and other software that queries `mysql-config`.
     ENV.minimal_optimization
 
-    # -DINSTALL_* are relative to `CMAKE_INSTALL_PREFIX` (`prefix`)
     args = %W[
       .
       -DCMAKE_INSTALL_PREFIX=#{prefix}
@@ -73,52 +68,39 @@ class Mysql < Formula
       -DWITH_EDITLINE=system
     ]
 
-    # To enable unit testing at build, we need to download the unit testing suite
     if build.with? "tests"
       args << "-DENABLE_DOWNLOADS=ON"
     else
       args << "-DWITH_UNIT_TESTS=OFF"
     end
 
-    # Build the embedded server
     args << "-DWITH_EMBEDDED_SERVER=ON" if build.with? "embedded"
 
-    # Compile with ARCHIVE engine enabled if chosen
     args << "-DWITH_ARCHIVE_STORAGE_ENGINE=1" if build.with? "archive-storage-engine"
 
-    # Compile with BLACKHOLE engine enabled if chosen
     args << "-DWITH_BLACKHOLE_STORAGE_ENGINE=1" if build.with? "blackhole-storage-engine"
 
-    # Make universal for binding to universal applications
     if build.universal?
       ENV.universal_binary
       args << "-DCMAKE_OSX_ARCHITECTURES=#{Hardware::CPU.universal_archs.as_cmake_arch_flags}"
     end
 
-    # Build with local infile loading support
     args << "-DENABLED_LOCAL_INFILE=1" if build.with? "local-infile"
 
-    # Build with memcached support
     args << "-DWITH_INNODB_MEMCACHED=1" if build.with? "memcached"
 
-    # Build with debug support
     args << "-DWITH_DEBUG=1" if build.with? "debug"
 
     system "cmake", *args
     system "make"
     system "make", "install"
 
-    # Don't create databases inside of the prefix!
-    # See: https://github.com/Homebrew/homebrew/issues/4975
     rm_rf prefix/"data"
 
-    # Link the setup script into bin
     bin.install_symlink prefix/"scripts/mysql_install_db"
 
-    # Fix up the control script and link into bin
     inreplace "#{prefix}/support-files/mysql.server" do |s|
       s.gsub!(/^(PATH=".*)(")/, "\\1:#{HOMEBREW_PREFIX}/bin\\2")
-      # pidof can be replaced with pgrep from proctools on Mountain Lion
       s.gsub!(/pidof/, "pgrep") if MacOS.version >= :mountain_lion
     end
 
@@ -129,7 +111,6 @@ class Mysql < Formula
   end
 
   def post_install
-    # Make sure the datadir exists
     datadir.mkpath
     unless (datadir/"mysql/user.frm").exist?
       ENV["TMPDIR"] = nil

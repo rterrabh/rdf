@@ -39,11 +39,7 @@ class Libgcrypt < Formula
       system "ed -s - config.h <config.h.ed"
     end
 
-    # Parallel builds work, but only when run as separate steps
     system "make"
-    # Make check currently dies on El Capitan
-    # https://github.com/Homebrew/homebrew/issues/41599
-    # https://bugs.gnupg.org/gnupg/issue2056
     system "make", "check" unless MacOS.version >= :el_capitan
     system "make", "install"
   end

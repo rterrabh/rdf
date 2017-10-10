@@ -8,8 +8,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
       end
     end
 
-    # If `invite_passthrough_hours` is defined, allow them to re-use the invite link
-    # to login again.
     if invite.redeemed_at && invite.redeemed_at >= SiteSetting.invite_passthrough_hours.hours.ago
       return invited_user
     end
@@ -17,7 +15,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
     nil
   end
 
-  # extracted from User cause it is very specific to invites
   def self.create_user_from_invite(invite, username, name)
     user_exists = User.find_by_email(invite.email)
     return user if user_exists
@@ -53,7 +50,6 @@ InviteRedeemer = Struct.new(:invite, :username, :name) do
   end
 
   def invite_was_redeemed?
-    # Return true if a row was updated
     mark_invite_redeemed == 1
   end
 

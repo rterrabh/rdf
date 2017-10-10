@@ -1,7 +1,5 @@
 module RDoc
 
-  ##
-  # Ruby's built-in classes, modules and exceptions
 
   KNOWN_CLASSES = {
     "rb_cArray"            => "Array",

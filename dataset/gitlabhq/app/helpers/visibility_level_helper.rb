@@ -10,11 +10,6 @@ module VisibilityLevelHelper
     end
   end
 
-  # Return the description for the +level+ argument.
-  #
-  # +level+ One of the Gitlab::VisibilityLevel constants
-  # +form_model+ Either a model object (Project, Snippet, etc.) or the name of
-  #              a Project or Snippet class.
   def visibility_level_description(level, form_model)
     case form_model.is_a?(String) ? form_model : form_model.class.name
     when 'PersonalSnippet', 'ProjectSnippet', 'Snippet'

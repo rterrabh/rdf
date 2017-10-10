@@ -43,7 +43,6 @@ class Karn < Formula
   test do
     (testpath/".karn.yml").write <<-EOS.undent
       ---
-      #{testpath}:
         name: Homebrew Test
         email: test@brew.sh
     EOS

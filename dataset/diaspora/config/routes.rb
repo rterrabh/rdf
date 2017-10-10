@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 require 'sidekiq/web'
 require 'sidetiq/web'
@@ -23,7 +20,6 @@ Diaspora::Application.routes.draw do
   get "/atom.xml" => redirect('http://blog.diasporafoundation.org/feed/atom') #too many stupid redirects :()
 
   get 'oembed' => 'posts#oembed', :as => 'oembed'
-  # Posting and Reading
   resources :reshares
 
   resources :status_messages, :only => [:new, :create]
@@ -47,12 +43,10 @@ Diaspora::Application.routes.draw do
   get 'p/:id' => 'posts#show', :as => 'short_post'
   get 'posts/:id/iframe' => 'posts#iframe', :as => 'iframe'
 
-  # roll up likes into a nested resource above
   resources :comments, :only => [:create, :destroy] do
     resources :likes, :only => [:create, :destroy, :index]
   end
 
-  # Streams
   get "participate" => "streams#activity" # legacy
   get "explore" => "streams#multi"        # legacy
 
@@ -79,7 +73,6 @@ Diaspora::Application.routes.draw do
     put :make_profile_photo
   end
 
-	#Search
 	get 'search' => "search#search"
 
   resources :conversations do
@@ -106,7 +99,6 @@ Diaspora::Application.routes.draw do
 
   resources :apps, :only => [:show]
 
-  # Users and people
 
   resource :user, :only => [:edit, :update, :destroy], :shallow => true do
     get :getting_started_completed
@@ -124,14 +116,11 @@ Diaspora::Application.routes.draw do
     get 'confirm_email/:token'      => :confirm_email,    :as => 'confirm_email'
   end
 
-  # This is a hack to overide a route created by devise.
-  # I couldn't find anything in devise to skip that route, see Bug #961
   get 'users/edit' => redirect('/user/edit')
 
   devise_for :users, :controllers => {:registrations => "registrations",
                                       :sessions      => "sessions"}
 
-  #legacy routes to support old invite routes
   get 'users/invitation/accept' => 'invitations#edit'
   get 'invitations/email' => 'invitations#email', :as => 'invite_email'
   get 'users/invitations' => 'invitations#new', :as => 'new_user_invitation'
@@ -139,7 +128,6 @@ Diaspora::Application.routes.draw do
 
   get 'login' => redirect('/users/sign_in')
 
-  # Admin backend routes
 
   scope 'admins', :controller => :admins do
     match :user_search, via: [:get, :post]
@@ -190,7 +178,6 @@ Diaspora::Application.routes.draw do
   get '/u/:username/profile_photo' => 'users#user_photo', :constraints => { :username => /[^\/]+/ }
 
 
-  # Federation
 
   controller :publics do
     post 'receive/users/:guid'  => :receive
@@ -200,7 +187,6 @@ Diaspora::Application.routes.draw do
 
 
 
-  # External
 
   resources :services, :only => [:index, :destroy]
   controller :services do
@@ -225,25 +211,19 @@ Diaspora::Application.routes.draw do
   end
 
   get 'community_spotlight' => "contacts#spotlight", :as => 'community_spotlight'
-  # Mobile site
 
   get 'mobile/toggle', :to => 'home#toggle_mobile', :as => 'toggle_mobile'
 
-  # Help
   get 'help' => 'help#faq', :as => 'help'
   get 'help/:topic' => 'help#faq'
 
-  #Protocol Url
   get 'protocol' => redirect("http://wiki.diasporafoundation.org/Federation_Protocol_Overview")
 
-  #Statistics
   get :statistics, controller: :statistics
 
-  # Terms
   if AppConfig.settings.terms.enable?
     get 'terms' => 'terms#index'
   end
 
-  # Startpage
   root :to => 'home#show'
 end

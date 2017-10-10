@@ -63,7 +63,6 @@ class Global < Formula
     inreplace "gtags.conf", prefix, opt_prefix
     etc.install "gtags.conf"
 
-    # we copy these in already
     cd share/"gtags" do
       rm %w[README COPYING LICENSE INSTALL ChangeLog AUTHORS]
     end
@@ -92,7 +91,6 @@ class Global < Formula
         assert shell_output("#{bin}/global -r py2func").include?("test.py")
         assert shell_output("#{bin}/global -s pyvar").include?("test.py")
       else
-        # Everything is a symbol in this case
         assert shell_output("#{bin}/global -s cfunc").include?("test.c")
         assert shell_output("#{bin}/global -s c2func").include?("test.c")
         assert shell_output("#{bin}/global -s cvar").include?("test.c")
@@ -103,7 +101,6 @@ class Global < Formula
     end
     if build.with? "exuberant-ctags"
       assert shell_output("#{bin}/gtags --gtagsconf=#{share}/gtags/gtags.conf --gtagslabel=exuberant-ctags .")
-      # ctags only yields definitions
       assert shell_output("#{bin}/global -d cfunc   # passes").include?("test.c")
       assert shell_output("#{bin}/global -d c2func  # passes").include?("test.c")
       assert !shell_output("#{bin}/global -r c2func  # correctly fails").include?("test.c")
@@ -120,7 +117,6 @@ class Global < Formula
       assert shell_output("#{bin}/global -r c2func").include?("test.c")
       assert shell_output("#{bin}/global -s cvar").include?("test.c")
     end
-    # C should work with default parser for any build
     assert shell_output("#{bin}/gtags --gtagsconf=#{share}/gtags/gtags.conf --gtagslabel=default .")
     assert shell_output("#{bin}/global -d cfunc").include?("test.c")
     assert shell_output("#{bin}/global -d c2func").include?("test.c")

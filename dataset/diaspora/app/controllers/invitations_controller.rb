@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class InvitationsController < ApplicationController
 
@@ -19,10 +16,6 @@ class InvitationsController < ApplicationController
     end
   end
 
-  # this is  for legacy invites.  We try to look the person who sent them the
-  # invite, and use their new invite code
-  # owe will be removing this eventually
-  # @depreciated
   def edit
     user = User.find_by_invitation_token(params[:invitation_token])
     invitation_code = user.ugly_accept_invitation_code
@@ -32,7 +25,6 @@ class InvitationsController < ApplicationController
   def email
     @invitation_code =
       if params[:invitation_token]
-        # this is  for legacy invites.
         user = User.find_by_invitation_token(params[:invitation_token])
 
         user.ugly_accept_invitation_code if user

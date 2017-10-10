@@ -1,6 +1,3 @@
-##
-# The global rubygems pool represented via the traditional
-# source index.
 
 class Gem::Resolver::IndexSet < Gem::Resolver::Set
 
@@ -31,9 +28,6 @@ class Gem::Resolver::IndexSet < Gem::Resolver::Set
     @specs = {}
   end
 
-  ##
-  # Return an array of IndexSpecification objects matching
-  # DependencyRequest +req+.
 
   def find_all req
     res = []

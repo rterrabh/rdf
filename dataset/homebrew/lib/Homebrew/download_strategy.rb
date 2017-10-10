@@ -13,21 +13,15 @@ class AbstractDownloadStrategy
     @meta = resource.specs
   end
 
-  # Download and cache the resource as {#cached_location}.
   def fetch
   end
 
-  # Unpack {#cached_location} into the current working directory.
   def stage
   end
 
-  # @!attribute [r] cached_location
-  # The path to the cached file or directory associated with the resource.
   def cached_location
   end
 
-  # Remove {#cached_location} and any other files associated with the resource
-  # from the cache.
   def clear_cache
     rm_rf(cached_location)
   end
@@ -44,7 +38,6 @@ class AbstractDownloadStrategy
         return args
       end
     end
-    # 2 as default because commands are eg. svn up, git pull
     args.insert(2, "-q") unless ARGV.verbose?
     args
   end
@@ -70,33 +63,21 @@ class AbstractDownloadStrategy
   def cvspath
     @cvspath ||= %W[
       /usr/bin/cvs
-      #{HOMEBREW_PREFIX}/bin/cvs
-      #{HOMEBREW_PREFIX}/opt/cvs/bin/cvs
-      #{which("cvs")}
     ].find { |p| File.executable? p }
   end
 
   def hgpath
     @hgpath ||= %W[
-      #{which("hg")}
-      #{HOMEBREW_PREFIX}/bin/hg
-      #{HOMEBREW_PREFIX}/opt/mercurial/bin/hg
     ].find { |p| File.executable? p }
   end
 
   def bzrpath
     @bzrpath ||= %W[
-      #{which("bzr")}
-      #{HOMEBREW_PREFIX}/bin/bzr
-      #{HOMEBREW_PREFIX}/opt/bazaar/bin/bzr
     ].find { |p| File.executable? p }
   end
 
   def fossilpath
     @fossilpath ||= %W[
-      #{which("fossil")}
-      #{HOMEBREW_PREFIX}/bin/fossil
-      #{HOMEBREW_PREFIX}/opt/fossil/bin/fossil
     ].find { |p| File.executable? p }
   end
 end
@@ -128,7 +109,6 @@ class VCSDownloadStrategy < AbstractDownloadStrategy
     if @ref_type == :tag && @revision && current_revision
       unless current_revision == @revision
         raise <<-EOS.undent
-          #{@ref} tag should be #{@revision}
           but is actually #{current_revision}
         EOS
       end
@@ -187,7 +167,6 @@ class AbstractFileDownloadStrategy < AbstractDownloadStrategy
     when :bzip2_only
       with_system_path { buffered_write("bunzip2") }
     when :gzip, :bzip2, :compress, :tar
-      # Assume these are also tarred
       with_system_path { safe_system "tar", "xf", cached_location }
       chdir
     when :xz
@@ -228,9 +207,6 @@ class AbstractFileDownloadStrategy < AbstractDownloadStrategy
     end
   end
 
-  # gunzip and bunzip2 write the output file in the same directory as the input
-  # file regardless of the current working directory, so we need to write it to
-  # the correct location ourselves.
   def buffered_write(tool)
     target = File.basename(basename_without_params, cached_location.extname)
 
@@ -243,16 +219,10 @@ class AbstractFileDownloadStrategy < AbstractDownloadStrategy
   end
 
   def basename_without_params
-    # Strip any ?thing=wad out of .c?thing=wad style extensions
     File.basename(@url)[/[^?]+/]
   end
 
   def ext
-    # We need a Pathname because we've monkeypatched extname to support double
-    # extensions (e.g. tar.gz).
-    # We can't use basename_without_params, because given a URL like
-    #   https://example.com/download.php?file=foo-1.0.tar.gz
-    # the extension we want is ".tar.gz", not ".php".
     Pathname.new(@url).extname[/[^?]+/]
   end
 end
@@ -286,8 +256,6 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
       begin
         _fetch
       rescue ErrorDuringExecution
-        # 33 == range not supported
-        # try wiping the incomplete download and retrying once
         if $?.exitstatus == 33 && had_incomplete_download
           ohai "Trying a full download"
           temporary_path.unlink
@@ -319,13 +287,10 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
 
   private
 
-  # Private method, can be overridden if needed.
   def _fetch
     curl @url, "-C", downloaded_size, "-o", temporary_path
   end
 
-  # Curl options to be always passed to curl,
-  # with raw head calls (`curl -I`) or with actual `fetch`.
   def _curl_opts
     copts = []
     copts << "--user" << meta.fetch(:user) if meta.key?(:user)
@@ -352,7 +317,6 @@ class CurlDownloadStrategy < AbstractFileDownloadStrategy
   end
 end
 
-# Detect and download from Apache Mirror
 class CurlApacheMirrorDownloadStrategy < CurlDownloadStrategy
   def apache_mirrors
     rd, wr = IO.pipe
@@ -390,8 +354,6 @@ class CurlApacheMirrorDownloadStrategy < CurlDownloadStrategy
   end
 end
 
-# Download via an HTTP POST.
-# Query parameters on the URL are converted into POST parameters
 class CurlPostDownloadStrategy < CurlDownloadStrategy
   def _fetch
     base_url, data = @url.split("?")
@@ -399,15 +361,12 @@ class CurlPostDownloadStrategy < CurlDownloadStrategy
   end
 end
 
-# Use this strategy to download but not unzip a file.
-# Useful for installing jars.
 class NoUnzipCurlDownloadStrategy < CurlDownloadStrategy
   def stage
     cp cached_location, basename_without_params
   end
 end
 
-# This strategy extracts our binary packages.
 class CurlBottleDownloadStrategy < CurlDownloadStrategy
   def stage
     ohai "Pouring #{cached_location.basename}"
@@ -415,7 +374,6 @@ class CurlBottleDownloadStrategy < CurlDownloadStrategy
   end
 end
 
-# This strategy extracts local binary packages.
 class LocalBottleDownloadStrategy < AbstractFileDownloadStrategy
   attr_reader :cached_location
 
@@ -429,17 +387,8 @@ class LocalBottleDownloadStrategy < AbstractFileDownloadStrategy
   end
 end
 
-# S3DownloadStrategy downloads tarballs from AWS S3.
-# To use it, add ":using => S3DownloadStrategy" to the URL section of your
-# formula.  This download strategy uses AWS access tokens (in the
-# environment variables AWS_ACCESS_KEY_ID and AWS_SECRET_ACCESS_KEY)
-# to sign the request.  This strategy is good in a corporate setting,
-# because it lets you use a private S3 bucket as a repo for internal
-# distribution.  (It will work for public buckets as well.)
 class S3DownloadStrategy < CurlDownloadStrategy
   def _fetch
-    # Put the aws gem requirement here (vs top of file) so it's only
-    # a dependency of S3 users, not all Homebrew users
     require "rubygems"
     begin
       require "aws-sdk-v1"
@@ -496,9 +445,6 @@ class SubversionDownloadStrategy < VCSDownloadStrategy
   end
 
   def fetch_repo(target, url, revision = nil, ignore_externals = false)
-    # Use "svn up" when the repository already exists locally.
-    # This saves on bandwidth and will have a similar effect to verifying the
-    # cache as it will make any changes to get the right revision.
     svncommand = target.directory? ? "up" : "checkout"
     args = ["svn", svncommand]
     args << url unless target.directory?
@@ -521,7 +467,6 @@ class SubversionDownloadStrategy < VCSDownloadStrategy
     when :revision
       fetch_repo cached_location, @url, @ref
     when :revisions
-      # nil is OK for main_revision, as fetch_repo will then get latest
       main_revision = @ref[:trunk]
       fetch_repo cached_location, @url, main_revision, true
 
@@ -702,7 +647,6 @@ class CVSDownloadStrategy < VCSDownloadStrategy
 
   def clone_repo
     HOMEBREW_CACHE.cd do
-      # Login is only needed (and allowed) with pserver; skip for anoncvs.
       quiet_safe_system cvspath, { :quiet_flag => "-Q" }, "-d", @url, "login" if @url.include? "pserver"
       quiet_safe_system cvspath, { :quiet_flag => "-Q" }, "-d", @url, "checkout", "-d", cache_filename, @module
     end
@@ -765,8 +709,6 @@ class BazaarDownloadStrategy < VCSDownloadStrategy
   end
 
   def stage
-    # The export command doesn't work on checkouts
-    # See https://bugs.launchpad.net/bzr/+bug/897511
     cp_r File.join(cached_location, "."), Dir.pwd
     rm_r ".bzr"
   end
@@ -782,7 +724,6 @@ class BazaarDownloadStrategy < VCSDownloadStrategy
   end
 
   def clone_repo
-    # "lightweight" means history-less
     safe_system bzrpath, "checkout", "--lightweight", @url, cached_location
   end
 

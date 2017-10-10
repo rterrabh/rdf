@@ -28,7 +28,6 @@ module Spree
       completely_decided? && return_items.accepted.includes(:reimbursement).all? { |return_item| return_item.reimbursement.try(:reimbursed?) }
     end
 
-    # Temporarily tie a customer_return to one order
     def order
       return nil if return_items.blank?
       return_items.first.inventory_unit.order

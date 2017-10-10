@@ -1,7 +1,5 @@
-#mixin for all guardian methods dealing with category permisions
 module CategoryGuardian
 
-  # Creating Method
   def can_create_category?(parent=nil)
     is_admin? ||
     (
@@ -10,7 +8,6 @@ module CategoryGuardian
     )
   end
 
-  # Editing Method
   def can_edit_category?(category)
     is_admin? ||
     (
@@ -36,7 +33,6 @@ module CategoryGuardian
       if oldest_topic
         return I18n.t('category.cannot_delete.topic_exists', {count: category.topic_count, topic_link: "<a href=\"#{oldest_topic.url}\">#{oldest_topic.title}</a>"})
       else
-        # This is a weird case, probably indicating a bug.
         return I18n.t('category.cannot_delete.topic_exists_no_oldest', {count: category.topic_count})
       end
     end
@@ -52,7 +48,6 @@ module CategoryGuardian
     @secure_category_ids ||= @user.secure_category_ids
   end
 
-  # all allowed category ids
   def allowed_category_ids
     unrestricted = Category.where(read_restricted: false).pluck(:id)
     unrestricted.concat(secure_category_ids)

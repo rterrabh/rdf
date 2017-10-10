@@ -30,9 +30,6 @@ class Rocksdb < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <assert.h>
-      #include <rocksdb/options.h>
-      #include <rocksdb/memtablerep.h>
       using namespace rocksdb;
       int main() {
         Options options;

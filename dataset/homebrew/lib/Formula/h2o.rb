@@ -37,12 +37,10 @@ class H2o < Formula
 
     (etc/"h2o").mkpath
     (var/"h2o").install "examples/doc_root/index.html"
-    # Write up a basic example conf for testing.
     (buildpath/"brew/h2o.conf").write conf_example
     (etc/"h2o").install buildpath/"brew/h2o.conf"
   end
 
-  # This is simplified from examples/h2o/h2o.conf upstream.
   def conf_example; <<-EOS.undent
     listen: 8080
     hosts:

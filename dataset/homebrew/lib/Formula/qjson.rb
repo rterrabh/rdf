@@ -23,7 +23,6 @@ class Qjson < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <qjson/parser.h>
       int main() {
         QJson::Parser parser;
         return 0;

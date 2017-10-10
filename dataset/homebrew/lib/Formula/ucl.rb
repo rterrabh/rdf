@@ -22,11 +22,6 @@ class Ucl < Formula
     (testpath/"test.c").write <<-EOS.undent
       // simplified version of
       // https://github.com/korczis/ucl/blob/master/examples/simple.c
-      #include <stdio.h>
-      #include <ucl/ucl.h>
-      #include <ucl/uclconf.h>
-      #define IN_LEN      (128*1024L)
-      #define OUT_LEN     (IN_LEN + IN_LEN / 8 + 256)
       int main(int argc, char *argv[]) {
           int r;
           ucl_byte *in, *out;

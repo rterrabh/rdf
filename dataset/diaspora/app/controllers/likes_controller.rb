@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class LikesController < ApplicationController
   include ApplicationHelper
@@ -16,7 +13,6 @@ class LikesController < ApplicationController
         current_user.like!(target)
       end
     rescue ActiveRecord::RecordNotFound, ActiveRecord::RecordInvalid => e
-      # do nothing
     end
 
     if @like
@@ -39,7 +35,6 @@ class LikesController < ApplicationController
     end
   end
 
-  #I can go when the old stream goes.
   def index
     @likes = target.likes.includes(:author => :profile)
     @people = @likes.map(&:author)

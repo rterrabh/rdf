@@ -1,4 +1,3 @@
-# Unlinks any Applications (.app) found in installed prefixes from /Applications
 require "keg"
 
 module Homebrew

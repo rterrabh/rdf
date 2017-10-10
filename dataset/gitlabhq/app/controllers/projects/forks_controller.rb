@@ -1,5 +1,4 @@
 class Projects::ForksController < Projects::ApplicationController
-  # Authorize
   before_action :require_non_empty_project
   before_action :authorize_download_code!
 

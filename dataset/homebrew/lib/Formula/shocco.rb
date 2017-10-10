@@ -17,7 +17,6 @@ class Shocco < Formula
     sha256 "fe183e3886f597e41f8c88d0e53c796cefddc879bfdf45f2915a383060436740"
   end
 
-  # Upstream, but not in a release
   patch :DATA
 
   def install

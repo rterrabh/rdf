@@ -63,23 +63,16 @@ module Homebrew
 
     oh1 "Upgrading #{f.full_name}"
 
-    # first we unlink the currently active keg for this formula otherwise it is
-    # possible for the existing build to interfere with the build we are about to
-    # do! Seriously, it happens!
     outdated_keg.unlink if outdated_keg
 
     fi.install
     fi.finish
 
-    # If the formula was pinned, and we were force-upgrading it, unpin and
-    # pin it again to get a symlink pointing to the correct keg.
     if f.pinned?
       f.unpin
       f.pin
     end
   rescue FormulaInstallationAlreadyAttemptedError
-    # We already attempted to upgrade f as part of the dependency tree of
-    # another formula. In that case, don't generate an error, just move on.
   rescue CannotInstallFormulaError => e
     ofail e
   rescue BuildError => e
@@ -89,7 +82,6 @@ module Homebrew
   rescue DownloadError => e
     ofail e
   ensure
-    # restore previous installation state if build failed
     outdated_keg.link if outdated_keg && !f.installed? rescue nil
   end
 end

@@ -1,6 +1,4 @@
 module WikiHelper
-  # Rails v4.1.9+ escapes all model IDs, converting slashes into %2F. The
-  # only way around this is to implement our own path generators.
   def namespace_project_wiki_path(namespace, project, wiki_page, *args)
     slug =
         case wiki_page

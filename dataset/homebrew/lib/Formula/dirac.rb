@@ -15,7 +15,6 @@ class Dirac < Formula
     build 2334
   end
 
-  # First two patches: the only two commits in the upstream repo not in 1.0.2
 
   patch do
     url "https://gist.githubusercontent.com/mistydemeo/da8a53abcf057c58b498/raw/bde69c5f07d871542dcb24792110e29e6418d2a3/unititialized-memory.patch"
@@ -27,12 +26,9 @@ class Dirac < Formula
     sha256 "52c40f2c8aec9174eba2345e6ba9689ced1b8f865c7ced23e7f7ee5fdd6502c3"
   end
 
-  # HACK: the configure script, which assumes any compiler that
-  # starts with "cl" is a Microsoft compiler
   patch :DATA
 
   def install
-    # BSD cp doesn't have '-d'
     inreplace "doc/Makefile.in", "cp -dR", "cp -R"
 
     system "./configure", "--disable-debug", "--disable-dependency-tracking",

@@ -4,8 +4,6 @@ class Statistics
               :range
 
   def initialize
-    #@start_time = start_time
-    #@range = range
   end
 
   def posts_count_sql
@@ -14,7 +12,6 @@ class Statistics
         FROM users
           JOIN people ON people.owner_id = users.id
           LEFT OUTER JOIN posts ON people.id = posts.author_id
-          #{self.where_clause_sql}
           GROUP BY users.id
 SQL
   end
@@ -25,7 +22,6 @@ SQL
         FROM users
           JOIN people ON people.owner_id = users.id
           LEFT OUTER JOIN comments ON people.id = comments.author_id
-          #{self.where_clause_sql}
           GROUP BY users.id
 SQL
   end
@@ -35,7 +31,6 @@ SQL
       SELECT users.id AS id, count(invitations.id) AS count
         FROM users
           LEFT OUTER JOIN invitations ON users.id = invitations.sender_id
-          #{self.where_clause_sql}
           GROUP BY users.id
 SQL
   end
@@ -45,7 +40,6 @@ SQL
       SELECT users.id AS id, count(tag_followings.id) AS count
         FROM users
           LEFT OUTER JOIN tag_followings on users.id = tag_followings.user_id
-          #{self.where_clause_sql}
           GROUP BY users.id
 SQL
   end
@@ -56,7 +50,6 @@ SQL
         FROM users
           JOIN people on users.id = people.owner_id
           LEFT OUTER JOIN mentions on people.id = mentions.person_id
-          #{self.where_clause_sql}
           GROUP BY users.id
 SQL
   end
@@ -67,7 +60,6 @@ SQL
         FROM users
           JOIN contacts on contacts.user_id = users.id
           JOIN aspect_memberships on aspect_memberships.contact_id = contacts.id
-          #{self.where_clause_sql}
           GROUP BY users.id
 SQL
   end
@@ -78,7 +70,6 @@ SQL
         FROM users
           LEFT OUTER JOIN services on services.user_id = users.id
             AND services.type = 'Services::Facebook'
-          #{self.where_clause_sql}
           GROUP BY users.id, users.sign_in_count
 SQL
   end
@@ -97,13 +88,11 @@ SQL
     <<SQL
       SELECT users.id AS id, users.sign_in_count AS count
         FROM users
-        #{self.where_clause_sql}
 SQL
   end
 
   def correlate(first_metric, second_metric)
 
-    # [{"id" => 1 , "count" => 123}]
 
     x_array = []
     y_array = []
@@ -160,7 +149,6 @@ SQL
     Math.sqrt(variance)
   end
 
-  ### % of cohort came back last week
   def retention(n)
     users_by_week(n).count.to_f/week_created(n).count
   end
@@ -187,16 +175,16 @@ SQL
     User.where("username IS NOT NULL").where("users.created_at > ? and users.created_at < ?", Time.now - (n+1).weeks, Time.now - n.weeks)
   end
 
-  #@param [Symbol] input type
-  #@returns [Hash] of resulting query
   def result_hash(type)
+    #nodyna <instance_variable_get-205> <not yet classified>
     instance_hash = self.instance_variable_get("@#{type.to_s}_hash".to_sym)
     unless instance_hash
-      #nodyna <ID:send-79> <SD MODERATE (change-prone variables)>
+      #nodyna <send-206> <SD MODERATE (change-prone variables)>
       post_count_array = User.connection.select_all(self.send("#{type.to_s}_sql".to_sym))
 
       instance_hash = {}
       post_count_array.each{ |h| instance_hash[h['id']] = h["count"]}
+      #nodyna <instance_variable_set-207> <not yet classified>
       self.instance_variable_set("@#{type.to_s}_hash".to_sym, instance_hash)
     end
     instance_hash

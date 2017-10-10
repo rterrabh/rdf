@@ -7,6 +7,7 @@ class TopicViewSerializer < ApplicationSerializer
   def self.attributes_from_topic(*list)
     [list].flatten.each do |attribute|
       attributes(attribute)
+      #nodyna <class_eval-462> <not yet classified>
       class_eval %{def #{attribute}
         object.topic.#{attribute}
       end}
@@ -55,7 +56,6 @@ class TopicViewSerializer < ApplicationSerializer
              :chunk_size,
              :bookmarked
 
-  # TODO: Split off into proper object / serializer
   def details
     result = {
       auto_close_at: object.topic.auto_close_at,
@@ -143,7 +143,6 @@ class TopicViewSerializer < ApplicationSerializer
     BasicUserSerializer.new(object.topic.deleted_by, root: false).as_json
   end
 
-  # Topic user stuff
   def has_topic_user?
     object.topic_user.present?
   end
@@ -190,7 +189,6 @@ class TopicViewSerializer < ApplicationSerializer
                   count: 0,
                   hidden: false,
                   can_act: scope.post_can_act?(post, sym)}
-      # TODO: other keys? :can_defer_flags, :acted, :can_undo
     end
     result
   end

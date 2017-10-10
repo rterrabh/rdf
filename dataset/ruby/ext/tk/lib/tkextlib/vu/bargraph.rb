@@ -1,10 +1,5 @@
-#
-#  ::vu::bargraph widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 
-# create module/class
 module Tk
   module Vu
     class Bargraph < TkWindow
@@ -13,7 +8,6 @@ module Tk
 end
 
 
-# call setup script  --  <libdir>/tkextlib/vu.rb
 require 'tkextlib/vu.rb'
 
 class Tk::Vu::Bargraph < TkWindow
@@ -21,7 +15,6 @@ class Tk::Vu::Bargraph < TkWindow
   WidgetClassName = 'Bargraph'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ###############################
 
   def __boolval_optkeys
     ['showminmax', 'showvalue']
@@ -48,7 +41,6 @@ class Tk::Vu::Bargraph < TkWindow
   end
   private :__font_optkeys
 
-  ###############################
 
   def set(val = None)
     tk_call_without_enc(@path, 'set', val)

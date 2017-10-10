@@ -1,37 +1,15 @@
-#
-#   irb/extend-command.rb - irb extend command
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 module IRB # :nodoc:
-  # Installs the default irb extensions command bundle.
   module ExtendCommandBundle
     EXCB = ExtendCommandBundle # :nodoc:
 
-    # See #install_alias_method.
     NO_OVERRIDE = 0
-    # See #install_alias_method.
     OVERRIDE_PRIVATE_ONLY = 0x01
-    # See #install_alias_method.
     OVERRIDE_ALL = 0x02
 
-    # Quits the current irb context
-    #
-    # +ret+ is the optional signal or message to send to Context#exit
-    #
-    # Same as <code>IRB.CurrentContext.exit</code>.
     def irb_exit(ret = 0)
       irb_context.exit(ret)
     end
 
-    # Displays current configuration.
-    #
-    # Modifing the configuration is achieved by sending a message to IRB.conf.
     def irb_context
       IRB.CurrentContext
     end
@@ -100,33 +78,12 @@ module IRB # :nodoc:
 
     ]
 
-    # Installs the default irb commands:
-    #
-    # +irb_current_working_workspace+::   Context#main
-    # +irb_change_workspace+::            Context#change_workspace
-    # +irb_workspaces+::                  Context#workspaces
-    # +irb_push_workspace+::              Context#push_workspace
-    # +irb_pop_workspace+::               Context#pop_workspace
-    # +irb_load+::                        #irb_load
-    # +irb_require+::                     #irb_require
-    # +irb_source+::                      IrbLoader#source_file
-    # +irb+::                             IRB.irb
-    # +irb_jobs+::                        JobManager
-    # +irb_fg+::                          JobManager#switch
-    # +irb_kill+::                        JobManager#kill
-    # +irb_help+::                        IRB@Command+line+options
     def self.install_extend_commands
       for args in @EXTEND_COMMANDS
         def_extend_command(*args)
       end
     end
 
-    # Evaluate the given +cmd_name+ on the given +cmd_class+ Class.
-    #
-    # Will also define any given +aliases+ for the method.
-    #
-    # The optional +load_file+ parameter will be required within the method
-    # definition.
     def self.def_extend_command(cmd_name, cmd_class, load_file = nil, *aliases)
       case cmd_class
       when Symbol
@@ -137,7 +94,7 @@ module IRB # :nodoc:
       end
 
       if load_file
-        #nodyna <ID:eval-100> <EV COMPLEX (method definition)>
+        #nodyna <eval-2207> <EV COMPLEX (method definition)>
         line = __LINE__; eval %[
           def #{cmd_name}(*opts, &b)
             require "#{load_file}"
@@ -146,16 +103,18 @@ module IRB # :nodoc:
             args << "*opts" if arity < 0
             args << "&block"
             args = args.join(", ")
+            #nodyna <eval-2208> <not yet classified>
             line = __LINE__; eval %[
               def #{cmd_name}(\#{args})
             ExtendCommand::#{cmd_class}.execute(irb_context, \#{args})
               end
             ], nil, __FILE__, line
+            #nodyna <send-2209> <not yet classified>
             send :#{cmd_name}, *opts, &b
           end
         ], nil, __FILE__, line
       else
-        #nodyna <ID:eval-102> <EV COMPLEX (method definition)>
+        #nodyna <eval-2210> <EV COMPLEX (method definition)>
         line = __LINE__; eval %[
           def #{cmd_name}(*opts, &b)
             ExtendCommand::#{cmd_class}.execute(irb_context, *opts, &b)
@@ -168,8 +127,6 @@ module IRB # :nodoc:
       end
     end
 
-    # Installs alias methods for the default irb commands, see
-    # ::install_extend_commands.
     def install_alias_method(to, from, override = NO_OVERRIDE)
       to = to.id2name unless to.kind_of?(String)
       from = from.id2name unless from.kind_of?(String)
@@ -178,7 +135,7 @@ module IRB # :nodoc:
           (override == OVERRIDE_PRIVATE_ONLY) && !respond_to?(to) or
           (override == NO_OVERRIDE) &&  !respond_to?(to, true)
         target = self
-        #nodyna <ID:instance_eval-174> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-2211> <IEV MODERATE (private access)>
         (class << self; self; end).instance_eval{
           if target.respond_to?(to, true) &&
             !target.respond_to?(EXCB.irb_original_method_name(to), true)
@@ -195,8 +152,6 @@ module IRB # :nodoc:
       "irb_" + method_name + "_org"
     end
 
-    # Installs alias methods for the default irb commands on the given object
-    # using #install_alias_method.
     def self.extend_object(obj)
       unless (class << obj; ancestors; end).include?(EXCB)
         super
@@ -209,7 +164,6 @@ module IRB # :nodoc:
     install_extend_commands
   end
 
-  # Extends methods for the Context module
   module ContextExtender
     CE = ContextExtender # :nodoc:
 
@@ -221,28 +175,20 @@ module IRB # :nodoc:
       [:save_history=, "irb/ext/save-history.rb"],
     ]
 
-    # Installs the default context extensions as irb commands:
-    #
-    # Context#eval_history=::   +irb/ext/history.rb+
-    # Context#use_tracer=::     +irb/ext/tracer.rb+
-    # Context#math_mode=::      +irb/ext/math-mode.rb+
-    # Context#use_loader=::     +irb/ext/use-loader.rb+
-    # Context#save_history=::   +irb/ext/save-history.rb+
     def self.install_extend_commands
       for args in @EXTEND_COMMANDS
         def_extend_command(*args)
       end
     end
 
-    # Evaluate the given +command+ from the given +load_file+ on the Context
-    # module.
-    #
-    # Will also define any given +aliases+ for the method.
     def self.def_extend_command(cmd_name, load_file, *aliases)
+      #nodyna <module_eval-2212> <not yet classified>
       line = __LINE__; Context.module_eval %[
         def #{cmd_name}(*opts, &b)
+          #nodyna <module_eval-2213> <not yet classified>
           Context.module_eval {remove_method(:#{cmd_name})}
           require "#{load_file}"
+          #nodyna <send-2214> <not yet classified>
           send :#{cmd_name}, *opts, &b
         end
         for ali in aliases
@@ -254,47 +200,41 @@ module IRB # :nodoc:
     CE.install_extend_commands
   end
 
-  # A convenience module for extending Ruby methods.
   module MethodExtender
-    # Extends the given +base_method+ with a prefix call to the given
-    # +extend_method+.
     def def_pre_proc(base_method, extend_method)
       base_method = base_method.to_s
       extend_method = extend_method.to_s
 
       alias_name = new_alias_name(base_method)
+      #nodyna <module_eval-2215> <not yet classified>
       module_eval %[
         alias_method alias_name, base_method
         def #{base_method}(*opts)
+          #nodyna <send-2216> <not yet classified>
           send :#{extend_method}, *opts
+          #nodyna <send-2217> <not yet classified>
           send :#{alias_name}, *opts
         end
       ]
     end
 
-    # Extends the given +base_method+ with a postfix call to the given
-    # +extend_method+.
     def def_post_proc(base_method, extend_method)
       base_method = base_method.to_s
       extend_method = extend_method.to_s
 
       alias_name = new_alias_name(base_method)
+      #nodyna <module_eval-2218> <not yet classified>
       module_eval %[
         alias_method alias_name, base_method
         def #{base_method}(*opts)
+          #nodyna <send-2219> <not yet classified>
           send :#{alias_name}, *opts
+          #nodyna <send-2220> <not yet classified>
           send :#{extend_method}, *opts
         end
       ]
     end
 
-    # Returns a unique method name to use as an alias for the given +name+.
-    #
-    # Usually returns <code>#{prefix}#{name}#{postfix}<num></code>, example:
-    #
-    #     new_alias_name('foo') #=> __alias_of__foo__
-    #     def bar; end
-    #     new_alias_name('bar') #=> __alias_of__bar__2
     def new_alias_name(name, prefix = "__alias_of__", postfix = "__")
       base_name = "#{prefix}#{name}#{postfix}"
       all_methods = instance_methods(true) + private_instance_methods(true)

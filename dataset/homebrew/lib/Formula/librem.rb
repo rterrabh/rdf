@@ -24,8 +24,6 @@ class Librem < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <re/re.h>
-      #include <rem/rem.h>
       int main() {
         return (NULL != vidfmt_name(VID_FMT_YUV420P)) ? 0 : 1;
       }

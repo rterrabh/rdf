@@ -54,7 +54,6 @@ class Import::GoogleCodeController < Import::BaseController
       render "new_user_map" and return
     end
 
-    # This is the default, so let's not save it into the database.
     user_map.reject! do |key, value|
       value == Gitlab::GoogleCodeImport::Client.mask_email(key)
     end

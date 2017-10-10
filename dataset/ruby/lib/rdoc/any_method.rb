@@ -1,49 +1,26 @@
-##
-# AnyMethod is the base class for objects representing methods
 
 class RDoc::AnyMethod < RDoc::MethodAttr
 
-  ##
-  # 2::
-  #   RDoc 4
-  #   Added calls_super
-  #   Added parent name and class
-  #   Added section title
-  # 3::
-  #   RDoc 4.1
-  #   Added is_alias_for
 
   MARSHAL_VERSION = 3 # :nodoc:
 
-  ##
-  # Don't rename \#initialize to \::new
 
   attr_accessor :dont_rename_initialize
 
-  ##
-  # The C function that implements this method (if it was defined in a C file)
 
   attr_accessor :c_function
 
-  ##
-  # Different ways to call this method
 
   attr_reader :call_seq
 
-  ##
-  # Parameters for this method
 
   attr_accessor :params
 
-  ##
-  # If true this method uses +super+ to call a superclass version
 
   attr_accessor :calls_super
 
   include RDoc::TokenStream
 
-  ##
-  # Creates a new AnyMethod with a token stream +text+ and +name+
 
   def initialize text, name
     super
@@ -55,8 +32,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @superclass_method = nil
   end
 
-  ##
-  # Adds +an_alias+ as an alias for this method in +context+.
 
   def add_alias an_alias, context = nil
     method = self.class.new an_alias.text, an_alias.new_name
@@ -72,17 +47,11 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     method
   end
 
-  ##
-  # Prefix for +aref+ is 'method'.
 
   def aref_prefix
     'method'
   end
 
-  ##
-  # The call_seq or the param_seq with method name, if there is no call_seq.
-  #
-  # Use this for displaying a method's argument lists.
 
   def arglists
     if @call_seq then
@@ -92,11 +61,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     end
   end
 
-  ##
-  # Sets the different ways you can call this method.  If an empty +call_seq+
-  # is given nil is assumed.
-  #
-  # See also #param_seq
 
   def call_seq= call_seq
     return if call_seq.empty?
@@ -104,9 +68,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @call_seq = call_seq
   end
 
-  ##
-  # Loads is_alias_for from the internal name.  Returns nil if the alias
-  # cannot be found.
 
   def is_alias_for # :nodoc:
     case @is_alias_for
@@ -123,8 +84,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     end
   end
 
-  ##
-  # Dumps this AnyMethod for use by ri.  See also #marshal_load
 
   def marshal_dump
     aliases = @aliases.map do |a|
@@ -156,12 +115,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     ]
   end
 
-  ##
-  # Loads this AnyMethod from +array+.  For a loaded AnyMethod the following
-  # methods will return cached values:
-  #
-  # * #full_name
-  # * #parent_name
 
   def marshal_load array
     initialize_visibility
@@ -183,9 +136,7 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @comment       = array[5]
     @call_seq      = array[6]
     @block_params  = array[7]
-    #                      8 handled below
     @params        = array[9]
-    #                      10 handled below
     @calls_super   = array[11]
     @parent_name   = array[12]
     @parent_title  = array[13]
@@ -207,10 +158,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @file = RDoc::TopLevel.new array[10] if version > 0
   end
 
-  ##
-  # Method name
-  #
-  # If the method has no assigned name, it extracts it from #call_seq.
 
   def name
     return @name if @name
@@ -221,9 +168,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
       @call_seq if @call_seq
   end
 
-  ##
-  # A list of this method's method and yield parameters.  +call-seq+ params
-  # are preferred over parsed method and block params.
 
   def param_list
     if @call_seq then
@@ -241,8 +185,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     end
 
     if @block_params then
-      # If this method has explicit block parameters, remove any explicit
-      # &block
       params.sub!(/,?\s*&\w+/, '')
     else
       params.sub!(/\&(\w+)/, '\1')
@@ -253,9 +195,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     params.map { |param| param.sub(/=.*/, '') }
   end
 
-  ##
-  # Pretty parameter list for this method.  If the method's parameters were
-  # given by +call-seq+ it is preferred over the parsed values.
 
   def param_seq
     if @call_seq then
@@ -271,8 +210,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     end
 
     if @block_params then
-      # If this method has explicit block parameters, remove any explicit
-      # &block
       params.sub!(/,?\s*&\w+/, '')
 
       block = @block_params.gsub(/\s*\#.*/, '')
@@ -286,8 +223,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     params
   end
 
-  ##
-  # Sets the store for this method and its referenced code objects.
 
   def store= store
     super
@@ -295,8 +230,6 @@ class RDoc::AnyMethod < RDoc::MethodAttr
     @file = @store.add_file @file.full_name if @file
   end
 
-  ##
-  # For methods that +super+, find the superclass method that would be called.
 
   def superclass_method
     return unless @calls_super

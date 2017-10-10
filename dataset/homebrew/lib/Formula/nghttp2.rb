@@ -95,9 +95,6 @@ class Nghttp2 < Formula
     sha256 "bdfd12d6a2a2e34b9a1bbc1af5a772cabdeedc3851703d249a52dcda8378018a"
   end
 
-  # https://github.com/tatsuhiro-t/nghttp2/issues/125
-  # Upstream requested the issue closed and for users to use gcc instead.
-  # Given this will actually build with Clang with cxx11, just use that.
   needs :cxx11
 
   def install
@@ -132,7 +129,6 @@ class Nghttp2 < Formula
     system "make"
     system "make", "check"
 
-    # Currently this is not installed by the make install stage.
     if build.with? "docs"
       system "make", "html"
       doc.install Dir["doc/manual/html/*"]

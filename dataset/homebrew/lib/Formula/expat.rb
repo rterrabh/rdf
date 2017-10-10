@@ -30,8 +30,6 @@ class Expat < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include "expat.h"
 
       static void XMLCALL my_StartElementHandler(
         void *userdata,

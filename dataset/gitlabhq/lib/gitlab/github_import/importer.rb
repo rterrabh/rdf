@@ -10,7 +10,6 @@ module Gitlab
       end
 
       def execute
-        #Issues && Comments
         client.list_issues(project.import_source, state: :all,
                                                   sort: :created,
                                                   direction: :asc).each do |issue|

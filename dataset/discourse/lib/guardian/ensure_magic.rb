@@ -1,4 +1,3 @@
-# Support for ensure_{blah}! methods.
 module EnsureMagic
 
   def method_missing(method, *args, &block)
@@ -6,7 +5,7 @@ module EnsureMagic
       can_method = :"#{Regexp.last_match[1]}?"
 
       if respond_to?(can_method)
-        #nodyna <ID:send-15> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-317> <SD COMPLEX (change-prone variables)>
         raise Discourse::InvalidAccess.new("#{can_method} failed") unless send(can_method, *args, &block)
         return
       end
@@ -15,7 +14,6 @@ module EnsureMagic
     super.method_missing(method, *args, &block)
   end
 
-  # Make sure we can see the object. Will raise a NotFound if it's nil
   def ensure_can_see!(obj)
     raise Discourse::InvalidAccess.new("Can't see #{obj}") unless can_see?(obj)
   end

@@ -19,7 +19,6 @@ class PostTimestampChanger
       end
     end
 
-    # Burst the cache for stats
     [AdminDashboardData, About].each { |klass| $redis.del klass.stats_cache_key }
   end
 

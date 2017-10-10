@@ -16,8 +16,6 @@ class Openvpn < Formula
   depends_on "openssl"
 
   def install
-    # pam_appl header is installed in a different location on Leopard
-    # and older; reported upstream https://community.openvpn.net/openvpn/ticket/326
     if MacOS.version < :snow_leopard
       inreplace Dir["src/plugins/auth-pam/{auth-pam,pamdl}.c"],
         "security/pam_appl.h", "pam/pam_appl.h"
@@ -38,7 +36,6 @@ class Openvpn < Formula
 
     (etc+"openvpn").mkpath
     (var+"run/openvpn").mkpath
-    # We don't use PolarSSL, so this file is unnecessary and somewhat confusing.
     rm "#{share}/doc/openvpn/README.polarssl"
   end
 

@@ -17,7 +17,6 @@ class Libelf < Formula
                           "--disable-dependency-tracking",
                           "--prefix=#{prefix}",
                           "--disable-compat"
-    # Use separate steps; there is a race in the Makefile.
     system "make"
     system "make", "install"
   end

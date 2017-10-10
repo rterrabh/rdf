@@ -1,12 +1,3 @@
-#
-# tk/optionobj.rb : control options for a group of widgets
-#
-#  NOTE: If you want to use key-only option (no value),
-#        use Tk::None for the value of the key-only option.
-#
-#        e.g. hash_kv({'aaa'=>1, 'bbb'=>Tk::None, 'ccc'=>3})
-#                 => ["-aaa", 1, "-bbb", "-ccc", 3]
-#
 require 'tk'
 
 module Tk
@@ -56,30 +47,6 @@ module Tk
     private :_remove_win
 
     def assign(*wins)
-      # win :=
-      #   widget             #==> call widget.configure(hash)
-      #   [widget]           #==> call widget.configure(hash)
-      #   [widget, nil, {src=>target, ... }]
-      #                      #==> call widget.configure(hash)
-      #                               with converting hash-key
-      #   [widget, method]   #==> call widget.method(hash)
-      #   [widget, method, {src=>target, ... }]
-      #                      #==> call widget.method(hash)
-      #                               with converting hash-key
-      #   [widget [receiver, method, arg, ... ]]
-      #                      #==> call receiver.method(arg, ... , hash)
-      #   [widget [receiver, method, arg, ... ], {src=>target, ... }]
-      #                      #==> call receiver.method(arg, ... , hash)
-      #                               with onverting hash-key
-      #
-      # src := option_name_on_optobj
-      #
-      # target :=
-      #   nil                #==> not use the src
-      #   option_name_on_target_widget
-      #   [ option_name_on_target_widget, ... ]
-      #                      #==> set all of them
-      #
       wins.each{|win|
         _remove_win(win)
         @observ << win

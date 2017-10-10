@@ -1,10 +1,5 @@
-##
-# Gem::StubSpecification reads the stub: line from the gemspec.  This prevents
-# us having to eval the entire gemspec in order to find out certain
-# information.
 
 class Gem::StubSpecification < Gem::BasicSpecification
-  # :nodoc:
   PREFIX = "# stub: "
 
   OPEN_MODE = # :nodoc:
@@ -46,8 +41,6 @@ class Gem::StubSpecification < Gem::BasicSpecification
     @spec            = nil
   end
 
-  ##
-  # True when this gem has been activated
 
   def activated?
     @activated ||=
@@ -64,9 +57,6 @@ class Gem::StubSpecification < Gem::BasicSpecification
     to_spec.build_extensions
   end
 
-  ##
-  # If the gemspec contains a stubline, returns a StubLine instance. Otherwise
-  # returns the full Gem::Specification.
 
   def data
     unless @data
@@ -92,8 +82,6 @@ class Gem::StubSpecification < Gem::BasicSpecification
 
   private :data
 
-  ##
-  # Extensions for this gem
 
   def extensions
     return @extensions if @extensions
@@ -103,10 +91,6 @@ class Gem::StubSpecification < Gem::BasicSpecification
     @extensions
   end
 
-  ##
-  # If a gem has a stub specification it doesn't need to bother with
-  # compatibility with original_name gems.  It was installed with the
-  # normalized name.
 
   def find_full_gem_path # :nodoc:
     path = File.expand_path File.join gems_dir, full_name
@@ -114,9 +98,6 @@ class Gem::StubSpecification < Gem::BasicSpecification
     path
   end
 
-  ##
-  # Full paths in the gem to add to <code>$LOAD_PATH</code> when this gem is
-  # activated.
 
   def full_require_paths
     @require_paths ||= data.require_paths
@@ -131,22 +112,16 @@ class Gem::StubSpecification < Gem::BasicSpecification
     to_spec.missing_extensions?
   end
 
-  ##
-  # Name of the gem
 
   def name
     @name ||= data.name
   end
 
-  ##
-  # Platform of the gem
 
   def platform
     @platform ||= data.platform
   end
 
-  ##
-  # Require paths of the gem
 
   def require_paths
     @require_paths ||= data.require_paths
@@ -154,8 +129,6 @@ class Gem::StubSpecification < Gem::BasicSpecification
     super
   end
 
-  ##
-  # The full Gem::Specification for this gem, loaded from evalling its gemspec
 
   def to_spec
     @spec ||= if @data then
@@ -170,23 +143,16 @@ class Gem::StubSpecification < Gem::BasicSpecification
     @spec
   end
 
-  ##
-  # Is this StubSpecification valid? i.e. have we found a stub line, OR does
-  # the filename contain a valid gemspec?
 
   def valid?
     data
   end
 
-  ##
-  # Version of the gem
 
   def version
     @version ||= data.version
   end
 
-  ##
-  # Is there a stub line present for this StubSpecification?
 
   def stubbed?
     data.is_a? StubLine

@@ -13,9 +13,6 @@ class HighlightJsController < ApplicationController
         return redirect_to path(HighlightJs.path)
       end
 
-      # note, this can be slightly optimised by caching the bundled file, it cuts down on N reads
-      # our nginx config caches this so in practical terms it does not really matter and keeps
-      # code simpler
       highlight_js = HighlightJs.bundle(SiteSetting.highlighted_languages.split("|"))
 
       response.headers["Last-Modified"] = 10.years.ago.httpdate

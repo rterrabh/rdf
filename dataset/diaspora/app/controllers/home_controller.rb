@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2012, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class HomeController < ApplicationController
   def show
@@ -27,10 +24,8 @@ class HomeController < ApplicationController
 
   def toggle_mobile
     if session[:mobile_view].nil?
-      # we're most probably not on mobile, but user wants it anyway
       session[:mobile_view] = true
     else
-      # switch from mobile to normal html
       session[:mobile_view] = !session[:mobile_view]
     end
 

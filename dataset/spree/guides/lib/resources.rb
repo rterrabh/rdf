@@ -38,7 +38,6 @@ module Spree
       end
 
       def gravatar_url_for(login)
-        # TODO: Fix this.
         return ""
         md5 = AUTHORS[login.to_sym]
         default = "https://a248.e.akamai.net/assets.github.com%2Fimages%2Fgravatars%2Fgravatar-user-420.png"
@@ -61,7 +60,7 @@ module Spree
             h
           when Array
             key
-          #nodyna <ID:const_get-1> <CG MODERATE (change-prone variables)>
+          #nodyna <const_get-2355> <CG MODERATE (change-prone variables)>
           else Resources.const_get(key.to_s.upcase)
         end
 
@@ -144,7 +143,6 @@ module Spree
         hs + %(<pre class="highlight"><code>) + res + "</code></pre>"
       end
 
-      # Used in the release notes to stop RSI
       def issue(num)
         "<small><a href='https://github.com/spree/spree/issues/#{num.to_s}'>##{num}</a></small>"
       end

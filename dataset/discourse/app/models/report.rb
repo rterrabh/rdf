@@ -30,14 +30,13 @@ class Report
   end
 
   def Report.add_report(name, &block)
-    #nodyna <ID:define_method-33> <DM COMPLEX (events)>
-    #nodyna <ID:instance_eval-2> <IEV COMPLEX (private access)>
+    #nodyna <define_method-390> <DM COMPLEX (events)>
+    #nodyna <instance_eval-391> <IEV COMPLEX (private access)>
     singleton_class.instance_eval { define_method("report_#{name}", &block) }
   end
 
   def self.find(type, opts=nil)
     opts ||= {}
-    # Load the report
     report = Report.new(type)
     report.start_date = opts[:start_date] if opts[:start_date]
     report.end_date = opts[:end_date] if opts[:end_date]
@@ -45,7 +44,7 @@ class Report
     report_method = :"report_#{type}"
 
     if respond_to?(report_method)
-      #nodyna <ID:send-191> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-392> <SD COMPLEX (change-prone variables)>
       send(report_method, report)
     elsif type =~ /_reqs$/
       req_report(report, type.split(/_reqs$/)[0].to_sym)
@@ -144,7 +143,7 @@ class Report
 
   def self.basic_report_about(report, subject_class, report_method, *args)
     report.data = []
-    #nodyna <ID:send-192> <SD MODERATE (change-prone variables)>
+    #nodyna <send-393> <SD MODERATE (change-prone variables)>
     subject_class.send(report_method, *args).each do |date, count|
       report.data << { x: date, y: count }
     end
@@ -162,7 +161,6 @@ class Report
     end
   end
 
-  # Post action counts:
   def self.report_flags(report)
     basic_report_about report, PostAction, :flag_count_by_date, report.start_date, report.end_date, report.category_id
     countable = PostAction.where(post_action_type_id: PostActionType.flag_types.values)
@@ -188,7 +186,6 @@ class Report
     add_counts report, countable, 'post_actions.created_at'
   end
 
-  # Private messages counts:
 
   def self.private_messages_report(report, topic_subtype)
     basic_report_about report, Post, :private_messages_count_per_day, default_days, topic_subtype

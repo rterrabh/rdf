@@ -20,8 +20,6 @@ class JohnJumbo < Formula
   depends_on "openssl"
   depends_on "gmp"
 
-  # Patch taken from MacPorts, tells john where to find runtime files.
-  # https://github.com/magnumripper/JohnTheRipper/issues/982
   patch :DATA
 
   fails_with :llvm do
@@ -29,7 +27,6 @@ class JohnJumbo < Formula
     cause "Don't remember, but adding this to whitelist 2336."
   end
 
-  # https://github.com/magnumripper/JohnTheRipper/blob/bleeding-jumbo/doc/INSTALL#L133-L143
   fails_with :gcc do
     cause "Upstream have a hacky workaround for supporting gcc that we can't use."
   end
@@ -45,12 +42,10 @@ class JohnJumbo < Formula
       system "make", "-s", "CC=#{ENV.cc}"
     end
 
-    # Remove the symlink and install the real file
     rm "README"
     prefix.install "doc/README"
     doc.install Dir["doc/*"]
 
-    # Only symlink the main binary into bin
     (share/"john").install Dir["run/*"]
     bin.install_symlink share/"john/john"
 
@@ -59,7 +54,6 @@ class JohnJumbo < Formula
       zsh_completion.install share/"john/john.zsh_completion" => "_john"
     end
 
-    # Source code defaults to "john.ini", so rename
     mv share/"john/john.conf", share/"john/john.ini"
   end
 
@@ -78,19 +72,10 @@ __END__
 @@ -70,15 +70,15 @@
   * notes above.
   */
- #ifndef JOHN_SYSTEMWIDE
 -#define JOHN_SYSTEMWIDE			0
 +#define JOHN_SYSTEMWIDE			1
- #endif
  
- #if JOHN_SYSTEMWIDE
- #ifndef JOHN_SYSTEMWIDE_EXEC /* please refer to the notes above */
 -#define JOHN_SYSTEMWIDE_EXEC		"/usr/libexec/john"
 +#define JOHN_SYSTEMWIDE_EXEC		"HOMEBREW_PREFIX/share/john"
- #endif
- #ifndef JOHN_SYSTEMWIDE_HOME
 -#define JOHN_SYSTEMWIDE_HOME		"/usr/share/john"
 +#define JOHN_SYSTEMWIDE_HOME		"HOMEBREW_PREFIX/share/john"
- #endif
- #define JOHN_PRIVATE_HOME		"~/.john"
- #endif

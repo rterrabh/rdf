@@ -22,8 +22,6 @@ class Glbinding < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <glbinding/gl/gl.h>
-      #include <glbinding/Binding.h>
       int main(void)
       {
         glbinding::Binding::initialize();

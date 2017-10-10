@@ -222,7 +222,6 @@ module Spree
         expect(json_response["pages"]).to eq(1)
       end
 
-      # Regression test for #1626
       context "deleted products" do
         before do
           create(:product, :deleted_at => 1.day.ago)
@@ -312,7 +311,6 @@ module Spree
           expect(json_response["taxon_ids"]).to eq([taxon_1.id, taxon_2.id])
         end
 
-        # Regression test for #2140
         context "with authentication_required set to false" do
           before do
             Spree::Api::Config.requires_authentication = false

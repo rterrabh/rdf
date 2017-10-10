@@ -24,7 +24,6 @@ class JsonGlib < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <json-glib/json-glib.h>
 
       int main(int argc, char *argv[]) {
         JsonParser *parser = json_parser_new();

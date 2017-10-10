@@ -18,8 +18,6 @@ module Configuration
       @pod_uri.dup
     end
 
-    # @param path [String]
-    # @return [String]
     def url_to(path)
       pod_uri.tap {|uri| uri.path = path }.to_s
     end
@@ -33,7 +31,7 @@ module Configuration
 
       @configured_services = []
       KNOWN_SERVICES.each do |service|
-        #nodyna <ID:send-85> <SD MODERATE (array)>
+        #nodyna <send-221> <SD MODERATE (array)>
         @configured_services << service if services.send(service).enable?
       end
 
@@ -43,7 +41,6 @@ module Configuration
 
     def show_service?(service, user)
       return false unless self["services.#{service}.enable"]
-      # Return true only if 'authorized' is true or equal to user username
       (user && self["services.#{service}.authorized"] == user.username) ||
         self["services.#{service}.authorized"] == true
     end

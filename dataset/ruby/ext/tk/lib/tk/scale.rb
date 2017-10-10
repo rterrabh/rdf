@@ -1,6 +1,3 @@
-#
-# tk/scale.rb : treat scale widget
-#
 require 'tk'
 
 class Tk::Scale<TkWindow
@@ -15,7 +12,6 @@ class Tk::Scale<TkWindow
         keys['command'] = proc{|val| cmd.call(val.to_f)}
       end
       unless TkConfigMethod.__IGNORE_UNKNOWN_CONFIGURE_OPTION__
-        #tk_call_without_enc('scale', @path, *hash_kv(keys, true))
         tk_call_without_enc(self.class::TkCommandNames[0], @path,
                             *hash_kv(keys, true))
       else
@@ -29,10 +25,8 @@ class Tk::Scale<TkWindow
             begin
               tk_call_without_enc('destroy', @path)
             rescue
-              # cannot destroy
               configure(keys)
             else
-              # re-create widget
               tk_call_without_enc(self.class::TkCommandNames[0], @path,
                                   *hash_kv(keys, true))
             end
@@ -40,7 +34,6 @@ class Tk::Scale<TkWindow
         end
       end
     else
-      #tk_call_without_enc('scale', @path)
       tk_call_without_enc(self.class::TkCommandNames[0], @path)
     end
   end
@@ -107,6 +100,4 @@ class Tk::Scale<TkWindow
   end
 end
 
-#TkScale = Tk::Scale unless Object.const_defined? :TkScale
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Scale, :TkScale)
 Tk.__set_loaded_toplevel_aliases__('tk/scale.rb', :Tk, Tk::Scale, :TkScale)

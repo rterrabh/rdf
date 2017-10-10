@@ -7,18 +7,13 @@ class Cppdom < Formula
   depends_on "scons" => :build
   depends_on "boost"
 
-  # Don't install to prefix/lib64
   patch :DATA
 
-  # Fix build failure by '#include <tr1/unordered_map>'
-  # reported to upstream: https://sourceforge.net/p/xml-cppdom/patches/5/
   patch do
     url "https://sourceforge.net/p/xml-cppdom/patches/5/attachment/switch_tr1_header.diff"
     sha256 "47381550932e297222875d58c02155cce2f94e9caa2a48fe5c7fb6923a9bcd26"
   end
 
-  # Workaround for multiple boost versions
-  # reported to upstream: https://sourceforge.net/p/xml-cppdom/patches/6/
   patch do
     url "https://sourceforge.net/p/xml-cppdom/patches/6/attachment/boost_integration.diff"
     sha256 "f514ceb7b585931f2f47aefe483da2f01b3a466ad0d70de5f378548196229734"

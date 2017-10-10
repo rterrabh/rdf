@@ -8,8 +8,6 @@ class Autotrace < Formula
   depends_on "pkg-config" => :build
   depends_on "imagemagick" => :recommended
 
-  # Issue 16569: Use MacPorts patch to port input-png.c to libpng 1.5.
-  # Fix underquoted m4
   patch :p0 do
     url "https://trac.macports.org/export/100575/trunk/dports/graphics/autotrace/files/patch-libpng-1.5.diff"
     sha256 "9c57a03d907db94956324e9199c7b5431701c51919af6dfcff4793421a1f31fe"

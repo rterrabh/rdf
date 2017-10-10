@@ -1,4 +1,3 @@
-# This class is inherited by the has_many and has_many_and_belongs_to_many association classes
 
 require 'active_record/associations'
 
@@ -35,7 +34,7 @@ module ActiveRecord::Associations::Builder
     def define_extensions(model)
       if @mod
         extension_module_name = "#{model.name.demodulize}#{name.to_s.camelize}AssociationExtension"
-        #nodyna <ID:const_set-2> <CS COMPLEX (change-prone variable)>
+        #nodyna <const_set-880> <CS COMPLEX (change-prone variable)>
         model.parent.const_set(extension_module_name, @mod)
       end
     end
@@ -43,28 +42,27 @@ module ActiveRecord::Associations::Builder
     def self.define_callback(model, callback_name, name, options)
       full_callback_name = "#{callback_name}_for_#{name}"
 
-      # TODO : why do i need method_defined? I think its because of the inheritance chain
       model.class_attribute full_callback_name unless model.method_defined?(full_callback_name)
       callbacks = Array(options[callback_name.to_sym]).map do |callback|
         case callback
         when Symbol
-          #nodyna <ID:send-118> <SD MODERATE (change-prone variables)>
+          #nodyna <send-881> <SD MODERATE (change-prone variables)>
           ->(method, owner, record) { owner.send(callback, record) }
         when Proc
           ->(method, owner, record) { callback.call(owner, record) }
         else
-          #nodyna <ID:send-119> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-882> <SD COMPLEX (change-prone variables)>
           ->(method, owner, record) { callback.send(method, owner, record) }
         end
       end
-      #nodyna <ID:send-120> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-883> <SD COMPLEX (change-prone variables)>
       model.send "#{full_callback_name}=", callbacks
     end
 
-    # Defines the setter and getter methods for the collection_singular_ids.
     def self.define_readers(mixin, name)
       super
 
+      #nodyna <class_eval-884> <not yet classified>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name.to_s.singularize}_ids
           association(:#{name}).ids_reader
@@ -75,6 +73,7 @@ module ActiveRecord::Associations::Builder
     def self.define_writers(mixin, name)
       super
 
+      #nodyna <class_eval-885> <not yet classified>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name.to_s.singularize}_ids=(ids)
           association(:#{name}).ids_writer(ids)
@@ -87,10 +86,10 @@ module ActiveRecord::Associations::Builder
     def wrap_scope(scope, mod)
       if scope
         if scope.arity > 0
-          #nodyna <ID:instance_exec-10> <IEX COMPLEX (block with parameters)>
+          #nodyna <instance_exec-886> <IEX COMPLEX (block with parameters)>
           proc { |owner| instance_exec(owner, &scope).extending(mod) }
         else
-          #nodyna <ID:instance_exec-11> <IEX COMPLEX (block without parameters)>
+          #nodyna <instance_exec-887> <IEX COMPLEX (block without parameters)>
           proc { instance_exec(&scope).extending(mod) }
         end
       else

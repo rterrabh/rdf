@@ -1,7 +1,3 @@
-#
-#  tlabelframe widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -31,8 +27,6 @@ class Tk::Tile::TLabelframe < Tk::Tile::TFrame
   end
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Labelframe,
-#                            :TkLabelframe, :TkLabelFrame)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tlabelframe.rb',
                                    :Ttk, Tk::Tile::Labelframe,
                                    :TkLabelframe, :TkLabelFrame)

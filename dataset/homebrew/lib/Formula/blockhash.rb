@@ -29,9 +29,6 @@ class Blockhash < Formula
   test do
     resource("testdata").stage testpath
     hash = "00007ffe7ffe7ffe7ffe7ffe7ffe77fe77fe600e7f5e00000000000000000000"
-    # Exit status is not meaningful, so use pipe_output instead of shell_output
-    # for now
-    # https://github.com/commonsmachinery/blockhash/pull/9
     result = pipe_output("#{bin}/blockhash #{testpath}/clipper_ship.jpg", nil, nil)
     assert result.include? hash
   end

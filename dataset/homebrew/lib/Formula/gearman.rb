@@ -14,9 +14,6 @@ class Gearman < Formula
   option "with-mysql", "Compile with MySQL persistent queue enabled"
   option "with-postgresql", "Compile with Postgresql persistent queue enabled"
 
-  # https://bugs.launchpad.net/gearmand/+bug/1318151 - Still ongoing as of 1.1.12
-  # https://bugs.launchpad.net/gearmand/+bug/1236815 - Still ongoing as of 1.1.12
-  # https://github.com/Homebrew/homebrew/issues/33246 - Still ongoing as of 1.1.12
   patch :DATA
 
   depends_on "pkg-config" => :build
@@ -32,7 +29,6 @@ class Gearman < Formula
   depends_on "tokyo-cabinet" => :optional
 
   def install
-    # https://bugs.launchpad.net/gearmand/+bug/1368926
     Dir["tests/**/*.cc", "libtest/main.cc"].each do |test_file|
       next unless /std::unique_ptr/ === File.read(test_file)
       inreplace test_file, "std::unique_ptr", "std::auto_ptr"
@@ -106,17 +102,11 @@ index 7f6d5e7..8f7a8f0 100644
 --- a/libgearman-1.0/gearman.h
 +++ b/libgearman-1.0/gearman.h
 @@ -50,7 +50,11 @@
- #endif
  
- #ifdef __cplusplus
 +#ifdef _LIBCPP_VERSION
- #  include <cinttypes>
 +#else
 +#  include <tr1/cinttypes>
 +#endif
- #  include <cstddef>
- #  include <cstdlib>
- #  include <ctime>
 
 diff --git a/libgearman/byteorder.cc b/libgearman/byteorder.cc
 index 674fed9..96f0650 100644
@@ -124,7 +114,6 @@ index 674fed9..96f0650 100644
 +++ b/libgearman/byteorder.cc
 @@ -65,6 +65,8 @@ static inline uint64_t swap64(uint64_t in)
  }
- #endif
  
 +#ifndef HAVE_HTONLL
 +

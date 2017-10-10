@@ -20,8 +20,6 @@ class Norm < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <assert.h>
-      #include <normApi.h>
 
       int main()
       {

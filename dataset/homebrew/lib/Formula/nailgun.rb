@@ -11,13 +11,11 @@ class Nailgun < Formula
       sha256 "4518faa6bf4bd26fccdc4d85e1625dc679381a08d56872d8ad12151dda9cef25"
     end
 
-    # This patch just prepares the way for the next one.
     patch do
       url "https://github.com/martylamb/nailgun/commit/a789fa3f4eefcd24018d4fd89fc9037427533f52.diff"
       sha256 "98ca6e740d0814aaf0d2d6594d4a75ca3277d2283eb2d272bae1ba84b3337e8c"
     end
 
-    # The makefile is not prefix aware
     patch do
       url "https://github.com/martylamb/nailgun/pull/45.diff"
       sha256 "8d6c0991d5fd557046a5462b0d59ca52933023082c5faff06ac901ba03e24db1"
@@ -37,7 +35,6 @@ class Nailgun < Formula
 
     depends_on "maven" => :build
 
-    # The -Xdoclint used in pom.xml causes a build error on Java 7
     patch do
       url "https://github.com/martylamb/nailgun/pull/70.diff"
       sha256 "b4bc4c33102c42ca5e37d22ad524085ccd33baafd225b9f0bc3b576aa6e8b983"
@@ -64,7 +61,6 @@ class Nailgun < Formula
     sleep 1 # the server does not begin listening as fast as we can start a background process
     system "ng", "--nailgun-port", "8765", "ng-version"
     Kernel.system "ng", "--nailgun-port", "8765", "ng-stop"
-    # ng-stop always returns a non-zero exit code even on successful exit
     true
   end
 end

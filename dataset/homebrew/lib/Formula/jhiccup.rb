@@ -7,9 +7,7 @@ class Jhiccup < Formula
   def install
     bin.install "jHiccup"
 
-    # Simple script to create and open a new plotter spreadsheet
     (bin+"jHiccupPlotter").write <<-EOS.undent
-      #!/bin/sh
       TMPFILE="/tmp/jHiccupPlotter.$$.xls"
       cp "#{prefix}/jHiccupPlotter.xls" $TMPFILE
       open $TMPFILE

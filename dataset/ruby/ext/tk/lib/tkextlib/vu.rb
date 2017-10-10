@@ -1,21 +1,12 @@
-#
-#  The vu widget set support
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/vu/setup.rb'
 
-# load package
-# TkPackage.require('vu', '2.1')
 TkPackage.require('vu')
 
-# autoload
 module Tk
   module Vu
     TkComm::TkExtlibAutoloadModule.unshift(self)
@@ -33,7 +24,6 @@ module Tk
       end
     end
 
-    ##########################################
 
     autoload :Dial,          'tkextlib/vu/dial'
 

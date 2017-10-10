@@ -1,5 +1,3 @@
-# Gets a patch from a GitHub commit or pull request and applies it to Homebrew.
-# Optionally, installs it too.
 
 require "utils"
 require "formula"
@@ -14,7 +12,6 @@ module Homebrew
   end
 
   def pull_url(url)
-    # GitHub provides commits/pull-requests raw patches using this URL.
     url += ".patch"
 
     patchpath = HOMEBREW_CACHE + File.basename(url)
@@ -22,15 +19,12 @@ module Homebrew
 
     ohai "Applying patch"
     patch_args = []
-    # Normally we don't want whitespace errors, but squashing them can break
-    # patches so an option is provided to skip this step.
     if ARGV.include?("--ignore-whitespace") || ARGV.include?("--clean")
       patch_args << "--whitespace=nowarn"
     else
       patch_args << "--whitespace=fix"
     end
 
-    # Fall back to three-way merge if patch does not apply cleanly
     patch_args << "-3"
     patch_args << patchpath
 
@@ -93,10 +87,8 @@ module Homebrew
         Dir.chdir HOMEBREW_REPOSITORY
       end
 
-      # The cache directory seems like a good place to put patches.
       HOMEBREW_CACHE.mkpath
 
-      # Store current revision and branch
       revision = `git rev-parse --short HEAD`.strip
       branch = `git symbolic-ref --short HEAD`.strip
 
@@ -122,7 +114,6 @@ module Homebrew
 
         begin
           changed_formulae << Formula[name]
-        # Make sure we catch syntax errors.
         rescue Exception
           next
         end
@@ -148,7 +139,6 @@ module Homebrew
           message = "#{subject}\n\n#{message}"
         end
 
-        # If this is a pull request, append a close message.
         unless message.include? "Closes ##{issue}."
           message += "\nCloses ##{issue}."
           safe_system "git", "commit", "--amend", "--signoff", "--allow-empty", "-q", "-m", message
@@ -177,7 +167,6 @@ module Homebrew
         safe_system "git", "merge", "--ff-only", "--no-edit", bottle_branch
         safe_system "git", "branch", "-D", bottle_branch
 
-        # Publish bottles on Bintray
         bintray_user = ENV["BINTRAY_USER"]
         bintray_key = ENV["BINTRAY_KEY"]
 

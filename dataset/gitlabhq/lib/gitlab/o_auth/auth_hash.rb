@@ -1,5 +1,3 @@
-# Class to parse and transform the info provided by omniauth
-#
 module Gitlab
   module OAuth
     class AuthHash
@@ -59,8 +57,6 @@ module Gitlab
         end
       end
 
-      # Get the first part of the email address (before @)
-      # In addtion in removes illegal characters
       def generate_username(email)
         email.match(/^[^@]*/)[0].parameterize
       end

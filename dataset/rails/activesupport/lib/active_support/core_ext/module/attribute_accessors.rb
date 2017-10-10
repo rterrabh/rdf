@@ -1,59 +1,11 @@
 require 'active_support/core_ext/array/extract_options'
 
-# Extends the module object with class/module and instance accessors for
-# class/module attributes, just like the native attr* accessors for instance
-# attributes.
 class Module
-  # Defines a class attribute and creates a class and instance reader methods.
-  # The underlying the class variable is set to +nil+, if it is not previously
-  # defined.
-  #
-  #   module HairColors
-  #     mattr_reader :hair_colors
-  #   end
-  #
-  #   HairColors.hair_colors # => nil
-  #   HairColors.class_variable_set("@@hair_colors", [:brown, :black])
-  #   HairColors.hair_colors # => [:brown, :black]
-  #
-  # The attribute name must be a valid method name in Ruby.
-  #
-  #   module Foo
-  #     mattr_reader :"1_Badname "
-  #   end
-  #   # => NameError: invalid attribute name
-  #
-  # If you want to opt out the creation on the instance reader method, pass
-  # <tt>instance_reader: false</tt> or <tt>instance_accessor: false</tt>.
-  #
-  #   module HairColors
-  #     mattr_writer :hair_colors, instance_reader: false
-  #   end
-  #
-  #   class Person
-  #     include HairColors
-  #   end
-  #
-  #   Person.new.hair_colors # => NoMethodError
-  #
-  #
-  # Also, you can pass a block to set up the attribute with a default value.
-  #
-  #   module HairColors
-  #     cattr_reader :hair_colors do
-  #       [:brown, :black, :blonde, :red]
-  #     end
-  #   end
-  #
-  #   class Person
-  #     include HairColors
-  #   end
-  #
-  #   Person.hair_colors # => [:brown, :black, :blonde, :red]
   def mattr_reader(*syms)
     options = syms.extract_options!
     syms.each do |sym|
       raise NameError.new("invalid attribute name: #{sym}") unless sym =~ /^[_A-Za-z]\w*$/
+      #nodyna <class_eval-1036> <not yet classified>
       class_eval(<<-EOS, __FILE__, __LINE__ + 1)
         @@#{sym} = nil unless defined? @@#{sym}
 
@@ -63,63 +15,24 @@ class Module
       EOS
 
       unless options[:instance_reader] == false || options[:instance_accessor] == false
+        #nodyna <class_eval-1037> <not yet classified>
         class_eval(<<-EOS, __FILE__, __LINE__ + 1)
           def #{sym}
             @@#{sym}
           end
         EOS
       end
+      #nodyna <class_variable_set-1038> <not yet classified>
       class_variable_set("@@#{sym}", yield) if block_given?
     end
   end
   alias :cattr_reader :mattr_reader
 
-  # Defines a class attribute and creates a class and instance writer methods to
-  # allow assignment to the attribute.
-  #
-  #   module HairColors
-  #     mattr_writer :hair_colors
-  #   end
-  #
-  #   class Person
-  #     include HairColors
-  #   end
-  #
-  #   HairColors.hair_colors = [:brown, :black]
-  #   Person.class_variable_get("@@hair_colors") # => [:brown, :black]
-  #   Person.new.hair_colors = [:blonde, :red]
-  #   HairColors.class_variable_get("@@hair_colors") # => [:blonde, :red]
-  #
-  # If you want to opt out the instance writer method, pass
-  # <tt>instance_writer: false</tt> or <tt>instance_accessor: false</tt>.
-  #
-  #   module HairColors
-  #     mattr_writer :hair_colors, instance_writer: false
-  #   end
-  #
-  #   class Person
-  #     include HairColors
-  #   end
-  #
-  #   Person.new.hair_colors = [:blonde, :red] # => NoMethodError
-  #
-  # Also, you can pass a block to set up the attribute with a default value.
-  #
-  #   class HairColors
-  #     mattr_writer :hair_colors do
-  #       [:brown, :black, :blonde, :red]
-  #     end
-  #   end
-  #
-  #   class Person
-  #     include HairColors
-  #   end
-  #
-  #   Person.class_variable_get("@@hair_colors") # => [:brown, :black, :blonde, :red]
   def mattr_writer(*syms)
     options = syms.extract_options!
     syms.each do |sym|
       raise NameError.new("invalid attribute name: #{sym}") unless sym =~ /^[_A-Za-z]\w*$/
+      #nodyna <class_eval-1039> <not yet classified>
       class_eval(<<-EOS, __FILE__, __LINE__ + 1)
         @@#{sym} = nil unless defined? @@#{sym}
 
@@ -129,82 +42,19 @@ class Module
       EOS
 
       unless options[:instance_writer] == false || options[:instance_accessor] == false
+        #nodyna <class_eval-1040> <not yet classified>
         class_eval(<<-EOS, __FILE__, __LINE__ + 1)
           def #{sym}=(obj)
             @@#{sym} = obj
           end
         EOS
       end
-      #nodyna <ID:send-260> <SD MODERATE (array)>
+      #nodyna <send-1041> <SD MODERATE (array)>
       send("#{sym}=", yield) if block_given?
     end
   end
   alias :cattr_writer :mattr_writer
 
-  # Defines both class and instance accessors for class attributes.
-  #
-  #   module HairColors
-  #     mattr_accessor :hair_colors
-  #   end
-  #
-  #   class Person
-  #     include HairColors
-  #   end
-  #
-  #   Person.hair_colors = [:brown, :black, :blonde, :red]
-  #   Person.hair_colors     # => [:brown, :black, :blonde, :red]
-  #   Person.new.hair_colors # => [:brown, :black, :blonde, :red]
-  #
-  # If a subclass changes the value then that would also change the value for
-  # parent class. Similarly if parent class changes the value then that would
-  # change the value of subclasses too.
-  #
-  #   class Male < Person
-  #   end
-  #
-  #   Male.hair_colors << :blue
-  #   Person.hair_colors # => [:brown, :black, :blonde, :red, :blue]
-  #
-  # To opt out of the instance writer method, pass <tt>instance_writer: false</tt>.
-  # To opt out of the instance reader method, pass <tt>instance_reader: false</tt>.
-  #
-  #   module HairColors
-  #     mattr_accessor :hair_colors, instance_writer: false, instance_reader: false
-  #   end
-  #
-  #   class Person
-  #     include HairColors
-  #   end
-  #
-  #   Person.new.hair_colors = [:brown]  # => NoMethodError
-  #   Person.new.hair_colors             # => NoMethodError
-  #
-  # Or pass <tt>instance_accessor: false</tt>, to opt out both instance methods.
-  #
-  #   module HairColors
-  #     mattr_accessor :hair_colors, instance_accessor: false
-  #   end
-  #
-  #   class Person
-  #     include HairColors
-  #   end
-  #
-  #   Person.new.hair_colors = [:brown]  # => NoMethodError
-  #   Person.new.hair_colors             # => NoMethodError
-  #
-  # Also you can pass a block to set up the attribute with a default value.
-  #
-  #   module HairColors
-  #     mattr_accessor :hair_colors do
-  #       [:brown, :black, :blonde, :red]
-  #     end
-  #   end
-  #
-  #   class Person
-  #     include HairColors
-  #   end
-  #
-  #   Person.class_variable_get("@@hair_colors") #=> [:brown, :black, :blonde, :red]
   def mattr_accessor(*syms, &blk)
     mattr_reader(*syms, &blk)
     mattr_writer(*syms, &blk)

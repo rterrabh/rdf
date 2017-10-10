@@ -2,14 +2,9 @@ require "active_record"
 require "rails"
 require "active_model/railtie"
 
-# For now, action_controller must always be present with
-# rails, so let's make sure that it gets required before
-# here. This is needed for correctly setting up the middleware.
-# In the future, this might become an optional require.
 require "action_controller/railtie"
 
 module ActiveRecord
-  # = Active Record Railtie
   class Railtie < Rails::Railtie # :nodoc:
     config.active_record = ActiveSupport::OrderedOptions.new
 
@@ -51,9 +46,6 @@ module ActiveRecord
       load "active_record/railties/databases.rake"
     end
 
-    # When loading console, force ActiveRecord::Base to be loaded
-    # to avoid cross references when loading a constant for the
-    # first time. Also, make it output to STDERR.
     console do |app|
       require "active_record/railties/console_sandbox" if app.sandbox?
       require "active_record/base"
@@ -105,14 +97,12 @@ module ActiveRecord
     initializer "active_record.set_configs" do |app|
       ActiveSupport.on_load(:active_record) do
         app.config.active_record.each do |k,v|
-          #nodyna <ID:send-204> <SD COMPLEX (array)>
+          #nodyna <send-795> <SD COMPLEX (array)>
           send "#{k}=", v
         end
       end
     end
 
-    # This sets the database configuration from Configuration#database_configuration
-    # and then establishes the connection.
     initializer "active_record.initialize_database" do |app|
       ActiveSupport.on_load(:active_record) do
         self.configurations = Rails.application.config.database_configuration
@@ -134,7 +124,6 @@ end_warning
       end
     end
 
-    # Expose database runtime to controller for logging.
     initializer "active_record.log_runtime" do
       require "active_record/railties/controller_runtime"
       ActiveSupport.on_load(:action_controller) do
@@ -146,7 +135,7 @@ end_warning
       hook = app.config.reload_classes_only_on_change ? :to_prepare : :to_cleanup
 
       ActiveSupport.on_load(:active_record) do
-        #nodyna <ID:send-205> <SD MODERATE (change-prone variables)>
+        #nodyna <send-796> <SD MODERATE (change-prone variables)>
         ActionDispatch::Reloader.send(hook) do
           if ActiveRecord::Base.connected?
             ActiveRecord::Base.clear_cache!

@@ -7,10 +7,6 @@ class Visualnetkit < Formula
 
   depends_on "qt"
 
-  # We're maintaining a patch to allow this software to compile against newer
-  # versions of Qt. Since the upstream project hasn't had activity in a while,
-  # if a newer version of Qt breaks this formula we will consider moving it to
-  # the boneyard instead.
   patch :DATA
 
   def install
@@ -29,7 +25,6 @@ diff --git a/src/plugin_dev/ipv4/ipv4.pro b/src/plugin_dev/ipv4/ipv4.pro
 @@ -5,7 +5,7 @@ TEMPLATE = lib
  TARGET = ipv4
 
- #prevent linking error on some system (like ubuntu)
 -QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] $$[QMAKE_LFLAGS_SHLIB]
 +QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] -undefined dynamic_lookup $$[QMAKE_LFLAGS_SHLIB]
 
@@ -41,7 +36,6 @@ diff --git a/src/plugin_dev/mac/mac.pro b/src/plugin_dev/mac/mac.pro
 @@ -5,7 +5,7 @@ TEMPLATE = lib
  TARGET = mac
 
- #prevent linking error on some system (like ubuntu)
 -QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] $$[QMAKE_LFLAGS_SHLIB]
 +QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] -undefined dynamic_lookup $$[QMAKE_LFLAGS_SHLIB]
 
@@ -53,7 +47,6 @@ diff --git a/src/plugin_dev/quagga/bgp/quagga-bgp.pro b/src/plugin_dev/quagga/bg
 @@ -2,7 +2,7 @@ TEMPLATE = lib
  TARGET = quagga-bgp
 
- # prevent linking error on some system (like ubuntu)
 -QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] \
 +QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] -undefined dynamic_lookup \
      $$[QMAKE_LFLAGS_SHLIB]
@@ -65,7 +58,6 @@ diff --git a/src/plugin_dev/quagga/core/quagga-core.pro b/src/plugin_dev/quagga/
 @@ -2,7 +2,7 @@ TEMPLATE = lib
  TARGET = quagga-core
 
- #prevent linking error on some system (like ubuntu)
 -QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] $$[QMAKE_LFLAGS_SHLIB]
 +QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] -undefined dynamic_lookup $$[QMAKE_LFLAGS_SHLIB]
 
@@ -77,7 +69,6 @@ diff --git a/src/plugin_dev/quagga/rip/quagga-rip.pro b/src/plugin_dev/quagga/ri
 @@ -2,7 +2,7 @@ TEMPLATE = lib
  TARGET = quagga-rip
 
- # prevent linking error on some system (like ubuntu)
 -QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] \
 +QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] -undefined dynamic_lookup \
      $$[QMAKE_LFLAGS_SHLIB]
@@ -89,7 +80,6 @@ diff --git a/src/plugin_dev/test/test.pro b/src/plugin_dev/test/test.pro
 @@ -5,7 +5,7 @@ TEMPLATE = lib
  TARGET = test
 
- #prevent linking error on some system (like ubuntu)
 -QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] $$[QMAKE_LFLAGS_SHLIB]
 +QMAKE_LFLAGS = -Wl,-rpath,$$[QT_INSTALL_LIBS] -undefined dynamic_lookup $$[QMAKE_LFLAGS_SHLIB]
 

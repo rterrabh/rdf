@@ -15,7 +15,6 @@ describe Spree::Store, :type => :model do
   end
 
   describe '.current' do
-    # there is a default store created with the test_app rake task.
     let!(:store_1) { Spree::Store.first || create(:store) }
 
     let!(:store_2) { create(:store, default: false, url: 'www.subdomain.com') }

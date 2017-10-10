@@ -65,7 +65,6 @@ module Sidekiq
   end
 end
 
-# server middleware that will reschedule work whenever Sidekiq is paused
 class Sidekiq::Pausable
 
   attr_reader :delay

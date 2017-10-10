@@ -1,10 +1,6 @@
-##
-# A singleton class
 
 class RDoc::SingleClass < RDoc::ClassModule
 
-  ##
-  # Adds the superclass to the included modules.
 
   def ancestors
     superclass ? super + [superclass] : super
@@ -14,8 +10,6 @@ class RDoc::SingleClass < RDoc::ClassModule
     'sclass'
   end
 
-  ##
-  # The definition of this singleton class, <tt>class << MyClassName</tt>
 
   def definition
     "class << #{full_name}"

@@ -31,7 +31,6 @@ class BaseService
     SystemHooksService.new
   end
 
-  # Add an error to the specified model for restricted visibility levels
   def deny_visibility_level(model, denied_visibility_level = nil)
     denied_visibility_level ||= model.visibility_level
 

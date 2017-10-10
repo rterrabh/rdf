@@ -15,11 +15,9 @@ class Bazaar < Formula
   def install
     ENV.j1 # Builds aren't parallel-safe
 
-    # Make and install man page first
     system "make", "man1/bzr.1"
     man1.install "man1/bzr.1"
 
-    # Put system Python first in path
     ENV.prepend_path "PATH", "/System/Library/Frameworks/Python.framework/Versions/Current/bin"
 
     system "make"

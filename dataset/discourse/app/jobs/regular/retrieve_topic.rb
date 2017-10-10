@@ -3,7 +3,6 @@ require_dependency 'topic_retriever'
 
 module Jobs
 
-  # Asynchronously retrieve a topic from an embedded site
   class RetrieveTopic < Jobs::Base
 
     def execute(args)

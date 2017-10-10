@@ -28,7 +28,6 @@ def bottle_tag
   elsif MacOS.version == :snow_leopard
     Hardware::CPU.is_64_bit? ? :snow_leopard : :snow_leopard_32
   else
-    # Return, e.g., :tiger_g3, :leopard_g5_64, :leopard_64 (which is Intel)
     if Hardware::CPU.type == :ppc
       tag = "#{MacOS.cat}_#{Hardware::CPU.family}".to_sym
     else
@@ -108,10 +107,6 @@ class BottleCollector
     end
   end
 
-  # This allows generic Altivec PPC bottles to be supported in some
-  # formulae, while also allowing specific bottles in others; e.g.,
-  # sometimes a formula has just :tiger_altivec, other times it has
-  # :tiger_g4, :tiger_g5, etc.
   def find_altivec_tag(tag)
     if tag.to_s =~ /(\w+)_(g4|g4e|g5)$/
       altivec_tag = "#{$1}_altivec".to_sym
@@ -119,9 +114,6 @@ class BottleCollector
     end
   end
 
-  # Allows a bottle tag to specify a specific OS or later,
-  # so the same bottle can target multiple OSs.
-  # Not used in core, used in taps.
   def find_or_later_tag(tag)
     begin
       tag_version = MacOS::Version.from_symbol(tag)

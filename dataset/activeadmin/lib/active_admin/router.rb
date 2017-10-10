@@ -4,21 +4,13 @@ module ActiveAdmin
       @application = application
     end
 
-    # Creates all the necessary routes for the ActiveAdmin configurations
-    #
-    # Use this within the routes.rb file:
-    #
-    #   Application.routes.draw do |map|
-    #     ActiveAdmin.routes(self)
-    #   end
-    #
     def apply(router)
       define_root_routes router
       define_resource_routes router
     end
 
     def define_root_routes(router)
-      #nodyna <ID:instance_exec-2> <IEX COMPLEX (block without parameters)>
+      #nodyna <instance_exec-76> <IEX COMPLEX (block without parameters)>
       router.instance_exec @application.namespaces do |namespaces|
         namespaces.each do |namespace|
           if namespace.root?
@@ -32,43 +24,37 @@ module ActiveAdmin
       end
     end
 
-    # Defines the routes for each resource
     def define_resource_routes(router)
-      #nodyna <ID:instance_exec-3> <IEX COMPLEX (block without parameters)>
+      #nodyna <instance_exec-77> <IEX COMPLEX (block without parameters)>
       router.instance_exec @application.namespaces, self do |namespaces, aa_router|
         resources = namespaces.flat_map{ |n| n.resources.values }
         resources.each do |config|
           routes = aa_router.resource_routes(config)
 
-          # Add in the parent if it exists
           if config.belongs_to?
             belongs_to = routes
             routes     = Proc.new do
-              # If it's optional, make the normal resource routes
-              #nodyna <ID:instance_exec-4> <IEX COMPLEX (block without parameters)>
+              #nodyna <instance_exec-78> <IEX COMPLEX (block without parameters)>
               instance_exec &belongs_to if config.belongs_to_config.optional?
 
-              # Make the nested belongs_to routes
-              # :only is set to nothing so that we don't clobber any existing routes on the resource
               resources config.belongs_to_config.target.resource_name.plural, only: [] do
-                #nodyna <ID:instance_exec-5> <IEX COMPLEX (block without parameters)>
+                #nodyna <instance_exec-79> <IEX COMPLEX (block without parameters)>
                 instance_exec &belongs_to
               end
             end
           end
 
-          # Add on the namespace if required
           unless config.namespace.root?
             nested = routes
             routes = Proc.new do
               namespace config.namespace.name do
-                #nodyna <ID:instance_exec-6> <IEX COMPLEX (block without parameters)>
+                #nodyna <instance_exec-80> <IEX COMPLEX (block without parameters)>
                 instance_exec &nested
               end
             end
           end
 
-          #nodyna <ID:instance_exec-7> <IEX COMPLEX (block without parameters)>
+          #nodyna <instance_exec-81> <IEX COMPLEX (block without parameters)>
           instance_exec &routes
         end
       end
@@ -76,12 +62,10 @@ module ActiveAdmin
 
     def resource_routes(config)
       Proc.new do
-        # Builds one route for each HTTP verb passed in
         build_route  = proc{ |verbs, *args|
-          #nodyna <ID:send-9> <SD COMPLEX (array)>
+          #nodyna <send-82> <SD COMPLEX (array)>
           [*verbs].each{ |verb| send verb, *args }
         }
-        # Deals with +ControllerAction+ instances
         build_action = proc{ |action|
           build_route.call(action.http_verb, action.name)
         }

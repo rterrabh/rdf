@@ -23,7 +23,6 @@ class Bokken < Formula
   end
 
   resource "pyew" do
-    # Upstream only provides binary packages so pull from Debian.
     url "http://ftp.de.debian.org/debian/pool/main/p/pyew/pyew_2.0.orig.tar.gz"
     sha256 "64a4dfb1850efbe2c9b06108697651f9ff25223fd132eec66c6fe84d5ecc17ae"
   end
@@ -40,8 +39,6 @@ class Bokken < Formula
 
     resource("pyew").stage do
       (libexec/"pyew").install Dir["*"]
-      # Make sure that the launcher looks for pyew.py in the correct path (fixed
-      # in pyew ab9ea236335e).
       inreplace libexec/"pyew/pyew", "\./pyew.py", "`dirname $0`/pyew.py"
     end
 
@@ -49,7 +46,6 @@ class Bokken < Formula
     ld_library_path = "#{libexec}/distorm64"
     (libexec/"bokken").install Dir["*"]
     (bin/"bokken").write <<-EOS.undent
-      #!/usr/bin/env bash
       env \
         PYTHONPATH=#{python_path}:${PYTHONPATH} \
         LD_LIBRARY_PATH=#{ld_library_path}:${LD_LIBRARY_PATH} \

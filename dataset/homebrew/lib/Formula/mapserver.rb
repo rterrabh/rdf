@@ -30,7 +30,6 @@ class Mapserver < Formula
   depends_on "fcgi" if build.with? "fastcgi"
   depends_on "cairo" => :optional
 
-  # This patch can be removed when this is merged https://github.com/mapserver/mapserver/pull/5113
   patch :DATA
 
   def install
@@ -101,8 +100,6 @@ __END__
 +        if v not in list1 and os.path.isdir(v):
 +            list1.append(v)
 +
- #
- # # Function needed to make unique lists.
  def unique(list):
 @@ -144,8 +149,12 @@
          return get_config(option, config =self.mapserver_config)

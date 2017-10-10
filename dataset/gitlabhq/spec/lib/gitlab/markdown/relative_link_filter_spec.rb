@@ -1,4 +1,3 @@
-# encoding: UTF-8
 
 require 'spec_helper'
 
@@ -107,7 +106,6 @@ module Gitlab::Markdown
         path = 'files/images/한글.png'
         escaped = Addressable::URI.escape(path)
 
-        # Stub these methods so the file doesn't actually need to be in the repo
         allow_any_instance_of(described_class).to receive(:file_exists?).
           and_return(true)
         allow_any_instance_of(described_class).

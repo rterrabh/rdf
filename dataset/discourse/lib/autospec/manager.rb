@@ -73,7 +73,7 @@ class Autospec::Manager
   end
 
   [:start, :stop, :abort].each do |verb|
-    #nodyna <ID:define_method-12> <DM MODERATE (array)>
+    #nodyna <define_method-315> <DM MODERATE (array)>
     define_method("#{verb}_runners") do
       puts "@@@@@@@@@@@@ #{verb}_runners" if @debug
       @runners.each(&verb)
@@ -89,14 +89,12 @@ class Autospec::Manager
     end
   end
 
-  # the main loop, will run the specs in the queue till one fails or the queue is empty
   def thread_loop
     puts "@@@@@@@@@@@@ thread_loop" if @debug
     @mutex.synchronize do
       current = @queue.first
       last_failed = false
       last_failed = process_spec(current) if current
-      # stop & wait for the queue to have at least one item or when there's been a failure
       if @debug
         puts "@@@@@@@@@@@@ waiting because..."
         puts "@@@@@@@@@@@@ ...current spec has failed" if last_failed
@@ -108,18 +106,14 @@ class Autospec::Manager
     fail(e, "failed in main loop")
   end
 
-  # will actually run the spec and check whether the spec has failed or not
   def process_spec(current)
     puts "@@@@@@@@@@@@ process_spec --> #{current}" if @debug
     has_failed = false
-    # retrieve the instance of the runner
     runner = current[2]
-    # actually run the spec (blocking call)
     result = runner.run(current[1]).to_i
 
     if result == 0
       puts "@@@@@@@@@@@@ success" if @debug
-      # remove the spec from the queue
       @queue.shift
     else
       puts "@@@@@@@@@@@@ failure" if @debug
@@ -136,12 +130,9 @@ class Autospec::Manager
   def focus_on_failed_tests(current)
     puts "@@@@@@@@@@@@ focus_on_failed_tests --> #{current}" if @debug
     runner = current[2]
-    # we only want 1 focus in the queue
     @queue.shift if current[0] == "focus"
-    # focus on the first 10 failed specs
     failed_specs = runner.failed_specs[0..10]
     puts "@@@@@@@@@@@@ failed_spces --> #{failed_specs}" if @debug
-    # focus on the failed specs
     @queue.unshift ["focus", failed_specs.join(" "), runner] if failed_specs.length > 0
   end
 
@@ -175,7 +166,6 @@ class Autospec::Manager
 
     files.each do |file|
       @runners.each do |runner|
-        # reloaders
         runner.reloaders.each do |k|
           if k.match(file)
             puts "@@@@@@@@@@@@ #{file} matched a reloader for #{runner}" if @debug
@@ -183,7 +173,6 @@ class Autospec::Manager
             return
           end
         end
-        # watchers
         runner.watchers.each do |k,v|
           if m = k.match(file)
             puts "@@@@@@@@@@@@ #{file} matched a watcher for #{runner}" if @debug
@@ -193,7 +182,6 @@ class Autospec::Manager
           end
         end
       end
-      # special watcher for styles/templates
       Autospec::ReloadCss::WATCHERS.each do |k, _|
         matches = []
         matches << file if k.match(file)
@@ -226,9 +214,7 @@ class Autospec::Manager
       puts "@@@@@@@@@@@@ queueing specs" if @debug
       puts "@@@@@@@@@@@@ #{@queue}" if @debug
       specs.each do |file, spec, runner|
-        # make sure there's no other instance of this spec in the queue
         @queue.delete_if { |_, s, r| s.strip == spec.strip && r == runner }
-        # deal with focused specs
         if @queue.first && @queue.first[0] == "focus"
           focus = @queue.shift
           @queue.unshift([file, spec, runner])

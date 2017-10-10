@@ -16,8 +16,6 @@ class Pgloader < Formula
   depends_on "buildapp" => :build
   depends_on :postgresql => :recommended
 
-  # Resource stanzas are generated automatically by quicklisp-roundup.
-  # See: https://github.com/benesch/quicklisp-homebrew-roundup
 
   resource "alexandria" do
     url "https://beta.quicklisp.org/archive/alexandria/2014-08-26/alexandria-20140826-git.tgz"
@@ -327,10 +325,6 @@ class Pgloader < Formula
     IO.popen(postgres_command * " ") do |postgres|
       begin
         ohai postgres_command * " "
-        # Postgres won't create the socket until it's ready for connections, but
-        # if it fails to start, we'll be waiting for the socket forever. So we
-        # time out quickly; this is simpler than mucking with child process
-        # signals.
         Timeout.timeout(5) { sleep 0.2 while socket_dir.children.empty? }
         yield
       ensure
@@ -340,8 +334,6 @@ class Pgloader < Formula
   end
 
   test do
-    # Remove any Postgres environment variables that might prevent us from
-    # isolating this disposable copy of Postgres.
     ENV.reject! { |key, _| key.start_with?("PG") }
 
     ENV["PGDATA"] = testpath/"data"

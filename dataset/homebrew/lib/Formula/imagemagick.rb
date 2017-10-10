@@ -99,7 +99,6 @@ class Imagemagick < Formula
     args << "--with-freetype=yes" if build.with? "freetype"
     args << "--with-webp=yes" if build.with? "webp"
 
-    # versioned stuff in main tree is pointless for us
     inreplace "configure", "${PACKAGE_NAME}-${PACKAGE_VERSION}", "${PACKAGE_NAME}"
     system "./configure", *args
     system "make", "install"

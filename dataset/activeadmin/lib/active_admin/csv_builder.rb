@@ -1,24 +1,6 @@
 module ActiveAdmin
-  # CSVBuilder stores CSV configuration
-  #
-  # Usage example:
-  #
-  #   csv_builder = CSVBuilder.new
-  #   csv_builder.column :id
-  #   csv_builder.column("Name") { |resource| resource.full_name }
-  #   csv_builder.column(:name, humanize: false)
-  #   csv_builder.column("name", humanize: false) { |resource| resource.full_name }
-  #
-  #   csv_builder = CSVBuilder.new col_sep: ";"
-  #   csv_builder = CSVBuilder.new humanize_name: false
-  #   csv_builder.column :id
-  #
-  #
   class CSVBuilder
 
-    # Return a default CSVBuilder for a resource
-    # The CSVBuilder's columns would be Id followed by this
-    # resource's content columns
     def self.default_for_resource(resource)
       new resource: resource do
         column :id
@@ -40,7 +22,7 @@ module ActiveAdmin
     end
 
     def build(controller, receiver)
-      #nodyna <ID:send-48> <SD EASY (private methods)>
+      #nodyna <send-5> <SD EASY (private methods)>
       @collection = controller.send(:find_collection, except: :pagination)
       options = ActiveAdmin.application.csv_options.merge self.options
       columns = exec_columns controller.view_context
@@ -55,7 +37,7 @@ module ActiveAdmin
 
       (1..paginated_collection.total_pages).each do |page_no|
         paginated_collection(page_no).each do |resource|
-           #nodyna <ID:send-49> <SD EASY (private methods)>
+           #nodyna <send-6> <SD EASY (private methods)>
            resource = controller.send :apply_decorator, resource
            receiver << CSV.generate_line(build_row(resource, columns, options), options)
         end
@@ -65,7 +47,7 @@ module ActiveAdmin
     def exec_columns(view_context = nil)
       @view_context = view_context
       @columns = [] # we want to re-render these every instance
-      #nodyna <ID:instance_exec-15> <IEX COMPLEX (block without parameters)>
+      #nodyna <instance_exec-7> <IEX COMPLEX (block without parameters)>
       instance_exec &@block if @block.present?
       columns
     end
@@ -86,7 +68,7 @@ module ActiveAdmin
 
     def method_missing(method, *args, &block)
       if @view_context.respond_to? method
-        #nodyna <ID:send-50> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-8> <SD COMPLEX (change-prone variables)>
         @view_context.public_send method, *args, &block
       else
         super
@@ -120,7 +102,7 @@ module ActiveAdmin
     end
 
     def paginated_collection(page_no = 1)
-      #nodyna <ID:send-51> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-9> <SD COMPLEX (change-prone variables)>
       @collection.public_send(Kaminari.config.page_method_name, page_no).per(batch_size)
     end
 

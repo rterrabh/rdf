@@ -49,9 +49,6 @@ class Audiofile < Formula
       opoo <<-EOS.undent
         One of the following files could not be located, and so
         the test was not executed:
-           #{inn}
-           #{conv_bin}
-           #{info_bin}
 
         Audiofile can also be tested at build-time:
           brew install -v audiofile --with-check

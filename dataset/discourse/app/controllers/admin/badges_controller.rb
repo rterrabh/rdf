@@ -86,8 +86,6 @@ class Admin::BadgesController < Admin::AdminController
       Badge.find(params[:id])
     end
 
-    # Options:
-    #   :new - reset the badge id to nil before saving
     def update_badge_from_params(badge, opts={})
       errors = []
       Badge.transaction do
@@ -97,11 +95,10 @@ class Admin::BadgesController < Admin::AdminController
         params.permit(*allowed)
 
         allowed.each do |key|
-          #nodyna <ID:send-90> <SD COMPLEX (array)>
+          #nodyna <send-448> <SD COMPLEX (array)>
           badge.send("#{key}=" , params[key]) if params[key]
         end
 
-        # Badge query contract checks
         begin
           BadgeGranter.contract_checks!(badge.query, { target_posts: badge.target_posts, trigger: badge.trigger })
         rescue => e

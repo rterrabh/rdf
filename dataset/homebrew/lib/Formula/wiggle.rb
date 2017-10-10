@@ -4,7 +4,6 @@ class Wiggle < Formula
   url "http://neil.brown.name/wiggle/wiggle-1.0.tar.gz"
   sha256 "44c97b2d47a109c709cdd4181d9ba941fee50dbb64448018b91d4a2fffe69cf2"
 
-  # All three patches are upstream commits
   patch do
     url "https://github.com/neilbrown/wiggle/commit/16bb4be1c93be24917669d63ab68dd7d77597b63.diff"
     sha256 "09c9e028c22ae9ee37c5f7636a79899862264bf45cae2ed3fb9c47535d092467"

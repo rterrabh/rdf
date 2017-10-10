@@ -8,21 +8,18 @@ module ActiveAdmin
 
         def title
           if Proc === config[:title]
-            #nodyna <ID:instance_exec-25> <IEX COMPLEX (block without parameters)>
+            #nodyna <instance_exec-44> <IEX COMPLEX (block without parameters)>
             controller.instance_exec &config[:title]
           else
             config[:title] || assigns[:page_title] || active_admin_config.plural_resource_label
           end
         end
 
-        # Retrieves the given page presenter, or uses the default.
         def config
           active_admin_config.get_page_presenter(:index, params[:as]) ||
           ActiveAdmin::PagePresenter.new(as: :table)
         end
 
-        # Renders the index configuration that was set in the
-        # controller. Defaults to rendering the ActiveAdmin::Pages::Index::Table
         def main_content
           wrap_with_batch_action_form do
             build_table_tools
@@ -103,11 +100,9 @@ module ActiveAdmin
           end
         end
 
-        # Returns the actual class for renderering the main content on the index
-        # page. To set this, use the :as option in the page_presenter block.
         def find_index_renderer_class(klass)
           klass.is_a?(Class) ? klass :
-            #nodyna <ID:const_get-2> <CG COMPLEX (change-prone variable)>
+            #nodyna <const_get-45> <CG COMPLEX (change-prone variable)>
             ::ActiveAdmin::Views.const_get("IndexAs" + klass.to_s.camelcase)
         end
 
@@ -149,7 +144,7 @@ module ActiveAdmin
           if config.options.has_key?(:blank_slate_link)
             blank_slate_link = config.options[:blank_slate_link]
             if blank_slate_link.is_a?(Proc)
-              #nodyna <ID:instance_exec-26> <IEX COMPLEX (block without parameters)>
+              #nodyna <instance_exec-46> <IEX COMPLEX (block without parameters)>
               instance_exec(&blank_slate_link)
             end
           else

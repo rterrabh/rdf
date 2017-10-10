@@ -33,9 +33,6 @@ class OpenMesh < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-    #include <iostream>
-    #include <OpenMesh/Core/IO/MeshIO.hh>
-    #include <OpenMesh/Core/Mesh/PolyMesh_ArrayKernelT.hh>
     typedef OpenMesh::PolyMesh_ArrayKernelT<>  MyMesh;
     int main()
     {

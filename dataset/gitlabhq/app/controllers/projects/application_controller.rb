@@ -4,8 +4,6 @@ class Projects::ApplicationController < ApplicationController
   layout 'project'
 
   def authenticate_user!
-    # Restrict access to Projects area only
-    # for non-signed users
     if !current_user
       id = params[:project_id] || params[:id]
       project_with_namespace = "#{params[:namespace_id]}/#{id}"

@@ -22,7 +22,6 @@ class Libiscsi < Formula
 
   def install
     if build.with? "noinst"
-      # Install the noinst binaries
       inreplace "Makefile.am", "noinst_PROGRAMS +=", "bin_PROGRAMS +="
     end
 

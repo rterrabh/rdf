@@ -1,27 +1,12 @@
-# coding: UTF-8
-# :markup: markdown
 
-##
-#--
-# This set of literals is for Ruby 1.9 regular expressions and gives full
-# unicode support.
-#
-# Unlike peg-markdown, this set of literals recognizes Unicode alphanumeric
-# characters, newlines and spaces.
 class RDoc::Markdown::Literals
-  # :stopdoc:
 
-    # This is distinct from setup_parser so that a standalone parser
-    # can redefine #initialize and still have access to the proper
-    # parser setup code.
     def initialize(str, debug=false)
       setup_parser(str, debug)
     end
 
 
 
-    # Prepares for parsing +str+.  If you define a custom initialize you must
-    # call this method before #parse
     def setup_parser(str, debug=false)
       set_string str, 0
       @memoizations = Hash.new { |h,k| h[k] = {} }
@@ -69,7 +54,6 @@ class RDoc::Markdown::Literals
       @string[start..@pos-1]
     end
 
-    # Sets the string and current parsing position for the parser.
     def set_string string, pos
       @string = string
       @string_size = string ? string.size : 0
@@ -205,10 +189,6 @@ class RDoc::Markdown::Literals
     end
 
     def parse(rule=nil)
-      # We invoke the rules indirectly via apply
-      # instead of by just calling them as methods because
-      # if the rules use left recursion, apply needs to
-      # manage that.
 
       if !rule
         apply(:_root)
@@ -281,8 +261,6 @@ class RDoc::Markdown::Literals
 
         m.move! ans, @pos, @result
 
-        # Don't bother trying to grow the left recursion
-        # if it's failing straight away (thus there is no seed)
         if ans and lr
           return grow_lr(rule, args, start_pos, m)
         else
@@ -315,8 +293,6 @@ class RDoc::Markdown::Literals
 
         m.move! ans, @pos, @result
 
-        # Don't bother trying to grow the left recursion
-        # if it's failing straight away (thus there is no seed)
         if ans and lr
           return grow_lr(rule, nil, start_pos, m)
         else
@@ -363,46 +339,38 @@ class RDoc::Markdown::Literals
     end
 
 
-  # :startdoc:
-  # :stopdoc:
   def setup_foreign_grammar; end
 
-  # Alphanumeric = /\p{Word}/
   def _Alphanumeric
     _tmp = scan(/\A(?-mix:\p{Word})/)
     set_failed_rule :_Alphanumeric unless _tmp
     return _tmp
   end
 
-  # AlphanumericAscii = /[A-Za-z0-9]/
   def _AlphanumericAscii
     _tmp = scan(/\A(?-mix:[A-Za-z0-9])/)
     set_failed_rule :_AlphanumericAscii unless _tmp
     return _tmp
   end
 
-  # BOM = "uFEFF"
   def _BOM
     _tmp = match_string("uFEFF")
     set_failed_rule :_BOM unless _tmp
     return _tmp
   end
 
-  # Newline = /\n|\r\n?|\p{Zl}|\p{Zp}/
   def _Newline
     _tmp = scan(/\A(?-mix:\n|\r\n?|\p{Zl}|\p{Zp})/)
     set_failed_rule :_Newline unless _tmp
     return _tmp
   end
 
-  # NonAlphanumeric = /\p{^Word}/
   def _NonAlphanumeric
     _tmp = scan(/\A(?-mix:\p{^Word})/)
     set_failed_rule :_NonAlphanumeric unless _tmp
     return _tmp
   end
 
-  # Spacechar = /\t|\p{Zs}/
   def _Spacechar
     _tmp = scan(/\A(?-mix:\t|\p{Zs})/)
     set_failed_rule :_Spacechar unless _tmp
@@ -416,5 +384,4 @@ class RDoc::Markdown::Literals
   Rules[:_Newline] = rule_info("Newline", "/\\n|\\r\\n?|\\p{Zl}|\\p{Zp}/")
   Rules[:_NonAlphanumeric] = rule_info("NonAlphanumeric", "/\\p{^Word}/")
   Rules[:_Spacechar] = rule_info("Spacechar", "/\\t|\\p{Zs}/")
-  # :startdoc:
 end

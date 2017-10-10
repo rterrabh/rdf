@@ -35,9 +35,6 @@ class GnuCobol < Formula
   depends_on "gcc"
 
   def install
-    # both environment variables are needed to be set
-    # the cobol compiler takes these variables for calling cc during its run
-    # if the paths to gmp and bdb are not provided, the run of cobc fails
     gmp = Formula["gmp"]
     bdb = Formula["berkeley-db4"]
     ENV.append "CPPFLAGS", "-I#{gmp.opt_include} -I#{bdb.opt_include}"
@@ -50,8 +47,6 @@ class GnuCobol < Formula
     if build.stable?
       system "aclocal"
 
-      # fix referencing of libintl and libiconv for ld
-      # bug report can be found here: https://sourceforge.net/p/open-cobol/bugs/93/
       inreplace "configure", "-R$found_dir", "-L$found_dir"
 
       args << "--with-cc=#{ENV.cc}"

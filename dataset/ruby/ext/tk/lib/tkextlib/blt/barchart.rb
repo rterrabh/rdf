@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/barchart.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -62,7 +58,6 @@ module Tk::BLT
     end
 
     def metafile(file=None)
-      # Windows only
       tk_send('metafile', file)
       self
     end

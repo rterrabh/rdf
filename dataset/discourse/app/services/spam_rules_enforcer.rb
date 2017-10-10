@@ -1,5 +1,3 @@
-# The SpamRulesEnforcer class takes action against users based on flags that their posts
-# receive, their trust level, etc.
 class SpamRulesEnforcer
 
   def self.enforce!(arg)

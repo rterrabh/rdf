@@ -36,7 +36,6 @@ class NetSnmp < Formula
       ENV["PYTHONPROG"] = `which python`
     end
 
-    # https://sourceforge.net/p/net-snmp/bugs/2504/
     ln_s "darwin13.h", "include/net-snmp/system/darwin14.h"
 
     system "./configure", *args

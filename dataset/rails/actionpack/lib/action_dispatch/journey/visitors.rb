@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 module ActionDispatch
   module Journey # :nodoc:
@@ -60,7 +59,7 @@ module ActionDispatch
         private
 
           def visit node
-            #nodyna <ID:send-97> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-1248> <SD COMPLEX (change-prone variables)>
             send(DISPATCH_CACHE[node.type], node)
           end
 
@@ -117,7 +116,6 @@ module ActionDispatch
         end
       end
 
-      # Loop through the requirements AST
       class Each < Visitor # :nodoc:
         attr_reader :block
 
@@ -164,8 +162,6 @@ module ActionDispatch
     size="8,5"
     node [shape = none];
     edge [dir = none];
-    #{@nodes.join "\n"}
-    #{@edges.join("\n")}
   }
           eodot
         end

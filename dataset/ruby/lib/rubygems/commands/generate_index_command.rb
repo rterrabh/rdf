@@ -1,10 +1,6 @@
 require 'rubygems/command'
 require 'rubygems/indexer'
 
-##
-# Generates a index files for use as a gem server.
-#
-# See `gem help generate_index`
 
 class Gem::Commands::GenerateIndexCommand < Gem::Command
 
@@ -48,7 +44,6 @@ your HTTP server configuration (not /path/to/repo/gems).
 When done, it will generate a set of files like this:
 
   gems/*.gem                                   # .gem files you want to
-                                               # index
 
   specs.<version>.gz                           # specs index
   latest_specs.<version>.gz                    # latest specs index
@@ -62,7 +57,6 @@ Marshal::MINOR_VERSION constants.  It is used to ensure compatibility.
   end
 
   def execute
-    # This is always true because it's the only way now.
     options[:build_modern] = true
 
     if not File.exist?(options[:directory]) or

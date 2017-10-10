@@ -15,7 +15,6 @@ class Ledit < Formula
   depends_on "camlp5"
 
   def install
-    # like camlp5, this build fails if the jobs are parallelized
     ENV.deparallelize
     args = %W[BINDIR=#{bin} LIBDIR=#{lib} MANDIR=#{man}]
     system "make", *args

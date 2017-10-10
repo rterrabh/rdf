@@ -22,7 +22,6 @@ class AprUtil < Formula
   def install
     ENV.universal_binary if build.universal?
 
-    # Stick it in libexec otherwise it pollutes lib with a .exp file.
     args = %W[
       --prefix=#{libexec}
       --with-apr=#{Formula["apr"].opt_prefix}

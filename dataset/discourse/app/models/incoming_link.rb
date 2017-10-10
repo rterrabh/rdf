@@ -26,7 +26,6 @@ class IncomingLink < ActiveRecord::Base
         host = URI.parse(opts[:referer]).host
         referer = opts[:referer][0..999]
       rescue URI::InvalidURIError
-        # bad uri, skip
       end
     end
 
@@ -57,7 +56,6 @@ class IncomingLink < ActiveRecord::Base
   def referer=(referer)
     self.incoming_referer_id = nil
 
-    # will set incoming_referer_id
     unless referer.present?
       return
     end
@@ -72,7 +70,6 @@ class IncomingLink < ActiveRecord::Base
     end
 
   rescue URI::InvalidURIError
-    # ignore
   end
 
   def referer
@@ -88,7 +85,6 @@ class IncomingLink < ActiveRecord::Base
   end
 
 
-  # Internal: Update appropriate link counts.
   def update_link_counts
     exec_sql("UPDATE topics
               SET incoming_link_count = incoming_link_count + 1
@@ -103,7 +99,6 @@ class IncomingLink < ActiveRecord::Base
   def referer_valid
     return true unless referer
     if (referer.length < 3 || referer.length > 100) || (domain.length < 1 || domain.length > 100)
-      # internal, no need to localize
       errors.add(:referer, 'referer is invalid')
       false
     else
@@ -112,20 +107,3 @@ class IncomingLink < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: incoming_links
-#
-#  id                  :integer          not null, primary key
-#  created_at          :datetime         not null
-#  user_id             :integer
-#  ip_address          :inet
-#  current_user_id     :integer
-#  post_id             :integer          not null
-#  incoming_referer_id :integer
-#
-# Indexes
-#
-#  index_incoming_links_on_created_at_and_user_id  (created_at,user_id)
-#  index_incoming_links_on_post_id                 (post_id)
-#

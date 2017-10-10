@@ -12,7 +12,6 @@ class EmailController < ApplicationController
   def unsubscribe
     @user = DigestUnsubscribeKey.user_for_key(params[:key])
 
-    # Don't allow the use of a key while logged in as a different user
     if current_user.present? && (@user != current_user)
       @different_user = true
       return

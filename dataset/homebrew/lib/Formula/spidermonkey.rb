@@ -21,7 +21,6 @@ class Spidermonkey < Formula
 
   def install
     cd "js/src" do
-      # Remove the broken *(for anyone but FF) install_name
       inreplace "config/rules.mk",
         "-install_name @executable_path/$(SHARED_LIBRARY) ",
         "-install_name #{lib}/$(SHARED_LIBRARY) "
@@ -36,11 +35,9 @@ class Spidermonkey < Formula
                                     "--enable-macos-target=#{MacOS.version}"
 
       inreplace "js-config", /JS_CONFIG_LIBS=.*?$/, "JS_CONFIG_LIBS=''"
-      # These need to be in separate steps.
       system "make"
       system "make", "install"
 
-      # Also install js REPL.
       bin.install "shell/js"
     end
   end

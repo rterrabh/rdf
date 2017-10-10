@@ -29,7 +29,6 @@ class Libgnomecanvas < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <libgnomecanvas/libgnomecanvas.h>
 
       int main(int argc, char *argv[]) {
         GnomeCanvasPoints *gcp = gnome_canvas_points_new(100);

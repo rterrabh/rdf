@@ -26,10 +26,6 @@ class Gtkx < Formula
     cause "Undefined symbols when linking"
   end
 
-  # Patch to allow Freeciv's gtk2 client to run.
-  # See:
-  # - https://bugzilla.gnome.org/show_bug.cgi?id=557780
-  # - Homebrew/homebrew-games#278
   patch do
     url "https://bug557780.bugzilla-attachments.gnome.org/attachment.cgi?id=306776"
     sha256 "4d7a1fe8d55174dc7f0be0016814668098d38bbec233b05a6c46180e96a159fc"
@@ -52,7 +48,6 @@ class Gtkx < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gtk/gtk.h>
 
       int main(int argc, char *argv[]) {
         GtkWidget *label = gtk_label_new("Hello World!");

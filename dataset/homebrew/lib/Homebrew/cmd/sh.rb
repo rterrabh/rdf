@@ -11,7 +11,6 @@ module Homebrew
     end
     ENV.setup_build_environment
     if superenv?
-      # superenv stopped adding brew's bin but generally user's will want it
       ENV["PATH"] = ENV["PATH"].split(File::PATH_SEPARATOR).insert(1, "#{HOMEBREW_PREFIX}/bin").join(File::PATH_SEPARATOR)
     end
     ENV["PS1"] = 'brew \[\033[1;32m\]\w\[\033[0m\]$ '

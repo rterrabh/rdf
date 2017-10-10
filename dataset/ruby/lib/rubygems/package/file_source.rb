@@ -1,9 +1,3 @@
-##
-# The primary source of gems is a file on disk, including all usages
-# internal to rubygems.
-#
-# This is a private class, do not depend on it directly. Instead, pass a path
-# object to `Gem::Package.new`.
 
 class Gem::Package::FileSource < Gem::Package::Source # :nodoc: all
 

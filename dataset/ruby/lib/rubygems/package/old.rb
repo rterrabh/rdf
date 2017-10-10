@@ -1,22 +1,9 @@
-#--
-# Copyright 2006 by Chad Fowler, Rich Kilmer, Jim Weirich and others.
-# All rights reserved.
-# See LICENSE.txt for permissions.
-#++
 
-##
-# The format class knows the guts of the ancient .gem file format and provides
-# the capability to read such ancient gems.
-#
-# Please pretend this doesn't exist.
 
 class Gem::Package::Old < Gem::Package
 
   undef_method :spec=
 
-  ##
-  # Creates a new old-format package reader for +gem+.  Old-format packages
-  # cannot be written.
 
   def initialize gem
     require 'fileutils'
@@ -29,8 +16,6 @@ class Gem::Package::Old < Gem::Package
     @spec            = nil
   end
 
-  ##
-  # A list of file names contained in this gem
 
   def contents
     verify
@@ -45,8 +30,6 @@ class Gem::Package::Old < Gem::Package
     end
   end
 
-  ##
-  # Extracts the files in this package into +destination_dir+
 
   def extract_files destination_dir
     verify
@@ -90,8 +73,6 @@ class Gem::Package::Old < Gem::Package
     raise Gem::Exception, errstr
   end
 
-  ##
-  # Reads the file list section from the old-format gem +io+
 
   def file_list io # :nodoc:
     header = ''
@@ -103,8 +84,6 @@ class Gem::Package::Old < Gem::Package
     YAML.load header
   end
 
-  ##
-  # Reads lines until a "---" separator is found
 
   def read_until_dashes io # :nodoc:
     while (line = io.gets) && line.chomp.strip != "---" do
@@ -112,8 +91,6 @@ class Gem::Package::Old < Gem::Package
     end
   end
 
-  ##
-  # Skips the Ruby self-install header in +io+.
 
   def skip_ruby io # :nodoc:
     loop do
@@ -126,8 +103,6 @@ class Gem::Package::Old < Gem::Package
     raise Gem::Exception, "Failed to find end of ruby script while reading gem"
   end
 
-  ##
-  # The specification for this gem
 
   def spec
     verify
@@ -160,9 +135,6 @@ class Gem::Package::Old < Gem::Package
     raise Gem::Exception, "Failed to parse gem specification out of gem file"
   end
 
-  ##
-  # Raises an exception if a security policy that verifies data is active.
-  # Old format gems cannot be verified as signed.
 
   def verify
     return true unless @security_policy

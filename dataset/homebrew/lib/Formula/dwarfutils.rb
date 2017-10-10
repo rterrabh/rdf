@@ -28,10 +28,6 @@ class Dwarfutils < Formula
     system "#{bin}/dwarfdump", "-V"
 
     (testpath/"test.c").write <<-EOS.undent
-      #include <dwarf.h>
-      #include <libdwarf.h>
-      #include <stdio.h>
-      #include <string.h>
 
       int main(void) {
         const char *out = NULL;

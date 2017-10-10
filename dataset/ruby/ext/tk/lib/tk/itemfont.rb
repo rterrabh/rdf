@@ -1,11 +1,7 @@
-#
-# tk/itemfont.rb : control font of widget items
-#
 require 'tk'
 
 module TkItemFontOptkeys
   def __item_font_optkeys(id)
-    # maybe need to override
     ['font']
   end
   private :__item_font_optkeys
@@ -15,12 +11,10 @@ module TkTreatItemFont
   include TkItemFontOptkeys
 
   def __item_pathname(id)
-    # maybe need to override
     [self.path, id].join(';')
   end
   private :__item_pathname
 
-  ################################################
 
   def tagfont_configinfo(tagOrId, key = nil)
     optkeys = __item_font_optkeys(tagid(tagOrId))
@@ -101,7 +95,6 @@ module TkTreatItemFont
                 begin
                   tk_call(*(__item_config_cmd(tagid(tagOrId)) << "-#{optkey}" << fnt))
                 rescue => e
-                  # ignore
                 end
               end
             end
@@ -124,7 +117,6 @@ module TkTreatItemFont
       end
     }
 
-    # configure other (without font) options
     tk_call(*(__item_config_cmd(tagid(tagOrId)).concat(hash_kv(slot)))) if slot != {}
     self
   end
@@ -163,7 +155,6 @@ module TkTreatItemFont
           begin
             tk_call(*(__item_config_cmd(tagid(tagOrId)) << "-#{optkey}" << ltn))
           rescue => e
-            # ignore
           end
         end
         next
@@ -223,7 +214,6 @@ module TkTreatItemFont
           begin
             tk_call(*(__item_config_cmd(tagid(tagOrId)) << "-#{optkey}" << knj))
           rescue => e
-            # ignore
           end
         end
         next

@@ -15,7 +15,6 @@ class UsernameChanger
       StaffActionLogger.new(@actor).log_username_change(@user, @user.username, @new_username)
     end
 
-    # future work: update mentions and quotes
 
     @user.username = @new_username
     @user.save

@@ -1,6 +1,6 @@
 class CreateStoreFromPreferences < ActiveRecord::Migration
   def change
-    # workaround for spree_i18n and Store translations
+    #nodyna <class_eval-2544> <not yet classified>
     Spree::Store.class_eval do
       def self.translated?(name)
         false
@@ -14,7 +14,6 @@ class CreateStoreFromPreferences < ActiveRecord::Migration
       store.seo_title        = preference_store.get('spree/app_configuration/default_seo_title') {}
       store.save!
     else
-      # we set defaults for the things we now require
       Spree::Store.new do |s|
         s.name              = preference_store.get 'spree/app_configuration/site_name' do
           'Spree Demo Site'

@@ -1,44 +1,3 @@
-# -*- coding: utf-8 -*-
-#--
-# Copyright (C) 2004 Mauricio Julio Fernández Pradier
-# See LICENSE.txt for additional licensing information.
-#++
-#
-# Example using a Gem::Package
-#
-# Builds a .gem file given a Gem::Specification. A .gem file is a tarball
-# which contains a data.tar.gz and metadata.gz, and possibly signatures.
-#
-#   require 'rubygems'
-#   require 'rubygems/package'
-#
-#   spec = Gem::Specification.new do |s|
-#     s.summary = "Ruby based make-like utility."
-#     s.name = 'rake'
-#     s.version = PKG_VERSION
-#     s.requirements << 'none'
-#     s.files = PKG_FILES
-#     s.description = <<-EOF
-#   Rake is a Make-like program implemented in Ruby. Tasks
-#   and dependencies are specified in standard Ruby syntax.
-#     EOF
-#   end
-#
-#   Gem::Package.build spec
-#
-# Reads a .gem file.
-#
-#   require 'rubygems'
-#   require 'rubygems/package'
-#
-#   the_gem = Gem::Package.new(path_to_dot_gem)
-#   the_gem.contents # get the files in the gem
-#   the_gem.extract_files destination_directory # extract the gem into a directory
-#   the_gem.spec # get the spec out of the gem
-#   the_gem.verify # check the gem is OK (contains valid gem specification, contains a not corrupt contents archive)
-#
-# #files are the files in the .gem tar file, not the Ruby files in the gem
-# #extract_files and #contents automatically call #verify
 
 require 'rubygems/security'
 require 'rubygems/specification'
@@ -77,32 +36,21 @@ class Gem::Package
 
   class TooLongFileName < Error; end
 
-  ##
-  # Raised when a tar file is corrupt
 
   class TarInvalidError < Error; end
 
 
   attr_accessor :build_time # :nodoc:
 
-  ##
-  # Checksums for the contents of the package
 
   attr_reader :checksums
 
-  ##
-  # The files in this package.  This is not the contents of the gem, just the
-  # files in the top-level container.
 
   attr_reader :files
 
-  ##
-  # The security policy used for verifying the contents of this package.
 
   attr_accessor :security_policy
 
-  ##
-  # Sets the Gem::Specification to use to build this package.
 
   attr_writer :spec
 
@@ -116,12 +64,6 @@ class Gem::Package
     gem_file
   end
 
-  ##
-  # Creates a new Gem::Package for the file at +gem+. +gem+ can also be
-  # provided as an IO object.
-  #
-  # If +gem+ is an existing file in the old format a Gem::Package::Old will be
-  # returned.
 
   def self.new gem
     gem = if gem.is_a?(Gem::Package::Source)
@@ -141,8 +83,6 @@ class Gem::Package
     Gem::Package::Old.new gem
   end
 
-  ##
-  # Creates a new package that will read or write to the file +gem+.
 
   def initialize gem # :notnew:
     @gem = gem
@@ -158,8 +98,6 @@ class Gem::Package
     @spec            = nil
   end
 
-  ##
-  # Adds a checksum for each entry in the gem to checksums.yaml.gz.
 
   def add_checksums tar
     Gem.load_yaml
@@ -179,9 +117,6 @@ class Gem::Package
     end
   end
 
-  ##
-  # Adds the files listed in the packages's Gem::Specification to data.tar.gz
-  # and adds this file to the +tar+.
 
   def add_contents tar # :nodoc:
     digests = tar.add_file_signed 'data.tar.gz', 0444, @signer do |io|
@@ -195,8 +130,6 @@ class Gem::Package
     @checksums['data.tar.gz'] = digests
   end
 
-  ##
-  # Adds files included the package's Gem::Specification to the +tar+ file
 
   def add_files tar # :nodoc:
     @spec.files.each do |file|
@@ -212,8 +145,6 @@ class Gem::Package
     end
   end
 
-  ##
-  # Adds the package's Gem::Specification to the +tar+ file
 
   def add_metadata tar # :nodoc:
     digests = tar.add_file_signed 'metadata.gz', 0444, @signer do |io|
@@ -225,8 +156,6 @@ class Gem::Package
     @checksums['metadata.gz'] = digests
   end
 
-  ##
-  # Builds this package based on the specification set by #spec=
 
   def build skip_validation = false
     Gem.load_yaml
@@ -255,8 +184,6 @@ EOM
     @signer = nil
   end
 
-  ##
-  # A list of file names contained in this gem
 
   def contents
     return @contents if @contents
@@ -282,9 +209,6 @@ EOM
     end
   end
 
-  ##
-  # Creates a digest of the TarEntry +entry+ from the digest algorithm set by
-  # the security policy.
 
   def digest entry # :nodoc:
     algorithms = if @checksums then
@@ -298,7 +222,7 @@ EOM
         if defined?(OpenSSL::Digest) then
           OpenSSL::Digest.new algorithm
         else
-          #nodyna <ID:const_get-30> <CG COMPLEX (change-prone variable)>
+          #nodyna <const_get-2250> <CG COMPLEX (change-prone variable)>
           Digest.const_get(algorithm).new
         end
 
@@ -312,11 +236,6 @@ EOM
     @digests
   end
 
-  ##
-  # Extracts the files in this package into +destination_dir+
-  #
-  # If +pattern+ is specified, only entries matching that glob will be
-  # extracted.
 
   def extract_files destination_dir, pattern = "*"
     verify unless @spec
@@ -336,16 +255,6 @@ EOM
     end
   end
 
-  ##
-  # Extracts all the files in the gzipped tar archive +io+ into
-  # +destination_dir+.
-  #
-  # If an entry in the archive contains a relative path above
-  # +destination_dir+ or an absolute path is encountered an exception is
-  # raised.
-  #
-  # If +pattern+ is specified, only entries matching that glob will be
-  # extracted.
 
   def extract_tar_gz io, destination_dir, pattern = "*" # :nodoc:
     open_tar_gz io do |tar|
@@ -376,11 +285,6 @@ EOM
     end
   end
 
-  ##
-  # Gzips content written to +gz_io+ to +io+.
-  #--
-  # Also sets the gzip modification time to the package build time to ease
-  # testing.
 
   def gzip_to io # :yields: gz_io
     gz_io = Zlib::GzipWriter.new io, Zlib::BEST_COMPRESSION
@@ -391,10 +295,6 @@ EOM
     gz_io.close
   end
 
-  ##
-  # Returns the full path for installing +filename+.
-  #
-  # If +filename+ is not inside +destination_dir+ an exception is raised.
 
   def install_location filename, destination_dir # :nodoc:
     raise Gem::Package::PathError.new(filename, destination_dir) if
@@ -414,8 +314,6 @@ EOM
     destination
   end
 
-  ##
-  # Loads a Gem::Specification from the TarEntry +entry+
 
   def load_spec entry # :nodoc:
     case entry.full_name
@@ -433,8 +331,6 @@ EOM
     end
   end
 
-  ##
-  # Opens +io+ as a gzipped tar archive
 
   def open_tar_gz io # :nodoc:
     Zlib::GzipReader.wrap io do |gzio|
@@ -444,8 +340,6 @@ EOM
     end
   end
 
-  ##
-  # Reads and loads checksums.yaml.gz from the tar file +gem+
 
   def read_checksums gem
     Gem.load_yaml
@@ -457,9 +351,6 @@ EOM
     end
   end
 
-  ##
-  # Prepares the gem for signing and checksum generation.  If a signing
-  # certificate and key are not present only checksum generation is set up.
 
   def setup_signer
     passphrase = ENV['GEM_PRIVATE_KEY_PASSPHRASE']
@@ -474,12 +365,6 @@ EOM
     end
   end
 
-  ##
-  # The spec for this gem.
-  #
-  # If this is a package for a built gem the spec is loaded from the
-  # gem and returned.  If this is a package for a gem being built the provided
-  # spec is returned.
 
   def spec
     verify unless @spec
@@ -487,15 +372,6 @@ EOM
     @spec
   end
 
-  ##
-  # Verifies that this gem:
-  #
-  # * Contains a valid gem specification
-  # * Contains a contents archive
-  # * The contents archive is not corrupt
-  #
-  # After verification the gem specification from the gem is available from
-  # #spec
 
   def verify
     @files     = []
@@ -525,9 +401,6 @@ EOM
     raise Gem::Package::FormatError.new e.message, @gem
   end
 
-  ##
-  # Verifies the +checksums+ against the +digests+.  This check is not
-  # cryptographically secure.  Missing checksums are ignored.
 
   def verify_checksums digests, checksums # :nodoc:
     return unless checksums
@@ -544,8 +417,6 @@ EOM
     end
   end
 
-  ##
-  # Verifies +entry+ in a .gem file.
 
   def verify_entry entry
     file_name = entry.full_name
@@ -571,8 +442,6 @@ EOM
     raise Gem::Package::FormatError.new message, @gem
   end
 
-  ##
-  # Verifies the files of the +gem+
 
   def verify_files gem
     gem.each do |entry|
@@ -589,8 +458,6 @@ EOM
     end
   end
 
-  ##
-  # Verifies that +entry+ is a valid gzipped file.
 
   def verify_gz entry # :nodoc:
     Zlib::GzipReader.wrap entry do |gzio|

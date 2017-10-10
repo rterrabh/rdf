@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/validator.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * Provides a unified validation API
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::validator', '0.1')
 TkPackage.require('widget::validator')
 
 module Tk::Tcllib

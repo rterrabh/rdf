@@ -15,16 +15,6 @@ class Libpqxx < Formula
   depends_on "pkg-config" => :build
   depends_on :postgresql
 
-  # Patches borrowed from MacPorts. See:
-  # https://trac.macports.org/ticket/33671
-  #
-  # (1) Patched maketemporary to avoid an error message about improper use
-  #     of the mktemp command; apparently maketemporary is designed to call
-  #     mktemp in various ways, some of which may be improper, as it attempts
-  #     to determine how to use it properly; we don't want to see those errors
-  #     in the configure phase output.
-  # (2) Patched configure on darwin to fix incorrect assumption
-  #     that true and false always live in /bin; on OS X they live in /usr/bin.
   patch :DATA
 
   def install

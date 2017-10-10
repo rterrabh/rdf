@@ -1,7 +1,3 @@
-#
-#  tscale & tprogress widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -51,6 +47,5 @@ class Tk::Tile::TProgress < Tk::Tile::TScale
   end
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Scale, :TkScale)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tscale.rb',
                                    :Ttk, Tk::Tile::Scale, :TkScale)

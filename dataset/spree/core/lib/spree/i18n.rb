@@ -7,8 +7,6 @@ module Spree
   extend ActionView::Helpers::TagHelper
 
   class << self
-    # Add spree namespace and delegate to Rails TranslationHelper for some nice
-    # extra functionality. e.g return reasonable strings for missing translations
     def translate(*args)
       @virtual_path = virtual_path
 
@@ -26,6 +24,7 @@ module Spree
 
     def virtual_path
       if context
+        #nodyna <instance_variable_get-2560> <not yet classified>
         path = context.instance_variable_get("@virtual_path")
 
         if path

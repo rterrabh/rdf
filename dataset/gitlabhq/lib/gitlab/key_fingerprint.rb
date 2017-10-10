@@ -26,7 +26,6 @@ module Gitlab
 
       return nil unless cmd_status.zero?
 
-      # 16 hex bytes separated by ':', optionally starting with "MD5:"
       fingerprint_matches = cmd_output.match(/(MD5:)?(?<fingerprint>(\h{2}:){15}\h{2})/)
       return nil unless fingerprint_matches
 
@@ -36,8 +35,6 @@ module Gitlab
     private
 
     def explicit_fingerprint_algorithm?
-      # OpenSSH 6.8 introduces a new default output format for fingerprints.
-      # Check the version and decide which command to use.
 
       version_output, version_status = popen(%W(ssh -V))
       return false unless version_status.zero?

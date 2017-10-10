@@ -4,9 +4,6 @@ class TitanServer < Formula
   url "http://s3.thinkaurelius.com/downloads/titan/titan-server-0.4.4.zip"
   sha256 "46703d315aa6ca0602b022fadca3846a58ba69bb490acb210bedd5be3bf12ef5"
 
-  # In reference to PR #30107 this patch will update the titan.sh and rexster-console.sh
-  # scripts to properly follow multiple symlinks so that java calls can accurately find
-  # their associated necessary libraries.
   patch :DATA
 
   def install
@@ -26,7 +23,6 @@ index dabc213..145085c 100755
 --- a/bin/rexster-console.sh
 +++ b/bin/rexster-console.sh
 @@ -1,7 +1,13 @@
- #!/bin/bash
 
  set_unix_paths() {
 -    BIN="$(dirname $0)"
@@ -45,7 +41,6 @@ index 0ea74c9..a78c48b 100755
 --- a/bin/titan.sh
 +++ b/bin/titan.sh
 @@ -1,6 +1,12 @@
- #!/bin/bash
 
 -BIN="`dirname $0`"
 +SOURCE="${BASH_SOURCE[0]}"

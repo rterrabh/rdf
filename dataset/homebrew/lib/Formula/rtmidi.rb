@@ -23,7 +23,6 @@ class Rtmidi < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include "RtMidi.h"
       int main(int argc, char **argv, char **env) {
         RtMidiIn midiin;
         RtMidiOut midiout;

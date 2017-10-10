@@ -15,7 +15,6 @@ class AndroidSdk < Formula
     sha256 "44b3e20ed9cb8fff01dc6907a57bd8648cd0d1bcc7b129ec952a190983ab5e1a"
   end
 
-  # Version of the android-build-tools the wrapper scripts reference.
   def build_tools_version
     "23.0.0"
   end
@@ -27,7 +26,6 @@ class AndroidSdk < Formula
        emulator-arm emulator-x86 hierarchyviewer lint mksdcard
        monitor monkeyrunner traceview].each do |tool|
       (bin/tool).write <<-EOS.undent
-        #!/bin/bash
         TOOL="#{prefix}/tools/#{tool}"
         exec "$TOOL" "$@"
       EOS
@@ -35,7 +33,6 @@ class AndroidSdk < Formula
 
     %w[zipalign].each do |tool|
       (bin/tool).write <<-EOS.undent
-        #!/bin/bash
         TOOL="#{prefix}/build-tools/#{build_tools_version}/#{tool}"
         exec "$TOOL" "$@"
       EOS
@@ -43,14 +40,11 @@ class AndroidSdk < Formula
 
     %w[dmtracedump etc1tool hprof-conv].each do |tool|
       (bin/tool).write <<-EOS.undent
-        #!/bin/bash
         TOOL="#{prefix}/platform-tools/#{tool}"
         exec "$TOOL" "$@"
       EOS
     end
 
-    # this is data that should be preserved across upgrades, but the Android
-    # SDK isn't too smart, so we still have to symlink it back into its tree.
     %w[platforms samples temp add-ons sources system-images extras].each do |d|
       src = var/"lib/android-sdk"/d
       src.mkpath
@@ -59,7 +53,6 @@ class AndroidSdk < Formula
 
     %w[adb fastboot].each do |platform_tool|
       (bin/platform_tool).write <<-EOS.undent
-        #!/bin/bash
         PLATFORM_TOOL="#{prefix}/platform-tools/#{platform_tool}"
         test -x "$PLATFORM_TOOL" && exec "$PLATFORM_TOOL" "$@"
         echo "It appears you do not have 'Android SDK Platform-tools' installed."
@@ -70,7 +63,6 @@ class AndroidSdk < Formula
 
     %w[aapt aidl dexdump dx llvm-rs-cc].each do |build_tool|
       (bin/build_tool).write <<-EOS.undent
-        #!/bin/bash
         BUILD_TOOLS_VERSION='#{build_tools_version}'
         BUILD_TOOL="#{prefix}/build-tools/$BUILD_TOOLS_VERSION/#{build_tool}"
         test -x "$BUILD_TOOL" && exec "$BUILD_TOOL" "$@"
@@ -81,8 +73,6 @@ class AndroidSdk < Formula
     end
 
     resource("completion").stage do
-      # googlesource.com only serves up the file in base64-encoded format; we
-      # need to decode it before installing
       decoded_file = buildpath/"adb-completion.bash"
       decoded_file.write Base64.decode64(File.read("adb.bash"))
       bash_completion.install decoded_file
@@ -102,11 +92,5 @@ class AndroidSdk < Formula
     EOS
   end
 
-  # The 'android' tool insists on deleting #{prefix}/platform-tools
-  # and then installing the new one. So it is impossible for us to redirect
-  # the SDK location to var so that the platform-tools don't have to be
-  # freshly installed EVERY DANG time the base SDK updates.
 
-  # Ideas: make android a script that calls the actual android tool, but after
-  # that tool exits it repairs the directory locations?
 end

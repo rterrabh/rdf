@@ -1,6 +1,5 @@
 class TopicViewWordpressSerializer < ApplicationSerializer
 
-  # These attributes will be delegated to the topic
   attributes :id,
              :posts_count,
              :filtered_posts_count,

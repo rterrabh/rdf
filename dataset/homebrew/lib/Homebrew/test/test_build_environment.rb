@@ -28,7 +28,7 @@ end
 class BuildEnvironmentDSLTests < Homebrew::TestCase
   def make_instance(&block)
     obj = Object.new.extend(BuildEnvironmentDSL)
-    #nodyna <ID:instance_eval-9> <IEV MODERATE (private access)>
+    #nodyna <instance_eval-627> <IEV MODERATE (private access)>
     obj.instance_eval(&block)
     obj
   end

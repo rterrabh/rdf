@@ -8,6 +8,7 @@ module ActiveRecord
 
         def dirties_query_cache(base, *method_names)
           method_names.each do |method_name|
+            #nodyna <class_eval-913> <not yet classified>
             base.class_eval <<-end_code, __FILE__, __LINE__ + 1
               def #{method_name}(*)
                 clear_query_cache if @query_cache_enabled
@@ -26,7 +27,6 @@ module ActiveRecord
         @query_cache_enabled = false
       end
 
-      # Enable the query cache within the block.
       def cache
         old, @query_cache_enabled = @query_cache_enabled, true
         yield
@@ -43,7 +43,6 @@ module ActiveRecord
         @query_cache_enabled = false
       end
 
-      # Disable the query cache within the block.
       def uncached
         old, @query_cache_enabled = @query_cache_enabled, false
         yield
@@ -51,12 +50,6 @@ module ActiveRecord
         @query_cache_enabled = old
       end
 
-      # Clears the query cache.
-      #
-      # One reason you may wish to call this method explicitly is between queries
-      # that ask the database to randomize results. Otherwise the cache would see
-      # the same SQL query and repeatedly return the same result each time, silently
-      # undermining the randomness you were expecting.
       def clear_query_cache
         @query_cache.clear
       end
@@ -85,8 +78,6 @@ module ActiveRecord
         result.dup
       end
 
-      # If arel is locked this is a SELECT ... FOR UPDATE or somesuch. Such
-      # queries should not be cached.
       def locked?(arel)
         arel.respond_to?(:locked) && arel.locked
       end

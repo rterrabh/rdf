@@ -1,0 +1,47 @@
+language: ruby
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1
+  - 2.2
+  - jruby-19mode
+  - jruby-9.0.0.0
+  - rbx-2
+gemfile:
+  - Gemfile
+matrix:
+  include:
+    - gemfile: gemfiles/Gemfile.base-versions
+      rvm: 1.9.3
+    - gemfile: gemfiles/Gemfile.beta-versions
+      rvm: 2.2
+    - gemfile: Gemfile
+      rvm: 2.2
+      env: CAPYBARA_CHROME=true
+  allow_failures:
+    - gemfile: gemfiles/Gemfile.beta-versions
+    - rvm: jruby-9.0.0.0
+env:
+  global:
+    - NOKOGIRI_USE_SYSTEM_LIBRARIES=true
+
+before_install:
+  - if [ $CAPYBARA_CHROME ]; then
+      CHROMEDRIVER_VERSION=$(wget -q -O - http://chromedriver.storage.googleapis.com/LATEST_RELEASE);
+      CHROMEDRIVER_URL="http://chromedriver.storage.googleapis.com/$CHROMEDRIVER_VERSION/chromedriver_linux64.zip";
+      FILE=`mktemp`; wget "$CHROMEDRIVER_URL" -qO $FILE && sudo unzip $FILE chromedriver -d /usr/local/bin; rm $FILE; sudo chmod 777 /usr/local/bin/chromedriver;
+      wget -q -O - https://dl-ssl.google.com/linux/linux_signing_key.pub | sudo apt-key add -;
+      sudo sh -c 'echo "deb http://dl.google.com/linux/chrome/deb/ stable main" >> /etc/apt/sources.list.d/google.list';
+      sudo apt-get update;
+      sudo apt-get install google-chrome-stable --force-yes;
+    fi
+  - sudo chmod 1777 /dev/shm
+  - sudo apt-get install awesome -y
+before_script:
+  - export DISPLAY=:99.0
+  - sh -e /etc/init.d/xvfb start
+  - sleep 1
+  - mkdir -p ~/.config/awesome
+  - echo "require('awful'); tags = {}; tags[1] = awful.tag({'name'})" > ~/.config/awesome/rc.lua
+  - "awesome &"
+script: "bundle exec rake travis"

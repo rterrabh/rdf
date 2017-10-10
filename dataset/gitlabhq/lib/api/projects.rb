@@ -1,5 +1,4 @@
 module API
-  # Projects API
   class Projects < Grape::API
     before { authenticate! }
 
@@ -13,7 +12,6 @@ module API
         end
 
         def filter_projects(projects)
-          # If the archived parameter is passed, limit results accordingly
           if params[:archived].present?
             projects = projects.where(archived: parse_boolean(params[:archived]))
           end
@@ -49,10 +47,6 @@ module API
         end
       end
 
-      # Get a projects list for authenticated user
-      #
-      # Example Request:
-      #   GET /projects
       get do
         @projects = current_user.authorized_projects
         @projects = filter_projects(@projects)
@@ -60,10 +54,6 @@ module API
         present @projects, with: Entities::Project
       end
 
-      # Get an owned projects list for authenticated user
-      #
-      # Example Request:
-      #   GET /projects/owned
       get '/owned' do
         @projects = current_user.owned_projects
         @projects = filter_projects(@projects)
@@ -71,10 +61,6 @@ module API
         present @projects, with: Entities::Project
       end
 
-      # Get all projects for admin user
-      #
-      # Example Request:
-      #   GET /projects/all
       get '/all' do
         authenticated_as_admin!
         @projects = Project.all
@@ -83,42 +69,15 @@ module API
         present @projects, with: Entities::Project
       end
 
-      # Get a single project
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      # Example Request:
-      #   GET /projects/:id
       get ":id" do
         present user_project, with: Entities::ProjectWithAccess, user: current_user
       end
 
-      # Get events for a single project
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      # Example Request:
-      #   GET /projects/:id/events
       get ":id/events" do
         events = paginate user_project.events.recent
         present events, with: Entities::Event
       end
 
-      # Create new project
-      #
-      # Parameters:
-      #   name (required) - name for new project
-      #   description (optional) - short project description
-      #   issues_enabled (optional)
-      #   merge_requests_enabled (optional)
-      #   wiki_enabled (optional)
-      #   snippets_enabled (optional)
-      #   namespace_id (optional) - defaults to user namespace
-      #   public (optional) - if true same as setting visibility_level = 20
-      #   visibility_level (optional) - 0 by default
-      #   import_url (optional)
-      # Example Request
-      #   POST /projects
       post do
         required_attributes! [:name]
         attrs = attributes_for_keys [:name,
@@ -144,22 +103,6 @@ module API
         end
       end
 
-      # Create new project for a specified user.  Only available to admin users.
-      #
-      # Parameters:
-      #   user_id (required) - The ID of a user
-      #   name (required) - name for new project
-      #   description (optional) - short project description
-      #   default_branch (optional) - 'master' by default
-      #   issues_enabled (optional)
-      #   merge_requests_enabled (optional)
-      #   wiki_enabled (optional)
-      #   snippets_enabled (optional)
-      #   public (optional) - if true same as setting visibility_level = 20
-      #   visibility_level (optional)
-      #   import_url (optional)
-      # Example Request
-      #   POST /projects/user/:user_id
       post "user/:user_id" do
         authenticated_as_admin!
         user = User.find(params[:user_id])
@@ -182,12 +125,6 @@ module API
         end
       end
 
-      # Fork new project for the current user.
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      # Example Request
-      #   POST /projects/fork/:id
       post 'fork/:id' do
         @forked_project =
           ::Projects::ForkService.new(user_project,
@@ -199,21 +136,6 @@ module API
         end
       end
 
-      # Update an existing project
-      #
-      # Parameters:
-      #   id (required) - the id of a project
-      #   name (optional) - name of a project
-      #   path (optional) - path of a project
-      #   description (optional) - short project description
-      #   issues_enabled (optional)
-      #   merge_requests_enabled (optional)
-      #   wiki_enabled (optional)
-      #   snippets_enabled (optional)
-      #   public (optional) - if true same as setting visibility_level = 20
-      #   visibility_level (optional) - visibility level of a project
-      # Example Request
-      #   PUT /projects/:id
       put ':id' do
         attrs = attributes_for_keys [:name,
                                      :path,
@@ -242,24 +164,11 @@ module API
         end
       end
 
-      # Remove project
-      #
-      # Parameters:
-      #   id (required) - The ID of a project
-      # Example Request:
-      #   DELETE /projects/:id
       delete ":id" do
         authorize! :remove_project, user_project
         ::Projects::DestroyService.new(user_project, current_user, {}).execute
       end
 
-      # Mark this project as forked from another
-      #
-      # Parameters:
-      #   id: (required) - The ID of the project being marked as a fork
-      #   forked_from_id: (required) - The ID of the project it was forked from
-      # Example Request:
-      #   POST /projects/:id/fork/:forked_from_id
       post ":id/fork/:forked_from_id" do
         authenticated_as_admin!
         forked_from_project = find_project(params[:forked_from_id])
@@ -275,26 +184,12 @@ module API
 
       end
 
-      # Remove a forked_from relationship
-      #
-      # Parameters:
-      # id: (required) - The ID of the project being marked as a fork
-      # Example Request:
-      #  DELETE /projects/:id/fork
       delete ":id/fork" do
         authenticated_as_admin!
         unless user_project.forked_project_link.nil?
           user_project.forked_project_link.destroy
         end
       end
-      # search for projects current_user has access to
-      #
-      # Parameters:
-      #   query (required) - A string contained in the project name
-      #   per_page (optional) - number of projects to return per page
-      #   page (optional) - the page to retrieve
-      # Example Request:
-      #   GET /projects/search/:query
       get "/search/:query" do
         ids = current_user.authorized_projects.map(&:id)
         visibility_levels = [ Gitlab::VisibilityLevel::INTERNAL, Gitlab::VisibilityLevel::PUBLIC ]
@@ -313,10 +208,6 @@ module API
       end
 
 
-      # Get a users list
-      #
-      # Example Request:
-      #  GET /users
       get ':id/users' do
         @users = User.where(id: user_project.team.users.map(&:id))
         @users = @users.search(params[:search]) if params[:search].present?

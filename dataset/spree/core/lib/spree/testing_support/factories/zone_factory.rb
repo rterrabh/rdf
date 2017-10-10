@@ -3,7 +3,7 @@ FactoryGirl.define do
     name 'GlobalZone'
     description { generate(:random_string) }
     zone_members do |proxy|
-      #nodyna <ID:instance_eval-1> <IEV COMPLEX (private access)>
+      #nodyna <instance_eval-2552> <IEV COMPLEX (private access)>
       zone = proxy.instance_eval { @instance }
       Spree::Country.all.map do |c|
         zone_member = Spree::ZoneMember.create(zoneable: c, zone: zone)
@@ -17,7 +17,7 @@ FactoryGirl.define do
 
     factory :zone_with_country do
       zone_members do |proxy|
-        #nodyna <ID:instance_eval-2> <IEV COMPLEX (private access)>
+        #nodyna <instance_eval-2553> <IEV COMPLEX (private access)>
         zone = proxy.instance_eval { @instance }
         country = create(:country)
         [Spree::ZoneMember.create(zoneable: country, zone: zone)]

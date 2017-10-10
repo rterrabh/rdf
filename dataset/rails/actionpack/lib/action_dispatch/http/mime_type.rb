@@ -12,6 +12,7 @@ module Mime
     %w(<< concat shift unshift push pop []= clear compact! collect!
     delete delete_at delete_if flatten! map! insert reject! reverse!
     replace slice! sort! uniq!).each do |method|
+      #nodyna <module_eval-1239> <not yet classified>
       module_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{method}(*)
           @symbols = nil
@@ -37,19 +38,6 @@ module Mime
     end
   end
 
-  # Encapsulates the notion of a mime type. Can be used at render time, for example, with:
-  #
-  #   class PostsController < ActionController::Base
-  #     def show
-  #       @post = Post.find(params[:id])
-  #
-  #       respond_to do |format|
-  #         format.html
-  #         format.ics { render text: @post.to_ics, mime_type: Mime::Type["text/calendar"]  }
-  #         format.xml { render xml: @post }
-  #       end
-  #     end
-  #   end
   class Type
     @@html_types = Set.new [:html, :all]
     cattr_reader :html_types
@@ -58,7 +46,6 @@ module Mime
 
     @register_callbacks = []
 
-    # A simple helper class used in parsing the accept header
     class AcceptItem #:nodoc:
       attr_accessor :index, :name, :q
       alias :to_s :name
@@ -85,7 +72,6 @@ module Mime
       def assort!
         sort!
 
-        # Take care of the broken text/xml entry by renaming or deleting it
         if text_xml_idx && app_xml_idx
           app_xml.q = [text_xml.q, app_xml.q].max # set the q value to the max of the two
           exchange_xml_items if app_xml_idx > text_xml_idx  # make sure app_xml is ahead of text_xml in the list
@@ -94,7 +80,6 @@ module Mime
           text_xml.name = Mime::XML.to_s
         end
 
-        # Look for more specific XML-based types and sort them ahead of app/xml
         if app_xml_idx
           idx = app_xml_idx
 
@@ -153,17 +138,15 @@ module Mime
         EXTENSION_LOOKUP[extension.to_s]
       end
 
-      # Registers an alias that's not used on mime type lookup, but can be referenced directly. Especially useful for
-      # rendering different HTML versions depending on the user agent, like an iPhone.
       def register_alias(string, symbol, extension_synonyms = [])
         register(string, symbol, [], extension_synonyms, true)
       end
 
       def register(string, symbol, mime_type_synonyms = [], extension_synonyms = [], skip_lookup = false)
-        #nodyna <ID:const_set-1> <CS COMPLEX (change-prone variable)>
+        #nodyna <const_set-1240> <CS COMPLEX (change-prone variable)>
         Mime.const_set(symbol.upcase, Type.new(string, symbol, mime_type_synonyms))
 
-        #nodyna <ID:const_get-5> <CG COMPLEX (change-prone variable)>
+        #nodyna <const_get-1241> <CG COMPLEX (change-prone variable)>
         new_mime = Mime.const_get(symbol.upcase)
         SET << new_mime
 
@@ -202,25 +185,15 @@ module Mime
         parse_data_with_trailing_star($1) if accept_header =~ TRAILING_STAR_REGEXP
       end
 
-      # For an input of <tt>'text'</tt>, returns <tt>[Mime::JSON, Mime::XML, Mime::ICS,
-      # Mime::HTML, Mime::CSS, Mime::CSV, Mime::JS, Mime::YAML, Mime::TEXT]</tt>.
-      #
-      # For an input of <tt>'application'</tt>, returns <tt>[Mime::HTML, Mime::JS,
-      # Mime::XML, Mime::YAML, Mime::ATOM, Mime::JSON, Mime::RSS, Mime::URL_ENCODED_FORM]</tt>.
       def parse_data_with_trailing_star(input)
         Mime::SET.select { |m| m =~ input }
       end
 
-      # This method is opposite of register method.
-      #
-      # Usage:
-      #
-      #   Mime::Type.unregister(:mobile)
       def unregister(symbol)
         symbol = symbol.upcase
-        #nodyna <ID:const_get-6> <CG COMPLEX (change-prone variable)>
+        #nodyna <const_get-1242> <CG COMPLEX (change-prone variable)>
         mime = Mime.const_get(symbol)
-        #nodyna <ID:instance_eval-2> <IEV MODERATE (private access)>
+        #nodyna <instance_eval-1243> <IEV MODERATE (private access)>
         Mime.instance_eval { remove_const(symbol) }
 
         SET.delete_if { |v| v.eql?(mime) }

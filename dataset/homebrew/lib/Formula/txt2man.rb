@@ -13,7 +13,6 @@ class Txt2man < Formula
   end
 
   test do
-    # txt2man
     (testpath/"test.txt").write <<-EOS.undent
       A TITLE
 
@@ -22,9 +21,7 @@ class Txt2man < Formula
 
     assert_match(/\.SH A TITLE/, shell_output("#{bin}/txt2man test.txt"))
 
-    # src2man
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
 
       /** 3
       * main - do stuff
@@ -35,7 +32,6 @@ class Txt2man < Formula
     assert_equal "main.3\n", shell_output("#{bin}/src2man test.c 2>&1")
     assert File.read("main.3").include?(%q(\fBmain \fP- do stuff))
 
-    # bookman
     system "#{bin}/bookman", "-t", "Test", "-o", "test", Dir["#{man1}/*"]
     assert File.exist?("test")
   end

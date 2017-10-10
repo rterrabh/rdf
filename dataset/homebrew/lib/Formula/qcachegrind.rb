@@ -19,9 +19,7 @@ class Qcachegrind < Formula
     cd "qcachegrind"
     system "qmake", "-spec", "macx-g++", "-config", "release"
     system "make"
-    # Install app
     prefix.install "qcachegrind.app"
-    # Symlink in the command-line version
     bin.install_symlink prefix/"qcachegrind.app/Contents/MacOS/qcachegrind"
   end
 end

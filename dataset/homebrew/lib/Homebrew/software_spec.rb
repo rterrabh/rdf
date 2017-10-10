@@ -69,7 +69,7 @@ class SoftwareSpec
   end
 
   def bottle(&block)
-    #nodyna <ID:instance_eval-8> <IEV COMPLEX (block execution)>
+    #nodyna <instance_eval-660> <IEV COMPLEX (block execution)>
     bottle_specification.instance_eval(&block)
   end
 
@@ -246,7 +246,6 @@ class Bottle
     @spec.compatible_cellar?
   end
 
-  # Does the bottle need to be relocated?
   def skip_relocation?
     @spec.skip_relocation?
   end
@@ -290,7 +289,6 @@ class BottleSpecification
     cellar == :any || cellar == :any_skip_relocation || cellar == HOMEBREW_CELLAR.to_s
   end
 
-  # Does the Bottle this BottleSpecification belongs to need to be relocated?
   def skip_relocation?
     cellar == :any_skip_relocation
   end
@@ -299,10 +297,8 @@ class BottleSpecification
     !!checksum_for(tag)
   end
 
-  # Checksum methods in the DSL's bottle block optionally take
-  # a Hash, which indicates the platform the checksum applies on.
   Checksum::TYPES.each do |cksum|
-    #nodyna <ID:define_method-12> <DM MODERATE (array)>
+    #nodyna <define_method-661> <DM MODERATE (array)>
     define_method(cksum) do |val|
       digest, tag = val.shift
       collector[tag] = Checksum.new(cksum, digest)

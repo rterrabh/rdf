@@ -25,7 +25,6 @@ class Libpagemaker < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libpagemaker/libpagemaker.h>
       int main() {
         libpagemaker::PMDocument::isSupported(0);
       }

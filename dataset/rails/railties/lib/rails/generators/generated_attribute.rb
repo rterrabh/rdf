@@ -14,9 +14,6 @@ module Rails
         def parse(column_definition)
           name, type, has_index = column_definition.split(':')
 
-          # if user provided "name:index" instead of "name:string:index"
-          # type should be set blank so GeneratedAttribute's constructor
-          # could set it to :string
           has_index, type = type, nil if INDEX_OPTIONS.include?(type)
 
           type, attr_options = *parse_type_and_options(type)
@@ -36,8 +33,6 @@ module Rails
 
         private
 
-        # parse possible attribute options like :limit for string/text/binary/integer, :precision/:scale for decimals or :polymorphic for references/belongs_to
-        # when declaring options curly brackets should be used
         def parse_type_and_options(type)
           case type
           when /(string|text|binary|integer)\{(\d+)\}/

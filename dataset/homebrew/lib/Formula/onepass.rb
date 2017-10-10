@@ -16,12 +16,8 @@ class Onepass < Formula
   depends_on :python if MacOS.version <= :snow_leopard
   depends_on "openssl" # For M2Crypto
 
-  # For vendored Swig
   depends_on "pcre" => :build
 
-  # Homebrew's swig breaks M2Crypto due to upstream's undermaintained status.
-  # https://github.com/swig/swig/issues/344
-  # https://github.com/martinpaljak/M2Crypto/issues/60
   resource "swig304" do
     url "https://downloads.sourceforge.net/project/swig/swig/swig-3.0.4/swig-3.0.4.tar.gz"
     sha256 "410ffa80ef5535244b500933d70c1b65206333b546ca5a6c89373afb65413795"
@@ -51,7 +47,6 @@ class Onepass < Formula
       system "python", *Language::Python.setup_install_args(libexec/"vendor")
     end
 
-    # M2Crypto always has to be done individually as we have to inreplace OpenSSL path
     resource("M2Crypto").stage do
       inreplace "setup.py", "self.openssl = '/usr'", "self.openssl = '#{Formula["openssl"].opt_prefix}'"
       system "python", *Language::Python.setup_install_args(libexec/"vendor")

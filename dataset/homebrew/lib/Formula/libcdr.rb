@@ -28,7 +28,6 @@ class Libcdr < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libcdr/libcdr.h>
       int main() {
         libcdr::CDRDocument::isSupported(0);
       }

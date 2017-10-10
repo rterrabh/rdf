@@ -46,8 +46,6 @@ class Bullet < Formula
 
     args << "-DUSE_DOUBLE_PRECISION=ON" if build.with? "double-precision"
 
-    # Related to the following warnings when building --with-shared --with-demo
-    # https://gist.github.com/scpeters/6afc44f0cf916b11a226
     if build.with?("demo") && (build.with?("shared") || build.with?("framework"))
       raise "Demos cannot be installed with shared libraries or framework."
     end
@@ -70,7 +68,6 @@ class Bullet < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include "bullet/LinearMath/btPolarDecomposition.h"
       int main() {
         btMatrix3x3 I = btMatrix3x3::getIdentity();
         btMatrix3x3 u, h;

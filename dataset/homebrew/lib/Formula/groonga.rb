@@ -37,7 +37,6 @@ class Groonga < Formula
     args << "--with-mecab" if build.with? "mecab"
     args << "--with-lz4" if build.with? "lz4"
 
-    # ZeroMQ is an optional dependency that will be auto-detected unless we disable it
     system "./configure", *args
     system "make", "install"
   end

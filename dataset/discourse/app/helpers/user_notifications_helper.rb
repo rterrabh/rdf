@@ -44,12 +44,10 @@ module UserNotificationsHelper
     end
     return result unless result.blank?
 
-    # If there is no first paragaph, return the first div (onebox)
     doc.css('div').first
   end
 
   def email_excerpt(html, posts_count)
-    # only include 1st paragraph when more than 1 posts
     html = first_paragraph_from(html).to_s if posts_count > 1
     raw format_for_email(html)
   end

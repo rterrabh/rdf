@@ -16,7 +16,6 @@ class Pygobject < Formula
 
   option :universal
 
-  # https://bugzilla.gnome.org/show_bug.cgi?id=668522
   patch do
     url "https://git.gnome.org/browse/pygobject/patch/gio/gio-types.defs?id=42d01f060c5d764baa881d13c103d68897163a49"
     sha256 "7bb60636a9731afd030820090062688a6b53af22c276d89d6af8db264d76edcc"

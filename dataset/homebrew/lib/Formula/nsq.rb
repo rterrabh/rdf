@@ -63,7 +63,6 @@ class Nsq < Formula
   end
 
   def install
-    # build a proper GOPATH tree for local dependencies
     (buildpath + "src/github.com/bitly/nsq").install "internal", "nsqlookupd", "nsqd", "nsqadmin"
 
     ENV["GOPATH"] = buildpath

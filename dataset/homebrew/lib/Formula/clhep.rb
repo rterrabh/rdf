@@ -20,7 +20,6 @@ class Clhep < Formula
   depends_on "cmake" => :build
 
   def install
-    # CLHEP is super fussy and doesn't allow source tree builds
     dir = Dir.mktmpdir
     cd dir do
       args = std_cmake_args
@@ -36,8 +35,6 @@ class Clhep < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
-      #include <Vector/ThreeVector.h>
 
       int main() {
         CLHEP::Hep3Vector aVec(1, 2, 3);

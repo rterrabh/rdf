@@ -2,19 +2,6 @@ require 'monitor'
 
 module ActiveSupport
   module Cache
-    # A cache store implementation which stores everything into memory in the
-    # same process. If you're running multiple Ruby on Rails server processes
-    # (which is the case if you're using mongrel_cluster or Phusion Passenger),
-    # then this means that Rails server process instances won't be able
-    # to share cache data with each other and this may not be the most
-    # appropriate cache in that scenario.
-    #
-    # This cache has a bounded size specified by the :size options to the
-    # initializer (default is 32Mb). When the cache exceeds the allotted size,
-    # a cleanup will occur which tries to prune the cache down to three quarters
-    # of the maximum size by removing the least recently used entries.
-    #
-    # MemoryStore is thread-safe.
     class MemoryStore < Store
       def initialize(options = nil)
         options ||= {}
@@ -36,7 +23,6 @@ module ActiveSupport
         end
       end
 
-      # Preemptively iterates through all stored keys and removes the ones which have expired.
       def cleanup(options = nil)
         options = merged_options(options)
         instrument(:cleanup, :size => @data.size) do
@@ -48,8 +34,6 @@ module ActiveSupport
         end
       end
 
-      # To ensure entries fit within the specified memory prune the cache by removing the least
-      # recently accessed entries.
       def prune(target_size, max_time = nil)
         return if pruning?
         @pruning = true
@@ -68,12 +52,10 @@ module ActiveSupport
         end
       end
 
-      # Returns true if the cache is currently being pruned.
       def pruning?
         @pruning
       end
 
-      # Increment an integer value in the cache.
       def increment(name, amount = 1, options = nil)
         synchronize do
           options = merged_options(options)
@@ -87,7 +69,6 @@ module ActiveSupport
         end
       end
 
-      # Decrement an integer value in the cache.
       def decrement(name, amount = 1, options = nil)
         synchronize do
           options = merged_options(options)
@@ -116,8 +97,6 @@ module ActiveSupport
         "<##{self.class.name} entries=#{@data.size}, size=#{@cache_size}, options=#{@options.inspect}>"
       end
 
-      # Synchronize calls to the cache. This should be called wherever the underlying cache implementation
-      # is not thread safe.
       def synchronize(&block) # :nodoc:
         @monitor.synchronize(&block)
       end

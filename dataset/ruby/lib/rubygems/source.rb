@@ -1,11 +1,6 @@
 require 'uri'
 require 'fileutils'
 
-##
-# A Source knows how to list and fetch gems from a RubyGems marshal index.
-#
-# There are other Source subclasses for installed gems, local gems, the
-# bundler dependency API and so-forth.
 
 class Gem::Source
 
@@ -17,13 +12,9 @@ class Gem::Source
     :prerelease => 'prerelease_specs',
   }
 
-  ##
-  # The URI this source will fetch gems from.
 
   attr_reader :uri
 
-  ##
-  # Creates a new Source which will use the index located at +uri+.
 
   def initialize(uri)
     begin
@@ -38,16 +29,12 @@ class Gem::Source
     @api_uri = nil
   end
 
-  ##
-  # Use an SRV record on the host to look up the true endpoint for the index.
 
   def api_uri # :nodoc:
     require 'rubygems/remote_fetcher'
     @api_uri ||= Gem::RemoteFetcher.fetcher.api_endpoint uri
   end
 
-  ##
-  # Sources are ordered by installation preference.
 
   def <=>(other)
     case other
@@ -78,8 +65,6 @@ class Gem::Source
 
   alias_method :eql?, :== # :nodoc:
 
-  ##
-  # Returns a Set that can fetch specifications from this source.
 
   def dependency_resolver_set # :nodoc:
     return Gem::Resolver::IndexSet.new self if 'file' == api_uri.scheme
@@ -104,19 +89,14 @@ class Gem::Source
     @uri.hash
   end
 
-  ##
-  # Returns the local directory to write +uri+ to.
 
   def cache_dir(uri)
-    # Correct for windows paths
     escaped_path = uri.path.sub(/^\/([a-z]):\//i, '/\\1-/')
     escaped_path.untaint
 
     File.join Gem.spec_cache_dir, "#{uri.host}%#{uri.port}", File.dirname(escaped_path)
   end
 
-  ##
-  # Returns true when it is possible and safe to update the cache directory.
 
   def update_cache?
     @update_cache ||=
@@ -127,8 +107,6 @@ class Gem::Source
       end
   end
 
-  ##
-  # Fetches a specification for the given +name_tuple+.
 
   def fetch_spec name_tuple
     fetcher = Gem::RemoteFetcher.fetcher
@@ -160,20 +138,9 @@ class Gem::Source
       end
     end
 
-    # TODO: Investigate setting Gem::Specification#loaded_from to a URI
     Marshal.load spec
   end
 
-  ##
-  # Loads +type+ kind of specs fetching from +@uri+ if the on-disk cache is
-  # out of date.
-  #
-  # +type+ is one of the following:
-  #
-  # :released   => Return the list of all released specs
-  # :latest     => Return the list of only the highest version of each gem
-  # :prerelease => Return the list of all prerelease only specs
-  #
 
   def load_specs(type)
     file       = FILES[type]
@@ -201,9 +168,6 @@ class Gem::Source
     end
   end
 
-  ##
-  # Downloads +spec+ and writes it to +dir+.  See also
-  # Gem::RemoteFetcher#download.
 
   def download(spec, dir=Dir.pwd)
     fetcher = Gem::RemoteFetcher.fetcher

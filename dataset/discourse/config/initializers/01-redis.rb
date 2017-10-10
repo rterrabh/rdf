@@ -8,7 +8,6 @@ if defined?(PhusionPassenger)
         if forked
             Discourse.after_fork
         else
-            # We're in conservative spawning mode. We don't need to do anything.
         end
     end
 end

@@ -59,6 +59,7 @@ module ActionDispatch
       end
 
       %w{ Symbol Slash Dot }.each do |t|
+        #nodyna <class_eval-1247> <not yet classified>
         class_eval <<-eoruby, __FILE__, __LINE__ + 1
           class #{t} < Terminal;
             def type; :#{t.upcase}; end

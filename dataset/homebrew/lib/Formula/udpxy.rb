@@ -11,8 +11,6 @@ class Udpxy < Formula
     sha1 "7f2dfa95dcf0f437c1ddc0197b1fa1599281c68b" => :lion
   end
 
-  # Fix gzip path in Makefile for uname Darwin, this is needed to fix the install task
-  # http://sourceforge.net/p/udpxy/patches/4/
   patch :DATA
 
   def install

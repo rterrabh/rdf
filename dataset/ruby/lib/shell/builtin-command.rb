@@ -1,13 +1,3 @@
-#
-#   shell/builtin-command.rb -
-#       $Release Version: 0.7 $
-#       $Revision$
-#       by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 require "shell/filter"
 
@@ -27,7 +17,6 @@ class Shell
     end
 
     def each(rs = nil)
-      # do nothing
     end
   end
 

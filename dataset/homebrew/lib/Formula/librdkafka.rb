@@ -22,7 +22,6 @@ class Librdkafka < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <librdkafka/rdkafka.h>
 
       int main (int argc, char **argv)
       {

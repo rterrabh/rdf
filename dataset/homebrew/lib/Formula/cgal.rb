@@ -30,7 +30,6 @@ class Cgal < Formula
   depends_on "qt" if build.include? "imaging"
   depends_on "eigen" if build.with? "eigen3"
 
-  # Allows to compile with clang 425: http://goo.gl/y9Dg2y
   patch :DATA
 
   def install
@@ -68,4 +67,3 @@ index 3f709ff..f0e5bd3 100644
 +    skip_comment_OFF(in);
      return in;
  }
- #undef CGAL_IN

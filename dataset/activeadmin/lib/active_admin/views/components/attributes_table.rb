@@ -48,10 +48,6 @@ module ActiveAdmin
         'attributes_table'
       end
 
-      # Build Colgroups
-      #
-      # Colgroups are only necessary for a collection of records; not
-      # a single record.
       def build_colgroups
         return if single_record?
         reset_cycle(self.class.to_s)
@@ -87,10 +83,10 @@ module ActiveAdmin
         if attr.is_a?(Proc)
           attr.call(record)
         elsif attr =~ /\A(.+)_id\z/ && reflection_for(record.class, $1.to_sym)
-          #nodyna <ID:send-61> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-50> <SD COMPLEX (change-prone variables)>
           record.public_send $1
         elsif record.respond_to? attr
-          #nodyna <ID:send-62> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-51> <SD COMPLEX (change-prone variables)>
           record.public_send attr
         elsif record.respond_to? :[]
           record[attr]

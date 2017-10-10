@@ -14,8 +14,6 @@ module MacCPUs
     OPTIMIZATION_FLAGS
   end
 
-  # These methods use info spewed out by sysctl.
-  # Look in <mach/machine.h> for decoding info.
   def type
     case sysctl_int("hw.cputype")
     when 7
@@ -60,8 +58,6 @@ module MacCPUs
       when 11
         :g4e # PowerPC 7450
       when 100
-        # This is the only 64-bit PPC CPU type, so it's useful
-        # to distinguish in `brew config` output and in bottle tags
         MacOS.prefer_64_bit? ? :g5_64 : :g5 # PowerPC 970
       else
         :dunno
@@ -89,11 +85,7 @@ module MacCPUs
     intel? ? :x86_64 : :ppc64
   end
 
-  # Returns an array that's been extended with ArchitectureListExtension,
-  # which provides helpers like #as_arch_flags and #as_cmake_arch_flags.
   def universal_archs
-    # Building 64-bit is a no-go on Tiger, and pretty hit or miss on Leopard.
-    # Don't even try unless Tigerbrew's experimental 64-bit Leopard support is enabled.
     if MacOS.version <= :leopard && !MacOS.prefer_64_bit?
       [arch_32_bit].extend ArchitectureListExtension
     else

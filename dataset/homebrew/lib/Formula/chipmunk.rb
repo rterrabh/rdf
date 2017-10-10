@@ -24,8 +24,6 @@ class Chipmunk < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <stdio.h>
-      #include <chipmunk.h>
 
       int main(void){
         cpVect gravity = cpv(0, -100);

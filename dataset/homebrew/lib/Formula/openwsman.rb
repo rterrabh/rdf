@@ -31,7 +31,6 @@ class Openwsman < Formula
   test do
     (testpath/"openwsman.conf").write <<-EOS.undent
       [server]
-      # conf file based on https://raw.githubusercontent.com/Openwsman/openwsman/master/etc/openwsman.conf
 
       port = 5985
 
@@ -55,7 +54,6 @@ class Openwsman < Formula
       verify_cert = no
     EOS
 
-    # should be able to open and parse the a config file
     system "#{sbin}/openwsmand", "--config-file=#{testpath}/openwsman.conf"
   end
 end

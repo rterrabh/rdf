@@ -22,7 +22,6 @@ class Gtkspell3 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gtkspell/gtkspell.h>
 
       int main(int argc, char *argv[]) {
         GList *list = gtk_spell_checker_get_language_list();

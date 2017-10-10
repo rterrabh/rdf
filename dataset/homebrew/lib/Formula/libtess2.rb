@@ -15,7 +15,6 @@ class Libtess2 < Formula
   depends_on "cmake" => :build
 
   def install
-    # creating CMakeLists.txt, since the original source doesn't have one
     (buildpath/"CMakeLists.txt").write <<-EOS.undent
       cmake_minimum_required(VERSION 2.6)
       project(libtess)

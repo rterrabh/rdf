@@ -27,7 +27,6 @@ class Atk < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <atk/atk.h>
 
       int main(int argc, char *argv[]) {
         const gchar *version = atk_get_version();

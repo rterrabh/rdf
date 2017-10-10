@@ -13,7 +13,6 @@ class PbcSig < Formula
 
   depends_on "pbc"
 
-  # https://groups.google.com/forum/#!topic/pbc-devel/ZmFCHZmrhcw
   patch :DATA
 
   def install
@@ -24,8 +23,6 @@ class PbcSig < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <pbc/pbc.h>
-      #include <pbc/pbc_sig.h>
 
       int main()
       {
@@ -53,6 +50,3 @@ index ed1b437..8aa8331 100644
 @@ -1,4 +1,5 @@
  //see Boneh, Boyen and Shacham, "Short Group Signatures"
 +#include <stdint.h>
- #include <pbc/pbc_utils.h>
- #include "pbc_sig.h"
- #include "pbc_hash.h"

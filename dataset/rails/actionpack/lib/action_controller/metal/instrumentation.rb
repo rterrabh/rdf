@@ -2,11 +2,6 @@ require 'benchmark'
 require 'abstract_controller/logger'
 
 module ActionController
-  # Adds instrumentation to several ends in ActionController::Base. It also provides
-  # some hooks related with process_action, this allows an ORM like Active Record
-  # and/or DataMapper to plug in ActionController and show related information.
-  #
-  # Check ActiveRecord::Railties::ControllerRuntime for an example.
   module Instrumentation
     extend ActiveSupport::Concern
 
@@ -70,35 +65,19 @@ module ActionController
 
   private
 
-    # A hook invoked every time a before callback is halted.
     def halted_callback_hook(filter)
       ActiveSupport::Notifications.instrument("halted_callback.action_controller", :filter => filter)
     end
 
-    # A hook which allows you to clean up any time taken into account in
-    # views wrongly, like database querying time.
-    #
-    #   def cleanup_view_runtime
-    #     super - time_taken_in_something_expensive
-    #   end
-    #
-    # :api: plugin
     def cleanup_view_runtime #:nodoc:
       yield
     end
 
-    # Every time after an action is processed, this method is invoked
-    # with the payload, so you can add more information.
-    # :api: plugin
     def append_info_to_payload(payload) #:nodoc:
       payload[:view_runtime] = view_runtime
     end
 
     module ClassMethods
-      # A hook which allows other frameworks to log what happened during
-      # controller process action. This method should return an array
-      # with the messages to be added.
-      # :api: plugin
       def log_process_action(payload) #:nodoc:
         messages, view_runtime = [], payload[:view_runtime]
         messages << ("Views: %.1fms" % view_runtime.to_f) if view_runtime

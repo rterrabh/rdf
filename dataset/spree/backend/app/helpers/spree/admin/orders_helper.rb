@@ -1,11 +1,10 @@
 module Spree
   module Admin
     module OrdersHelper
-      # Renders all the extension partials that may have been specified in the extensions
       def event_links
         links = []
         @order_events.sort.each do |event|
-          #nodyna <ID:send-37> <SD COMPLEX (array)>
+          #nodyna <send-2425> <SD COMPLEX (array)>
           if @order.send("can_#{event}?")
             links << button_link_to(Spree.t(event).capitalize, [event, :admin, @order],
                                     :method => :put,

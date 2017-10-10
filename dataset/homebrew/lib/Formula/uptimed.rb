@@ -19,7 +19,6 @@ class Uptimed < Formula
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
 
-    # Per MacPorts
     inreplace "Makefile", "/var/spool/uptimed", "#{var}/uptimed"
     inreplace "libuptimed/urec.h", "/var/spool", var
     inreplace "etc/uptimed.conf-dist", "/var/run", "#{var}/uptimed"

@@ -18,7 +18,6 @@ class Ape < Formula
 
   def install
     system "./build.sh"
-    # The Makefile installs a configuration file in the bindir which our bot red-flags
     (prefix+"etc").mkdir
     inreplace "Makefile", "bin/ape.conf $(bindir)", "bin/ape.conf $(prefix)/etc"
     system "make", "install", "prefix=#{prefix}"

@@ -7,11 +7,9 @@ class Rust < Formula
     sha256 "ea6eb983daf2a073df57186a58f0d4ce0e85c711bec13c627a8c85d51b6a6d78"
 
     resource "cargo" do
-      # git required because of submodules
       url "https://github.com/rust-lang/cargo.git", :tag => "0.4.0", :revision => "553b363bcfcf444c5bd4713e30382a6ffa2a52dd"
     end
 
-    # name includes date to satisfy cache
     resource "cargo-nightly-2015-08-12" do
       url "https://static-rust-lang-org.s3.amazonaws.com/cargo-dist/2015-08-12/cargo-nightly-x86_64-apple-darwin.tar.gz"
       sha256 "3d0ea9e20215e6450e2ae3977bbe20b9fb2bbf51ce145017ab198ea3409ffda2"
@@ -35,7 +33,6 @@ class Rust < Formula
   depends_on "pkg-config" => :build
   depends_on "openssl"
 
-  # According to the official readme, GCC 4.7+ is required
   fails_with :gcc_4_0
   fails_with :gcc
   ("4.3".."4.6").each do |n|
@@ -61,13 +58,10 @@ class Rust < Formula
       if build.stable?
         resource("cargo-nightly-2015-08-12").stage do
           system "./install.sh", "--prefix=#{cargo_stage_path}/target/snapshot/cargo"
-          # satisfy make target to skip download
           touch "#{cargo_stage_path}/target/snapshot/cargo/bin/cargo"
         end
       end
 
-      # Fix for El Capitan DYLD_LIBRARY_PATH behavior
-      # https://github.com/rust-lang/cargo/issues/1816
       inreplace "Makefile.in" do |s|
         s.gsub! '"$$(CFG_RUSTC)"', '$$(CFG_RUSTC)'
         s.gsub! '"$$(CARGO)"', '$$(CARGO)'

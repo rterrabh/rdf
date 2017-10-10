@@ -3,13 +3,12 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
   protect_from_forgery except: [:kerberos, :saml]
 
   Gitlab.config.omniauth.providers.each do |provider|
-    #nodyna <ID:define_method-2> <DM COMPLEX (array)>
+    #nodyna <define_method-530> <DM COMPLEX (array)>
     define_method provider['name'] do
       handle_omniauth
     end
   end
 
-  # Extend the standard message generation to accept our custom exception
   def failure_message
     exception = env["omniauth.error"]
     error   = exception.error_reason if exception.respond_to?(:error_reason)
@@ -19,15 +18,12 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
     error.to_s.humanize if error
   end
 
-  # We only find ourselves here
-  # if the authentication to LDAP was successful.
   def ldap
     @user = Gitlab::LDAP::User.new(oauth)
     @user.save if @user.changed? # will also save new users
     gl_user = @user.gl_user
     gl_user.remember_me = params[:remember_me] if @user.persisted?
 
-    # Do additional LDAP checks for the user filter and EE features
     if @user.allowed?
       log_audit_event(gl_user, with: :ldap)
       sign_in_and_redirect(gl_user)
@@ -47,7 +43,6 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
 
   def handle_omniauth
     if current_user
-      # Add new authentication method
       current_user.identities.find_or_create_by(extern_uid: oauth['uid'], provider: oauth['provider'])
       log_audit_event(current_user, with: oauth['provider'])
       redirect_to profile_account_path, notice: 'Authentication method updated'
@@ -55,7 +50,6 @@ class OmniauthCallbacksController < Devise::OmniauthCallbacksController
       @user = Gitlab::OAuth::User.new(oauth)
       @user.save
 
-      # Only allow properly saved users to login.
       if @user.persisted? && @user.valid?
         log_audit_event(@user.gl_user, with: oauth['provider'])
         sign_in_and_redirect(@user.gl_user)

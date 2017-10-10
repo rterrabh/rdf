@@ -1,4 +1,3 @@
-# Interface to the Redis-backed cache store used by the Repository model
 class RepositoryCache
   attr_reader :namespace, :backend
 

@@ -1,6 +1,3 @@
-# Sam: This has now forked of rails. Trouble is we would never like to use "about 1 month" ever, we only want months for 2 or more months. 
-#
-# Backporting a fix to rails itself may get too complex
 module FreedomPatches
   module Rails4
 
@@ -36,7 +33,6 @@ module FreedomPatches
           when 90..1439        then locale.t :about_x_hours,  :count => (distance_in_minutes.to_f / 60.0).round
           when 1440..2519      then locale.t :x_days,         :count => 1
           
-          # this is were we diverge from Rails
           when 2520..129599     then locale.t :x_days,         :count => (distance_in_minutes.to_f / 1440.0).round
           when 129600..525599   then locale.t :x_months,       :count => (distance_in_minutes.to_f / 43200.0).round
           else
@@ -46,11 +42,6 @@ module FreedomPatches
             tyear -= 1 if to_time.month < 3
             leap_years = (fyear > tyear) ? 0 : (fyear..tyear).count{|x| Date.leap?(x)}
             minute_offset_for_leap_year = leap_years * 1440
-            # Discount the leap year days when calculating year distance.
-            # e.g. if there are 20 leap year days between 2 dates having the same day
-            # and month then the based on 365 days calculation
-            # the distance in years will come out to over 80 years when in written
-            # english it would read better as about 80 years.
             minutes_with_offset         = distance_in_minutes - minute_offset_for_leap_year
             remainder                   = (minutes_with_offset % 525600)
             distance_in_years           = (minutes_with_offset / 525600)

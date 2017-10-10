@@ -6,9 +6,6 @@ module ActiveSupport
   module XmlMini_LibXML #:nodoc:
     extend self
 
-    # Parse an XML Document string or IO into a simple hash using libxml.
-    # data::
-    #   XML Document string or IO to parse
     def parse(data)
       if !data.respond_to?(:read)
         data = StringIO.new(data || '')
@@ -37,21 +34,15 @@ module LibXML #:nodoc:
     module Node #:nodoc:
       CONTENT_ROOT = '__content__'.freeze
 
-      # Convert XML document to hash.
-      #
-      # hash::
-      #   Hash to merge the converted element into.
       def to_hash(hash={})
         node_hash = {}
 
-        # Insert node hash into parent hash correctly.
         case hash[name]
           when Array then hash[name] << node_hash
           when Hash  then hash[name] = [hash[name], node_hash]
           when nil   then hash[name] = node_hash
         end
 
-        # Handle child elements
         each_child do |c|
           if c.element?
             c.to_hash(node_hash)
@@ -61,12 +52,10 @@ module LibXML #:nodoc:
           end
         end
 
-        # Remove content node if it is blank
         if node_hash.length > 1 && node_hash[CONTENT_ROOT].blank?
           node_hash.delete(CONTENT_ROOT)
         end
 
-        # Handle attributes
         each_attr { |a| node_hash[a.name] = a.value }
 
         hash
@@ -75,7 +64,7 @@ module LibXML #:nodoc:
   end
 end
 
-#nodyna <ID:send-223> <SD TRIVIAL (public methods)>
+#nodyna <send-1018> <SD TRIVIAL (public methods)>
 LibXML::XML::Document.send(:include, LibXML::Conversions::Document)
-#nodyna <ID:send-224> <SD TRIVIAL (public methods)>
+#nodyna <send-1019> <SD TRIVIAL (public methods)>
 LibXML::XML::Node.send(:include, LibXML::Conversions::Node)

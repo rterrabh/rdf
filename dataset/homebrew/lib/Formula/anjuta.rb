@@ -33,7 +33,6 @@ class Anjuta < Formula
   depends_on "vala" => :recommended
   depends_on "autogen" => :recommended
 
-  # patch submitted upstream at https://bugzilla.gnome.org/show_bug.cgi?id=752763
   patch :DATA
 
   def install
@@ -87,7 +86,6 @@ index b5f5f5d..5068739 100644
 @@ -94,7 +94,7 @@ am-parser.c: $(srcdir)/am-parser.y
  am-scanner.h: am-parser.c
 
- # Test program
 -
 +if !MACOSX
  noinst_PROGRAMS = projectparser
@@ -144,7 +142,6 @@ index 2a011e2..77dd800 100644
 -
 +endif
 
- ## File created by the gnome-build tools
 
 diff --git a/plugins/symbol-db/benchmark/symbol-db/Makefile.am b/plugins/symbol-db/benchmark/symbol-db/Makefile.am
 index c49665a..788b85b 100644
@@ -162,4 +159,3 @@ index c49665a..788b85b 100644
 -
 +endif
 
- ## File created by the gnome-build tools

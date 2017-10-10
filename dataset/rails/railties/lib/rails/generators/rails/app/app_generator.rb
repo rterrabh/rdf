@@ -12,28 +12,21 @@ module Rails
     private
       %w(template copy_file directory empty_directory inside
          empty_directory_with_keep_file create_file chmod shebang).each do |method|
+        #nodyna <class_eval-1158> <not yet classified>
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{method}(*args, &block)
-            #nodyna <ID:send-281> <SD MODERATE (change-prone variables)>
+            #nodyna <send-1159> <SD MODERATE (change-prone variables)>
             @generator.send(:#{method}, *args, &block)
           end
         RUBY
       end
 
-      # TODO: Remove once this is fully in place
       def method_missing(meth, *args, &block)
-        #nodyna <ID:send-281> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1160> <SD COMPLEX (change-prone variables)>
         @generator.send(meth, *args, &block)
       end
   end
 
-  # The application builder allows you to override elements of the application
-  # generator without being forced to reverse the operations of the default
-  # generator.
-  #
-  # This allows you to override entire operations, like the creation of the
-  # Gemfile, README, or JavaScript files, without needing to know exactly
-  # what those operations do so you can create another template action.
   class AppBuilder
     def rakefile
       template "Rakefile"
@@ -153,15 +146,12 @@ module Rails
   end
 
   module Generators
-    # We need to store the RAILS_DEV_PATH in a constant, otherwise the path
-    # can change in Ruby 1.8.7 when we FileUtils.cd.
     RAILS_DEV_PATH = File.expand_path("../../../../../..", File.dirname(__FILE__))
     RESERVED_NAMES = %w[application destroy plugin runner test]
 
     class AppGenerator < AppBase # :nodoc:
       add_shared_options_for "application"
 
-      # Add bin/rails options
       class_option :version, type: :boolean, aliases: "-v", group: :rails,
                              desc: "Show Rails version number and quit"
 
@@ -273,7 +263,6 @@ module Rails
         "rails new #{self.arguments.map(&:usage).join(' ')} [options]"
       end
 
-      # Define file as an alias to create_file for backwards compatibility.
       def file(*args, &block)
         create_file(*args, &block)
       end
@@ -335,13 +324,6 @@ module Rails
       end
     end
 
-    # This class handles preparation of the arguments before the AppGenerator is
-    # called. The class provides version or help information if they were
-    # requested, and also constructs the railsrc file (used for extra configuration
-    # options).
-    #
-    # This class should be called before the AppGenerator is required and started
-    # since it configures and mutates ARGV correctly.
     class ARGVScrubber # :nodoc:
       def initialize(argv = ARGV)
         @argv = argv

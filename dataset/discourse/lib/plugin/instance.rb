@@ -8,8 +8,8 @@ class Plugin::Instance
   attr_accessor :path, :metadata
   attr_reader :admin_route
 
-  # Memoized array readers
   [:assets, :auth_providers, :color_schemes, :initializers, :javascripts, :styles].each do |att|
+    #nodyna <class_eval-292> <not yet classified>
     class_eval %Q{
       def #{att}
         @#{att} ||= []
@@ -23,7 +23,6 @@ class Plugin::Instance
 
   def self.find_all(parent_path)
     [].tap { |plugins|
-      # also follows symlinks - http://stackoverflow.com/q/357754
       Dir["#{parent_path}/**/*/**/plugin.rb"].sort.each do |path|
         source = File.read(path)
         metadata = Plugin::Metadata.parse(source)
@@ -43,7 +42,7 @@ class Plugin::Instance
   end
 
   def enabled?
-    #nodyna <ID:send-49> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-293> <SD COMPLEX (change-prone variables)>
     @enabled_site_setting ? SiteSetting.send(@enabled_site_setting) : true
   end
 
@@ -54,50 +53,46 @@ class Plugin::Instance
 
     klass.attributes(attr) unless attr.to_s.start_with?("include_")
 
-    #nodyna <ID:send-50> <SD MODERATE (private methods)>
-    #nodyna <ID:define_method-6> <DM MODERATE (events)>
+    #nodyna <send-294> <SD MODERATE (private methods)>
+    #nodyna <define_method-295> <DM MODERATE (events)>
     klass.send(:define_method, attr, &block)
 
     return unless define_include_method
 
-    # Don't include serialized methods if the plugin is disabled
     plugin = self
-    #nodyna <ID:send-51> <SD MODERATE (private methods)>
-    #nodyna <ID:define_method-7> <DM MODERATE (events)>
+    #nodyna <send-296> <SD MODERATE (private methods)>
+    #nodyna <define_method-297> <DM MODERATE (events)>
     klass.send(:define_method, "include_#{attr}?") { plugin.enabled? }
   end
 
-  # Extend a class but check that the plugin is enabled
-  # for class methods use `add_class_method`
   def add_to_class(klass, attr, &block)
     klass = klass.to_s.classify.constantize
 
     hidden_method_name = :"#{attr}_without_enable_check"
-    #nodyna <ID:send-52> <SD COMPLEX (private methods)>
-    #nodyna <ID:define_method-8> <DM COMPLEX (events)>
+    #nodyna <send-298> <SD COMPLEX (private methods)>
+    #nodyna <define_method-299> <DM COMPLEX (events)>
     klass.send(:define_method, hidden_method_name, &block)
 
     plugin = self
-    #nodyna <ID:send-53> <SD COMPLEX (private methods)>
-    #nodyna <ID:define_method-9> <DM COMPLEX (events)>
+    #nodyna <send-300> <SD COMPLEX (private methods)>
+    #nodyna <define_method-301> <DM COMPLEX (events)>
     klass.send(:define_method, attr) do |*args|
-      #nodyna <ID:send-54> <SD COMPLEX (array)>
+      #nodyna <send-302> <SD COMPLEX (array)>
       send(hidden_method_name, *args) if plugin.enabled?
     end
   end
 
-  # Adds a class method to a class, respecting if plugin is enabled
   def add_class_method(klass, attr, &block)
     klass = klass.to_s.classify.constantize
 
     hidden_method_name = :"#{attr}_without_enable_check"
-    #nodyna <ID:send-55> <SD COMPLEX (private methods)>
+    #nodyna <send-303> <SD COMPLEX (private methods)>
     klass.send(:define_singleton_method, hidden_method_name, &block)
 
     plugin = self
-    #nodyna <ID:send-56> <SD COMPLEX (private methods)>
+    #nodyna <send-304> <SD COMPLEX (private methods)>
     klass.send(:define_singleton_method, attr) do |*args|
-      #nodyna <ID:send-57> <SD COMPLEX (change-prone variables)>
+      #nodyna <send-305> <SD COMPLEX (change-prone variables)>
       send(hidden_method_name, *args) if plugin.enabled?
     end
   end
@@ -106,34 +101,31 @@ class Plugin::Instance
     klass = klass.to_s.classify.constantize
     plugin = self
 
-    # generate a unique method name
     method_name = "#{plugin.name}_#{klass.name}_#{callback}#{@idx}".underscore
     @idx += 1
     hidden_method_name = :"#{method_name}_without_enable_check"
-    #nodyna <ID:send-58> <SD COMPLEX (private methods)>
-    #nodyna <ID:define_method-10> <DM COMPLEX (events)>
+    #nodyna <send-306> <SD COMPLEX (private methods)>
+    #nodyna <define_method-307> <DM COMPLEX (events)>
     klass.send(:define_method, hidden_method_name, &block)
 
-    #nodyna <ID:send-59> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-308> <SD COMPLEX (change-prone variables)>
     klass.send(callback) do |*args|
-      #nodyna <ID:send-60> <SD COMPLEX (array)>
+      #nodyna <send-309> <SD COMPLEX (array)>
       send(hidden_method_name, *args) if plugin.enabled?
     end
 
   end
 
-  # Add validation method but check that the plugin is enabled
   def validate(klass, name, &block)
     klass = klass.to_s.classify.constantize
-    #nodyna <ID:send-61> <SD MODERATE (private methods)>
-    #nodyna <ID:define_method-11> <DM MODERATE (events)>
+    #nodyna <send-310> <SD MODERATE (private methods)>
+    #nodyna <define_method-311> <DM MODERATE (events)>
     klass.send(:define_method, name, &block)
 
     plugin = self
     klass.validate(name, if: -> { plugin.enabled? })
   end
 
-  # will make sure all the assets this plugin needs are registered
   def generate_automatic_assets!
     paths = []
     automatic_assets.each do |path, contents|
@@ -155,7 +147,6 @@ class Plugin::Instance
     return unless Dir.exists? auto_generated_path
 
     filenames = good_paths.map{|f| File.basename(f)}
-    # nuke old files
     Dir.foreach(auto_generated_path) do |p|
       next if [".", ".."].include?(p)
       next if filenames.include?(p)
@@ -178,7 +169,6 @@ class Plugin::Instance
     initializers << block
   end
 
-  # A proxy to `DiscourseEvent.on` which does nothing if the plugin is disabled
   def on(event_name, &block)
     DiscourseEvent.on(event_name) do |*args|
       block.call(*args) if enabled?
@@ -248,7 +238,6 @@ class Plugin::Instance
       end
     end
 
-    # Generate an IIFE for the JS
     js = "(function(){#{js}})();" if js.present?
 
     result = []
@@ -263,13 +252,9 @@ class Plugin::Instance
   end
 
 
-  # note, we need to be able to parse seperately to activation.
-  # this allows us to present information about a plugin in the UI
-  # prior to activations
   def activate!
 
     if @path
-      # Automatically include all ES6 JS and hbs files
       root_path = "#{File.dirname(@path)}/assets/javascripts"
       DiscoursePluginRegistry.register_glob(root_path, 'js.es6')
       DiscoursePluginRegistry.register_glob(root_path, 'hbs')
@@ -279,7 +264,7 @@ class Plugin::Instance
       DiscoursePluginRegistry.register_glob(admin_path, 'hbs', admin: true)
     end
 
-    #nodyna <ID:instance_eval-1> <IEV COMPLEX (block execution)>
+    #nodyna <instance_eval-312> <IEV COMPLEX (block execution)>
     self.instance_eval File.read(path), path
     if auto_assets = generate_automatic_assets!
       assets.concat auto_assets.map{|a| [a]}
@@ -291,17 +276,13 @@ class Plugin::Instance
       DiscoursePluginRegistry.register_seed_data(key, value)
     end
 
-    # TODO: possibly amend this to a rails engine
 
-    # Automatically include assets
     Rails.configuration.assets.paths << auto_generated_path
     Rails.configuration.assets.paths << File.dirname(path) + "/assets"
     Rails.configuration.assets.paths << File.dirname(path) + "/admin/assets"
 
-    # Automatically include rake tasks
     Rake.add_rakelib(File.dirname(path) + "/lib/tasks")
 
-    # Automatically include migrations
     Rails.configuration.paths["db/migrate"] << File.dirname(path) + "/db/migrate"
 
     public_data = File.dirname(path) + "/public"
@@ -309,7 +290,6 @@ class Plugin::Instance
       target = Rails.root.to_s + "/public/plugins/"
       `mkdir -p #{target}`
       target << name.gsub(/\s/,"_")
-      # TODO a cleaner way of registering and unregistering
       `rm -f #{target}`
       `ln -s #{public_data} #{target}`
     end
@@ -319,19 +299,13 @@ class Plugin::Instance
   def auth_provider(opts)
     provider = Plugin::AuthProvider.new
     [:glyph, :background_color, :title, :message, :frame_width, :frame_height, :authenticator].each do |sym|
-      #nodyna <ID:send-62> <SD MODERATE (array)>
+      #nodyna <send-313> <SD MODERATE (array)>
       provider.send "#{sym}=", opts.delete(sym)
     end
     auth_providers << provider
   end
 
 
-  # shotgun approach to gem loading, in future we need to hack bundler
-  #  to at least determine dependencies do not clash before loading
-  #
-  # Additionally we want to support multiple ruby versions correctly and so on
-  #
-  # This is a very rough initial implementation
   def gem(name, version, opts = {})
     gems_path = File.dirname(path) + "/gems/#{RUBY_VERSION}"
     spec_path = gems_path + "/specifications"

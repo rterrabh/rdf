@@ -20,18 +20,6 @@ module Paperclip
     ::Paperclip::REQUIRED_VALIDATORS = [AttachmentFileNameValidator, AttachmentContentTypeValidator, AttachmentFileTypeIgnoranceValidator]
 
     module ClassMethods
-      # This method is a shortcut to validator classes that is in
-      # "Attachment...Validator" format. It is almost the same thing as the
-      # +validates+ method that shipped with Rails, but this is customized to
-      # be using with attachment validators. This is helpful when you're using
-      # multiple attachment validators on a single attachment.
-      #
-      # Example of using the validator:
-      #
-      #   validates_attachment :avatar, :presence => true,
-      #      :content_type => { :content_type => "image/jpg" },
-      #      :size => { :in => 0..10.kilobytes }
-      #
       def validates_attachment(*attributes)
         options = attributes.extract_options!.dup
 
@@ -44,9 +32,9 @@ module Paperclip
               validator_options = {} if validator_options == true
               conditional_options = options.slice(:if, :unless)
               Array.wrap(validator_options).each do |local_options|
-                #nodyna <ID:const_get-3> <CG COMPLEX (array)>
+                #nodyna <const_get-698> <CG COMPLEX (array)>
                 method_name = Paperclip::Validators.const_get(constant.to_s).helper_method_name
-                #nodyna <ID:send-2> <SD COMPLEX (change-prone variables)>
+                #nodyna <send-699> <SD COMPLEX (change-prone variables)>
                 send(method_name, attributes, local_options.merge(conditional_options))
               end
             end
@@ -66,7 +54,7 @@ module Paperclip
       def create_validating_before_filter(attribute, validator_class, options)
         if_clause = options.delete(:if)
         unless_clause = options.delete(:unless)
-        #nodyna <ID:send-3> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-700> <SD COMPLEX (change-prone variables)>
         send(:"before_#{attribute}_post_process", :if => if_clause, :unless => unless_clause) do |*args|
           validator_class.new(options.dup).validate(self)
         end

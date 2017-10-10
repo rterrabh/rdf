@@ -33,7 +33,6 @@ class PostActionType < ActiveRecord::Base
       @flag_types ||= types.only(:off_topic, :spam, :inappropriate, :notify_moderators)
     end
 
-    # flags resulting in mod notifications
     def notify_flag_type_ids
       @notify_flag_type_ids ||= types.only(:off_topic, :spam, :inappropriate, :notify_moderators).values
     end
@@ -48,15 +47,3 @@ class PostActionType < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: post_action_types
-#
-#  name_key   :string(50)       not null
-#  is_flag    :boolean          default(FALSE), not null
-#  icon       :string(20)
-#  created_at :datetime         not null
-#  updated_at :datetime         not null
-#  id         :integer          not null, primary key
-#  position   :integer          default(0), not null
-#

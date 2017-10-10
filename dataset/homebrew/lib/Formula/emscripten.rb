@@ -44,16 +44,12 @@ class Emscripten < Formula
 
   def install
     ENV.cxx11
-    # OSX doesn't provide a "python2" binary so use "python" instead.
     python2_shebangs = `grep --recursive --files-with-matches ^#!/usr/bin/.*python2$ #{buildpath}`
     python2_shebang_files = python2_shebangs.lines.sort.uniq
     python2_shebang_files.map! { |f| Pathname(f.chomp) }
     python2_shebang_files.reject! &:symlink?
     inreplace python2_shebang_files, %r{^(#!/usr/bin/.*python)2$}, "\\1"
 
-    # All files from the repository are required as emscripten is a collection
-    # of scripts which need to be installed in the same layout as in the Git
-    # repository.
     libexec.install Dir["*"]
 
     (buildpath/"fastcomp").install resource("fastcomp")
@@ -81,7 +77,6 @@ class Emscripten < Formula
 
   def caveats; <<-EOS.undent
     Manually set LLVM_ROOT to
-      #{opt_libexec}/llvm/bin
     in ~/.emscripten after running `emcc` for the first time.
     EOS
   end

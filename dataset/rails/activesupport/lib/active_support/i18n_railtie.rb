@@ -9,14 +9,10 @@ module I18n
     config.i18n.load_path = []
     config.i18n.fallbacks = ActiveSupport::OrderedOptions.new
 
-    # Set the i18n configuration after initialization since a lot of
-    # configuration is still usually done in application initializers.
     config.after_initialize do |app|
       I18n::Railtie.initialize_i18n(app)
     end
 
-    # Trigger i18n config before any eager loading has happened
-    # so it's ready if any classes require it when eager loaded.
     config.before_eager_load do |app|
       I18n::Railtie.initialize_i18n(app)
     end
@@ -25,14 +21,11 @@ module I18n
 
     @i18n_inited = false
 
-    # Setup i18n configuration.
     def self.initialize_i18n(app)
       return if @i18n_inited
 
       fallbacks = app.config.i18n.delete(:fallbacks)
 
-      # Avoid issues with setting the default_locale by disabling available locales
-      # check while configuring.
       enforce_available_locales = app.config.i18n.delete(:enforce_available_locales)
       enforce_available_locales = I18n.enforce_available_locales if enforce_available_locales.nil?
       I18n.enforce_available_locales = false
@@ -44,14 +37,13 @@ module I18n
         when :load_path
           I18n.load_path += value
         else
-          #nodyna <ID:send-263> <SD COMPLEX (array)>
+          #nodyna <send-1005> <SD COMPLEX (array)>
           I18n.send("#{setting}=", value)
         end
       end
 
       init_fallbacks(fallbacks) if fallbacks && validate_fallbacks(fallbacks)
 
-      # Restore available locales check so it will take place from now on.
       I18n.enforce_available_locales = enforce_available_locales
 
       reloader = ActiveSupport::FileUpdateChecker.new(I18n.load_path.dup){ I18n.reload! }
@@ -63,7 +55,7 @@ module I18n
     end
 
     def self.include_fallbacks_module
-      #nodyna <ID:send-264> <SD TRIVIAL (public methods)>
+      #nodyna <send-1006> <SD TRIVIAL (public methods)>
       I18n.backend.class.send(:include, I18n::Backend::Fallbacks)
     end
 

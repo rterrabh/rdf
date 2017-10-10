@@ -17,8 +17,6 @@ class Ezlupdate < Formula
 
   def install
     cd "support/ezlupdate-qt4.5/ezlupdate" do
-      # Use the qmake installation done with brew
-      # because others installations can make a mess
       system "#{HOMEBREW_PREFIX}/bin/qmake", "ezlupdate.pro"
       system "make"
     end

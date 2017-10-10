@@ -1,6 +1,3 @@
-# review per rails release, this speeds up the inflector, we are not inflecting too much at the moment, except in dev
-#
-# note: I am working with the rails team on including this in official rails
 
 module ActiveSupport
   module Inflector
@@ -20,16 +17,14 @@ module ActiveSupport
         uncached = "#{method_name}_without_cache"
         alias_method uncached, method_name
 
-        #nodyna <ID:define_method-1> <DM MODERATE (array)>
+        #nodyna <define_method-346> <DM MODERATE (array)>
         define_method(method_name) do |*args|
-          # this avoids recursive locks
           found = true
           data = cache.fetch(args){found = false}
           unless found
-            #nodyna <ID:send-1> <SD MODERATE (array)>
+            #nodyna <send-347> <SD MODERATE (array)>
             cache[args] = data = send(uncached, *args)
           end
-          # so cache is never corrupted
           data.dup
         end
       end
@@ -47,10 +42,10 @@ module ActiveSupport
         args.each do |method_name|
           orig = "#{method_name}_without_clear_memoize"
           alias_method orig, method_name
-          #nodyna <ID:define_method-2> <DM MODERATE (array)>
+          #nodyna <define_method-348> <DM MODERATE (array)>
           define_method(method_name) do |*args|
             ActiveSupport::Inflector.clear_memoize!
-            #nodyna <ID:send-2> <SD MODERATE (change-prone variables)>
+            #nodyna <send-349> <SD MODERATE (change-prone variables)>
             send(orig, *args)
           end
         end

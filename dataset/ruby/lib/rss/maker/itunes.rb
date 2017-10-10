@@ -35,6 +35,7 @@ module RSS
 
       def def_yes_other_accessor(klass, full_name)
         klass.def_other_element(full_name)
+        #nodyna <module_eval-2069> <not yet classified>
         klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           def #{full_name}?
             Utils::YesOther.parse(@#{full_name})
@@ -44,6 +45,7 @@ module RSS
 
       def def_yes_clean_other_accessor(klass, full_name)
         klass.def_other_element(full_name)
+        #nodyna <module_eval-2070> <not yet classified>
         klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           def #{full_name}?
             Utils::YesCleanOther.parse(#{full_name})
@@ -64,14 +66,12 @@ module RSS
         else
           klass.def_classed_element(full_plural_name, plural_klass_name)
         end
+        #nodyna <module_eval-2071> <not yet classified>
         klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           def new_#{full_name}(text=nil)
-            #{full_name} = @#{full_plural_name}.new_#{name}
-            #{full_name}.text = text
             if block_given?
               yield #{full_name}
             else
-              #{full_name}
             end
           end
         EOC

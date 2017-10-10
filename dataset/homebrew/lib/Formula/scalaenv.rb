@@ -31,11 +31,13 @@ class Scalaenv < Formula
       export SCALAENV_ROOT=#{var}/scalaenv
 
     To enable shims and autocompletion add to your profile:
+      #nodyna <eval-580> <not yet classified>
       eval "$(scalaenv init -)"
     EOS
   end
 
   test do
+    #nodyna <eval-581> <not yet classified>
     shell_output("eval \"$(#{bin}/scalaenv init -)\" && scalaenv versions")
   end
 end

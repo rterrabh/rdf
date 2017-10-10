@@ -30,7 +30,6 @@ class MidnightCommander < Formula
                           "--enable-vfs-sftp"
     system "make", "install"
 
-    # https://www.midnight-commander.org/ticket/3509
     inreplace libexec/"mc/ext.d/text.sh", "man -P cat -l ", "man -P cat "
   end
 

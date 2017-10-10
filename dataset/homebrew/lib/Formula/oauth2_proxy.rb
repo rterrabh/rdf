@@ -49,7 +49,6 @@ class Oauth2Proxy < Formula
   end
 
   def caveats; <<-EOS.undent
-    #{etc}/oauth2_proxy/oauth2_proxy.cfg must be filled in.
     EOS
   end
 
@@ -57,7 +56,6 @@ class Oauth2Proxy < Formula
     require "socket"
     require "timeout"
 
-    # Get an unused TCP port.
     server = TCPServer.new(0)
     port = server.addr[1]
     server.close

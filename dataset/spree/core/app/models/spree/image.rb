@@ -12,11 +12,8 @@ module Spree
       :presence => true,
       :content_type => { :content_type => %w(image/jpeg image/jpg image/png image/gif) }
 
-    # save the w,h of the original image (from which others can be calculated)
-    # we need to look at the write-queue for images which have not been saved yet
     after_post_process :find_dimensions
 
-    #used by admin products autocomplete
     def mini_url
       attachment.url(:mini, false)
     end
@@ -30,11 +27,8 @@ module Spree
       self.attachment_height = geometry.height
     end
 
-    # if there are errors from the plugin, then add a more meaningful message
     def no_attachment_errors
       unless attachment.errors.empty?
-        # uncomment this to get rid of the less-than-useful interim messages
-        # errors.clear
         errors.add :attachment, "Paperclip returned errors for file '#{attachment_file_name}' - check ImageMagick installation or image source file."
         false
       end

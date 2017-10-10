@@ -1,6 +1,3 @@
-#
-# tk/listbox.rb : treat listbox widget
-#
 require 'tk'
 require 'tk/itemconfig'
 require 'tk/scrollable'
@@ -23,14 +20,6 @@ class Tk::Listbox<TkTextWin
   WidgetClassName = 'Listbox'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  #def create_self(keys)
-  #  if keys and keys != None
-  #    tk_call_without_enc('listbox', @path, *hash_kv(keys, true))
-  #  else
-  #    tk_call_without_enc('listbox', @path)
-  #  end
-  #end
-  #private :create_self
 
   def __tkvariable_optkeys
     super() << 'listvariable'
@@ -38,7 +27,6 @@ class Tk::Listbox<TkTextWin
   private :__tkvariable_optkeys
 
   def tagid(id)
-    #id.to_s
     _get_eval_string(id)
   end
 
@@ -51,7 +39,6 @@ class Tk::Listbox<TkTextWin
   end
   def get(first, last=nil)
     if last
-      # tk_split_simplelist(_fromUTF8(tk_send_without_enc('get', first, last)))
       tk_split_simplelist(tk_send_without_enc('get', first, last), false, true)
     else
       _fromUTF8(tk_send_without_enc('get', first))
@@ -109,14 +96,12 @@ class Tk::Listbox<TkTextWin
     when 'text', 'label', 'show'
       _fromUTF8(tk_send_without_enc('itemcget', index, "-#{key}"))
     when 'font', 'kanjifont'
-      #fnt = tk_tcl2ruby(tk_send('itemcget', index, "-#{key}"))
       fnt = tk_tcl2ruby(_fromUTF8(tk_send_without_enc('itemcget', index,
                                                       '-font')))
       unless fnt.kind_of?(TkFont)
         fnt = tagfontobj(index, fnt)
       end
       if key.to_s == 'kanjifont' && JAPANIZED_TK && TK_VERSION =~ /^4\.*/
-        # obsolete; just for compatibility
         fnt.kanji_font
       else
         fnt
@@ -278,7 +263,5 @@ class Tk::Listbox<TkTextWin
 =end
 end
 
-#TkListbox = Tk::Listbox unless Object.const_defined? :TkListbox
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Listbox, :TkListbox)
 Tk.__set_loaded_toplevel_aliases__('tk/listbox.rb', :Tk, Tk::Listbox,
                                    :TkListbox)

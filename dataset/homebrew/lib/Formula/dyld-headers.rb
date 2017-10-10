@@ -6,7 +6,6 @@ class DyldHeaders < Formula
 
   keg_only :provided_by_osx
 
-  # Use Tiger-style availability macros
   patch :DATA if MacOS.version < :leopard
 
   def install
@@ -22,10 +21,8 @@ index bcb0c09..ab77069 100644
 @@ -58,7 +58,7 @@ extern void * dlopen(const char * __path, int __mode);
  extern void * dlsym(void * __handle, const char * __symbol);
  
- #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
 -extern bool dlopen_preflight(const char* __path) __OSX_AVAILABLE_STARTING(__MAC_10_5, __IPHONE_2_0);
 +extern bool dlopen_preflight(const char* __path) __attribute__((unavailable));
- #endif /* not POSIX */
  
  
 diff --git a/include/dlfcn.h b/include/dlfcn.h
@@ -34,8 +31,6 @@ index ab77069..60557d2 100644
 +++ b/include/dlfcn.h
 @@ -38,7 +38,7 @@ extern "C" {
  
- #if !defined(_POSIX_C_SOURCE) || defined(_DARWIN_C_SOURCE)
- #include <stdbool.h>
 -#include <Availability.h>
 +#include <AvailabilityMacros.h>
  /*
@@ -46,13 +41,10 @@ index 642ca42..3436d81 100644
 --- a/include/mach-o/dyld.h
 +++ b/include/mach-o/dyld.h
 @@ -29,7 +29,7 @@
- #include <stdbool.h>
  
- #include <mach-o/loader.h>
 -#include <Availability.h>
 +#include <AvailabilityMacros.h>
  
- #if __cplusplus
  extern "C" {
 @@ -44,10 +44,10 @@ extern "C" {
   * will return the mach_header and name of an image, given an address in 
@@ -150,18 +142,10 @@ index 642ca42..3436d81 100644
  
 -extern NSModule NSLinkModule(NSObjectFileImage objectFileImage, const char* moduleName, uint32_t options) __OSX_AVAILABLE_BUT_DEPRECATED(__MAC_10_1,__MAC_10_5,__IPHONE_NA,__IPHONE_NA);
 +extern NSModule NSLinkModule(NSObjectFileImage objectFileImage, const char* moduleName, uint32_t options) AVAILABLE_MAC_OS_X_VERSION_10_1_AND_LATER;
- #define NSLINKMODULE_OPTION_NONE                         0x0
- #define NSLINKMODULE_OPTION_BINDNOW                      0x1
- #define NSLINKMODULE_OPTION_PRIVATE                      0x2
 @@ -165,27 +165,27 @@ extern NSModule NSLinkModule(NSObjectFileImage objectFileImage, const char* modu
- #define NSLINKMODULE_OPTION_DONT_CALL_MOD_INIT_ROUTINES  0x8
- #define NSLINKMODULE_OPTION_TRAILING_PHYS_NAME          0x10
  
 -extern bool NSUnLinkModule(NSModule module, uint32_t options) __OSX_AVAILABLE_BUT_DEPRECATED(__MAC_10_1,__MAC_10_5,__IPHONE_NA,__IPHONE_NA);
 +extern bool NSUnLinkModule(NSModule module, uint32_t options) AVAILABLE_MAC_OS_X_VERSION_10_1_AND_LATER;
- #define NSUNLINKMODULE_OPTION_NONE                  0x0
- #define NSUNLINKMODULE_OPTION_KEEP_MEMORY_MAPPED    0x1
- #define NSUNLINKMODULE_OPTION_RESET_LAZY_REFERENCES	0x2
  
  /* symbol API */
  typedef struct __NSSymbol* NSSymbol;
@@ -179,10 +163,6 @@ index 642ca42..3436d81 100644
 +extern NSSymbol NSLookupAndBindSymbolWithHint(const char* symbolName, const char* libraryNameHint)               AVAILABLE_MAC_OS_X_VERSION_10_1_AND_LATER_BUT_DEPRECATED_IN_MAC_OS_X_VERSION_10_4;
 +extern NSSymbol NSLookupSymbolInModule(NSModule module, const char* symbolName)                                  AVAILABLE_MAC_OS_X_VERSION_10_1_AND_LATER_BUT_DEPRECATED_IN_MAC_OS_X_VERSION_10_4;
 +extern NSSymbol NSLookupSymbolInImage(const struct mach_header* image, const char* symbolName, uint32_t options) AVAILABLE_MAC_OS_X_VERSION_10_1_AND_LATER_BUT_DEPRECATED_IN_MAC_OS_X_VERSION_10_4;
- #define NSLOOKUPSYMBOLINIMAGE_OPTION_BIND            0x0
- #define NSLOOKUPSYMBOLINIMAGE_OPTION_BIND_NOW        0x1
- #define NSLOOKUPSYMBOLINIMAGE_OPTION_BIND_FULLY      0x2
- #define NSLOOKUPSYMBOLINIMAGE_OPTION_RETURN_ON_ERROR 0x4
 -extern const char*  NSNameOfSymbol(NSSymbol symbol)    __OSX_AVAILABLE_BUT_DEPRECATED(__MAC_10_1,__MAC_10_5,__IPHONE_NA,__IPHONE_NA);
 -extern void *       NSAddressOfSymbol(NSSymbol symbol) __OSX_AVAILABLE_BUT_DEPRECATED(__MAC_10_1,__MAC_10_5,__IPHONE_NA,__IPHONE_NA);
 -extern NSModule     NSModuleForSymbol(NSSymbol symbol) __OSX_AVAILABLE_BUT_DEPRECATED(__MAC_10_1,__MAC_10_5,__IPHONE_NA,__IPHONE_NA);
@@ -214,11 +194,6 @@ index 642ca42..3436d81 100644
 +extern bool                      NSAddLibrary(const char* pathName)                   AVAILABLE_MAC_OS_X_VERSION_10_1_AND_LATER_BUT_DEPRECATED_IN_MAC_OS_X_VERSION_10_4;
 +extern bool                      NSAddLibraryWithSearching(const char* pathName)      AVAILABLE_MAC_OS_X_VERSION_10_1_AND_LATER_BUT_DEPRECATED_IN_MAC_OS_X_VERSION_10_4;
 +extern const struct mach_header* NSAddImage(const char* image_name, uint32_t options) AVAILABLE_MAC_OS_X_VERSION_10_1_AND_LATER;
- #define NSADDIMAGE_OPTION_NONE                  	0x0
- #define NSADDIMAGE_OPTION_RETURN_ON_ERROR       	0x1
- #define NSADDIMAGE_OPTION_WITH_SEARCHING        	0x2
- #define NSADDIMAGE_OPTION_RETURN_ONLY_IF_LOADED 	0x4
- #define NSADDIMAGE_OPTION_MATCH_FILENAME_BY_INSTALLNAME	0x8
  
 -extern bool _dyld_present(void)                                                              __OSX_AVAILABLE_BUT_DEPRECATED(__MAC_10_1,__MAC_10_5,__IPHONE_NA,__IPHONE_NA);
 -extern bool _dyld_launched_prebound(void)                                                    __OSX_AVAILABLE_BUT_DEPRECATED(__MAC_10_1,__MAC_10_5,__IPHONE_NA,__IPHONE_NA);
@@ -244,17 +219,12 @@ index 642ca42..3436d81 100644
 +extern const struct mach_header* _dyld_get_image_header_containing_address(const void* address) AVAILABLE_MAC_OS_X_VERSION_10_3_AND_LATER;
  
  
- #if __cplusplus
 diff --git a/include/mach-o/dyld_priv.h b/include/mach-o/dyld_priv.h
 index 49d5775..2467b29 100644
 --- a/include/mach-o/dyld_priv.h
 +++ b/include/mach-o/dyld_priv.h
 @@ -25,7 +25,7 @@
- #define _MACH_O_DYLD_PRIV_H_
  
- #include <stdbool.h>
 -#include <Availability.h>
 +#include <AvailabilityMacros.h>
- #include <mach-o/dyld.h>
- #include <mach-o/dyld_images.h>
  

@@ -1,6 +1,5 @@
 require 'rake'
 
-# Load the test files from the command line.
 argv = ARGV.select do |argument|
   case argument
   when /^-/ then

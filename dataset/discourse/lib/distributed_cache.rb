@@ -1,6 +1,3 @@
-# Like a hash, just does its best to stay in sync across the farm
-# On boot all instances are blank, but they populate as various processes
-# fill it up
 
 require 'weakref'
 
@@ -69,7 +66,6 @@ class DistributedCache
   end
 
   def self.set(hash, key, value)
-    # special support for set
     marshal = Set === value
     value = Marshal.dump(value) if marshal
     publish(hash, { op: :set, key: key, value: value, marshalled: marshal })
@@ -98,7 +94,6 @@ class DistributedCache
   end
 
   def identity
-    # fork resilient / multi machine identity
     (@seed_id ||= SecureRandom.hex) + "#{Process.pid}"
   end
 

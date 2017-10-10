@@ -17,8 +17,7 @@ module ActiveAdmin
 
         def main_content
           if config.block
-            # Eval the show config from the controller
-            #nodyna <ID:instance_exec-24> <IEX COMPLEX (block with parameters)>
+            #nodyna <instance_exec-42> <IEX COMPLEX (block with parameters)>
             instance_exec resource, &config.block
           else
             default_main_content

@@ -1,6 +1,4 @@
 class Lua51 < Formula
-  # 5.2 is not fully backwards compatible so we must retain 2 Luas for now.
-  # The transition has begun. Lua will now become Lua51, and Lua52 will become Lua.
   desc "Powerful, lightweight programming language (v5.1.5)"
   homepage "http://www.lua.org/"
   url "http://www.lua.org/ftp/lua-5.1.5.tar.gz"
@@ -24,12 +22,8 @@ class Lua51 < Formula
   option "without-sigaction", "Revert to ANSI signal instead of improved POSIX sigaction"
   option "without-luarocks", "Don't build with Luarocks support embedded"
 
-  # Be sure to build a dylib, or else runtime modules will pull in another static copy of liblua = crashy
-  # See: https://github.com/Homebrew/homebrew/pull/5043
   patch :DATA
 
-  # sigaction provided by posix signalling power patch from
-  # http://lua-users.org/wiki/LuaPowerPatches
   if build.with? "completion"
     patch do
       url "http://lua-users.org/files/wiki_insecure/power_patches/5.1/sig_catch.patch"
@@ -37,8 +31,6 @@ class Lua51 < Formula
     end
   end
 
-  # completion provided by advanced readline power patch from
-  # http://lua-users.org/wiki/LuaPowerPatches
   if build.with? "completion"
     patch do
       url "http://luajit.org/patches/lua-5.1.4-advanced_readline.patch"
@@ -54,7 +46,6 @@ class Lua51 < Formula
   def install
     ENV.universal_binary if build.universal?
 
-    # Use our CC/CFLAGS to compile.
     inreplace "src/Makefile" do |s|
       s.remove_make_var! "CC"
       s.change_make_var! "CFLAGS", "#{ENV.cflags} $(MYCFLAGS)"
@@ -62,10 +53,8 @@ class Lua51 < Formula
       s.sub! "MYCFLAGS_VAL", "-fno-common -DLUA_USE_LINUX"
     end
 
-    # Fix path in the config header
     inreplace "src/luaconf.h", "/usr/local", HOMEBREW_PREFIX
 
-    # Fix paths in the .pc
     inreplace "etc/lua.pc" do |s|
       s.gsub! "prefix= /usr/local", "prefix=#{HOMEBREW_PREFIX}"
       s.gsub! "INSTALL_MAN= ${prefix}/man/man1", "INSTALL_MAN= ${prefix}/share/man/man1"
@@ -79,9 +68,6 @@ class Lua51 < Formula
 
     (lib/"pkgconfig").install "etc/lua.pc"
 
-    # Renaming from Lua to Lua51.
-    # Note that the naming must be both lua-version & lua.version.
-    # Software can't find the libraries without supporting both the hyphen or full stop.
     mv "#{bin}/lua", "#{bin}/lua-5.1"
     mv "#{bin}/luac", "#{bin}/luac-5.1"
     mv "#{man1}/lua.1", "#{man1}/lua-5.1.1"
@@ -92,8 +78,6 @@ class Lua51 < Formula
     bin.install_symlink "lua-5.1" => "lua5.1"
     bin.install_symlink "luac-5.1" => "luac5.1"
 
-    # This resource must be handled after the main install, since there's a lua dep.
-    # Keeping it in install rather than postinstall means we can bottle.
     if build.with? "luarocks"
       resource("luarocks").stage do
         ENV.prepend_path "PATH", bin
@@ -108,7 +92,6 @@ class Lua51 < Formula
         bin.install_symlink libexec/"bin/luarocks-5.1"
         bin.install_symlink libexec/"bin/luarocks-admin-5.1"
 
-        # This block ensures luarock exec scripts don't break across updates.
         inreplace libexec/"share/lua/5.1/luarocks/site_config.lua" do |s|
           s.gsub! libexec.to_s, opt_libexec.to_s
           s.gsub! include.to_s, "#{HOMEBREW_PREFIX}/include"
@@ -146,14 +129,12 @@ index 209a132..9387b09 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -43,7 +43,7 @@ PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
- # What to install.
  TO_BIN= lua luac
  TO_INC= lua.h luaconf.h lualib.h lauxlib.h ../etc/lua.hpp
 -TO_LIB= liblua.a
 +TO_LIB= liblua.5.1.5.dylib
  TO_MAN= lua.1 luac.1
 
- # Lua version and release.
 @@ -64,6 +64,8 @@ install: dummy
 	cd src && $(INSTALL_DATA) $(TO_INC) $(INSTALL_INC)
 	cd src && $(INSTALL_DATA) $(TO_LIB) $(INSTALL_LIB)
@@ -199,5 +180,3 @@ index e0d4c9f..4477d7b 100644
  macosx:
 -	$(MAKE) all MYCFLAGS=-DLUA_USE_LINUX MYLIBS="-lreadline"
 +	$(MAKE) all MYCFLAGS="MYCFLAGS_VAL" MYLIBS="-lreadline"
- # use this on Mac OS X 10.3-
- #	$(MAKE) all MYCFLAGS=-DLUA_USE_MACOSX

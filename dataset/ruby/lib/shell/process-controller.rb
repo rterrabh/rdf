@@ -1,13 +1,3 @@
-#
-#   shell/process-controller.rb -
-#       $Release Version: 0.7 $
-#       $Revision$
-#       by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 require "forwardable"
 
 require "thread"
@@ -84,7 +74,6 @@ class Shell
       end
     end
 
-    # for shell-command complete finish at this process exit.
     USING_AT_EXIT_WHEN_PROCESS_EXIT = true
     at_exit do
       wait_to_finish_all_process_controllers unless $@
@@ -137,7 +126,6 @@ class Shell
       end
     end
 
-    # schedule a command
     def add_schedule(command)
       @jobs_sync.synchronize(:EX) do
         ProcessController.activate(self)
@@ -149,7 +137,6 @@ class Shell
       end
     end
 
-    # start a job
     def start_job(command = nil)
       @jobs_sync.synchronize(:EX) do
         if command
@@ -163,7 +150,6 @@ class Shell
         @active_jobs.push command
         command.start
 
-        # start all jobs that input from the job
         for job in @waiting_jobs.dup
           start_job(job) if job.input == command
         end
@@ -182,7 +168,6 @@ class Shell
       end
     end
 
-    # terminate a job
     def terminate_job(command)
       @jobs_sync.synchronize(:EX) do
         @active_jobs.delete command
@@ -194,7 +179,6 @@ class Shell
       end
     end
 
-    # kill a job
     def kill_job(sig, command)
       @jobs_sync.synchronize(:EX) do
         if @waiting_jobs.delete command
@@ -214,7 +198,6 @@ class Shell
       end
     end
 
-    # wait for all jobs to terminate
     def wait_all_jobs_execution
       @job_monitor.synchronize do
         begin
@@ -230,7 +213,6 @@ class Shell
       end
     end
 
-    # simple fork
     def sfork(command)
       pipe_me_in, pipe_peer_out = IO.pipe
       pipe_peer_in, pipe_me_out = IO.pipe
@@ -281,7 +263,6 @@ class Shell
           _pid = true
         ensure
           command.notify("Job(%id): Wait to finish when Process finished.", @shell.debug?)
-          # when the process ends, wait until the command terminates
           if USING_AT_EXIT_WHEN_PROCESS_EXIT or _pid
           else
             command.notify("notice: Process finishing...",

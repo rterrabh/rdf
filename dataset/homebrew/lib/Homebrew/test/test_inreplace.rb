@@ -4,7 +4,6 @@ require "utils/inreplace"
 
 class InreplaceTest < Homebrew::TestCase
   def test_change_make_var
-    # Replace flag
     s1 = "OTHER=def\nFLAG = abc\nFLAG2=abc"
     s1.extend(StringInreplaceExtension)
     s1.change_make_var! "FLAG", "def"
@@ -12,7 +11,6 @@ class InreplaceTest < Homebrew::TestCase
   end
 
   def test_change_make_var_empty
-    # Replace empty flag
     s1 = "OTHER=def\nFLAG = \nFLAG2=abc"
     s1.extend(StringInreplaceExtension)
     s1.change_make_var! "FLAG", "def"
@@ -20,7 +18,6 @@ class InreplaceTest < Homebrew::TestCase
   end
 
   def test_change_make_var_empty_2
-    # Replace empty flag
     s1 = "FLAG = \nmv file_a file_b"
     s1.extend(StringInreplaceExtension)
     s1.change_make_var! "FLAG", "def"
@@ -28,7 +25,6 @@ class InreplaceTest < Homebrew::TestCase
   end
 
   def test_change_make_var_append
-    # Append to flag
     s1 = "OTHER=def\nFLAG = abc\nFLAG2=abc"
     s1.extend(StringInreplaceExtension)
     s1.change_make_var! "FLAG", "\\1 def"
@@ -36,7 +32,6 @@ class InreplaceTest < Homebrew::TestCase
   end
 
   def test_change_make_var_shell_style
-    # Shell variables have no spaces around =
     s1 = "OTHER=def\nFLAG=abc\nFLAG2=abc"
     s1.extend(StringInreplaceExtension)
     s1.change_make_var! "FLAG", "def"
@@ -44,7 +39,6 @@ class InreplaceTest < Homebrew::TestCase
   end
 
   def test_remove_make_var
-    # Replace flag
     s1 = "OTHER=def\nFLAG = abc\nFLAG2 = def"
     s1.extend(StringInreplaceExtension)
     s1.remove_make_var! "FLAG"
@@ -52,7 +46,6 @@ class InreplaceTest < Homebrew::TestCase
   end
 
   def test_remove_make_vars
-    # Replace flag
     s1 = "OTHER=def\nFLAG = abc\nFLAG2 = def\nOTHER2=def"
     s1.extend(StringInreplaceExtension)
     s1.remove_make_var! ["FLAG", "FLAG2"]
@@ -85,7 +78,6 @@ class InreplaceTest < Homebrew::TestCase
     s.sub!("f", "b")
     assert_equal "boo", s
 
-    # Under current context, we are testing `String#gsub!`, so let's disable rubocop temporarily.
     s.gsub!("o", "e") # rubocop:disable Performance/StringReplacement
     assert_equal "bee", s
   end
@@ -100,7 +92,6 @@ class InreplaceTest < Homebrew::TestCase
     end
 
     assert_raises(Utils::InreplaceError) do
-      # Under current context, we are testing `String#gsub!`, so let's disable rubocop temporarily.
       inreplace("test") { |s| s.gsub!("d", "f") } # rubocop:disable Performance/StringReplacement
     end
 

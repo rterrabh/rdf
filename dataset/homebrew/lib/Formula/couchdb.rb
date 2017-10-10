@@ -6,8 +6,6 @@ class Couchdb < Formula
   revision 3
 
   stable do
-    # Support Erlang/OTP 18.0 compatibility, see upstream #95cb436
-    # It will be in the next CouchDB point release, likely 1.6.2.
     patch :DATA
   end
 
@@ -35,16 +33,12 @@ class Couchdb < Formula
   depends_on "curl" if MacOS.version <= :leopard
 
   def install
-    # CouchDB >=1.3.0 supports vendor names and versioning
-    # in the welcome message
     inreplace "etc/couchdb/default.ini.tpl.in" do |s|
       s.gsub! "%package_author_name%", "Homebrew"
       s.gsub! "%version%", pkg_version
     end
 
     if build.devel? || build.head?
-      # workaround for the auto-generation of THANKS file which assumes
-      # a developer build environment incl access to git sha
       touch "THANKS"
       system "./bootstrap"
     end
@@ -59,7 +53,6 @@ class Couchdb < Formula
     system "make"
     system "make", "install"
 
-    # Use our plist instead to avoid faffing with a new system user.
     (prefix+"Library/LaunchDaemons/org.apache.couchdb.plist").delete
     (lib+"couchdb/bin/couchjs").chmod 0755
     (var+"lib/couchdb").mkpath
@@ -67,10 +60,7 @@ class Couchdb < Formula
   end
 
   def post_install
-    # default.ini is owned by CouchDB and marked not user-editable
-    # and must be overwritten to ensure correct operation.
     if (etc/"couchdb/default.ini.default").exist?
-      # but take a backup just in case the user didn't read the warning.
       mv etc/"couchdb/default.ini", etc/"couchdb/default.ini.old"
       mv etc/"couchdb/default.ini.default", etc/"couchdb/default.ini"
     end
@@ -108,7 +98,6 @@ class Couchdb < Formula
   end
 
   test do
-    # ensure couchdb embedded spidermonkey vm works
     system "#{bin}/couchjs", "-h"
   end
 end
@@ -178,6 +167,7 @@ index 103f029..bf9ffc4 100644
 +    [can_use_ejson=$(echo $otp_release | grep -E "^(R14B03|R15|R16|17|18)")])
 
  has_crypto=`\
+     #nodyna <eval-561> <not yet classified>
      ${ERL} -eval "\
 diff --git a/share/doc/src/install/unix.rst b/share/doc/src/install/unix.rst
 index 76fe922..904c128 100644

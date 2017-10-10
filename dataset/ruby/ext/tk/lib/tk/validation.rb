@@ -1,6 +1,3 @@
-#
-#  tk/validation.rb - validation support module for entry, spinbox, and so on
-#
 require 'tk'
 
 module Tk
@@ -8,7 +5,7 @@ module Tk
     def self.__def_validcmd(scope, klass, keys=nil)
       keys = klass._config_keys unless keys
       keys.each{|key|
-        #nodyna <ID:eval-61> <EV COMPLEX (method definition)>
+        #nodyna <eval-1853> <EV COMPLEX (method definition)>
         eval("def #{key}(*args, &b)
                  __validcmd_call(#{klass.name}, '#{key}', *args, &b)
               end", scope)
@@ -30,7 +27,6 @@ module Tk
     end
 
     def __validation_class_list
-      # maybe need to override
       []
     end
 
@@ -51,9 +47,7 @@ module Tk
       key2class.each{|key, klass|
         if keys[key].kind_of?(Array)
           cmd, *args = keys[key]
-          #keys[key] = klass.new(cmd, args.join(' '))
           keys[key] = klass.new(cmd, *args)
-        # elsif keys[key].kind_of?(Proc) ||  keys[key].kind_of?(Method)
         elsif TkComm._callback_entry?(keys[key])
           keys[key] = klass.new(keys[key])
         end
@@ -112,7 +106,7 @@ module Tk
     def self.__def_validcmd(scope, klass, keys=nil)
       keys = klass._config_keys unless keys
       keys.each{|key|
-        #nodyna <ID:eval-62> <EV COMPLEX (method definition)>
+        #nodyna <eval-1854> <EV COMPLEX (method definition)>
         eval("def item_#{key}(id, *args, &b)
                  __item_validcmd_call(#{klass.name}, '#{key}', id, *args, &b)
               end", scope)
@@ -134,7 +128,6 @@ module Tk
     end
 
     def __item_validation_class_list(id)
-      # maybe need to override
       []
     end
 
@@ -154,9 +147,7 @@ module Tk
       key2class.each{|key, klass|
         if keys[key].kind_of?(Array)
           cmd, *args = keys[key]
-          #keys[key] = klass.new(cmd, args.join(' '))
           keys[key] = klass.new(cmd, *args)
-        # elsif keys[key].kind_of?(Proc) || keys[key].kind_of?(Method)
         elsif TkComm._callback_entry?(keys[key])
           keys[key] = klass.new(keys[key])
         end
@@ -230,7 +221,6 @@ class TkValidateCommand
       [ ?w, TkComm.method(:window) ],
 
       [ ?e, proc{|val|
-          #enc = Tk.encoding
           enc = ((Tk.encoding)? Tk.encoding : Tk.encoding_system)
           if enc
             Tk.fromUTF8(TkComm::string(val), enc)
@@ -254,7 +244,6 @@ class TkValidateCommand
     ]
 
 =begin
-    # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
     KEY_TBL.map!{|inf|
       if inf.kind_of?(Array)
         inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -273,25 +262,15 @@ class TkValidateCommand
 
     _setup_subst_table(KEY_TBL, PROC_TBL);
 
-    #
-    # NOTE: The order of parameters which passed to callback procedure is
-    #        <extra_arg>, <extra_arg>, ... , <subst_arg>, <subst_arg>, ...
-    #
 
-    #def self._get_extra_args_tbl
-    #  # return an array of convert procs
-    #  []
-    #end
 
     def self.ret_val(val)
       (val)? '1': '0'
     end
   end
 
-  ###############################################
 
   def self._config_keys
-    # array of config-option key (string or symbol)
     ['vcmd', 'validatecommand', 'invcmd', 'invalidcommand']
   end
 
@@ -357,7 +336,6 @@ module TkValidation
     end
   end
 
-  #####################################
 
   def __validation_class_list
     super() << ValidateCmd
@@ -376,10 +354,6 @@ module TkValidation
     end
   end
 =end
-#  def validatecommand(*args, &b)
-#    __validcmd_call(ValidateCmd, 'validatecommand', *args, &b)
-#  end
-#  alias vcmd validatecommand
 
 =begin
   def invalidcommand(cmd = Proc.new, args = nil)
@@ -392,8 +366,4 @@ module TkValidation
     end
   end
 =end
-#  def invalidcommand(*args, &b)
-#    __validcmd_call(ValidateCmd, 'invalidcommand', *args, &b)
-#  end
-#  alias invcmd invalidcommand
 end

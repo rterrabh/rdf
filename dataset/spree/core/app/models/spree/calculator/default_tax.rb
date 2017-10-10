@@ -6,9 +6,6 @@ module Spree
       Spree.t(:default_tax)
     end
 
-    # Default tax calculator still needs to support orders for legacy reasons
-    # Orders created before Spree 2.1 had tax adjustments applied to the order, as a whole.
-    # Orders created with Spree 2.2 and after, have them applied to the line items individually.
     def compute_order(order)
 
       matched_line_items = order.line_items.select do |line_item|
@@ -23,7 +20,6 @@ module Spree
       end
     end
 
-    # When it comes to computing shipments or line items: same same.
     def compute_shipment_or_line_item(item)
       if rate.included_in_price
         deduced_total_by_rate(item.pre_tax_amount, rate)

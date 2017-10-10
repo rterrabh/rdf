@@ -1,5 +1,3 @@
-# OLEProperty
-# helper class of Property with arguments.
 class OLEProperty
   def initialize(obj, dispid, gettypes, settypes)
     @obj = obj

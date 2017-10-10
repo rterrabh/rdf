@@ -6,7 +6,6 @@ class Numeric
   PETABYTE = TERABYTE * 1024
   EXABYTE  = PETABYTE * 1024
 
-  # Enables the use of byte calculations and declarations, like 45.bytes + 2.6.megabytes
   def bytes
     self
   end

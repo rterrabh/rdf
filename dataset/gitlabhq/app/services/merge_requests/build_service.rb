@@ -3,7 +3,6 @@ module MergeRequests
     def execute
       merge_request = MergeRequest.new(params)
 
-      # Set MR attributes
       merge_request.can_be_created = false
       merge_request.compare_failed = false
       merge_request.compare_commits = []
@@ -26,21 +25,17 @@ module MergeRequests
 
       commits = compare_result.commits
 
-      # At this point we decide if merge request can be created
-      # If we have at least one commit to merge -> creation allowed
       if commits.present?
         merge_request.compare_commits = Commit.decorate(commits, merge_request.source_project)
         merge_request.can_be_created = true
         merge_request.compare_failed = false
 
-        # Try to collect diff for merge request.
         diffs = compare_result.diffs
 
         if diffs.present?
           merge_request.compare_diffs = diffs
 
         elsif diffs == false
-          # satellite timeout return false
           merge_request.can_be_created = false
           merge_request.compare_failed = true
         end

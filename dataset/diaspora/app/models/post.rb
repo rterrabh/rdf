@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Post < ActiveRecord::Base
   include ApplicationHelper
@@ -33,7 +30,6 @@ class Post < ActiveRecord::Base
     self.touch(:interacted_at)
   end
 
-  #scopes
   scope :includes_for_a_stream, -> {
     includes(:o_embed_cache,
              :open_graph_cache,
@@ -70,8 +66,6 @@ class Post < ActiveRecord::Base
   def mentioned_people; []; end
   def photos; []; end
 
-  #prevents error when trying to access @post.address in a post different than Reshare and StatusMessage types;
-  #check PostPresenter
   def address
   end
 
@@ -120,7 +114,6 @@ class Post < ActiveRecord::Base
     likes.where(:author_id => user.person.id).first
   end
 
-  #############
 
   def self.diaspora_initialize(params)
     new_post = self.new params.to_hash.stringify_keys.slice(*self.column_names)
@@ -131,7 +124,6 @@ class Post < ActiveRecord::Base
     new_post
   end
 
-  # @return Returns true if this Post will accept updates (i.e. updates to the caption of a photo).
   def mutable?
     false
   end
@@ -156,7 +148,6 @@ class Post < ActiveRecord::Base
              Post.where(key => id).includes(:author, :comments => :author).first
            end
 
-    # is that a private post?
     raise(Diaspora::NonPublic) unless user || post.try(:public?)
 
     post || raise(ActiveRecord::RecordNotFound.new("could not find a post with id #{id}"))

@@ -22,8 +22,6 @@ class Ats2Postiats < Formula
 
     system "./configure", "--prefix=#{prefix}"
 
-    # Disable GC support for patsopt
-    # https://github.com/githwxi/ATS-Postiats/issues/76
     system "make", "GCFLAG=-D_ATS_NGC", "all"
     system "make", "install"
   end

@@ -6,12 +6,10 @@ class TomeePlus < Formula
   sha256 "deb551788f56e5051e4f9cd6a642b9543c7635819a58015b72d8506de08c693a"
 
   def install
-    # Remove Windows scripts
     rm_rf Dir["bin/*.bat"]
     rm_rf Dir["bin/*.bat.original"]
     rm_rf Dir["bin/*.exe"]
 
-    # Install files
     prefix.install %w[NOTICE LICENSE RELEASE-NOTES RUNNING.txt]
     libexec.install Dir["*"]
     bin.install_symlink "#{libexec}/bin/startup.sh" => "tomee-plus-startup"
@@ -19,9 +17,7 @@ class TomeePlus < Formula
 
   def caveats; <<-EOS.undent
     The home of Apache TomEE Plus is:
-      #{opt_libexec}
     To run Apache TomEE:
-      #{opt_libexec}/bin/tomee-plus-startup
     EOS
   end
 

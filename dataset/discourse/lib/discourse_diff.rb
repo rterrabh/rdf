@@ -180,11 +180,8 @@ class DiscourseDiff
     if html_or_text.length > 0 && html_or_text[0] == '<' && index_of_next_chevron
       index_of_class = html_or_text.index("class=")
       if index_of_class.nil? || index_of_class > index_of_next_chevron
-        # we do not have a class for the current tag
-        # add it right before the ">"
         html_or_text.insert(index_of_next_chevron, " class=\"diff-#{klass}\"")
       else
-        # we have a class, insert it at the beginning
         html_or_text.insert(index_of_class + "class=".length + 1, "diff-#{klass} ")
       end
     else

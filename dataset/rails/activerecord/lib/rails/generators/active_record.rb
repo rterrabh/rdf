@@ -8,7 +8,6 @@ module ActiveRecord
     class Base < Rails::Generators::NamedBase # :nodoc:
       include ActiveRecord::Generators::Migration
 
-      # Set the current directory as base for the inherited generators.
       def self.base_root
         File.dirname(__FILE__)
       end

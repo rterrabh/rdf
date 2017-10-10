@@ -19,15 +19,11 @@ class Plan9port < Formula
     To run the Plan 9 version of a command simply call it through the command
     "9", which has been installed into the Homebrew prefix bin.  For example,
     to run Plan 9's ls run:
-        # 9 ls
     EOS
   end
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <u.h>
-      #include <libc.h>
-      #include <stdio.h>
 
       int main(void) {
         return printf("Hello World\\n");

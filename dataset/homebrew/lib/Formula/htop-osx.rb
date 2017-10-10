@@ -15,7 +15,6 @@ class HtopOsx < Formula
   depends_on "libtool" => :build
 
   def install
-    # Otherwise htop will segfault when resizing the terminal
     ENV.no_optimization if ENV.compiler == :clang
 
     system "./autogen.sh"

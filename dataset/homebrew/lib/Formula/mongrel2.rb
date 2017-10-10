@@ -18,11 +18,8 @@ class Mongrel2 < Formula
   depends_on "zeromq"
 
   def install
-    # Build in serial. See:
-    # https://github.com/Homebrew/homebrew/issues/8719
     ENV.j1
 
-    # Mongrel2 pulls from these ENV vars instead
     ENV["OPTFLAGS"] = "#{ENV.cflags} #{ENV.cppflags}"
     ENV["OPTLIBS"] = "#{ENV.ldflags} -undefined dynamic_lookup"
 

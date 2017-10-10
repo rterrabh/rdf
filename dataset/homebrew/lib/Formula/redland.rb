@@ -115,7 +115,6 @@ class Redland < Formula
     if build.with? "ruby"
       s += <<-EOS.undent
         You may need to add the Ruby bindings to your RUBYLIB from:
-          #{HOMEBREW_PREFIX}/lib/ruby/site_ruby
       EOS
     end
 

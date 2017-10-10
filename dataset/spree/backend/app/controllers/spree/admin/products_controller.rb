@@ -34,8 +34,6 @@ module Spree
             format.js   { render layout: false }
           end
         else
-          # Stops people submitting blank slugs, causing errors when they try to
-          # update the product again
           @product.slug = @product.slug_was if @product.slug.blank?
           invoke_callbacks(:update, :fails)
           respond_with(@object)
@@ -100,14 +98,9 @@ module Spree
 
         params[:q][:s] ||= "name asc"
         @collection = super
-        # Don't delete params[:q][:deleted_at_null] here because it is used in view to check the
-        # checkbox for 'q[deleted_at_null]'. This also messed with pagination when deleted_at_null is checked.
         if params[:q][:deleted_at_null] == '0'
           @collection = @collection.with_deleted
         end
-        # @search needs to be defined as this is passed to search_form_for
-        # Temporarily remove params[:q][:deleted_at_null] from params[:q] to ransack products.
-        # This is to include all products and not just deleted products.
         @search = @collection.ransack(params[:q].reject { |k, _v| k.to_s == 'deleted_at_null' })
         @collection = @search.result.
               distinct_by_product_ids(params[:q][:s]).
@@ -123,8 +116,6 @@ module Spree
       end
 
       def update_before
-        # note: we only reset the product properties if we're receiving a post
-        #       from the form on that tab
         return unless params[:clear_product_properties]
         params[:product] ||= {}
       end

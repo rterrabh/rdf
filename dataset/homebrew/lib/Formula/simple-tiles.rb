@@ -25,7 +25,6 @@ class SimpleTiles < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <simple-tiles/simple_tiles.h>
 
       int main(){
         simplet_map_t *map = simplet_map_new();

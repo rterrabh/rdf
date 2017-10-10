@@ -1,5 +1,3 @@
-# Helps us determine whether a topic should be displayed as pinned or not,
-# taking into account anonymous users and users who have dismissed it
 class PinnedCheck
 
   def self.unpinned?(topic,topic_user=nil)

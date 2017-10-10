@@ -5,12 +5,7 @@ require 'fileutils'
 begin
   gem 'rdoc'
 rescue Gem::LoadError
-  # swallow
 else
-  # This will force any deps that 'rdoc' might have
-  # (such as json) that are ambiguous to be activated, which
-  # is important because we end up using Specification.reset
-  # and we don't want the warning it pops out.
   Gem.finish_resolve
 end
 
@@ -25,14 +20,6 @@ begin
 rescue LoadError
 end
 
-##
-# Gem::RDoc provides methods to generate RDoc and ri data for installed gems.
-# It works for RDoc 1.0.1 (in Ruby 1.8) up to RDoc 3.6.
-#
-# This implementation is considered obsolete.  The RDoc project is the
-# appropriate location to find this functionality.  This file provides the
-# hooks to load RDoc generation code from the "rdoc" gem and a fallback in
-# case the installed version of RDoc does not have them.
 
 class Gem::RDoc # :nodoc: all
 
@@ -42,33 +29,22 @@ class Gem::RDoc # :nodoc: all
   @rdoc_version = nil
   @specs = []
 
-  ##
-  # Force installation of documentation?
 
   attr_accessor :force
 
-  ##
-  # Generate rdoc?
 
   attr_accessor :generate_rdoc
 
-  ##
-  # Generate ri data?
 
   attr_accessor :generate_ri
 
   class << self
 
-    ##
-    # Loaded version of RDoc.  Set by ::load_rdoc
 
     attr_reader :rdoc_version
 
   end
 
-  ##
-  # Post installs hook that generates documentation for each specification in
-  # +specs+
 
   def self.generation_hook installer, specs
     start = Time.now
@@ -89,8 +65,6 @@ class Gem::RDoc # :nodoc: all
     say "Done installing documentation for #{names} after #{duration} seconds"
   end
 
-  ##
-  # Loads the RDoc generator
 
   def self.load_rdoc
     return if @rdoc_version
@@ -107,12 +81,6 @@ class Gem::RDoc # :nodoc: all
     raise Gem::DocumentError, "RDoc is not installed: #{e}"
   end
 
-  ##
-  # Creates a new documentation generator for +spec+.  RDoc and ri data
-  # generation can be enabled or disabled through +generate_rdoc+ and
-  # +generate_ri+ respectively.
-  #
-  # Only +generate_ri+ is enabled by default.
 
   def initialize spec, generate_rdoc = true, generate_ri = true
     @doc_dir   = spec.doc_dir
@@ -128,10 +96,6 @@ class Gem::RDoc # :nodoc: all
     @ri_dir   = spec.doc_dir 'ri'
   end
 
-  ##
-  # Removes legacy rdoc arguments from +args+
-  #--
-  # TODO move to RDoc::Options
 
   def delete_legacy_args args
     args.delete '--inline-source'
@@ -140,11 +104,6 @@ class Gem::RDoc # :nodoc: all
     args.delete '--one-file'
   end
 
-  ##
-  # Generates documentation using the named +generator+ ("darkfish" or "ri")
-  # and following the given +options+.
-  #
-  # Documentation will be generated into +destination+
 
   def document generator, options, destination
     generator_name = generator
@@ -174,8 +133,6 @@ class Gem::RDoc # :nodoc: all
     end
   end
 
-  ##
-  # Generates RDoc and ri data
 
   def generate
     return unless @generate_ri or @generate_rdoc
@@ -229,9 +186,6 @@ class Gem::RDoc # :nodoc: all
       @generate_rdoc and (@force or not File.exist? @rdoc_dir)
   end
 
-  ##
-  # Generates RDoc and ri data for legacy RDoc versions.  This method will not
-  # exist in future versions.
 
   def generate_legacy
     if @generate_rdoc then
@@ -247,9 +201,6 @@ class Gem::RDoc # :nodoc: all
     end
   end
 
-  ##
-  # Generates RDoc using a legacy version of RDoc from the ARGV-like +args+.
-  # This method will not exist in future versions.
 
   def legacy_rdoc *args
     args << @spec.rdoc_options
@@ -283,23 +234,16 @@ class Gem::RDoc # :nodoc: all
     end
   end
 
-  ##
-  # #new_rdoc creates a new RDoc instance.  This method is provided only to
-  # make testing easier.
 
   def new_rdoc # :nodoc:
     ::RDoc::RDoc.new
   end
 
-  ##
-  # Is rdoc documentation installed?
 
   def rdoc_installed?
     File.exist? @rdoc_dir
   end
 
-  ##
-  # Removes generated RDoc and ri data
 
   def remove
     base_dir = @spec.base_dir
@@ -310,15 +254,11 @@ class Gem::RDoc # :nodoc: all
     FileUtils.rm_rf @ri_dir
   end
 
-  ##
-  # Is ri data installed?
 
   def ri_installed?
     File.exist? @ri_dir
   end
 
-  ##
-  # Prepares the spec for documentation generation
 
   def setup
     self.class.load_rdoc

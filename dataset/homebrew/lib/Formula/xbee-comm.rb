@@ -1,5 +1,3 @@
-# This fork contains OS X patches.
-# Original project: https://github.com/roysjosh/xbee-comm
 
 class XbeeComm < Formula
   desc "XBee communication libraries and utilities"

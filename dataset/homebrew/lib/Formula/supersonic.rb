@@ -27,7 +27,6 @@ class Supersonic < Formula
   def install
     ENV.cxx11
 
-    # gflags no longer supply .pc files; supersonic's compile expects them.
     ENV["GFLAGS_CFLAGS"] = "-I#{Formula["gflags"].opt_include}"
     ENV["GFLAGS_LIBS"] = "-L#{Formula["gflags"].opt_lib} -lgflags"
 
@@ -40,8 +39,6 @@ class Supersonic < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
-      #include <supersonic/supersonic.h>
       using std::cout;
       using std::endl;
       using supersonic::BoundExpressionTree;

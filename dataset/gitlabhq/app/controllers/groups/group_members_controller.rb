@@ -2,7 +2,6 @@ class Groups::GroupMembersController < Groups::ApplicationController
   skip_before_action :authenticate_user!, only: [:index]
   before_action :group
 
-  # Authorize
   before_action :authorize_read_group!
   before_action :authorize_admin_group!, except: [:index, :leave]
   before_action :authorize_admin_group_member!, only: [:create, :resend_invite]

@@ -9,7 +9,6 @@ class HerokuToolbelt < Formula
 
   def install
     libexec.install Dir["*"]
-    # turn off autoupdates (off by default in HEAD)
     if build.stable?
       inreplace libexec/"bin/heroku", "Heroku::Updater.inject_libpath", "Heroku::Updater.disable(\"Use `brew upgrade heroku-toolbelt` to update\")"
     end

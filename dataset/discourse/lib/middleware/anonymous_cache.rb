@@ -24,8 +24,6 @@ module Middleware
         @is_mobile ||=
           begin
             session = @env[RACK_SESSION]
-            # don't initialize params until later otherwise
-            # you get a broken params on the request
             params = {}
             user_agent  = @env[USER_AGENT]
 
@@ -81,9 +79,6 @@ module Middleware
         @env["ANON_CACHE_DURATION"]
       end
 
-      # NOTE in an ideal world cache still serves out cached content except for one magic worker
-      #  that fills it up, this avoids a herd killing you, we can probably do this using a job or redis tricks
-      #  but coordinating this is tricky
       def cache(result)
         status,headers,response = result
 

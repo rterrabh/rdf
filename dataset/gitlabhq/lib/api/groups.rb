@@ -1,13 +1,8 @@
 module API
-  # groups API
   class Groups < Grape::API
     before { authenticate! }
 
     resource :groups do
-      # Get a groups list
-      #
-      # Example Request:
-      #  GET /groups
       get do
         @groups = if current_user.admin
                     Group.all
@@ -20,13 +15,6 @@ module API
         present @groups, with: Entities::Group
       end
 
-      # Create group. Available only for users who can create groups.
-      #
-      # Parameters:
-      #   name (required) - The name of the group
-      #   path (required) - The path of the group
-      # Example Request:
-      #   POST /groups
       post do
         authorize! :create_group, current_user
         required_attributes! [:name, :path]
@@ -42,36 +30,17 @@ module API
         end
       end
 
-      # Get a single group, with containing projects
-      #
-      # Parameters:
-      #   id (required) - The ID of a group
-      # Example Request:
-      #   GET /groups/:id
       get ":id" do
         group = find_group(params[:id])
         present group, with: Entities::GroupDetail
       end
 
-      # Remove group
-      #
-      # Parameters:
-      #   id (required) - The ID of a group
-      # Example Request:
-      #   DELETE /groups/:id
       delete ":id" do
         group = find_group(params[:id])
         authorize! :admin_group, group
         DestroyGroupService.new(group, current_user).execute
       end
 
-      # Transfer a project to the Group namespace
-      #
-      # Parameters:
-      #   id - group id
-      #   project_id  - project id
-      # Example Request:
-      #   POST /groups/:id/projects/:project_id
       post ":id/projects/:project_id" do
         authenticated_as_admin!
         group = Group.find_by(id: params[:id])

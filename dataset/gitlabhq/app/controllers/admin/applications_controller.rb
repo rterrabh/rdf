@@ -45,7 +45,6 @@ class Admin::ApplicationsController < Admin::ApplicationController
     @application = Doorkeeper::Application.where("owner_id IS NULL").find(params[:id])
   end
 
-  # Only allow a trusted parameter "white list" through.
   def application_params
     params[:doorkeeper_application].permit(:name, :redirect_uri)
   end

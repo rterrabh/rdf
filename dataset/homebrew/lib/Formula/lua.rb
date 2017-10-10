@@ -22,12 +22,8 @@ class Lua < Formula
   option "without-sigaction", "Revert to ANSI signal instead of improved POSIX sigaction"
   option "without-luarocks", "Don't build with Luarocks support embedded"
 
-  # Be sure to build a dylib, or else runtime modules will pull in another static copy of liblua = crashy
-  # See: https://github.com/Homebrew/homebrew/pull/5043
   patch :DATA
 
-  # completion provided by advanced readline power patch
-  # See http://lua-users.org/wiki/LuaPowerPatches
   if build.with? "completion"
     patch do
       url "http://luajit.org/patches/lua-5.2.0-advanced_readline.patch"
@@ -35,7 +31,6 @@ class Lua < Formula
     end
   end
 
-  # sigaction provided by posix signalling power patch
   if build.with? "sigaction"
     patch do
       url "http://lua-users.org/files/wiki_insecure/power_patches/5.2/lua-5.2.3-sig_catch.patch"
@@ -51,22 +46,18 @@ class Lua < Formula
   def install
     ENV.universal_binary if build.universal?
 
-    # Use our CC/CFLAGS to compile.
     inreplace "src/Makefile" do |s|
       s.remove_make_var! "CC"
       s.change_make_var! "CFLAGS", "#{ENV.cflags} -DLUA_COMPAT_ALL $(SYSCFLAGS) $(MYCFLAGS)"
       s.change_make_var! "MYLDFLAGS", ENV.ldflags
     end
 
-    # Fix path in the config header
     inreplace "src/luaconf.h", "/usr/local", HOMEBREW_PREFIX
 
-    # We ship our own pkg-config file as Lua no longer provide them upstream.
     system "make", "macosx", "INSTALL_TOP=#{prefix}", "INSTALL_MAN=#{man1}"
     system "make", "install", "INSTALL_TOP=#{prefix}", "INSTALL_MAN=#{man1}"
     (lib+"pkgconfig/lua.pc").write pc_file
 
-    # Fix some software potentially hunting for different pc names.
     bin.install_symlink "lua" => "lua5.2"
     bin.install_symlink "lua" => "lua-5.2"
     bin.install_symlink "luac" => "luac5.2"
@@ -75,8 +66,6 @@ class Lua < Formula
     (lib/"pkgconfig").install_symlink "lua.pc" => "lua5.2.pc"
     (lib/"pkgconfig").install_symlink "lua.pc" => "lua-5.2.pc"
 
-    # This resource must be handled after the main install, since there's a lua dep.
-    # Keeping it in install rather than postinstall means we can bottle.
     if build.with? "luarocks"
       resource("luarocks").stage do
         ENV.prepend_path "PATH", bin
@@ -93,7 +82,6 @@ class Lua < Formula
         bin.install_symlink libexec/"bin/luarocks"
         bin.install_symlink libexec/"bin/luarocks-admin"
 
-        # This block ensures luarock exec scripts don't break across updates.
         inreplace libexec/"share/lua/5.2/luarocks/site_config.lua" do |s|
           s.gsub! libexec.to_s, opt_libexec
           s.gsub! include.to_s, "#{HOMEBREW_PREFIX}/include"
@@ -154,14 +142,12 @@ index bd9515f..5940ba9 100644
 --- a/Makefile
 +++ b/Makefile
 @@ -41,7 +41,7 @@ PLATS= aix ansi bsd freebsd generic linux macosx mingw posix solaris
- # What to install.
  TO_BIN= lua luac
  TO_INC= lua.h luaconf.h lualib.h lauxlib.h lua.hpp
 -TO_LIB= liblua.a
 +TO_LIB= liblua.5.2.4.dylib
  TO_MAN= lua.1 luac.1
 
- # Lua version and release.
 @@ -63,6 +63,8 @@ install: dummy
 	cd src && $(INSTALL_DATA) $(TO_INC) $(INSTALL_INC)
 	cd src && $(INSTALL_DATA) $(TO_LIB) $(INSTALL_LIB)

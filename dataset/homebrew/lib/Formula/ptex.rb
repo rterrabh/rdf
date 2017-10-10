@@ -4,7 +4,6 @@ class Ptex < Formula
   url "https://github.com/wdas/ptex/archive/v2.0.42.tar.gz"
   sha256 "4abdee8b51fa239d576d6b5a70f10d9ea56f51fa50408fe6b9440e11fe646658"
 
-  # fix utils/Makefile not to expect a git repo for version info
   patch :DATA
 
   def install

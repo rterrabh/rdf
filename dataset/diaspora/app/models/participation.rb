@@ -9,7 +9,6 @@ class Participation < Federated::Relayable
     end
   end
 
-  # NOTE API V1 to be extracted
   acts_as_api
   api_accessible :backbone do |t|
     t.add :id

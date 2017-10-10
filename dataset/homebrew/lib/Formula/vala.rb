@@ -37,11 +37,8 @@ class Vala < Formula
     EOS
     valac_args = [ # Build with debugging symbols.
       "-g",
-      # Use Homebrew's default C compiler.
       "--cc=#{ENV.cc}",
-      # Save generated C source code.
       "--save-temps",
-      # Vala source code path.
       "#{path}"]
     system "#{bin}/valac", *valac_args
     assert File.exist?(testpath/"hello.c")

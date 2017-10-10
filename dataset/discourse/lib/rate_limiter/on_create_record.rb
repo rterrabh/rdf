@@ -1,23 +1,16 @@
 class RateLimiter
 
-  # A mixin we can use on ActiveRecord Models to automatically rate limit them
-  # based on a SiteSetting.
-  #
-  # It expects a SiteSetting called `rate_limit_create_{model_name}` where
-  # `model_name` is the class name of your model, underscored.
-  #
   module OnCreateRecord
 
-    # Over write to define your own rate limiter
     def default_rate_limiter
       return @rate_limiter if @rate_limiter.present?
 
       limit_key = "create_#{self.class.name.underscore}"
       max_setting = if user.new_user? and SiteSetting.has_setting?("rate_limit_new_user_#{limit_key}")
-        #nodyna <ID:send-26> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-337> <SD COMPLEX (change-prone variables)>
         SiteSetting.send("rate_limit_new_user_#{limit_key}")
       else
-        #nodyna <ID:send-27> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-338> <SD COMPLEX (change-prone variables)>
         SiteSetting.send("rate_limit_#{limit_key}")
       end
       @rate_limiter = RateLimiter.new(user, limit_key, 1, max_setting)
@@ -27,7 +20,6 @@ class RateLimiter
       base.extend(ClassMethods)
     end
 
-    # For the lifetime of this instance, don't enforce rate limits.
     def disable_rate_limits!
       @rate_limits_disabled = true
     end
@@ -40,7 +32,7 @@ class RateLimiter
         self.after_create do |*args|
           next if @rate_limits_disabled
 
-          #nodyna <ID:send-28> <SD MODERATE (change-prone variables)>
+          #nodyna <send-339> <SD MODERATE (change-prone variables)>
           if rate_limiter = send(limiter_method)
             rate_limiter.performed!
             @performed ||= {}
@@ -50,7 +42,7 @@ class RateLimiter
 
         self.after_destroy do
           next if @rate_limits_disabled
-          #nodyna <ID:send-29> <SD MODERATE (change-prone variables)>
+          #nodyna <send-340> <SD MODERATE (change-prone variables)>
           if rate_limiter = send(limiter_method)
             rate_limiter.rollback!
           end
@@ -58,7 +50,7 @@ class RateLimiter
 
         self.after_rollback do
           next if @rate_limits_disabled
-          #nodyna <ID:send-30> <SD MODERATE (change-prone variables)>
+          #nodyna <send-341> <SD MODERATE (change-prone variables)>
           if rate_limiter = send(limiter_method)
             if @performed.present? && @performed[limiter_method]
               rate_limiter.rollback!

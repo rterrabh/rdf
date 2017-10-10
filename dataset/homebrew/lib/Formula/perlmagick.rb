@@ -27,7 +27,6 @@ class Perlmagick < Formula
     system "make", "install"
   end
 
-  # References the system Perl version.
   def caveats
     perl_version = `/usr/bin/perl -e 'printf "%vd", $^V;'`
     <<-EOS.undent

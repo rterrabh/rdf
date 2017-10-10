@@ -59,7 +59,6 @@ class Xapian < Formula
       if build.with? "python"
         (lib+"python2.7/site-packages").mkpath
         ENV["PYTHON_LIB"] = lib+"python2.7/site-packages"
-        # configure looks for python2 and system python doesn't install one
         ENV["PYTHON"] = which "python"
         args << "--with-python"
       else
@@ -82,7 +81,6 @@ class Xapian < Formula
     if build.include? "ruby"
       <<-EOS.undent
         You may need to add the Ruby bindings to your RUBYLIB from:
-          #{HOMEBREW_PREFIX}/lib/ruby/site_ruby
 
       EOS
     end

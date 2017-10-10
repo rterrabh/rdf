@@ -25,9 +25,6 @@ module OS
         "2.7.73" => "2.7.7"
       }.freeze
 
-      # This returns the version number of XQuartz, not of the upstream X.org.
-      # The X11.app distributed by Apple is also XQuartz, and therefore covered
-      # by this method.
       def version
         @version ||= detect_version
       end
@@ -42,8 +39,6 @@ module OS
         end
       end
 
-      # https://xquartz.macosforge.org/trac/wiki
-      # https://xquartz.macosforge.org/trac/wiki/Releases
       def latest_version
         case MacOS.version
         when "10.5"
@@ -64,9 +59,6 @@ module OS
         version unless version.empty?
       end
 
-      # The XQuartz that Apple shipped in OS X through 10.7 does not have a
-      # pkg-util entry, so if Spotlight indexing is disabled we must make an
-      # educated guess as to what version is installed.
       def guess_system_version
         case MacOS.version
         when "10.5" then "2.1.6"
@@ -76,8 +68,6 @@ module OS
         end
       end
 
-      # Upstream XQuartz *does* have a pkg-info entry, so if we can't get it
-      # from mdls, we can try pkgutil. This is very slow.
       def version_from_pkgutil
         str = MacOS.pkgutil_info(FORGE_PKG_ID)[/version: (\d\.\d\.\d+)$/, 1]
         PKGINFO_VERSION_MAP.fetch(str, str)
@@ -89,9 +79,6 @@ module OS
         end == APPLE_BUNDLE_ID
       end
 
-      # This should really be private, but for compatibility reasons it must
-      # remain public. New code should use MacOS::X11.bin, MacOS::X11.lib and
-      # MacOS::X11.include instead, as that accounts for Xcode-only systems.
       def prefix
         @prefix ||= if Pathname.new("/opt/X11/lib/libpng.dylib").exist?
           Pathname.new("/opt/X11")
@@ -104,11 +91,6 @@ module OS
         !version.nil? && !prefix.nil?
       end
 
-      # If XQuartz and/or the CLT are installed, headers will be found under
-      # /opt/X11/include or /usr/X11/include. For Xcode-only systems, they are
-      # found in the SDK, so we use sdk_path for both the headers and libraries.
-      # Confusingly, executables (e.g. config scripts) are only found under
-      # /opt/X11/bin or /usr/X11/bin in all cases.
       def effective_prefix
         if provided_by_apple? && Xcode.without_clt?
           Pathname.new("#{OS::Mac.sdk_path}/usr/X11")

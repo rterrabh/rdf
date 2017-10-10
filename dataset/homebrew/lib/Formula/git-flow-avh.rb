@@ -24,7 +24,6 @@ class GitFlowAvh < Formula
   def install
     system "make", "prefix=#{libexec}", "install"
     (bin/"git-flow").write <<-EOS.undent
-      #!/bin/bash
       export FLAGS_GETOPT_CMD=#{Formula["gnu-getopt"].opt_bin}/getopt
       exec "#{libexec}/bin/git-flow" "$@"
     EOS

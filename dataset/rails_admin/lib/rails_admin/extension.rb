@@ -5,10 +5,6 @@ module RailsAdmin
   AUDITING_ADAPTERS = {}
   CONFIGURATION_ADAPTERS = {}
 
-  # Extend RailsAdmin
-  #
-  # The extension may define various adapters (e.g., for authorization) and
-  # register those via the options hash.
   def self.add_extension(extension_key, extension_definition, options = {})
     options.assert_valid_keys(:authorization, :configuration, :auditing)
 

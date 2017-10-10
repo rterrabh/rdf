@@ -1,7 +1,3 @@
-#
-# HTML emails don't support CSS, so we can use nokogiri to inline attributes based on
-# matchers.
-#
 module Email
   class Styles
     @@plugin_callbacks = []
@@ -18,7 +14,6 @@ module Email
     def add_styles(node, new_styles)
       existing = node['style']
       if existing.present?
-        # merge styles
         node['style'] = "#{new_styles}; #{existing}"
       else
         node['style'] = new_styles
@@ -28,7 +23,6 @@ module Email
     def format_basic
       uri = URI(Discourse.base_url)
 
-      # images
       @fragment.css('img').each do |img|
 
         next if img['class'] == 'site-logo'
@@ -37,7 +31,6 @@ module Email
           img['width'] = 20
           img['height'] = 20
         else
-          # use dimensions of original iPhone screen for 'too big, let device rescale'
           if img['width'].to_i > 320 or img['height'].to_i > 480
             img['width'] = 'auto'
             img['height'] = 'auto'
@@ -45,26 +38,21 @@ module Email
           add_styles(img, 'max-width:100%;') if img['style'] !~ /max-width/
         end
 
-        # ensure all urls are absolute
         if img['src'] =~ /^\/[^\/]/
           img['src'] = "#{Discourse.base_url}#{img['src']}"
         end
 
-        # ensure no schemaless urls
         if img['src'] && img['src'].starts_with?("//")
           img['src'] = "#{uri.scheme}:#{img['src']}"
         end
       end
 
-      # attachments
       @fragment.css('a.attachment').each do |a|
 
-        # ensure all urls are absolute
         if a['href'] =~ /^\/[^\/]/
           a['href'] = "#{Discourse.base_url}#{a['href']}"
         end
 
-        # ensure no schemaless urls
         if a['href'] && a['href'].starts_with?("//")
           a['href'] = "#{uri.scheme}:#{a['href']}"
         end
@@ -91,13 +79,11 @@ module Email
     end
 
     def onebox_styles
-      # Links to other topics
       style('aside.quote', 'border-left: 5px solid #bebebe; background-color: #f1f1f1; padding: 12px 25px 2px 12px; margin-bottom: 10px;')
       style('aside.quote blockquote', 'border: 0px; padding: 0; margin: 7px 0')
       style('aside.quote div.info-line', 'color: #666; margin: 10px 0')
       style('aside.quote .avatar', 'margin-right: 5px; width:20px; height:20px')
 
-      # Oneboxes
       style('aside.onebox', "padding: 12px 25px 2px 12px; border-left: 5px solid #bebebe; background: #eee; margin-bottom: 10px;")
       style('aside.onebox img', "max-height: 80%; max-width: 25%; height: auto; float: left; margin-right: 10px; margin-bottom: 10px")
       style('aside.onebox h3', "border-bottom: 0")
@@ -105,21 +91,17 @@ module Email
       style('aside.onebox .source a[href]', "color: #333; font-weight: normal")
       style('aside.clearfix', "clear: both")
 
-      # Finally, convert all `aside` tags to `div`s
       @fragment.css('aside, article, header').each do |n|
         n.name = "div"
       end
 
-      # iframes can't go in emails, so replace them with clickable links
       @fragment.css('iframe').each do |i|
         begin
           src_uri = URI(i['src'])
 
-          # If an iframe is protocol relative, use SSL when displaying it
           display_src = "#{src_uri.scheme || 'https://'}#{src_uri.host}#{src_uri.path}"
           i.replace "<p><a href='#{src_uri.to_s}'>#{display_src}</a><p>"
         rescue URI::InvalidURIError
-          # If the URL is weird, remove it
           i.remove
         end
       end
@@ -144,7 +126,6 @@ module Email
       plugin_styles
     end
 
-    # this method is reserved for styles specific to plugin
     def plugin_styles
       @@plugin_callbacks.each { |block| block.call(@fragment) }
     end

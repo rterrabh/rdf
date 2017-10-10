@@ -12,7 +12,6 @@ class Libxmlxx < Formula
 
   depends_on "pkg-config" => :build
   depends_on "glibmm"
-  # LibXML++ can't compile agains the version of LibXML shipped with Leopard
   depends_on "libxml2" if MacOS.version <= :leopard
 
   def install
@@ -22,7 +21,6 @@ class Libxmlxx < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <libxml++/libxml++.h>
 
       int main(int argc, char *argv[])
       {

@@ -1,36 +1,7 @@
-# -*- coding: utf-8 -*-
-#--
-# Copyright (C) 2004 Mauricio Julio Fernández Pradier
-# See LICENSE.txt for additional licensing information.
-#++
 
-##
-#--
-# struct tarfile_entry_posix {
-#   char name[100];     # ASCII + (Z unless filled)
-#   char mode[8];       # 0 padded, octal, null
-#   char uid[8];        # ditto
-#   char gid[8];        # ditto
-#   char size[12];      # 0 padded, octal, null
-#   char mtime[12];     # 0 padded, octal, null
-#   char checksum[8];   # 0 padded, octal, null, space
-#   char typeflag[1];   # file: "0"  dir: "5"
-#   char linkname[100]; # ASCII + (Z unless filled)
-#   char magic[6];      # "ustar\0"
-#   char version[2];    # "00"
-#   char uname[32];     # ASCIIZ
-#   char gname[32];     # ASCIIZ
-#   char devmajor[8];   # 0 padded, octal, null
-#   char devminor[8];   # o padded, octal, null
-#   char prefix[155];   # ASCII + (Z unless filled)
-# };
-#++
-# A header for a tar file
 
 class Gem::Package::TarHeader
 
-  ##
-  # Fields in the tar header
 
   FIELDS = [
     :checksum,
@@ -51,8 +22,6 @@ class Gem::Package::TarHeader
     :version,
   ]
 
-  ##
-  # Pack format for a tar header
 
   PACK_FORMAT = 'a100' + # name
                 'a8'   + # mode
@@ -71,8 +40,6 @@ class Gem::Package::TarHeader
                 'a8'   + # devminor
                 'a155'   # prefix
 
-  ##
-  # Unpack format for a tar header
 
   UNPACK_FORMAT = 'A100' + # name
                   'A8'   + # mode
@@ -93,8 +60,6 @@ class Gem::Package::TarHeader
 
   attr_reader(*FIELDS)
 
-  ##
-  # Creates a tar header from IO +stream+
 
   def self.from(stream)
     header = stream.read 512
@@ -122,8 +87,6 @@ class Gem::Package::TarHeader
         :empty => empty
   end
 
-  ##
-  # Creates a new TarHeader using +vals+
 
   def initialize(vals)
     unless vals[:name] && vals[:size] && vals[:prefix] && vals[:mode] then
@@ -143,14 +106,13 @@ class Gem::Package::TarHeader
     vals[:devminor] ||= 0
 
     FIELDS.each do |name|
+      #nodyna <instance_variable_set-2248> <not yet classified>
       instance_variable_set "@#{name}", vals[name]
     end
 
     @empty = vals[:empty]
   end
 
-  ##
-  # Is the tar entry empty?
 
   def empty?
     @empty
@@ -181,8 +143,6 @@ class Gem::Package::TarHeader
     header
   end
 
-  ##
-  # Updates the TarHeader's checksum
 
   def update_checksum
     header = header " " * 8

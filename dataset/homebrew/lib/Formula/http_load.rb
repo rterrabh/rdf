@@ -5,7 +5,6 @@ class HttpLoad < Formula
   version "20140814"
   sha256 "538a19cf1a45b1c0ca9be2a5f421b0a3f8d1989c24657d08bc139144b6e14622"
 
-  # HTTPS support
   depends_on "openssl" => :optional
 
   def install

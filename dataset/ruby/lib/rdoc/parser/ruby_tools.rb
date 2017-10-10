@@ -1,21 +1,14 @@
-##
-# Collection of methods for writing parsers against RDoc::RubyLex and
-# RDoc::RubyToken
 
 module RDoc::Parser::RubyTools
 
   include RDoc::RubyToken
 
-  ##
-  # Adds a token listener +obj+, but you should probably use token_listener
 
   def add_token_listener(obj)
     @token_listeners ||= []
     @token_listeners << obj
   end
 
-  ##
-  # Fetches the next token from the scanner
 
   def get_tk
     tk = nil
@@ -43,7 +36,6 @@ module RDoc::Parser::RubyTools
           tk = Token(TkSYMBOL).set_text(":" + tk1.text)
         end
 
-        # remove the identifier we just read to replace it with a symbol
         @token_listeners.each do |obj|
           obj.pop_token
         end if @token_listeners
@@ -52,7 +44,6 @@ module RDoc::Parser::RubyTools
       end
     end
 
-    # inform any listeners of our shiny new token
     @token_listeners.each do |obj|
       obj.add_token(tk)
     end if @token_listeners
@@ -60,9 +51,6 @@ module RDoc::Parser::RubyTools
     tk
   end
 
-  ##
-  # Reads and returns all tokens up to one of +tokens+.  Leaves the matched
-  # token in the token list.
 
   def get_tk_until(*tokens)
     read = []
@@ -82,8 +70,6 @@ module RDoc::Parser::RubyTools
     read
   end
 
-  ##
-  # Retrieves a String representation of the read tokens
 
   def get_tkread
     read = @read.join("")
@@ -91,30 +77,22 @@ module RDoc::Parser::RubyTools
     read
   end
 
-  ##
-  # Peek equivalent for get_tkread
 
   def peek_read
     @read.join('')
   end
 
-  ##
-  # Peek at the next token, but don't remove it from the stream
 
   def peek_tk
     unget_tk(tk = get_tk)
     tk
   end
 
-  ##
-  # Removes the token listener +obj+
 
   def remove_token_listener(obj)
     @token_listeners.delete(obj)
   end
 
-  ##
-  # Resets the tools
 
   def reset
     @read       = []
@@ -123,8 +101,6 @@ module RDoc::Parser::RubyTools
     @nest = 0
   end
 
-  ##
-  # Skips whitespace tokens including newlines if +skip_nl+ is true
 
   def skip_tkspace(skip_nl = true) # HACK dup
     tokens = []
@@ -137,8 +113,6 @@ module RDoc::Parser::RubyTools
     tokens
   end
 
-  ##
-  # Has +obj+ listen to tokens
 
   def token_listener(obj)
     add_token_listener obj
@@ -147,14 +121,11 @@ module RDoc::Parser::RubyTools
     remove_token_listener obj
   end
 
-  ##
-  # Returns +tk+ to the scanner
 
   def unget_tk(tk)
     @tokens.unshift tk
     @unget_read.unshift @read.pop
 
-    # Remove this token from any listeners
     @token_listeners.each do |obj|
       obj.pop_token
     end if @token_listeners

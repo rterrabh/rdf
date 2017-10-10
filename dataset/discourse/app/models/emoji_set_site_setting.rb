@@ -4,7 +4,6 @@ class EmojiSetSiteSetting < EnumSiteSetting
 
   NAME = :emoji_set
 
-  # fix the URLs when changing the site setting
   DiscourseEvent.on(:site_setting_saved) do |site_setting|
     if site_setting.name == NAME && site_setting.value_changed?
       Emoji.clear_cache

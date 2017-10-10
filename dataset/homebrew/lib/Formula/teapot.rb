@@ -13,9 +13,6 @@ class Teapot < Formula
 
   depends_on "cmake" => :build
 
-  # The upstream tarball still defines the version number as "2.2.1", even
-  # though the tarball contains the directory name "teapot-2.3.0" and there are
-  # significant differences between this and the 2.2.1 tarball.
   patch :DATA
 
   def install
@@ -39,4 +36,3 @@ index 2a4e34f..cdf11a1 100644
 -#define VERSION "2.2.1"
 +#define VERSION "2.3.0"
 
- #define HELPFILE "/usr/local/share/doc/teapot/html/index.html"

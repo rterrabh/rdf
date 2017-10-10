@@ -1,4 +1,3 @@
-# Read about interceptors in http://guides.rubyonrails.org/action_mailer_basics.html#intercepting-emails
 class DisableEmailInterceptor
 
   def self.delivering_email(message)

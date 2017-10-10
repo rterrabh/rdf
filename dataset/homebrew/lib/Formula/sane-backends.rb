@@ -20,9 +20,6 @@ class SaneBackends < Formula
   depends_on "libusb-compat"
   depends_on "openssl"
 
-  # Fixes u_long missing error. Reported upstream:
-  # https://github.com/fab1an/homebrew/commit/2a716f1a2b07705aa891e2c7fbb5148506aa5a01
-  # When updating this formula, check on the usptream status of this patch.
   patch :DATA
 
   def install
@@ -38,7 +35,6 @@ class SaneBackends < Formula
     system "make"
     system "make", "install"
 
-    # Some drivers require a lockfile
     (var+"lock/sane").mkpath
   end
 end
@@ -50,7 +46,6 @@ index 5320b4a..6cb7090 100644
 +++ b/include/sane/sane.h
 @@ -20,6 +20,9 @@
  extern "C" {
- #endif
  
 +// Fixes u_long missing error
 +#include <sys/types.h>

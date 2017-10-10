@@ -13,7 +13,6 @@ class Lemon < Formula
   def install
     (share/"lemon").install "lempar.c"
 
-    # patch the parser generator to look for the 'lempar.c' template file where we've installed it
     inreplace "lemon.c", / = pathsearch\([^)]*\);/, " = \"#{share}/lemon/lempar.c\";"
 
     system ENV.cc, "-o", "lemon", "lemon.c"
@@ -25,8 +24,6 @@ class Lemon < Formula
       %token_type {int}
       %left PLUS.
       %include {
-        #include <iostream>
-        #include "example1.h"
       }
       %syntax_error {
         std::cout << "Syntax error!" << std::endl;

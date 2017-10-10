@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/screenruler.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * screenruler dialog
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::screenruler', '1.1')
 TkPackage.require('widget::screenruler')
 
 module Tk::Tcllib

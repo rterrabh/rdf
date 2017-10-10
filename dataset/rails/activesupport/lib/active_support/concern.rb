@@ -1,102 +1,4 @@
 module ActiveSupport
-  # A typical module looks like this:
-  #
-  #   module M
-  #     def self.included(base)
-  #       base.extend ClassMethods
-  #       base.class_eval do
-  #         scope :disabled, -> { where(disabled: true) }
-  #       end
-  #     end
-  #
-  #     module ClassMethods
-  #       ...
-  #     end
-  #   end
-  #
-  # By using <tt>ActiveSupport::Concern</tt> the above module could instead be
-  # written as:
-  #
-  #   require 'active_support/concern'
-  #
-  #   module M
-  #     extend ActiveSupport::Concern
-  #
-  #     included do
-  #       scope :disabled, -> { where(disabled: true) }
-  #     end
-  #
-  #     class_methods do
-  #       ...
-  #     end
-  #   end
-  #
-  # Moreover, it gracefully handles module dependencies. Given a +Foo+ module
-  # and a +Bar+ module which depends on the former, we would typically write the
-  # following:
-  #
-  #   module Foo
-  #     def self.included(base)
-  #       base.class_eval do
-  #         def self.method_injected_by_foo
-  #           ...
-  #         end
-  #       end
-  #     end
-  #   end
-  #
-  #   module Bar
-  #     def self.included(base)
-  #       base.method_injected_by_foo
-  #     end
-  #   end
-  #
-  #   class Host
-  #     include Foo # We need to include this dependency for Bar
-  #     include Bar # Bar is the module that Host really needs
-  #   end
-  #
-  # But why should +Host+ care about +Bar+'s dependencies, namely +Foo+? We
-  # could try to hide these from +Host+ directly including +Foo+ in +Bar+:
-  #
-  #   module Bar
-  #     include Foo
-  #     def self.included(base)
-  #       base.method_injected_by_foo
-  #     end
-  #   end
-  #
-  #   class Host
-  #     include Bar
-  #   end
-  #
-  # Unfortunately this won't work, since when +Foo+ is included, its <tt>base</tt>
-  # is the +Bar+ module, not the +Host+ class. With <tt>ActiveSupport::Concern</tt>,
-  # module dependencies are properly resolved:
-  #
-  #   require 'active_support/concern'
-  #
-  #   module Foo
-  #     extend ActiveSupport::Concern
-  #     included do
-  #       def self.method_injected_by_foo
-  #         ...
-  #       end
-  #     end
-  #   end
-  #
-  #   module Bar
-  #     extend ActiveSupport::Concern
-  #     include Foo
-  #
-  #     included do
-  #       self.method_injected_by_foo
-  #     end
-  #   end
-  #
-  #   class Host
-  #     include Bar # It works, now Bar takes care of its dependencies
-  #   end
   module Concern
     class MultipleIncludedBlocks < StandardError #:nodoc:
       def initialize
@@ -105,20 +7,23 @@ module ActiveSupport
     end
 
     def self.extended(base) #:nodoc:
+      #nodyna <instance_variable_set-1134> <not yet classified>
       base.instance_variable_set(:@_dependencies, [])
     end
 
     def append_features(base)
       if base.instance_variable_defined?(:@_dependencies)
+        #nodyna <instance_variable_get-1135> <not yet classified>
         base.instance_variable_get(:@_dependencies) << self
         return false
       else
         return false if base < self
-        #nodyna <ID:send-275> <SD TRIVIAL (public methods)>
+        #nodyna <send-1136> <SD TRIVIAL (public methods)>
         @_dependencies.each { |dep| base.send(:include, dep) }
         super
-        #nodyna <ID:const_get-20> <CG TRIVIAL (static values)>
+        #nodyna <const_get-1137> <CG TRIVIAL (static values)>
         base.extend const_get(:ClassMethods) if const_defined?(:ClassMethods)
+        #nodyna <class_eval-1138> <not yet classified>
         base.class_eval(&@_included_block) if instance_variable_defined?(:@_included_block)
       end
     end
@@ -135,11 +40,12 @@ module ActiveSupport
 
     def class_methods(&class_methods_module_definition)
       mod = const_defined?(:ClassMethods, false) ?
-        #nodyna <ID:const_get-21> <CG TRIVIAL (static values)>
+        #nodyna <const_get-1139> <CG TRIVIAL (static values)>
         const_get(:ClassMethods) :
-        #nodyna <ID:const_set-10> <CS TRIVIAL (static values)>
+        #nodyna <const_set-1140> <CS TRIVIAL (static values)>
         const_set(:ClassMethods, Module.new)
 
+      #nodyna <module_eval-1141> <not yet classified>
       mod.module_eval(&class_methods_module_definition)
     end
   end

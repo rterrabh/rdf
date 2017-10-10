@@ -67,7 +67,6 @@ module Spree
           before { allow(user).to receive_messages :has_spree_role? => true }
 
           context "a user's id is not provided" do
-            # this is a regression spec for an issue we ran into at Bonobos
             it "doesn't unassociate the admin from the order" do
               params = { }
               order = Importer::Order.import(user, params)
@@ -248,7 +247,7 @@ module Spree
 
       it 'ensures_country_id for country fields' do
         [:name, :iso, :iso_name, :iso3].each do |field|
-          #nodyna <ID:send-27> <SD MODERATE (array)>
+          #nodyna <send-2492> <SD MODERATE (array)>
           address = { country: { field => country.send(field) } }
           Importer::Order.ensure_country_id_from_params(address)
           expect(address[:country_id]).to eq country.id
@@ -264,7 +263,7 @@ module Spree
 
       it 'ensures_state_id for state fields' do
         [:name, :abbr].each do |field|
-          #nodyna <ID:send-28> <SD MODERATE (array)>
+          #nodyna <send-2493> <SD MODERATE (array)>
           address = { country_id: country.id, state: { field => state.send(field) } }
           Importer::Order.ensure_state_id_from_params(address)
           expect(address[:state_id]).to eq state.id

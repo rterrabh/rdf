@@ -4,8 +4,6 @@ class Mkclean < Formula
   url "https://downloads.sourceforge.net/project/matroska/mkclean/mkclean-0.8.7.tar.bz2"
   sha256 "88713065a172d1ab7fd34c8854a42f6bf8d0e794957265340328a2f692ad46d9"
 
-  # Fixes compile error with XCode-4.3+, a hardcoded /Developer.  Reported as:
-  # https://sourceforge.net/tracker/?func=detail&aid=3505611&group_id=68739&atid=522228
   patch :DATA if MacOS.prefer_64_bit?
 
   def install
@@ -31,4 +29,3 @@ __END__
 +CCFLAGS=%(CCFLAGS) -arch x86_64 -mdynamic-no-pic
  ASMFLAGS = -f macho64 -D_MACHO
  
- #include "gcc_osx.inc"

@@ -2,7 +2,6 @@ class TopicUser < ActiveRecord::Base
   belongs_to :user
   belongs_to :topic
 
-  # used for serialization
   attr_accessor :post_action_data
 
   scope :tracking, lambda { |topic_id|
@@ -12,10 +11,8 @@ class TopicUser < ActiveRecord::Base
      tracking: TopicUser.notification_levels[:tracking])
   }
 
-  # Class methods
   class << self
 
-    # Enums
     def notification_levels
       @notification_levels ||= Enum.new(:muted, :regular, :tracking, :watching, start: 0)
     end
@@ -48,9 +45,7 @@ class TopicUser < ActiveRecord::Base
       end
     end
 
-    # Find the information specific to a user in a forum topic
     def lookup_for(user, topics)
-      # If the user isn't logged in, there's no last read posts
       return {} if user.blank? || topics.blank?
 
       topic_ids = topics.map(&:id)
@@ -71,11 +66,7 @@ class TopicUser < ActiveRecord::Base
       TopicUser.find_by(topic_id: topic, user_id: user)
     end
 
-    # Change attributes for a user (creates a record when none is present). First it tries an update
-    # since there's more likely to be an existing record than not. If the update returns 0 rows affected
-    # it then creates the row instead.
     def change(user_id, topic_id, attrs)
-      # Sometimes people pass objs instead of the ids. We can handle that.
       topic_id = topic_id.id if topic_id.is_a?(::Topic)
       user_id = user_id.id if user_id.is_a?(::User)
 
@@ -114,7 +105,6 @@ class TopicUser < ActiveRecord::Base
       end
 
     rescue ActiveRecord::RecordNotUnique
-      # In case of a race condition to insert, do nothing
     end
 
     def track_visit!(topic,user)
@@ -130,8 +120,6 @@ class TopicUser < ActiveRecord::Base
       end
     end
 
-    # Update the last read and the last seen post count, but only if it doesn't exist.
-    # This would be a lot easier if psql supported some kind of upsert
     def update_last_read(user, topic_id, post_number, msecs, opts={})
       return if post_number.blank?
       msecs = 0 if msecs.to_i < 0
@@ -146,12 +134,6 @@ class TopicUser < ActiveRecord::Base
         threshold: SiteSetting.default_other_auto_track_topics_after_msecs
       }
 
-      # In case anyone seens "highest_seen_post_number" and gets confused, like I do.
-      # highest_seen_post_number represents the highest_post_number of the topic when
-      # the user visited it. It may be out of alignment with last_read, meaning
-      # ... user visited the topic but did not read the posts
-      #
-      # 86400000 = 1 day
       rows = exec_sql("UPDATE topic_users
                                     SET
                                       last_read_post_number = GREATEST(:post_number, tu.last_read_post_number),
@@ -185,7 +167,6 @@ class TopicUser < ActiveRecord::Base
         before_last_read = rows[0][2].to_i
 
         if before_last_read < post_number
-          # The user read at least one new post
           TopicTrackingState.publish_read(topic_id, post_number, user.id, after)
           user.update_posts_read!(post_number - before_last_read, mobile: opts[:mobile])
         end
@@ -196,7 +177,6 @@ class TopicUser < ActiveRecord::Base
       end
 
       if rows.length == 0
-        # The user read at least one post in a topic that they haven't viewed before.
         args[:new_status] = notification_levels[:regular]
         if (user.auto_track_topics_after_msecs || SiteSetting.default_other_auto_track_topics_after_msecs) == 0
           args[:new_status] = notification_levels[:tracking]
@@ -287,10 +267,6 @@ SQL
   def self.ensure_consistency!(topic_id=nil)
     update_post_action_cache(topic_id: topic_id)
 
-    # TODO this needs some reworking, when we mark stuff skipped
-    # we up these numbers so they are not in-sync
-    # the simple fix is to add a column here, but table is already quite big
-    # long term we want to split up topic_users and allow for this better
     builder = SqlBuilder.new <<SQL
 
 UPDATE topic_users t
@@ -327,29 +303,3 @@ SQL
 
 end
 
-# == Schema Information
-#
-# Table name: topic_users
-#
-#  user_id                  :integer          not null
-#  topic_id                 :integer          not null
-#  posted                   :boolean          default(FALSE), not null
-#  last_read_post_number    :integer
-#  highest_seen_post_number :integer
-#  last_visited_at          :datetime
-#  first_visited_at         :datetime
-#  notification_level       :integer          default(1), not null
-#  notifications_changed_at :datetime
-#  notifications_reason_id  :integer
-#  total_msecs_viewed       :integer          default(0), not null
-#  cleared_pinned_at        :datetime
-#  id                       :integer          not null, primary key
-#  last_emailed_post_number :integer
-#  liked                    :boolean          default(FALSE)
-#  bookmarked               :boolean          default(FALSE)
-#
-# Indexes
-#
-#  index_topic_users_on_topic_id_and_user_id  (topic_id,user_id) UNIQUE
-#  index_topic_users_on_user_id_and_topic_id  (user_id,topic_id) UNIQUE
-#

@@ -32,11 +32,9 @@ module ActiveAdmin
         end
 
         @opening_tag, @closing_tag = split_string_on(form_string, "</form>")
-        #nodyna <ID:instance_eval-1> <IEV COMPLEX (block execution)>
+        #nodyna <instance_eval-53> <IEV COMPLEX (block execution)>
         instance_eval(&block) if block_given?
 
-        # Rails 4 sets multipart automatically if a file field is present,
-        # but the form tag has already been rendered before the block eval.
         if multipart? && @opening_tag !~ /multipart/
           @opening_tag.sub!(/<form/, '<form enctype="multipart/form-data"')
         end

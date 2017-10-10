@@ -1,5 +1,3 @@
-#--
-# Extensions to time to allow comparisons with early and late time classes.
 
 require 'rake/early_time'
 require 'rake/late_time'

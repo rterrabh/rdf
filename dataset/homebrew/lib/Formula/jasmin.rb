@@ -14,7 +14,6 @@ class Jasmin < Formula
   depends_on :java
 
   def install
-    # Remove Windows scripts
     rm_rf Dir["*.bat"]
 
     libexec.install Dir["*.jar"]

@@ -1,7 +1,3 @@
-#
-#  tkextlib/blt/bitmap.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/blt.rb'
@@ -14,7 +10,7 @@ module Tk::BLT
 
     BITMAP_ID_TBL = TkCore::INTERP.create_table
 
-    #nodyna <ID:instance_eval-69> <IEV MODERATE (method definition)>
+    #nodyna <instance_eval-1547> <IEV MODERATE (method definition)>
     (BITMAP_ID = ['blt_bitmap_id'.freeze, TkUtil.untrust('00000')]).instance_eval{
       @mutex = Mutex.new
       def mutex; @mutex; end
@@ -46,7 +42,6 @@ module Tk::BLT
       tk_simple_list(tk_call('::blt::bitmap', 'source', name))
     end
 
-    #################################
 
     class << self
       alias _new new

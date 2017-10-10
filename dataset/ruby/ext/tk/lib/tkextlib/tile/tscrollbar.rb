@@ -1,7 +1,3 @@
-#
-#  tscrollbar widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 require 'tkextlib/tile.rb'
 
@@ -31,11 +27,9 @@ class Tk::Tile::TScrollbar < Tk::Scrollbar
   alias identify ttk_identify
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::Scrollbar, :TkScrollbar)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tscrollbar.rb',
                                    :Ttk, Tk::Tile::Scrollbar, :TkScrollbar)
 
-#######################################################################
 
 class Tk::Tile::XScrollbar < Tk::Tile::TScrollbar
   def create_self(keys)
@@ -55,8 +49,6 @@ class Tk::Tile::YScrollbar < Tk::Tile::TScrollbar
   private :create_self
 end
 
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::XScrollbar, :TkXScrollbar)
-#Tk.__set_toplevel_aliases__(:Ttk, Tk::Tile::YScrollbar, :TkYScrollbar)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tscrollbar.rb',
                                    :Ttk, Tk::Tile::XScrollbar, :TkXScrollbar)
 Tk.__set_loaded_toplevel_aliases__('tkextlib/tile/tscrollbar.rb',

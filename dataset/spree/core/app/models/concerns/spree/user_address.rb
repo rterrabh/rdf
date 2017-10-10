@@ -17,7 +17,6 @@ module Spree
         b_address.save
         self.update_attributes(bill_address_id: b_address.id)
 
-        # May not be present if delivery step has been removed
         if order.ship_address
           s_address = self.ship_address || self.build_ship_address
           s_address.attributes = order.ship_address.attributes.except('id', 'updated_at', 'created_at')

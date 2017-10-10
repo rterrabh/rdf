@@ -33,9 +33,6 @@ class Osm2pgsql < Formula
     if build.with? "protobuf-c"
       args << "--with-protobuf-c=#{Formula["protobuf-c"].opt_prefix}"
     end
-    # Mountain Lion has some problems with C++11.
-    # This is probably going to be a fatal issue for 0.89 and 0.90, but
-    # for now it can be worked around.
     args << "--without-cxx11" if MacOS.version < :mavericks
     system "./autogen.sh"
     system "./configure", *args

@@ -26,9 +26,6 @@ module ActiveRecord
       end
 
       def non_numeric_string?(value)
-        # 'wibble'.to_i will give zero, we want to make sure
-        # that we aren't marking int zero to string zero as
-        # changed.
         value.to_s !~ /\A-?\d+\.?\d*\z/
       end
     end

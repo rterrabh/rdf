@@ -1,32 +1,6 @@
 module LabelsHelper
   include ActionView::Helpers::TagHelper
 
-  # Link to a Label
-  #
-  # label   - Label object to link to
-  # project - Project object which will be used as the context for the label's
-  #           link. If omitted, defaults to `@project`, or the label's own
-  #           project.
-  # block   - An optional block that will be passed to `link_to`, forming the
-  #           body of the link element. If omitted, defaults to
-  #           `render_colored_label`.
-  #
-  # Examples:
-  #
-  #   # Allow the generated link to use the label's own project
-  #   link_to_label(label)
-  #
-  #   # Force the generated link to use @project
-  #   @project = Project.first
-  #   link_to_label(label)
-  #
-  #   # Force the generated link to use a provided project
-  #   link_to_label(label, project: Project.last)
-  #
-  #   # Customize link body with a block
-  #   link_to_label(label) { "My Custom Label Text" }
-  #
-  # Returns a String
   def link_to_label(label, project: nil, &block)
     project ||= @project || label.project
     link = namespace_project_issues_path(project.namespace, project,
@@ -47,8 +21,6 @@ module LabelsHelper
     label_color = label.color || Label::DEFAULT_COLOR
     text_color = text_color_for_bg(label_color)
 
-    # Intentionally not using content_tag here so that this method can be called
-    # by LabelReferenceFilter
     span = %(<span class="label color-label") +
       %( style="background-color: #{label_color}; color: #{text_color}">) +
       escape_once(label.name) + '</span>'
@@ -96,6 +68,5 @@ module LabelsHelper
     options_from_collection_for_select(project.labels, 'name', 'name', params[:label_name])
   end
 
-  # Required for Gitlab::Markdown::LabelReferenceFilter
   module_function :render_colored_label, :text_color_for_bg, :escape_once
 end

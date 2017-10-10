@@ -1,24 +1,9 @@
-##
-# Base class for RDoc markup formatters
-#
-# Formatters are a visitor that converts an RDoc::Markup tree (from a comment)
-# into some kind of output.  RDoc ships with formatters for converting back to
-# rdoc, ANSI text, HTML, a Table of Contents and other formats.
-#
-# If you'd like to write your own Formatter use
-# RDoc::Markup::FormatterTestCase.  If you're writing a text-output formatter
-# use RDoc::Markup::TextFormatterTestCase which provides extra test cases.
 
 class RDoc::Markup::Formatter
 
-  ##
-  # Tag for inline markup containing a +bit+ for the bitmask and the +on+ and
-  # +off+ triggers.
 
   InlineTag = Struct.new(:bit, :on, :off)
 
-  ##
-  # Converts a target url to one that is relative to a given path
 
   def self.gen_relative_url path, target
     from        = File.dirname path
@@ -41,8 +26,6 @@ class RDoc::Markup::Formatter
     File.join(*from)
   end
 
-  ##
-  # Creates a new Formatter
 
   def initialize options, markup = nil
     @options = options
@@ -62,8 +45,6 @@ class RDoc::Markup::Formatter
     @from_path = '.'
   end
 
-  ##
-  # Adds +document+ to the output
 
   def accept_document document
     document.parts.each do |item|
@@ -76,15 +57,11 @@ class RDoc::Markup::Formatter
     end
   end
 
-  ##
-  # Adds a special for links of the form rdoc-...:
 
   def add_special_RDOCLINK
     @markup.add_special(/rdoc-[a-z]+:[^\s\]]+/, :RDOCLINK)
   end
 
-  ##
-  # Adds a special for links of the form {<text>}[<url>] and <word>[<url>]
 
   def add_special_TIDYLINK
     @markup.add_special(/(?:
@@ -96,31 +73,22 @@ class RDoc::Markup::Formatter
                         /x, :TIDYLINK)
   end
 
-  ##
-  # Add a new set of tags for an attribute. We allow separate start and end
-  # tags for flexibility
 
   def add_tag(name, start, stop)
     attr = @attributes.bitmap_for name
     @attr_tags << InlineTag.new(attr, start, stop)
   end
 
-  ##
-  # Allows +tag+ to be decorated with additional information.
 
   def annotate(tag)
     tag
   end
 
-  ##
-  # Marks up +content+
 
   def convert content
     @markup.convert content, self
   end
 
-  ##
-  # Converts flow items +flow+
 
   def convert_flow(flow)
     res = []
@@ -142,8 +110,6 @@ class RDoc::Markup::Formatter
     res.join
   end
 
-  ##
-  # Converts added specials.  See RDoc::Markup#add_special
 
   def convert_special special
     return special.text if in_tt?
@@ -154,7 +120,7 @@ class RDoc::Markup::Formatter
       method_name = "handle_special_#{name}"
 
       if respond_to? method_name then
-        #nodyna <ID:send-41> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-2029> <SD COMPLEX (change-prone variables)>
         special.text = send method_name, special
         handled = true
       end
@@ -169,33 +135,20 @@ class RDoc::Markup::Formatter
     special.text
   end
 
-  ##
-  # Converts a string to be fancier if desired
 
   def convert_string string
     string
   end
 
-  ##
-  # Use ignore in your subclass to ignore the content of a node.
-  #
-  #   ##
-  #   # We don't support raw nodes in ToNoRaw
-  #
-  #   alias accept_raw ignore
 
   def ignore *node
   end
 
-  ##
-  # Are we currently inside tt tags?
 
   def in_tt?
     @in_tt > 0
   end
 
-  ##
-  # Turns on tags for +item+ on +res+
 
   def on_tags res, item
     attr_mask = item.turn_on
@@ -209,8 +162,6 @@ class RDoc::Markup::Formatter
     end
   end
 
-  ##
-  # Turns off tags for +item+ on +res+
 
   def off_tags res, item
     attr_mask = item.turn_off
@@ -224,8 +175,6 @@ class RDoc::Markup::Formatter
     end
   end
 
-  ##
-  # Extracts and a scheme, url and an anchor id from +url+ and returns them.
 
   def parse_url url
     case url
@@ -254,8 +203,6 @@ class RDoc::Markup::Formatter
     [scheme, url, id]
   end
 
-  ##
-  # Is +tag+ a tt tag?
 
   def tt? tag
     tag.bit == @tt_bit

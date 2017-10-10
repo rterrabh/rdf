@@ -21,8 +21,6 @@ class Libforensic1394 < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <assert.h>
-      #include <forensic1394.h>
       int main() {
         forensic1394_bus *bus;
         bus = forensic1394_alloc();

@@ -29,7 +29,6 @@ class Wemux < Formula
 
     To give a user the ability to host wemux sessions add them to the
     host_list array in:
-      #{etc}/wemux.conf
 
     Either edit the file in your text editor of choice or run `wemux conf` to
     open the file in your $EDITOR.

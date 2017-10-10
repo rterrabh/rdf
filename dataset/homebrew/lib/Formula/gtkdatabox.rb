@@ -11,9 +11,6 @@ class Gtkdatabox < Formula
   def install
     system "./configure", "--disable-dependency-tracking",
                           "--prefix=#{prefix}"
-    # We need to re-enable deprecated features of gtk
-    # in order to build without errors
-    # Will be fixed in the next upstream release
     inreplace "gtk/Makefile", "-DGTK_DISABLE_DEPRECATED", ""
     inreplace "examples/Makefile", "-DGTK_DISABLE_DEPRECATED", ""
 
@@ -22,7 +19,6 @@ class Gtkdatabox < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gtkdatabox.h>
 
       int main(int argc, char *argv[]) {
         GtkWidget *db = gtk_databox_new();

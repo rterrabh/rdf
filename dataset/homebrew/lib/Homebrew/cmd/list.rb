@@ -3,11 +3,8 @@ require "formula"
 
 module Homebrew
   def list
-    # Use of exec means we don't explicitly exit
     list_unbrewed if ARGV.flag? "--unbrewed"
 
-    # Unbrewed uses the PREFIX, which will exist
-    # Things below use the CELLAR, which doesn't until the first formula is installed.
     unless HOMEBREW_CELLAR.exist?
       raise NoSuchKegError.new(ARGV.named.first) if ARGV.named.any?
       return
@@ -61,7 +58,6 @@ module Homebrew
     dirs  = HOMEBREW_PREFIX.subdirs.map { |dir| dir.basename.to_s }
     dirs -= %w[Library Cellar .git]
 
-    # Exclude the repository and cache, if they are located under the prefix
     dirs.delete HOMEBREW_CACHE.relative_path_from(HOMEBREW_PREFIX).to_s
     dirs.delete HOMEBREW_REPOSITORY.relative_path_from(HOMEBREW_PREFIX).to_s
     dirs.delete "etc"
@@ -111,7 +107,6 @@ class PrettyListing
         pn.find { |pnn| puts pnn unless pnn.directory? }
       when "lib"
         print_dir pn do |pnn|
-          # dylibs have multiple symlinks and we don't care about them
           (pnn.extname == ".dylib" || pnn.extname == ".pc") && !pnn.symlink?
         end
       else
@@ -156,7 +151,6 @@ class PrettyListing
   def print_remaining_files(files, root, other = "")
     case files.length
     when 0
-      # noop
     when 1
       puts files
     else

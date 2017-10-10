@@ -26,13 +26,9 @@ class Pypy3 < Formula
     sha256 "3a14091299dcdb9bab9e9004ae67ac401f2b1b14a7c98de074ca74fdddf4bfa0"
   end
 
-  # https://bugs.launchpad.net/ubuntu/+source/gcc-4.2/+bug/187391
   fails_with :gcc
 
   def install
-    # Having PYTHONPATH set can cause the build to fail if another
-    # Python is present, e.g. a Homebrew-provided Python 2.x
-    # See https://github.com/Homebrew/homebrew/issues/24364
     ENV["PYTHONPATH"] = ""
     ENV["PYPY_USESSION_DIR"] = buildpath
 
@@ -49,10 +45,6 @@ class Pypy3 < Formula
     (libexec/"lib-python").install "lib-python/3"
     libexec.install %w[include lib_pypy]
 
-    # The PyPy binary install instructions suggest installing somewhere
-    # (like /opt) and symlinking in binaries as needed. Specifically,
-    # we want to avoid putting PyPy's Python.h somewhere that configure
-    # scripts will find it.
     bin.install_symlink libexec/"bin/pypy" => "pypy3"
     lib.install_symlink libexec/"lib/libpypy3-c.dylib"
 
@@ -62,23 +54,15 @@ class Pypy3 < Formula
   end
 
   def post_install
-    # Precompile cffi extensions in lib_pypy
-    # list from create_cffi_import_libraries in pypy/tool/release/package.py
     %w[_sqlite3 _curses syslog gdbm _tkinter].each do |module_name|
       quiet_system bin/"pypy3", "-c", "import #{module_name}"
     end
 
-    # Post-install, fix up the site-packages and install-scripts folders
-    # so that user-installed Python software survives minor updates, such
-    # as going from 1.7.0 to 1.7.1.
 
-    # Create a site-packages in the prefix.
     prefix_site_packages.mkpath
 
-    # Symlink the prefix site-packages into the cellar.
     libexec.install_symlink prefix_site_packages
 
-    # Tell distutils-based installers where to put scripts
     scripts_folder.mkpath
     (distutils+"distutils.cfg").atomic_write <<-EOF.undent
       [install]
@@ -91,19 +75,15 @@ class Pypy3 < Formula
       end
     end
 
-    # Symlinks to easy_install_pypy3 and pip_pypy3
     bin.install_symlink scripts_folder/"easy_install" => "easy_install_pypy3"
     bin.install_symlink scripts_folder/"pip" => "pip_pypy3"
 
-    # post_install happens after linking
     %w[easy_install_pypy3 pip_pypy3].each { |e| (HOMEBREW_PREFIX/"bin").install_symlink bin/e }
   end
 
   def caveats; <<-EOS.undent
     A "distutils.cfg" has been written to:
-      #{distutils}
     specifying the install-scripts folder as:
-      #{scripts_folder}
 
     If you install Python packages via "pypy3 setup.py install", easy_install_pypy3,
     or pip_pypy3, any provided scripts will go into the install-scripts folder
@@ -119,17 +99,14 @@ class Pypy3 < Formula
     EOS
   end
 
-  # The HOMEBREW_PREFIX location of site-packages
   def prefix_site_packages
     HOMEBREW_PREFIX+"lib/pypy3/site-packages"
   end
 
-  # Where setuptools will install executable scripts
   def scripts_folder
     HOMEBREW_PREFIX+"share/pypy3"
   end
 
-  # The Cellar location of distutils
   def distutils
     libexec+"lib-python/3/distutils"
   end

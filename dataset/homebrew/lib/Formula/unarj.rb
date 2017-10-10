@@ -23,7 +23,6 @@ class Unarj < Formula
   end
 
   test do
-    # Ensure that you can extract ARJ.EXE from a sample self-extracting file
     resource("testfile").stage do
       system "unarj", "e", "ARJ286.EXE"
       assert File.exist? "ARJ.EXE"

@@ -35,11 +35,10 @@ module RSS
     end
 
     def def_convert(depth=0)
-      #nodyna <ID:instance_eval-164> <IEV MODERATE (method definition)>
+      #nodyna <instance_eval-2099> <IEV MODERATE (method definition)>
       instance_eval(<<-EOC, *get_file_and_line_from_caller(depth))
       def convert(value)
         if value.kind_of?(String)
-          #{yield('value')}
         else
           value
         end

@@ -47,7 +47,6 @@ class Exiv2 < Formula
       mkdir "build.cmake" do
         system "cmake", "-G", "Unix Makefiles", ".", *args
         system "make", "install"
-        # `-DCMAKE_INSTALL_MANDIR=#{man}` doesn't work
         mv prefix/"man", man
       end
     else

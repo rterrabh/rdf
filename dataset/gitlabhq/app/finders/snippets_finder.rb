@@ -18,10 +18,6 @@ class SnippetsFinder
     if current_user
       Snippet.public_and_internal
     else
-      # Not authenticated
-      #
-      # Return only:
-      #   public snippets
       Snippet.are_public
     end
   end

@@ -24,13 +24,11 @@ class Openjpeg < Formula
     system "cmake", ".", *std_cmake_args
     system "make", "install"
 
-    # https://github.com/uclouvain/openjpeg/issues/562
     (lib/"pkgconfig").install_symlink lib/"pkgconfig/libopenjpeg1.pc" => "libopenjpeg.pc"
   end
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <openjpeg.h>
 
       int main () {
         opj_image_cmptparm_t cmptparm;

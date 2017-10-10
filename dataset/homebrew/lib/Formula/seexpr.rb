@@ -8,8 +8,6 @@ class Seexpr < Formula
   depends_on "doxygen" => :build
   depends_on "libpng"
 
-  # fix for macosx
-  # already present in HEAD so it can be removed after version 1.0.1
   patch :DATA
 
   def install
@@ -32,12 +30,10 @@ index feb6b45..8269b39 100644
 +++ b/src/SeExpr/SeExprFunc.cpp
 @@ -208,7 +208,7 @@ SeExprFunc::getDocString(const char* functionName)
 
- #ifndef SEEXPR_WIN32
 
 -#ifdef __APPLE__
 +#if defined(__APPLE__) && __MAC_OS_X_VERSION_MIN_REQUIRED <= __MAC_10_7
  static int MatchPluginName(struct dirent* dir)
- #else
  static int MatchPluginName(const struct dirent* dir)
 diff --git a/src/SeExpr/SePlatform.h b/src/SeExpr/SePlatform.h
 index 32a6b96..82b0f44 100644
@@ -52,5 +48,3 @@ index 32a6b96..82b0f44 100644
 +#endif
 +
  // platform-specific includes
- #if defined(_WIN32) || defined(_WINDOWS) || defined(_MSC_VER)
- #    ifndef WINDOWS

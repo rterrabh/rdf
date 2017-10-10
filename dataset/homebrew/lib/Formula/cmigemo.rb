@@ -6,7 +6,6 @@ class Cmigemo < Formula
     url "https://cmigemo.googlecode.com/files/cmigemo-default-src-20110227.zip"
     sha256 "4aa759b2e055ef3c3fbeb9e92f7f0aacc1fd1f8602fdd2f122719793ee14414c"
 
-    # Patch per discussion at: https://github.com/Homebrew/homebrew/pull/7005
     patch :DATA
   end
 
@@ -35,10 +34,5 @@ __END__
 --- a/src/wordbuf.c	2011-08-15 02:57:05.000000000 +0900
 +++ b/src/wordbuf.c	2011-08-15 02:57:17.000000000 +0900
 @@ -9,6 +9,7 @@
- #include <stdio.h>
- #include <stdlib.h>
- #include <string.h>
 +#include <limits.h>
- #include "wordbuf.h"
 
- #define WORDLEN_DEF 64

@@ -145,7 +145,7 @@ describe Spree::Order, :type => :model do
           shared_examples "it cloned the default address" do
             it do
               default_attributes = default_address.attributes
-              #nodyna <ID:send-53> <SD COMPLEX (change-prone variables)>
+              #nodyna <send-2473> <SD COMPLEX (change-prone variables)>
               order_attributes = order.send("#{address_kind}_address".to_sym).try(:attributes) || {}
 
               expect(order_attributes.except('id', 'created_at', 'updated_at')).to eql(default_attributes.except('id', 'created_at', 'updated_at'))
@@ -200,7 +200,6 @@ describe Spree::Order, :type => :model do
       end
 
       it "does not call persist_order_address if there is no address on the order" do
-        # otherwise, it will crash
         allow(order).to receive_messages(:ensure_available_shipping_rates => true)
 
         order.user = FactoryGirl.create(:user)
@@ -326,7 +325,6 @@ describe Spree::Order, :type => :model do
         end
 
         before do
-          # Needs to be set here because we're working with a persisted order object
           order.email = "test@example.com"
           order.save!
           order.shipments << shipment
@@ -441,7 +439,6 @@ describe Spree::Order, :type => :model do
         end
       end
 
-      # Regression test for #2028
       context "when payment is not required" do
         before do
           allow(order).to receive_messages :payment_required? => false
@@ -469,7 +466,6 @@ describe Spree::Order, :type => :model do
         order.email = 'spree@example.org'
         order.payments << FactoryGirl.create(:payment)
 
-        # make sure we will actually capture a payment
         allow(order).to receive_messages(payment_required?: true)
         order.line_items << FactoryGirl.create(:line_item)
         Spree::OrderUpdater.new(order).update
@@ -492,8 +488,6 @@ describe Spree::Order, :type => :model do
   end
 
   context "subclassed order" do
-    # This causes another test above to fail, but fixing this test should make
-    #   the other test pass
     class SubclassedOrder < Spree::Order
       checkout_flow do
         go_to_state :payment
@@ -515,6 +509,7 @@ describe Spree::Order, :type => :model do
   context "re-define checkout flow" do
     before do
       @old_checkout_flow = Spree::Order.checkout_flow
+      #nodyna <class_eval-2474> <not yet classified>
       Spree::Order.class_eval do
         checkout_flow do
           go_to_state :payment
@@ -541,10 +536,10 @@ describe Spree::Order, :type => :model do
     end
   end
 
-  # Regression test for #3665
   context "with only a complete step" do
     before do
       @old_checkout_flow = Spree::Order.checkout_flow
+      #nodyna <class_eval-2475> <not yet classified>
       Spree::Order.class_eval do
         checkout_flow do
           go_to_state :complete
@@ -571,6 +566,7 @@ describe Spree::Order, :type => :model do
   context "insert checkout step" do
     before do
       @old_checkout_flow = Spree::Order.checkout_flow
+      #nodyna <class_eval-2476> <not yet classified>
       Spree::Order.class_eval do
         insert_checkout_step :new_step, before: :address
       end
@@ -587,6 +583,7 @@ describe Spree::Order, :type => :model do
 
     context "before" do
       before do
+        #nodyna <class_eval-2477> <not yet classified>
         Spree::Order.class_eval do
           insert_checkout_step :before_address, before: :address
         end
@@ -600,6 +597,7 @@ describe Spree::Order, :type => :model do
 
     context "after" do
       before do
+        #nodyna <class_eval-2478> <not yet classified>
         Spree::Order.class_eval do
           insert_checkout_step :after_address, after: :address
         end
@@ -615,6 +613,7 @@ describe Spree::Order, :type => :model do
   context "remove checkout step" do
     before do
       @old_checkout_flow = Spree::Order.checkout_flow
+      #nodyna <class_eval-2479> <not yet classified>
       Spree::Order.class_eval do
         remove_checkout_step :address
       end

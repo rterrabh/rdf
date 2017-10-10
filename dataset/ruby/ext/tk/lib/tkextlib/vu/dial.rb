@@ -1,10 +1,5 @@
-#
-#  ::vu::dial widget
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 
-# create module/class
 module Tk
   module Vu
     class Dial < TkWindow
@@ -12,23 +7,19 @@ module Tk
   end
 end
 
-# call setup script  --  <libdir>/tkextlib/vu.rb
 require 'tkextlib/vu.rb'
 
-# define module/class
 class Tk::Vu::Dial < TkWindow
   TkCommandNames = ['::vu::dial'.freeze].freeze
   WidgetClassName = 'Dial'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  ###############################
 
   def __methodcall_optkeys  # { key=>method, ... }
     {'coords'=>'coords'}
   end
   private :__methodcall_optkeys
 
-  ###############################
 
   def coords(val = nil)
     if val

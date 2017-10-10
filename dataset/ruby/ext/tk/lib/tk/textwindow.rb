@@ -1,6 +1,3 @@
-#
-# tk/textwindow.rb - treat Tk text window object
-#
 require 'tk'
 require 'tk/text'
 
@@ -8,9 +5,6 @@ class TkTextWindow<TkObject
   include Tk::Text::IndexModMethods
 
   def initialize(parent, index, keys = {})
-    #unless parent.kind_of?(Tk::Text)
-    #  fail ArgumentError, "expect Tk::Text for 1st argument"
-    #end
     @t = parent
     if index == 'end' || index == :end
       @path = TkTextMark.new(@t, tk_call_without_enc(@t.path, 'index',
@@ -30,11 +24,9 @@ class TkTextWindow<TkObject
     @index = @path.path
     keys = _symbolkey2str(keys)
     @id = keys['window']
-    # keys['window'] = @id.epath if @id.kind_of?(TkWindow)
     keys['window'] = _epath(@id) if @id
     if keys['create']
       @p_create = keys['create']
-      # if @p_create.kind_of?(Proc)
       if TkComm._callback_entry?(@p_create)
 =begin
         keys['create'] = install_cmd(proc{
@@ -81,7 +73,6 @@ class TkTextWindow<TkObject
       slot = _symbolkey2str(slot)
       if slot['window']
         @id = slot['window']
-        # slot['window'] = @id.epath if @id.kind_of?(TkWindow)
         slot['window'] = _epath(@id) if @id
       end
       if slot['create']
@@ -94,7 +85,6 @@ class TkTextWindow<TkObject
     else
       if slot == 'window' || slot == :window
         @id = value
-        # value = @id.epath if @id.kind_of?(TkWindow)
         value = _epath(@id) if @id
       end
       if slot == 'create' || slot == :create
@@ -121,7 +111,6 @@ class TkTextWindow<TkObject
 
   def window=(value)
     @id = value
-    # value = @id.epath if @id.kind_of?(TkWindow)
     value = _epath(@id) if @id
     tk_call_without_enc(@t.path, 'window', 'configure', @index,
                         '-window', _get_eval_enc_str(value))
@@ -134,7 +123,6 @@ class TkTextWindow<TkObject
 
   def create=(value)
     @p_create = value
-    # if @p_create.kind_of?(Proc)
     if TkComm._callback_entry?(@p_create)
       value = install_cmd(proc{
                             @id = @p_create.call

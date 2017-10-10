@@ -35,7 +35,6 @@ class Libharu < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include "hpdf.h"
 
       int main(void)
       {

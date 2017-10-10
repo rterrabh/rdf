@@ -3,10 +3,6 @@ require 'thread_safe'
 
 module ActiveSupport
   module Notifications
-    # This is a default queue implementation that ships with Notifications.
-    # It just pushes events to all registered log subscribers.
-    #
-    # This class is thread safe. All methods are reentrant.
     class Fanout
       include Mutex_m
 
@@ -51,9 +47,7 @@ module ActiveSupport
       end
 
       def listeners_for(name)
-        # this is correctly done double-checked locking (ThreadSafe::Cache's lookups have volatile semantics)
         @listeners_for[name] || synchronize do
-          # use synchronisation when accessing @subscribers
           @listeners_for[name] ||= @subscribers.select { |s| s.subscribed_to?(name) }
         end
       end
@@ -62,7 +56,6 @@ module ActiveSupport
         listeners_for(name).any?
       end
 
-      # This is a sync queue, so there is no waiting.
       def wait
       end
 

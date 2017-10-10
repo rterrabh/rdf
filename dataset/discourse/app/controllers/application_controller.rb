@@ -20,11 +20,7 @@ class ApplicationController < ActionController::Base
 
   protect_from_forgery
 
-  # Default Rails 3.2 lets the request through with a blank session
-  #  we are being more pedantic here and nulling session / current_user
-  #  and then raising a CSRF exception
   def handle_unverified_request
-    # NOTE: API key is secret, having it invalidates the need for a CSRF token
     unless is_api?
       super
       clear_current_user
@@ -66,15 +62,12 @@ class ApplicationController < ActionController::Base
     use_crawler_layout? ? 'crawler' : 'application'
   end
 
-  # Some exceptions
   class RenderEmpty < StandardError; end
 
-  # Render nothing
   rescue_from RenderEmpty do
     render 'default/empty'
   end
 
-  # If they hit the rate limiter
   rescue_from RateLimiter::LimitExceeded do |e|
 
     time_left = ""
@@ -120,7 +113,6 @@ class ApplicationController < ActionController::Base
   def rescue_discourse_actions(type, status_code, include_ember=false)
 
     if (request.format && request.format.json?) || (request.xhr?)
-      # HACK: do not use render_json_error for topics#show
       if request.params[:controller] == 'topics' && request.params[:action] == 'show'
         return render status: status_code, layout: false, text: (status_code == 404) ? build_not_found_page(status_code) : I18n.t(type)
       end
@@ -133,8 +125,6 @@ class ApplicationController < ActionController::Base
 
   class PluginDisabled < StandardError; end
 
-  # If a controller requires a plugin, it will raise an exception if that plugin is
-  # disabled. This allows plugins to be disabled programatically.
   def self.requires_plugin(plugin_name)
     before_filter do
       raise PluginDisabled.new if Discourse.disabled_plugin_names.include?(plugin_name)
@@ -161,21 +151,14 @@ class ApplicationController < ActionController::Base
 
   def store_preloaded(key, json)
     @preloaded ||= {}
-    # I dislike that there is a gsub as opposed to a gsub!
-    #  but we can not be mucking with user input, I wonder if there is a way
-    #  to inject this safty deeper in the library or even in AM serializer
     @preloaded[key] = json.gsub("</", "<\\/")
   end
 
-  # If we are rendering HTML, preload the session data
   def preload_json
-    # We don't preload JSON on xhr or JSON request
     return if request.xhr? || request.format.json?
 
-    # if we are posting in makes no sense to preload
     return if request.method != "GET"
 
-    # TODO should not be invoked on redirection so this should be further deferred
     preload_anonymous_data
 
     if current_user
@@ -221,7 +204,6 @@ class ApplicationController < ActionController::Base
   end
 
   def serialize_data(obj, serializer, opts=nil)
-    # If it's an array, apply the serializer as an each_serializer to the elements
     serializer_opts = {scope: guardian}.merge!(opts || {})
     if obj.respond_to?(:to_ary)
       serializer_opts[:each_serializer] = serializer
@@ -231,10 +213,6 @@ class ApplicationController < ActionController::Base
     end
   end
 
-  # This is odd, but it seems that in Rails `render json: obj` is about
-  # 20% slower than calling MultiJSON.dump ourselves. I'm not sure why
-  # Rails doesn't call MultiJson.dump when you pass it json: obj but
-  # it seems we don't need whatever Rails is doing.
   def render_serialized(obj, serializer, opts=nil)
     render_json_dump(serialize_data(obj, serializer, opts), opts)
   end
@@ -256,7 +234,6 @@ class ApplicationController < ActionController::Base
     !current_user.present?
   end
 
-  # Our custom cache method
   def discourse_expires_in(time_length)
     return unless can_cache_content?
     Middleware::AnonymousCache.anon_cache(request.env, time_length)
@@ -291,8 +268,6 @@ class ApplicationController < ActionController::Base
   end
 
   def no_cookies
-    # do your best to ensure response has no cookies
-    # longer term we may want to push this into middleware
     headers.delete 'Set-Cookie'
     request.session_options[:skip] = true
   end
@@ -348,12 +323,6 @@ class ApplicationController < ActionController::Base
       MultiJson.dump(serializer)
     end
 
-    # Render action for a JSON error.
-    #
-    # obj      - a translated string, an ActiveRecord model, or an array of translated strings
-    # opts:
-    #   type   - a machine-readable description of the error
-    #   status - HTTP status code to return
     def render_json_error(obj, opts={})
       opts = { status: opts } if opts.is_a?(Fixnum)
       render json: MultiJson.dump(create_errors_json(obj, opts[:type])), status: opts[:status] || 422
@@ -371,7 +340,6 @@ class ApplicationController < ActionController::Base
       if yield(obj)
         json = success_json
 
-        # If we were given a serializer, add the class to the json that comes back
         if opts[:serializer].present?
           json[obj.class.name.underscore] = opts[:serializer].new(obj, scope: guardian).serializable_hash
         end
@@ -381,11 +349,11 @@ class ApplicationController < ActionController::Base
         error_obj = nil
         if opts[:additional_errors]
           error_target = opts[:additional_errors].find do |o|
-            #nodyna <ID:send-98> <SD COMPLEX (array)>
+            #nodyna <send-417> <SD COMPLEX (array)>
             target = obj.send(o)
             target && target.errors.present?
           end
-          #nodyna <ID:send-99> <SD COMPLEX (array)>
+          #nodyna <send-418> <SD COMPLEX (array)>
           error_obj = obj.send(error_target) if error_target
         end
         render_json_error(error_obj || obj)
@@ -402,7 +370,6 @@ class ApplicationController < ActionController::Base
     end
 
     def check_xhr
-      # bypass xhr check on PUT / POST / DELETE provided api key is there, otherwise calling api is annoying
       return if !request.get? && api_key_valid?
       raise RenderEmpty.new unless ((request.format && request.format.json?) || request.xhr?)
     end
@@ -418,10 +385,8 @@ class ApplicationController < ActionController::Base
     def redirect_to_login_if_required
       return if current_user || (request.format.json? && api_key_valid?)
 
-      # save original URL in a cookie
       cookies[:destination_url] = request.original_url unless request.original_url =~ /uploads/
 
-      # redirect user to the SSO page if we need to log in AND SSO is enabled
       if SiteSetting.login_required?
         if SiteSetting.enable_sso?
           redirect_to path('/session/sso')
@@ -464,8 +429,6 @@ class ApplicationController < ActionController::Base
       request["api_key"] && ApiKey.where(key: request["api_key"]).exists?
     end
 
-    # returns an array of integers given a param key
-    # returns nil if key is not found
     def param_to_integer_list(key, delimiter = ',')
       if params[key]
         params[key].split(delimiter).map(&:to_i)

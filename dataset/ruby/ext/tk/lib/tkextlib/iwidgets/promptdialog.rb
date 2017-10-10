@@ -1,7 +1,3 @@
-#
-#  tkextlib/iwidgets/promptdialog.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 require 'tkextlib/iwidgets.rb'
@@ -18,7 +14,6 @@ class Tk::Iwidgets::Promptdialog
   WidgetClassName = 'Promptdialog'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-  # index method is not available, because it shows index of the entry field
   def default(name)
     tk_call(@path, 'default', tagid(name))
     self
@@ -44,7 +39,6 @@ class Tk::Iwidgets::Promptdialog
   end
 
 
-  # based on Tk::Iwidgets::Entryfield
   def clear
     tk_call(@path, 'clear')
     self
@@ -68,7 +62,6 @@ class Tk::Iwidgets::Promptdialog
 
   def cursor=(index)
     tk_send_without_enc('icursor', index)
-    #self
     index
   end
   alias icursor cursor=

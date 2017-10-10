@@ -13,7 +13,7 @@ module Paperclip
       def validate_each(record, attribute, value)
         base_attribute = attribute.to_sym
         attribute = "#{attribute}_content_type".to_sym
-        #nodyna <ID:send-47> <SD EASY (private methods)>
+        #nodyna <send-706> <SD EASY (private methods)>
         value = record.send :read_attribute_for_validation, attribute
 
         return if (value.nil? && options[:allow_nil]) || (value.blank? && options[:allow_blank])
@@ -60,25 +60,6 @@ module Paperclip
     end
 
     module HelperMethods
-      # Places ActiveModel validations on the content type of the file
-      # assigned. The possible options are:
-      # * +content_type+: Allowed content types.  Can be a single content type
-      #   or an array.  Each type can be a String or a Regexp. It should be
-      #   noted that Internet Explorer uploads files with content_types that you
-      #   may not expect. For example, JPEG images are given image/pjpeg and
-      #   PNGs are image/x-png, so keep that in mind when determining how you
-      #   match.  Allows all by default.
-      # * +not+: Forbidden content types.
-      # * +message+: The message to display when the uploaded file has an invalid
-      #   content type.
-      # * +if+: A lambda or name of an instance method. Validation will only
-      #   be run is this lambda or method returns true.
-      # * +unless+: Same as +if+ but validates if lambda or method returns false.
-      # NOTE: If you do not specify an [attachment]_content_type field on your
-      # model, content_type validation will work _ONLY upon assignment_ and
-      # re-validation after the instance has been reloaded will always succeed.
-      # You'll still need to have a virtual attribute (created by +attr_accessor+)
-      # name +[attachment]_content_type+ to be able to use this validator.
       def validates_attachment_content_type(*attr_names)
         options = _merge_attributes(attr_names)
         validates_with AttachmentContentTypeValidator, options.dup

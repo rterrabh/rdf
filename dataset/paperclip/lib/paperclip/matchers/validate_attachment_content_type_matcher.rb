@@ -1,15 +1,6 @@
 module Paperclip
   module Shoulda
     module Matchers
-      # Ensures that the given instance or class validates the content type of
-      # the given attachment as specified.
-      #
-      # Example:
-      #   describe User do
-      #     it { should validate_attachment_content_type(:icon).
-      #                   allowing('image/png', 'image/gif').
-      #                   rejecting('text/plain', 'text/xml') }
-      #   end
       def validate_attachment_content_type name
         ValidateAttachmentContentTypeMatcher.new(name)
       end
@@ -80,7 +71,7 @@ module Paperclip
         end
 
         def type_allowed?(type)
-          #nodyna <ID:send-9> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-688> <SD COMPLEX (change-prone variables)>
           @subject.send("#{@attachment_name}_content_type=", type)
           @subject.valid?
           @subject.errors[:"#{@attachment_name}_content_type"].blank?

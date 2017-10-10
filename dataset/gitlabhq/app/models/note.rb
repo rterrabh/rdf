@@ -1,21 +1,3 @@
-# == Schema Information
-#
-# Table name: notes
-#
-#  id            :integer          not null, primary key
-#  note          :text
-#  noteable_type :string(255)
-#  author_id     :integer
-#  created_at    :datetime
-#  updated_at    :datetime
-#  project_id    :integer
-#  attachment    :string(255)
-#  line_code     :string(255)
-#  commit_id     :string(255)
-#  noteable_id   :integer
-#  system        :boolean          default(FALSE), not null
-#  st_diff       :text
-#
 
 require 'carrierwave/orm/activerecord'
 require 'file_size_validator'
@@ -40,7 +22,6 @@ class Note < ActiveRecord::Base
 
   validates :note, :project, presence: true
   validates :line_code, format: { with: /\A[a-z0-9]+_\d+_\d+\Z/ }, allow_blank: true
-  # Attachments are deprecated and are handled by Markdown uploader
   validates :attachment, file_size: { maximum: :max_attachment_size }
 
   validates :noteable_id, presence: true, if: ->(n) { n.noteable_type.present? && n.noteable_type != 'Commit' }
@@ -48,7 +29,6 @@ class Note < ActiveRecord::Base
 
   mount_uploader :attachment, AttachmentUploader
 
-  # Scopes
   scope :for_commit_id, ->(commit_id) { where(noteable_type: "Commit", commit_id: commit_id) }
   scope :inline, ->{ where("line_code IS NOT NULL") }
   scope :not_inline, ->{ where(line_code: [nil, '']) }
@@ -71,7 +51,6 @@ class Note < ActiveRecord::Base
       notes.each do |note|
         next if discussion_ids.include?(note.discussion_id)
 
-        # don't group notes for the main target
         if !note.for_diff_line? && note.noteable_type == "MergeRequest"
           discussions << [note]
         else
@@ -115,8 +94,6 @@ class Note < ActiveRecord::Base
   end
 
   def set_diff
-    # First lets find notes with same diff
-    # before iterating over all mr diffs
     diff = diff_for_line_code unless for_merge_request?
     diff ||= find_diff
 
@@ -131,9 +108,6 @@ class Note < ActiveRecord::Base
     Note.where(noteable_id: noteable_id, noteable_type: noteable_type, line_code: line_code).last.try(:diff)
   end
 
-  # Check if such line of code exists in merge request diff
-  # If exists - its active discussion
-  # If not - its outdated diff
   def active?
     return true unless self.diff
     return false unless noteable
@@ -270,29 +244,24 @@ class Note < ActiveRecord::Base
     noteable_type == "Snippet"
   end
 
-  # override to return commits, which are not active record
   def noteable
     if for_commit?
       project.commit(commit_id)
     else
       super
     end
-  # Temp fix to prevent app crash
-  # if note commit id doesn't exist
   rescue
     nil
   end
 
   DOWNVOTES = %w(-1 :-1: :thumbsdown: :thumbs_down_sign:)
 
-  # Check if the note is a downvote
   def downvote?
     votable? && note.start_with?(*DOWNVOTES)
   end
 
   UPVOTES = %w(+1 :+1: :thumbsup: :thumbs_up_sign:)
 
-  # Check if the note is an upvote
   def upvote?
     votable? && note.start_with?(*UPVOTES)
   end
@@ -321,12 +290,10 @@ class Note < ActiveRecord::Base
     for_issue? || (for_merge_request? && !for_diff_line?)
   end
 
-  # Mentionable override.
   def gfm_reference(from_project = nil)
     noteable.gfm_reference(from_project)
   end
 
-  # Mentionable override.
   def local_reference
     noteable
   end
@@ -337,21 +304,10 @@ class Note < ActiveRecord::Base
     end
   end
 
-  # FIXME: Hack for polymorphic associations with STI
-  #        For more information visit http://api.rubyonrails.org/classes/ActiveRecord/Associations/ClassMethods.html#label-Polymorphic+Associations
   def noteable_type=(sType)
     super(sType.to_s.classify.constantize.base_class.to_s)
   end
 
-  # Reset notes events cache
-  #
-  # Since we do cache @event we need to reset cache in special cases:
-  # * when a note is updated
-  # * when a note is removed
-  # Events cache stored like  events/23-20130109142513.
-  # The cache key includes updated_at timestamp.
-  # Thus it will automatically generate a new fragment
-  # when the event is updated because the key changes.
   def reset_events_cache
     Event.reset_event_cache_for(self)
   end

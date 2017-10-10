@@ -28,7 +28,6 @@ class Ffms2 < Formula
   end
 
   def install
-    # For Mountain Lion
     ENV.libcxx
 
     args = %W[
@@ -48,7 +47,6 @@ class Ffms2 < Formula
   end
 
   test do
-    # download small sample and check that the index was created
     resource("videosample").stage do
       system "ffmsindex", "lm20.avi"
       assert File.exist? "lm20.avi.ffindex"

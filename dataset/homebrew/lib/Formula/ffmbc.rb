@@ -16,7 +16,6 @@ class Ffmbc < Formula
   option "without-lame", "Disable MP3 encoder"
   option "without-xvid", "Disable Xvid MPEG-4 video encoder"
 
-  # manpages won't be built without texi2html
   depends_on "texi2html" => :build if MacOS.version >= :mountain_lion
   depends_on "yasm" => :build
 
@@ -55,8 +54,6 @@ class Ffmbc < Formula
     system "./configure", *args
     system "make"
 
-    # ffmbc's lib and bin names conflict with ffmpeg and libav
-    # This formula will only install the commandline tools
     mv "ffprobe", "ffprobe-bc"
     bin.install "ffmbc", "ffprobe-bc"
   end

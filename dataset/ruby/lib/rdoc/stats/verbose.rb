@@ -1,11 +1,6 @@
-##
-# Stats printer that prints everything documented, including the documented
-# status
 
 class RDoc::Stats::Verbose < RDoc::Stats::Normal
 
-  ##
-  # Returns a marker for RDoc::CodeObject +co+ being undocumented
 
   def nodoc co
     " (undocumented)" unless co.documented?

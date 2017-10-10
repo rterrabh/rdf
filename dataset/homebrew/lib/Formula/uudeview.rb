@@ -11,7 +11,6 @@ class Uudeview < Formula
     sha256 "880ad715f426a3284778d05138b45af606e8a7e78bd3aff4bd6e96fe9020f22d" => :mountain_lion
   end
 
-  # Fix function signatures (for clang)
   patch :p0 do
     url "https://trac.macports.org/export/102865/trunk/dports/mail/uudeview/files/inews.c.patch"
     sha256 "4bdf357ede31abc17b1fbfdc230051f0c2beb9bb8805872bd66e40989f686d7b"
@@ -22,9 +21,6 @@ class Uudeview < Formula
                           "--mandir=#{man}",
                           "--disable-tcl"
     system "make", "install"
-    # uudeview provides the public library libuu, but no way to install it.
-    # Since the package is unsupported, upstream changes are unlikely to occur.
-    # Install the library and headers manually for now.
     lib.install "uulib/libuu.a"
     include.install "uulib/uudeview.h"
   end

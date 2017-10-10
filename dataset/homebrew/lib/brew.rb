@@ -1,4 +1,3 @@
-#!/System/Library/Frameworks/Ruby.framework/Versions/Current/usr/bin/ruby -W0
 
 std_trap = trap("INT") { exit! 130 } # no backtrace thanks
 
@@ -19,15 +18,10 @@ if ARGV.first == "--version"
   exit 0
 elsif ARGV.first == "-v"
   puts "Homebrew #{Homebrew.homebrew_version_string}"
-  # Shift the -v to the end of the parameter list
   ARGV << ARGV.shift
-  # If no other arguments, just quit here.
   exit 0 if ARGV.length == 1
 end
 
-# Check for bad xcode-select before anything else, because `doctor` and
-# many other things will hang
-# Note that this bug was fixed in 10.9
 if OS.mac? && MacOS.version < :mavericks && MacOS.active_developer_dir == "/"
   odie <<-EOS.undent
   Your xcode-select path is currently set to '/'.
@@ -41,7 +35,6 @@ end
 
 case HOMEBREW_PREFIX.to_s
 when "/", "/usr"
-  # it may work, but I only see pain this route and don't want to support it
   abort "Cowardly refusing to continue at this prefix: #{HOMEBREW_PREFIX}"
 end
 
@@ -52,15 +45,11 @@ if OS.mac? and MacOS.version < "10.6"
   EOABORT
 end
 
-# Many Pathname operations use getwd when they shouldn't, and then throw
-# odd exceptions. Reduce our support burden by showing a user-friendly error.
 Dir.getwd rescue abort "The current working directory doesn't exist, cannot proceed."
 
 def require?(path)
   require path
 rescue LoadError => e
-  # HACK: ( because we should raise on syntax errors but
-  # not if the file doesn't exist. TODO make robust!
   raise unless e.to_s.include? path
 end
 
@@ -98,37 +87,27 @@ begin
     end
   end
 
-  # Add contributed commands to PATH before checking.
   Dir["#{HOMEBREW_LIBRARY}/Taps/*/*/cmd"].each do |tap_cmd_dir|
     ENV["PATH"] += "#{File::PATH_SEPARATOR}#{tap_cmd_dir}"
   end
 
-  # Add SCM wrappers.
   ENV["PATH"] += "#{File::PATH_SEPARATOR}#{HOMEBREW_LIBRARY}/ENV/scm"
 
   internal_cmd = require? HOMEBREW_LIBRARY_PATH.join("cmd", cmd) if cmd
 
-  # Usage instructions should be displayed if and only if one of:
-  # - a help flag is passed AND an internal command is matched
-  # - a help flag is passed AND there is no command specified
-  # - no arguments are passed
-  #
-  # It should never affect external commands so they can handle usage
-  # arguments themselves.
 
   if empty_argv || (help_flag && (cmd.nil? || internal_cmd))
-    # TODO: - `brew help cmd` should display subcommand help
     require "cmd/help"
     puts ARGV.usage
     exit ARGV.any? ? 0 : 1
   end
 
   if internal_cmd
-    #nodyna <ID:send-41> <SD COMPLEX (change-prone variables)>
+    #nodyna <send-679> <SD COMPLEX (change-prone variables)>
     Homebrew.send cmd.to_s.gsub("-", "_").downcase
   elsif which "brew-#{cmd}"
     %w[CACHE CELLAR LIBRARY_PATH PREFIX REPOSITORY].each do |e|
-      #nodyna <ID:const_get-3> <CG MODERATE (array)>
+      #nodyna <const_get-680> <CG MODERATE (array)>
       ENV["HOMEBREW_#{e}"] = Object.const_get("HOMEBREW_#{e}").to_s
     end
     exec "brew-#{cmd}", *ARGV

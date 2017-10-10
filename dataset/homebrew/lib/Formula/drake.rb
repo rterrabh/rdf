@@ -28,7 +28,6 @@ class Drake < Formula
   end
 
   test do
-    # count lines test
     (testpath/"Drakefile").write <<-EOS.undent
       find_lines <- [shell]
         echo 'drake' > $OUTPUT
@@ -37,7 +36,6 @@ class Drake < Formula
         cat $INPUT | wc -l > $OUTPUT
     EOS
 
-    # force run (no user prompt) the full workflow
     system bin/"drake", "--auto", "--workflow=#{testpath}/Drakefile", "+..."
   end
 end

@@ -17,7 +17,6 @@ class Fontforge < Formula
 
   deprecated_option "with-gif" => "with-giflib"
 
-  # Autotools are required to build from source in all releases.
   depends_on "autoconf" => :build
   depends_on "automake" => :build
   depends_on "pkg-config" => :build
@@ -34,9 +33,6 @@ class Fontforge < Formula
   depends_on "libspiro" => :optional
   depends_on :python if MacOS.version <= :snow_leopard
 
-  # This may be causing font-display glitches and needs further isolation & fixing.
-  # https://github.com/fontforge/fontforge/issues/2083
-  # https://github.com/Homebrew/homebrew/issues/37803
   depends_on "fontconfig"
 
   resource "gnulib" do
@@ -50,9 +46,6 @@ class Fontforge < Formula
   end
 
   def install
-    # Don't link libraries to libpython, but do link binaries that expect
-    # to embed a python interpreter
-    # https://github.com/fontforge/fontforge/issues/2353#issuecomment-121009759
     ENV["PYTHON_CFLAGS"] = `python-config --cflags`.chomp
     ENV["PYTHON_LIBS"] = "-undefined dynamic_lookup"
     python_libs = `python2.7-config --ldflags`.chomp
@@ -61,8 +54,6 @@ class Fontforge < Formula
       s.change_make_var! "libfontforgeexe_la_LDFLAGS", "#{python_libs} #{oldflags}"
     end
 
-    # Disable Homebrew detection
-    # https://github.com/fontforge/fontforge/issues/2425
     inreplace "configure.ac", 'test "y$HOMEBREW_BREW_FILE" != "y"', "false"
 
     args = %W[
@@ -79,13 +70,10 @@ class Fontforge < Formula
     args << "--without-giflib" if build.without? "giflib"
     args << "--without-libspiro" if build.without? "libspiro"
 
-    # Fix linker error; see: https://trac.macports.org/ticket/25012
     ENV.append "LDFLAGS", "-lintl"
 
-    # Reset ARCHFLAGS to match how we build
     ENV["ARCHFLAGS"] = "-arch #{MacOS.preferred_arch}"
 
-    # Bootstrap in every build: https://github.com/fontforge/fontforge/issues/1806
     resource("gnulib").fetch
     system "./bootstrap",
            "--gnulib-srcdir=#{resource("gnulib").cached_download}",
@@ -94,8 +82,6 @@ class Fontforge < Formula
     system "make"
     system "make", "install"
 
-    # The app here is not functional. You should install Fontforge
-    # via the Cask if you want GUI/App support.
     (share/"fontforge/osx/FontForge.app").rmtree
 
     if build.with? "extra-tools"

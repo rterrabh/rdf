@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 require 'spec_helper'
 
@@ -17,8 +14,11 @@ describe Postzord::Receiver::Private do
       expect(Salmon::EncryptedSlap).not_to receive(:from_xml)
 
       zord = Postzord::Receiver::Private.new(bob, :person => alice.person, :object => @alices_post)
+      #nodyna <instance_variable_get-154> <not yet classified>
       expect(zord.instance_variable_get(:@user)).not_to be_nil
+      #nodyna <instance_variable_get-155> <not yet classified>
       expect(zord.instance_variable_get(:@author)).not_to be_nil
+      #nodyna <instance_variable_get-156> <not yet classified>
       expect(zord.instance_variable_get(:@object)).not_to be_nil
     end
 
@@ -31,8 +31,11 @@ describe Postzord::Receiver::Private do
       expect(Webfinger).to receive(:new).and_return(web_double)
 
       zord = Postzord::Receiver::Private.new(bob, :salmon_xml => @salmon_xml)
+      #nodyna <instance_variable_get-157> <not yet classified>
       expect(zord.instance_variable_get(:@user)).not_to be_nil
+      #nodyna <instance_variable_get-158> <not yet classified>
       expect(zord.instance_variable_get(:@author)).not_to be_nil
+      #nodyna <instance_variable_get-159> <not yet classified>
       expect(zord.instance_variable_get(:@salmon_xml)).not_to be_nil
     end
   end
@@ -40,17 +43,20 @@ describe Postzord::Receiver::Private do
   describe '#receive!' do
     before do
       @zord = Postzord::Receiver::Private.new(bob, :salmon_xml => @salmon_xml)
+      #nodyna <instance_variable_get-160> <not yet classified>
       @salmon = @zord.instance_variable_get(:@salmon)
     end
 
     context "does not parse and receive" do
       it "if the salmon author does not exist" do
+        #nodyna <instance_variable_set-161> <not yet classified>
         @zord.instance_variable_set(:@author, nil)
         expect(@zord).not_to receive(:parse_and_receive)
         @zord.receive!
       end
 
       it "if the author does not match the signature" do
+        #nodyna <instance_variable_set-162> <not yet classified>
         @zord.instance_variable_set(:@author, FactoryGirl.create(:person))
         expect(@zord).not_to receive(:parse_and_receive)
         @zord.receive!
@@ -66,6 +72,7 @@ describe Postzord::Receiver::Private do
   describe 'receive_object' do
     before do
       @zord = Postzord::Receiver::Private.new(bob, :person => alice.person, :object => @alices_post)
+      #nodyna <instance_variable_get-163> <not yet classified>
       @salmon = @zord.instance_variable_get(:@salmon)
     end
 
@@ -84,6 +91,7 @@ describe Postzord::Receiver::Private do
     end
 
     it 'calls receive on @object' do
+      #nodyna <instance_variable_get-164> <not yet classified>
       obj = expect(@zord.instance_variable_get(:@object)).to receive(:receive)
       @zord.receive_object
     end

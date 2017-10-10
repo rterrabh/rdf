@@ -3,14 +3,9 @@ class UserStat < ActiveRecord::Base
   belongs_to :user
   after_save :trigger_badges
 
-  # Updates the denormalized view counts for all users
   def self.update_view_counts(last_seen = 1.hour.ago)
 
-    # NOTE: we only update the counts for users we have seen in the last hour
-    #  this avoids a very expensive query that may run on the entire user base
-    #  we also ensure we only touch the table if data changes
 
-    # Update denormalized topics_entered
     exec_sql "UPDATE user_stats SET topics_entered = X.c
              FROM
             (SELECT v.user_id, COUNT(topic_id) AS c
@@ -24,7 +19,6 @@ class UserStat < ActiveRecord::Base
                     X.c <> topics_entered
     ", seen_at: last_seen
 
-    # Update denormalzied posts_read_count
     exec_sql "UPDATE user_stats SET posts_read_count = X.c
               FROM
               (SELECT pt.user_id,
@@ -52,7 +46,6 @@ class UserStat < ActiveRecord::Base
   end
 
   MAX_TIME_READ_DIFF = 100
-  # attempt to add total read time to user based on previous time this was called
   def update_time_read!
     if last_seen = last_seen_cached
       diff = (Time.now.to_f - last_seen.to_f).round
@@ -85,21 +78,3 @@ class UserStat < ActiveRecord::Base
 
 end
 
-# == Schema Information
-#
-# Table name: user_stats
-#
-#  user_id               :integer          not null, primary key
-#  topics_entered        :integer          default(0), not null
-#  time_read             :integer          default(0), not null
-#  days_visited          :integer          default(0), not null
-#  posts_read_count      :integer          default(0), not null
-#  likes_given           :integer          default(0), not null
-#  likes_received        :integer          default(0), not null
-#  topic_reply_count     :integer          default(0), not null
-#  new_since             :datetime         not null
-#  read_faq              :datetime
-#  first_post_created_at :datetime
-#  post_count            :integer          default(0), not null
-#  topic_count           :integer          default(0), not null
-#

@@ -52,11 +52,8 @@ module Homebrew
     result = false
 
     keg.each_unique_file_matching(string) do |file|
-      # skip document file.
       next if Metafiles::EXTENSIONS.include? file.extname
 
-      # Check dynamic library linkage. Importantly, do not run otool on static
-      # libraries, which will falsely report "linkage" to themselves.
       if file.mach_o_executable? || file.dylib? || file.mach_o_bundle?
         linked_libraries = file.dynamically_linked_libraries
         linked_libraries = linked_libraries.select { |lib| lib.include? string }
@@ -72,7 +69,6 @@ module Homebrew
         end
       end
 
-      # Use strings to search through the file for each string
       Utils.popen_read("strings", "-t", "x", "-", file.to_s) do |io|
         until io.eof?
           str = io.readline.chomp
@@ -112,7 +108,7 @@ module Homebrew
 
   def bottle_output(bottle)
     erb = ERB.new BOTTLE_ERB
-    #nodyna <ID:instance_eval-4> <IEV COMPLEX (block execution)>
+    #nodyna <instance_eval-608> <IEV COMPLEX (block execution)>
     erb.result(bottle.instance_eval { binding }).gsub(/^\s*$\n/, "")
   end
 
@@ -157,8 +153,6 @@ module Homebrew
         keg.delete_pyc_files!
 
         cd cellar do
-          # Use gzip, faster to compress than bzip2, faster to uncompress than bzip2
-          # or an uncompressed tarball (and more bandwidth friendly).
           safe_system "tar", "czf", bottle_path, "#{f.name}/#{f.pkg_version}"
         end
 
@@ -192,7 +186,6 @@ module Homebrew
     end
 
     root_url = ARGV.value("root-url")
-    # Use underscored version for legacy reasons. Remove at some point.
     root_url ||= ARGV.value("root_url")
 
     bottle = BottleSpecification.new
@@ -217,7 +210,7 @@ module Homebrew
 
   module BottleMerger
     def bottle(&block)
-      #nodyna <ID:instance_eval-5> <IEV COMPLEX (block execution)>
+      #nodyna <instance_eval-609> <IEV COMPLEX (block execution)>
       instance_eval(&block)
     end
   end
@@ -235,7 +228,7 @@ module Homebrew
       ohai formula_name
 
       bottle = BottleSpecification.new.extend(BottleMerger)
-      #nodyna <ID:instance_eval-6> <IEV COMPLEX (block execution)>
+      #nodyna <instance_eval-610> <IEV COMPLEX (block execution)>
       bottle_blocks.each { |block| bottle.instance_eval(block) }
 
       output = bottle_output bottle

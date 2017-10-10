@@ -92,20 +92,3 @@ class Permalink < ActiveRecord::Base
   end
 end
 
-# == Schema Information
-#
-# Table name: permalinks
-#
-#  id           :integer          not null, primary key
-#  url          :string(1000)     not null
-#  topic_id     :integer
-#  post_id      :integer
-#  category_id  :integer
-#  created_at   :datetime
-#  updated_at   :datetime
-#  external_url :string(1000)
-#
-# Indexes
-#
-#  index_permalinks_on_url  (url) UNIQUE
-#

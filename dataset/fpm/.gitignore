@@ -1,0 +1,33 @@
+# vim
+.*.sw[a-z]
+
+# emacs
+\#*#
+
+# other editors
+*~
+
+# build byproducts
+build-*/*
+fpm.wiki
+*.gem
+*.pkg
+
+# python
+*.pyc
+
+# RVM
+.rvmrc
+.ruby-gemset
+.ruby-version
+
+.yardoc
+coverage
+test/tmp
+Gemfile.lock
+
+# OS X
+.DS_Store
+
+.rbx
+.vagrant

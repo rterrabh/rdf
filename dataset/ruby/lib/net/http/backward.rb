@@ -1,6 +1,4 @@
-# for backward compatibility
 
-# :enddoc:
 
 class Net::HTTP
   ProxyMod = ProxyDelta

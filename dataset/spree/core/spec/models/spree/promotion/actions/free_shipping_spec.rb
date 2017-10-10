@@ -8,7 +8,6 @@ describe Spree::Promotion::Actions::FreeShipping, :type => :model do
 
   it_behaves_like 'an adjustment source'
 
-  # From promotion spec:
   context "#perform" do
     before do
       order.shipments << create(:shipment)

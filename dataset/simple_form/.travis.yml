@@ -1,0 +1,20 @@
+language: ruby
+before_install:
+  - gem install bundler -v '>= 1.5.1'
+rvm:
+  - 1.9.3
+  - 2.0.0
+  - 2.1.1
+  - rbx-2
+  - jruby
+gemfile:
+  - gemfiles/Gemfile.rails-4-0-stable
+  - gemfiles/Gemfile.rails-4-1-stable
+  - Gemfile
+notifications:
+  email: false
+  campfire:
+    on_success: change
+    on_failure: always
+    rooms:
+      - secure: "0UzWiVjxtaMsAiLCdK0p5ZIpWi94rmH71hbEQ3tuKTSSrsh9qW16cd39TS6i\nOdlSojcdzACanjIL8Z2qyG2DHScLBZAzWdDNWpnbtpJfDQ+p5ldDdbFmL6+5\n0t2nvv9uNQvhSOMD9ukdb7BFlRvd8Yq7zdjyAKt8efV2Abx7Msk="

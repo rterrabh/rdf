@@ -1,12 +1,7 @@
-##
-# This Markup outputter is used for testing purposes.
 
 class RDoc::Markup::ToTest < RDoc::Markup::Formatter
 
-  # :stopdoc:
 
-  ##
-  # :section: Visitor
 
   def start_accepting
     @res = []
@@ -63,7 +58,6 @@ class RDoc::Markup::ToTest < RDoc::Markup::Formatter
     @res << '-' * rule.weight
   end
 
-  # :startdoc:
 
 end
 

@@ -1,18 +1,7 @@
-#
-#   irb/slex.rb - simple lex analyzer
-#   	$Release Version: 0.9.6$
-#   	$Revision$
-#   	by Keiju ISHITSUKA(keiju@ruby-lang.org)
-#
-# --
-#
-#
-#
 
 require "e2mmap"
 require "irb/notifier"
 
-# :stopdoc:
 module IRB
   class SLex
 
@@ -52,7 +41,6 @@ module IRB
       node.preproc=proc
     end
 
-    #要チェック?
     def postproc(token)
       node = search(token, proc)
       node.postproc=proc
@@ -83,14 +71,7 @@ module IRB
       format("<SLex: @head = %s>", @head.inspect)
     end
 
-    #----------------------------------------------------------------------
-    #
-    #   class Node -
-    #
-    #----------------------------------------------------------------------
     class Node
-      # if postproc is nil, this node is an abstract node.
-      # if postproc is non-nil, this node is a real node.
       def initialize(preproc = nil, postproc = nil)
         @Tree = {}
         @preproc = preproc
@@ -157,12 +138,6 @@ module IRB
         node
       end
 
-      #
-      # chrs: String
-      #       character array
-      #       io must have getc()/ungetc(); and ungetc() must be
-      #       able to be called arbitrary number of times.
-      #
       def match(chrs, op = "")
         D_DETAIL.print "match>: ", chrs, "op:", op, "\n"
         if chrs.empty?
@@ -243,7 +218,6 @@ module IRB
     end
   end
 end
-# :startdoc:
 
 if $0 == __FILE__
   case $1

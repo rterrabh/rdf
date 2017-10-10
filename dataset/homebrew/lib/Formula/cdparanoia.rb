@@ -23,8 +23,6 @@ class Cdparanoia < Formula
 
   def install
     system "autoconf"
-    # Libs are installed as keg-only because most software that searches for cdparanoia
-    # will fail to link against it cleanly due to our patches
     system "./configure", "--prefix=#{prefix}",
                           "--mandir=#{man}",
                           "--libdir=#{libexec}"

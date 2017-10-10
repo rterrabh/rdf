@@ -1,16 +1,10 @@
 module ActiveAdmin
   class Resource
     module Routes
-      # @param params [Hash] of params: { study_id: 3 }
-      # @return [String] the path to this resource collection page
-      # @example "/admin/posts"
       def route_collection_path(params = {})
         RouteBuilder.new(self).collection_path(params)
       end
 
-      # @param resource [ActiveRecord::Base] the instance we want the path of
-      # @return [String] the path to this resource collection page
-      # @example "/admin/posts/1"
       def route_instance_path(resource)
         RouteBuilder.new(self).instance_path(resource)
       end
@@ -19,7 +13,6 @@ module ActiveAdmin
         RouteBuilder.new(self).edit_instance_path(resource)
       end
 
-      # Returns the routes prefix for this config
       def route_prefix
         namespace.module_name.try(:underscore)
       end
@@ -43,28 +36,22 @@ module ActiveAdmin
             suffix: (resource.route_uncountable? ? "index_path" : "path")
           )
 
-          #nodyna <ID:send-43> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-110> <SD COMPLEX (change-prone variables)>
           routes.public_send route_name, *route_collection_params(params)
         end
 
-        # @return [String] the path to this resource collection page
-        # @param instance [ActiveRecord::Base] the instance we want the path of
-        # @example "/admin/posts/1"
         def instance_path(instance)
           route_name = route_name(resource.resources_configuration[:self][:route_instance_name])
 
-          #nodyna <ID:send-44> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-111> <SD COMPLEX (change-prone variables)>
           routes.public_send route_name, *route_instance_params(instance)
         end
 
-        # @return [String] the path to the edit page of this resource
-        # @param instance [ActiveRecord::Base] the instance we want the path of
-        # @example "/admin/posts/1/edit"
         def edit_instance_path(instance)
           path = resource.resources_configuration[:self][:route_instance_name]
           route_name = route_name(path, action: :edit)
 
-          #nodyna <ID:send-45> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-112> <SD COMPLEX (change-prone variables)>
           routes.public_send route_name, *route_instance_params(instance)
         end
 
@@ -86,10 +73,9 @@ module ActiveAdmin
         end
 
 
-        # @return params to pass to instance path
         def route_instance_params(instance)
           if nested?
-            #nodyna <ID:send-46> <SD COMPLEX (change-prone variables)>
+            #nodyna <send-113> <SD COMPLEX (change-prone variables)>
             [instance.public_send(belongs_to_name).to_param, instance.to_param]
           else
             instance.to_param

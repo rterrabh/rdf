@@ -12,10 +12,6 @@ module ActionDispatch
 
       attr_reader :variant
 
-      # The MIME type of the HTTP request, such as Mime::XML.
-      #
-      # For backward compatibility, the post \format is extracted from the
-      # X-Post-Data-Format HTTP header if present.
       def content_mime_type
         @env["action_dispatch.request.content_type"] ||= begin
           if @env['CONTENT_TYPE'] =~ /^([^,\;]*)/
@@ -30,7 +26,6 @@ module ActionDispatch
         content_mime_type && content_mime_type.to_s
       end
 
-      # Returns the accepted MIME type for the request.
       def accepts
         @env["action_dispatch.request.accepts"] ||= begin
           header = @env['HTTP_ACCEPT'].to_s.strip
@@ -43,12 +38,6 @@ module ActionDispatch
         end
       end
 
-      # Returns the MIME type for the \format used in the request.
-      #
-      #   GET /posts/5.xml   | request.format => Mime::XML
-      #   GET /posts/5.xhtml | request.format => Mime::HTML
-      #   GET /posts/5       | request.format => Mime::HTML or MIME::JS, or request.accepts.first
-      #
       def format(view_path = [])
         formats.first || Mime::NullType.instance
       end
@@ -73,7 +62,6 @@ module ActionDispatch
         end
       end
 
-      # Sets the \variant for template.
       def variant=(variant)
         if variant.is_a?(Symbol)
           @variant = [variant]
@@ -87,36 +75,11 @@ module ActionDispatch
         end
       end
 
-      # Sets the \format by string extension, which can be used to force custom formats
-      # that are not controlled by the extension.
-      #
-      #   class ApplicationController < ActionController::Base
-      #     before_action :adjust_format_for_iphone
-      #
-      #     private
-      #       def adjust_format_for_iphone
-      #         request.format = :iphone if request.env["HTTP_USER_AGENT"][/iPhone/]
-      #       end
-      #   end
       def format=(extension)
         parameters[:format] = extension.to_s
         @env["action_dispatch.request.formats"] = [Mime::Type.lookup_by_extension(parameters[:format])]
       end
 
-      # Sets the \formats by string extensions. This differs from #format= by allowing you
-      # to set multiple, ordered formats, which is useful when you want to have a fallback.
-      #
-      # In this example, the :iphone format will be used if it's available, otherwise it'll fallback
-      # to the :html format.
-      #
-      #   class ApplicationController < ActionController::Base
-      #     before_action :adjust_format_for_iphone_with_html_fallback
-      #
-      #     private
-      #       def adjust_format_for_iphone_with_html_fallback
-      #         request.formats = [ :iphone, :html ] if request.env["HTTP_USER_AGENT"][/iPhone/]
-      #       end
-      #   end
       def formats=(extensions)
         parameters[:format] = extensions.first.to_s
         @env["action_dispatch.request.formats"] = extensions.collect do |extension|
@@ -124,9 +87,6 @@ module ActionDispatch
         end
       end
 
-      # Receives an array of mimes and return the first user sent mime that
-      # matches the order array.
-      #
       def negotiate_mime(order)
         formats.each do |priority|
           if priority == Mime::ALL

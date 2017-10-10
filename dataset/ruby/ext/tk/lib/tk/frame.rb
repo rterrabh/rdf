@@ -1,6 +1,3 @@
-#
-# tk/frame.rb : treat frame widget
-#
 require 'tk'
 
 class Tk::Frame<TkWindow
@@ -8,27 +5,6 @@ class Tk::Frame<TkWindow
   WidgetClassName = 'Frame'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-################# old version
-#  def initialize(parent=nil, keys=nil)
-#    if keys.kind_of? Hash
-#      keys = keys.dup
-#      @classname = keys.delete('classname') if keys.key?('classname')
-#      @colormap  = keys.delete('colormap')  if keys.key?('colormap')
-#      @container = keys.delete('container') if keys.key?('container')
-#      @visual    = keys.delete('visual')    if keys.key?('visual')
-#    end
-#    super(parent, keys)
-#  end
-#
-#  def create_self
-#    s = []
-#    s << "-class"     << @classname if @classname
-#    s << "-colormap"  << @colormap  if @colormap
-#    s << "-container" << @container if @container
-#    s << "-visual"    << @visual    if @visual
-#    tk_call 'frame', @path, *s
-#  end
-#################
 
   def __boolval_optkeys
     super() << 'container'
@@ -73,14 +49,6 @@ class Tk::Frame<TkWindow
     super(keys)
   end
 
-  #def create_self(keys)
-  #  if keys and keys != None
-  #    tk_call_without_enc('frame', @path, *hash_kv(keys))
-  #  else
-  #    tk_call_without_enc( 'frame', @path)
-  #  end
-  #end
-  #private :create_self
 
   def database_classname
     @classname
@@ -127,6 +95,4 @@ class Tk::Frame<TkWindow
   end
 end
 
-#TkFrame = Tk::Frame unless Object.const_defined? :TkFrame
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Frame, :TkFrame)
 Tk.__set_loaded_toplevel_aliases__('tk/frame.rb', :Tk, Tk::Frame, :TkFrame)

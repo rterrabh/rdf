@@ -21,7 +21,6 @@ module Gitlab::Markdown
     context 'internal reference' do
       let(:reference) { commit.id }
 
-      # Let's test a variety of commit SHA sizes just to be paranoid
       [6, 8, 12, 18, 20, 32, 40].each do |size|
         it "links to a valid reference of #{size} characters" do
           doc = filter("See #{reference[0...size]}")

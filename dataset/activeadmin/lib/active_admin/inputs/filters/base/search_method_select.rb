@@ -1,16 +1,3 @@
-# This is a common set of Formtastic overrides needed to build a filter form
-# that lets you select from a set of search methods for a given attribute.
-#
-# Your class must declare available filters for this module to work.
-# Those filters must be recognizable by Ransack. For example:
-#
-#   class FilterNumericInput < ::Formtastic::Inputs::NumberInput
-#     include FilterBase
-#     include FilterBase::SearchMethodSelect
-#
-#     filter :equals, :greater_than, :less_than
-#   end
-#
 module ActiveAdmin
   module Inputs
     module Filters
@@ -58,7 +45,7 @@ module ActiveAdmin
           def current_filter
             @current_filter ||= begin
               methods = filters.map{ |f| "#{method}_#{f}" }
-              #nodyna <ID:send-17> <SD COMPLEX (change-prone variables)>
+              #nodyna <send-66> <SD COMPLEX (change-prone variables)>
               methods.detect{ |m| @object.public_send m } || methods.first
             end
           end

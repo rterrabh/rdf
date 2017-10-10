@@ -1,4 +1,3 @@
-# encoding: utf-8
 
 require 'minitest/unit'
 
@@ -12,11 +11,6 @@ class MiniTest::Unit # :nodoc:
   end
 
   class TestCase
-    ##
-    # Returns a set of ranges stepped exponentially from +min+ to
-    # +max+ by powers of +base+. Eg:
-    #
-    #   bench_exp(2, 16, 2) # => [2, 4, 8, 16]
 
     def self.bench_exp min, max, base = 10
       min = (Math.log10(min) / Math.log10(base)).to_i
@@ -25,11 +19,6 @@ class MiniTest::Unit # :nodoc:
       (min..max).map { |m| base ** m }.to_a
     end
 
-    ##
-    # Returns a set of ranges stepped linearly from +min+ to +max+ by
-    # +step+. Eg:
-    #
-    #   bench_linear(20, 40, 10) # => [20, 30, 40]
 
     def self.bench_linear min, max, step = 10
       (min..max).step(step).to_a
@@ -37,49 +26,21 @@ class MiniTest::Unit # :nodoc:
       r = []; (min..max).step(step) { |n| r << n }; r
     end
 
-    ##
-    # Returns the benchmark methods (methods that start with bench_)
-    # for that class.
 
     def self.benchmark_methods # :nodoc:
       public_instance_methods(true).grep(/^bench_/).map { |m| m.to_s }.sort
     end
 
-    ##
-    # Returns all test suites that have benchmark methods.
 
     def self.benchmark_suites
       TestCase.test_suites.reject { |s| s.benchmark_methods.empty? }
     end
 
-    ##
-    # Specifies the ranges used for benchmarking for that class.
-    # Defaults to exponential growth from 1 to 10k by powers of 10.
-    # Override if you need different ranges for your benchmarks.
-    #
-    # See also: ::bench_exp and ::bench_linear.
 
     def self.bench_range
       bench_exp 1, 10_000
     end
 
-    ##
-    # Runs the given +work+, gathering the times of each run. Range
-    # and times are then passed to a given +validation+ proc. Outputs
-    # the benchmark name and times in tab-separated format, making it
-    # easy to paste into a spreadsheet for graphing or further
-    # analysis.
-    #
-    # Ranges are specified by ::bench_range.
-    #
-    # Eg:
-    #
-    #   def bench_algorithm
-    #     validation = proc { |x, y| ... }
-    #     assert_performance validation do |n|
-    #       @obj.algorithm(n)
-    #     end
-    #   end
 
     def assert_performance validation, &work
       range = self.class.bench_range
@@ -91,7 +52,7 @@ class MiniTest::Unit # :nodoc:
       range.each do |x|
         GC.start
         t0 = Time.now
-        #nodyna <ID:instance_exec-30> <IEX COMPLEX (block with parameters)>
+        #nodyna <instance_exec-1450> <IEX COMPLEX (block with parameters)>
         instance_exec(x, &work)
         t = Time.now - t0
 
@@ -103,28 +64,6 @@ class MiniTest::Unit # :nodoc:
       validation[range, times]
     end
 
-    ##
-    # Runs the given +work+ and asserts that the times gathered fit to
-    # match a constant rate (eg, linear slope == 0) within a given
-    # +threshold+. Note: because we're testing for a slope of 0, R^2
-    # is not a good determining factor for the fit, so the threshold
-    # is applied against the slope itself. As such, you probably want
-    # to tighten it from the default.
-    #
-    # See http://www.graphpad.com/curvefit/goodness_of_fit.htm for
-    # more details.
-    #
-    # Fit is calculated by #fit_linear.
-    #
-    # Ranges are specified by ::bench_range.
-    #
-    # Eg:
-    #
-    #   def bench_algorithm
-    #     assert_performance_constant 0.9999 do |n|
-    #       @obj.algorithm(n)
-    #     end
-    #   end
 
     def assert_performance_constant threshold = 0.99, &work
       validation = proc do |range, times|
@@ -136,90 +75,26 @@ class MiniTest::Unit # :nodoc:
       assert_performance validation, &work
     end
 
-    ##
-    # Runs the given +work+ and asserts that the times gathered fit to
-    # match a exponential curve within a given error +threshold+.
-    #
-    # Fit is calculated by #fit_exponential.
-    #
-    # Ranges are specified by ::bench_range.
-    #
-    # Eg:
-    #
-    #   def bench_algorithm
-    #     assert_performance_exponential 0.9999 do |n|
-    #       @obj.algorithm(n)
-    #     end
-    #   end
 
     def assert_performance_exponential threshold = 0.99, &work
       assert_performance validation_for_fit(:exponential, threshold), &work
     end
 
-    ##
-    # Runs the given +work+ and asserts that the times gathered fit to
-    # match a logarithmic curve within a given error +threshold+.
-    #
-    # Fit is calculated by #fit_logarithmic.
-    #
-    # Ranges are specified by ::bench_range.
-    #
-    # Eg:
-    #
-    #   def bench_algorithm
-    #     assert_performance_logarithmic 0.9999 do |n|
-    #       @obj.algorithm(n)
-    #     end
-    #   end
 
     def assert_performance_logarithmic threshold = 0.99, &work
       assert_performance validation_for_fit(:logarithmic, threshold), &work
     end
 
-    ##
-    # Runs the given +work+ and asserts that the times gathered fit to
-    # match a straight line within a given error +threshold+.
-    #
-    # Fit is calculated by #fit_linear.
-    #
-    # Ranges are specified by ::bench_range.
-    #
-    # Eg:
-    #
-    #   def bench_algorithm
-    #     assert_performance_linear 0.9999 do |n|
-    #       @obj.algorithm(n)
-    #     end
-    #   end
 
     def assert_performance_linear threshold = 0.99, &work
       assert_performance validation_for_fit(:linear, threshold), &work
     end
 
-    ##
-    # Runs the given +work+ and asserts that the times gathered curve
-    # fit to match a power curve within a given error +threshold+.
-    #
-    # Fit is calculated by #fit_power.
-    #
-    # Ranges are specified by ::bench_range.
-    #
-    # Eg:
-    #
-    #   def bench_algorithm
-    #     assert_performance_power 0.9999 do |x|
-    #       @obj.algorithm
-    #     end
-    #   end
 
     def assert_performance_power threshold = 0.99, &work
       assert_performance validation_for_fit(:power, threshold), &work
     end
 
-    ##
-    # Takes an array of x/y pairs and calculates the general R^2 value.
-    #
-    # See: http://en.wikipedia.org/wiki/Coefficient_of_determination
 
     def fit_error xys
       y_bar  = sigma(xys) { |x, y| y } / xys.size.to_f
@@ -229,12 +104,6 @@ class MiniTest::Unit # :nodoc:
       1 - (ss_err / ss_tot)
     end
 
-    ##
-    # To fit a functional form: y = ae^(bx).
-    #
-    # Takes x and y values and returns [a, b, r^2].
-    #
-    # See: http://mathworld.wolfram.com/LeastSquaresFittingExponential.html
 
     def fit_exponential xs, ys
       n     = xs.size
@@ -251,12 +120,6 @@ class MiniTest::Unit # :nodoc:
       return Math.exp(a), b, fit_error(xys) { |x| Math.exp(a + b * x) }
     end
 
-    ##
-    # To fit a functional form: y = a + b*ln(x).
-    #
-    # Takes x and y values and returns [a, b, r^2].
-    #
-    # See: http://mathworld.wolfram.com/LeastSquaresFittingLogarithmic.html
 
     def fit_logarithmic xs, ys
       n     = xs.size
@@ -274,12 +137,6 @@ class MiniTest::Unit # :nodoc:
     end
 
 
-    ##
-    # Fits the functional form: a + bx.
-    #
-    # Takes x and y values and returns [a, b, r^2].
-    #
-    # See: http://mathworld.wolfram.com/LeastSquaresFitting.html
 
     def fit_linear xs, ys
       n   = xs.size
@@ -296,12 +153,6 @@ class MiniTest::Unit # :nodoc:
       return a, b, fit_error(xys) { |x| a + b * x }
     end
 
-    ##
-    # To fit a functional form: y = ax^b.
-    #
-    # Takes x and y values and returns [a, b, r^2].
-    #
-    # See: http://mathworld.wolfram.com/LeastSquaresFittingPowerLaw.html
 
     def fit_power xs, ys
       n       = xs.size
@@ -317,25 +168,16 @@ class MiniTest::Unit # :nodoc:
       return Math.exp(a), b, fit_error(xys) { |x| (Math.exp(a) * (x ** b)) }
     end
 
-    ##
-    # Enumerates over +enum+ mapping +block+ if given, returning the
-    # sum of the result. Eg:
-    #
-    #   sigma([1, 2, 3])                # => 1 + 2 + 3 => 7
-    #   sigma([1, 2, 3]) { |n| n ** 2 } # => 1 + 4 + 9 => 14
 
     def sigma enum, &block
       enum = enum.map(&block) if block
       enum.inject { |sum, n| sum + n }
     end
 
-    ##
-    # Returns a proc that calls the specified fit method and asserts
-    # that the error is within a tolerable threshold.
 
     def validation_for_fit msg, threshold
       proc do |range, times|
-        #nodyna <ID:send-149> <SD MODERATE (change-prone variables)>
+        #nodyna <send-1451> <SD MODERATE (change-prone variables)>
         a, b, rr = send "fit_#{msg}", range, times
         assert_operator rr, :>=, threshold
         [a, b, rr]
@@ -345,44 +187,22 @@ class MiniTest::Unit # :nodoc:
 end
 
 class MiniTest::Spec
-  ##
-  # This is used to define a new benchmark method. You usually don't
-  # use this directly and is intended for those needing to write new
-  # performance curve fits (eg: you need a specific polynomial fit).
-  #
-  # See ::bench_performance_linear for an example of how to use this.
 
   def self.bench name, &block
-    #nodyna <ID:define_method-47> <DM COMPLEX (events)>
+    #nodyna <define_method-1452> <DM COMPLEX (events)>
     define_method "bench_#{name.gsub(/\W+/, '_')}", &block
   end
 
-  ##
-  # Specifies the ranges used for benchmarking for that class.
-  #
-  #   bench_range do
-  #     bench_exp(2, 16, 2)
-  #   end
-  #
-  # See Unit::TestCase.bench_range for more details.
 
   def self.bench_range &block
     return super unless block
 
     meta = (class << self; self; end)
-    #nodyna <ID:send-150> <SD MODERATE (private methods)>
-    #nodyna <ID:define_method-48> <DM COMPLEX (events)>
+    #nodyna <send-1453> <SD MODERATE (private methods)>
+    #nodyna <define_method-1454> <DM COMPLEX (events)>
     meta.send :define_method, "bench_range", &block
   end
 
-  ##
-  # Create a benchmark that verifies that the performance is linear.
-  #
-  #   describe "my class" do
-  #     bench_performance_linear "fast_algorithm", 0.9999 do |n|
-  #       @obj.fast_algorithm(n)
-  #     end
-  #   end
 
   def self.bench_performance_linear name, threshold = 0.99, &work
     bench name do
@@ -390,14 +210,6 @@ class MiniTest::Spec
     end
   end
 
-  ##
-  # Create a benchmark that verifies that the performance is constant.
-  #
-  #   describe "my class" do
-  #     bench_performance_constant "zoom_algorithm!" do |n|
-  #       @obj.zoom_algorithm!(n)
-  #     end
-  #   end
 
   def self.bench_performance_constant name, threshold = 0.99, &work
     bench name do
@@ -405,14 +217,6 @@ class MiniTest::Spec
     end
   end
 
-  ##
-  # Create a benchmark that verifies that the performance is exponential.
-  #
-  #   describe "my class" do
-  #     bench_performance_exponential "algorithm" do |n|
-  #       @obj.algorithm(n)
-  #     end
-  #   end
 
   def self.bench_performance_exponential name, threshold = 0.99, &work
     bench name do

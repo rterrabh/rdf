@@ -1,36 +1,6 @@
 module Gitlab
   class NoteDataBuilder
     class << self
-      # Produce a hash of post-receive data
-      #
-      # For all notes:
-      #
-      # data = {
-      #   object_kind: "note",
-      #   user: {
-      #     name: String,
-      #     username: String,
-      #     avatar_url: String
-      #   }
-      #   project_id: Integer,
-      #   repository: {
-      #     name: String,
-      #     url: String,
-      #     description: String,
-      #     homepage: String,
-      #   }
-      #  object_attributes: {
-      #    <hook data for note>
-      #  }
-      #  <note-specific data>: {
-      # }
-      # note-specific data is a hash with one of the following keys and contains
-      # the hook data for that type.
-      #  - commit
-      #  - issue
-      #  - merge_request
-      #  - snippet
-      #
       def build(note, user)
         project = note.project
         data = build_base_data(project, user, note)
@@ -68,7 +38,6 @@ module Gitlab
       end
 
       def build_data_for_commit(project, user, note)
-        # commit_id is the SHA hash
         commit = project.commit(note.commit_id)
         commit.hook_attrs
       end

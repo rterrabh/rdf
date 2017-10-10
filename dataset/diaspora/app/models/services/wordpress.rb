@@ -4,7 +4,6 @@ module Services
 
     attr_accessor :username, :password, :host, :path
 
-    # uid = blog_id
 
     def provider
       "wordpress"

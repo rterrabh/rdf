@@ -1,15 +1,3 @@
-#
-# httpauth/digestauth.rb -- HTTP digest access authentication
-#
-# Author: IPR -- Internet Programming with Ruby -- writers
-# Copyright (c) 2003 Internet Programming with Ruby writers.
-# Copyright (c) 2003 H.M.
-#
-# The original implementation is provided by H.M.
-#   URL: http://rwiki.jin.gr.jp/cgi-bin/rw-cgi.rb?cmd=view;name=
-#        %C7%A7%BE%DA%B5%A1%C7%BD%A4%F2%B2%FE%C2%A4%A4%B7%A4%C6%A4%DF%A4%EB
-#
-# $IPR: digestauth.rb,v 1.5 2003/02/20 07:15:47 gotoyuzo Exp $
 
 require 'webrick/config'
 require 'webrick/httpstatus'
@@ -20,68 +8,27 @@ require 'digest/sha1'
 module WEBrick
   module HTTPAuth
 
-    ##
-    # RFC 2617 Digest Access Authentication for WEBrick
-    #
-    # Use this class to add digest authentication to a WEBrick servlet.
-    #
-    # Here is an example of how to set up DigestAuth:
-    #
-    #   config = { :Realm => 'DigestAuth example realm' }
-    #
-    #   htdigest = WEBrick::HTTPAuth::Htdigest.new 'my_password_file'
-    #   htdigest.set_passwd config[:Realm], 'username', 'password'
-    #   htdigest.flush
-    #
-    #   config[:UserDB] = htdigest
-    #
-    #   digest_auth = WEBrick::HTTPAuth::DigestAuth.new config
-    #
-    # When using this as with a servlet be sure not to create a new DigestAuth
-    # object in the servlet's #initialize.  By default WEBrick creates a new
-    # servlet instance for every request and the DigestAuth object must be
-    # used across requests.
 
     class DigestAuth
       include Authenticator
 
       AuthScheme = "Digest" # :nodoc:
 
-      ##
-      # Struct containing the opaque portion of the digest authentication
 
       OpaqueInfo = Struct.new(:time, :nonce, :nc) # :nodoc:
 
-      ##
-      # Digest authentication algorithm
 
       attr_reader :algorithm
 
-      ##
-      # Quality of protection.  RFC 2617 defines "auth" and "auth-int"
 
       attr_reader :qop
 
-      ##
-      # Used by UserDB to create a digest password entry
 
       def self.make_passwd(realm, user, pass)
         pass ||= ""
         Digest::MD5::hexdigest([user, realm, pass].join(":"))
       end
 
-      ##
-      # Creates a new DigestAuth instance.  Be sure to use the same DigestAuth
-      # instance for multiple requests as it saves state between requests in
-      # order to perform authentication.
-      #
-      # See WEBrick::Config::DigestAuth for default configuration entries
-      #
-      # You must supply the following configuration entries:
-      #
-      # :Realm:: The name of the realm being protected.
-      # :UserDB:: A database of usernames and passwords.
-      #           A WEBrick::HTTPAuth::Htdigest instance should be used.
 
       def initialize(config, default=Config::DigestAuth)
         check_init(config)
@@ -113,9 +60,6 @@ module WEBrick
         @mutex = Mutex.new
       end
 
-      ##
-      # Authenticates a +req+ and returns a 401 Unauthorized using +res+ if
-      # the authentication was not correct.
 
       def authenticate(req, res)
         unless result = @mutex.synchronize{ _authenticate(req, res) }
@@ -127,9 +71,6 @@ module WEBrick
         return true
       end
 
-      ##
-      # Returns a challenge response which asks for for authentication
-      # information
 
       def challenge(req, res, stale=false)
         nonce = generate_next_nonce(req)
@@ -155,7 +96,6 @@ module WEBrick
 
       private
 
-      # :stopdoc:
 
       MustParams = ['username','realm','nonce','uri','response']
       MustParamsAuth = ['cnonce','nc']
@@ -390,11 +330,8 @@ module WEBrick
         @h.hexdigest(args.join(":"))
       end
 
-      # :startdoc:
     end
 
-    ##
-    # Digest authentication for proxy servers.  See DigestAuth for details.
 
     class ProxyDigestAuth < DigestAuth
       include ProxyAuthenticator

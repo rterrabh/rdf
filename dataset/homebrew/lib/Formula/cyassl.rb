@@ -73,9 +73,6 @@ class Cyassl < Formula
 
     args << "--enable-aesni" if Hardware::CPU.aes? && !build.bottle?
 
-    # Extra flag is stated as a needed for the Mac platform.
-    # http://yassl.com/yaSSL/Docs-cyassl-manual-2-building-cyassl.html
-    # Also, only applies if fastmath is enabled.
     ENV.append_to_cflags "-mdynamic-no-pic" if MacOS.prefer_64_bit?
 
     system "./autogen.sh"

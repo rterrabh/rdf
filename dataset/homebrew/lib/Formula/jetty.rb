@@ -22,9 +22,7 @@ class Jetty < Formula
     Dir.glob("#{libexec}/bin/*.sh") do |f|
       scriptname = File.basename(f, ".sh")
       (bin+scriptname).write <<-EOS.undent
-        #!/bin/bash
         JETTY_HOME=#{libexec}
-        #{f} "$@"
       EOS
       chmod 0755, bin+scriptname
     end

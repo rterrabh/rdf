@@ -25,8 +25,6 @@ class Awscli < Formula
     end
   end
 
-  # Use :python on Lion to avoid urllib3 warning
-  # https://github.com/Homebrew/homebrew/pull/37240
   depends_on :python if MacOS.version <= :lion
 
   resource "six" do
@@ -86,10 +84,8 @@ class Awscli < Formula
 
     system "python", *Language::Python.setup_install_args(libexec)
 
-    # Install zsh completion
     zsh_completion.install "bin/aws_zsh_completer.sh" => "_aws"
 
-    # Install the examples
     pkgshare.install "awscli/examples"
 
     bin.install Dir[libexec/"bin/*"]
@@ -98,7 +94,6 @@ class Awscli < Formula
 
   def caveats; <<-EOS.undent
     The "examples" directory has been installed to:
-      #{HOMEBREW_PREFIX}/share/awscli/examples
 
     Add the following to ~/.bashrc to enable bash completion:
       complete -C aws_completer aws

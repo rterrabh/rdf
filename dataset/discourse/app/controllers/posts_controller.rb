@@ -6,7 +6,6 @@ require_dependency 'new_post_result_serializer'
 
 class PostsController < ApplicationController
 
-  # Need to be logged in for all actions here
   before_filter :ensure_logged_in, except: [:show, :replies, :by_number, :short_link, :reply_history, :revisions, :latest_revision, :expand_embed, :markdown_id, :markdown_num, :cooked, :latest]
 
   skip_before_filter :preload_json, :check_xhr, only: [:markdown_id, :markdown_num, :short_link, :latest]
@@ -32,15 +31,12 @@ class PostsController < ApplicationController
     last_post_id = params[:before].to_i
     last_post_id = Post.last.id if last_post_id <= 0
 
-    # last 50 post IDs only, to avoid counting deleted posts in security check
     posts = Post.order(created_at: :desc)
                 .where('posts.id <= ?', last_post_id)
                 .where('posts.id > ?', last_post_id - 50)
                 .includes(topic: :category)
                 .includes(:user)
                 .limit(50)
-    # Remove posts the user doesn't have permission to see
-    # This isn't leaking any information we weren't already through the post ID numbers
     posts = posts.reject { |post| !guardian.can_see?(post) }
     counts = PostAction.counts_for(posts, current_user)
 
@@ -77,7 +73,6 @@ class PostsController < ApplicationController
 
   def short_link
     post = Post.find(params[:post_id].to_i)
-    # Stuff the user in the request object, because that's what IncomingLink wants
     if params[:user_id]
       user = User.find(params[:user_id].to_i)
       request['u'] = user.username_lower if user
@@ -91,8 +86,6 @@ class PostsController < ApplicationController
 
     if !is_api? && current_user.blocked?
 
-      # error has parity with what user would get if they posted when blocked
-      # and it went through post creator
       render json: {errors: [I18n.t("topic_not_found")]}, status: 422
       return
     end
@@ -136,13 +129,11 @@ class PostsController < ApplicationController
       edit_reason: params[:post][:edit_reason]
     }
 
-    # to stay consistent with the create api, we allow for title & category changes here
     if post.is_first_post?
       changes[:title] = params[:title] if params[:title]
       changes[:category_id] = params[:post][:category_id] if params[:post][:category_id]
     end
 
-    # We don't need to validate edits to small action posts by staff
     opts = {}
     if post.post_type == Post.types[:small_action] && current_user.staff?
       opts[:skip_validations] = true
@@ -222,7 +213,6 @@ class PostsController < ApplicationController
     posts = Post.where(id: post_ids_including_replies)
     raise Discourse::InvalidParameters.new(:post_ids) if posts.blank?
 
-    # Make sure we can delete the posts
     posts.each {|p| guardian.ensure_can_delete!(p) }
 
     Post.transaction do
@@ -232,7 +222,6 @@ class PostsController < ApplicationController
     render nothing: true
   end
 
-  # Direct replies to this post
   def replies
     post = find_post_from_params
     render_serialized(post.replies, PostSerializer)
@@ -358,9 +347,6 @@ class PostsController < ApplicationController
 
   protected
 
-  # We can't break the API for making posts. The new, queue supporting API
-  # doesn't return the post as the root JSON object, but as a nested object.
-  # If a param is present it uses that result structure.
   def backwards_compatible_json(json_obj, success)
     json_obj.symbolize_keys!
     if params[:nested_post].blank? && json_obj[:errors].blank? && json_obj[:action] != :enqueued
@@ -410,8 +396,6 @@ class PostsController < ApplicationController
 
     if guardian.user.moderator?
 
-      # Awful hack, but you can't seem to remove the `default_scope` when joining
-      # So instead I grab the topics separately
       topic_ids = posts.dup.pluck(:topic_id)
       topics = Topic.where(id: topic_ids).with_deleted.where.not(archetype: 'private_message')
       topics = topics.secured(guardian)
@@ -436,26 +420,21 @@ class PostsController < ApplicationController
       :composer_open_duration_msecs
     ]
 
-    # param munging for WordPress
     params[:auto_track] = !(params[:auto_track].to_s == "false") if params[:auto_track]
 
     if api_key_valid?
-      # php seems to be sending this incorrectly, don't fight with it
       params[:skip_validations] = params[:skip_validations].to_s == "true"
       permitted << :skip_validations
 
-      # We allow `embed_url` via the API
       permitted << :embed_url
     end
 
     params.require(:raw)
     result = params.permit(*permitted).tap do |whitelisted|
       whitelisted[:image_sizes] = params[:image_sizes]
-      # TODO this does not feel right, we should name what meta_data is allowed
       whitelisted[:meta_data] = params[:meta_data]
     end
 
-    # Staff are allowed to pass `is_warning`
     if current_user.staff?
       params.permit(:is_warning)
       result[:is_warning] = (params[:is_warning] == "true")
@@ -468,7 +447,6 @@ class PostsController < ApplicationController
       result[f] = params[f] if params.has_key?(f)
     end
 
-    # Stuff we can use in spam prevention plugins
     result[:ip_address] = request.remote_ip
     result[:user_agent] = request.user_agent
     result[:referrer] = request.env["HTTP_REFERER"]
@@ -486,7 +464,7 @@ class PostsController < ApplicationController
   end
 
   def too_late_to(action, post)
-    #nodyna <ID:send-73> <SD MODERATE (change-prone variables)>
+    #nodyna <send-456> <SD MODERATE (change-prone variables)>
     !guardian.send("can_#{action}?", post) && post.user_id == current_user.id && post.edit_time_limit_expired?
   end
 
@@ -506,11 +484,9 @@ class PostsController < ApplicationController
   end
 
   def find_post_using(finder)
-    # Include deleted posts if the user is staff
     finder = finder.with_deleted if current_user.try(:staff?)
     post = finder.first
     raise Discourse::NotFound unless post
-    # load deleted topic
     post.topic = Topic.with_deleted.find(post.topic_id) if current_user.try(:staff?)
     guardian.ensure_can_see!(post)
     post

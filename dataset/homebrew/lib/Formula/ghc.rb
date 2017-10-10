@@ -48,15 +48,10 @@ class Ghc < Formula
   end
 
   def install
-    # Build a static gmp rather than in-tree gmp, otherwise it links to brew's.
     gmp = libexec/"integer-gmp"
 
-    # MPN_PATH: The lowest common denomenator asm paths that work on Darwin,
-    # corresponding to Yonah and Merom. Obviates --disable-assembly.
     ENV["MPN_PATH"] = "x86_64/fastsse x86_64/core2 x86_64 generic" if build.bottle?
 
-    # GMP *does not* use PIC by default without shared libs  so --with-pic
-    # is mandatory or else you'll get "illegal text relocs" errors.
     resource("gmp").stage do
       system "./configure", "--prefix=#{gmp}", "--with-pic", "--disable-shared"
       system "make"

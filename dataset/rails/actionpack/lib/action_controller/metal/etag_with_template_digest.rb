@@ -1,21 +1,4 @@
 module ActionController
-  # When our views change, they should bubble up into HTTP cache freshness
-  # and bust browser caches. So the template digest for the current action
-  # is automatically included in the ETag.
-  #
-  # Enabled by default for apps that use Action View. Disable by setting
-  #
-  #   config.action_controller.etag_with_template_digest = false
-  #
-  # Override the template to digest by passing +:template+ to +fresh_when+
-  # and +stale?+ calls. For example:
-  #
-  #   # We're going to render widgets/show, not posts/show
-  #   fresh_when @post, template: 'widgets/show'
-  #
-  #   # We're not going to render a template, so omit it from the ETag.
-  #   fresh_when @post, template: false
-  #
   module EtagWithTemplateDigest
     extend ActiveSupport::Concern
 

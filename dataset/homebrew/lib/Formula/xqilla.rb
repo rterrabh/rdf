@@ -22,8 +22,6 @@ class Xqilla < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <iostream>
-      #include <xqilla/xqilla-simple.hpp>
 
       int main(int argc, char *argv[]) {
         XQilla xqilla;

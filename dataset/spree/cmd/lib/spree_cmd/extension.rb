@@ -31,7 +31,6 @@ module SpreeCmd
 
     def final_banner
       say %Q{
-        #{'*' * 80}
 
         Your extension has been generated with a gemspec dependency on Spree #{spree_version}.
 
@@ -40,7 +39,6 @@ module SpreeCmd
 
         Consider listing your extension in the official extension registry http://spreecommerce.com/extensions
 
-        #{'*' * 80}
       }
     end
 

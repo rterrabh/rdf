@@ -49,7 +49,6 @@ class Cairo < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <cairo.h>
 
       int main(int argc, char *argv[]) {
 

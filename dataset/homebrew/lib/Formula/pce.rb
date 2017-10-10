@@ -21,9 +21,6 @@ class Pce < Formula
                           "--enable-readline"
     system "make"
 
-    # We need to run 'make install' without parallelization, because
-    # of a race that may cause the 'install' utility to fail when
-    # two instances concurrently create the same parent directories.
     ENV.deparallelize
     system "make", "install"
   end

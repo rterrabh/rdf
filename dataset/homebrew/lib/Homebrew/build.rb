@@ -1,5 +1,3 @@
-# This script is loaded by formula_installer as a separate instance.
-# Thrown exceptions are propagated back to the parent process over a pipe
 
 old_trap = trap("INT") { exit! 130 }
 
@@ -29,8 +27,6 @@ class Build
   end
 
   def post_superenv_hacks
-    # Only allow Homebrew-approved directories into the PATH, unless
-    # a formula opts-in to allowing the user's path.
     if formula.env.userpaths? || reqs.any? { |rq| rq.env.userpaths? }
       ENV.userpaths!
     end
@@ -131,7 +127,6 @@ class Build
         stdlibs = detect_stdlibs(ENV.compiler)
         Tab.create(formula, ENV.compiler, stdlibs.first, formula.build).write
 
-        # Find and link metafiles
         formula.prefix.install_metafiles Pathname.pwd
         formula.prefix.install_metafiles formula.libexec if formula.libexec.exist?
       end
@@ -142,9 +137,6 @@ class Build
     keg = Keg.new(formula.prefix)
     CxxStdlib.check_compatibility(formula, deps, keg, compiler)
 
-    # The stdlib recorded in the install receipt is used during dependency
-    # compatibility checks, so we only care about the stdlib that libraries
-    # link against.
     keg.detect_cxx_stdlibs(:skip_executables => true)
   end
 

@@ -1,4 +1,3 @@
-#NOTE add the person object you want to attach role to...
 
 class Role < ActiveRecord::Base
   belongs_to :person

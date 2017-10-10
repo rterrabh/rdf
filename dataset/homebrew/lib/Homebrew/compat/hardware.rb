@@ -1,13 +1,9 @@
 class Hardware
   class << self
-    # We won't change the name because of backward compatibility.
-    # So disable rubocop here.
     def is_32_bit? # rubocop:disable Style/PredicateName
       !CPU.is_64_bit?
     end
 
-    # We won't change the name because of backward compatibility.
-    # So disable rubocop here.
     def is_64_bit? # rubocop:disable Style/PredicateName
       CPU.is_64_bit?
     end

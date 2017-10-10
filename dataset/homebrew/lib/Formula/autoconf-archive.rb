@@ -11,7 +11,6 @@ class AutoconfArchive < Formula
     sha1 "5c2d27e4a970cdc0ef102e0404a5eb13cc1f0543" => :mountain_lion
   end
 
-  # autoconf-archive is useless without autoconf
   depends_on "autoconf" => :run
 
   def install
@@ -26,7 +25,6 @@ class AutoconfArchive < Formula
 
       m4_include([#{share}/aclocal/ax_have_select.m4])
 
-      # from http://www.gnu.org/software/autoconf-archive/ax_have_select.html
       AX_HAVE_SELECT(
         [AX_CONFIG_FEATURE_ENABLE(select)],
         [AX_CONFIG_FEATURE_DISABLE(select)])

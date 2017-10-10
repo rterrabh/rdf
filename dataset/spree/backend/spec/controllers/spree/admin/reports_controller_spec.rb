@@ -31,7 +31,7 @@ describe Spree::Admin::ReportsController, :type => :controller do
   end
 
   it 'should respond to model_class as Spree::AdminReportsController' do
-    #nodyna <ID:send-15> <SD EASY (private methods)>
+    #nodyna <send-2423> <SD EASY (private methods)>
     expect(controller.send(:model_class)).to eql(Spree::Admin::ReportsController)
   end
 

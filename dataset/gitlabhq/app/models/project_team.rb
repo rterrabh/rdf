@@ -5,12 +5,6 @@ class ProjectTeam
     @project = project
   end
 
-  # Shortcut to add users
-  #
-  # Use:
-  #   @team << [@user, :master]
-  #   @team << [@users, :master]
-  #
   def <<(args)
     users, access, current_user = *args
 
@@ -34,8 +28,6 @@ class ProjectTeam
   def find_member(user_id)
     member = project.project_members.find_by(user_id: user_id)
 
-    # If user is not in project members
-    # we should check for group membership
     if group && !member
       member = group.group_members.find_by(user_id: user_id)
     end
@@ -56,7 +48,6 @@ class ProjectTeam
     add_users([user], access, current_user)
   end
 
-  # Remove all users from project team
   def truncate
     ProjectMember.truncate_team(project)
   end
@@ -92,7 +83,6 @@ class ProjectTeam
     target_user_ids = target_project.project_members.pluck(:user_id)
 
     source_members.reject! do |member|
-      # Skip if user already present in team
       !member.invite? && target_user_ids.include?(member.user_id)
     end
 
@@ -153,9 +143,9 @@ class ProjectTeam
     group_members = group ? group.group_members : []
 
     if level
-      #nodyna <ID:send-93> <SD MODERATE (change-prone variables)>
+      #nodyna <send-507> <SD MODERATE (change-prone variables)>
       project_members = project_members.send(level)
-      #nodyna <ID:send-94> <SD MODERATE (change-prone variables)>
+      #nodyna <send-508> <SD MODERATE (change-prone variables)>
       group_members = group_members.send(level) if group
     end
 

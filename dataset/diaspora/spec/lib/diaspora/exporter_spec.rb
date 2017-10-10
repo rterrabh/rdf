@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 require 'spec_helper'
 require Rails.root.join('lib', 'diaspora', 'exporter')
@@ -63,7 +60,7 @@ describe Diaspora::Exporter do
     private
 
     def matches(*fields, to: nil, root: @user1)
-      #nodyna <ID:send-104> <SD MODERATE (change-prone variables)>
+      #nodyna <send-124> <SD MODERATE (change-prone variables)>
       expected = to || root.send(fields.last)
       expect(recurse_field(json, fields)).to eq expected
     end
@@ -71,7 +68,7 @@ describe Diaspora::Exporter do
     def matches_relation(relation, *fields, to: nil, root: @user1)
       array = json['user'][to || relation.to_s]
       fields.each do |field|
-        #nodyna <ID:send-105> <SD MODERATE (change-prone variables)>
+        #nodyna <send-125> <SD MODERATE (change-prone variables)>
         expected = root.send(relation).map(&:"#{field}")
         expect(array.map { |f| f[field.to_s] }).to eq expected
       end

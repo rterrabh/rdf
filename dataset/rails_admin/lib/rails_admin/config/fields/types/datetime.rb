@@ -6,7 +6,6 @@ module RailsAdmin
     module Fields
       module Types
         class Datetime < RailsAdmin::Config::Fields::Base
-          # Register field type for the type loader
           RailsAdmin::Config::Fields::Types.register(self)
 
           @format = :long
@@ -43,7 +42,6 @@ module RailsAdmin
               parse_date_string(date_string)
             end
 
-            # Parse normalized date strings using time zone
             def parse_date_string(date_string)
               ::Time.zone.parse(date_string)
             end
@@ -58,10 +56,7 @@ module RailsAdmin
             value.nil? ? '' : I18n.l(value, format: localized_time_format)
           end
 
-          # Ruby to javascript formatting options translator
           def js_date_format
-            # Ruby format options as a key and javascript format options
-            # as a value
             translations = {
               '%a' => 'D',          # The abbreviated weekday name ("Sun")
               '%A' => 'DD',         # The  full  weekday  name ("Sunday")
@@ -71,13 +66,8 @@ module RailsAdmin
               '%D' => 'mm/dd/y',    # American date format mm/dd/yy
               '%e' => 'd',          # Day of the month (1..31)
               '%F' => 'yy-mm-dd',   # ISO 8601 date format
-              # "%H" => "??",         # Hour of the day, 24-hour clock (00..23)
-              # "%I" => "??",         # Hour of the day, 12-hour clock (01..12)
               '%m' => 'mm',         # Month of the year (01..12)
               '%-m' => 'm',         # Month of the year (1..12)
-              # "%M" => "??",         # Minute of the hour (00..59)
-              # "%p" => "??",         # Meridian indicator ("AM" or "PM")
-              # "%S" => "??",         # Second of the minute (00..60)
               '%Y' => 'yy',         # Year with century
               '%y' => 'y',          # Year without a century (00..99)
             }

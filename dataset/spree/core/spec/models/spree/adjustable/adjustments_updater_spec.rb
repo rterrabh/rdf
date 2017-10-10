@@ -80,8 +80,6 @@ module Spree
           it "tax applies to line item" do
             subject.update
             line_item.reload
-            # Taxable amount is: $20 (base) - $10 (promotion) = $10
-            # Tax rate is 5% (of $10).
             expect(line_item.included_tax_total).to eq(0)
             expect(line_item.additional_tax_total).to eq(0.5)
             expect(line_item.promo_total).to eq(-10)
@@ -132,7 +130,6 @@ module Spree
         end
 
         it "should choose the most recent promotion adjustment when amounts are equal" do
-          # Using Timecop is a regression test
           Timecop.freeze do
             create_adjustment("Promotion A", -200)
             create_adjustment("Promotion B", -200)
@@ -183,12 +180,10 @@ module Spree
           let(:line_item_promos) { [line_item_promo1, line_item_promo2] }
           let(:order) { create(:order_with_line_items, line_items_count: 1) }
 
-          # Apply promotions in different sequences. Results should be the same.
           promo_sequences = [[0, 1], [1, 0]]
 
           promo_sequences.each do |promo_sequence|
             it "should pick the best order-level promo according to current eligibility" do
-              # apply both promos to the order, even though only promo1 is eligible
               order_promos[promo_sequence[0]].activate order: order
               order_promos[promo_sequence[1]].activate order: order
 
@@ -219,7 +214,6 @@ module Spree
 
           promo_sequences.each do |promo_sequence|
             it "should pick the best line-item-level promo according to current eligibility" do
-              # apply both promos to the order, even though only promo1 is eligible
               line_item_promos[promo_sequence[0]].activate order: order
               line_item_promos[promo_sequence[1]].activate order: order
 
@@ -230,8 +224,6 @@ module Spree
               msg = "Expected one elegible adjustment (using sequence #{promo_sequence})"
               expect(order.all_adjustments.eligible.count).to eq(1), msg
 
-              # line_item_promo1 is the only one that has thus far met the order total threshold,
-              # it is the only promo which should be applied.
               msg = "Expected line_item_promo1 to be used (using sequence #{promo_sequence})"
               expect(order.all_adjustments.first.source.promotion).to eq(line_item_promo1), msg
 
@@ -262,7 +254,6 @@ module Spree
             promo_c.update_column(:eligible, false)
           end
 
-          # regression for #3274
           it "still makes the previous best eligible adjustment valid" do
             subject.update
             expect(line_item.adjustments.promotion.eligible.first.label).to eq('Promotion A')

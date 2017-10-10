@@ -1,4 +1,3 @@
-# Load a specific server configuration
 module Gitlab
   module LDAP
     class Config
@@ -59,7 +58,6 @@ module Gitlab
         sync_ssh_keys.present?
       end
 
-      # The LDAP attribute in which the ssh keys are stored
       def sync_ssh_keys
         options['sync_ssh_keys']
       end

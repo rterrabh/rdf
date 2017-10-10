@@ -1,8 +1,3 @@
-# From: Jacques Distler <distler@golem.ph.utexas.edu>
-# You can always find the latest version by checking
-#    http://golem.ph.utexas.edu/~distler/code/itexToMML/view/head:/itex-src/itex2MML.h
-# The corresponding versioned archive is
-#    http://golem.ph.utexas.edu/~distler/blog/files/itexToMML-x.x.x.tar.gz
 
 class Itex2mml < Formula
   desc "Text filter to convert itex equations to MathML"

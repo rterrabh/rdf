@@ -13,12 +13,7 @@ require 'action_dispatch/routing/endpoint'
 
 module ActionDispatch
   module Routing
-    # :stopdoc:
     class RouteSet
-      # Since the router holds references to many parts of the system
-      # like engines, controllers and the application itself, inspecting
-      # the route set can actually be really slow, therefore we default
-      # alias inspect to to_s.
       alias inspect to_s
 
       mattr_accessor :relative_url_root
@@ -37,7 +32,6 @@ module ActionDispatch
 
           prepare_params!(params)
 
-          # Just raise undefined constant errors if a controller was specified as default.
           unless controller = controller(params, @defaults.key?(:controller))
             return [404, {'X-Cascade' => 'pass'}, []]
           end
@@ -50,12 +44,6 @@ module ActionDispatch
           merge_default_action!(params)
         end
 
-        # If this is a default_controller (i.e. a controller specified by the user)
-        # we should raise an error in case it's not found, because it usually means
-        # a user error. However, if the controller was retrieved through a dynamic
-        # segment, as in :controller(/:action), we should simply return nil and
-        # delegate the control back to Rack cascade. Besides, if this is not a default
-        # controller, it means we should respect the @scope[:module] parameter.
         def controller(params, default_controller=true)
           if params && params.key?(:controller)
             controller_param = params[:controller]
@@ -85,9 +73,6 @@ module ActionDispatch
         end
       end
 
-      # A NamedRouteCollection instance is a collection of named routes, and also
-      # maintains an anonymous module that can be used to install helpers for the
-      # named routes.
       class NamedRouteCollection
         include Enumerable
         attr_reader :routes, :url_helpers_module
@@ -119,12 +104,12 @@ module ActionDispatch
 
         def clear!
           @path_helpers.each do |helper|
-            #nodyna <ID:send-77> <SD COMPLEX (private methods)>
+            #nodyna <send-1254> <SD COMPLEX (private methods)>
             @path_helpers_module.send :undef_method, helper
           end
 
           @url_helpers.each do |helper|
-            #nodyna <ID:send-78> <SD COMPLEX (private methods)>
+            #nodyna <send-1255> <SD COMPLEX (private methods)>
             @url_helpers_module.send  :undef_method, helper
           end
 
@@ -139,9 +124,9 @@ module ActionDispatch
           url_name  = :"#{name}_url"
 
           if routes.key? key
-            #nodyna <ID:send-79> <SD COMPLEX (private methods)>
+            #nodyna <send-1256> <SD COMPLEX (private methods)>
             @path_helpers_module.send :undef_method, path_name
-            #nodyna <ID:send-80> <SD COMPLEX (private methods)>
+            #nodyna <send-1257> <SD COMPLEX (private methods)>
             @url_helpers_module.send  :undef_method, url_name
           end
           routes[key] = route
@@ -185,7 +170,7 @@ module ActionDispatch
               include mod
 
               helpers.each do |meth|
-                #nodyna <ID:define_method-12> <DM COMPLEX (array)>
+                #nodyna <define_method-1258> <DM COMPLEX (array)>
                 define_method(meth) do |*args, &block|
                   ActiveSupport::Deprecation.warn("The method `#{meth}` cannot be used here as a full URL is required. Use `#{meth.to_s.sub(/_path$/, '_url')}` instead")
                   super(*args, &block)
@@ -245,7 +230,7 @@ module ActionDispatch
             end
 
             def optimize_routes_generation?(t)
-              #nodyna <ID:send-81> <SD EASY (private methods)>
+              #nodyna <send-1259> <SD EASY (private methods)>
               t.send(:optimize_routes_generation?)
             end
 
@@ -290,7 +275,6 @@ module ActionDispatch
 
           def handle_positional_args(controller_options, inner_options, args, result, path_params)
             if args.size > 0
-              # take format into account
               if path_params.include?(:format)
                 path_params_size = path_params.size - 1
               else
@@ -331,23 +315,11 @@ module ActionDispatch
         end
 
         private
-        # Create a url helper allowing ordered parameters to be associated
-        # with corresponding dynamic segments, so you can do:
-        #
-        #   foo_url(bar, baz, bang)
-        #
-        # Instead of:
-        #
-        #   foo_url(bar: bar, baz: baz, bang: bang)
-        #
-        # Also allow options hash, so you can do:
-        #
-        #   foo_url(bar, baz, bang, sort_by: 'baz')
-        #
         def define_url_helper(mod, route, name, opts, route_key, url_strategy)
           helper = UrlHelper.create(route, opts, route_key, url_strategy)
+          #nodyna <module_eval-1260> <not yet classified>
           mod.module_eval do
-            #nodyna <ID:define_method-13> <DM COMPLEX (events)>
+            #nodyna <define_method-1261> <DM COMPLEX (events)>
             define_method(name) do |*args|
               options = nil
               options = args.pop if args.last.is_a? Hash
@@ -357,7 +329,6 @@ module ActionDispatch
         end
       end
 
-      # strategy for building urls to send to the client
       PATH    = ->(options) { ActionDispatch::Http::URL.path_for(options) }
       FULL    = ->(options) { ActionDispatch::Http::URL.full_url_for(options) }
       UNKNOWN = ->(options) { ActionDispatch::Http::URL.url_for(options) }
@@ -438,7 +409,7 @@ module ActionDispatch
         if default_scope
           mapper.with_default_scope(default_scope, &block)
         else
-          #nodyna <ID:instance_exec-4> <IEX COMPLEX (block without parameters)>
+          #nodyna <instance_exec-1262> <IEX COMPLEX (block without parameters)>
           mapper.instance_exec(&block)
         end
       end
@@ -467,10 +438,6 @@ module ActionDispatch
         include UrlFor
       end
 
-      # Contains all the mounted helpers across different
-      # engines and the `main_app` helper for the application.
-      # You can include this in your classes if you want to
-      # access routes for other engines.
       def mounted_helpers
         MountedHelpers
       end
@@ -479,13 +446,15 @@ module ActionDispatch
         return if MountedHelpers.method_defined?(name)
 
         routes = self
+        #nodyna <class_eval-1263> <not yet classified>
         MountedHelpers.class_eval do
-          #nodyna <ID:define_method-14> <DM COMPLEX (events)>
+          #nodyna <define_method-1264> <DM COMPLEX (events)>
           define_method "_#{name}" do
             RoutesProxy.new(routes, _routes_context)
           end
         end
 
+        #nodyna <class_eval-1265> <not yet classified>
         MountedHelpers.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           def #{name}
             @_#{name} ||= _#{name}
@@ -508,8 +477,6 @@ module ActionDispatch
           extend ActiveSupport::Concern
           include UrlFor
 
-          # Define url_for in the singleton level so one can do:
-          # Rails.application.routes.url_helpers.url_for(args)
           @_routes = routes
           class << self
             delegate :url_for, :optimize_routes_generation?, to: '@_routes'
@@ -519,13 +486,8 @@ module ActionDispatch
 
           url_helpers = routes.named_routes.url_helpers_module
 
-          # Make named_routes available in the module singleton
-          # as well, so one can do:
-          # Rails.application.routes.url_helpers.posts_path
           extend url_helpers
 
-          # Any class that includes this module will get all
-          # named routes...
           include url_helpers
 
           if supports_path
@@ -537,19 +499,15 @@ module ActionDispatch
           include path_helpers
           extend path_helpers
 
-          # plus a singleton class method called _routes ...
           included do
-            #nodyna <ID:send-82> <SD COMPLEX (private methods)>
+            #nodyna <send-1266> <SD COMPLEX (private methods)>
             singleton_class.send(:redefine_method, :_routes) { routes }
           end
 
-          # And an instance method _routes. Note that
-          # UrlFor (included in this module) add extra
-          # conveniences for working with @_routes.
-          #nodyna <ID:define_method-15> <DM MODERATE (events)>
+          #nodyna <define_method-1267> <DM MODERATE (events)>
           define_method(:_routes) { @_routes || routes }
 
-          #nodyna <ID:define_method-16> <DM MODERATE (events)>
+          #nodyna <define_method-1268> <DM MODERATE (events)>
           define_method(:_generate_paths_by_default) do
             supports_path
           end
@@ -595,13 +553,10 @@ module ActionDispatch
 
         builder = Journey::GTG::Builder.new pattern.spec
 
-        # Get all the symbol nodes followed by literals that are not the
-        # dummy node.
         symbols = pattern.spec.grep(Journey::Nodes::Symbol).find_all { |n|
           builder.followpos(n).first.literal?
         }
 
-        # Get all the symbol nodes preceded by literals.
         symbols.concat pattern.spec.find_all(&:literal?).map { |n|
           builder.followpos(n).first
         }.find_all(&:symbol?)
@@ -617,10 +572,6 @@ module ActionDispatch
       def build_conditions(current_conditions, path_values)
         conditions = current_conditions.dup
 
-        # Rack-Mount requires that :request_method be a regular expression.
-        # :request_method represents the HTTP verb that matches this route.
-        #
-        # Here we munge values before they get sent on to rack-mount.
         verbs = conditions[:request_method] || []
         unless verbs.empty?
           conditions[:request_method] = %r[^#{verbs.join('|')}$]
@@ -676,20 +627,11 @@ module ActionDispatch
           end
         end
 
-        # Set 'index' as default action for recall
         def normalize_recall!
           @recall[:action] ||= 'index'
         end
 
         def normalize_options!
-          # If an explicit :controller was given, always make :action explicit
-          # too, so that action expiry works as expected for things like
-          #
-          #   generate({controller: 'content'}, {controller: 'content', action: 'show'})
-          #
-          # (the above is from the unit tests). In the above case, because the
-          # controller was explicitly given, but no action, the action is implied to
-          # be "index", not the recalled action of "show".
 
           if options[:controller]
             options[:action]     ||= 'index'
@@ -701,19 +643,12 @@ module ActionDispatch
           end
         end
 
-        # This pulls :controller, :action, and :id out of the recall.
-        # The recall key is only used if there is no key in the options
-        # or if the key in the options is identical. If any of
-        # :controller, :action or :id is not found, don't pull any
-        # more keys from the recall.
         def normalize_controller_action_id!
           use_recall_for(:controller) or return
           use_recall_for(:action) or return
           use_recall_for(:id)
         end
 
-        # if the current controller is "foo/bar/baz" and controller: "baz/bat"
-        # is specified, the controller becomes "foo/baz/bat"
         def use_relative_controller!
           if !named_route && different_controller? && !controller.start_with?("/")
             old_parts = current_controller.split('/')
@@ -723,20 +658,16 @@ module ActionDispatch
           end
         end
 
-        # Remove leading slashes from controllers
         def normalize_controller!
           @options[:controller] = controller.sub(%r{^/}, '') if controller
         end
 
-        # Move 'index' action from options to recall
         def normalize_action!
           if @options[:action] == 'index'
             @recall[:action] = @options.delete(:action)
           end
         end
 
-        # Generates a path from routes, returns [path, params].
-        # If no route is generated the formatter will raise ActionController::UrlGenerationError
         def generate
           @set.formatter.generate(named_route, options, recall, PARAMETERIZE)
         end
@@ -756,8 +687,6 @@ module ActionDispatch
           end
       end
 
-      # Generate the path indicated by the arguments, and return an array of
-      # the keys that were not used to generate it.
       def extra_keys(options, recall={})
         generate_extras(options, recall).last
       end
@@ -789,7 +718,6 @@ module ActionDispatch
         url_for(options, route_name, PATH)
       end
 
-      # The +options+ argument must be a hash whose keys are *symbols*.
       def url_for(options, route_name = nil, url_strategy = UNKNOWN)
         options = default_url_options.merge options
 
@@ -871,6 +799,5 @@ module ActionDispatch
         raise ActionController::RoutingError, "No route matches #{path.inspect}"
       end
     end
-    # :startdoc:
   end
 end

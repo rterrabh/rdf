@@ -1,9 +1,3 @@
-# == Issuable concern
-#
-# Contains common functionality shared between Issues and MergeRequests
-#
-# Used by Issue, MergeRequest
-#
 module Issuable
   extend ActiveSupport::Concern
   include Mentionable
@@ -85,11 +79,7 @@ module Issuable
     assignee_id_changed?
   end
 
-  #
-  # Votes
-  #
 
-  # Return the number of -1 comments (downvotes)
   def downvotes
     filter_superceded_votes(notes.select(&:downvote?), notes).size
   end
@@ -102,7 +92,6 @@ module Issuable
     end
   end
 
-  # Return the number of +1 comments (upvotes)
   def upvotes
     filter_superceded_votes(notes.select(&:upvote?), notes).size
   end
@@ -115,7 +104,6 @@ module Issuable
     end
   end
 
-  # Return the total number of votes
   def votes_count
     upvotes + downvotes
   end
@@ -160,12 +148,6 @@ module Issuable
     end
   end
 
-  # Convert this Issuable class name to a format usable by Ability definitions
-  #
-  # Examples:
-  #
-  #   issuable.class           # => MergeRequest
-  #   issuable.to_ability_name # => "merge_request"
   def to_ability_name
     self.class.to_s.underscore
   end

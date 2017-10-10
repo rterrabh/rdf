@@ -8,7 +8,6 @@ class Discodex < Formula
   depends_on "disco"
 
   def install
-    # The make target only installs python libs; must manually install the rest
     system "make", "install", "prefix=#{prefix}"
     prefix.install(%w[bin doc])
   end

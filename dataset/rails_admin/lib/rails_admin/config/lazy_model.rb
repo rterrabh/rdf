@@ -11,14 +11,14 @@ module RailsAdmin
       def target
         unless @model
           @model = RailsAdmin::Config::Model.new(@entity)
-          #nodyna <ID:instance_eval-12> <IEV COMPLEX (block execution)>
+          #nodyna <instance_eval-1385> <IEV COMPLEX (block execution)>
           @model.instance_eval(&@deferred_block) if @deferred_block
         end
         @model
       end
 
       def method_missing(method, *args, &block)
-        #nodyna <ID:send-36> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1386> <SD COMPLEX (change-prone variables)>
         target.send(method, *args, &block)
       end
 

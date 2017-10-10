@@ -1,13 +1,10 @@
 require 'will_paginate/array'
 
-# Optional for Bootstrap :renderer => WillPaginate::ActionView::BootstrapLinkRenderer
-# https://github.com/yrgoldteeth/bootstrap-will_paginate
 
 module WillPaginate
   module ActionView
     def will_paginate(collection = nil, options = {} )
       options, collection = collection, nil if collection.is_a? Hash
-      # Taken from original will_paginate code to handle if the helper is not passed a collection object.
       collection ||= infer_collection_from_controller
       options[:renderer] ||= WillPaginate::ActionView::LinkRenderer
       super.try :html_safe

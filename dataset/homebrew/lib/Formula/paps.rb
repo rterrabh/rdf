@@ -11,7 +11,6 @@ class Paps < Formula
   depends_on "glib"
   depends_on "gettext"
 
-  # Find freetype headers
   patch :DATA
 
   def install
@@ -22,7 +21,6 @@ class Paps < Formula
   end
 
   test do
-    # http://paps.sourceforge.net/small-hello.utf8
     utf8 = <<-EOS
 paps by Dov Grobgeld (דב גרובגלד)
 Printing through Παν語 (Pango)
@@ -46,14 +44,9 @@ index 6081d0d..d502b68 100644
 +++ b/src/libpaps.c
 @@ -25,8 +25,10 @@
  
- #include <pango/pango.h>
- #include <pango/pangoft2.h>
 -#include <freetype/ftglyph.h>
 -#include <freetype/ftoutln.h>
 +#include <ft2build.h>
 +#include FT_FREETYPE_H
 +#include FT_GLYPH_H
 +#include FT_OUTLINE_H
- #include <errno.h>
- #include <stdlib.h>
- #include <stdio.h>

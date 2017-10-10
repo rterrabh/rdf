@@ -1,10 +1,8 @@
-# coding: UTF-8
 
 require 'spec_helper'
 
 module ThirdParty
   class Extension < Spree::Base
-    # nasty hack so we don't have to create a table to back this fake model
     self.table_name = 'spree_products'
   end
 end
@@ -101,7 +99,6 @@ describe Spree::Product, :type => :model do
     end
 
     context "#price" do
-      # Regression test for #1173
       it 'strips non-price characters' do
         product.price = "$10"
         expect(product.price).to eq(10.0)
@@ -183,7 +180,6 @@ describe Spree::Product, :type => :model do
       end
     end
 
-    # Regression test for #3737
     context "has stock items" do
       it "can retrieve stock items" do
         expect(product.master.stock_items.first).not_to be_nil
@@ -298,7 +294,6 @@ describe Spree::Product, :type => :model do
       }.to change { product.properties.length }.by(1)
     end
 
-    # Regression test for #2455
     it "should not overwrite properties' presentation names" do
       Spree::Property.where(:name => 'foo').first_or_create!(:presentation => "Foo's Presentation Name")
       product.set_property('foo', 'value1')
@@ -307,7 +302,6 @@ describe Spree::Product, :type => :model do
       expect(Spree::Property.where(:name => 'bar').first.presentation).to eq("bar")
     end
 
-    # Regression test for #4416
     context "#possible_promotions" do
       let!(:promotion) do
         create(:promotion, advertise: true, starts_at: 1.day.ago)
@@ -420,7 +414,6 @@ describe Spree::Product, :type => :model do
     end
   end
 
-  # Regression tests for #2352
   context "classifications and taxons" do
     it "is joined through classifications" do
       reflection = Spree::Product.reflect_on_association(:taxons)
@@ -458,7 +451,6 @@ describe Spree::Product, :type => :model do
     end
   end
 
-  # Regression spec for https://github.com/spree/spree/issues/5588
   context '#validate_master when duplicate SKUs entered' do
     let!(:first_product) { create(:product, sku: 'a-sku') }
     let(:second_product) { build(:product, sku: 'a-sku') }

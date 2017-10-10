@@ -1,7 +1,3 @@
-#
-#   tk/virtevent.rb : treats virtual events
-#                     1998/07/16 by Hidetoshi Nagai <nagai@ai.kyutech.ac.jp>
-#
 require 'tk'
 
 class TkVirtualEvent<TkObject
@@ -9,7 +5,7 @@ class TkVirtualEvent<TkObject
 
   TkCommandNames = ['event'.freeze].freeze
 
-  #nodyna <ID:instance_eval-52> <IEV MODERATE (method definition)>
+  #nodyna <instance_eval-1885> <IEV MODERATE (method definition)>
   (TkVirtualEventID = ["VirtEvent".freeze, TkUtil.untrust("00000")]).instance_eval{
     @mutex = Mutex.new
     def mutex; @mutex; end
@@ -33,8 +29,7 @@ class TkVirtualEvent<TkObject
         if TkVirtualEvent::TkVirtualEventTBL.has_key?(event)
           TkVirtualEvent::TkVirtualEventTBL[event]
         else
-          # super(event, *sequences)
-          #nodyna <ID:instance_eval-53> <IEV MODERATE (private access)>
+          #nodyna <instance_eval-1886> <IEV MODERATE (private access)>
           (obj = self.allocate).instance_eval{
             initialize(event, *sequences)
             TkVirtualEvent::TkVirtualEventTBL[@id] = self
@@ -73,7 +68,6 @@ class TkVirtualEvent<TkObject
 
   def initialize(*sequences)
     TkVirtualEventID.mutex.synchronize{
-      # @path = @id = '<' + TkVirtualEventID.join('') + '>'
       @path = @id = '<' + TkVirtualEventID.join(TkCore::INTERP._ip_id_) + '>'
       TkVirtualEventID[1].succ!
     }

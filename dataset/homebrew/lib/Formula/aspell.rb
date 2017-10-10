@@ -666,7 +666,6 @@ class Aspell < Formula
     resources.map(&:name)
   end
 
-  # const problems with llvm: http://www.freebsd.org/cgi/query-pr.cgi?pr=180565&cat=
   patch :DATA
 
   def install

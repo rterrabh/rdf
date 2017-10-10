@@ -1,16 +1,6 @@
 module Paperclip
   module Shoulda
     module Matchers
-      # Ensures that the given instance or class validates the size of the
-      # given attachment as specified.
-      #
-      # Examples:
-      #   it { should validate_attachment_size(:avatar).
-      #                 less_than(2.megabytes) }
-      #   it { should validate_attachment_size(:icon).
-      #                 greater_than(1024) }
-      #   it { should validate_attachment_size(:icon).
-      #                 in(0..100) }
       def validate_attachment_size name
         ValidateAttachmentSizeMatcher.new(name)
       end
@@ -57,8 +47,9 @@ module Paperclip
         protected
 
         def override_method object, method, &replacement
+          #nodyna <class_eval-681> <not yet classified>
           (class << object; self; end).class_eval do
-            #nodyna <ID:define_method-1> <DM MODERATE (events)>
+            #nodyna <define_method-682> <DM MODERATE (events)>
             define_method(method, &replacement)
           end
         end
@@ -68,14 +59,14 @@ module Paperclip
           override_method(file, :size){ new_size }
           override_method(file, :to_tempfile){ file }
 
-          #nodyna <ID:send-6> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-683> <SD COMPLEX (change-prone variables)>
           @subject.send(@attachment_name).post_processing = false
-          #nodyna <ID:send-7> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-684> <SD COMPLEX (change-prone variables)>
           @subject.send(@attachment_name).assign(file)
           @subject.valid?
           @subject.errors[:"#{@attachment_name}_file_size"].blank?
         ensure
-          #nodyna <ID:send-8> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-685> <SD COMPLEX (change-prone variables)>
           @subject.send(@attachment_name).post_processing = true
         end
 

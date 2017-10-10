@@ -10,9 +10,6 @@ class Osm2pgrouting < Formula
   depends_on :postgresql
 
   def install
-    # Fixes the default hard-coded /usr/share which the program would be installed in.
-    # Instead we supply relative paths, and run cmake with flag -DCMAKE_INSTALL_PREFIX=#{prefix} so that
-    # we get a proper path inside prefix.
     inreplace "CMakeLists.txt" do |s|
       s.gsub! "/usr/share/osm2pgrouting", "."
       s.gsub! "/usr/share/bin", "bin"

@@ -45,10 +45,7 @@ module ActiveRecord
         private
 
         def inherited(subclass)
-          # We need to apply this decorator here, rather than on module inclusion. The closure
-          # created by the matcher would otherwise evaluate for `ActiveRecord::Base`, not the
-          # sub class being decorated. As such, changes to `time_zone_aware_attributes`, or
-          # `skip_time_zone_conversion_for_attributes` would not be picked up.
+          #nodyna <class_eval-756> <not yet classified>
           subclass.class_eval do
             matcher = ->(name, type) { create_time_zone_conversion_attribute?(name, type) }
             decorate_matching_attribute_types(matcher, :_time_zone_conversion) do |type|

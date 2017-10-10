@@ -24,7 +24,6 @@ class Gconf < Formula
                           "--sysconfdir=#{etc}"
     system "make", "install"
 
-    # Refresh the cache post-install, not during install.
     rm lib/"gio/modules/giomodule.cache"
   end
 

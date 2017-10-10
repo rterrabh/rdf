@@ -27,8 +27,6 @@ class Nettle < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <nettle/sha1.h>
-      #include <stdio.h>
 
       int main()
       {

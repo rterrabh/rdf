@@ -33,7 +33,6 @@ describe Spree::InventoryUnit, :type => :model do
       stock_item.set_count_on_hand(-2)
     end
 
-    # Regression for #3066
     it "returns modifiable objects" do
       units = Spree::InventoryUnit.backordered_for_stock_item(stock_item)
       expect { units.first.save! }.to_not raise_error
@@ -81,7 +80,6 @@ describe Spree::InventoryUnit, :type => :model do
         shipment.stock_location = stock_location
         shipment.shipping_methods << create(:shipping_method)
         shipment.order = other_order
-        # We don't care about this in this test
         allow(shipment).to receive(:ensure_correct_adjustment)
         shipment.tap(&:save!)
       end

@@ -18,10 +18,6 @@ class Gtksourceview < Formula
   depends_on "gtk+"
   depends_on "gtk-mac-integration"
 
-  # patches added the ensure that gtk-mac-integration is supported properly instead
-  # of the old released called ige-mac-integration.
-  # These are already integrated upstream in their gnome-2-30 branch but a release of
-  # this remains highly unlikely
   patch :DATA
 
   def install
@@ -32,7 +28,6 @@ class Gtksourceview < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <gtksourceview/gtksourceview.h>
 
       int main(int argc, char *argv[]) {
         GtkWidget *widget = gtk_source_view_new();
@@ -140,7 +135,6 @@ index ed522e5..5f51d4f 100755
 -	        IGE_MAC_PKG_ERRORS=`$PKG_CONFIG --print-errors "ige-mac-integration" 2>&1`
 +	        IGE_MAC_PKG_ERRORS=`$PKG_CONFIG --print-errors "gtk-mac-integration-gtk2" 2>&1`
          fi
-	# Put the nasty error message in config.log where it belongs
 	echo "$IGE_MAC_PKG_ERRORS" >&5
 
 -	as_fn_error $? "Package requirements (ige-mac-integration) were not met:
@@ -153,18 +147,13 @@ index e4db3eb..70f8f2c 100644
 --- a/gtksourceview/gtksourceview-i18n.c
 +++ b/gtksourceview/gtksourceview-i18n.c
 @@ -24,7 +24,7 @@
- #endif
 
- #ifdef OS_OSX
 -#include <ige-mac-bundle.h>
 +#include <gtkosxapplication.h>
- #endif
 
- #include <string.h>
 @@ -45,12 +45,10 @@ get_locale_dir (void)
 
 	g_free (win32_dir);
- #elif defined (OS_OSX)
 -	IgeMacBundle *bundle = ige_mac_bundle_get_default ();
 -
 -	if (ige_mac_bundle_get_is_app_bundle (bundle))

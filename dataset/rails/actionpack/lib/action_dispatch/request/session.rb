@@ -2,12 +2,10 @@ require 'rack/session/abstract/id'
 
 module ActionDispatch
   class Request < Rack::Request
-    # Session is responsible for lazily loading the session from store.
     class Session # :nodoc:
       ENV_SESSION_KEY         = Rack::Session::Abstract::ENV_SESSION_KEY # :nodoc:
       ENV_SESSION_OPTIONS_KEY = Rack::Session::Abstract::ENV_SESSION_OPTIONS_KEY # :nodoc:
 
-      # Singleton object used to determine if an optional param wasn't specified
       Unspecified = Object.new
 
       def self.create(store, env, default_options)
@@ -46,7 +44,7 @@ module ActionDispatch
         def [](key)
           if key == :id
             @delegate.fetch(key) {
-              #nodyna <ID:send-103> <SD EASY (private methods)>
+              #nodyna <send-1244> <SD EASY (private methods)>
               @delegate[:id] = @by.send(:extract_session_id, @env)
             }
           else
@@ -78,11 +76,10 @@ module ActionDispatch
       def destroy
         clear
         options = self.options || {}
-        #nodyna <ID:send-104> <SD TRIVIAL (public methods)>
+        #nodyna <send-1245> <SD TRIVIAL (public methods)>
         new_sid = @by.send(:destroy_session, @env, options[:id], options)
         options[:id] = new_sid # Reset session id with a new value or nil
 
-        # Load the new sid to be written with the response
         @loaded = false
         load_for_write!
       end
@@ -151,7 +148,7 @@ module ActionDispatch
 
       def exists?
         return @exists unless @exists.nil?
-        #nodyna <ID:send-105> <SD EASY (private methods)>
+        #nodyna <send-1246> <SD EASY (private methods)>
         @exists = @by.send(:session_exists?, @env)
       end
 

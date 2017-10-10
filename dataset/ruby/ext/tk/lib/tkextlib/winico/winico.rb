@@ -1,18 +1,10 @@
-#
-#  tkextlib/winico/winico.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/winico/setup.rb'
 
-# TkPackage.require('winico', '0.5')
-# TkPackage.require('winico', '0.6')
 TkPackage.require('winico')
 
 module Tk
@@ -58,7 +50,6 @@ class Tk::Winico
     }
   end
 
-  #################################
 
   def self.new_from_file(file_name)
     self.new(file_name)
@@ -70,14 +61,12 @@ class Tk::Winico
 
   def initialize(file_name, resource_name=nil, winico_id=nil)
     if resource_name
-      # from resource
       if file_name
         @id = Tk.tk_call('winico', 'load', resource_name, file_name)
       else
         @id = Tk.tk_call('winico', 'load', resource_name)
       end
     elsif file_name
-      # from .ico file
       @id = Tk.tk_call('winico', 'createfrom', file_name)
     elsif winico_id
       @id = winico_id
@@ -96,8 +85,6 @@ class Tk::Winico
   end
 
   def set_window(win_id, *opts) # opts := ?'big'|'small'?, ?pos?
-    # NOTE:: the window, which is denoted by win_id, MUST BE MAPPED.
-    #        If not, then this may fail or crash.
     tk_call('winico', 'setwindow', win_id, @id, *opts)
   end
 
@@ -114,7 +101,6 @@ class Tk::Winico
     Tk::Winico.icon_info(@id)
   end
 
-  #################################
 
   class Winico_callback < TkValidateCommand
     class ValidateArgs < TkUtil::CallbackSubst
@@ -139,9 +125,8 @@ class Tk::Winico
               if Tk::Winico::WinicoID_TBL.key?(id)
                 obj = Tk::Winico::WinicoID_TBL[id]
               else
-                # Tk::Winico.new(nil, nil, id)
                 obj = Tk::Winico.allocate
-                #nodyna <ID:instance_eval-105> <IEV MODERATE (private access)>
+                #nodyna <instance_eval-1639> <IEV MODERATE (private access)>
                 obj.instance_eval{ @path = @id = id }
                 Tk::Winico::WinicoID_TBL[id] = obj
               end
@@ -152,7 +137,6 @@ class Tk::Winico
       ]
 
 =begin
-      # for Ruby m17n :: ?x --> String --> char-code ( getbyte(0) )
       KEY_TBL.map!{|inf|
         if inf.kind_of?(Array)
           inf[0] = inf[0].getbyte(0) if inf[0].kind_of?(String)
@@ -181,16 +165,13 @@ class Tk::Winico
     end
   end
 
-  #################################
 
   def add_to_taskbar(keys = {})
     keys = _symbolkey2str(keys)
     Winico_callback._config_keys.each{|k|
       if keys[k].kind_of?(Array)
         cmd, *args = keys[k]
-        #keys[k] = Winico_callback.new(cmd, args.join(' '))
         keys[k] = Winico_callback.new(cmd, *args)
-       # elsif keys[k].kind_of?(Proc)
       elsif TkComm._callback_entry?(keys[k])
         keys[k] = Winico_callback.new(keys[k])
       end
@@ -205,9 +186,7 @@ class Tk::Winico
     Winico_callback._config_keys.each{|k|
       if keys[k].kind_of?(Array)
         cmd, *args = keys[k]
-        #keys[k] = Winico_callback.new(cmd, args.join(' '))
         keys[k] = Winico_callback.new(cmd, *args)
-      # elsif keys[k].kind_of?(Proc)
       elsif TkComm._callback_entry?(keys[k])
         keys[k] = Winico_callback.new(keys[k])
       end

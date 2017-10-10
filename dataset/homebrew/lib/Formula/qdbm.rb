@@ -24,13 +24,7 @@ class Qdbm < Formula
 
   test do
     (testpath/"test.c").write <<-EOS.undent
-      #include <depot.h>
-      #include <stdlib.h>
-      #include <stdio.h>
 
-      #define NAME     "mike"
-      #define NUMBER   "00-12-34-56"
-      #define DBNAME   "book"
 
       int main(void) {
         DEPOT *depot;

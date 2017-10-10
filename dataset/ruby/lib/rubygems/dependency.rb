@@ -1,38 +1,20 @@
-##
-# The Dependency class holds a Gem name and a Gem::Requirement.
 
 require "rubygems/requirement"
 
 class Gem::Dependency
 
-  ##
-  # Valid dependency types.
-  #--
-  # When this list is updated, be sure to change
-  # Gem::Specification::CURRENT_SPECIFICATION_VERSION as well.
-  #
-  # REFACTOR: This type of constant, TYPES, indicates we might want
-  # two classes, used via inheritance or duck typing.
 
   TYPES = [
     :development,
     :runtime,
   ]
 
-  ##
-  # Dependency name or regular expression.
 
   attr_accessor :name
 
-  ##
-  # Allows you to force this dependency to be a prerelease.
 
   attr_writer :prerelease
 
-  ##
-  # Constructs a dependency with +name+ and +requirements+. The last
-  # argument can optionally be the dependency type, which defaults to
-  # <tt>:runtime</tt>.
 
   def initialize name, *requirements
     case name
@@ -59,15 +41,10 @@ class Gem::Dependency
     @type        = type
     @prerelease  = false
 
-    # This is for Marshal backwards compatibility. See the comments in
-    # +requirement+ for the dirty details.
 
     @version_requirements = @requirement
   end
 
-  ##
-  # A dependency's hash is the XOR of the hashes of +name+, +type+,
-  # and +requirement+.
 
   def hash # :nodoc:
     name.hash ^ type.hash ^ requirement.hash
@@ -83,16 +60,11 @@ class Gem::Dependency
     end
   end
 
-  ##
-  # Does this dependency require a prerelease?
 
   def prerelease?
     @prerelease || requirement.prerelease?
   end
 
-  ##
-  # Is this dependency simply asking for the latest version
-  # of a gem?
 
   def latest_version?
     @requirement.none?
@@ -113,30 +85,14 @@ class Gem::Dependency
     end
   end
 
-  ##
-  # What does this dependency require?
 
   def requirement
     return @requirement if defined?(@requirement) and @requirement
 
-    # @version_requirements and @version_requirement are legacy ivar
-    # names, and supported here because older gems need to keep
-    # working and Dependency doesn't implement marshal_dump and
-    # marshal_load. In a happier world, this would be an
-    # attr_accessor. The horrifying instance_variable_get you see
-    # below is also the legacy of some old restructurings.
-    #
-    # Note also that because of backwards compatibility (loading new
-    # gems in an old RubyGems installation), we can't add explicit
-    # marshaling to this class until we want to make a big
-    # break. Maybe 2.0.
-    #
-    # Children, define explicit marshal and unmarshal behavior for
-    # public classes. Marshal formats are part of your public API.
 
-    # REFACTOR: See above
 
     if defined?(@version_requirement) && @version_requirement
+      #nodyna <instance_variable_get-2247> <not yet classified>
       version = @version_requirement.instance_variable_get :@version
       @version_requirement  = nil
       @version_requirements = Gem::Requirement.new version
@@ -157,8 +113,6 @@ class Gem::Dependency
     end
   end
 
-  ##
-  # Dependency type.
 
   def type
     @type ||= :runtime
@@ -171,18 +125,11 @@ class Gem::Dependency
       self.requirement == other.requirement
   end
 
-  ##
-  # Dependencies are ordered by name.
 
   def <=> other
     self.name <=> other.name
   end
 
-  ##
-  # Uses this dependency as a pattern to compare to +other+. This
-  # dependency will match if the name matches the other's name, and
-  # other has only an equal version requirement that satisfies this
-  # dependency.
 
   def =~ other
     unless Gem::Dependency === other
@@ -204,17 +151,6 @@ class Gem::Dependency
 
   alias === =~
 
-  ##
-  # :call-seq:
-  #   dep.match? name          => true or false
-  #   dep.match? name, version => true or false
-  #   dep.match? spec          => true or false
-  #
-  # Does this dependency match the specification described by +name+ and
-  # +version+ or match +spec+?
-  #
-  # NOTE:  Unlike #matches_spec? this method does not return true when the
-  # version is a prerelease version unless this is a prerelease dependency.
 
   def match? obj, version=nil, allow_prerelease=false
     if !version
@@ -236,12 +172,6 @@ class Gem::Dependency
     requirement.satisfied_by? version
   end
 
-  ##
-  # Does this dependency match +spec+?
-  #
-  # NOTE:  This is not a convenience method.  Unlike #match? this method
-  # returns true when +spec+ is a prerelease version even if this dependency
-  # is not a prerelease dependency.
 
   def matches_spec? spec
     return false unless name === spec.name
@@ -250,8 +180,6 @@ class Gem::Dependency
     requirement.satisfied_by?(spec.version)
   end
 
-  ##
-  # Merges the requirements of +other+ into this dependency
 
   def merge other
     unless name == other.name then
@@ -284,8 +212,6 @@ class Gem::Dependency
     matches.sort_by { |s| s.sort_obj } # HACK: shouldn't be needed
   end
 
-  ##
-  # True if the dependency will not always match the latest version.
 
   def specific?
     @requirement.specific?
@@ -294,7 +220,6 @@ class Gem::Dependency
   def to_specs
     matches = matching_specs true
 
-    # TODO: check Gem.activated_spec[self.name] in case matches falls outside
 
     if matches.empty? then
       specs = Gem::Specification.find_all { |s|
@@ -315,7 +240,6 @@ class Gem::Dependency
       raise error
     end
 
-    # TODO: any other resolver validations should go here
 
     matches
   end

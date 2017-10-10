@@ -14,7 +14,6 @@ class GoogleSparsehash < Formula
   option :cxx11
   option "without-check", "Skip build-time tests (not recommended)"
 
-  # Patch from upstream issue: https://code.google.com/p/sparsehash/issues/detail?id=99
   patch do
     url "https://gist.githubusercontent.com/jacknagel/3314c8cc67032a912f8b/raw/387b44a3b46e7b68876dbcb3c6595d700fa08a3c/sparsehash.diff"
     sha256 "c12f68278bce1ebf893ffa791e43df7f09e5452db3fbd13bd30fcf91cbf6ad36"

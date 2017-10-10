@@ -1,6 +1,3 @@
-#
-# tk/radiobutton.rb : treat radiobutton widget
-#
 require 'tk'
 require 'tk/button'
 
@@ -8,14 +5,6 @@ class Tk::RadioButton<Tk::Button
   TkCommandNames = ['radiobutton'.freeze].freeze
   WidgetClassName = 'Radiobutton'.freeze
   WidgetClassNames[WidgetClassName] ||= self
-  #def create_self(keys)
-  #  if keys and keys != None
-  #    tk_call_without_enc('radiobutton', @path, *hash_kv(keys, true))
-  #  else
-  #    tk_call_without_enc('radiobutton', @path)
-  #  end
-  #end
-  #private :create_self
 
   def __boolval_optkeys
     super() << 'indicatoron'
@@ -65,9 +54,5 @@ class Tk::RadioButton<Tk::Button
 end
 
 Tk::Radiobutton = Tk::RadioButton
-#TkRadioButton = Tk::RadioButton unless Object.const_defined? :TkRadioButton
-#TkRadiobutton = Tk::Radiobutton unless Object.const_defined? :TkRadiobutton
-#Tk.__set_toplevel_aliases__(:Tk, Tk::RadioButton,
-#                            :TkRadioButton, :TkRadiobutton)
 Tk.__set_loaded_toplevel_aliases__('tk/radiobutton.rb', :Tk, Tk::RadioButton,
                                    :TkRadioButton, :TkRadiobutton)

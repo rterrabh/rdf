@@ -6,7 +6,6 @@ class Jena < Formula
 
   def shim_script(target)
     <<-EOS.undent
-      #!/usr/bin/env bash
       export JENA_HOME="#{libexec}"
       "$JENA_HOME/bin/#{target}" "$@"
     EOS

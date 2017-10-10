@@ -86,7 +86,6 @@ module Spree
                 order.line_items.each do |line_item|
                   expect(line_item.adjustments.count).to eq(1)
                 end
-                # Ensure that applying the adjustment actually affects the order's total!
                 expect(order.reload.total).to eq(100)
               end
 
@@ -98,7 +97,6 @@ module Spree
               end
             end
 
-            # Regression test for #4211
             context "with incorrect coupon code casing" do
               before { allow(order).to receive_messages :coupon_code => "10OFF" }
               it "successfully activates promo" do
@@ -108,7 +106,6 @@ module Spree
                 order.line_items.each do |line_item|
                   expect(line_item.adjustments.count).to eq(1)
                 end
-                # Ensure that applying the adjustment actually affects the order's total!
                 expect(order.reload.total).to eq(100)
               end
             end
@@ -126,7 +123,6 @@ module Spree
               order.contents.add create(:variant)
             end
 
-            # regression spec for #4515
             it "successfully activates promo" do
               subject.apply
               expect(subject).to be_successful
@@ -167,7 +163,6 @@ module Spree
             before do
               allow(order).to receive_messages({
                 :coupon_code => "10off",
-                # These need to be here so that promotion adjustment "wins"
                 :item_total => 50,
                 :ship_total => 10
               })
@@ -246,12 +241,10 @@ module Spree
               end
             end
             it "successfully applies the promo" do
-              # 3 * (9 + 0.9)
               expect(@order.total).to eq(29.7)
               coupon = Coupon.new(@order)
               coupon.apply
               expect(coupon.success).to be_present
-              # 3 * ((9 - [9,10].min) + 0)
               expect(@order.reload.total).to eq(0)
               expect(@order.additional_tax_total).to eq(0)
             end
@@ -264,12 +257,10 @@ module Spree
               end
             end
             it "successfully applies the promo" do
-              # 3 * (22 + 2.2)
               expect(@order.total.to_f).to eq(72.6)
               coupon = Coupon.new(@order)
               coupon.apply
               expect(coupon.success).to be_present
-              # 3 * ( (22 - 10) + 1.2)
               expect(@order.reload.total).to eq(39.6)
               expect(@order.additional_tax_total).to eq(3.6)
             end
@@ -289,12 +280,10 @@ module Spree
               end
             end
             it "successfully applies the promo" do
-              # 3 * ((2 * 10) + 2.0)
               expect(@order.total.to_f).to eq(66)
               coupon = Coupon.new(@order)
               coupon.apply
               expect(coupon.success).to be_present
-              # 0
               expect(@order.reload.total).to eq(0)
               expect(@order.additional_tax_total).to eq(0)
             end

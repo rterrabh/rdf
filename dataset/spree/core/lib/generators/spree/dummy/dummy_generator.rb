@@ -24,8 +24,6 @@ module Spree
     ]
 
     def generate_test_dummy
-      # calling slice on a Thor::CoreExtensions::HashWithIndifferentAccess
-      # object has been known to return nil
       opts = {}.merge(options).slice(*PASSTHROUGH_OPTIONS)
       opts[:database] = 'sqlite3' if opts[:database].blank?
       opts[:force] = true
@@ -89,7 +87,6 @@ module Spree
 begin
   require '#{requirement}'
 rescue LoadError
-  # #{requirement} is not available.
 end
       ], :before => /require '#{@lib_name}'/, :verbose => true
     end

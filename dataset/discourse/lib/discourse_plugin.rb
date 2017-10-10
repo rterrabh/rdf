@@ -1,5 +1,3 @@
-# A basic plugin for Discourse. Meant to be extended and filled in.
-# Most work is delegated to a registry.
 
 class DiscoursePlugin
 
@@ -10,24 +8,20 @@ class DiscoursePlugin
   end
 
   def setup
-    # Initialize the plugin here
   end
 
-  # Loads and mixes in the plugin's mixins into the host app's classes.
-  # A mixin named "UserMixin" will be included into the "User" class.
   def self.include_mixins
     mixins.each do |mixin|
       original_class = mixin.to_s.demodulize.sub("Mixin", "")
       dependency_file_name = original_class.underscore
       require_dependency(dependency_file_name)
-      #nodyna <ID:send-14> <SD TRIVIAL (public methods)>
+      #nodyna <send-352> <SD TRIVIAL (public methods)>
       original_class.constantize.send(:include, mixin)
     end
   end
 
-  # Find the modules defined in the plugin with "Mixin" in their name.
   def self.mixins
-    #nodyna <ID:const_get-1> <CG COMPLEX (array)>
+    #nodyna <const_get-353> <CG COMPLEX (array)>
     constants.map { |const_name| const_get(const_name) }
              .select { |const| const.class == Module && const.name["Mixin"] }
   end

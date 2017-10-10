@@ -24,9 +24,6 @@ class Nu < Formula
     cause "nu only builds with clang"
   end
 
-  # remove deprecated -fobjc-gc
-  # https://github.com/timburks/nu/pull/74
-  # https://github.com/Homebrew/homebrew/issues/37341
   patch do
     url "https://github.com/timburks/nu/commit/c0b05f1.diff"
     sha256 "f6c1a66e470e7132ba11937c971f9b90824bb03eaa030b3e70004f9d2725c636"
@@ -55,7 +52,6 @@ EOS
     if self.installed? && File.exist?(frameworks+"Nu.framework")
       return <<-EOS.undent
         Nu.framework was installed to:
-          #{frameworks}/Nu.framework
 
         You may want to symlink this Framework to a standard OS X location,
         such as:

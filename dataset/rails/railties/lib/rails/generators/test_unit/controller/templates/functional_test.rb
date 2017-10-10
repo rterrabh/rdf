@@ -9,9 +9,6 @@ class <%= class_name %>ControllerTest < ActionController::TestCase
 
 <% end -%>
 <% if actions.empty? -%>
-  # test "the truth" do
-  #   assert true
-  # end
 <% else -%>
 <% actions.each do |action| -%>
   test "should get <%= action %>" do

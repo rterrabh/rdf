@@ -1,16 +1,8 @@
-#
-#  tkextlib/tcllib/getstring.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * A dialog which consists of an Entry, OK, and Cancel buttons.
-#
 
 require 'tk'
 require 'tk/entry'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('getstring', '0.1')
 TkPackage.require('getstring')
 
 module Tk::Tcllib
@@ -68,7 +60,6 @@ class Tk::Tcllib::GetString_Dialog
   end
 
   def create_self(keys)
-    # dummy
   end
   private :create_self
 

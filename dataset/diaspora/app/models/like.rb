@@ -1,6 +1,3 @@
-#   Copyright (c) 2010-2011, Diaspora Inc.  This file is
-#   licensed under the Affero General Public License version 3 or later.  See
-#   the COPYRIGHT file.
 
 class Like < Federated::Relayable
   class Generator < Federated::Generator
@@ -23,7 +20,6 @@ class Like < Federated::Relayable
 
   xml_attr :positive
 
-  # NOTE API V1 to be extracted
   acts_as_api
   api_accessible :backbone do |t|
     t.add :id
@@ -33,7 +29,6 @@ class Like < Federated::Relayable
   end
 
   def notification_type(user, person)
-    #TODO(dan) need to have a notification for likes on comments, until then, return nil
     return nil if self.target_type == "Comment"
     Notifications::Liked if self.target.author == user.person && user.person != person
   end

@@ -76,7 +76,6 @@ module Spree
       expect(json_response["variants"].first.has_key?(:cost_price)).to eq false
     end
 
-    # Regression test for #2141
     context "a deleted variant" do
       before do
         variant.update_column(:deleted_at, Time.now)
@@ -154,7 +153,6 @@ module Spree
       sign_in_as_admin!
       let(:resource_scoping) { { :product_id => variant.product.to_param } }
 
-      # Test for #2141
       context "deleted variants" do
         before do
           variant.update_column(:deleted_at, Time.now)

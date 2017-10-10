@@ -34,6 +34,7 @@ module Jobs
         if Guardian.new(user).can_see?(post)
           begin
             message = UserNotifications.mailing_list_notify(user, post)
+            #nodyna <send-411> <not yet classified>
             Email::Sender.new(message, :mailing_list, user).send
           rescue => e
             Discourse.handle_job_exception(e, error_context(

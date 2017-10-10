@@ -19,15 +19,12 @@ class Fish < Formula
 
   def install
     system "autoconf" if build.head?
-    # In Homebrew's 'superenv' sed's path will be incompatible, so
-    # the correct path is passed into configure here.
     system "./configure", "--prefix=#{prefix}", "SED=/usr/bin/sed"
     system "make", "install"
   end
 
   def caveats; <<-EOS.undent
     You will need to add:
-      #{HOMEBREW_PREFIX}/bin/fish
     to /etc/shells. Run:
       chsh -s #{HOMEBREW_PREFIX}/bin/fish
     to make fish your default shell.

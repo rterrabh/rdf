@@ -25,8 +25,6 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
       topic.reload.set_auto_close(nil).save
     end
 
-    # pick up the changes right away as opposed to waiting for
-    # the schedule
     CategoryFeaturedTopic.feature_topics_for(topic.category)
   end
 
@@ -37,8 +35,6 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
 
   def update_read_state_for(status, old_highest_read)
     if status.autoclosed?
-      # let's pretend all the people that read up to the autoclose message
-      # actually read the topic
       PostTiming.pretend_read(topic.id, old_highest_read, topic.highest_post_number)
     end
   end
@@ -73,7 +69,7 @@ TopicStatusUpdate = Struct.new(:topic, :user) do
 
   Status = Struct.new(:name, :enabled) do
     %w(pinned_globally pinned autoclosed closed).each do |status|
-      #nodyna <ID:define_method-34> <DM MODERATE (array)>
+      #nodyna <define_method-358> <DM MODERATE (array)>
       define_method("#{status}?") { name == status }
     end
 

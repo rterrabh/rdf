@@ -1,16 +1,9 @@
-#
-#  tclx/tclx.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
 require 'tk'
 
-# call setup script for general 'tkextlib' libraries
 require 'tkextlib/setup.rb'
 
-# call setup script
 require 'tkextlib/tclx/setup.rb'
 
-# TkPackage.require('Tclx', '8.0')
 TkPackage.require('Tclx')
 
 module Tk
@@ -42,7 +35,6 @@ module Tk
       Tk.tk_call('signal', '-restart', *args)
     end
 
-    ##############################
 
     class XPG3_MsgCat
       class << self

@@ -69,9 +69,6 @@ class Knot < Formula
     }
     zones {
       storage "#{var}/knot";
-    #  example.com {
-    #    file "#{var}/knot/example.com.zone";
-    #  }
     }
     log {
       syslog {

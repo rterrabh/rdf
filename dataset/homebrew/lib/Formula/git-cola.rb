@@ -17,7 +17,6 @@ class GitCola < Formula
   depends_on "pyqt"
 
   if build.with? "docs"
-    # these are needed to build man pages
     depends_on "asciidoc"
     depends_on "xmlto"
   end

@@ -38,8 +38,6 @@ class Io < Formula
     EOS
   end
 
-  # Fixes build on GCC with recursive inline functions;
-  # committed upstream, will be in the next release.
   patch do
     url "https://github.com/stevedekorte/io/commit/f21a10ca0e8959e2a0774962c36392cf166be6a6.diff"
     sha256 "7dbea1f027de4a4b12decba13a3e58c3352cd599fae14054d7a3af5eb2c454bb"
@@ -48,11 +46,9 @@ class Io < Formula
   def install
     ENV.j1
 
-    # FSF GCC needs this to build the ObjC bridge
     ENV.append_to_cflags "-fobjc-exceptions"
 
     if build.without? "addons"
-      # Turn off all add-ons in main cmake file
       inreplace "CMakeLists.txt", "add_subdirectory(addons)",
                                   "#add_subdirectory(addons)"
     else
@@ -61,11 +57,8 @@ class Io < Formula
           s.gsub! "add_subdirectory(Python)", "#add_subdirectory(Python)"
         end
 
-        # Turn off specific add-ons that are not currently working
 
-        # Looks for deprecated Freetype header
         s.gsub! /(add_subdirectory\(Font\))/, '#\1'
-        # Builds against older version of memcached library
         s.gsub! /(add_subdirectory\(Memcached\))/, '#\1'
       end
     end

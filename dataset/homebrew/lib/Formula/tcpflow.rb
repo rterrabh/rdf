@@ -16,7 +16,6 @@ class Tcpflow < Formula
   depends_on "openssl"
 
   stable do
-    # Upstream fix for 10.6; can be removed in next release
     patch do
       url "https://github.com/simsong/tcpflow/commit/1cd5a9168c2ebf72c1fadcd64634398bd8470bce.diff"
       sha256 "6c3aae2f3a140847a9333c5f4d1e94bddb60e79b7c7ee2d13a2cc116fd9620c3"

@@ -1,6 +1,3 @@
-#
-# tk/toplevel.rb : treat toplevel widget
-#
 require 'tk'
 require 'tk/wm'
 require 'tk/menuspec'
@@ -13,37 +10,6 @@ class Tk::Toplevel<TkWindow
   WidgetClassName = 'Toplevel'.freeze
   WidgetClassNames[WidgetClassName] ||= self
 
-################# old version
-#  def initialize(parent=nil, screen=nil, classname=nil, keys=nil)
-#    if screen.kind_of? Hash
-#      keys = screen.dup
-#    else
-#      @screen = screen
-#    end
-#    @classname = classname
-#    if keys.kind_of? Hash
-#      keys = keys.dup
-#      @classname = keys.delete('classname') if keys.key?('classname')
-#      @colormap  = keys.delete('colormap')  if keys.key?('colormap')
-#      @container = keys.delete('container') if keys.key?('container')
-#      @screen    = keys.delete('screen')    if keys.key?('screen')
-#      @use       = keys.delete('use')       if keys.key?('use')
-#      @visual    = keys.delete('visual')    if keys.key?('visual')
-#    end
-#    super(parent, keys)
-#  end
-#
-#  def create_self
-#    s = []
-#    s << "-class"     << @classname if @classname
-#    s << "-colormap"  << @colormap  if @colormap
-#    s << "-container" << @container if @container
-#    s << "-screen"    << @screen    if @screen
-#    s << "-use"       << @use       if @use
-#    s << "-visual"    << @visual    if @visual
-#    tk_call 'toplevel', @path, *s
-#  end
-#################
 
   def __boolval_optkeys
     super() << 'container'
@@ -178,32 +144,21 @@ class Tk::Toplevel<TkWindow
     super(parent, keys)
     cmds.each{|k,v|
       if v.kind_of? Array
-        #nodyna <ID:send-35> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1838> <SD COMPLEX (change-prone variables)>
         self.send(k,*v)
       else
-        #nodyna <ID:send-36> <SD COMPLEX (change-prone variables)>
+        #nodyna <send-1839> <SD COMPLEX (change-prone variables)>
         self.send(k,v)
       end
     }
   end
 
-  #def create_self(keys)
-  #  if keys and keys != None
-  #    tk_call_without_enc('toplevel', @path, *hash_kv(keys, true))
-  #  else
-  #    tk_call_without_enc('toplevel', @path)
-  #  end
-  #end
-  #private :create_self
 
   def specific_class
     @classname
   end
 
   def add_menu(menu_info, tearoff=false, opts=nil)
-    # See tk/menuspec.rb for menu_info.
-    # opts is a hash of default configs for all of cascade menus.
-    # Configs of menu_info can override it.
     if tearoff.kind_of?(Hash)
       opts = tearoff
       tearoff = false
@@ -212,9 +167,6 @@ class Tk::Toplevel<TkWindow
   end
 
   def add_menubar(menu_spec, tearoff=false, opts=nil)
-    # See tk/menuspec.rb for menu_spec.
-    # opts is a hash of default configs for all of cascade menus.
-    # Configs of menu_spec can override it.
     menu_spec.each{|info| add_menu(info, tearoff, opts)}
     self.menu
   end
@@ -260,7 +212,5 @@ class Tk::Toplevel<TkWindow
   end
 end
 
-#TkToplevel = Tk::Toplevel unless Object.const_defined? :TkToplevel
-#Tk.__set_toplevel_aliases__(:Tk, Tk::Toplevel, :TkToplevel)
 Tk.__set_loaded_toplevel_aliases__('tk/toplevel.rb', :Tk, Tk::Toplevel,
                                    :TkToplevel)

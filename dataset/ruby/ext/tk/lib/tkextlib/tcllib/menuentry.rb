@@ -1,15 +1,7 @@
-#
-#  tkextlib/tcllib/menuentry.rb
-#                               by Hidetoshi NAGAI (nagai@ai.kyutech.ac.jp)
-#
-#   * Part of tcllib extension
-#   * menuentry widget
-#
 
 require 'tk'
 require 'tkextlib/tcllib.rb'
 
-# TkPackage.require('widget::menuentry', '1.0')
 TkPackage.require('widget::menuentry')
 
 module Tk::Tcllib

@@ -26,7 +26,6 @@ class GumboParser < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-    #include "gumbo.h"
 
     int main() {
       GumboOutput* output = gumbo_parse("<h1>Hello, World!</h1>");

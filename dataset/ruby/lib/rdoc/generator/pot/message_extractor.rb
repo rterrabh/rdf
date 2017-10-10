@@ -1,19 +1,12 @@
-##
-# Extracts message from RDoc::Store
 
 class RDoc::Generator::POT::MessageExtractor
 
-  ##
-  # Creates a message extractor for +store+.
 
   def initialize store
     @store = store
     @po = RDoc::Generator::POT::PO.new
   end
 
-  ##
-  # Extracts messages from +store+, stores them into
-  # RDoc::Generator::POT::PO and returns it.
 
   def extract
     @store.all_classes_and_modules.each do |klass|

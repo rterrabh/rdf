@@ -1,83 +1,30 @@
-# Define a package task library to aid in the definition of
-# redistributable package files.
 
 require 'rake'
 require 'rake/tasklib'
 
 module Rake
 
-  # Create a packaging task that will package the project into
-  # distributable files (e.g zip archive or tar files).
-  #
-  # The PackageTask will create the following targets:
-  #
-  # +:package+ ::
-  #   Create all the requested package files.
-  #
-  # +:clobber_package+ ::
-  #   Delete all the package files.  This target is automatically
-  #   added to the main clobber target.
-  #
-  # +:repackage+ ::
-  #   Rebuild the package files from scratch, even if they are not out
-  #   of date.
-  #
-  # <tt>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tgz"</tt> ::
-  #   Create a gzipped tar package (if <em>need_tar</em> is true).
-  #
-  # <tt>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.gz"</tt> ::
-  #   Create a gzipped tar package (if <em>need_tar_gz</em> is true).
-  #
-  # <tt>"<em>package_dir</em>/<em>name</em>-<em>version</em>.tar.bz2"</tt> ::
-  #   Create a bzip2'd tar package (if <em>need_tar_bz2</em> is true).
-  #
-  # <tt>"<em>package_dir</em>/<em>name</em>-<em>version</em>.zip"</tt> ::
-  #   Create a zip package archive (if <em>need_zip</em> is true).
-  #
-  # Example:
-  #
-  #   Rake::PackageTask.new("rake", "1.2.3") do |p|
-  #     p.need_tar = true
-  #     p.package_files.include("lib/**/*.rb")
-  #   end
-  #
   class PackageTask < TaskLib
-    # Name of the package (from the GEM Spec).
     attr_accessor :name
 
-    # Version of the package (e.g. '1.3.2').
     attr_accessor :version
 
-    # Directory used to store the package files (default is 'pkg').
     attr_accessor :package_dir
 
-    # True if a gzipped tar file (tgz) should be produced (default is
-    # false).
     attr_accessor :need_tar
 
-    # True if a gzipped tar file (tar.gz) should be produced (default
-    # is false).
     attr_accessor :need_tar_gz
 
-    # True if a bzip2'd tar file (tar.bz2) should be produced (default
-    # is false).
     attr_accessor :need_tar_bz2
 
-    # True if a zip file should be produced (default is false)
     attr_accessor :need_zip
 
-    # List of files to be included in the package.
     attr_accessor :package_files
 
-    # Tar command for gzipped or bzip2ed archives.  The default is 'tar'.
     attr_accessor :tar_command
 
-    # Zip command for zipped archives.  The default is 'zip'.
     attr_accessor :zip_command
 
-    # Create a Package Task with the given name and version.  Use +:noversion+
-    # as the version to build a package without a version or to provide a
-    # fully-versioned package name.
 
     def initialize(name=nil, version=nil)
       init(name, version)
@@ -85,7 +32,6 @@ module Rake
       define unless name.nil?
     end
 
-    # Initialization that bypasses the "yield self" and "define" step.
     def init(name, version)
       @name = name
       @version = version
@@ -99,7 +45,6 @@ module Rake
       @zip_command = 'zip'
     end
 
-    # Create the tasks defined by this task library.
     def define
       fail "Version required (or :noversion)" if @version.nil?
       @version = nil if :noversion == @version
@@ -159,37 +104,31 @@ module Rake
       self
     end
 
-    # The name of this package
 
     def package_name
       @version ? "#{@name}-#{@version}" : @name
     end
 
-    # The directory this package will be built in
 
     def package_dir_path
       "#{package_dir}/#{package_name}"
     end
 
-    # The package name with .tgz added
 
     def tgz_file
       "#{package_name}.tgz"
     end
 
-    # The package name with .tar.gz added
 
     def tar_gz_file
       "#{package_name}.tar.gz"
     end
 
-    # The package name with .tar.bz2 added
 
     def tar_bz2_file
       "#{package_name}.tar.bz2"
     end
 
-    # The package name with .zip added
 
     def zip_file
       "#{package_name}.zip"

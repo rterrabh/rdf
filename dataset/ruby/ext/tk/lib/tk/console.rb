@@ -1,6 +1,3 @@
-#
-#   tk/console.rb : control the console on system without a real console
-#
 require 'tk'
 
 module TkConsole
@@ -23,28 +20,19 @@ module TkConsole
   def self.show
     tk_call_without_enc('console', 'show')
   end
+  #nodyna <eval-1804> <not yet classified>
   def self.eval(tcl_script)
-    #
-    # supports a Tcl script only
-    # I have no idea to support a Ruby script seamlessly.
-    #
+    #nodyna <eval-1805> <not yet classified>
     _fromUTF8(tk_call_without_enc('console', 'eval',
                                   _get_eval_enc_str(tcl_script)))
   end
   def self.maininterp_eval(tcl_script)
-    #
-    # supports a Tcl script only
-    # I have no idea to support a Ruby script seamlessly.
-    #
+    #nodyna <eval-1806> <not yet classified>
     _fromUTF8(tk_call_without_enc('consoleinterp', 'eval',
                                   _get_eval_enc_str(tcl_script)))
 
   end
   def self.maininterp_record(tcl_script)
-    #
-    # supports a Tcl script only
-    # I have no idea to support a Ruby script seamlessly.
-    #
     _fromUTF8(tk_call_without_enc('consoleinterp', 'record',
                                   _get_eval_enc_str(tcl_script)))
 

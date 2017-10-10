@@ -20,7 +20,6 @@ class Libmarisa < Formula
 
   test do
     (testpath/"test.cpp").write <<-EOS.undent
-      #include <marisa.h>
       int main() {
         marisa::Keyset keyset;
         keyset.push_back("a");

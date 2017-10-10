@@ -49,10 +49,6 @@ module Spree
         adjustable.is_a?(Shipment)
       end
 
-      # Picks one (and only one) competing discount to be eligible for
-      # this order. This adjustment provides the most discount, and if
-      # two adjustments have the same amount, then it will pick the
-      # latest one.
       def choose_best_promo_adjustment
         if best_promo_adjustment
           other_promotions = adjustments.competing_promos.where.not(id: best_promo_adjustment.id)

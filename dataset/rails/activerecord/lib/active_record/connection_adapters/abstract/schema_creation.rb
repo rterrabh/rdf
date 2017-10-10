@@ -11,7 +11,7 @@ module ActiveRecord
 
         def accept(o)
           m = @cache[o.class] ||= "visit_#{o.class.name.split('::').last}"
-          #nodyna <ID:send-137> <SD COMPLEX (change-prone variables)>
+          #nodyna <send-914> <SD COMPLEX (change-prone variables)>
           send m, o
         end
 
@@ -83,7 +83,6 @@ module ActiveRecord
 
           def add_column_options!(sql, options)
             sql << " DEFAULT #{quote_value(options[:default], options[:column])}" if options_include_default?(options)
-            # must explicitly check for :null to allow change_column to work on migrations
             if options[:null] == false
               sql << " NOT NULL"
             end

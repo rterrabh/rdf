@@ -25,7 +25,6 @@ describe Spree::ShipmentMailer, :type => :mailer do
     end
   end
 
-  # Regression test for #2196
   it "doesn't include out of stock in the email body" do
     shipment_email = Spree::ShipmentMailer.shipped_email(shipment)
     expect(shipment_email.body).not_to include(%Q{Out of Stock})
