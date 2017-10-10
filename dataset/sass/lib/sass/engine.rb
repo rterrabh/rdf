@@ -617,7 +617,7 @@ WARNING
 
       directive_name = directive.gsub('-', '_').to_sym
       if DIRECTIVES.include?(directive_name)
-        #nodyna <send-3004> <not yet classified>
+        #nodyna <send-3004> <SD COMPLEX (change-prone variables)>
         return send("parse_#{directive_name}_directive", parent, line, root, value, offset)
       end
 

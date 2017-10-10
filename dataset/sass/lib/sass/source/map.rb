@@ -83,7 +83,7 @@ module Sass::Source
 
           if options[:type] == :inline
             id_to_contents[current_source_id] =
-              #nodyna <instance_variable_get-2972> <not yet classified>
+              #nodyna <instance_variable_get-2972> <IVG MODERATE (private access)>
               importer.find(file, {}).instance_variable_get('@template')
           end
         end

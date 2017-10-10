@@ -323,9 +323,9 @@ module Sass
     end
 
     def av_template_class(name)
-      #nodyna <const_get-3001> <not yet classified>
+      #nodyna <const_get-3001> <CG COMPLEX (change-prone variables)>
       return ActionView.const_get("Template#{name}") if ActionView.const_defined?("Template#{name}")
-      #nodyna <const_get-3002> <not yet classified>
+      #nodyna <const_get-3002> <CG COMPLEX (change-prone variables)>
       ActionView::Template.const_get(name.to_s)
     end
 
@@ -511,7 +511,7 @@ module Sass
     end
 
     def has?(attr, klass, method)
-      #nodyna <send-3003> <not yet classified>
+      #nodyna <send-3003> <SD MODERATE (change-prone variables)>
       klass.send("#{attr}s").include?(ruby1_8? ? method.to_s : method.to_sym)
     end
 

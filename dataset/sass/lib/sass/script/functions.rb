@@ -73,7 +73,7 @@ module Sass::Script
       end
 
       def assert_type(value, type, name = nil)
-        #nodyna <const_get-3030> <not yet classified>
+        #nodyna <const_get-3030> <CG MODERATE (change-prone variables)>
         klass = Sass::Script::Value.const_get(type)
         return if value.is_a?(klass)
         return if value.is_a?(Sass::Script::Value::List) && type == :Map && value.value.empty?
@@ -119,7 +119,7 @@ module Sass::Script
 
       def include(*args)
         r = super
-        #nodyna <send-3031> <not yet classified>
+        #nodyna <send-3031> <SD TRIVIAL (public functions)>
         EvaluationContext.send :include, self
         r
       end
@@ -310,7 +310,7 @@ module Sass::Script
     def ie_hex_str(color)
       assert_type color, :Color, :color
       alpha = Sass::Util.round(color.alpha * 255).to_s(16).rjust(2, '0')
-      #nodyna <send-3032> <not yet classified>
+      #nodyna <send-3032> <SD EASY (private access)>
       identifier("##{alpha}#{color.send(:hex_str)[1..-1]}".upcase)
     end
     declare :ie_hex_str, [:color]
@@ -331,7 +331,7 @@ module Sass::Script
         next unless val
         assert_type val, :Number, name
         Sass::Util.check_range("$#{name}: Amount", range, val, units) if range
-        #nodyna <send-3033> <not yet classified>
+        #nodyna <send-3033> <SD MODERATE (array)>
         adjusted = color.send(name) + val.value
         adjusted = [0, Sass::Util.restrict(adjusted, range)].max if range
         [name.to_sym, adjusted]
@@ -363,7 +363,7 @@ module Sass::Script
         assert_unit val, '%', name
         Sass::Util.check_range("$#{name}: Amount", -100..100, val, '%')
 
-        #nodyna <send-3034> <not yet classified>
+        #nodyna <send-3034> <SD MODERATE (array)>
         current = color.send(name)
         scale = val.value / 100.0
         diff = scale > 0 ? max - current : current
@@ -943,8 +943,8 @@ MESSAGE
       assert_type amount, :Number, :amount
       Sass::Util.check_range('Amount', range, amount, units)
 
-      #nodyna <send-3035> <not yet classified>
-      #nodyna <send-3036> <not yet classified>
+      #nodyna <send-3035> <SD MODERATE (change-prone variables)>
+      #nodyna <send-3036> <SD COMPLEX (change-prone variables)>
       color.with(attr => color.send(attr).send(op, amount.value))
     end
 

@@ -143,7 +143,7 @@ module Sass
         private
 
         def production(name, sub, *ops)
-          #nodyna <class_eval-3005> <not yet classified>
+          #nodyna <class_eval-3005> <CE MODERATE (define methods)>
           class_eval <<RUBY, __FILE__, __LINE__ + 1
             def #{name}
               interp = try_ops_after_interp(#{ops.inspect}, #{name.inspect})
@@ -165,7 +165,7 @@ RUBY
         end
 
         def unary(op, sub)
-          #nodyna <class_eval-3006> <not yet classified>
+          #nodyna <class_eval-3006> <CE MODERATE (define methods)>
           class_eval <<RUBY, __FILE__, __LINE__ + 1
             def unary_#{op}
               return #{sub} unless tok = try_tok(:#{op})
@@ -377,7 +377,7 @@ RUBY
       def arglist(subexpr, description)
         args = []
         keywords = Sass::Util::NormalizedMap.new
-        #nodyna <send-3007> <not yet classified>
+        #nodyna <send-3007> <SD MODERATE (change-prone variables)>
         e = send(subexpr)
 
         return [args, keywords] unless e
@@ -489,7 +489,7 @@ RUBY
       }
 
       def assert_expr(name, expected = nil)
-        #nodyna <send-3008> <not yet classified>
+        #nodyna <send-3008> <SD MODERATE (change-prone variables)>
         e = send(name)
         return e if e
         @lexer.expected!(expected || EXPR_NAMES[name] || EXPR_NAMES[:default])

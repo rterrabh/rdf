@@ -79,8 +79,8 @@ module Sass
 
       def dup
         d = super
-        #nodyna <instance_variable_set-3039> <not yet classified>
-        #nodyna <send-3040> <not yet classified>
+        #nodyna <instance_variable_set-3039> <IVS MODERATE (private access)>
+        #nodyna <send-3040> <SD TRIVIAL (public functions)>
         d.send(:instance_variable_set, "@map", @map.dup)
         d
       end
@@ -98,7 +98,7 @@ module Sass
         if Sass.tests_running
           raise ArgumentError.new("The method #{method} must be implemented explicitly")
         end
-        #nodyna <send-3041> <not yet classified>
+        #nodyna <send-3041> <SD COMPLEX (change-prone variables)>
         @map.send(method, *args, &block)
       end
 

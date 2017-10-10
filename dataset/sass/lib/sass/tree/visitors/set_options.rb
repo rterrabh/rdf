@@ -1,5 +1,5 @@
 class Sass::Tree::Visitors::SetOptions < Sass::Tree::Visitors::Base
-  #nodyna <send-2991> <not yet classified>
+  #nodyna <send-2991> <SD EASY (private access)>
   def self.visit(root, options); new(options).send(:visit, root); end
 
   protected
@@ -9,7 +9,7 @@ class Sass::Tree::Visitors::SetOptions < Sass::Tree::Visitors::Base
   end
 
   def visit(node)
-    #nodyna <instance_variable_set-2992> <not yet classified>
+    #nodyna <instance_variable_set-2992> <IVS MODERATE (private access)>
     node.instance_variable_set('@options', @options)
     super
   end

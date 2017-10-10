@@ -1,7 +1,7 @@
 class Sass::Tree::Visitors::Perform < Sass::Tree::Visitors::Base
   class << self
     def visit(root, environment = nil)
-      #nodyna <send-2993> <not yet classified>
+      #nodyna <send-2993> <SD EASY (private access)>
       new(environment).send(:visit, root)
     end
 

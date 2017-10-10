@@ -168,7 +168,7 @@ class Sass::Tree::Visitors::CheckNesting < Sass::Tree::Visitors::Base
 
   def try_send(method, *args)
     return unless respond_to?(method, true)
-    #nodyna <send-2995> <not yet classified>
+    #nodyna <send-2995> <SD COMPLEX (change-prone variables)>
     send(method, *args)
   end
 end

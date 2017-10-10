@@ -33,7 +33,7 @@ module Sass
         end
 
         def define_logger(name, options = {})
-          #nodyna <class_eval-3038> <not yet classified>
+          #nodyna <class_eval-3038> <CE MODERATE (define methods)>
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{name}(message)
             end

@@ -27,7 +27,7 @@ module Sass::Script::Tree
 
     def deep_copy
       node = dup
-      #nodyna <instance_variable_set-3025> <not yet classified>
+      #nodyna <instance_variable_set-3025> <IVS MODERATE (private access)>
       node.instance_variable_set('@pairs',
         pairs.map {|(k, v)| [k.deep_copy, v.deep_copy]})
       node

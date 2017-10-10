@@ -35,7 +35,7 @@ module Sass
 
     def method_missing(method, *args, &block)
       if compiler.respond_to?(method)
-        #nodyna <send-2985> <not yet classified>
+        #nodyna <send-2985> <SD COMPLEX (change-prone variables)>
         compiler.send(method, *args, &block)
       else
         super

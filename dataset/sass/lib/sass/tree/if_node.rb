@@ -26,9 +26,9 @@ module Sass::Tree
       node = IfNode.new(expr)
       node.else = else_
       node.children = children
-      #nodyna <instance_variable_set-2998> <not yet classified>
+      #nodyna <instance_variable_set-2998> <IVS MODERATE (private access)>
       node.instance_variable_set('@last_else',
-        #nodyna <instance_variable_get-2999> <not yet classified>
+        #nodyna <instance_variable_get-2999> <IVG MODERATE (private access)>
         node.else ? node.else.instance_variable_get('@last_else') : node)
       node
     end

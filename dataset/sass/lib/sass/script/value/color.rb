@@ -299,10 +299,10 @@ module Sass::Script::Value
       end
 
       if hsl
-        #nodyna <send-3027> <not yet classified>
+        #nodyna <send-3027> <SD MODERATE (array)>
         [:hue, :saturation, :lightness].each {|k| attrs[k] ||= send(k)}
       elsif rgb
-        #nodyna <send-3028> <not yet classified>
+        #nodyna <send-3028> <SD MODERATE (array)>
         [:red, :green, :blue].each {|k| attrs[k] ||= send(k)}
       else
         attrs = @attrs.merge(attrs)
@@ -413,7 +413,7 @@ module Sass::Script::Value
 
       result = []
       (0...3).each do |i|
-        #nodyna <send-3029> <not yet classified>
+        #nodyna <send-3029> <SD MODERATE (change-prone variables)>
         res = rgb[i].to_f.send(operation, other_num ? other.value : other.rgb[i])
         result[i] = [[res, 255].min, 0].max
       end

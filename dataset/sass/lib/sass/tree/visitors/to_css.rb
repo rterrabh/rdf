@@ -31,9 +31,9 @@ class Sass::Tree::Visitors::ToCss < Sass::Tree::Visitors::Base
     yield
 
     range_attr = attr_prefix ? :"#{attr_prefix}_source_range" : :source_range
-    #nodyna <send-2986> <not yet classified>
+    #nodyna <send-2986> <SD COMPLEX (change-prone variables)>
     return if node.invisible? || !node.send(range_attr)
-    #nodyna <send-2987> <not yet classified>
+    #nodyna <send-2987> <SD COMPLEX (change-prone variables)>
     source_range = node.send(range_attr)
     target_end_pos = Sass::Source::Position.new(@line, @offset)
     target_range = Sass::Source::Range.new(start_pos, target_end_pos, nil)

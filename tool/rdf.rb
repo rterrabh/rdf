@@ -133,10 +133,10 @@ files_to_research = []
 #files_to_research << "../dataset/resque/**/lib/**/*.rb"
 
 #sass
-#files_to_research << "../dataset/sass/**/lib/**/*.rb"
+files_to_research << "../dataset/sass/**/lib/**/*.rb"
 
 #simple form
-files_to_research << "../dataset/simple_form/**/lib/**/*.rb"
+#files_to_research << "../dataset/simple_form/**/lib/**/*.rb"
 
 #vagrant
 #files_to_research << "../dataset/vagrant/**/lib/**/*.rb"

@@ -1,6 +1,6 @@
 class Sass::Tree::Visitors::Convert < Sass::Tree::Visitors::Base
   def self.visit(root, options, format)
-    #nodyna <send-2988> <not yet classified>
+    #nodyna <send-2988> <SD EASY (private access)>
     new(options, format).send(:visit, root)
   end
 

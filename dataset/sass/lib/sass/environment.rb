@@ -9,7 +9,7 @@ module Sass
       end
 
       def inherited_hash_reader(name)
-        #nodyna <class_eval-2983> <not yet classified>
+        #nodyna <class_eval-2983> <CE MODERATE (define methods)>
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{name}(name)
             _#{name}(name.tr('_', '-'))
@@ -28,7 +28,7 @@ module Sass
       end
 
       def inherited_hash_writer(name)
-        #nodyna <class_eval-2984> <not yet classified>
+        #nodyna <class_eval-2984> <CE MODERATE (define methods)>
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def set_#{name}(name, value)
             name = name.tr('_', '-')

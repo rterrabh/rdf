@@ -5,7 +5,7 @@ module Sass
 
       def lexer_class
         klass = Class.new(super)
-        #nodyna <send-2981> <not yet classified>
+        #nodyna <send-2981> <SD TRIVIAL (public functions)>
         klass.send(:include, ScriptLexer)
         klass
       end

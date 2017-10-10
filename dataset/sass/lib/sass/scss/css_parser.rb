@@ -47,7 +47,7 @@ module Sass
       end
 
       @sass_script_parser = Class.new(Sass::Script::CssParser)
-      #nodyna <send-2979> <not yet classified>
+      #nodyna <send-2979> <SD TRIVIAL (public functions)>
       @sass_script_parser.send(:include, ScriptParser)
     end
   end

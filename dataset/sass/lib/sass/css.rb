@@ -16,7 +16,7 @@ module Sass
 
     def render(fmt = :sass)
       check_encoding!
-      #nodyna <send-2982> <not yet classified>
+      #nodyna <send-2982> <SD COMPLEX (change-prone variables)>
       build_tree.send("to_#{fmt}", @options).strip + "\n"
     rescue Sass::SyntaxError => err
       err.modify_backtrace(:filename => @options[:filename] || '(css)')

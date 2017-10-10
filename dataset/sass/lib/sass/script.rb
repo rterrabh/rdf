@@ -41,7 +41,7 @@ module Sass
     def self.const_missing(name)
       klass = CONST_RENAMES[name]
       super unless klass
-      #nodyna <const_set-3037> <not yet classified>
+      #nodyna <const_set-3037> <CS MODERATE (array)>
       CONST_RENAMES.each {|n, k| const_set(n, k)}
       klass
     end

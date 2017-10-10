@@ -172,13 +172,13 @@ module Sass
 
       def special_directive(name, start_pos)
         sym = name.gsub('-', '_').to_sym
-        #nodyna <send-2973> <not yet classified>
+        #nodyna <send-2973> <SD COMPLEX (change-prone variables)>
         DIRECTIVES.include?(sym) && send("#{sym}_directive", start_pos)
       end
 
       def prefixed_directive(name, start_pos)
         sym = deprefix(name).gsub('-', '_').to_sym
-        #nodyna <send-2974> <not yet classified>
+        #nodyna <send-2974> <SD COMPLEX (change-prone variables)>
         PREFIXED_DIRECTIVES.include?(sym) && send("#{sym}_directive", name, start_pos)
       end
 
@@ -890,7 +890,7 @@ module Sass
       end
 
       @sass_script_parser = Class.new(Sass::Script::Parser)
-      #nodyna <send-2975> <not yet classified>
+      #nodyna <send-2975> <SD TRIVIAL (public functions)>
       @sass_script_parser.send(:include, ScriptParser)
 
       class << self
@@ -900,7 +900,7 @@ module Sass
       def sass_script(*args)
         parser = self.class.sass_script_parser.new(@scanner, @line, @offset,
                                                    :filename => @filename, :importer => @importer)
-        #nodyna <send-2976> <not yet classified>
+        #nodyna <send-2976> <SD MODERATE (change-prone variables)>
         result = parser.send(*args)
         unless @strs.empty?
           src = result.to_sass
@@ -940,7 +940,7 @@ module Sass
       }
 
       TOK_NAMES = Sass::Util.to_hash(Sass::SCSS::RX.constants.map do |c|
-        #nodyna <const_get-2977> <not yet classified>
+        #nodyna <const_get-2977> <CG MODERATE (array)>
         [Sass::SCSS::RX.const_get(c), c.downcase]
       end).merge(
         IDENT => "identifier",
@@ -953,7 +953,7 @@ module Sass
       end
 
       def expr!(name)
-        #nodyna <send-2978> <not yet classified>
+        #nodyna <send-2978> <SD MODERATE (change-prone variables)>
         e = send(name)
         return e if e
         expected(EXPR_NAMES[name] || name.to_s)

@@ -5,7 +5,7 @@ module Sass
 
       def self.inherited(base)
         node_name = base.name.gsub(/.*::(.*?)Node$/, '\\1').downcase
-        #nodyna <instance_eval-2997> <not yet classified>
+        #nodyna <instance_eval-2997> <IEV COMPLEX (method definition)>
         base.instance_eval <<-METHODS
           def node_name
             :#{node_name}

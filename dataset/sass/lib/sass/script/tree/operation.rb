@@ -33,9 +33,9 @@ module Sass::Script::Tree
 
     def deep_copy
       node = dup
-      #nodyna <instance_variable_set-3018> <not yet classified>
+      #nodyna <instance_variable_set-3018> <IVS MODERATE (private access)>
       node.instance_variable_set('@operand1', @operand1.deep_copy)
-      #nodyna <instance_variable_set-3019> <not yet classified>
+      #nodyna <instance_variable_set-3019> <IVS MODERATE (private access)>
       node.instance_variable_set('@operand2', @operand2.deep_copy)
       node
     end
@@ -60,7 +60,7 @@ module Sass::Script::Tree
       end
 
       begin
-        #nodyna <send-3020> <not yet classified>
+        #nodyna <send-3020> <SD MODERATE (change-prone variables)>
         result = opts(value1.send(@operator, value2))
       rescue NoMethodError => e
         raise e unless e.name.to_s == @operator.to_s

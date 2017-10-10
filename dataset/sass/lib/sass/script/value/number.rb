@@ -224,7 +224,7 @@ module Sass::Script::Value
         end
       end
       value = :/ == operation ? this.value.to_f : this.value
-      #nodyna <send-3026> <not yet classified>
+      #nodyna <send-3026> <SD MODERATE (change-prone variables)>
       result = value.send(operation, other.value)
 
       if result.is_a?(Numeric)

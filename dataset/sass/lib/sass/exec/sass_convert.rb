@@ -240,7 +240,7 @@ END
               Sass::Engine.for_file(input_path, @options[:for_engine])
             else
               Sass::Engine.new(input.read, @options[:for_engine])
-            #nodyna <send-3000> <not yet classified>
+            #nodyna <send-3000> <SD COMPLEX (change-prone variables)>
             end.to_tree.send("to_#{@options[:to]}", @options[:for_tree])
           end
         end

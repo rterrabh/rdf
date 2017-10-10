@@ -1,7 +1,7 @@
 module Sass
   module Callbacks
     def self.extended(base)
-      #nodyna <send-2970> <not yet classified>
+      #nodyna <send-2970> <SD TRIVIAL (public functions)>
       base.send(:include, InstanceMethods)
     end
 
@@ -14,7 +14,7 @@ module Sass
     end
 
     def define_callback(name)
-      #nodyna <class_eval-2971> <not yet classified>
+      #nodyna <class_eval-2971> <CE MODERATE (define methods)>
       class_eval <<RUBY, __FILE__, __LINE__ + 1
 def on_#{name}(&block)
   @_sass_callbacks ||= {}

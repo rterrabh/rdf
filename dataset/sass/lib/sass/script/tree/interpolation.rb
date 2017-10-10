@@ -46,11 +46,11 @@ module Sass::Script::Tree
 
     def deep_copy
       node = dup
-      #nodyna <instance_variable_set-3010> <not yet classified>
+      #nodyna <instance_variable_set-3010> <IVS MODERATE (private access)>
       node.instance_variable_set('@before', @before.deep_copy) if @before
-      #nodyna <instance_variable_set-3011> <not yet classified>
+      #nodyna <instance_variable_set-3011> <IVS MODERATE (private access)>
       node.instance_variable_set('@mid', @mid.deep_copy)
-      #nodyna <instance_variable_set-3012> <not yet classified>
+      #nodyna <instance_variable_set-3012> <IVS MODERATE (private access)>
       node.instance_variable_set('@after', @after.deep_copy) if @after
       node
     end

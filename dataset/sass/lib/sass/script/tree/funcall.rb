@@ -63,11 +63,11 @@ module Sass::Script::Tree
 
     def deep_copy
       node = dup
-      #nodyna <instance_variable_set-3021> <not yet classified>
+      #nodyna <instance_variable_set-3021> <IVS MODERATE (private access)>
       node.instance_variable_set('@args', args.map {|a| a.deep_copy})
       copied_keywords = Sass::Util::NormalizedMap.new
       @keywords.as_stored.each {|k, v| copied_keywords[k] = v.deep_copy}
-      #nodyna <instance_variable_set-3022> <not yet classified>
+      #nodyna <instance_variable_set-3022> <IVS MODERATE (private access)>
       node.instance_variable_set('@keywords', copied_keywords)
       node
     end
@@ -92,7 +92,7 @@ module Sass::Script::Tree
         local_environment = Sass::Environment.new(environment.global_env, environment.options)
         local_environment.caller = Sass::ReadOnlyEnvironment.new(environment, environment.options)
         result = opts(Sass::Script::Functions::EvaluationContext.new(
-          #nodyna <send-3023> <not yet classified>
+          #nodyna <send-3023> <SD COMPLEX (change-prone variables)>
           local_environment).send(ruby_name, *args))
         without_original(result)
       else
@@ -219,7 +219,6 @@ module Sass::Script::Tree
           trace = e.backtrace.dup
           raise e if !Sass::Util.jruby1_6? && trace.shift !~ /:in `__send__'$/
 
-          #nodyna <send-3024> <not yet classified>
           if !(trace[0] =~ /:in `send'$/ && trace[1] =~ /:in `_perform'$/)
             raise e
           elsif !Sass::Util.jruby1_6?

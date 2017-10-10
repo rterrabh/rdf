@@ -31,7 +31,7 @@ module Sass::Script::Tree
 
     def deep_copy
       node = dup
-      #nodyna <instance_variable_set-3016> <not yet classified>
+      #nodyna <instance_variable_set-3016> <IVS MODERATE (private access)>
       node.instance_variable_set('@operand', @operand.deep_copy)
       node
     end
@@ -41,7 +41,7 @@ module Sass::Script::Tree
     def _perform(environment)
       operator = "unary_#{@operator}"
       value = @operand.perform(environment)
-      #nodyna <send-3017> <not yet classified>
+      #nodyna <send-3017> <SD MODERATE (change-prone variables)>
       value.send(operator)
     rescue NoMethodError => e
       raise e unless e.name.to_s == operator.to_s
