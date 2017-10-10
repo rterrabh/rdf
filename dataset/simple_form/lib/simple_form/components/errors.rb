@@ -16,14 +16,14 @@ module SimpleForm
       protected
 
       def error_text
-        #nodyna <send-3058> <not yet classified>
+        #nodyna <send-3058> <SD COMPLEX (change-prone variables)>
         text = has_custom_error? ? options[:error] : errors.send(error_method)
 
         "#{html_escape(options[:error_prefix])} #{text}".lstrip.html_safe
       end
 
       def full_error_text
-        #nodyna <send-3059> <not yet classified>
+        #nodyna <send-3059> <SD COMPLEX (change-prone variables)>
         text = has_custom_error? ? options[:error] : full_errors.send(error_method)
 
         text.html_safe

@@ -32,27 +32,27 @@ class Caller < SexpInterpreter
 
   def process_defn(exp)
     if(exp[1] == @methodName)
-      puts "#{@currentFile}.#{exp.line}"
+      puts "#{@currentFile}.#{exp.line} (DEF)"
     end
     default_process(exp)
   end
 
   def process_sdefn(exp)
     if(exp[1] == @methodName)
-      puts "#{@currentFile}.#{exp.line}"
+      puts "#{@currentFile}.#{exp.line} (DEF)"
     end
     default_process(exp)
   end
 
   def process_call(exp)
     if(exp[2] == @methodName)
-      puts "#{@currentFile}.#{exp.line}"
+      puts "#{@currentFile}.#{exp.line} (CALL)"
     end
     default_process(exp)
   end
 end
 
 if(ARGV.size >= 0)
-  files_to_research = ["../dataset/vagrant/**/lib/**/*.rb"]
+  files_to_research = ["../dataset/simple_form/**/lib/**/*.rb"]
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

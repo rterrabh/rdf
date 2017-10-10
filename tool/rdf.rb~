@@ -136,10 +136,10 @@ files_to_research = []
 #files_to_research << "../dataset/sass/**/lib/**/*.rb"
 
 #simple form
-files_to_research << "../dataset/simple_form/**/lib/**/*.rb"
+#files_to_research << "../dataset/simple_form/**/lib/**/*.rb"
 
 #vagrant
-#files_to_research << "../dataset/vagrant/**/lib/**/*.rb"
+files_to_research << "../dataset/vagrant/**/lib/**/*.rb"
 
 #whenever
 #files_to_research << "../dataset/whenever/**/lib/**/*.rb"

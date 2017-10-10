@@ -88,10 +88,10 @@ module SimpleForm
       options[:class] = [SimpleForm.button_class, options[:class]].compact
       args << options
       if respond_to?("#{type}_button")
-        #nodyna <send-3042> <not yet classified>
+        #nodyna <send-3042> <SD COMPLEX (change-prone variables)>
         send("#{type}_button", *args, &block)
       else
-        #nodyna <send-3043> <not yet classified>
+        #nodyna <send-3043> <SD COMPLEX (change-prone variables)>
         send(type, *args, &block)
       end
     end
@@ -183,12 +183,12 @@ module SimpleForm
         relation = reflection.klass.all
 
         if reflection.respond_to?(:scope) && reflection.scope
-          #nodyna <instance_exec-3044> <not yet classified>
+          #nodyna <instance_exec-3044> <IEX COMPLEX (block without parameters)>
           relation = reflection.klass.instance_exec(&reflection.scope)
         else
           order = reflection.options[:order]
           conditions = reflection.options[:conditions]
-          #nodyna <instance_exec-3045> <not yet classified>
+          #nodyna <instance_exec-3045> <IEX COMPLEX (block without parameters)>
           conditions = object.instance_exec(&conditions) if conditions.respond_to?(:call)
 
           relation = relation.where(conditions)
@@ -212,7 +212,7 @@ module SimpleForm
         end
 
         if options[:preload] != false && object.respond_to?(association)
-          #nodyna <send-3046> <not yet classified>
+          #nodyna <send-3046> <SD COMPLEX (change-prone variables)>
           target = object.send(association)
           target.to_a if target.respond_to?(:to_a)
         end
@@ -264,7 +264,7 @@ module SimpleForm
     end
 
     def file_method?(attribute_name)
-      #nodyna <send-3047> <not yet classified>
+      #nodyna <send-3047> <SD COMPLEX (change-prone variables)>
       file = @object.send(attribute_name) if @object.respond_to?(attribute_name)
       file && SimpleForm.file_methods.any? { |m| file.respond_to?(m) }
     end
@@ -331,7 +331,7 @@ module SimpleForm
       return if SimpleForm.inputs_discovery == false && at == Object
 
       begin
-        #nodyna <const_get-3048> <not yet classified>
+        #nodyna <const_get-3048> <CG COMPLEX (change-prone variables)>
         at.const_get(mapping)
       rescue NameError => e
         raise if e.message !~ /#{mapping}$/

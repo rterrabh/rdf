@@ -5,10 +5,10 @@ module SimpleForm
         merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 
         if use_html5_inputs?
-          #nodyna <send-3053> <not yet classified>
+          #nodyna <send-3053> <SD COMPLEX (change-prone variables)>
           @builder.send(:"#{input_type}_field", attribute_name, merged_input_options)
         else
-          #nodyna <send-3054> <not yet classified>
+          #nodyna <send-3054> <SD COMPLEX (change-prone variables)>
           @builder.send(:"#{input_type}_select", attribute_name, input_options, merged_input_options)
         end
       end

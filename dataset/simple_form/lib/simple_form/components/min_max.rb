@@ -40,7 +40,7 @@ module SimpleForm
         if option.is_a?(Numeric)
           option
         elsif option.is_a?(Symbol)
-          #nodyna <send-3060> <not yet classified>
+          #nodyna <send-3060> <SD COMPLEX (change-prone variables)>
           object.send(option)
         elsif option.respond_to?(:call)
           option.call(object)

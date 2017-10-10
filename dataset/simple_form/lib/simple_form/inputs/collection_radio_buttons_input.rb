@@ -6,7 +6,7 @@ module SimpleForm
 
         merged_input_options = merge_wrapper_options(input_html_options, wrapper_options)
 
-        #nodyna <send-3057> <not yet classified>
+        #nodyna <send-3057> <SD COMPLEX (change-prone variables)>
         @builder.send("collection_#{input_type}",
           attribute_name, collection, value_method, label_method,
           input_options, merged_input_options,

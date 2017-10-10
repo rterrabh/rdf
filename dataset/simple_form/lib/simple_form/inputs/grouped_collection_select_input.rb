@@ -21,7 +21,6 @@ module SimpleForm
       end
 
       def collection
-        #nodyna <send-3052> <not yet classified>
         @collection ||= grouped_collection.map { |collection| collection.try(:send, group_method) }.detect(&:present?) || []
       end
 

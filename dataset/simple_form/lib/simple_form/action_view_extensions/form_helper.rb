@@ -54,5 +54,5 @@ module SimpleForm
   end
 end
 
-#nodyna <send-3051> <not yet classified>
+#nodyna <send-3051> <SD TRIVIAL (public methods)>
 ActionView::Base.send :include, SimpleForm::ActionViewExtensions::FormHelper
