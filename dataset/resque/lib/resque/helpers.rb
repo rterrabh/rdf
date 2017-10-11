@@ -60,11 +60,10 @@ module Resque
 
       constant = Object
       names.each do |name|
-        #nodyna <const_get-2962> <not yet classified>
         args = Module.method(:const_get).arity != 1 ? [false] : []
 
         if constant.const_defined?(name, *args)
-          #nodyna <const_get-2963> <not yet classified>
+          #nodyna <const_get-2963> <CG COMPLEX (change-prone variables)>
           constant = constant.const_get(name)
         else
           constant = constant.const_missing(name)

@@ -53,6 +53,6 @@ class Caller < SexpInterpreter
 end
 
 if(ARGV.size >= 0)
-  files_to_research = ["../dataset/sass/**/lib/**/*.rb"]
+  files_to_research = ["../dataset/resque/**/lib/**/*.rb"]
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

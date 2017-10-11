@@ -68,11 +68,10 @@ module Resque
 
       constant = Object
       names.each do |name|
-        #nodyna <const_get-2955> <not yet classified>
         args = Module.method(:const_get).arity != 1 ? [false] : []
 
         if constant.const_defined?(name, *args)
-          #nodyna <const_get-2956> <not yet classified>
+          #nodyna <const_get-2956> <CG COMPLEX (change-prone variables)>
           constant = constant.const_get(name)
         else
           constant = constant.const_missing(name)
@@ -136,7 +135,7 @@ module Resque
       begin
         begin
           before_hooks.each do |hook|
-            #nodyna <send-2957> <not yet classified>
+            #nodyna <send-2957> <SD COMPLEX (array)>
             job.send(hook, *job_args)
           end
         rescue DontPerform
@@ -150,12 +149,12 @@ module Resque
           stack = around_hooks.reverse.inject(nil) do |last_hook, hook|
             if last_hook
               lambda do
-                #nodyna <send-2958> <not yet classified>
+                #nodyna <send-2958> <SD COMPLEX (array)>
                 job.send(hook, *job_args) { last_hook.call }
               end
             else
               lambda do
-                #nodyna <send-2959> <not yet classified>
+                #nodyna <send-2959> <SD COMPLEX (array)>
                 job.send(hook, *job_args) do
                   result = job.perform(*job_args)
                   job_was_performed = true
@@ -168,7 +167,7 @@ module Resque
         end
 
         after_hooks.each do |hook|
-          #nodyna <send-2960> <not yet classified>
+          #nodyna <send-2960> <SD COMPLEX (array)>
           job.send(hook, *job_args)
         end
 
@@ -244,7 +243,7 @@ module Resque
       begin
         job_args = args || []
         if has_payload_class?
-          #nodyna <send-2961> <not yet classified>
+          #nodyna <send-2961> <SD COMPLEX (array)>
           failure_hooks.each { |hook| payload_class.send(hook, exception, *job_args) } unless @failure_hooks_ran
         end
       ensure

@@ -195,7 +195,7 @@ module Resque
 
   def enqueue_to(queue, klass, *args)
     before_hooks = Plugin.before_enqueue_hooks(klass).collect do |hook|
-      #nodyna <send-2965> <not yet classified>
+      #nodyna <send-2965> <SD COMPLEX (array)>
       klass.send(hook, *args)
     end
     return nil if before_hooks.any? { |result| result == false }
@@ -203,7 +203,7 @@ module Resque
     Job.create(queue, klass, *args)
 
     Plugin.after_enqueue_hooks(klass).each do |hook|
-      #nodyna <send-2966> <not yet classified>
+      #nodyna <send-2966> <SD COMPLEX (array)>
       klass.send(hook, *args)
     end
 
@@ -212,7 +212,7 @@ module Resque
 
   def dequeue(klass, *args)
     before_hooks = Plugin.before_dequeue_hooks(klass).collect do |hook|
-      #nodyna <send-2967> <not yet classified>
+      #nodyna <send-2967> <SD COMPLEX (array)>
       klass.send(hook, *args)
     end
     return if before_hooks.any? { |result| result == false }
@@ -220,7 +220,7 @@ module Resque
     destroyed = Job.destroy(queue_from_class(klass), klass, *args)
 
     Plugin.after_dequeue_hooks(klass).each do |hook|
-      #nodyna <send-2968> <not yet classified>
+      #nodyna <send-2968> <SD COMPLEX (array)>
       klass.send(hook, *args)
     end
     
@@ -228,7 +228,7 @@ module Resque
   end
 
   def queue_from_class(klass)
-    #nodyna <instance_variable_get-2969> <not yet classified>
+    #nodyna <instance_variable_get-2969> <IVG COMPLEX (change-prone variables)>
     klass.instance_variable_get(:@queue) ||
       (klass.respond_to?(:queue) and klass.queue)
   end

@@ -406,7 +406,7 @@ module Resque
     end
 
     def run_hook(name, *args)
-      #nodyna <send-2964> <not yet classified>
+      #nodyna <send-2964> <SD MODERATE (change-prone variables)>
       return unless hooks = Resque.send(name)
       msg = "Running #{name} hooks"
       msg << " with #{args.inspect}" if args.any?
