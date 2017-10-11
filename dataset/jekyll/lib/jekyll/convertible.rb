@@ -77,7 +77,7 @@ module Jekyll
 
     def to_liquid(attrs = nil)
       further_data = Hash[(attrs || self.class::ATTRIBUTES_FOR_LIQUID).map { |attribute|
-        #nodyna <send-2951> <not yet classified>
+        #nodyna <send-2951> <SD COMPLEX (array)>
         [attribute, send(attribute)]
       }]
 
@@ -176,7 +176,7 @@ module Jekyll
 
     def [](property)
       if self.class::ATTRIBUTES_FOR_LIQUID.include?(property)
-        #nodyna <send-2952> <not yet classified>
+        #nodyna <send-2952> <SD COMPLEX (change-prone variables)>
         send(property)
       else
         data[property]

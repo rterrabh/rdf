@@ -17,7 +17,7 @@ module Jekyll
 
       %w[safe lsi highlighter baseurl exclude include future unpublished
         show_drafts limit_posts keep_files gems].each do |opt|
-        #nodyna <send-2947> <not yet classified>
+        #nodyna <send-2947> <SD MODERATE (array)>
         self.send("#{opt}=", config[opt])
       end
 
@@ -163,7 +163,7 @@ module Jekyll
 
     def post_attr_hash(post_attr)
       hash = Hash.new { |h, key| h[key] = [] }
-      #nodyna <send-2948> <not yet classified>
+      #nodyna <send-2948> <SD MODERATE (change-prone variables)>
       posts.each { |p| p.send(post_attr.to_sym).each { |t| hash[t] << p } }
       hash.values.each { |posts| posts.sort!.reverse! }
       hash
@@ -237,7 +237,7 @@ module Jekyll
 
     def each_site_file
       %w(posts pages static_files docs_to_write).each do |type|
-        #nodyna <send-2949> <not yet classified>
+        #nodyna <send-2949> <SD MODERATE (array)>
         send(type).each do |item|
           yield item
         end

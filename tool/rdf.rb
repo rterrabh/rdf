@@ -124,13 +124,13 @@ files_to_research = []
 #files_to_research << "../dataset/huginn/**/app/**/*.rb"
 
 #jekyll
-#files_to_research << "../dataset/jekyll/**/lib/**/*.rb"
+files_to_research << "../dataset/jekyll/**/lib/**/*.rb"
 
 #octopress
 #files_to_research << "../dataset/octopress/**/plugins/**/*.rb"
 
 #resque
-files_to_research << "../dataset/resque/**/lib/**/*.rb"
+#files_to_research << "../dataset/resque/**/lib/**/*.rb"
 
 #sass
 #files_to_research << "../dataset/sass/**/lib/**/*.rb"

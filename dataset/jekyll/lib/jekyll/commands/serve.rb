@@ -62,7 +62,7 @@ module Jekyll
           FileUtils.mkdir_p(destination)
 
           if File.exist?(File.join(destination, '404.html'))
-            #nodyna <class_eval-2950> <not yet classified>
+            #nodyna <class_eval-2950> <CE MODERATE (define methods)>
             WEBrick::HTTPResponse.class_eval do
               def create_error_page
                 @header['content-type'] = "text/html; charset=UTF-8"

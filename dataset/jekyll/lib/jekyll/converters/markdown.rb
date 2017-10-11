@@ -15,7 +15,7 @@ module Jekyll
             when 'rdiscount' then RDiscountParser.new(@config)
           else
             if allowed_custom_class?(@config['markdown'])
-              #nodyna <const_get-2945> <not yet classified>
+              #nodyna <const_get-2945> <CG COMPLEX (change-prone variables)>
               self.class.const_get(@config['markdown']).new(@config)
             else
               Jekyll.logger.error "Invalid Markdown Processor:", "#{@config['markdown']}"

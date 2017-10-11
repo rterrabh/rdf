@@ -93,7 +93,7 @@ module Jekyll
 
         def convert(content)
           @redcarpet_extensions[:fenced_code_blocks] = !@redcarpet_extensions[:no_fenced_code_blocks]
-          #nodyna <send-2946> <not yet classified>
+          #nodyna <send-2946> <SD TRIVIAL (public methods)>
           @renderer.send :include, Redcarpet::Render::SmartyPants if @redcarpet_extensions[:smart]
           markdown = Redcarpet::Markdown.new(@renderer.new(@redcarpet_extensions), @redcarpet_extensions)
           markdown.render(content)
