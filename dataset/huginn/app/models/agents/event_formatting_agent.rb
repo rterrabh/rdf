@@ -20,7 +20,6 @@ module Agents
             "data": "This is some data"
           }
 
-      #nodyna <send-2899> <not yet classified>
       You may want to send this event to another Agent, for example a Twilio Agent, which expects a `message` key.
       You can use an Event Formatting Agent's `instructions` setting to do this in the following way:
 

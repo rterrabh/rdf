@@ -32,7 +32,6 @@ class GoogleCalendar
 
     ret = @client.execute(
       api_method: @calendar.events.insert,
-      #nodyna <send-2890> <not yet classified>
       parameters: {'calendarId' => who, 'sendNotifications' => true},
       body: details.to_json,
       headers: {'Content-Type' => 'application/json'}
@@ -51,7 +50,6 @@ class GoogleCalendar
 
     ret = @client.execute(
       api_method: @calendar.events.list,
-      #nodyna <send-2891> <not yet classified>
       parameters: {'calendarId' => who, 'sendNotifications' => true},
       body: details.to_json,
       headers: {'Content-Type' => 'application/json'}

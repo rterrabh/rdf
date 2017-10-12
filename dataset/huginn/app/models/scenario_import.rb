@@ -212,7 +212,7 @@ class ScenarioImport
       BASE_FIELDS.each do |option|
         if agent_data.has_key?(option)
           value = agent_data[option]
-          #nodyna <send-2922> <not yet classified>
+          #nodyna <send-2922> <SD MODERATE (array)>
           value = send(:"translate_#{option}", value) if option.in?(FIELDS_REQUIRING_TRANSLATION)
           self[option] = FieldDiff.new(value)
         end
@@ -244,7 +244,7 @@ class ScenarioImport
 
       BASE_FIELDS.each do |field|
         next unless self[field].present?
-        #nodyna <send-2923> <not yet classified>
+        #nodyna <send-2923> <SD MODERATE (array)>
         self[field].set_current(agent.send(field))
 
         @requires_merge ||= self[field].requires_merge?

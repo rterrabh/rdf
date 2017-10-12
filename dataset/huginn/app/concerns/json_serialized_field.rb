@@ -6,7 +6,7 @@ module JSONSerializedField
   module ClassMethods
     def json_serialize(*fields)
       fields.each do |field|
-        #nodyna <class_eval-2938> <not yet classified>
+        #nodyna <class_eval-2938> <CE MODERATE (define methods)>
         class_eval <<-CODE
           serialize :#{field}, JSONWithIndifferentAccess
 

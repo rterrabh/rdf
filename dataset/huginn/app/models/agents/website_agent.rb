@@ -86,7 +86,6 @@ module Agents
 
       Set `user_agent` to a custom User-Agent name if the website does not like the default value (`#{default_user_agent}`).
 
-      #nodyna <send-2912> <not yet classified>
       The `headers` field is optional.  When present, it should be a hash of headers to send with the request.
 
       Set `disable_ssl_verification` to `true` to disable ssl verification.

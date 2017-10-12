@@ -6,7 +6,6 @@ module Agents
     gem_dependency_check { defined?(Jabber) }
 
     description <<-MD
-      #nodyna <send-2919> <not yet classified>
       The Jabber Agent will send any events it receives to your Jabber/XMPP IM account.
 
 
@@ -47,7 +46,7 @@ module Agents
     end
 
     def deliver(text)
-      #nodyna <send-2920> <not yet classified>
+      #nodyna <send-2920> <SD COMPLEX (change-prone variable)>
       client.send Jabber::Message::new(interpolated['jabber_receiver'], text).set_type(:chat)
     end
 

@@ -24,7 +24,6 @@ module Agents
             "mode": "clean"
           }
 
-      #nodyna <send-2921> <not yet classified>
       An example of usage would be to watch a specific Dropbox directory (with the _DropboxWatchAgent_) and get the URLs for the added or updated files. You could then, for example, send emails with those links.
 
     MD

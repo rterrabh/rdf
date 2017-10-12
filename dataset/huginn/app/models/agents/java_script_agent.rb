@@ -104,7 +104,7 @@ module Agents
     def execute_js(js_function, incoming_events = [])
       js_function = js_function == "check" ? "check" : "receive"
       context = V8::Context.new
-      #nodyna <eval-2914> <not yet classified>
+      #nodyna <eval-2914> <EV COMPLEX (change-prone variables)>
       context.eval(setup_javascript)
 
       context["doCreateEvent"] = lambda { |a, y| create_event(payload: clean_nans(JSON.parse(y))).payload.to_json }
@@ -123,13 +123,13 @@ module Agents
       context["unescapeHtml"] = lambda { |a, x| CGI.unescapeHTML(x) }
 
       if (options['language'] || '').downcase == 'coffeescript'
-        #nodyna <eval-2915> <not yet classified>
+        #nodyna <eval-2915> <EV COMPLEX (change-prone variables)>
         context.eval(CoffeeScript.compile code)
       else
-        #nodyna <eval-2916> <not yet classified>
+        #nodyna <eval-2916> <EV COMPLEX (change-prone variables)>
         context.eval(code)
       end
-      #nodyna <eval-2917> <not yet classified>
+      #nodyna <eval-2917> <EV COMPLEX (change-prone variables)>
       context.eval("Agent.#{js_function}();")
     end
 

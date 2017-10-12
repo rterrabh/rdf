@@ -13,7 +13,6 @@ module Agents
       payloads contain a `message`, that will be highlighted, otherwise everything in
       their payloads will be shown.
 
-      #nodyna <send-2913> <not yet classified>
       You can specify one or more `recipients` for the email, or skip the option in order to send the email to your
       account's default email address.
 

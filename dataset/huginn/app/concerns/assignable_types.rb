@@ -16,21 +16,21 @@ module AssignableTypes
 
   module ClassMethods
     def load_types_in(module_name, my_name = module_name.singularize)
-      #nodyna <const_set-2932> <not yet classified>
+      #nodyna <const_set-2932> <CS TRIVIAL (public constant)>
       const_set(:MODULE_NAME, module_name)
-      #nodyna <const_set-2933> <not yet classified>
+      #nodyna <const_set-2933> <CS TRIVIAL (public constant)>
       const_set(:BASE_CLASS_NAME, my_name)
-      #nodyna <const_set-2934> <not yet classified>
+      #nodyna <const_set-2934> <CS TRIVIAL (public constant)>
       const_set(:TYPES, Dir[Rails.root.join("app", "models", module_name.underscore, "*.rb")].map { |path| module_name + "::" + File.basename(path, ".rb").camelize })
     end
 
     def types
-      #nodyna <const_get-2935> <not yet classified>
+      #nodyna <const_get-2935> <CG TRIVIAL (public constant)>
       const_get(:TYPES).map(&:constantize)
     end
 
     def valid_type?(type)
-      #nodyna <const_get-2936> <not yet classified>
+      #nodyna <const_get-2936> <CG TRIVIAL (public constant)>
       const_get(:TYPES).include?(type)
     end
 
@@ -42,7 +42,7 @@ module AssignableTypes
           instance.user = user if instance.respond_to?(:user=)
         end
       else
-        #nodyna <const_get-2937> <not yet classified>
+        #nodyna <const_get-2937> <CG TRIVIAL (public constant)>
         const_get(:BASE_CLASS_NAME).constantize.new(attributes).tap do |instance|
           instance.type = type
           instance.user = user if instance.respond_to?(:user=)

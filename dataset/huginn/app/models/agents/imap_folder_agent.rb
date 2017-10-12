@@ -80,7 +80,7 @@ module Agents
 
     FNM_FLAGS = [:FNM_CASEFOLD, :FNM_EXTGLOB].inject(0) { |flags, sym|
       if File.const_defined?(sym)
-        #nodyna <const_get-2903> <not yet classified>
+        #nodyna <const_get-2903> <CG MODERATE (array)>
         flags | File.const_get(sym)
       else
         flags
@@ -476,7 +476,7 @@ module Agents
       def initialize(client, fetch_data, props = {})
         @client = client
         props.each { |key, value|
-          #nodyna <instance_variable_set-2904> <not yet classified>
+          #nodyna <instance_variable_set-2904> <IVS COMPLEX (array)>
           instance_variable_set(:"@#{key}", value)
         }
         attr = fetch_data.attr

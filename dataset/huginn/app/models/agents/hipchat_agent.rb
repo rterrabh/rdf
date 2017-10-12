@@ -15,7 +15,6 @@ module Agents
 
       `https://`yoursubdomain`.hipchat.com/admin/api`
 
-      #nodyna <send-2900> <not yet classified>
       Change the `room_name` to the name of the room you want to send notifications to.
 
       You can provide a `username` and a `message`. If you want to use mentions change `format` to "text" ([details](https://www.hipchat.com/docs/api/method/rooms/message)).
@@ -70,7 +69,7 @@ module Agents
     def receive(incoming_events)
       incoming_events.each do |event|
         mo = interpolated(event)
-        #nodyna <send-2901> <not yet classified>
+        #nodyna <send-2901> <SD COMPLEX (change-prone variables)>
         client[mo[:room_name]].send(mo[:username][0..14], mo[:message],
                                       notify: boolify(mo[:notify]),
                                       color: mo[:color],

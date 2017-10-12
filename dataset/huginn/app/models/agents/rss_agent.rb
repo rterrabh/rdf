@@ -25,7 +25,6 @@ module Agents
           * `url` - The URL of the RSS feed (an array of URLs can also be used; items with identical guids across feeds will be considered duplicates).
           * `clean` - Attempt to use [feed-normalizer](https://github.com/aasmith/feed-normalizer)'s' `clean!` method to cleanup HTML in the feed.  Set to `true` to use.
           * `expected_update_period_in_days` - How often you expect this RSS feed to change.  If more than this amount of time passes without an update, the Agent will mark itself as not working.
-          #nodyna <send-2902> <not yet classified>
           * `headers` - When present, it should be a hash of headers to send with the request.
           * `basic_auth` - Specify HTTP basic auth parameters: `"username:password"`, or `["username", "password"]`.
           * `disable_ssl_verification` - Set to `true` to disable ssl verification.

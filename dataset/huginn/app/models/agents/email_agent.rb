@@ -14,11 +14,9 @@ module Agents
       By default, the email body will contain an optional `headline`, followed by a listing of the Events' keys.
 
       You can customize the email body by including the optional `body` param.  Like the `subject`, the `body` can be a simple message
-      #nodyna <send-2910> <not yet classified>
       or a Liquid template.  You could send only the Event's `some_text` field with a `body` set to `{{ some_text }}`.
       The body can contain simple HTML and will be sanitized.
 
-      #nodyna <send-2911> <not yet classified>
       You can specify one or more `recipients` for the email, or skip the option in order to send the email to your
       account's default email address.
 

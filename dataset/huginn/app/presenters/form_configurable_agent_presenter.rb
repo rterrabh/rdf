@@ -29,21 +29,21 @@ class FormConfigurableAgentPresenter < Decorator
     when :boolean
       @view.content_tag 'div' do
         @view.concat(@view.content_tag('label', class: 'radio-inline') do
-          #nodyna <send-2925> <not yet classified>
+          #nodyna <send-2925> <SD EASY (private access)>
           @view.concat @view.radio_button_tag "agent[options][#{attribute}_radio]", 'true', @agent.send(:boolify, value) == true, html_options
           @view.concat "True"
         end)
         @view.concat(@view.content_tag('label', class: 'radio-inline') do
-          #nodyna <send-2926> <not yet classified>
+          #nodyna <send-2926> <SD EASY (private access)>
           @view.concat @view.radio_button_tag "agent[options][#{attribute}_radio]", 'false', @agent.send(:boolify, value) == false, html_options
           @view.concat "False"
         end)
         @view.concat(@view.content_tag('label', class: 'radio-inline') do
-          #nodyna <send-2927> <not yet classified>
+          #nodyna <send-2927> <SD EASY (private access)>
           @view.concat @view.radio_button_tag "agent[options][#{attribute}_radio]", 'manual', @agent.send(:boolify, value) == nil, html_options
           @view.concat "Manual Input"
         end)
-        #nodyna <send-2928> <not yet classified>
+        #nodyna <send-2928> <SD EASY (private access)>
         @view.concat(@view.text_field_tag "agent[options][#{attribute}]", value, html_options.merge(:class => "form-control #{@agent.send(:boolify, value) != nil ? 'hidden' : ''}"))
       end
     when :array, :string

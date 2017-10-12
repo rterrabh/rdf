@@ -15,7 +15,7 @@ module FormConfigurable
 
   def validate_option(method)
     if self.respond_to? "validate_#{method}".to_sym
-      #nodyna <send-2929> <not yet classified>
+      #nodyna <send-2929> <SD COMPLEX (change-prone variables)>
       self.send("validate_#{method}".to_sym)
     else
       false
@@ -24,7 +24,7 @@ module FormConfigurable
 
   def complete_option(method)
     if self.respond_to? "complete_#{method}".to_sym
-      #nodyna <send-2930> <not yet classified>
+      #nodyna <send-2930> <SD COMPLEX (change-prone variable)>
       self.send("complete_#{method}".to_sym)
     end
   end
@@ -47,7 +47,7 @@ module FormConfigurable
 
       if options[:type] == :array
         options[:roles] << :completable
-        #nodyna <class_eval-2931> <not yet classified>
+        #nodyna <class_eval-2931> <CE MODERATE (define methods)>
         class_eval <<-EOF
           def complete_#{name}
           end

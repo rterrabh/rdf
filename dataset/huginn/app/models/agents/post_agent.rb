@@ -7,21 +7,16 @@ module Agents
     default_schedule "never"
 
     description <<-MD
-      #nodyna <send-2905> <not yet classified>
       A Post Agent receives events from other agents (or runs periodically), merges those events with the [Liquid-interpolated](https://github.com/cantino/huginn/wiki/Formatting-Events-using-Liquid) contents of `payload`, and sends the results as POST (or GET) requests to a specified url.  To skip merging in the incoming event, but still send the interpolated payload, set `no_merge` to `true`.
 
-      #nodyna <send-2906> <not yet classified>
       The `post_url` field must specify where you would like to send requests. Please include the URI scheme (`http` or `https`).
 
       The `method` used can be any of `get`, `post`, `put`, `patch`, and `delete`.
 
-      #nodyna <send-2907> <not yet classified>
-      #nodyna <send-2908> <not yet classified>
       By default, non-GETs will be sent with form encoding (`application/x-www-form-urlencoded`).  Change `content_type` to `json` to send JSON instead.  Change `content_type` to `xml` to send XML, where the name of the root element may be specified using `xml_root`, defaulting to `post`.
 
       Other Options:
 
-        #nodyna <send-2909> <not yet classified>
         * `headers` - When present, it should be a hash of headers to send with the request.
         * `basic_auth` - Specify HTTP basic auth parameters: `"username:password"`, or `["username", "password"]`.
         * `disable_ssl_verification` - Set to `true` to disable ssl verification.

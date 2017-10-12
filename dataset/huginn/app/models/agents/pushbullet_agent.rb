@@ -94,7 +94,7 @@ module Agents
     end
 
     def request(http_method, method, options)
-      #nodyna <send-2918> <not yet classified>
+      #nodyna <send-2918> <SD MODERATE (change-prone variables)>
       response = JSON.parse(HTTParty.send(http_method, API_BASE + method, options).body)
       raise Unauthorized, response['error']['message'] if response['error'].present?
       response

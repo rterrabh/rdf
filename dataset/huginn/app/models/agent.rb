@@ -423,7 +423,7 @@ class AgentDrop
     :keep_events_for,
     :propagate_immediately,
   ].each { |attr|
-    #nodyna <define_method-2892> <not yet classified>
+    #nodyna <define_method-2892> <DM MODERATE (array)>
     define_method(attr) {
       @object.__send__(attr)
     } unless method_defined?(attr)

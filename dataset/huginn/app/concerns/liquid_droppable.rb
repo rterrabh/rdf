@@ -18,13 +18,13 @@ module LiquidDroppable
   end
 
   included do
-    #nodyna <const_set-2939> <not yet classified>
+    #nodyna <const_set-2939> <CS TRIVIAL (public constant)>
     const_set :Drop,
               if Kernel.const_defined?(drop_name = "#{name}Drop")
-                #nodyna <const_get-2940> <not yet classified>
+                #nodyna <const_get-2940> <CG COMPLEX (change-prone variables)>
                 Kernel.const_get(drop_name)
               else
-                #nodyna <const_set-2941> <not yet classified>
+                #nodyna <const_set-2941> <CG COMPLEX (change-prone variables)>
                 Kernel.const_set(drop_name, Class.new(Drop))
               end
   end
@@ -37,7 +37,7 @@ module LiquidDroppable
 
   class URIDrop < Drop
     URI::Generic::COMPONENT.each { |attr|
-      #nodyna <define_method-2942> <not yet classified>
+      #nodyna <define_method-2942> <DM MODERATE (array)>
       define_method(attr) {
         @object.__send__(attr)
       }

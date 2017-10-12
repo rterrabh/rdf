@@ -35,7 +35,7 @@ module DotHelper
 
     def self.draw(*args, &block)
       drawer = new(*args)
-      #nodyna <instance_exec-2924> <not yet classified>
+      #nodyna <instance_exec-2924> <IEX COMPLEX (block without parameters)>
       drawer.instance_exec(&block)
       drawer.to_s
     end

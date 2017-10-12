@@ -74,11 +74,9 @@ describe Utils do
       expect(Utils.value_at({ :foo => { :bar => :baz }}, "foo.bing")).to be_nil
     end
 
-    #nodyna <eval-2888> <not yet classified>
     it "does not eval" do
       expect {
         Utils.value_at({ :foo => 2 }, "foo[?(@ > 1)]")
-      #nodyna <eval-2889> <not yet classified>
       }.to raise_error(RuntimeError, /Cannot use .*? eval/)
     end
   end

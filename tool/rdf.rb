@@ -120,11 +120,11 @@ files_to_research = []
 #files_to_research << "../dataset/homebrew-cask/**/lib/**/*.rb"
 
 #huginn
-#files_to_research << "../dataset/huginn/**/lib/**/*.rb"
-#files_to_research << "../dataset/huginn/**/app/**/*.rb"
+files_to_research << "../dataset/huginn/**/lib/**/*.rb"
+files_to_research << "../dataset/huginn/**/app/**/*.rb"
 
 #jekyll
-files_to_research << "../dataset/jekyll/**/lib/**/*.rb"
+#files_to_research << "../dataset/jekyll/**/lib/**/*.rb"
 
 #octopress
 #files_to_research << "../dataset/octopress/**/plugins/**/*.rb"

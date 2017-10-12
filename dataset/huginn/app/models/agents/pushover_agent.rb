@@ -18,16 +18,12 @@ module Agents
 
       Your event can provide any of the following optional parameters or you can provide defaults:
 
-      #nodyna <send-2893> <not yet classified>
       * `device` - your user's device name to send the message directly to that device, rather than all of the user's devices
       * `title` or `subject` - your notification's title
       * `url` - a supplementary URL to show with your message - `512` Character Limit
       * `url_title` - a title for your supplementary URL, otherwise just the URL is shown - `100` Character Limit
-      #nodyna <send-2894> <not yet classified>
-      #nodyna <send-2895> <not yet classified>
       * `priority` - send as `-1` to always send as a quiet notification, `0` is default, `1` to display as high-priority and bypass the user's quiet hours, or `2` for emergency priority: [Please read Pushover Docs on Emergency Priority](https://pushover.net/api#priority)
       * `sound` - the name of one of the sounds supported by device clients to override the user's default sound choice. [See PushOver docs for sound options.](https://pushover.net/api#sounds)
-      #nodyna <send-2896> <not yet classified>
       * `retry` - Required for emergency priority - Specifies how often (in seconds) the Pushover servers will send the same notification to the user. Minimum value: `30`
       * `expire` - Required for emergency priority - Specifies how many seconds your notification will continue to be retried for (every retry seconds). Maximum value: `86400`
 
