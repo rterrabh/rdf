@@ -73,7 +73,7 @@ class Hbc::CLI::InternalStanza < Hbc::CLI::InternalUseBase
       end
 
       begin
-        #nodyna <send-2867> <not yet classified>
+        #nodyna <send-2867> <SD COMPLEX (change-prone variables)>
         value = cask.send(stanza)
       rescue StandardError
         opoo "failure calling '#{stanza}' on Cask '#{cask_token}'" unless quiet
@@ -92,7 +92,7 @@ class Hbc::CLI::InternalStanza < Hbc::CLI::InternalUseBase
       end
 
       if format
-        #nodyna <send-2868> <not yet classified>
+        #nodyna <send-2868> <SD MODERATE (change-prone variables)>
         puts value.send(format)
       else
         if artifact_name or value.is_a?(Symbol)

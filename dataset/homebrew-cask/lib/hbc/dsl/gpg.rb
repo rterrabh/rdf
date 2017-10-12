@@ -19,7 +19,7 @@ class Hbc::DSL::Gpg
       writer_method = "#{hkey}=".to_sym
       hvalue = Hbc::UnderscoreSupportingURI.parse(hvalue) if hkey == :key_url
       valid_id?(hvalue) if hkey == :key_id
-      #nodyna <send-2857> <not yet classified>
+      #nodyna <send-2857> <SD COMPLEX (change-prone variables)>
       send(writer_method, hvalue)
     end
     unless KEY_PARAMETERS.intersection(parameters.keys).length == 1

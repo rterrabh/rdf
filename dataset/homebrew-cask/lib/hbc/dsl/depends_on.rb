@@ -47,7 +47,7 @@ class Hbc::DSL::DependsOn
     pairs.each do |key, value|
       raise "invalid depends_on key: '#{key.inspect}'" unless VALID_KEYS.include?(key)
       writer_method = "#{key}=".to_sym
-      #nodyna <send-2853> <not yet classified>
+      #nodyna <send-2853> <SD COMPLEX (array)>
       @pairs[key] = send(writer_method, value)
     end
   end

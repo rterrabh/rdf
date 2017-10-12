@@ -51,10 +51,10 @@ class Hbc::Artifact::Symlinked < Hbc::Artifact::Base
     if target_hash
       raise Hbc::CaskInvalidError unless target_hash.respond_to?(:keys)
       target_hash.assert_valid_keys(:target)
-      #nodyna <send-2849> <not yet classified>
+      #nodyna <send-2849> <SD COMPLEX (change-prone variables)>
       @target = Hbc.send(self.class.artifact_dirmethod).join(target_hash[:target])
     else
-      #nodyna <send-2850> <not yet classified>
+      #nodyna <send-2850> <SD COMPLEX (change-prone variables)>
       @target = Hbc.send(self.class.artifact_dirmethod).join(source.basename)
     end
   end

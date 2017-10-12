@@ -12,7 +12,7 @@ class Hbc::DSL::Tags
     @pairs.each do |key, value|
       raise "invalid tags key: '#{key.inspect}'" unless VALID_TAGS.include?(key)
       writer_method = "#{key}=".to_sym
-      #nodyna <send-2855> <not yet classified>
+      #nodyna <send-2855> <SD COMPLEX (array)>
       send(writer_method, value)
     end
   end

@@ -17,7 +17,7 @@ class Hbc::DSL::ConflictsWith
     pairs.each do |key, value|
       raise "invalid conflicts_with key: '#{key.inspect}'" unless VALID_KEYS.include?(key)
       writer_method = "#{key}=".to_sym
-      #nodyna <send-2854> <not yet classified>
+      #nodyna <send-2854> <SD COMPLEX (array)>
       send(writer_method, value)
     end
   end

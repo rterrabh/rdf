@@ -100,7 +100,7 @@ class Hbc::Cask
       ].each do |method|
         printable_method = method.to_s
         printable_method = "name" if printable_method == "full_name"
-        #nodyna <send-2866> <not yet classified>
+        #nodyna <send-2866> <SD MODERATE (array)>
         odebug "Cask instance method '#{printable_method}':", self.send(method).to_yaml
       end
     end

@@ -8,7 +8,7 @@ module Hbc::UnderscoreSupportingURI
     scheme, host, path = simple_parse(maybe_uri)
     if path and host =~ /\_/
       URI.parse(without_host_underscores(scheme, host, path)).tap { |uri|
-        #nodyna <instance_variable_set-2877> <not yet classified>
+        #nodyna <instance_variable_set-2877> <IVS COMPLEX (change-prone variables)>
         uri.instance_variable_set('@host', host)
       }
     else

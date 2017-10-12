@@ -251,7 +251,7 @@ module Hbc::DSL
     end
 
     ordinary_artifact_types.each do |type|
-      #nodyna <define_method-2861> <not yet classified>
+      #nodyna <define_method-2861> <DM MODERATE (array)>
       define_method(type) do |*args|
         if type == :stage_only and args != [true]
           raise Hbc::CaskInvalidError.new(self.token, "'stage_only' takes a single argument: true")
@@ -283,7 +283,7 @@ module Hbc::DSL
     ]
 
     SPECIAL_ARTIFACT_TYPES.each do |type|
-      #nodyna <define_method-2862> <not yet classified>
+      #nodyna <define_method-2862> <DM MODERATE (array)>
       define_method(type) do |*args|
         artifacts[type].merge(args)
       end
@@ -297,7 +297,7 @@ module Hbc::DSL
     ]
 
     ARTIFACT_BLOCK_TYPES.each do |type|
-      #nodyna <define_method-2863> <not yet classified>
+      #nodyna <define_method-2863> <DM MODERATE (array)>
       define_method(type) do |&block|
         artifacts[type] << block
       end

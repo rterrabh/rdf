@@ -43,7 +43,7 @@ class Hbc::CLI
 
   def self.command_classes
     @@command_classes ||= Hbc::CLI.constants.
-                          #nodyna <const_get-2864> <not yet classified>
+                          #nodyna <const_get-2864> <CG MODERATE (array)>
                           map    { |sym| Hbc::CLI.const_get sym }.
                           select { |sym| sym.respond_to?(:run)   }
   end
@@ -73,7 +73,7 @@ class Hbc::CLI
     elsif command.to_s.include?('/') and require? command.to_s
       sym = Pathname.new(command.to_s).basename('.rb').to_s.capitalize
       klass = begin
-                #nodyna <const_get-2865> <not yet classified>
+                #nodyna <const_get-2865> <CG COMPLEX (change-prone variables)>
                 Hbc::CLI.const_get(sym)
               rescue NameError => e
                 nil

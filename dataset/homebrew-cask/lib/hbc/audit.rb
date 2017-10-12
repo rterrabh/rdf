@@ -29,7 +29,7 @@ class Hbc::Audit
   def _check_required_stanzas
     odebug "Auditing required stanzas"
     %i{version sha256 url homepage}.each do |sym|
-      #nodyna <send-2874> <not yet classified>
+      #nodyna <send-2874> <SD MODERATE (array)>
       add_error "a #{sym} stanza is required" unless cask.send(sym)
     end
     add_error 'a license value is required (:unknown is OK)' unless cask.license

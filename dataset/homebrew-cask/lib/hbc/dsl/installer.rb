@@ -26,7 +26,7 @@ class Hbc::DSL::Installer
     key = parameters.keys.first
     raise "invalid 'installer' stanza key: '#{key.inspect}'" unless VALID_KEYS.include?(key)
     writer_method = "#{key}=".to_sym
-    #nodyna <send-2856> <not yet classified>
+    #nodyna <send-2856> <SD COMPLEX (change-prone variables)>
     send(writer_method, parameters[key])
   end
 end

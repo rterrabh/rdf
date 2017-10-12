@@ -51,10 +51,10 @@ class Hbc::Source::PathBase
       end
 
       begin
-        #nodyna <const_get-2858> <not yet classified>
+        #nodyna <const_get-2858> <CG COMPLEX (change-prone variables)>
         Object.const_get(cask_class_name)
       rescue NameError
-        #nodyna <eval-2859> <not yet classified>
+        #nodyna <eval-2859> <EV COMPLEX (change-prone variables)>
         eval(cask_contents, TOPLEVEL_BINDING)
       end
 
@@ -63,7 +63,7 @@ class Hbc::Source::PathBase
       raise e
     end
     begin
-      #nodyna <const_get-2860> <not yet classified>
+      #nodyna <const_get-2860> <CG COMPLEX (change-prone variables)>
       Object.const_get(cask_class_name).new(path)
     rescue Hbc::CaskError, StandardError, ScriptError => e
       e.message.concat(" while instantiating '#{cask_class_name}' from '#{path}'")

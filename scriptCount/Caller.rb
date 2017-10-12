@@ -54,7 +54,6 @@ end
 
 if(ARGV.size >= 0)
   files_to_research = []
-  files_to_research << "../dataset/huginn/**/lib/**/*.rb"
-  files_to_research << "../dataset/huginn/**/app/**/*.rb"
+  files_to_research << "../dataset/homebrew-cask/**/lib/**/*.rb"
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

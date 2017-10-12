@@ -28,22 +28,22 @@ class Hbc::Utils::Tty
     @@sequence = []
 
     COLORS.keys.each do |sym|
-      #nodyna <define_method-2870> <not yet classified>
+      #nodyna <define_method-2870> <DM MODERATE (array)>
       define_method(sym) do
         foreground(COLORS[sym])
       end
-      #nodyna <define_method-2871> <not yet classified>
+      #nodyna <define_method-2871> <DM MODERATE (array)>
       define_method("fg_#{sym}".to_sym) do
         foreground(COLORS[sym])
       end
-      #nodyna <define_method-2872> <not yet classified>
+      #nodyna <define_method-2872> <DM MODERATE (array)>
       define_method("bg_#{sym}".to_sym) do
         background(COLORS[sym])
       end
     end
 
     ATTRIBUTES.keys.each do |sym|
-      #nodyna <define_method-2873> <not yet classified>
+      #nodyna <define_method-2873> <DM MODERATE (array)>
       define_method(sym) do
         deferred_emit(ATTRIBUTES[sym])
       end

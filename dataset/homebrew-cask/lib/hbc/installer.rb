@@ -131,7 +131,7 @@ class Hbc::Installer
     return unless @cask.depends_on.macos
     if @cask.depends_on.macos.first.is_a?(Array)
       operator, release = @cask.depends_on.macos.first
-      #nodyna <send-2869> <not yet classified>
+      #nodyna <send-2869> <SD COMPLEX (change-prone variables)>
       unless MacOS.release.send(operator, release)
         raise Hbc::CaskError.new "Cask #{@cask} depends on OS X release #{operator} #{release}, but you are running release #{MacOS.release}."
       end

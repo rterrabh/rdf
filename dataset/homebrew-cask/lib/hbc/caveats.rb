@@ -11,7 +11,7 @@ end
 class Hbc::CaveatsDSL
   def initialize(cask, block)
     @cask = cask
-    #nodyna <instance_eval-2875> <not yet classified>
+    #nodyna <instance_eval-2875> <IEV COMPLEX (block execution)>
     retval = instance_eval &block
     unless retval.nil?
       puts retval.to_s.sub(/[\r\n \t]*\Z/, "\n\n")
@@ -51,7 +51,6 @@ class Hbc::CaveatsDSL
     ~/.zprofile.  (Among other effects, #{path} will be added to the
     PATH environment variable):
 
-      #nodyna <eval-2876> <not yet classified>
       eval `/usr/libexec/path_helper -s`
 
     EOS

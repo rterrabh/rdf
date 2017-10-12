@@ -9,10 +9,10 @@ class Hbc::HbVCSDownloadStrategy < Hbc::AbstractDownloadStrategy
 
   def extract_ref
     key = REF_TYPES.find do |type|
-      #nodyna <send-2843> <not yet classified>
+      #nodyna <send-2843> <SD MODERATE (array)>
       uri_object.respond_to?(type) and uri_object.send(type)
     end
-    #nodyna <send-2844> <not yet classified>
+    #nodyna <send-2844> <SD MODERATE (change-prone variables)>
     return key, key ? uri_object.send(key) : nil
   end
 
