@@ -37,11 +37,11 @@ module CarrierWave
             if condition.respond_to?(:call)
               next unless condition.call(self, :args => args, :method => method, :file => new_file)
             else
-              #nodyna <send-2676> <not yet classified>
+              #nodyna <send-2676> <SD COMPLEX (change-prone variable)>
               next unless self.send(condition, new_file)
             end
           end
-          #nodyna <send-2677> <not yet classified>
+          #nodyna <send-2677> <SD COMPLEX (change-prone variable)>
           self.send(method, *args)
         end
       end

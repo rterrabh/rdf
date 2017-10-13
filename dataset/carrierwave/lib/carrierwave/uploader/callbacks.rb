@@ -12,10 +12,10 @@ module CarrierWave
       end
 
       def with_callbacks(kind, *args)
-        #nodyna <send-2671> <not yet classified>
+        #nodyna <send-2671> <SD COMPLEX (array)>
         self.class._before_callbacks[kind].each { |c| send c, *args }
         yield
-        #nodyna <send-2672> <not yet classified>
+        #nodyna <send-2672> <SD COMPLEX (array)>
         self.class._after_callbacks[kind].each { |c| send c, *args }
       end
 

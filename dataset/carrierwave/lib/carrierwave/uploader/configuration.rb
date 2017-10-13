@@ -44,7 +44,7 @@ module CarrierWave
 
         def storage(storage = nil)
           if storage
-            #nodyna <eval-2674> <not yet classified>
+            #nodyna <eval-2674> <EV COMPLEX (change-prone variables)>
             self._storage = storage.is_a?(Symbol) ? eval(storage_engines[storage]) : storage
           end
           _storage
@@ -52,7 +52,7 @@ module CarrierWave
         alias_method :storage=, :storage
 
         def add_config(name)
-          #nodyna <class_eval-2675> <not yet classified>
+          #nodyna <class_eval-2675> <CE MODERATE (define methods)>
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def self.eager_load_fog(fog_credentials)
               Fog::Storage.new(fog_credentials) if fog_credentials.present?

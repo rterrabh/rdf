@@ -98,10 +98,10 @@ files_to_research = []
 #files_to_research << "../dataset/capybara/**/lib/**/*.rb"
 
 #carrierwave
-#files_to_research << "../dataset/carrierwave/**/lib/**/*.rb"
+files_to_research << "../dataset/carrierwave/**/lib/**/*.rb"
 
 #cocoapods
-files_to_research << "../dataset/cocoaPods/**/lib/**/*.rb"
+#files_to_research << "../dataset/cocoaPods/**/lib/**/*.rb"
 
 #devdocs
 #files_to_research << "../dataset/devdocs/**/lib/**/*.rb"

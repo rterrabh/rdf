@@ -32,7 +32,7 @@ module CarrierWave
         if file.respond_to?(:content_type=)
           file.content_type = new_content_type
         else
-          #nodyna <instance_variable_set-2663> <not yet classified>
+          #nodyna <instance_variable_set-2663> <IVS COMPLEX (private access)>
           file.instance_variable_set(:@content_type, new_content_type)
         end
       end

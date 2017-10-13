@@ -28,14 +28,14 @@ module CarrierWave
           name = name.to_sym
           build_version(name, options) unless versions[name]
 
-          #nodyna <class_eval-2678> <not yet classified>
+          #nodyna <class_eval-2678> <CE COMPLEX (block execution)>
           versions[name][:uploader].class_eval(&block) if block
           versions[name]
         end
 
         def recursively_apply_block_to_versions(&block)
           versions.each do |name, version|
-            #nodyna <class_eval-2679> <not yet classified>
+            #nodyna <class_eval-2679> <CE COMPLEX (block execution)>
             version[:uploader].class_eval(&block)
             version[:uploader].recursively_apply_block_to_versions(&block)
           end
@@ -45,13 +45,13 @@ module CarrierWave
 
         def build_version(name, options)
           uploader = Class.new(self)
-          #nodyna <const_set-2680> <not yet classified>
+          #nodyna <const_set-2680> <CS COMPLEX (change-prone variable)>
           const_set("Uploader#{uploader.object_id}".gsub('-', '_'), uploader)
           uploader.version_names += [name]
           uploader.versions = {}
           uploader.processors = []
 
-          #nodyna <class_eval-2681> <not yet classified>
+          #nodyna <class_eval-2681> <CE MODERATE (define methods)>
           uploader.class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def self.enable_processing(value=nil)
               self.enable_processing = value if value
@@ -67,7 +67,7 @@ module CarrierWave
             end
           RUBY
 
-          #nodyna <class_eval-2682> <not yet classified>
+          #nodyna <class_eval-2682> <CE COMPLEX (define methods)>
           class_eval <<-RUBY
             def #{name}
               versions[:#{name}]
@@ -108,7 +108,7 @@ module CarrierWave
           if(condition.respond_to?(:call))
             condition.call(self, :version => name, :file => file)
           else
-            #nodyna <send-2683> <not yet classified>
+            #nodyna <send-2683> <SD COMPLEX (change-prone variable)>
             send(condition, file)
           end
         else
@@ -165,7 +165,7 @@ module CarrierWave
         active_versions.each do |name, v|
           next if v.cached?
 
-          #nodyna <send-2684> <not yet classified>
+          #nodyna <send-2684> <SD EASY (private access)>
           v.send(:cache_id=, cache_id)
           if self.class.versions[name][:options] && self.class.versions[name][:options][:from_version]
             unless versions[self.class.versions[name][:options][:from_version]].cached?

@@ -28,18 +28,18 @@ module CarrierWave
       before_update :"store_previous_model_for_#{column}"
       after_save :"remove_previously_stored_#{column}"
 
-      #nodyna <class_eval-2657> <not yet classified>
+      #nodyna <class_eval-2657> <CE COMPLEX (define methods)>
       class_eval <<-RUBY, __FILE__, __LINE__+1
         def #{column}=(new_file)
           column = _mounter(:#{column}).serialization_column
-          #nodyna <send-2658> <not yet classified>
+          #nodyna <send-2658> <SD COMPLEX (change-prone variable)>
           send(:"\#{column}_will_change!")
           super
         end
 
         def remote_#{column}_url=(url)
           column = _mounter(:#{column}).serialization_column
-          #nodyna <send-2659> <not yet classified>
+          #nodyna <send-2659> <SD COMPLEX (change-prone variable)>
           send(:"\#{column}_will_change!")
           super
         end

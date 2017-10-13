@@ -15,7 +15,7 @@ module CarrierWave
       if uploader_options[column].has_key?(option)
         uploader_options[column][option]
       else
-        #nodyna <send-2665> <not yet classified>
+        #nodyna <send-2665> <SD MODERATE (change-prone variable)>
         uploaders[column].send(option)
       end
     end
@@ -27,7 +27,7 @@ module CarrierWave
       uploaders[column.to_sym] = uploader
       uploader_options[column.to_sym] = options
 
-      #nodyna <class_eval-2666> <not yet classified>
+      #nodyna <class_eval-2666> <CE COMPLEX (define methods)>
       class_eval <<-RUBY, __FILE__, __LINE__+1
         def #{column}; super; end
         def #{column}=(new_file); super; end
@@ -35,7 +35,7 @@ module CarrierWave
 
       mod = Module.new
       include mod
-      #nodyna <class_eval-2667> <not yet classified>
+      #nodyna <class_eval-2667> <CE COMPLEX (define methods)>
       mod.class_eval <<-RUBY, __FILE__, __LINE__+1
 
         def #{column}
@@ -113,7 +113,7 @@ module CarrierWave
         def store_previous_model_for_#{column}
           serialization_column = _mounter(:#{column}).serialization_column
 
-          #nodyna <send-2668> <not yet classified>
+          #nodyna <send-2668> <SD COMPLEX (change-prone variable)>
           if #{column}.remove_previously_stored_files_after_update && send(:"\#{serialization_column}_changed?")
             @previous_model_for_#{column} ||= self.find_previous_model_for_#{column}
           end
@@ -143,11 +143,11 @@ module CarrierWave
       return uploader if uploader && !block_given?
 
       uploader = Class.new(uploader || CarrierWave::Uploader::Base)
-      #nodyna <const_set-2669> <not yet classified>
+      #nodyna <const_set-2669> <CS COMPLEX (change-prone variable)>
       const_set("Uploader#{uploader.object_id}".gsub('-', '_'), uploader)
 
       if block_given?
-        #nodyna <class_eval-2670> <not yet classified>
+        #nodyna <class_eval-2670> <CE COMPLEX (block execution)>
         uploader.class_eval(&block)
         uploader.recursively_apply_block_to_versions(&block)
       end
