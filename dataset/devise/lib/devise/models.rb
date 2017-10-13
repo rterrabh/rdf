@@ -15,7 +15,7 @@ module Devise
       mod.available_configs = accessors
 
       accessors.each do |accessor|
-        #nodyna <class_eval-2761> <not yet classified>
+        #nodyna <class_eval-2761> <CE MODERATE (define methods)>
         mod.class_eval <<-METHOD, __FILE__, __LINE__ + 1
           def #{accessor}
             if defined?(@#{accessor})
@@ -39,7 +39,7 @@ module Devise
       instance = klass.new
 
       klass.devise_modules.each do |mod|
-        #nodyna <const_get-2762> <not yet classified>
+        #nodyna <const_get-2762> <CG COMPLEX (array)>
         constant = const_get(mod.to_s.classify)
 
         constant.required_fields(klass).each do |field|
@@ -63,11 +63,11 @@ module Devise
         include Devise::Models::Authenticatable
 
         selected_modules.each do |m|
-          #nodyna <const_get-2763> <not yet classified>
+          #nodyna <const_get-2763> <CG COMPLEX (array)>
           mod = Devise::Models.const_get(m.to_s.classify)
 
           if mod.const_defined?("ClassMethods")
-            #nodyna <const_get-2764> <not yet classified>
+            #nodyna <const_get-2764> <CG COMPLEX (static values)>
             class_mod = mod.const_get("ClassMethods")
             extend class_mod
 
@@ -75,7 +75,7 @@ module Devise
               available_configs = class_mod.available_configs
               available_configs.each do |config|
                 next unless options.key?(config)
-                #nodyna <send-2765> <not yet classified>
+                #nodyna <send-2765> <SD COMPLEX (array)>
                 send(:"#{config}=", options.delete(config))
               end
             end
@@ -85,7 +85,7 @@ module Devise
         end
 
         self.devise_modules |= selected_modules
-        #nodyna <send-2766> <not yet classified>
+        #nodyna <send-2766> <SD COMPLEX (array)>
         options.each { |key, value| send(:"#{key}=", value) }
       end
     end

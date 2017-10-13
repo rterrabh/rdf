@@ -109,11 +109,11 @@ module Devise
       config = Rails.application.config
       opts[:script_name] = (config.relative_url_root if config.respond_to?(:relative_url_root))
 
-      #nodyna <send-2756> <not yet classified>
+      #nodyna <send-2756> <SD COMPLEX (change-prone variables)>
       context = send(Devise.available_router_name)
 
       if context.respond_to?(route)
-        #nodyna <send-2757> <not yet classified>
+        #nodyna <send-2757> <SD COMPLEX (change-prone variables)>
         context.send(route, opts)
       elsif respond_to?(:root_url)
         root_url(opts)
@@ -144,7 +144,7 @@ module Devise
       if method == "to_xml"
         { error: i18n_message }.to_xml(root: "errors")
       elsif {}.respond_to?(method)
-        #nodyna <send-2758> <not yet classified>
+        #nodyna <send-2758> <SD COMPLEX (change-prone variables)>
         { error: i18n_message }.send(method)
       else
         i18n_message

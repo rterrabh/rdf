@@ -107,11 +107,11 @@ files_to_research = []
 #files_to_research << "../dataset/devdocs/**/lib/**/*.rb"
 
 #devise
-#files_to_research << "../dataset/devise/**/lib/**/*.rb"
-#files_to_research << "../dataset/devise/**/app/**/*.rb"
+files_to_research << "../dataset/devise/**/lib/**/*.rb"
+files_to_research << "../dataset/devise/**/app/**/*.rb"
 
 #fpm
-files_to_research << "../dataset/fpm/**/lib/**/*.rb"
+#files_to_research << "../dataset/fpm/**/lib/**/*.rb"
 
 #grape
 #files_to_research << "../dataset/grape/**/lib/**/*.rb"

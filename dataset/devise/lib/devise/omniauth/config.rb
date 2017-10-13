@@ -35,7 +35,7 @@ module Devise
       def autoload_strategy
         name = ::OmniAuth::Utils.camelize(provider.to_s)
         if ::OmniAuth::Strategies.const_defined?(name)
-          #nodyna <const_get-2745> <not yet classified>
+          #nodyna <const_get-2745> <CG MODERATE (change-prone variable)>
           ::OmniAuth::Strategies.const_get(name)
         else
           raise StrategyNotFound, name

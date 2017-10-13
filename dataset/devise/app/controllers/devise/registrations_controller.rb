@@ -41,7 +41,7 @@ class Devise::RegistrationsController < DeviseController
   end
 
   def update
-    #nodyna <send-2789> <not yet classified>
+    #nodyna <send-2789> <SD COMPLEX (change-prone variable)>
     self.resource = resource_class.to_adapter.get!(send(:"current_#{resource_name}").to_key)
     prev_unconfirmed_email = resource.unconfirmed_email if resource.respond_to?(:unconfirmed_email)
 
@@ -101,7 +101,7 @@ class Devise::RegistrationsController < DeviseController
   def after_inactive_sign_up_path_for(resource)
     scope = Devise::Mapping.find_scope!(resource)
     router_name = Devise.mappings[scope].router_name
-    #nodyna <send-2790> <not yet classified>
+    #nodyna <send-2790> <SD COMPLEX (change-prone variable)>
     context = router_name ? send(router_name) : self
     context.respond_to?(:root_path) ? context.root_path : "/"
   end
@@ -111,9 +111,9 @@ class Devise::RegistrationsController < DeviseController
   end
 
   def authenticate_scope!
-    #nodyna <send-2791> <not yet classified>
+    #nodyna <send-2791> <SD COMPLEX (change-prone variable)>
     send(:"authenticate_#{resource_name}!", force: true)
-    #nodyna <send-2792> <not yet classified>
+    #nodyna <send-2792> <SD COMPLEX (change-prone variable)>
     self.resource = send(:"current_#{resource_name}")
   end
 

@@ -43,7 +43,7 @@ module Devise
     end
 
     initializer "devise.fix_routes_proxy_missing_respond_to_bug" do
-      #nodyna <class_eval-2759> <not yet classified>
+      #nodyna <class_eval-2759> <CE MODERATE (define methods)>
       ActionDispatch::Routing::RoutesProxy.class_eval do
         def respond_to?(method, include_private = false)
           super || routes.url_helpers.respond_to?(method)

@@ -17,7 +17,7 @@ module Devise
 
       def initialize_from_record(record)
         @scope_name = Devise::Mapping.find_scope!(record)
-        #nodyna <instance_variable_set-2778> <not yet classified>
+        #nodyna <instance_variable_set-2778> <IVS COMPLEX (change-prone variable)>
         @resource   = instance_variable_set("@#{devise_mapping.name}", record)
       end
 
@@ -50,7 +50,7 @@ module Devise
       def mailer_sender(mapping, sender = :from)
         default_sender = default_params[sender]
         if default_sender.present?
-          #nodyna <instance_eval-2779> <not yet classified>
+          #nodyna <instance_eval-2779> <IEV COMPLEX (block execution)>
           default_sender.respond_to?(:to_proc) ? instance_eval(&default_sender) : default_sender
         elsif Devise.mailer_sender.is_a?(Proc)
           Devise.mailer_sender.call(mapping.name)

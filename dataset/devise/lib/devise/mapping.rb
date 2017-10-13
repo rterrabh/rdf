@@ -20,7 +20,7 @@ module Devise
     end
 
     def self.find_by_path!(path, path_type=:fullpath)
-      #nodyna <send-2754> <not yet classified>
+      #nodyna <send-2754> <SD COMPLEX (array)>
       Devise.mappings.each_value { |m| return m if path.include?(m.send(path_type)) }
       raise "Could not find a valid mapping for path #{path.inspect}"
     end
@@ -76,7 +76,7 @@ module Devise
     end
 
     def self.add_module(m)
-      #nodyna <class_eval-2755> <not yet classified>
+      #nodyna <class_eval-2755> <CE MODERATE (define methods)>
       class_eval <<-METHOD, __FILE__, __LINE__ + 1
         def #{m}?
           self.modules.include?(:#{m})

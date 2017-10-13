@@ -55,7 +55,7 @@ module Devise
   [ :allow_insecure_token_lookup,
     :allow_insecure_sign_in_after_confirmation,
     :token_authentication_key ].each do |method|
-    #nodyna <class_eval-2740> <not yet classified>
+    #nodyna <class_eval-2740> <CE MODERATE (define methods)>
     class_eval <<-RUBY
     def self.#{method}
       ActiveSupport::Deprecation.warn "Devise.#{method} is deprecated " \
@@ -305,7 +305,7 @@ module Devise
     if options[:model]
       path = (options[:model] == true ? "devise/models/#{module_name}" : options[:model])
       camelized = ActiveSupport::Inflector.camelize(module_name.to_s)
-      #nodyna <send-2741> <not yet classified>
+      #nodyna <send-2741> <SD TRIVIAL (public methods)>
       Devise::Models.send(:autoload, camelized.to_sym, path)
     end
 

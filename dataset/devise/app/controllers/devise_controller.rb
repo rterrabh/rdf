@@ -12,7 +12,7 @@ class DeviseController < Devise.parent_controller.constantize
   respond_to :html if mimes_for_respond_to.empty?
 
   def resource
-    #nodyna <instance_variable_get-2787> <not yet classified>
+    #nodyna <instance_variable_get-2787> <IVG COMPLEX (change-prone variable)>
     instance_variable_get(:"@#{resource_name}")
   end
 
@@ -74,7 +74,7 @@ MESSAGE
   end
 
   def resource=(new_resource)
-    #nodyna <instance_variable_set-2788> <not yet classified>
+    #nodyna <instance_variable_set-2788> <IVS COMPLEX (change-prone variable)>
     instance_variable_set(:"@#{resource_name}", new_resource)
   end
 

@@ -17,7 +17,7 @@ module Devise
     def filtered_hash_by_method_for_given_keys(conditions, method, condition_keys)
       condition_keys.each do |k|
         value = conditions[k]
-        #nodyna <send-2780> <not yet classified>
+        #nodyna <send-2780> <SD MODERATE (change-prone variable)>
         conditions[k] = value.send(method) if value.respond_to?(method)
       end
 

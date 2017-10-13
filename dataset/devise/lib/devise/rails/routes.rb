@@ -68,7 +68,7 @@ module ActionDispatch::Routing
 
         devise_scope mapping.name do
           with_devise_exclusive_scope mapping.fullpath, mapping.name, options do
-            #nodyna <send-2752> <not yet classified>
+            #nodyna <send-2752> <SD COMPLEX (array)>
             routes.each { |mod| send("devise_#{mod}", mapping, mapping.controllers) }
           end
         end
@@ -212,7 +212,7 @@ ERROR
 
       def constraints_for(method_to_apply, scope=nil, block=nil)
         constraint = lambda do |request|
-          #nodyna <send-2753> <not yet classified>
+          #nodyna <send-2753> <SD MODERATE (change-prone variable)>
           request.env['warden'].send(method_to_apply, scope: scope) &&
             (block.nil? || block.call(request.env["warden"].user(scope)))
         end

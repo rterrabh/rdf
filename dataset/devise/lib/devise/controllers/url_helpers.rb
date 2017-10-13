@@ -19,14 +19,14 @@ module Devise
               action = action ? "#{action}_" : ""
               method = "#{action}#{module_name}_#{path_or_url}"
 
-              #nodyna <class_eval-2767> <not yet classified>
+              #nodyna <class_eval-2767> <CE COMPLEX (define methods)>
               class_eval <<-URL_HELPERS, __FILE__, __LINE__ + 1
                 def #{method}(resource_or_scope, *args)
                   scope = Devise::Mapping.find_scope!(resource_or_scope)
                   router_name = Devise.mappings[scope].router_name
-                  #nodyna <send-2768> <not yet classified>
+                  #nodyna <send-2768> <SD COMPLEX (change-prone variable)>
                   context = router_name ? send(router_name) : _devise_route_context
-                  #nodyna <send-2769> <not yet classified>
+                  #nodyna <send-2769> <SD COMPLEX (change-prone variable)>
                   context.send("#{action}\#{scope}_#{module_name}_#{path_or_url}", *args)
                 end
               URL_HELPERS
@@ -40,7 +40,7 @@ module Devise
       private
 
       def _devise_route_context
-        #nodyna <send-2770> <not yet classified>
+        #nodyna <send-2770> <SD COMPLEX (change-prone variable)>
         @_devise_route_context ||= send(Devise.available_router_name)
       end
     end

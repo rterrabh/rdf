@@ -46,7 +46,7 @@ module Devise
       array << "to_xml" if Rails::VERSION::STRING[0,3] == "3.1"
 
       array.each do |method|
-        #nodyna <class_eval-2747> <not yet classified>
+        #nodyna <class_eval-2747> <CE MODERATE (define methods)>
         class_eval <<-RUBY, __FILE__, __LINE__
           def #{method}(options=nil)
             options ||= {}
@@ -69,7 +69,7 @@ module Devise
       end
 
       def send_devise_notification(notification, *args)
-        #nodyna <send-2748> <not yet classified>
+        #nodyna <send-2748> <SD MODERATE (change-prone variable)>
         message = devise_mailer.send(notification, self, *args)
         if message.respond_to?(:deliver_now)
           message.deliver_now
@@ -91,9 +91,9 @@ module Devise
           self[attr] = self[attr].try(method)
 
         elsif respond_to?(attr) && respond_to?("#{attr}=")
-          #nodyna <send-2749> <not yet classified>
+          #nodyna <send-2749> <SD COMPLEX (change-prone variable)>
           new_value = send(attr).try(method)
-          #nodyna <send-2750> <not yet classified>
+          #nodyna <send-2750> <SD COMPLEX (change-prone variable)>
           send("#{attr}=", new_value)
         end
       end
@@ -147,7 +147,7 @@ module Devise
 
             required_attributes.each do |key|
               value = attributes[key]
-              #nodyna <send-2751> <not yet classified>
+              #nodyna <send-2751> <SD COMPLEX (array)>
               record.send("#{key}=", value)
               record.errors.add(key, value.present? ? error : :blank)
             end

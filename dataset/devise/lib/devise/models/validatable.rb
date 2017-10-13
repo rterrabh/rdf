@@ -12,7 +12,7 @@ module Devise
         base.extend ClassMethods
         assert_validations_api!(base)
 
-        #nodyna <class_eval-2746> <not yet classified>
+        #nodyna <class_eval-2746> <CE MODERATE (private access)>
         base.class_eval do
           validates_presence_of   :email, if: :email_required?
           validates_uniqueness_of :email, allow_blank: true, if: :email_changed?

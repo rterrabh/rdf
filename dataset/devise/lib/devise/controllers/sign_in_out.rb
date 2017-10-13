@@ -31,7 +31,7 @@ module Devise
         warden.raw_session.inspect # Without this inspect here. The session does not clear.
         warden.logout(scope)
         warden.clear_strategies_cache!(scope: scope)
-        #nodyna <instance_variable_set-2771> <not yet classified>
+        #nodyna <instance_variable_set-2771> <IVS COMPLEX (change-prone variable)>
         instance_variable_set(:"@current_#{scope}", nil)
 
         !!user

@@ -108,7 +108,7 @@ module Devise
 
       def request_values
         keys = request_keys.respond_to?(:keys) ? request_keys.keys : request_keys
-        #nodyna <send-2786> <not yet classified>
+        #nodyna <send-2786> <SD COMPLEX (array)>
         values = keys.map { |k| self.request.send(k) }
         Hash[keys.zip(values)]
       end

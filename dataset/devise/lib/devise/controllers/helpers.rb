@@ -13,7 +13,7 @@ module Devise
         def devise_group(group_name, opts={})
           mappings = "[#{ opts[:contains].map { |m| ":#{m}" }.join(',') }]"
 
-          #nodyna <class_eval-2772> <not yet classified>
+          #nodyna <class_eval-2772> <CE MODERATE (define methods)>
           class_eval <<-METHODS, __FILE__, __LINE__ + 1
             def authenticate_#{group_name}!(favourite=nil, opts={})
               unless #{group_name}_signed_in?
@@ -59,7 +59,7 @@ module Devise
       def self.define_helpers(mapping) #:nodoc:
         mapping = mapping.name
 
-        #nodyna <class_eval-2773> <not yet classified>
+        #nodyna <class_eval-2773> <CE MODERATE (define methods)>
         class_eval <<-METHODS, __FILE__, __LINE__ + 1
           def authenticate_#{mapping}!(opts={})
             opts[:scope] = :#{mapping}
@@ -110,11 +110,11 @@ module Devise
 
         home_path = "#{scope}_root_path"
 
-        #nodyna <send-2774> <not yet classified>
+        #nodyna <send-2774> <SD COMPLEX (change-prone variable)>
         context = router_name ? send(router_name) : self
 
         if context.respond_to?(home_path, true)
-          #nodyna <send-2775> <not yet classified>
+          #nodyna <send-2775> <SD COMPLEX (change-prone variable)>
           context.send(home_path)
         elsif context.respond_to?(:root_path)
           context.root_path
@@ -132,7 +132,7 @@ module Devise
       def after_sign_out_path_for(resource_or_scope)
         scope = Devise::Mapping.find_scope!(resource_or_scope)
         router_name = Devise.mappings[scope].router_name
-        #nodyna <send-2776> <not yet classified>
+        #nodyna <send-2776> <SD COMPLEX (change-prone variable)>
         context = router_name ? send(router_name) : self
         context.respond_to?(:root_path) ? context.root_path : "/"
       end
@@ -179,7 +179,7 @@ module Devise
       end
 
       def expire_data_after_sign_out!
-        #nodyna <instance_variable_set-2777> <not yet classified>
+        #nodyna <instance_variable_set-2777> <IVS COMPLEX (change-prone variable)>
         Devise.mappings.each { |_,m| instance_variable_set("@current_#{m.name}", nil) }
         super
       end

@@ -1,7 +1,7 @@
 module Devise
   module TestHelpers
     def self.included(base)
-      #nodyna <class_eval-2781> <not yet classified>
+      #nodyna <class_eval-2781> <CE MODERATE (private methods)>
       base.class_eval do
         setup :setup_controller_for_warden, :warden if respond_to?(:setup)
       end
@@ -27,16 +27,16 @@ module Devise
     def sign_in(resource_or_scope, resource=nil)
       scope    ||= Devise::Mapping.find_scope!(resource_or_scope)
       resource ||= resource_or_scope
-      #nodyna <instance_variable_get-2782> <not yet classified>
+      #nodyna <instance_variable_get-2782> <IVG EASY (private access)>
       warden.instance_variable_get(:@users).delete(scope)
       warden.session_serializer.store(resource, scope)
     end
 
     def sign_out(resource_or_scope)
       scope = Devise::Mapping.find_scope!(resource_or_scope)
-      #nodyna <instance_variable_set-2783> <not yet classified>
+      #nodyna <instance_variable_set-2783> <IVS COMPLEX (change-prone variable)>
       @controller.instance_variable_set(:"@current_#{scope}", nil)
-      #nodyna <instance_variable_get-2784> <not yet classified>
+      #nodyna <instance_variable_get-2784> <IVG EASY (private access)>
       user = warden.instance_variable_get(:@users).delete(scope)
       warden.session_serializer.delete(scope, user)
     end
@@ -82,7 +82,7 @@ module Devise
 
         status, headers, response = Devise.warden_config[:failure_app].call(env).to_a
         @controller.response.headers.merge!(headers)
-        #nodyna <send-2785> <not yet classified>
+        #nodyna <send-2785> <SD TRIVIAL (public methods)>
         @controller.send :render, status: status, text: response.body,
           content_type: headers["Content-Type"], location: headers["Location"]
         nil # causes process return @response
