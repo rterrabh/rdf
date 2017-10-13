@@ -24,7 +24,7 @@ module Grape
                 namespace_inheritable(:version, args)
                 namespace_inheritable(:version_options, options)
 
-                #nodyna <instance_eval-2815> <not yet classified>
+                #nodyna <instance_eval-2815> <IEV COMPLEX (block execution)>
                 instance_eval(&block)
               end
             else
@@ -95,7 +95,7 @@ module Grape
         end
 
         %w(get post put head delete options patch).each do |meth|
-          #nodyna <define_method-2816> <not yet classified>
+          #nodyna <define_method-2816> <DM MODERATE (array)>
           define_method meth do |*args, &block|
             options = args.extract_options!
             paths = args.first || ['/']

@@ -184,8 +184,8 @@ module Grape
             entity_class ||= (Grape::DSL::Configuration.stacked_hash_to_hash(namespace_stackable(:representations)) || {})[potential]
           end
 
-          #nodyna <const_get-2813> <not yet classified>
-          #nodyna <const_get-2814> <not yet classified>
+          #nodyna <const_get-2813> <CG TRIVIAL (public constant)>
+          #nodyna <const_get-2814> <CG TRIVIAL (public constant)>
           entity_class ||= object_class.const_get(:Entity) if object_class.const_defined?(:Entity) && object_class.const_get(:Entity).respond_to?(:represent)
         end
 

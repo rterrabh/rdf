@@ -30,6 +30,12 @@ class Caller < SexpInterpreter
     exp.map {|subtree| process(subtree) if subtree.class == Sexp}
   end
 
+  def process_cdecl(exp)
+    if(exp[1] == @methodName)
+      puts "#{@currentFile}.#{exp.line} (CDECL)"
+    end
+    default_process(exp)
+  end
   def process_defn(exp)
     if(exp[1] == @methodName)
       puts "#{@currentFile}.#{exp.line} (DEF)"
@@ -54,6 +60,7 @@ end
 
 if(ARGV.size >= 0)
   files_to_research = []
-  files_to_research << "../dataset/homebrew-cask/**/lib/**/*.rb"
+  files_to_research << "../dataset/grape/**/lib/**/*.rb"
+  #files_to_research << "/home/elderjr/Documents/test.rb"
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

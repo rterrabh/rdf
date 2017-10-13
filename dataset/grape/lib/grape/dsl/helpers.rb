@@ -15,7 +15,7 @@ module Grape
             end
             if block_given?
               inject_api_helpers_to_mod(mod) do
-                #nodyna <class_eval-2820> <not yet classified>
+                #nodyna <class_eval-2820> <CE COMPLEX (block execution)>
                 mod.class_eval(&block)
               end
             end
@@ -24,7 +24,7 @@ module Grape
           else
             mod = Module.new
             namespace_stackable(:helpers).each do |mod_to_include|
-              #nodyna <send-2821> <not yet classified>
+              #nodyna <send-2821> <SD TRIVIAL (public method)>
               mod.send :include, mod_to_include
             end
             change!

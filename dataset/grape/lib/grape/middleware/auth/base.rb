@@ -31,7 +31,7 @@ module Grape
             throw(:error, status: 401, message: 'API Authorization Failed.') unless strategy_info.present?
 
             strategy = strategy_info.create(@app, options) do |*args|
-              #nodyna <instance_exec-2808> <not yet classified>
+              #nodyna <instance_exec-2808> <IEX COMPLEX (block execution with parameters)>
               auth_proc_context.instance_exec(*args, &auth_proc)
             end
 

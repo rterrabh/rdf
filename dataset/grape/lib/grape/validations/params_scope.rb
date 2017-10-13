@@ -14,7 +14,7 @@ module Grape
         @dependent_on = opts[:dependent_on]
         @declared_params = []
 
-        #nodyna <instance_eval-2825> <not yet classified>
+        #nodyna <instance_eval-2825> <IEV COMPLEX (block execution)>
         instance_eval(&block) if block_given?
 
         configure_declared_params

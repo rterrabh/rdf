@@ -25,7 +25,7 @@ module Grape
           fail NameError.new("method #{method_name.inspect} already exists and cannot be used as an unbound method name")
         end
 
-        #nodyna <define_method-2826> <not yet classified>
+        #nodyna <define_method-2826> <DM COMPLEX (event)>
         define_method(method_name, &block)
         method = instance_method(method_name)
         remove_method(method_name)
@@ -285,7 +285,7 @@ module Grape
     def helpers
       mod = Module.new
       (namespace_stackable(:helpers) || []).each do |mod_to_include|
-        #nodyna <send-2827> <not yet classified>
+        #nodyna <send-2827> <SD TRIVIAL (public method)>
         mod.send :include, mod_to_include
       end
       mod
@@ -294,7 +294,7 @@ module Grape
     def run_filters(filters, type = :other)
       ActiveSupport::Notifications.instrument('endpoint_run_filters.grape', endpoint: self, filters: filters, type: type) do
         (filters || []).each do |filter|
-          #nodyna <instance_eval-2828> <not yet classified>
+          #nodyna <instance_eval-2828> <IEV COMPLEX (block execution)>
           instance_eval(&filter)
         end
       end

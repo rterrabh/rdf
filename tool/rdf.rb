@@ -114,10 +114,10 @@ files_to_research = []
 #files_to_research << "../dataset/fpm/**/lib/**/*.rb"
 
 #grape
-#files_to_research << "../dataset/grape/**/lib/**/*.rb"
+files_to_research << "../dataset/grape/**/lib/**/*.rb"
 
 #homebrew-cask
-files_to_research << "../dataset/homebrew-cask/**/lib/**/*.rb"
+#files_to_research << "../dataset/homebrew-cask/**/lib/**/*.rb"
 
 #huginn
 #files_to_research << "../dataset/huginn/**/lib/**/*.rb"
