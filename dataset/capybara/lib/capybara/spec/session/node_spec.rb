@@ -264,14 +264,12 @@ Capybara::SpecHelper.spec "node" do
   end
 
   describe '#send_keys', requires: [:send_keys] do
-    #nodyna <send-2637> <not yet classified>
     it "should send a string of keys to an element" do
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys('Oceanside')
       expect(@session.find(:css, '#address1_city').value).to eq 'Oceanside'
     end
 
-    #nodyna <send-2638> <not yet classified>
     it "should send special characters" do
       @session.visit('/form')
       @session.find(:css, '#address1_city').send_keys('Ocean', :space, 'sie', :left, 'd')

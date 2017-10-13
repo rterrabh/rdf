@@ -1,6 +1,6 @@
 if RSpec::Core::Version::STRING.to_f >= 3.0
   RSpec.shared_context "Capybara Features", :capybara_feature => true do
-    #nodyna <instance_eval-2654> <not yet classified>
+    #nodyna <instance_eval-2654> <IEV COMPLEX (block execution)>
     instance_eval do
       alias background before
       alias given let
@@ -18,7 +18,7 @@ else
   module Capybara
     module Features
       def self.included(base)
-        #nodyna <instance_eval-2655> <not yet classified>
+        #nodyna <instance_eval-2655> <IEV COMPLEX (block execution)>
         base.instance_eval do
           alias :background :before
           alias :scenario :it

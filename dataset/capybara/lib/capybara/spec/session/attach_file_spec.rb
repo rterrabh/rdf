@@ -44,14 +44,12 @@ Capybara::SpecHelper.spec "#attach_file" do
       expect(@session).to have_content('No file uploaded')
     end
 
-    #nodyna <send-2634> <not yet classified>
     it "should send content type text/plain when uploading a text file" do
       @session.attach_file "Single Document", @test_file_path
       @session.click_button 'Upload Single'
       expect(@session).to have_content('text/plain')
     end
 
-    #nodyna <send-2635> <not yet classified>
     it "should send content type image/jpeg when uploading an image" do
       @session.attach_file "Single Document", @test_jpg_file_path
       @session.click_button 'Upload Single'
@@ -74,7 +72,6 @@ Capybara::SpecHelper.spec "#attach_file" do
       expect(@session.body).to include(File.read(@another_test_file_path))
     end
 
-    #nodyna <send-2636> <not yet classified>
     it "should not send anything when attaching no files to a multiple upload field" do
       @session.click_button('Upload Empty Multiple')
       expect(@session).to have_content("Successfully ignored empty file field")

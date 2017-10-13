@@ -77,20 +77,17 @@ Capybara::SpecHelper.spec '#visit' do
     end
   end
 
-  #nodyna <send-2639> <not yet classified>
   it "should send no referer when visiting a page" do
     @session.visit '/get_referer'
     expect(@session).to have_content 'No referer'
   end
 
-  #nodyna <send-2640> <not yet classified>
   it "should send no referer when visiting a second page" do
     @session.visit '/get_referer'
     @session.visit '/get_referer'
     expect(@session).to have_content 'No referer'
   end
 
-  #nodyna <send-2641> <not yet classified>
   it "should send a referer when following a link" do
     @session.visit '/referer_base'
     @session.find('//a[@href="/get_referer"]').click
@@ -103,7 +100,6 @@ Capybara::SpecHelper.spec '#visit' do
     expect(@session).to have_content %r{http://.*/referer_base}
   end
 
-  #nodyna <send-2642> <not yet classified>
   it "should send a referer when submitting a form" do
     @session.visit '/referer_base'
     @session.find('//input').click

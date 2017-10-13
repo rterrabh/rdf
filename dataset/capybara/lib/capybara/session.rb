@@ -364,18 +364,18 @@ module Capybara
     end
 
     NODE_METHODS.each do |method|
-      #nodyna <define_method-2650> <not yet classified>
+      #nodyna <define_method-2650> <DM MODERATE (array)>
       define_method method do |*args, &block|
         @touched = true
-        #nodyna <send-2651> <not yet classified>
+        #nodyna <send-2651> <SD MODERATE (array)>
         current_scope.send(method, *args, &block)
       end
     end
 
     DOCUMENT_METHODS.each do |method|
-      #nodyna <define_method-2652> <not yet classified>
+      #nodyna <define_method-2652> <DM MODERATE (array)>
       define_method method do |*args, &block|
-        #nodyna <send-2653> <not yet classified>
+        #nodyna <send-2653> <SD MODERATE (array)>
         document.send(method, *args, &block)
       end
     end

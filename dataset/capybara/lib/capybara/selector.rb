@@ -47,7 +47,7 @@ module Capybara
       @label = nil
       @failure_message = nil
       @description = nil
-      #nodyna <instance_eval-2656> <not yet classified>
+      #nodyna <instance_eval-2656> <IEV COMPLEX (block execution)>
       instance_eval(&block)
     end
 

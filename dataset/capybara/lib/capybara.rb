@@ -136,7 +136,7 @@ module Capybara
     end
 
     def included(base)
-      #nodyna <send-2625> <not yet classified>
+      #nodyna <send-2625> <SD TRIVIAL (public functions)>
       base.send(:include, Capybara::DSL)
       warn "`include Capybara` is deprecated. Please use `include Capybara::DSL` instead."
     end

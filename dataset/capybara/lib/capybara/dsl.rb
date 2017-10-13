@@ -8,7 +8,7 @@ module Capybara
     end
 
     def self.extended(base)
-      #nodyna <eval-2627> <not yet classified>
+      #nodyna <eval-2627> <EV COMPLEX (scope)>
       warn "extending the main object with Capybara::DSL is not recommended!" if base == TOPLEVEL_BINDING.eval("self")
       super
     end
@@ -26,9 +26,9 @@ module Capybara
     end
 
     Session::DSL_METHODS.each do |method|
-      #nodyna <define_method-2628> <not yet classified>
+      #nodyna <define_method-2628> <DM MODERATE (array)>
       define_method method do |*args, &block|
-        #nodyna <send-2629> <not yet classified>
+        #nodyna <send-2629> <SD MODERATE (array)>
         page.send method, *args, &block
       end
     end

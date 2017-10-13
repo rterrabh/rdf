@@ -305,7 +305,6 @@ Capybara::SpecHelper.spec '#click_button' do
       expect(extract_results(@session)['first_name']).to eq('John')
     end
 
-    #nodyna <send-2630> <not yet classified>
     it "should serialize and send GET forms" do
       @session.visit('/form')
       @session.click_button('med')
@@ -365,21 +364,18 @@ Capybara::SpecHelper.spec '#click_button' do
     end
   end
 
-  #nodyna <send-2631> <not yet classified>
   it "should serialize and send valueless buttons that were clicked" do
     @session.click_button('No Value!')
     @results = extract_results(@session)
     expect(@results['no_value']).not_to be_nil
   end
 
-  #nodyna <send-2632> <not yet classified>
   it "should not send image buttons that were not clicked" do
     @session.click_button('Click me!')
     @results = extract_results(@session)
     expect(@results['okay']).to be_nil
   end
 
-  #nodyna <send-2633> <not yet classified>
   it "should serialize and send GET forms" do
     @session.visit('/form')
     @session.click_button('med')

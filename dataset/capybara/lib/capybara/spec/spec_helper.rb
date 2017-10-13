@@ -5,7 +5,7 @@ require "capybara/spec/test_app"
 require "nokogiri"
 
 unless RSpec::Matchers.method_defined?(:be_truthy)
-  #nodyna <module_eval-2648> <not yet classified>
+  #nodyna <module_eval-2648> <ME COMPLEX (block execution)>
   RSpec::Matchers.module_eval do
     alias be_truthy be_true
     alias be_falsey be_false
@@ -64,7 +64,7 @@ module Capybara
           end
           specs.each do |spec_name, spec_options, block|
             describe spec_name, spec_options do
-              #nodyna <class_eval-2649> <not yet classified>
+              #nodyna <class_eval-2649> <CE COMPLEX (block execution)>
               class_eval(&block)
             end
           end
