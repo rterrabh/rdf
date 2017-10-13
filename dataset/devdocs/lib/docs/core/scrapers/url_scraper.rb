@@ -81,7 +81,7 @@ module Docs
       def with_filters(*filters)
         stack = FilterStack.new
         stack.push(*filters)
-        #nodyna <instance_variable_set-2739> <not yet classified>
+        #nodyna <instance_variable_set-2739> <IVS EASY (private access)>
         pipeline.instance_variable_set :@filters, stack.to_a.freeze
         yield
       ensure

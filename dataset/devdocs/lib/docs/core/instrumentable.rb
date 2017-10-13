@@ -3,12 +3,12 @@ require 'active_support/notifications'
 module Docs
   module Instrumentable
     def self.extended(base)
-      #nodyna <send-2736> <not yet classified>
+      #nodyna <send-2736> <SD TRIVIAL (public methods)>
       base.send :extend, Methods
     end
 
     def self.included(base)
-      #nodyna <send-2737> <not yet classified>
+      #nodyna <send-2737> <SD TRIVIAL (public methods)>
       base.send :include, Methods
     end
 

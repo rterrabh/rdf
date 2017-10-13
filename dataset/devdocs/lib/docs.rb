@@ -37,7 +37,7 @@ module Docs
 
   def self.find(name)
     const = name.camelize
-    #nodyna <const_get-2732> <not yet classified>
+    #nodyna <const_get-2732> <CG COMPLEX (change-prone variables)>
     const_get(const)
   rescue NameError => error
     if error.name.to_s == const
@@ -67,7 +67,7 @@ module Docs
 
   def self.install_report(*names)
     names.each do |name|
-      #nodyna <const_get-2733> <not yet classified>
+      #nodyna <const_get-2733> <CG COMPLEX (array)>
       const_get("#{name}_subscriber".camelize).subscribe_to(self)
     end
   end

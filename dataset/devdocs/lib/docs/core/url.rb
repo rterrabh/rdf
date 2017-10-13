@@ -33,7 +33,7 @@ module Docs
       return super unless hash.is_a? Hash
       hash.assert_valid_keys URI::Generic::COMPONENT
       hash.each_pair do |key, value|
-        #nodyna <send-2738> <not yet classified>
+        #nodyna <send-2738> <SD COMPLEX (array)>
         send "#{key}=", value
       end
       self

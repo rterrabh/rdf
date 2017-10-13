@@ -56,7 +56,7 @@ class DocsAbstractStoreTest < MiniTest::Spec
   describe "#open" do
     it "raises an error when the store is locked" do
       assert_raises LockError do
-        #nodyna <send-2711> <not yet classified>
+        #nodyna <send-2711> <SD EASY (private access)>
         store.send :lock, &-> { store.open 'dir' }
       end
     end
@@ -139,7 +139,7 @@ class DocsAbstractStoreTest < MiniTest::Spec
 
     it "raises an error when the store is locked" do
       assert_raises LockError do
-        #nodyna <send-2712> <not yet classified>
+        #nodyna <send-2712> <SD EASY (private access)>
         store.send :lock, &-> { store.close }
       end
     end

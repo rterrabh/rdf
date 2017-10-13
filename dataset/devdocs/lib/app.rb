@@ -202,7 +202,7 @@ class App < Sinatra::Application
   end
 
   %w(docs.json application.js application.css).each do |asset|
-    #nodyna <class_eval-2730> <not yet classified>
+    #nodyna <class_eval-2730> <CE MODERATE (array)>
     class_eval <<-CODE, __FILE__, __LINE__ + 1
       get '/#{asset}' do
         redirect asset_path('#{asset}', protocol: 'http')
@@ -223,7 +223,7 @@ class App < Sinatra::Application
     '/s/fb'               => 'https://twitter.com/intent/tweet?url=http%3A%2F%2Fdevdocs.io&via=DevDocs&text=All-in-one%2C%20offline%20API%20documentation%20browser%3A',
     '/s/re'               => 'http://www.reddit.com/submit?url=http%3A%2F%2Fdevdocs.io&title=All-in-one%2C%20offline%20API%20documentation%20browser&resubmit=true'
   }.each do |path, url|
-    #nodyna <class_eval-2731> <not yet classified>
+    #nodyna <class_eval-2731> <CE MODERATE (array)>
     class_eval <<-CODE, __FILE__, __LINE__ + 1
       get '#{path}' do
         redirect '#{url}'

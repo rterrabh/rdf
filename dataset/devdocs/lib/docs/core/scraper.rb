@@ -8,7 +8,7 @@ module Docs
       def inherited(subclass)
         super
 
-        #nodyna <class_eval-2735> <not yet classified>
+        #nodyna <class_eval-2735> <CE MODERATE (block execution)>
         subclass.class_eval do
           extend AutoloadHelper
           autoload_all "docs/filters/#{to_s.demodulize.underscore}", 'filter'

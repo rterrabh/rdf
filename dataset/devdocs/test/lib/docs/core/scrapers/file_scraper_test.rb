@@ -28,7 +28,7 @@ class FileScraperTest < MiniTest::Spec
     end
 
     let :result do
-      #nodyna <send-2717> <not yet classified>
+      #nodyna <send-2717> <SD EASY (private access)>
       scraper.send :request_one, path
     end
 
@@ -61,14 +61,14 @@ class FileScraperTest < MiniTest::Spec
 
     it "requests the given url" do
       mock(scraper).request_one('url')
-      #nodyna <send-2718> <not yet classified>
+      #nodyna <send-2718> <SD EASY (private access)>
       scraper.send(:request_all, 'url') {}
     end
 
     it "requests the given urls" do
       requests = []
       stub(scraper).request_one { |url| requests << url; nil }
-      #nodyna <send-2719> <not yet classified>
+      #nodyna <send-2719> <SD EASY (private access)>
       scraper.send(:request_all, urls) {}
       assert_equal urls, requests
     end
@@ -76,7 +76,7 @@ class FileScraperTest < MiniTest::Spec
     it "yields the responses" do
       responses = []
       stub(scraper).request_one { |url| urls.index(url) }
-      #nodyna <send-2720> <not yet classified>
+      #nodyna <send-2720> <SD EASY (private access)>
       scraper.send(:request_all, urls) { |response| responses << response; nil }
       assert_equal (0...urls.length).to_a, responses
     end
@@ -93,7 +93,7 @@ class FileScraperTest < MiniTest::Spec
       it "requests the returned urls" do
         requests = []
         stub(scraper).request_one { |url| requests << url; url }
-        #nodyna <send-2721> <not yet classified>
+        #nodyna <send-2721> <SD EASY (private access)>
         scraper.send(:request_all, urls) { [next_urls.shift].compact }
         assert_equal all_urls, requests
       end
@@ -101,7 +101,7 @@ class FileScraperTest < MiniTest::Spec
       it "yields their responses" do
         responses = []
         stub(scraper).request_one { |url| all_urls.index(url) }
-        #nodyna <send-2722> <not yet classified>
+        #nodyna <send-2722> <SD EASY (private access)>
         scraper.send :request_all, urls do |response|
           responses << response
           [next_urls.shift].compact
@@ -113,7 +113,7 @@ class FileScraperTest < MiniTest::Spec
 
   describe "#process_response?" do
     let :result do
-      #nodyna <send-2723> <not yet classified>
+      #nodyna <send-2723> <SD EASY (private access)>
       scraper.send :process_response?, response
     end
 
@@ -130,7 +130,7 @@ class FileScraperTest < MiniTest::Spec
 
   describe "#read_file" do
     let :result do
-      #nodyna <send-2724> <not yet classified>
+      #nodyna <send-2724> <SD EASY (private access)>
       scraper.send :read_file, 'file'
     end
 
