@@ -39,7 +39,7 @@ module Pod
       perform_linting
       perform_extensive_analysis(a_spec) if a_spec && !quick
 
-      #nodyna <send-2686> <not yet classified>
+      #nodyna <send-2686> <SD MODERATE (change-prone variable)>
       UI.puts ' -> '.send(result_color) << (a_spec ? a_spec.to_s : file.basename.to_s)
       print_results
       validated?
@@ -162,7 +162,7 @@ module Pod
       validate_documentation_url(spec)
       validate_docset_url(spec)
 
-      #nodyna <send-2687> <not yet classified>
+      #nodyna <send-2687> <SD MODERATE (change-prone variable)>
       valid = spec.available_platforms.send(fail_fast ? :all? : :each) do |platform|
         UI.message "\n\n#{spec} - Analyzing on #{platform} platform.".green.reversed
         @consumer = spec.consumer(platform)
@@ -183,7 +183,7 @@ module Pod
     end
 
     def perform_extensive_subspec_analysis(spec)
-      #nodyna <send-2688> <not yet classified>
+      #nodyna <send-2688> <SD MODERATE (change-prone variable)>
       spec.subspecs.send(fail_fast ? :all? : :each) do |subspec|
         @subspec_name = subspec.name
         perform_extensive_analysis(subspec)
@@ -254,7 +254,7 @@ module Pod
       sandbox = Sandbox.new(config.sandbox_root)
       @installer = Installer.new(sandbox, podfile)
       @installer.use_default_plugins = false
-      #nodyna <send-2689> <not yet classified>
+      #nodyna <send-2689> <SD MODERATE (array)>
       %i(prepare resolve_dependencies download_dependencies).each { |m| @installer.send(m) }
       @file_accessor = @installer.pod_targets.flat_map(&:file_accessors).find { |fa| fa.spec.name == consumer.spec.name }
     end
@@ -263,7 +263,7 @@ module Pod
       %i(determine_dependency_product_types verify_no_duplicate_framework_names
          verify_no_static_framework_transitive_dependencies
          verify_framework_usage generate_pods_project
-         #nodyna <send-2690> <not yet classified>
+         #nodyna <send-2690> <SD MODERATE (array)>
          perform_post_install_actions).each { |m| @installer.send(m) }
 
       deployment_target = spec.subspec_by_name(subspec_name).deployment_target(consumer.platform_name)
@@ -321,12 +321,12 @@ module Pod
     def check_file_patterns
       FILE_PATTERNS.each do |attr_name|
         if respond_to?("_validate_#{attr_name}", true)
-          #nodyna <send-2691> <not yet classified>
+          #nodyna <send-2691> <SD MODERATE (array)>
           send("_validate_#{attr_name}")
         end
 
-        #nodyna <send-2692> <not yet classified>
-        #nodyna <send-2693> <not yet classified>
+        #nodyna <send-2692> <SD MODERATE (array)>
+        #nodyna <send-2693> <SD MODERATE (array)>
         if !file_accessor.spec_consumer.send(attr_name).empty? && file_accessor.send(attr_name).empty?
           error('file patterns', "The `#{attr_name}` pattern did not match any file.")
         end
@@ -365,7 +365,7 @@ module Pod
     end
 
     def _validate_header_files(attr_name)
-      #nodyna <send-2694> <not yet classified>
+      #nodyna <send-2694> <SD MODERATE (change-prone variable)>
       non_header_files = file_accessor.send(attr_name).
         select { |f| !Sandbox::FileAccessor::HEADER_EXTENSIONS.include?(f.extname) }.
         map { |f| f.relative_path_from file_accessor.root }

@@ -32,9 +32,9 @@ module Pod
     self.description = 'CocoaPods, the Cocoa library package manager.'
     self.plugin_prefixes = %w(claide cocoapods)
 
-    #nodyna <send-2706> <not yet classified>
+    #nodyna <send-2706> <SD TRIVIAL (public function)>
     [Install, Update, Outdated, IPC::Podfile, IPC::Repl].each { |c| c.send(:include, ProjectDirectory) }
-    #nodyna <send-2707> <not yet classified>
+    #nodyna <send-2707> <SD TRIVIAL (public function)>
     [Outdated].each { |c| c.send(:include, Project) }
 
     def self.options
@@ -74,8 +74,8 @@ module Pod
       config.silent = argv.flag?('silent', config.silent)
       config.verbose = self.verbose? unless verbose.nil?
       unless self.ansi_output?
-        #nodyna <define_method-2708> <not yet classified>
-        #nodyna <send-2709> <not yet classified>
+        #nodyna <define_method-2708> <DM COMPLEX (event)>
+        #nodyna <send-2709> <SD COMPLEX (private access)>
         String.send(:define_method, :colorize) { |string, _| string }
       end
     end

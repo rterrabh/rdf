@@ -11,7 +11,7 @@ module Pod
         end
 
         def method_missing(method, *args, &block)
-          #nodyna <send-2698> <not yet classified>
+          #nodyna <send-2698> <SD COMPLEX (change-prone variable)>
           specification.send(method, *args, &block)
         end
 

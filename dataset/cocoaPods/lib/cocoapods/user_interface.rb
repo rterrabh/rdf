@@ -57,7 +57,7 @@ module Pod
           title = verbose_prefix + title if config.verbose?
           title = "\n#{title}" if @title_level < 2
           if (color = @title_colors[@title_level])
-            #nodyna <send-2697> <not yet classified>
+            #nodyna <send-2697> <SD COMPLEX (change-prone variable)>
             title = title.send(color)
           end
           puts "#{title}"

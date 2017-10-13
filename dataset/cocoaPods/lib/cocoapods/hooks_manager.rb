@@ -14,7 +14,7 @@ module Pod
         raise ArgumentError, 'Missing block' unless block
 
         UI.warn '[Hooks] The use of hooks without specifying a `plugin_name` ' \
-                #nodyna <eval-2710> <not yet classified>
+                #nodyna <eval-2710> <EV COMPLEX (change-prone variable)>
                 "has been deprecated (from file `#{block.binding.eval('File.expand_path __FILE__')}`)." unless plugin_name
 
         @name = name

@@ -26,7 +26,7 @@ module Pod
     end
   end
 
-  #nodyna <send-2685> <not yet classified>
+  #nodyna <send-2685> <SD TRIVIAL (public function)>
   Xcodeproj::PlainInformative.send(:include, CLAide::InformativeError)
 
   autoload :AggregateTarget,           'cocoapods/target/aggregate_target'

@@ -20,7 +20,7 @@ module Pod
       old = {}
       changes.keys.each do |key|
         key = key.to_sym
-        #nodyna <send-2699> <not yet classified>
+        #nodyna <send-2699> <SD COMPLEX (array)>
         old[key] = send(key) if respond_to?(key)
       end
       configure_with(changes)
@@ -185,7 +185,7 @@ module Pod
     def configure_with(values_by_key)
       return unless values_by_key
       values_by_key.each do |key, value|
-        #nodyna <instance_variable_set-2700> <not yet classified>
+        #nodyna <instance_variable_set-2700> <IVS COMPLEX (array)>
         instance_variable_set("@#{key}", value)
       end
     end

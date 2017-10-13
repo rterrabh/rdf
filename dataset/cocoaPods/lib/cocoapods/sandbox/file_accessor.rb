@@ -204,7 +204,7 @@ module Pod
 
 
       def paths_for_attribute(attribute, include_dirs = false)
-        #nodyna <send-2703> <not yet classified>
+        #nodyna <send-2703> <SD MODERATE (change-prone variable)>
         file_patterns = spec_consumer.send(attribute)
         options = {
           :exclude_patterns => spec_consumer.exclude_files,

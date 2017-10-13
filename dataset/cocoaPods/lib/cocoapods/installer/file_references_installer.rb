@@ -99,7 +99,7 @@ module Pod
         file_accessors.each do |file_accessor|
           pod_name = file_accessor.spec.name
           local = sandbox.local?(pod_name)
-          #nodyna <send-2702> <not yet classified>
+          #nodyna <send-2702> <SD MODERATE (change-prone variable)>
           paths = file_accessor.send(file_accessor_key)
           paths.each do |path|
             group = pods_project.group_for_spec(file_accessor.spec.name, group_key)

@@ -155,7 +155,7 @@ module Pod
             repl_commands = repl_command.split
             subcommand = repl_commands.shift.capitalize
             arguments = repl_commands
-            #nodyna <const_get-2705> <not yet classified>
+            #nodyna <const_get-2705> <CG COMPLEX (change-prone variable)>
             subcommand_class = Pod::Command::IPC.const_get(subcommand)
             subcommand_class.new(CLAide::ARGV.new(arguments)).run
             signal_end_of_output
