@@ -97,7 +97,7 @@ class FPM::Package
       self.class.declared_options.each do |option|
         with(option.attribute_name) do |attr|
           attr = "#{attr}?" if !respond_to?(attr)
-          #nodyna <send-2793> <not yet classified>
+          #nodyna <send-2793> <SD COMPLEX (array)>
           input.attributes[attr.to_sym] = send(attr) if respond_to?(attr)
         end
       end
@@ -135,8 +135,8 @@ class FPM::Package
       :@directories, :@staging_path, :@attrs
     ]
     ivars.each do |ivar|
-      #nodyna <instance_variable_get-2794> <not yet classified>
-      #nodyna <instance_variable_set-2795> <not yet classified>
+      #nodyna <instance_variable_get-2794> <IVG MODERATE (array)>
+      #nodyna <instance_variable_set-2795> <IVS MODERATE (array)>
       pkg.instance_variable_set(ivar, instance_variable_get(ivar))
     end
 
