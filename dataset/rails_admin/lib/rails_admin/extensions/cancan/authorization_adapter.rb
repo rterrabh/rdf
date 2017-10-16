@@ -4,7 +4,7 @@ module RailsAdmin
       class AuthorizationAdapter
         def initialize(controller, ability = ::Ability)
           @controller = controller
-          #nodyna <instance_variable_set-1344> <not yet classified>
+          #nodyna <instance_variable_set-1344> <IVS COMPLEX (private access)>
           @controller.instance_variable_set '@ability', ability
           @controller.extend ControllerExtension
           @controller.current_ability.authorize! :access, :rails_admin

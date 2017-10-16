@@ -5,7 +5,7 @@ module RailsAdmin
         field = _fields.detect { |f| name == f.name }
 
         if field
-          #nodyna <instance_variable_get-1378> <not yet classified>
+          #nodyna <instance_variable_get-1378> <IVG COMPLEX (change-prone variable)>
           field.show unless field.instance_variable_get("@#{field.name}_registered").is_a?(Proc)
         end
         if field.nil? && type.nil?

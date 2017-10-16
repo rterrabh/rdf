@@ -8,7 +8,7 @@ module RailsAdmin
       end
 
       def has_option?(name) # rubocop:disable PredicateName
-        #nodyna <instance_variable_get-1388> <not yet classified>
+        #nodyna <instance_variable_get-1388> <IVG MODERATE (private access)>
         options = self.class.instance_variable_get('@config_options')
         options && options.key?(name)
       end
@@ -25,9 +25,9 @@ module RailsAdmin
 
       module ClassMethods
         def register_instance_option(option_name, scope = self, &default)
-          #nodyna <instance_variable_get-1389> <not yet classified>
+          #nodyna <instance_variable_get-1389> <IVG MODERATE (private access)>
           options = scope.instance_variable_get('@config_options') ||
-                    #nodyna <instance_variable_set-1390> <not yet classified>
+                    #nodyna <instance_variable_set-1390> <IVS MODERATE (private access)>
                     scope.instance_variable_set('@config_options', {})
 
           option_name = option_name.to_s
@@ -46,23 +46,23 @@ module RailsAdmin
           #nodyna <define_method-1395> <DM MODERATE (events)>
           scope.send(:define_method, option_name) do |*args, &block|
             if !args[0].nil? || block # rubocop:disable NonNilCheck
-              #nodyna <instance_variable_set-1396> <not yet classified>
+              #nodyna <instance_variable_set-1396> <IVS MODERATE (change-prone variable)>
               instance_variable_set("@#{option_name}_registered", args[0].nil? ? block : args[0])
             else
-              #nodyna <instance_variable_get-1397> <not yet classified>
+              #nodyna <instance_variable_get-1397> <IVG MODERATE (change-prone variable)>
               value = instance_variable_get("@#{option_name}_registered")
               case value
               when Proc
-                #nodyna <instance_variable_get-1398> <not yet classified>
+                #nodyna <instance_variable_get-1398> <IVG MODERATE (change-prone variable)>
                 if instance_variable_get("@#{option_name}_recurring")
                   #nodyna <instance_eval-1399> <IEV COMPLEX (block execution)>
                   value = instance_eval(&default)
                 else
-                  #nodyna <instance_variable_set-1400> <not yet classified>
+                  #nodyna <instance_variable_set-1400> <IVS MODERATE (change-prone variable)>
                   instance_variable_set("@#{option_name}_recurring", true)
                   #nodyna <instance_eval-1401> <IEV COMPLEX (block execution)>
                   value = instance_eval(&value)
-                  #nodyna <instance_variable_set-1402> <not yet classified>
+                  #nodyna <instance_variable_set-1402> <IVS MODERATE (change-prone variable)>
                   instance_variable_set("@#{option_name}_recurring", false)
                 end
               when nil

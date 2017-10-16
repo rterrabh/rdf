@@ -28,7 +28,7 @@ module RailsAdmin
         def inspect
           "#<#{self.class.name} #{
             instance_variables.collect do |v|
-              #nodyna <instance_variable_get-1421> <not yet classified>
+              #nodyna <instance_variable_get-1421> <IVG COMPLEX (array)>
               value = instance_variable_get(v)
               if [:@parent, :@root, :@abstract_model].include? v
                 if value.respond_to? :name

@@ -45,6 +45,14 @@ class Caller < SexpInterpreter
     exp.map {|subtree| process(subtree) if subtree.class == Sexp}
   end
 
+  def process_module(exp)
+    moduleName = getClassName(exp)
+    if (@methodName == moduleName)
+      puts "#{@currentFile}.#{exp.line} (MODULE)"
+    end
+    default_process(exp)    
+  end
+
   def process_sclass(exp)
     className = getClassName(exp)
     if (@methodName == className)
@@ -89,14 +97,12 @@ class Caller < SexpInterpreter
     end
     default_process(exp)
   end
+  
 end
 
 if(ARGV.size >= 0)
   files_to_research = []
-  files_to_research << "../dataset/spree/**/lib/**/*.rb"
-  files_to_research << "../dataset/spree/api/**/*.rb"
-  files_to_research << "../dataset/spree/backend/**/*.rb"
-  files_to_research << "../dataset/spree/core/**/*.rb"
+  files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
   #files_to_research << "/home/elderjr/Documents/test.rb"
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

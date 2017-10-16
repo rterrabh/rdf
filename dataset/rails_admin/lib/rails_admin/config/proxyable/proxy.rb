@@ -2,7 +2,6 @@ module RailsAdmin
   module Config
     module Proxyable
       class Proxy
-        #nodyna <instance_eval-1374> <not yet classified>
         instance_methods.each { |m| undef_method m unless m =~ /^(__|instance_eval|object_id)/ }
 
         attr_reader :bindings
@@ -23,14 +22,14 @@ module RailsAdmin
 
         def method_missing(name, *args, &block)
           if @object.respond_to?(name)
-            #nodyna <instance_variable_get-1375> <not yet classified>
+            #nodyna <instance_variable_get-1375> <IVG COMPLEX (private access)>
             reset = @object.instance_variable_get('@bindings')
             begin
-              #nodyna <instance_variable_set-1376> <not yet classified>
+              #nodyna <instance_variable_set-1376> <IVS COMPLEX (private access)>
               @object.instance_variable_set('@bindings', @bindings)
               response = @object.__send__(name, *args, &block)
             ensure
-              #nodyna <instance_variable_set-1377> <not yet classified>
+              #nodyna <instance_variable_set-1377> <IVS COMPLEX (private access)>
               @object.instance_variable_set('@bindings', reset)
             end
             response

@@ -2,7 +2,6 @@ module RailsAdmin
   module Adapters
     module ActiveRecord
       class AbstractObject
-        #nodyna <send-1336> <not yet classified>
         instance_methods.each { |m| undef_method m unless m.to_s =~ /(^__|^send$|^object_id$)/ }
 
         attr_accessor :object

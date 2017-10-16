@@ -26,7 +26,7 @@ module RailsAdmin
 
         def field(name, type = nil, &block)
           field = section.field(name, type, &block)
-          #nodyna <instance_variable_set-1363> <not yet classified>
+          #nodyna <instance_variable_set-1363> <IVS MODERATE (private access)>
           field.instance_variable_set('@group', self)
           field
         end
