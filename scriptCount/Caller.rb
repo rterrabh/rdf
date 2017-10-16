@@ -93,7 +93,10 @@ end
 
 if(ARGV.size >= 0)
   files_to_research = []
-  files_to_research << "../dataset/cancan/**/lib/**/*.rb"
+  files_to_research << "../dataset/spree/**/lib/**/*.rb"
+  files_to_research << "../dataset/spree/api/**/*.rb"
+  files_to_research << "../dataset/spree/backend/**/*.rb"
+  files_to_research << "../dataset/spree/core/**/*.rb"
   #files_to_research << "/home/elderjr/Documents/test.rb"
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

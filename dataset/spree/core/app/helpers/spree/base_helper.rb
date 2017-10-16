@@ -35,7 +35,7 @@ module Spree
     end
 
     def meta_data
-      #nodyna <instance_variable_get-2538> <not yet classified>
+      #nodyna <instance_variable_get-2538> <IVG COMPLEX (change-prone variable)>
       object = instance_variable_get('@'+controller_name.singularize)
       meta = {}
 

@@ -1,6 +1,6 @@
 Spree::Core::Engine.config.to_prepare do
   if Spree.user_class
-    #nodyna <class_eval-2589> <not yet classified>
+    #nodyna <class_eval-2589> <CE COMPLEX (define methods)>
     Spree.user_class.class_eval do
 
       include Spree::UserApiAuthentication

@@ -1,6 +1,6 @@
 class CreateStoreFromPreferences < ActiveRecord::Migration
   def change
-    #nodyna <class_eval-2544> <not yet classified>
+    #nodyna <class_eval-2544> <CE MODERATE (define methods)>
     Spree::Store.class_eval do
       def self.translated?(name)
         false

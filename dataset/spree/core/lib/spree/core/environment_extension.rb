@@ -4,16 +4,16 @@ module Spree
       extend ActiveSupport::Concern
 
       def add_class(name)
-        #nodyna <instance_variable_set-2581> <not yet classified>
+        #nodyna <instance_variable_set-2581> <IVS MODERATE (change-prone variable)>
         self.instance_variable_set "@#{name}", Set.new
 
         create_method( "#{name}=".to_sym ) { |val|
-          #nodyna <instance_variable_set-2582> <not yet classified>
+          #nodyna <instance_variable_set-2582> <IVS MODERATE (change-prone variable)>
           instance_variable_set( "@" + name, val)
         }
 
         create_method(name.to_sym) do
-          #nodyna <instance_variable_get-2583> <not yet classified>
+          #nodyna <instance_variable_get-2583> <IVG MODERATE (change-prone variable)>
           instance_variable_get( "@" + name )
         end
       end

@@ -47,7 +47,7 @@ module DelegateBelongsTo
       def class_def(name, method=nil, &blk)
         #nodyna <define_method-2567> <DM COMPLEX (events)>
         #nodyna <define_method-2568> <DM COMPLEX (events)>
-        #nodyna <class_eval-2569> <not yet classified>
+        #nodyna <class_eval-2569> <CE COMPLEX (define methods)>
         class_eval { method.nil? ? define_method(name, &blk) : define_method(name, method) }
       end
   end

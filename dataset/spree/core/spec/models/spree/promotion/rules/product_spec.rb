@@ -13,7 +13,7 @@ describe Spree::Promotion::Rules::Product, :type => :model do
     end
 
     before do
-      #nodyna <instance_variable_set-2443> <not yet classified>
+      #nodyna <instance_variable_set-2443> <IVS MODERATE (array)>
       3.times { |i| instance_variable_set("@product#{i}", mock_model(Spree::Product)) }
     end
 

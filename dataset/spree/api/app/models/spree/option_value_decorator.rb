@@ -1,4 +1,4 @@
-#nodyna <class_eval-2405> <not yet classified>
+#nodyna <class_eval-2405> <CE MODERATE (define methods)>
 Spree::OptionValue.class_eval do
   def option_type_name
     option_type.name

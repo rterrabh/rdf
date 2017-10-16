@@ -20,7 +20,7 @@ module Spree
       end
 
       context "currency is defined" do
-        #nodyna <class_eval-2487> <not yet classified>
+        #nodyna <class_eval-2487> <CE MODERATE (define method)>
         before { test_class.class_eval { def currency; "USD"; end } }
 
         it "generates a display_* method that builds a Spree::Money with currency" do
@@ -30,7 +30,7 @@ module Spree
 
       context "with multiple + options" do
         before do
-          #nodyna <class_eval-2488> <not yet classified>
+          #nodyna <class_eval-2488> <CE MODERATE (define method)>
           test_class.class_eval { def amount; 20.0; end }
           test_class.money_methods :total, amount: { no_cents: true }
         end

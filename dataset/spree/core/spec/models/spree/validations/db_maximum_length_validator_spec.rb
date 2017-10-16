@@ -2,7 +2,7 @@ require 'spec_helper'
 
 describe Spree::Validations::DbMaximumLengthValidator, :type => :model do
   context 'when Spree::Product' do
-    #nodyna <class_eval-2480> <not yet classified>
+    #nodyna <class_eval-2480> <CE MODERATE (block execution)>
     Spree::Product.class_eval do
       attribute :slug, ActiveRecord::Type::String.new(limit: 255)
       validates_with Spree::Validations::DbMaximumLengthValidator, field: :slug

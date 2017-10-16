@@ -501,7 +501,6 @@ describe Spree::Shipment, :type => :model do
           expect(shipment.shipped_at).not_to be_nil
         end
 
-        #nodyna <send-2482> <not yet classified>
         it "should send a shipment email" do
           mail_message = double 'Mail::Message'
           shipment_id = nil

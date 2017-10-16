@@ -509,7 +509,7 @@ describe Spree::Order, :type => :model do
   context "re-define checkout flow" do
     before do
       @old_checkout_flow = Spree::Order.checkout_flow
-      #nodyna <class_eval-2474> <not yet classified>
+      #nodyna <class_eval-2474> <CE MODERATE (block execution)>
       Spree::Order.class_eval do
         checkout_flow do
           go_to_state :payment
@@ -539,7 +539,7 @@ describe Spree::Order, :type => :model do
   context "with only a complete step" do
     before do
       @old_checkout_flow = Spree::Order.checkout_flow
-      #nodyna <class_eval-2475> <not yet classified>
+      #nodyna <class_eval-2475> <CE MODERATE (block execution)>
       Spree::Order.class_eval do
         checkout_flow do
           go_to_state :complete
@@ -566,7 +566,7 @@ describe Spree::Order, :type => :model do
   context "insert checkout step" do
     before do
       @old_checkout_flow = Spree::Order.checkout_flow
-      #nodyna <class_eval-2476> <not yet classified>
+      #nodyna <class_eval-2476> <CE MODERATE (block execution)>
       Spree::Order.class_eval do
         insert_checkout_step :new_step, before: :address
       end
@@ -583,7 +583,7 @@ describe Spree::Order, :type => :model do
 
     context "before" do
       before do
-        #nodyna <class_eval-2477> <not yet classified>
+        #nodyna <class_eval-2477> <CE MODERATE (block execution)>
         Spree::Order.class_eval do
           insert_checkout_step :before_address, before: :address
         end
@@ -597,7 +597,7 @@ describe Spree::Order, :type => :model do
 
     context "after" do
       before do
-        #nodyna <class_eval-2478> <not yet classified>
+        #nodyna <class_eval-2478> <CE MODERATE (block execution)>
         Spree::Order.class_eval do
           insert_checkout_step :after_address, after: :address
         end
@@ -613,7 +613,7 @@ describe Spree::Order, :type => :model do
   context "remove checkout step" do
     before do
       @old_checkout_flow = Spree::Order.checkout_flow
-      #nodyna <class_eval-2479> <not yet classified>
+      #nodyna <class_eval-2479> <CE MODERATE (block execution)>
       Spree::Order.class_eval do
         remove_checkout_step :address
       end

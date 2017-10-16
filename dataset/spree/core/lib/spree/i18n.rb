@@ -24,7 +24,7 @@ module Spree
 
     def virtual_path
       if context
-        #nodyna <instance_variable_get-2560> <not yet classified>
+        #nodyna <instance_variable_get-2560> <IVG MODERATE (private access)>
         path = context.instance_variable_get("@virtual_path")
 
         if path

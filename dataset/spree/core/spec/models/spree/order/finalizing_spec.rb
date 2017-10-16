@@ -49,7 +49,6 @@ describe Spree::Order, :type => :model do
       order.finalize!
     end
 
-    #nodyna <send-2470> <not yet classified>
     it "should send an order confirmation email" do
       mail_message = double "Mail::Message"
       expect(Spree::OrderMailer).to receive(:confirm_email).with(order.id).and_return mail_message
@@ -63,7 +62,6 @@ describe Spree::Order, :type => :model do
       expect(order.confirmation_delivered?).to be true
     end
 
-    #nodyna <send-2471> <not yet classified>
     it "should not send duplicate confirmation emails" do
       allow(order).to receive_messages(:confirmation_delivered? => true)
       expect(Spree::OrderMailer).not_to receive(:confirm_email)

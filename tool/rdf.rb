@@ -83,13 +83,13 @@ files_to_research = []
 #files_to_research << "../dataset/ruby/**/lib/**/*.rb"
 
 #spree
-#files_to_research << "../dataset/spree/**/lib/**/*.rb"
-#files_to_research << "../dataset/spree/api/**/*.rb"
-#files_to_research << "../dataset/spree/backend/**/*.rb"
-#files_to_research << "../dataset/spree/core/**/*.rb"
+files_to_research << "../dataset/spree/**/lib/**/*.rb"
+files_to_research << "../dataset/spree/api/**/*.rb"
+files_to_research << "../dataset/spree/backend/**/*.rb"
+files_to_research << "../dataset/spree/core/**/*.rb"
 
 #cancan
-files_to_research << "../dataset/cancan/**/lib/**/*.rb"
+#files_to_research << "../dataset/cancan/**/lib/**/*.rb"
 
 #capistrano
 #files_to_research << "../dataset/capistrano/**/lib/**/*.rb"

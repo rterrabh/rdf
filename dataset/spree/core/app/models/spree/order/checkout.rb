@@ -2,7 +2,7 @@ module Spree
   class Order < Spree::Base
     module Checkout
       def self.included(klass)
-        #nodyna <class_eval-2506> <not yet classified>
+        #nodyna <class_eval-2506> <CE COMPLEX (define methods)>
         klass.class_eval do
           class_attribute :next_event_transitions
           class_attribute :previous_states

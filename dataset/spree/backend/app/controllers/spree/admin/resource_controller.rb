@@ -134,13 +134,13 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
 
       authorize! action, @object
 
-      #nodyna <instance_variable_set-2427> <not yet classified>
+      #nodyna <instance_variable_set-2427> <IVS COMPLEX (change-prone variable)>
       instance_variable_set("@#{resource.object_name}", @object)
     else
       @collection ||= collection
 
 
-      #nodyna <instance_variable_set-2428> <not yet classified>
+      #nodyna <instance_variable_set-2428> <IVS COMPLEX (change-prone variable)>
       instance_variable_set("@#{controller_name}", @collection)
     end
   end
@@ -162,7 +162,7 @@ class Spree::Admin::ResourceController < Spree::Admin::BaseController
       @parent ||= parent_data[:model_class].
           #nodyna <send-2429> <SD MODERATE (change-prone variables)>
           send("find_by_#{parent_data[:find_by]}", params["#{resource.model_name}_id"])
-      #nodyna <instance_variable_set-2430> <not yet classified>
+      #nodyna <instance_variable_set-2430> <IVS COMPLEX (change-prone variable)>
       instance_variable_set("@#{resource.model_name}", @parent)
     else
       nil

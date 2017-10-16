@@ -1,7 +1,7 @@
 require 'factory_girl'
 
 
-#nodyna <class_eval-2550> <not yet classified>
+#nodyna <class_eval-2550> <CE MODERATE (define methods)>
 Spree::Zone.class_eval do
   def self.global
     find_by(name: 'GlobalZone') || FactoryGirl.create(:global_zone)

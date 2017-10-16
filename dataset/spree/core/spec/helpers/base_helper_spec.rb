@@ -53,7 +53,7 @@ describe Spree::BaseHelper, type: :helper do
   context "defining custom image helpers" do
     let(:product) { mock_model(Spree::Product, :images => [], :variant_images => []) }
     before do
-      #nodyna <class_eval-2490> <not yet classified>
+      #nodyna <class_eval-2490> <CE MODERATE (block execution)>
       Spree::Image.class_eval do
         attachment_definitions[:attachment][:styles].merge!({:very_strange => '1x1'})
       end
@@ -110,7 +110,7 @@ describe Spree::BaseHelper, type: :helper do
   context "custom image helpers conflict with inproper statements" do
     let(:product) { mock_model(Spree::Product, :images => [], :variant_images => []) }
     before do
-      #nodyna <class_eval-2491> <not yet classified>
+      #nodyna <class_eval-2491> <CE MODERATE (block execution)>
       Spree::Image.class_eval do
         attachment_definitions[:attachment][:styles].merge!({:foobar => '1x1'})
       end

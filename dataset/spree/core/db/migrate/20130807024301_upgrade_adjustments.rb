@@ -1,6 +1,6 @@
 class UpgradeAdjustments < ActiveRecord::Migration
   def up
-    #nodyna <class_eval-2545> <not yet classified>
+    #nodyna <class_eval-2545> <CE MODERATE (block execution)>
     Spree::Adjustment.class_eval do
       belongs_to :originator, polymorphic: true
     end

@@ -1,7 +1,7 @@
 require 'spec_helper'
 
 module Spree
-  #nodyna <module_eval-2404> <not yet classified>
+  #nodyna <module_eval-2404> <ME MODERATE (block execution)>
   PermittedAttributes.module_eval do
     mattr_writer :line_item_attributes
   end

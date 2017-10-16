@@ -23,7 +23,7 @@ module Spree
 
       def error_message_on(object, method, options = {})
         object = convert_to_model(object)
-        #nodyna <instance_variable_get-2424> <not yet classified>
+        #nodyna <instance_variable_get-2424> <IVG COMPLEX (change-prone variable)>
         obj = object.respond_to?(:errors) ? object : instance_variable_get("@#{object}")
 
         if obj && obj.errors[method].present?

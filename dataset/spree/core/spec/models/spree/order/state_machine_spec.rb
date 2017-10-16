@@ -119,7 +119,6 @@ describe Spree::Order, type: :model do
       allow_any_instance_of(Spree::OrderUpdater).to receive(:update_adjustment_total) { 10 }
     end
 
-    #nodyna <send-2472> <not yet classified>
     it "should send a cancel email" do
       allow(shipment).to receive(:cancel!)
       allow(order).to receive :has_available_shipment

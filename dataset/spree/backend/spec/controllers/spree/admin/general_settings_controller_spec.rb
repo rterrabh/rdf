@@ -23,7 +23,7 @@ describe Spree::Admin::GeneralSettingsController, type: :controller do
     end
 
     context 'when callback implemented' do
-      #nodyna <class_eval-2422> <not yet classified>
+      #nodyna <class_eval-2422> <CE MODERATE (define methods)>
       Spree::Admin::GeneralSettingsController.class_eval do
         custom_callback(:clear_cache).after :foo
 
