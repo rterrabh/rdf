@@ -6,7 +6,7 @@ module RaiseNotImplementedMacro
   def raise_not_implemented_on(method)
     it "should raise NotImplemented on #{method}" do
       expect {
-        #nodyna <send-2622> <not yet classified>
+        #nodyna <send-2622> <SD COMPLEX (change-prone variable)>
         subject.send(method)
       }.to raise_error(NotImplementedError)
     end

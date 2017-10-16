@@ -6,7 +6,7 @@ module Capistrano
     def initialize(context, strategy)
       @context = context
       singleton = class << self; self; end
-      #nodyna <send-2623> <not yet classified>
+      #nodyna <send-2623> <SD TRIVIAL (public functions)>
       singleton.send(:include, strategy)
     end
 

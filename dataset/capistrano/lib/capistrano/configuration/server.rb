@@ -69,7 +69,7 @@ module Capistrano
 
       def add_property(key, value)
         if respond_to?("#{key}=")
-          #nodyna <send-2624> <not yet classified>
+          #nodyna <send-2624> <SD COMPLEX (array)>
           send("#{key}=", value)
         else
           set(key, value)
