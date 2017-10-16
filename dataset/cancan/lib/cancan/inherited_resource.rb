@@ -2,22 +2,22 @@ module CanCan
   class InheritedResource < ControllerResource # :nodoc:
     def load_resource_instance
       if parent?
-        #nodyna <send-2612> <not yet classified>
+        #nodyna <send-2612> <SD MODERATE (private access)>
         @controller.send :association_chain
-        #nodyna <instance_variable_get-2613> <not yet classified>
+        #nodyna <instance_variable_get-2613> <IVG COMPLEX (change-prone variable)>
         @controller.instance_variable_get("@#{instance_name}")
       elsif new_actions.include? @params[:action].to_sym
-        #nodyna <send-2614> <not yet classified>
+        #nodyna <send-2614> <SD EASY (private access)>
         resource = @controller.send :build_resource
         assign_attributes(resource)
       else
-        #nodyna <send-2615> <not yet classified>
+        #nodyna <send-2615> <SD COMPLEX (private access)>
         @controller.send :resource
       end
     end
 
     def resource_base
-      #nodyna <send-2616> <not yet classified>
+      #nodyna <send-2616> <SD MODERATE (private access)>
       @controller.send :end_of_association_chain
     end
   end

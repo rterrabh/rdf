@@ -34,9 +34,9 @@ module CanCan
       def check_authorization(options = {})
         self.after_filter(options.slice(:only, :except)) do |controller|
           next if controller.instance_variable_defined?(:@_authorized)
-          #nodyna <send-2590> <not yet classified>
+          #nodyna <send-2590> <SD COMPLEX (change-prone variable)>
           next if options[:if] && !controller.send(options[:if])
-          #nodyna <send-2591> <not yet classified>
+          #nodyna <send-2591> <SD COMPLEX (change-prone variable)>
           next if options[:unless] && controller.send(options[:unless])
           raise AuthorizationNotPerformed, "This action failed the check_authorization because it does not authorize_resource. Add skip_authorization_check to bypass this check."
         end
@@ -44,7 +44,7 @@ module CanCan
 
       def skip_authorization_check(*args)
         self.before_filter(*args) do |controller|
-          #nodyna <instance_variable_set-2592> <not yet classified>
+          #nodyna <instance_variable_set-2592> <IVS MODERATE (private access)>
           controller.instance_variable_set(:@_authorized, true)
         end
       end
@@ -95,7 +95,7 @@ module CanCan
 end
 
 if defined? ActionController::Base
-  #nodyna <class_eval-2593> <not yet classified>
+  #nodyna <class_eval-2593> <CE TRIVIAL (block execution)>
   ActionController::Base.class_eval do
     include CanCan::ControllerAdditions
   end

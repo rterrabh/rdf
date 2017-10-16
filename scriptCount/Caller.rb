@@ -76,6 +76,7 @@ class Caller < SexpInterpreter
   end
 
   def process_sdefn(exp)
+    puts exp[1]
     if(exp[1] == @methodName)
       puts "#{@currentFile}.#{exp.line} (DEF)"
     end
@@ -92,7 +93,7 @@ end
 
 if(ARGV.size >= 0)
   files_to_research = []
-  files_to_research << "../dataset/capistrano/**/lib/**/*.rb"
+  files_to_research << "../dataset/cancan/**/lib/**/*.rb"
   #files_to_research << "/home/elderjr/Documents/test.rb"
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

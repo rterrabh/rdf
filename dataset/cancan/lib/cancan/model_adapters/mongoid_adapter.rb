@@ -9,7 +9,7 @@ module CanCan
         conditions.any? do |k,v|
           key_is_not_symbol = lambda { !k.kind_of?(Symbol) }
           subject_value_is_array = lambda do
-            #nodyna <send-2620> <not yet classified>
+            #nodyna <send-2620> <SD COMPLEX (array)>
             subject.respond_to?(k) && subject.send(k).is_a?(Array)
           end
 

@@ -1,5 +1,5 @@
 rspec_module = defined?(RSpec::Core) ? 'RSpec' : 'Spec'  # for RSpec 1 compatability
-#nodyna <const_get-2595> <not yet classified>
+#nodyna <const_get-2595> <CG MODERATE (change-prone variable)>
 Kernel.const_get(rspec_module)::Matchers.define :be_able_to do |*args|
   match do |ability|
     ability.can?(*args)

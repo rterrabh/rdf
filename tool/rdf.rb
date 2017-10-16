@@ -89,10 +89,10 @@ files_to_research = []
 #files_to_research << "../dataset/spree/core/**/*.rb"
 
 #cancan
-#files_to_research << "../dataset/cancan/**/lib/**/*.rb"
+files_to_research << "../dataset/cancan/**/lib/**/*.rb"
 
 #capistrano
-files_to_research << "../dataset/capistrano/**/lib/**/*.rb"
+#files_to_research << "../dataset/capistrano/**/lib/**/*.rb"
 
 #capybara
 #files_to_research << "../dataset/capybara/**/lib/**/*.rb"

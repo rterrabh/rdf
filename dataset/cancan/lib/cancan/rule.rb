@@ -95,7 +95,7 @@ module CanCan
             if model_adapter(subject).override_condition_matching? subject, name, value
               model_adapter(subject).matches_condition? subject, name, value
             else
-              #nodyna <send-2594> <not yet classified>
+              #nodyna <send-2594> <SD COMPLEX (array)>
               attribute = subject.send(name)
               if value.kind_of?(Hash)
                 if attribute.kind_of? Array

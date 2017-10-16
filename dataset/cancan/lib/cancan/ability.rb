@@ -81,7 +81,7 @@ module CanCan
     end
 
     def merge(ability)
-      #nodyna <send-2621> <not yet classified>
+      #nodyna <send-2621> <SD EASY (private access)>
       ability.send(:rules).each do |rule|
         rules << rule.dup
       end

@@ -4,9 +4,9 @@ module CanCan
       options = args.extract_options!
       resource_name = args.first
       before_filter_method = options.delete(:prepend) ? :prepend_before_filter : :before_filter
-      #nodyna <send-2596> <not yet classified>
+      #nodyna <send-2596> <SD MODERATE (change-prone variable)>
       controller_class.send(before_filter_method, options.slice(:only, :except, :if, :unless)) do |controller|
-        #nodyna <send-2597> <not yet classified>
+        #nodyna <send-2597> <SD MODERATE (change-prone variable)>
         controller.class.cancan_resource_class.new(controller, resource_name, options.except(:only, :except, :if, :unless)).send(method)
       end
     end
@@ -87,10 +87,10 @@ module CanCan
     end
 
     def assign_attributes(resource)
-      #nodyna <send-2598> <not yet classified>
+      #nodyna <send-2598> <SD COMPLEX (change-prone variable)>
       resource.send("#{parent_name}=", parent_resource) if @options[:singleton] && parent_resource
       initial_attributes.each do |attr_name, value|
-        #nodyna <send-2599> <not yet classified>
+        #nodyna <send-2599> <SD COMPLEX (array)>
         resource.send("#{attr_name}=", value)
       end
       resource
@@ -104,18 +104,18 @@ module CanCan
 
     def find_resource
       if @options[:singleton] && parent_resource.respond_to?(name)
-        #nodyna <send-2600> <not yet classified>
+        #nodyna <send-2600> <SD COMPLEX (change-prone variable)>
         parent_resource.send(name)
       else
         if @options[:find_by]
           if resource_base.respond_to? "find_by_#{@options[:find_by]}!"
-            #nodyna <send-2601> <not yet classified>
+            #nodyna <send-2601> <SD COMPLEX (change-prone variable)>
             resource_base.send("find_by_#{@options[:find_by]}!", id_param)
           elsif resource_base.respond_to? "find_by"
-            #nodyna <send-2602> <not yet classified>
+            #nodyna <send-2602> <SD COMPLEX (change-prone variable)>
             resource_base.send("find_by", { @options[:find_by].to_sym => id_param })
           else
-            #nodyna <send-2603> <not yet classified>
+            #nodyna <send-2603> <SD COMPLEX (change-prone variable)>
             resource_base.send(@options[:find_by], id_param)
           end
         else
@@ -158,29 +158,29 @@ module CanCan
     end
 
     def resource_instance=(instance)
-      #nodyna <instance_variable_set-2604> <not yet classified>
+      #nodyna <instance_variable_set-2604> <IVS COMPLEX (change-prone variable)>
       @controller.instance_variable_set("@#{instance_name}", instance)
     end
 
     def resource_instance
-      #nodyna <instance_variable_get-2605> <not yet classified>
+      #nodyna <instance_variable_get-2605> <IVS COMPLEX (change-prone variable)>
       @controller.instance_variable_get("@#{instance_name}") if load_instance?
     end
 
     def collection_instance=(instance)
-      #nodyna <instance_variable_set-2606> <not yet classified>
+      #nodyna <instance_variable_set-2606> <IVS COMPLEX (change-prone variable)>
       @controller.instance_variable_set("@#{instance_name.to_s.pluralize}", instance)
     end
 
     def collection_instance
-      #nodyna <instance_variable_get-2607> <not yet classified>
+      #nodyna <instance_variable_get-2607> <IVS COMPLEX (change-prone variable)>
       @controller.instance_variable_get("@#{instance_name.to_s.pluralize}")
     end
 
     def resource_base
       if @options[:through]
         if parent_resource
-          #nodyna <send-2608> <not yet classified>
+          #nodyna <send-2608> <SD COMPLEX (change-prone variable)>
           @options[:singleton] ? resource_class : parent_resource.send(@options[:through_association] || name.to_s.pluralize)
         elsif @options[:shallow]
           resource_class
@@ -202,16 +202,16 @@ module CanCan
 
     def fetch_parent(name)
       if @controller.instance_variable_defined? "@#{name}"
-        #nodyna <instance_variable_get-2609> <not yet classified>
+        #nodyna <instance_variable_get-2609> <IVG COMPLEX (change-prone variable)>
         @controller.instance_variable_get("@#{name}")
       elsif @controller.respond_to?(name, true)
-        #nodyna <send-2610> <not yet classified>
+        #nodyna <send-2610> <SD COMPLEX (change-prone variable)>
         @controller.send(name)
       end
     end
 
     def current_ability
-      #nodyna <send-2611> <not yet classified>
+      #nodyna <send-2611> <SD EASY (private access)>
       @controller.send(:current_ability)
     end
 
