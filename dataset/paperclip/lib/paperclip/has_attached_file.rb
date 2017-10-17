@@ -46,12 +46,12 @@ module Paperclip
       #nodyna <define_method-719> <DM COMPLEX (events)>
       @klass.send :define_method, @name do |*args|
         ivar = "@attachment_#{name}"
-        #nodyna <instance_variable_get-720> <not yet classified>
+        #nodyna <instance_variable_get-720> <IVG COMPLEX (change-prone variable)>
         attachment = instance_variable_get(ivar)
 
         if attachment.nil?
           attachment = Attachment.new(name, self, options)
-          #nodyna <instance_variable_set-721> <not yet classified>
+          #nodyna <instance_variable_set-721> <IVS COMPLEX (change-prone variable)>
           instance_variable_set(ivar, attachment)
         end
 

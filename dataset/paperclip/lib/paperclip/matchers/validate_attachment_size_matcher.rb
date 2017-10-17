@@ -47,7 +47,7 @@ module Paperclip
         protected
 
         def override_method object, method, &replacement
-          #nodyna <class_eval-681> <not yet classified>
+          #nodyna <class_eval-681> <CE MODERATE (define methods)>
           (class << object; self; end).class_eval do
             #nodyna <define_method-682> <DM MODERATE (events)>
             define_method(method, &replacement)

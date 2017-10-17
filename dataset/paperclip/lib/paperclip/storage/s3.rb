@@ -11,14 +11,14 @@ module Paperclip
         end unless defined?(AWS::Core)
 
         if defined?(AWS::Core::LogFormatter)
-          #nodyna <class_eval-689> <not yet classified>
+          #nodyna <class_eval-689> <CE MODERATE (define methods)>
           AWS::Core::LogFormatter.class_eval do
             def summarize_hash(hash)
               hash.map { |key, value| ":#{key}=>#{summarize_value(value)}".force_encoding('UTF-8') }.sort.join(',')
             end
           end
         elsif defined?(AWS::Core::ClientLogging)
-          #nodyna <class_eval-690> <not yet classified>
+          #nodyna <class_eval-690> <CE MODERATE (define methods)>
           AWS::Core::ClientLogging.class_eval do
             def sanitize_hash(hash)
               hash.map { |key, value| "#{sanitize_value(key)}=>#{sanitize_value(value)}".force_encoding('UTF-8') }.sort.join(',')

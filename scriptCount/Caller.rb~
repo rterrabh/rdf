@@ -45,6 +45,14 @@ class Caller < SexpInterpreter
     exp.map {|subtree| process(subtree) if subtree.class == Sexp}
   end
 
+  def process_module(exp)
+    moduleName = getClassName(exp)
+    if (@methodName == moduleName)
+      puts "#{@currentFile}.#{exp.line} (MODULE)"
+    end
+    default_process(exp)    
+  end
+
   def process_sclass(exp)
     className = getClassName(exp)
     if (@methodName == className)
@@ -89,6 +97,7 @@ class Caller < SexpInterpreter
     end
     default_process(exp)
   end
+  
 end
 
 if(ARGV.size >= 0)
