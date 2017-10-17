@@ -15,13 +15,11 @@ class PyenvVirtualenv < Formula
 
   def caveats; <<-EOS.undent
     To enable auto-activation add to your profile:
-      #nodyna <eval-585> <not yet classified>
       if which pyenv-virtualenv-init > /dev/null; then eval "$(pyenv virtualenv-init -)"; fi
     EOS
   end
 
   test do
-    #nodyna <eval-586> <not yet classified>
     shell_output("eval \"$(pyenv init -)\" && pyenv virtualenvs")
   end
 end

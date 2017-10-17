@@ -35,7 +35,6 @@ class Pyenv < Formula
 
   def caveats; <<-EOS.undent
     To enable shims and autocompletion add to your profile:
-      #nodyna <eval-550> <not yet classified>
       if which pyenv > /dev/null; then eval "$(pyenv init -)"; fi
 
     To use Homebrew's directories rather than ~/.pyenv add to your profile:
@@ -44,7 +43,6 @@ class Pyenv < Formula
   end
 
   test do
-    #nodyna <eval-551> <not yet classified>
     shell_output("eval \"$(#{bin}/pyenv init -)\" && pyenv versions")
   end
 end

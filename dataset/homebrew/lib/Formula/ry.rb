@@ -25,7 +25,6 @@ class Ry < Formula
 
   def caveats; <<-EOS.undent
     Please add to your profile:
-      #nodyna <eval-570> <not yet classified>
       which ry &>/dev/null && eval "$(ry setup)"
 
     If you want your Rubies to persist across updates you

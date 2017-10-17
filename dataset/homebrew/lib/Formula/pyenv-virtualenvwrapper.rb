@@ -14,7 +14,6 @@ class PyenvVirtualenvwrapper < Formula
   end
 
   test do
-    #nodyna <eval-597> <not yet classified>
     shell_output("eval \"$(pyenv init -)\" && pyenv virtualenvwrapper")
   end
 end

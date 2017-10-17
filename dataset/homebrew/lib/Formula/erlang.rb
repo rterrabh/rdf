@@ -98,7 +98,6 @@ class Erlang < Formula
   end
 
   test do
-    #nodyna <eval-588> <not yet classified>
     system "#{bin}/erl", "-noshell", "-eval", "crypto:start().", "-s", "init", "stop"
   end
 end

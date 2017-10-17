@@ -38,7 +38,6 @@ class Verilator < Formula
       int main(int argc, char **argv, char **env) {
           Verilated::commandArgs(argc, argv);
           Vtest* top = new Vtest;
-          #nodyna <eval-568> <not yet classified>
           while (!Verilated::gotFinish()) { top->eval(); }
           delete top;
           exit(0);

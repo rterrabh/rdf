@@ -1256,7 +1256,6 @@ module Homebrew
 
   def inject_dump_stats(checks)
     checks.extend Module.new {
-      #nodyna <send-614> <not yet classified>
       def send(method, *)
         time = Time.now
         super

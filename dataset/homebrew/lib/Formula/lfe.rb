@@ -22,7 +22,6 @@ class Lfe < Formula
   end
 
   test do
-    #nodyna <eval-562> <not yet classified>
     system bin/"lfe", "-eval", '"(io:format \"~p\" (list (* 2 (lists:foldl #\'+/2 0 (lists:seq 1 6)))))"'
   end
 end

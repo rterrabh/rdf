@@ -97,7 +97,6 @@ class Opam < Formula
 
     Run the following to initialize your environment variables:
 
-    #nodyna <eval-557> <not yet classified>
     $  eval `opam config env`
 
     To export the needed variables every time, add them to your dotfiles.

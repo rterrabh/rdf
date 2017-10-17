@@ -124,7 +124,6 @@ class Git < Formula
     chmod 0644, Dir["#{share}/doc/git-doc/**/*.{html,txt}"]
     chmod 0755, Dir["#{share}/doc/git-doc/{RelNotes,howto,technical}"]
 
-    #nodyna <send-563> <not yet classified>
     rm "#{libexec}/git-core/git-imap-send" if build.without? "brewed-openssl"
   end
 

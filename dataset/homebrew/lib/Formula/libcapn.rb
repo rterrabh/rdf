@@ -1,5 +1,4 @@
 class Libcapn < Formula
-  #nodyna <send-556> <not yet classified>
   desc "C library to send push notifications to Apple devices"
   homepage "http://libcapn.org/"
   url "http://libcapn.org/download/libcapn-1.0.0-src.tar.gz"

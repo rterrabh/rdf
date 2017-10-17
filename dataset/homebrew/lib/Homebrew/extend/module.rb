@@ -4,7 +4,7 @@ class Module
     line = line.to_i
 
     attrs.each do |attr|
-      #nodyna <module_eval-678> <not yet classified>
+      #nodyna <module_eval-678> <ME MODERATE (define methods)>
       module_eval <<-EOS, file, line
         def #{attr}(val=nil)
           val.nil? ? @#{attr} : @#{attr} = val

@@ -20,7 +20,6 @@ class Buildapp < Formula
 
   test do
     code = "(defun f (a) (declare (ignore a)) (write-line \"Hello, homebrew\"))"
-    #nodyna <eval-565> <not yet classified>
     system "#{bin}/buildapp", "--eval", code,
                               "--entry", "f",
                               "--output", "t"

@@ -10,7 +10,6 @@ class EmacsRequirement < Requirement
 
   satisfy :build_env => false do
     next unless which "emacs"
-    #nodyna <eval-642> <not yet classified>
     emacs_version = Utils.popen_read("emacs", "--batch", "--eval", "(princ emacs-version)")
     Version.new(emacs_version) >= Version.new(@version)
   end

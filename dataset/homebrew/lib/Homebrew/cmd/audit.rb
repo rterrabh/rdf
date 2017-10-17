@@ -26,7 +26,7 @@ module Homebrew
     ENV.setup_build_environment
 
     if ARGV.switch? "D"
-      #nodyna <module_eval-615> <not yet classified>
+      #nodyna <module_eval-615> <ME MODERATE (define method)>
       FormulaAuditor.module_eval do
         instance_methods.grep(/audit_/).map do |name|
           method = instance_method(name)

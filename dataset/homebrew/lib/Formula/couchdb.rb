@@ -167,7 +167,6 @@ index 103f029..bf9ffc4 100644
 +    [can_use_ejson=$(echo $otp_release | grep -E "^(R14B03|R15|R16|17|18)")])
 
  has_crypto=`\
-     #nodyna <eval-561> <not yet classified>
      ${ERL} -eval "\
 diff --git a/share/doc/src/install/unix.rst b/share/doc/src/install/unix.rst
 index 76fe922..904c128 100644

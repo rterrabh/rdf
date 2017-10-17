@@ -18,7 +18,7 @@ class Formulary
     #nodyna <const_set-645> <CS COMPLEX (change-prone variable)>
     const_set("FormulaNamespace#{Digest::MD5.hexdigest(path.to_s)}", mod)
     contents = path.open("r") { |f| set_encoding(f).read }
-    #nodyna <module_eval-646> <not yet classified>
+    #nodyna <module_eval-646> <ME COMPLEX (block execution)>
     mod.module_eval(contents, path)
     class_name = class_s(name)
 

@@ -98,7 +98,6 @@ class Rpm < Formula
   end
 
   def rpmdir(macro)
-    #nodyna <eval-598> <not yet classified>
     Pathname.new(`#{bin}/rpm --eval #{macro}`.chomp)
   end
 

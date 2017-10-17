@@ -23,6 +23,5 @@ index 689fc79..93efae8
 +++ b/chcase
 @@ -1,3 +1,4 @@
 +#!/bin/sh -- # -*- perl -*-
- #nodyna <eval-583> <not yet classified>
  eval 'exec perl $0 ${1+"$@"}'
  if 0;

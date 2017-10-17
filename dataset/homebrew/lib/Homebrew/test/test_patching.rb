@@ -11,7 +11,7 @@ class PatchingTests < Homebrew::TestCase
     super do
       url "file://#{TEST_DIRECTORY}/tarballs/testball-0.1.tbz"
       sha1 "482e737739d946b7c8cbaf127d9ee9c148b999f5"
-      #nodyna <class_eval-634> <not yet classified>
+      #nodyna <class_eval-634> <CE MODERATE (block execution)>
       class_eval(&block)
     end
   end

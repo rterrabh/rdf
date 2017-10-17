@@ -13,7 +13,6 @@ class Hyperspec < Formula
     To use this copy of the HyperSpec with SLIME, put the following in
     you .emacs intialization file:
 
-    #nodyna <eval-582> <not yet classified>
     (eval-after-load "slime"
       '(progn
          (setq common-lisp-hyperspec-root

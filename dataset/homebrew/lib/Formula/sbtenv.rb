@@ -31,13 +31,11 @@ class Sbtenv < Formula
       export SBTENV_ROOT=#{var}/sbtenv
 
     To enable shims and autocompletion add to your profile:
-      #nodyna <eval-574> <not yet classified>
       eval "$(sbtenv init -)"
     EOS
   end
 
   test do
-    #nodyna <eval-575> <not yet classified>
     shell_output("eval \"$(#{bin}/sbtenv init -)\" && sbtenv versions")
   end
 end

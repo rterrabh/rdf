@@ -12,7 +12,6 @@ class RbenvUse < Formula
   end
 
   test do
-    #nodyna <eval-571> <not yet classified>
     shell_output("eval \"$(rbenv init -)\" && rbenv use system")
   end
 end

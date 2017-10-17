@@ -28,7 +28,6 @@ class RiemannClient < Formula
   end
 
   test do
-    #nodyna <send-569> <not yet classified>
     system "#{bin}/riemann-client", "send", "-h"
   end
 end

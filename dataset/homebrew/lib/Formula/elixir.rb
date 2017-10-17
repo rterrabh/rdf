@@ -6,7 +6,6 @@ class Erlang17Requirement < Requirement
   satisfy do
     erl = which("erl")
     next unless erl
-    #nodyna <eval-572> <not yet classified>
     `#{erl} -noshell -eval 'io:fwrite("~s~n", [erlang:system_info(otp_release)]).' -s erlang halt | grep -q '^1[789]'`
     $?.exitstatus == 0
   end

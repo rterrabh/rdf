@@ -1,7 +1,6 @@
 class Sendemail < Formula
   desc "Email program for sending SMTP mail"
   homepage "http://caspian.dotconf.net/menu/Software/SendEmail/"
-  #nodyna <send-595> <not yet classified>
   url "http://caspian.dotconf.net/menu/Software/SendEmail/sendEmail-v1.56.tar.gz"
   sha256 "6dd7ef60338e3a26a5e5246f45aa001054e8fc984e48202e4b0698e571451ac0"
 
@@ -11,7 +10,6 @@ class Sendemail < Formula
   end
 
   def install
-    #nodyna <send-596> <not yet classified>
     bin.install "sendEmail"
   end
 

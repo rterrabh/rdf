@@ -92,7 +92,7 @@ class Formula
     spec = self.class.send(name)
     if spec.url
       spec.owner = self
-      #nodyna <instance_variable_set-650> <not yet classified>
+      #nodyna <instance_variable_set-650> <IVS MODERATE (change-prone variable)>
       instance_variable_set("@#{name}", spec)
     end
   end

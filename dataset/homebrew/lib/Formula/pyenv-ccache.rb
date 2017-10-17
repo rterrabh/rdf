@@ -15,7 +15,6 @@ class PyenvCcache < Formula
   end
 
   test do
-    #nodyna <eval-553> <not yet classified>
     assert shell_output("eval \"$(pyenv init -)\" && pyenv hooks install").include?("ccache.bash")
   end
 end

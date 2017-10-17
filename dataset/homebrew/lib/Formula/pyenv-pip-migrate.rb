@@ -13,7 +13,6 @@ class PyenvPipMigrate < Formula
   end
 
   test do
-    #nodyna <eval-591> <not yet classified>
     shell_output("eval \"$(pyenv init -)\" && pyenv help migrate")
   end
 end

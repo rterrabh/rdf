@@ -142,7 +142,6 @@ class Emacs < Formula
   end
 
   test do
-    #nodyna <eval-576> <not yet classified>
     assert_equal "4", shell_output("#{bin}/emacs --batch --eval=\"(print (+ 2 2))\"").strip
   end
 end

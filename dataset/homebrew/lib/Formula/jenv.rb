@@ -19,7 +19,6 @@ class Jenv < Formula
 
   def caveats; <<-EOS.undent
      To enable shims and autocompletion add to your profile:
-       #nodyna <eval-555> <not yet classified>
        if which jenv > /dev/null; then eval "$(jenv init -)"; fi
 
      To use Homebrew's directories rather than ~/.jenv add to your profile:

@@ -102,7 +102,7 @@ end
 
 if(ARGV.size >= 0)
   files_to_research = []
-  files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
+  files_to_research << "../dataset/jekyll/**/lib/**/*.rb"
   #files_to_research << "/home/elderjr/Documents/test.rb"
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

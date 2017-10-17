@@ -14,7 +14,6 @@ class PyenvWhichExt < Formula
   end
 
   test do
-    #nodyna <eval-564> <not yet classified>
     shell_output("eval \"$(pyenv init -)\" && pyenv which python")
   end
 end

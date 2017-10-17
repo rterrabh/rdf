@@ -27,7 +27,6 @@ class PdfTools < Formula
 
   def caveats; <<-EOS.undent
     To install to your Emacs run:
-      #nodyna <eval-584> <not yet classified>
       emacs -Q --batch --eval "(package-install-file \\"#{prefix}/pdf-tools-#{version}.tar\\")"
     EOS
   end

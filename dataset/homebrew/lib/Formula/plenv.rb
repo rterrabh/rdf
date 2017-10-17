@@ -14,7 +14,6 @@ class Plenv < Formula
 
   def caveats; <<-EOS.undent
     To enable shims add to your profile:
-      #nodyna <eval-552> <not yet classified>
       if which plenv > /dev/null; then eval "$(plenv init -)"; fi
     EOS
   end
