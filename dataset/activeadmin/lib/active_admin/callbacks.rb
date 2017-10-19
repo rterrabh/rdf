@@ -31,8 +31,8 @@ module ActiveAdmin
             #nodyna <send-22> <SD MODERATE (private methods)>
             #nodyna <define_method-23> <DM MODERATE (array)>
             singleton_class.send :define_method, callback_name do
-              #nodyna <instance_variable_get-24> <not yet classified>
-              #nodyna <instance_variable_set-25> <not yet classified>
+              #nodyna <instance_variable_get-24> <IVG change-prone variable>
+              #nodyna <instance_variable_set-25> <IVS change-prone variable>
               instance_variable_get(callback_ivar) || instance_variable_set(callback_ivar, [])
             end
             #nodyna <send-26> <SD MODERATE (private methods)>

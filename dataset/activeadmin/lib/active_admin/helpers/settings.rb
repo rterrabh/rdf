@@ -25,7 +25,7 @@ module ActiveAdmin
         #nodyna <define_method-86> <DM COMPLEX (events)>
         define_method name do
           if instance_variable_defined? "@#{name}"
-            #nodyna <instance_variable_get-87> <not yet classified>
+            #nodyna <instance_variable_get-87> <IVG COMPLEX (change-prone variable)>
             instance_variable_get "@#{name}"
           else
             read_default_setting name.to_sym

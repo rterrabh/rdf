@@ -50,7 +50,7 @@ files_to_research = []
 
 
 #activeadmin
-#files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
+files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
 
 #diaspora
 #files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
@@ -68,7 +68,7 @@ files_to_research = []
 #files_to_research << "../dataset/gitlabhq/config/**/*.rb"
 
 #homebrew
-files_to_research << "../dataset/homebrew/**/lib/**/*.rb"
+#files_to_research << "../dataset/homebrew/**/lib/**/*.rb"
 
 #paperclip
 #files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
