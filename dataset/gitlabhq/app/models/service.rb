@@ -75,7 +75,7 @@ class Service < ActiveRecord::Base
 
   def self.prop_accessor(*args)
     args.each do |arg|
-      #nodyna <class_eval-502> <not yet classified>
+      #nodyna <class_eval-502> <CE COMPLEX (define methods)>
       class_eval %{
         def #{arg}
           properties['#{arg}']

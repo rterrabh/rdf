@@ -6,7 +6,7 @@ if Gitlab::LDAP::Config.enabled?
     const_set(klass, Class.new(LDAP)) unless klass == 'LDAP'
   end
 
-  #nodyna <class_eval-548> <not yet classified>
+  #nodyna <class_eval-548> <CE MODERATE (block execution)>
   OmniauthCallbacksController.class_eval do
     server = Gitlab.config.ldap.servers.values.first
     alias_method server['provider_name'], :ldap

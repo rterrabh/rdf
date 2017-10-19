@@ -42,7 +42,6 @@ class Projects::ServicesController < Projects::ApplicationController
     if outcome[:success]
       message = { notice: 'We sent a request to the provided URL' }
     else
-      #nodyna <send-532> <not yet classified>
       error_message = "We tried to send a request to the provided URL but an error occurred"
       error_message << ": #{outcome[:result]}" if outcome[:result].present?
       message = { alert: error_message }

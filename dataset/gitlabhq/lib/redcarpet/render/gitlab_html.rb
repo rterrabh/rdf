@@ -11,7 +11,7 @@ class Redcarpet::Render::GitlabHTML < Redcarpet::Render::HTML
 
     @options.reverse_merge!(
       escape_html: false,
-      #nodyna <instance_variable_get-498> <not yet classified>
+      #nodyna <instance_variable_get-498> <IVG COMPLEX (private access)>
       project: @template.instance_variable_get("@project")
     )
 
