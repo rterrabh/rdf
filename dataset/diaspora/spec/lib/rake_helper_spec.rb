@@ -14,7 +14,6 @@ describe RakeHelpers do
       AppConfig.admins.account = FactoryGirl.create(:user).username
     end
 
-    #nodyna <send-191> <not yet classified>
     it 'should send emails to each email' do
       expect(EmailInviter).to receive(:new).exactly(3).times.and_return(double.as_null_object)
       process_emails(@csv, 100, 1, false)

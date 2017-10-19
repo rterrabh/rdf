@@ -19,7 +19,7 @@ describe Postzord::Receiver do
 
   describe "#author_does_not_match_xml_author?" do
     before do
-      #nodyna <instance_variable_set-165> <not yet classified>
+      #nodyna <instance_variable_set-165> <IVS MODERATE (private access)>
       @receiver.instance_variable_set(:@author, alice.person)
       allow(@receiver).to receive(:xml_author).and_return(alice.diaspora_handle)
     end
@@ -39,12 +39,12 @@ describe Postzord::Receiver do
 
   describe "#relayable_without_parent?" do
     before do
-      #nodyna <instance_variable_set-168> <not yet classified>
+      #nodyna <instance_variable_set-168> <IVS MODERATE (private access)>
       @receiver.instance_variable_set(:@author, alice.person)
     end
 
     it "should return false if object is not relayable" do
-      #nodyna <instance_variable_set-169> <not yet classified>
+      #nodyna <instance_variable_set-169> <IVS MODERATE (private access)>
       @receiver.instance_variable_set(:@object, nil)
       #nodyna <send-170> <SD EASY (private methods)>
       expect(@receiver.send(:relayable_without_parent?)).to be_falsey
@@ -53,7 +53,7 @@ describe Postzord::Receiver do
     context "if object is relayable" do
       before do
         @comment = bob.build_comment(text: "yo", post: FactoryGirl.create(:status_message))
-        #nodyna <instance_variable_set-171> <not yet classified>
+        #nodyna <instance_variable_set-171> <IVS MODERATE (private access)>
         @receiver.instance_variable_set(:@object, @comment)
       end
 

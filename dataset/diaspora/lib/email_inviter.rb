@@ -19,7 +19,6 @@ class EmailInviter
     @invitation_code ||= inviter.invitation_code 
   end
 
-  #nodyna <send-204> <not yet classified>
   def send!
     self.emails.each{ |email| mail(email)}
   end

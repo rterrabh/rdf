@@ -4,7 +4,7 @@ module Diaspora
     include Encryptable
 
     def self.included(model)
-      #nodyna <class_eval-218> <not yet classified>
+      #nodyna <class_eval-218> <CE MODERATE (block execution)>
       model.class_eval do
         xml_attr :parent_guid
         xml_attr :parent_author_signature

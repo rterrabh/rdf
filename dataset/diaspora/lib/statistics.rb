@@ -176,7 +176,7 @@ SQL
   end
 
   def result_hash(type)
-    #nodyna <instance_variable_get-205> <not yet classified>
+    #nodyna <instance_variable_get-205> <IVS MODERATE (change-prone variable)>
     instance_hash = self.instance_variable_get("@#{type.to_s}_hash".to_sym)
     unless instance_hash
       #nodyna <send-206> <SD MODERATE (change-prone variables)>
@@ -184,7 +184,7 @@ SQL
 
       instance_hash = {}
       post_count_array.each{ |h| instance_hash[h['id']] = h["count"]}
-      #nodyna <instance_variable_set-207> <not yet classified>
+      #nodyna <instance_variable_set-207> <IVS MODERATE (change-prone variable)>
       self.instance_variable_set("@#{type.to_s}_hash".to_sym, instance_hash)
     end
     instance_hash

@@ -23,7 +23,7 @@ describe HydraWrapper do
   describe '#run' do
     it 'delegates #run to the @hydra' do
       hydra = double.as_null_object
-      #nodyna <instance_variable_set-183> <not yet classified>
+      #nodyna <instance_variable_set-183> <IVS MODERATE (private access)>
       @wrapper.instance_variable_set :@hydra, hydra
       expect(hydra).to receive :run
       @wrapper.run

@@ -51,7 +51,7 @@ describe Postzord::Dispatcher do
 
     describe '#post' do
       it 'calls Array#partition on subscribers' do
-        #nodyna <instance_variable_set-174> <not yet classified>
+        #nodyna <instance_variable_set-174> <IVS MODERATE (private access)>
         @zord.instance_variable_set(:@subscribers, @subscribers)
         expect(@subscribers).to receive(:partition).and_return([@remote_people, @local_people])
         @zord.post
@@ -235,7 +235,7 @@ describe Postzord::Dispatcher do
       end
 
       it 'returns if the object is a profile' do
-        #nodyna <instance_variable_set-178> <not yet classified>
+        #nodyna <instance_variable_set-178> <IVS MODERATE (private access)>
         @mailman.instance_variable_set(:@object, Profile.new)
         expect(Workers::ReceiveLocalBatch).not_to receive(:perform_async)
         #nodyna <send-179> <SD EASY (private methods)>

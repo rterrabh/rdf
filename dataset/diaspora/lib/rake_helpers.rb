@@ -26,7 +26,6 @@ module RakeHelpers
         puts "#{n}: sending email to: #{backer_name} #{backer_email}" unless Rails.env == 'test'
         unless test
           i = EmailInviter.new(backer_email)
-          #nodyna <send-220> <not yet classified>
           i.send!
         end
       else

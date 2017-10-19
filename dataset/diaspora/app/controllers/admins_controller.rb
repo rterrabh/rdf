@@ -18,7 +18,6 @@ class AdminsController < Admin::AdminController
     user = User.find_by_email(email)
 
     unless user
-      #nodyna <send-237> <not yet classified>
       EmailInviter.new(email, inviter).send!
       flash[:notice] = "invitation sent to #{email}"
     else

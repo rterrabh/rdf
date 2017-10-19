@@ -40,10 +40,8 @@ class Invitation < ActiveRecord::Base
     !email_like_identifer
   end
 
-  #nodyna <send-223> <not yet classified>
   def send!
     if email_like_identifer
-      #nodyna <send-224> <not yet classified>
       EmailInviter.new(self.identifier, sender).send! 
     else
       puts "broken facebook invitation_token"
@@ -60,7 +58,6 @@ class Invitation < ActiveRecord::Base
     self
   end
   def resend
-    #nodyna <send-225> <not yet classified>
     self.send!
   end
 

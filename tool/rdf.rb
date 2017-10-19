@@ -50,12 +50,12 @@ files_to_research = []
 
 
 #activeadmin
-files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
+#files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
 
 #diaspora
-#files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
-#files_to_research << "../dataset/diaspora/app/**/*.rb"
-#files_to_research << "../dataset/diaspora/config/**/*.rb"
+files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
+files_to_research << "../dataset/diaspora/app/**/*.rb"
+files_to_research << "../dataset/diaspora/config/**/*.rb"
 
 #discourse
 #files_to_research << "../dataset/discourse/**/lib/**/*.rb"

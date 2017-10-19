@@ -2,7 +2,7 @@
 module Diaspora
   module Taggable
     def self.included(model)
-      #nodyna <class_eval-215> <not yet classified>
+      #nodyna <class_eval-215> <CE COMPLEX (define methods)>
       model.class_eval do
         cattr_accessor :field_with_tags
 

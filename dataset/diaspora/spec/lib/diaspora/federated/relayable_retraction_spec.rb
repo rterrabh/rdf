@@ -43,7 +43,7 @@ describe RelayableRetraction do
       @comment= @local_luke.comment!(@local_parent, "yo")
       @retraction= @local_luke.retract(@comment)
 
-      #nodyna <instance_variable_set-121> <not yet classified>
+      #nodyna <instance_variable_set-121> <IVS MODERATE (private access)>
       @retraction.instance_variable_set(:@target, nil)
       @retraction.target_guid = '135245'
       expect(@retraction).not_to receive(:perform)

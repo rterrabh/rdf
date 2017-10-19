@@ -20,7 +20,7 @@ describe Retraction do
     context 'posts' do
       before do
         @retraction = described_class.for(@post)
-        #nodyna <instance_variable_get-122> <not yet classified>
+        #nodyna <instance_variable_get-122> <IVG COMPLEX (private access)>
         @obj = @retraction.instance_variable_get(:@object)
         @wanted_subscribers = @obj.subscribers(alice)
       end
@@ -41,7 +41,7 @@ describe Retraction do
     context 'setting subscribers' do
       it 'barfs if the type is a person, and subscribers instance varabile is not set' do
         retraction = described_class.for(alice)
-        #nodyna <instance_variable_get-123> <not yet classified>
+        #nodyna <instance_variable_get-123> <IVG COMPLEX (private access)>
         obj = retraction.instance_variable_get(:@object)
 
         expect {

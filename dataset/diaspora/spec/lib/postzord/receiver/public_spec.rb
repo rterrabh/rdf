@@ -99,7 +99,7 @@ describe Postzord::Receiver::Public do
 
     it 'receives only for the parent author if he is local to the pod' do
       comment = double.as_null_object
-      #nodyna <instance_variable_set-151> <not yet classified>
+      #nodyna <instance_variable_set-151> <IVS MODERATE (private access)>
       @receiver.instance_variable_set(:@object, comment)
 
       expect(comment).to receive(:receive)
@@ -108,7 +108,7 @@ describe Postzord::Receiver::Public do
 
     it 'calls notifiy_users' do
       comment = double.as_null_object
-      #nodyna <instance_variable_set-152> <not yet classified>
+      #nodyna <instance_variable_set-152> <IVS MODERATE (private access)>
       @receiver.instance_variable_set(:@object, comment)
 
       local_batch_receiver = double.as_null_object

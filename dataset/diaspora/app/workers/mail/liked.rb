@@ -6,7 +6,6 @@ module Workers
       def perform(recipient_id, sender_id, like_id)
         Notifier.liked(recipient_id, sender_id, like_id).deliver_now
       rescue ActiveRecord::RecordNotFound => e
-        #nodyna <send-226> <not yet classified>
         logger.warn("failed to send liked notification mail: #{e.message}")
         raise e unless e.message.start_with?("Couldn't find Like with")
       end
