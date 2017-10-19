@@ -35,7 +35,7 @@ class TopicView
     check_and_raise_exceptions
 
     options.each do |key, value|
-      #nodyna <instance_variable_set-291> <not yet classified>
+      #nodyna <instance_variable_set-291> <IVS COMPLEX (array)>
       self.instance_variable_set("@#{key}".to_sym, value)
     end
 

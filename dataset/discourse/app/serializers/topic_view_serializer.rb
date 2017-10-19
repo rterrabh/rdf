@@ -7,7 +7,7 @@ class TopicViewSerializer < ApplicationSerializer
   def self.attributes_from_topic(*list)
     [list].flatten.each do |attribute|
       attributes(attribute)
-      #nodyna <class_eval-462> <not yet classified>
+      #nodyna <class_eval-462> <CE COMPLEX (define methods)>
       class_eval %{def #{attribute}
         object.topic.#{attribute}
       end}

@@ -74,7 +74,6 @@ module Jobs
         template_args[:site_name] = SiteSetting.title
 
         client_message = RejectionMailer.send_rejection(message_template, message.from, template_args)
-        #nodyna <send-404> <not yet classified>
         Email::Sender.new(client_message, message_template).send
       else
         Discourse.handle_job_exception(e, error_context(@args, "Unrecognized error type when processing incoming email", mail: mail_string))

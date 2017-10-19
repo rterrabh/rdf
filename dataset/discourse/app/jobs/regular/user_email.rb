@@ -55,7 +55,6 @@ module Jobs
         message.to = [args[:to_address]]
       end
 
-      #nodyna <send-410> <not yet classified>
       Email::Sender.new(message, args[:type], @user).send
     end
 

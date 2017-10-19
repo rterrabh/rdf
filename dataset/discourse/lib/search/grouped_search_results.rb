@@ -34,7 +34,7 @@ class Search
 
       #nodyna <send-288> <SD COMPLEX (change-prone variables)>
       if !@type_filter.present? && send(type).length == Search.per_facet
-        #nodyna <instance_variable_set-289> <not yet classified>
+        #nodyna <instance_variable_set-289> <IVS COMPLEX (change-prone variable)>
         instance_variable_set("@more_#{type}".to_sym, true)
       else
         #nodyna <send-290> <SD COMPLEX (change-prone variables)>

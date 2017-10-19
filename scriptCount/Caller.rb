@@ -102,9 +102,9 @@ end
 
 if(ARGV.size >= 0)
   files_to_research = []
-  files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
-  files_to_research << "../dataset/diaspora/app/**/*.rb"
-  files_to_research << "../dataset/diaspora/config/**/*.rb"
+  files_to_research << "../dataset/discourse/**/lib/**/*.rb"
+  files_to_research << "../dataset/discourse/app/**/*.rb"
+  files_to_research << "../dataset/discourse/config/**/*.rb"
   #files_to_research << "/home/elderjr/Documents/test.rb"
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end

@@ -7,7 +7,7 @@ class FilterBestPosts
     @topic = topic
     @limit = limit
     options.each do |key, value|
-        #nodyna <instance_variable_set-285> <not yet classified>
+        #nodyna <instance_variable_set-285> <IVS COMPLEX (array)>
         self.instance_variable_set("@#{key}".to_sym, value)
     end
     filter

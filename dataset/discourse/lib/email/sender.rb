@@ -13,7 +13,6 @@ module Email
       @user = user
     end
 
-    #nodyna <send-357> <not yet classified>
     def send
       return if SiteSetting.disable_emails
       return skip(I18n.t('email_log.message_blank')) if @message.blank?

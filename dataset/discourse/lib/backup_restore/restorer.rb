@@ -295,7 +295,6 @@ module BackupRestore
           SystemMessage.create_from_system_user(user, :restore_failed, logs: @logs.join("\n"))
         end
       else
-        #nodyna <send-282> <not yet classified>
         log "Could not send notification to '#{@user_info[:username]}' (#{@user_info[:email]}), because the user does not exists..."
       end
     end

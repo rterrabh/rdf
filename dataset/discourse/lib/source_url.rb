@@ -5,7 +5,6 @@ class SourceURL < Tilt::Template
   end
 
   def evaluate(scope, locals, &block)
-    #nodyna <eval-258> <not yet classified>
     code = "eval("
     code << data.inspect
     code << " + \"\\n//# sourceURL=#{scope.logical_path}\""

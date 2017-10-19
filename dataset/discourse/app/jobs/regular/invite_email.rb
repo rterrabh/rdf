@@ -9,7 +9,6 @@ module Jobs
 
       invite = Invite.find_by(id: args[:invite_id])
       message = InviteMailer.send_invite(invite)
-      #nodyna <send-415> <not yet classified>
       Email::Sender.new(message, :invite).send
     end
 

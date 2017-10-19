@@ -9,7 +9,7 @@ class Plugin::Instance
   attr_reader :admin_route
 
   [:assets, :auth_providers, :color_schemes, :initializers, :javascripts, :styles].each do |att|
-    #nodyna <class_eval-292> <not yet classified>
+    #nodyna <class_eval-292> <CE MODERATE (define methods)>
     class_eval %Q{
       def #{att}
         @#{att} ||= []

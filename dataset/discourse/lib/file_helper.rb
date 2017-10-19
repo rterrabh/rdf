@@ -39,7 +39,7 @@ class FileHelper
   rescue URI::InvalidURIError
     host = url.match(".+\:\/\/([^\/]+)")[1]
     uri = URI.parse(url.sub(host, 'valid-host'))
-    #nodyna <instance_variable_set-333> <not yet classified>
+    #nodyna <instance_variable_set-333> <IVS TRIVIAL (public access)>
     uri.instance_variable_set("@host", host)
     uri
   end

@@ -37,7 +37,7 @@ class DiscourseSassCompiler
     env = Rails.application.assets
 
     if env.is_a?(Sprockets::Index)
-      #nodyna <instance_variable_get-255> <not yet classified>
+      #nodyna <instance_variable_get-255> <IVG COMPLEX (change-prone variable)>
       env = env.instance_variable_get('@environment')
     end
 
