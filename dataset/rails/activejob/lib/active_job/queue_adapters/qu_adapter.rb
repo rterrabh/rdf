@@ -6,7 +6,7 @@ module ActiveJob
       class << self
         def enqueue(job, *args) #:nodoc:
           Qu::Payload.new(klass: JobWrapper, args: [job.serialize]).tap do |payload|
-            #nodyna <instance_variable_set-1328> <not yet classified>
+            #nodyna <instance_variable_set-1328> <IVS COMPLEX (private access)>
             payload.instance_variable_set(:@queue, job.queue_name)
           end.push
         end

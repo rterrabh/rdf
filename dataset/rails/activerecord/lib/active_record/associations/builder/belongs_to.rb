@@ -28,7 +28,7 @@ module ActiveRecord::Associations::Builder
     def self.add_counter_cache_methods(mixin)
       return if mixin.method_defined? :belongs_to_counter_cache_after_update
 
-      #nodyna <class_eval-888> <not yet classified>
+      #nodyna <class_eval-888> <CE COMPLEX (define methods)>
       mixin.class_eval do
         def belongs_to_counter_cache_after_update(reflection)
           foreign_key  = reflection.foreign_key

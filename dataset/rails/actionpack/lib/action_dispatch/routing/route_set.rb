@@ -317,7 +317,7 @@ module ActionDispatch
         private
         def define_url_helper(mod, route, name, opts, route_key, url_strategy)
           helper = UrlHelper.create(route, opts, route_key, url_strategy)
-          #nodyna <module_eval-1260> <not yet classified>
+          #nodyna <module_eval-1260> <ME COMPLEX (define methods)>
           mod.module_eval do
             #nodyna <define_method-1261> <DM COMPLEX (events)>
             define_method(name) do |*args|
@@ -446,15 +446,15 @@ module ActionDispatch
         return if MountedHelpers.method_defined?(name)
 
         routes = self
-        #nodyna <class_eval-1263> <not yet classified>
+        #nodyna <class_eval-1263> <CE MODERATE (define methods)>
         MountedHelpers.class_eval do
-          #nodyna <define_method-1264> <DM COMPLEX (events)>
+          #nodyna <define_method-1264> <DM MODERATE (events)>
           define_method "_#{name}" do
             RoutesProxy.new(routes, _routes_context)
           end
         end
 
-        #nodyna <class_eval-1265> <not yet classified>
+        #nodyna <class_eval-1265> <CE MODERATE (define methods)>
         MountedHelpers.class_eval(<<-RUBY, __FILE__, __LINE__ + 1)
           def #{name}
             @_#{name} ||= _#{name}

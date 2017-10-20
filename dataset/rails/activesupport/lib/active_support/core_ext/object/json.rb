@@ -11,7 +11,7 @@ require 'active_support/core_ext/date/conversions'
 require 'active_support/core_ext/module/aliasing'
 
 [Enumerable, Object, Array, FalseClass, Float, Hash, Integer, NilClass, String, TrueClass].each do |klass|
-  #nodyna <class_eval-1095> <not yet classified>
+  #nodyna <class_eval-1095> <CE MODERATE (define methods)>
   klass.class_eval do
     def to_json_with_active_support_encoder(options = nil) # :nodoc:
       if options.is_a?(::JSON::State)

@@ -11,7 +11,7 @@ module ActiveRecord::Associations::Builder
     end
 
     def self.define_constructors(mixin, name)
-      #nodyna <class_eval-892> <not yet classified>
+      #nodyna <class_eval-892> <CE COMPLEX (define methods)>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def build_#{name}(*args, &block)
           association(:#{name}).build(*args, &block)

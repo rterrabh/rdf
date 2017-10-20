@@ -119,7 +119,7 @@ module ActiveRecord
         private
 
         def inherited(subclass)
-          #nodyna <class_eval-778> <not yet classified>
+          #nodyna <class_eval-778> <CE COMPLEX (block execution)>
           subclass.class_eval do
             is_lock_column = ->(name, _) { lock_optimistically && name == locking_column }
             decorate_matching_attribute_types(is_lock_column, :_optimistic_locking) do |type|

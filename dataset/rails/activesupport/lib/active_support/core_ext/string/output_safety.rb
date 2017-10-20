@@ -85,7 +85,7 @@ module ActiveSupport #:nodoc:
           new_safe_buffer = super
 
           if new_safe_buffer
-            #nodyna <instance_variable_set-1058> <not yet classified>
+            #nodyna <instance_variable_set-1058> <IVS MODERATE (private access)>
             new_safe_buffer.instance_variable_set :@html_safe, true
           end
 
@@ -162,7 +162,7 @@ module ActiveSupport #:nodoc:
 
     UNSAFE_STRING_METHODS.each do |unsafe_method|
       if unsafe_method.respond_to?(unsafe_method)
-        #nodyna <class_eval-1059> <not yet classified>
+        #nodyna <class_eval-1059> <CE MODERATE (define methods)>
         class_eval <<-EOT, __FILE__, __LINE__ + 1
           def #{unsafe_method}(*args, &block)       # def capitalize(*args, &block)
             to_str.#{unsafe_method}(*args, &block)  #   to_str.capitalize(*args, &block)

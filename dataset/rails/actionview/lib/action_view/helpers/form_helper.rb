@@ -221,7 +221,7 @@ module ActionView
         @object_name, @object, @template, @options = object_name, object, template, options
         @default_options = @options ? @options.slice(:index, :namespace) : {}
         if @object_name.to_s.match(/\[\]$/)
-          #nodyna <instance_variable_get-1211> <not yet classified>
+          #nodyna <instance_variable_get-1211> <IVG COMPLEX (change-prone variable)>
           if object ||= @template.instance_variable_get("@#{Regexp.last_match.pre_match}") and object.respond_to?(:to_param)
             @auto_index = object.to_param
           else
@@ -233,11 +233,10 @@ module ActionView
       end
 
       (field_helpers - [:label, :check_box, :radio_button, :fields_for, :hidden_field, :file_field]).each do |selector|
-        #nodyna <class_eval-1212> <not yet classified>
+        #nodyna <class_eval-1212> <CE MODERATE (define methods)>
         class_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
           def #{selector}(method, options = {})  # def text_field(method, options = {})
-            #nodyna <send-1213> <not yet classified>
-            #nodyna <send-1214> <not yet classified>
+            #nodyna <send-1213> <SD COMPLEX (change-prone variable)>
             @template.send(                      #   @template.send(
               @object_name,                      #     @object_name,
               method,                            #     method,

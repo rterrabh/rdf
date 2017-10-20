@@ -21,7 +21,7 @@ if Time.local(2010).zone != Marshal.load(Marshal.dump(Time.local(2010))).zone
     alias_method :_dump_without_zone, :_dump
     def _dump(*args)
       obj = dup
-      #nodyna <instance_variable_set-1098> <not yet classified>
+      #nodyna <instance_variable_set-1098> <IVS MODERATE (private access)>
       obj.instance_variable_set('@_zone', zone)
       #nodyna <send-1099> <SD EASY (private methods)>
       obj.send :_dump_without_zone, *args

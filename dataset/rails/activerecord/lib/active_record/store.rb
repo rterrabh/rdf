@@ -19,7 +19,7 @@ module ActiveRecord
       def store_accessor(store_attribute, *keys)
         keys = keys.flatten
 
-        #nodyna <module_eval-924> <not yet classified>
+        #nodyna <module_eval-924> <ME COMPLEX (block execution)>
         _store_accessors_module.module_eval do
           keys.each do |key|
             #nodyna <define_method-925> <DM COMPLEX (array)>

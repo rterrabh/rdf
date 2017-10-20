@@ -254,7 +254,7 @@ module ActiveSupport
         end
 
         ATTRIBUTES.each do |attr_name|
-          #nodyna <class_eval-1104> <not yet classified>
+          #nodyna <class_eval-1104> <CE MODERATE (define methods)>
           class_eval(<<-EOS, __FILE__, __LINE__ + 1)
             def #{attr_name}     # def codepoints
               load               #   load

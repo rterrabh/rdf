@@ -19,7 +19,7 @@ module ActionController
 
     def setup_subscriptions
       RENDER_TEMPLATE_INSTANCE_VARIABLES.each do |instance_variable|
-        #nodyna <instance_variable_set-1296> <not yet classified>
+        #nodyna <instance_variable_set-1296> <IVS MODERATE (array)>
         instance_variable_set("@_#{instance_variable}", Hash.new(0))
       end
 
@@ -70,7 +70,7 @@ module ActionController
       RENDER_TEMPLATE_INSTANCE_VARIABLES.each do |instance_variable|
         ivar_name = "@_#{instance_variable}"
         if instance_variable_defined?(ivar_name)
-          #nodyna <instance_variable_get-1297> <not yet classified>
+          #nodyna <instance_variable_get-1297> <IVG MODERATE (array)>
           instance_variable_get(ivar_name).clear
         end
       end
@@ -218,9 +218,9 @@ module ActionController
       @fullpath = @ip = @remote_ip = @protocol = nil
       @env['action_dispatch.request.query_parameters'] = {}
       @set_cookies ||= {}
-      #nodyna <instance_variable_get-1298> <not yet classified>
+      #nodyna <instance_variable_get-1298> <IVG MODERATE (private access)>
       @set_cookies.update(Hash[cookie_jar.instance_variable_get("@set_cookies").map{ |k,o| [k,o[:value]] }])
-      #nodyna <instance_variable_get-1299> <not yet classified>
+      #nodyna <instance_variable_get-1299> <IVG MODERATE (private access)>
       deleted_cookies = cookie_jar.instance_variable_get("@delete_cookies")
       @set_cookies.reject!{ |k,v| deleted_cookies.include?(k) }
       cookie_jar.update(rack_cookies)
@@ -497,7 +497,7 @@ module ActionController
 
       def check_required_ivars
         [:@routes, :@controller, :@request, :@response].each do |iv_name|
-          #nodyna <instance_variable_get-1300> <not yet classified>
+          #nodyna <instance_variable_get-1300> <IVG MODERATE (array)>
           if !instance_variable_defined?(iv_name) || instance_variable_get(iv_name).nil?
             raise "#{iv_name} is nil: make sure you set it in your test's setup method."
           end

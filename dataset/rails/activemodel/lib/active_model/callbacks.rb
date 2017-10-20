@@ -3,7 +3,7 @@ require 'active_support/core_ext/array/extract_options'
 module ActiveModel
   module Callbacks
     def self.extended(base) #:nodoc:
-      #nodyna <class_eval-940> <not yet classified>
+      #nodyna <class_eval-940> <CE TRIVIAL (block execution)>
       base.class_eval do
         include ActiveSupport::Callbacks
       end

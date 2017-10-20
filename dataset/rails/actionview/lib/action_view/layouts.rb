@@ -92,7 +92,7 @@ module ActionView
             name_clause
         end
 
-        #nodyna <class_eval-1198> <not yet classified>
+        #nodyna <class_eval-1198> <CE TRIVIAL (define methods)>
         self.class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def _layout
             if _conditional_layout?

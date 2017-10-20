@@ -6,7 +6,7 @@ module ActiveSupport
       require 'thread'
 
       def self.included(klass) #:nodoc:
-        #nodyna <class_eval-1129> <not yet classified>
+        #nodyna <class_eval-1129> <CE COMPLEX (block execution)>
         klass.class_eval do
           parallelize_me!
         end

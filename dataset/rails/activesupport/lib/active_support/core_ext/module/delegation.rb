@@ -63,7 +63,7 @@ class Module
         ].join ';'
       end
 
-      #nodyna <module_eval-1046> <not yet classified>
+      #nodyna <module_eval-1046> <ME COMPLEX (define methods)>
       module_eval(method_def, file, line)
     end
   end

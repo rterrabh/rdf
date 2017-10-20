@@ -62,7 +62,7 @@ module ActiveRecord
             return if method_defined?(method)
 
             if method.to_s =~ /\A[a-zA-Z_]\w*[!?]?\z/
-              #nodyna <module_eval-825> <not yet classified>
+              #nodyna <module_eval-825> <ME COMPLEX (define methods)>
               module_eval <<-RUBY, __FILE__, __LINE__ + 1
                 def #{method}(*args, &block)
                   scoping { @klass.#{method}(*args, &block) }

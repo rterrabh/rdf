@@ -12,7 +12,7 @@ module Rails
     private
       %w(template copy_file directory empty_directory inside
          empty_directory_with_keep_file create_file chmod shebang).each do |method|
-        #nodyna <class_eval-1158> <not yet classified>
+        #nodyna <class_eval-1158> <CE MODERATE (define methods)>
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{method}(*args, &block)
             #nodyna <send-1159> <SD MODERATE (change-prone variables)>

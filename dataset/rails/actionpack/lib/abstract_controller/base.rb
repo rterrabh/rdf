@@ -30,7 +30,7 @@ module AbstractController
 
       def inherited(klass) # :nodoc:
         unless klass.instance_variable_defined?(:@abstract)
-          #nodyna <instance_variable_set-1315> <not yet classified>
+          #nodyna <instance_variable_set-1315> <IVS COMPLEX (define variable)>
           klass.instance_variable_set(:@abstract, false)
         end
         super
@@ -112,7 +112,6 @@ module AbstractController
         send_action(method_name, *args)
       end
 
-      #nodyna <send-1316> <not yet classified>
       alias send_action send
 
       def _handle_action_missing(*args)

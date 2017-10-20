@@ -37,7 +37,7 @@ module ActiveRecord
     end
 
     Relation::MULTI_VALUE_METHODS.each do |name|
-      #nodyna <class_eval-813> <not yet classified>
+      #nodyna <class_eval-813> <CE MODERATE (define methods)>
       class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}_values                   # def select_values
           @values[:#{name}] || []            #   @values[:select] || []
@@ -51,7 +51,7 @@ module ActiveRecord
     end
 
     (Relation::SINGLE_VALUE_METHODS - [:create_with]).each do |name|
-      #nodyna <class_eval-814> <not yet classified>
+      #nodyna <class_eval-814> <CE MODERATE (define methods)>
       class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}_value                    # def readonly_value
           @values[:#{name}]                  #   @values[:readonly]
@@ -60,7 +60,7 @@ module ActiveRecord
     end
 
     Relation::SINGLE_VALUE_METHODS.each do |name|
-      #nodyna <class_eval-815> <not yet classified>
+      #nodyna <class_eval-815> <CE MODERATE (define methods)>
       class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}_value=(value)            # def readonly_value=(value)
           raise ImmutableRelation if @loaded #   raise ImmutableRelation if @loaded

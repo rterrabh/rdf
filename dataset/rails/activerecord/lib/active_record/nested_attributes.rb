@@ -43,7 +43,7 @@ module ActiveRecord
       private
 
       def generate_association_writer(association_name, type)
-        #nodyna <module_eval-840> <not yet classified>
+        #nodyna <module_eval-840> <ME COMPLEX (define methods)>
         generated_association_methods.module_eval <<-eoruby, __FILE__, __LINE__ + 1
           if method_defined?(:#{association_name}_attributes=)
             remove_method(:#{association_name}_attributes=)

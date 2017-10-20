@@ -69,10 +69,10 @@ module ActionView
 
         def helper_method(*methods)
           methods.flatten.each do |method|
-            #nodyna <module_eval-1201> <not yet classified>
+            #nodyna <module_eval-1201> <ME COMPLEX (define methods)>
             _helpers.module_eval <<-end_eval
               def #{method}(*args, &block)                    # def current_user(*args, &block)
-                #nodyna <send-1202> <not yet classified>
+                #nodyna <send-1202> <SD COMPLEX (change-prone variable)>
                 _test_case.send(%(#{method}), *args, &block)  #   _test_case.send(%(current_user), *args, &block)
               end                                             # end
             end_eval
@@ -159,7 +159,7 @@ module ActionView
       end
 
       def say_no_to_protect_against_forgery!
-        #nodyna <module_eval-1203> <not yet classified>
+        #nodyna <module_eval-1203> <ME COMPLEX (block execution)>
         _helpers.module_eval do
           remove_possible_method :protect_against_forgery?
           def protect_against_forgery?
@@ -170,7 +170,7 @@ module ActionView
 
       def make_test_case_available_to_view!
         test_case_instance = self
-        #nodyna <module_eval-1204> <not yet classified>
+        #nodyna <module_eval-1204> <ME COMPLEX (block execution)>
         _helpers.module_eval do
           unless private_method_defined?(:_test_case)
             #nodyna <define_method-1205> <DM MODERATE (events)>
@@ -250,7 +250,7 @@ module ActionView
 
       def view_assigns
         Hash[_user_defined_ivars.map do |ivar|
-          #nodyna <instance_variable_get-1207> <not yet classified>
+          #nodyna <instance_variable_get-1207> <IVG COMPLEX (array)>
           [ivar[1..-1].to_sym, instance_variable_get(ivar)]
         end]
       end

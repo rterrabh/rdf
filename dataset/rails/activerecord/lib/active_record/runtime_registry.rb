@@ -7,9 +7,9 @@ module ActiveRecord
     attr_accessor :connection_handler, :sql_runtime, :connection_id
 
     [:connection_handler, :sql_runtime, :connection_id].each do |val|
-      #nodyna <class_eval-766> <not yet classified>
+      #nodyna <class_eval-766> <CE MODERATE (define methods)>
       class_eval %{ def self.#{val}; instance.#{val}; end }, __FILE__, __LINE__
-      #nodyna <class_eval-767> <not yet classified>
+      #nodyna <class_eval-767> <CE MODERATE (define methods)>
       class_eval %{ def self.#{val}=(x); instance.#{val}=x; end }, __FILE__, __LINE__
     end
   end

@@ -17,7 +17,7 @@ class Class
       ivar = "@#{name}"
 
       define_singleton_method("#{name}=") do |val|
-        #nodyna <class_eval-1080> <not yet classified>
+        #nodyna <class_eval-1080> <CE MODERATE (block execution)>
         singleton_class.class_eval do
           remove_possible_method(name)
           #nodyna <define_method-1081> <DM MODERATE (events)>
@@ -25,13 +25,13 @@ class Class
         end
 
         if singleton_class?
-          #nodyna <class_eval-1082> <not yet classified>
+          #nodyna <class_eval-1082> <CE MODERATE (define methods)>
           class_eval do
             remove_possible_method(name)
             #nodyna <define_method-1083> <DM MODERATE (events)>
             define_method(name) do
               if instance_variable_defined? ivar
-                #nodyna <instance_variable_get-1084> <not yet classified>
+                #nodyna <instance_variable_get-1084> <IVG MODERATE (change-prone variable)>
                 instance_variable_get ivar
               else
                 #nodyna <send-1085> <SD MODERATE (change-prone variables)>
@@ -48,7 +48,7 @@ class Class
         #nodyna <define_method-1086> <DM MODERATE (events)>
         define_method(name) do
           if instance_variable_defined?(ivar)
-            #nodyna <instance_variable_get-1087> <not yet classified>
+            #nodyna <instance_variable_get-1087> <IVG MODERATE (change-prone variable)>
             instance_variable_get ivar
           else
             #nodyna <send-1088> <SD MODERATE (change-prone variables)>

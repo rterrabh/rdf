@@ -47,7 +47,7 @@ module ActiveRecord
         :change_column, :execute, :remove_columns, :change_column_null,
         :add_foreign_key, :remove_foreign_key
       ].each do |method|
-        #nodyna <class_eval-769> <not yet classified>
+        #nodyna <class_eval-769> <CE MODERATE (define methods)>
         class_eval <<-EOV, __FILE__, __LINE__ + 1
           def #{method}(*args, &block)          # def create_table(*args, &block)
             record(:"#{method}", args, &block)  #   record(:create_table, args, &block)
@@ -75,7 +75,7 @@ module ActiveRecord
           enable_extension:  :disable_extension
         }.each do |cmd, inv|
           [[inv, cmd], [cmd, inv]].uniq.each do |method, inverse|
-            #nodyna <class_eval-770> <not yet classified>
+            #nodyna <class_eval-770> <CE MODERATE (define methods)>
             class_eval <<-EOV, __FILE__, __LINE__ + 1
               def invert_#{method}(args, &block)    # def invert_create_table(args, &block)
                 [:#{inverse}, args, block]          #   [:drop_table, args, block]

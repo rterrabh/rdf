@@ -20,7 +20,7 @@ class Module
   end
 
   def alias_attribute(new_name, old_name)
-    #nodyna <module_eval-1048> <not yet classified>
+    #nodyna <module_eval-1048> <ME COMPLEX (define methods)>
     module_eval <<-STR, __FILE__, __LINE__ + 1
       def #{new_name}; self.#{old_name}; end          # def subject; self.title; end
       def #{new_name}?; self.#{old_name}?; end        # def subject?; self.title?; end

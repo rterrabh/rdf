@@ -12,7 +12,7 @@ module Mime
     %w(<< concat shift unshift push pop []= clear compact! collect!
     delete delete_at delete_if flatten! map! insert reject! reverse!
     replace slice! sort! uniq!).each do |method|
-      #nodyna <module_eval-1239> <not yet classified>
+      #nodyna <module_eval-1239> <ME MODERATE (define methods)>
       module_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{method}(*)
           @symbols = nil

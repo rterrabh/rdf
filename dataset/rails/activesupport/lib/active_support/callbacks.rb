@@ -588,7 +588,7 @@ module ActiveSupport
           class_attribute "_#{name}_callbacks"
           set_callbacks name, CallbackChain.new(name, options)
 
-          #nodyna <module_eval-995> <not yet classified>
+          #nodyna <module_eval-995> <ME MODERATE (define methods)>
           module_eval <<-RUBY, __FILE__, __LINE__ + 1
             def _run_#{name}_callbacks(&block)
               __run_callbacks__(_#{name}_callbacks, &block)

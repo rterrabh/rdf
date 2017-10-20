@@ -115,7 +115,7 @@ module ActionDispatch
         @app = app
 
         if app.respond_to?(:routes)
-          #nodyna <class_eval-1288> <not yet classified>
+          #nodyna <class_eval-1288> <CE MODERATE (block execution)>
           singleton_class.class_eval do
             include app.routes.url_helpers
             include app.routes.mounted_helpers
@@ -261,7 +261,7 @@ module ActionDispatch
       def copy_session_variables! #:nodoc:
         return unless integration_session
         %w(controller response request).each do |var|
-          #nodyna <instance_variable_set-1290> <not yet classified>
+          #nodyna <instance_variable_set-1290> <IVS MODERATE (array)>
           instance_variable_set("@#{var}", @integration_session.__send__(var))
         end
       end

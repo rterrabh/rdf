@@ -3,7 +3,6 @@ require 'active_support/core_ext/hash/deep_merge'
 module ActiveSupport
   class OptionMerger #:nodoc:
     instance_methods.each do |method|
-      #nodyna <instance_eval-1124> <not yet classified>
       undef_method(method) if method !~ /^(__|instance_eval|class|object_id)/
     end
 

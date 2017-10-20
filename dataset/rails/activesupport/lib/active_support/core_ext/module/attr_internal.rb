@@ -23,7 +23,7 @@ class Module
 
     def attr_internal_define(attr_name, type)
       internal_name = attr_internal_ivar_name(attr_name).sub(/\A@/, '')
-      #nodyna <class_eval-1049> <not yet classified>
+      #nodyna <class_eval-1049> <CE MODERATE (block execution)>
       class_eval do
         #nodyna <send-1050> <SD MODERATE (change-prone variables)>
         send("attr_#{type}", internal_name)

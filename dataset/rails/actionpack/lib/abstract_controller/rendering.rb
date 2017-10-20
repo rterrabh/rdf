@@ -48,7 +48,7 @@ module AbstractController
 
       variables.reject! { |s| protected_vars.include? s }
       variables.each_with_object({}) { |name, hash|
-        #nodyna <instance_variable_get-1317> <not yet classified>
+        #nodyna <instance_variable_get-1317> <IVG COMPLEX (change-prone variable)>
         hash[name.slice(1, name.length)] = instance_variable_get(name)
       }
     end

@@ -3,7 +3,7 @@ require "active_support/inflector/methods"
 module ActiveSupport
   module Autoload
     def self.extended(base) # :nodoc:
-      #nodyna <class_eval-1133> <not yet classified>
+      #nodyna <class_eval-1133> <CE COMPLEX (block execution)>
       base.class_eval do
         @_autoloads = {}
         @_under_path = nil

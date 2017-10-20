@@ -73,7 +73,7 @@ module ActiveModel
       end
 
       def undefine_attribute_methods
-        #nodyna <module_eval-965> <not yet classified>
+        #nodyna <module_eval-965> <ME COMPLEX (block execution)>
         generated_attribute_methods.module_eval do
           instance_methods.each { |m| undef_method(m) }
         end
@@ -103,28 +103,22 @@ module ActiveModel
           end
         end
 
-        #nodyna <send-966> <not yet classified>
         def define_proxy_call(include_private, mod, name, send, *extra) #:nodoc:
           defn = if name =~ NAME_COMPILABLE_REGEXP
             "def #{name}(*args)"
           else
-            #nodyna <define_method-967> <not yet classified>
             "define_method(:'#{name}') do |*args|"
           end
 
           extra = (extra.map!(&:inspect) << "*args").join(", ")
 
-          #nodyna <send-968> <not yet classified>
           target = if send =~ CALL_COMPILABLE_REGEXP
-            #nodyna <send-969> <not yet classified>
             "#{"self." unless include_private}#{send}(#{extra})"
           else
-            #nodyna <send-970> <not yet classified>
-            #nodyna <send-971> <not yet classified>
             "send(:'#{send}', #{extra})"
           end
 
-          #nodyna <module_eval-972> <not yet classified>
+          #nodyna <module_eval-972> <ME COMPLEX (block execution)>
           mod.module_eval <<-RUBY, __FILE__, __LINE__ + 1
             end
           RUBY

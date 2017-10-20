@@ -7,13 +7,13 @@ module ActiveSupport
     end
 
     def self.extended(base) #:nodoc:
-      #nodyna <instance_variable_set-1134> <not yet classified>
+      #nodyna <instance_variable_set-1134> <IVS COMPLEX (define variable)>
       base.instance_variable_set(:@_dependencies, [])
     end
 
     def append_features(base)
       if base.instance_variable_defined?(:@_dependencies)
-        #nodyna <instance_variable_get-1135> <not yet classified>
+        #nodyna <instance_variable_get-1135> <IVG COMPLEX (private access)>
         base.instance_variable_get(:@_dependencies) << self
         return false
       else
@@ -23,7 +23,7 @@ module ActiveSupport
         super
         #nodyna <const_get-1137> <CG TRIVIAL (static values)>
         base.extend const_get(:ClassMethods) if const_defined?(:ClassMethods)
-        #nodyna <class_eval-1138> <not yet classified>
+        #nodyna <class_eval-1138> <CE COMPLEX (block execution)>
         base.class_eval(&@_included_block) if instance_variable_defined?(:@_included_block)
       end
     end
@@ -45,7 +45,7 @@ module ActiveSupport
         #nodyna <const_set-1140> <CS TRIVIAL (static values)>
         const_set(:ClassMethods, Module.new)
 
-      #nodyna <module_eval-1141> <not yet classified>
+      #nodyna <module_eval-1141> <ME COMPLEX (block execution)>
       mod.module_eval(&class_methods_module_definition)
     end
   end

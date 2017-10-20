@@ -23,7 +23,7 @@ module ActionView
 
     Finalizer = proc do |method_name, mod|
       proc do
-        #nodyna <module_eval-1208> <not yet classified>
+        #nodyna <module_eval-1208> <ME COMPLEX (block execution)>
         mod.module_eval do
           remove_possible_method method_name
         end
@@ -143,7 +143,7 @@ module ActionView
           raise WrongEncodingError.new(@source, Encoding.default_internal)
         end
 
-        #nodyna <module_eval-1210> <not yet classified>
+        #nodyna <module_eval-1210> <ME COMPLEX (define methods)>
         mod.module_eval(source, identifier, 0)
         ObjectSpace.define_finalizer(self, Finalizer[method_name, mod])
       end

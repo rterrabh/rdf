@@ -28,7 +28,7 @@ module ActionView #:nodoc:
     end
 
     %w(<< concat push insert unshift).each do |method|
-      #nodyna <class_eval-1191> <not yet classified>
+      #nodyna <class_eval-1191> <CE MODERATE (define methods)>
       class_eval <<-METHOD, __FILE__, __LINE__ + 1
         def #{method}(*args)
           paths.#{method}(*typecast(args))

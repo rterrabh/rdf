@@ -63,9 +63,9 @@ files_to_research = []
 #files_to_research << "../dataset/discourse/config/**/*.rb"
 
 #gitlab
-files_to_research << "../dataset/gitlabhq/**/lib/**/*.rb"
-files_to_research << "../dataset/gitlabhq/app/**/*.rb"
-files_to_research << "../dataset/gitlabhq/config/**/*.rb"
+#files_to_research << "../dataset/gitlabhq/**/lib/**/*.rb"
+#files_to_research << "../dataset/gitlabhq/app/**/*.rb"
+#files_to_research << "../dataset/gitlabhq/config/**/*.rb"
 
 #homebrew
 #files_to_research << "../dataset/homebrew/**/lib/**/*.rb"
@@ -74,7 +74,7 @@ files_to_research << "../dataset/gitlabhq/config/**/*.rb"
 #files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
 
 #rails
-#files_to_research << "../dataset/rails/**/lib/**/*.rb"
+files_to_research << "../dataset/rails/**/lib/**/*.rb"
 
 #rails_admin
 #files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"

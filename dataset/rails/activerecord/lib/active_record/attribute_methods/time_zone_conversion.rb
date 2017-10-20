@@ -45,7 +45,7 @@ module ActiveRecord
         private
 
         def inherited(subclass)
-          #nodyna <class_eval-756> <not yet classified>
+          #nodyna <class_eval-756> <CE COMPLEX (define methods)>
           subclass.class_eval do
             matcher = ->(name, type) { create_time_zone_conversion_attribute?(name, type) }
             decorate_matching_attribute_types(matcher, :_time_zone_conversion) do |type|

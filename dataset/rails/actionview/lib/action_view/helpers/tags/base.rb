@@ -51,7 +51,7 @@ module ActionView
           if object
             object
           elsif @template_object.instance_variable_defined?("@#{@object_name}")
-            #nodyna <instance_variable_get-1231> <not yet classified>
+            #nodyna <instance_variable_get-1231> <IVG COMPLEX (change-prone variable)>
             @template_object.instance_variable_get("@#{@object_name}")
           end
         rescue NameError
@@ -59,7 +59,7 @@ module ActionView
         end
 
         def retrieve_autoindex(pre_match)
-          #nodyna <instance_variable_get-1232> <not yet classified>
+          #nodyna <instance_variable_get-1232> <IVG COMPLEX (change-prone variable)>
           object = self.object || @template_object.instance_variable_get("@#{pre_match}")
           if object && object.respond_to?(:to_param)
             object.to_param

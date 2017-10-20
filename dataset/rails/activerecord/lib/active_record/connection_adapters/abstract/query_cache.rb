@@ -8,7 +8,7 @@ module ActiveRecord
 
         def dirties_query_cache(base, *method_names)
           method_names.each do |method_name|
-            #nodyna <class_eval-913> <not yet classified>
+            #nodyna <class_eval-913> <CE COMPLEX (define methods)>
             base.class_eval <<-end_code, __FILE__, __LINE__ + 1
               def #{method_name}(*)
                 clear_query_cache if @query_cache_enabled

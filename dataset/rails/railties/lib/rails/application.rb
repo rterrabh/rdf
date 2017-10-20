@@ -72,7 +72,7 @@ module Rails
 
       @initial_variable_values.each do |variable_name, value|
         if INITIAL_VARIABLES.include?(variable_name)
-          #nodyna <instance_variable_set-1150> <not yet classified>
+          #nodyna <instance_variable_set-1150> <IVS COMPLEX (array)>
           instance_variable_set("@#{variable_name}", value)
         end
       end

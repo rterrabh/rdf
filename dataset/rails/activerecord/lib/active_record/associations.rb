@@ -204,7 +204,7 @@ module ActiveRecord
         middle_reflection.parent_reflection = [name.to_s, habtm_reflection]
 
         include Module.new {
-          #nodyna <class_eval-809> <not yet classified>
+          #nodyna <class_eval-809> <CE TRIVIAL (define methods)>
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def destroy_associations
             association(:#{middle_reflection.name}).delete_all(:delete_all)

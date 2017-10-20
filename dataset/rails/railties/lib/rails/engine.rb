@@ -63,7 +63,7 @@ module Rails
             end
 
             unless mod.respond_to?(:use_relative_model_naming?)
-              #nodyna <class_eval-1172> <not yet classified>
+              #nodyna <class_eval-1172> <CE MODERATE (define methods)>
               class_eval "def use_relative_model_naming?; true; end", __FILE__, __LINE__
             end
 

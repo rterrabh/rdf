@@ -20,7 +20,7 @@ module ActionView
       #nodyna <send-1192> <SD MODERATE (private methods)>
       #nodyna <define_method-1193> <DM MODERATE (events)>
       Accessors.send :define_method, :"default_#{name}", &block
-      #nodyna <module_eval-1194> <not yet classified>
+      #nodyna <module_eval-1194> <ME MODERATE (define methods)>
       Accessors.module_eval <<-METHOD, __FILE__, __LINE__ + 1
         def #{name}
           @details.fetch(:#{name}, [])

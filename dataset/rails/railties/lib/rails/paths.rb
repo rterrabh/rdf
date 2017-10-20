@@ -98,7 +98,7 @@ module Rails
       end
 
       %w(autoload_once eager_load autoload load_path).each do |m|
-        #nodyna <class_eval-1181> <not yet classified>
+        #nodyna <class_eval-1181> <CE MODERATE (define methods)>
         class_eval <<-RUBY, __FILE__, __LINE__ + 1
           def #{m}!        # def eager_load!
             @#{m} = true   #   @eager_load = true

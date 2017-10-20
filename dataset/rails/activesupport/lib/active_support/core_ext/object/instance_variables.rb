@@ -1,6 +1,6 @@
 class Object
   def instance_values
-    #nodyna <instance_variable_get-1091> <not yet classified>
+    #nodyna <instance_variable_get-1091> <IVG COMPLEX (change-prone variable)>
     Hash[instance_variables.map { |name| [name[1..-1], instance_variable_get(name)] }]
   end
 

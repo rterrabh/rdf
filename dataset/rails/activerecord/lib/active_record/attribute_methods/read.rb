@@ -36,7 +36,7 @@ module ActiveRecord
           def define_method_attribute(name)
             method = ReaderMethodCache[name]
             #nodyna <define_method-758> <DM COMPLEX (events)>
-            #nodyna <module_eval-759> <not yet classified>
+            #nodyna <module_eval-759> <ME COMPLEX (define methods)>
             generated_attribute_methods.module_eval { define_method name, method }
           end
         else
@@ -46,7 +46,7 @@ module ActiveRecord
 
             ActiveRecord::AttributeMethods::AttrNames.set_name_cache safe_name, name
 
-            #nodyna <module_eval-760> <not yet classified>
+            #nodyna <module_eval-760> <ME COMPLEX (define methods)>
             generated_attribute_methods.module_eval <<-STR, __FILE__, __LINE__ + 1
               def #{temp_method}
                 name = ::ActiveRecord::AttributeMethods::AttrNames::ATTR_#{safe_name}
@@ -54,7 +54,7 @@ module ActiveRecord
               end
             STR
 
-            #nodyna <module_eval-761> <not yet classified>
+            #nodyna <module_eval-761> <ME COMPLEX (define methods)>
             generated_attribute_methods.module_eval do
               alias_method name, temp_method
               undef_method temp_method

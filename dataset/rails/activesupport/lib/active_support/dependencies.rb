@@ -113,7 +113,7 @@ module ActiveSupport #:nodoc:
 
     module ModuleConstMissing #:nodoc:
       def self.append_features(base)
-        #nodyna <class_eval-1110> <not yet classified>
+        #nodyna <class_eval-1110> <CE COMPLEX (block execution)>
         base.class_eval do
           return if defined?(@_const_missing) && @_const_missing
           @_const_missing = instance_method(:const_missing)
@@ -123,7 +123,7 @@ module ActiveSupport #:nodoc:
       end
 
       def self.exclude_from(base)
-        #nodyna <class_eval-1111> <not yet classified>
+        #nodyna <class_eval-1111> <CE COMPLEX (block execution)>
         base.class_eval do
           #nodyna <define_method-1112> <DM MODERATE (events)>
           define_method :const_missing, @_const_missing
@@ -151,7 +151,7 @@ module ActiveSupport #:nodoc:
 
     module Loadable #:nodoc:
       def self.exclude_from(base)
-        #nodyna <class_eval-1113> <not yet classified>
+        #nodyna <class_eval-1113> <CE COMPLEX (block execution)>
         base.class_eval do
           #nodyna <define_method-1114> <DM MODERATE (events)>
           define_method(:load, Kernel.instance_method(:load))
@@ -223,11 +223,11 @@ module ActiveSupport #:nodoc:
     end
 
     def hook!
-      #nodyna <class_eval-1115> <not yet classified>
+      #nodyna <class_eval-1115> <CE TRIVIAL (block execution)>
       Object.class_eval { include Loadable }
-      #nodyna <class_eval-1116> <not yet classified>
+      #nodyna <class_eval-1116> <CE TRIVIAL (block execution)>
       Module.class_eval { include ModuleConstMissing }
-      #nodyna <class_eval-1117> <not yet classified>
+      #nodyna <class_eval-1117> <CE TRIVIAL (block execution)>
       Exception.class_eval { include Blamable }
     end
 

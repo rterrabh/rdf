@@ -30,7 +30,7 @@ module AbstractController
       def inherited(klass)
         helpers = _helpers
         klass._helpers = Module.new { include helpers }
-        #nodyna <class_eval-1321> <not yet classified>
+        #nodyna <class_eval-1321> <CE COMPLEX (block execution)>
         klass.class_eval { default_helper_module! } unless klass.anonymous?
         super
       end
@@ -40,11 +40,10 @@ module AbstractController
         self._helper_methods += meths
 
         meths.each do |meth|
-          #nodyna <class_eval-1322> <not yet classified>
+          #nodyna <class_eval-1322> <CE COMPLEX (define methods)>
           _helpers.class_eval <<-ruby_eval, __FILE__, __LINE__ + 1
             def #{meth}(*args, &blk)                               # def current_user(*args, &blk)
-              #nodyna <send-1323> <not yet classified>
-              #nodyna <send-1324> <not yet classified>
+              #nodyna <send-1323> <SD COMPLEX (change-prone variable)>
               controller.send(%(#{meth}), *args, &blk)             #   controller.send(:current_user, *args, &blk)
             end                                                    # end
           ruby_eval
@@ -56,7 +55,7 @@ module AbstractController
           add_template_helper(mod)
         end
 
-        #nodyna <module_eval-1325> <not yet classified>
+        #nodyna <module_eval-1325> <ME COMPLEX (define methods)>
         _helpers.module_eval(&block) if block_given?
       end
 
@@ -96,7 +95,7 @@ module AbstractController
 
       private
       def add_template_helper(mod)
-        #nodyna <module_eval-1326> <not yet classified>
+        #nodyna <module_eval-1326> <ME TRIVIAL (block execution)>
         _helpers.module_eval { include mod }
       end
 

@@ -50,7 +50,7 @@ module ActiveSupport
         end
 
         ActiveSupport::Logger::Severity.constants.each do |severity|
-          #nodyna <class_eval-1024> <not yet classified>
+          #nodyna <class_eval-1024> <CE MODERATE (define methods)>
           class_eval <<-EOT, __FILE__, __LINE__ + 1
             def #{severity.downcase}?
             end

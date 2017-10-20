@@ -101,7 +101,6 @@ module ActiveModel
       !valid?(context)
     end
 
-    #nodyna <send-960> <not yet classified>
     alias :read_attribute_for_validation :send
 
   protected

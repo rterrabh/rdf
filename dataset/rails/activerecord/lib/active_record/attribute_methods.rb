@@ -45,7 +45,7 @@ module ActiveRecord
           safe_name = name.unpack('h*').first
           temp_method = "__temp__#{safe_name}"
           ActiveRecord::AttributeMethods::AttrNames.set_name_cache safe_name, name
-          #nodyna <module_eval-855> <not yet classified>
+          #nodyna <module_eval-855> <ME COMPLEX (block execution)>
           @module.module_eval method_body(temp_method, safe_name), __FILE__, __LINE__
           @module.instance_method temp_method
         end

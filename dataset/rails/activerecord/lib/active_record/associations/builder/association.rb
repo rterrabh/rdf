@@ -91,7 +91,7 @@ module ActiveRecord::Associations::Builder
     end
 
     def self.define_readers(mixin, name)
-      #nodyna <class_eval-894> <not yet classified>
+      #nodyna <class_eval-894> <CE COMPLEX (define methods)>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}(*args)
           association(:#{name}).reader(*args)
@@ -100,7 +100,7 @@ module ActiveRecord::Associations::Builder
     end
 
     def self.define_writers(mixin, name)
-      #nodyna <class_eval-895> <not yet classified>
+      #nodyna <class_eval-895> <CE COMPLEX (define methods)>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name}=(value)
           association(:#{name}).writer(value)

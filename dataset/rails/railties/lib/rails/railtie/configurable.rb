@@ -21,7 +21,7 @@ module Rails
         end
 
         def configure(&block)
-          #nodyna <class_eval-1148> <not yet classified>
+          #nodyna <class_eval-1148> <CE COMPLEX (block execution)>
           class_eval(&block)
         end
 

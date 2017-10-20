@@ -80,16 +80,16 @@ module ActiveRecord
 
     def becomes(klass)
       became = klass.new
-      #nodyna <instance_variable_set-799> <not yet classified>
+      #nodyna <instance_variable_set-799> <IVS MODERATE (private access)>
       became.instance_variable_set("@attributes", @attributes)
       changed_attributes = @changed_attributes if defined?(@changed_attributes)
-      #nodyna <instance_variable_set-800> <not yet classified>
+      #nodyna <instance_variable_set-800> <IVS MODERATE (private access)>
       became.instance_variable_set("@changed_attributes", changed_attributes || {})
-      #nodyna <instance_variable_set-801> <not yet classified>
+      #nodyna <instance_variable_set-801> <IVS MODERATE (private access)>
       became.instance_variable_set("@new_record", new_record?)
-      #nodyna <instance_variable_set-802> <not yet classified>
+      #nodyna <instance_variable_set-802> <IVS MODERATE (private access)>
       became.instance_variable_set("@destroyed", destroyed?)
-      #nodyna <instance_variable_set-803> <not yet classified>
+      #nodyna <instance_variable_set-803> <IVS MODERATE (private access)>
       became.instance_variable_set("@errors", errors)
       became
     end
@@ -194,7 +194,7 @@ module ActiveRecord
           self.class.unscoped { self.class.find(id) }
         end
 
-      #nodyna <instance_variable_get-807> <not yet classified>
+      #nodyna <instance_variable_get-807> <IVS MODERATE (private access)>
       @attributes = fresh_object.instance_variable_get('@attributes')
       @new_record = false
       self

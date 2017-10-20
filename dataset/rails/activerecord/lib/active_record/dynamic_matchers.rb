@@ -62,7 +62,7 @@ module ActiveRecord
       end
 
       def define
-        #nodyna <class_eval-861> <not yet classified>
+        #nodyna <class_eval-861> <CE COMPLEX (define methods)>
         model.class_eval <<-CODE, __FILE__, __LINE__ + 1
           def self.#{name}(#{signature})
           end

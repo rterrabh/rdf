@@ -23,7 +23,7 @@ module ActiveRecord
         #nodyna <define_method-780> <DM COMPLEX (events)>
         klass.singleton_class.send(:define_method, name.to_s.pluralize) { enum_values }
 
-        #nodyna <module_eval-781> <not yet classified>
+        #nodyna <module_eval-781> <ME COMPLEX (define methods)>
         _enum_methods_module.module_eval do
           #nodyna <send-782> <SD EASY (private methods)>
           klass.send(:detect_enum_conflict!, name, "#{name}=")

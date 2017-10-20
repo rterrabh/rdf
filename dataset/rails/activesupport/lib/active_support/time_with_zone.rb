@@ -189,7 +189,7 @@ module ActiveSupport
     end
 
     %w(year mon month day mday wday yday hour min sec usec nsec to_date).each do |method_name|
-      #nodyna <class_eval-1123> <not yet classified>
+      #nodyna <class_eval-1123> <CE MODERATE (define methods)>
       class_eval <<-EOV, __FILE__, __LINE__ + 1
         def #{method_name}    # def month
           time.#{method_name} #   time.month

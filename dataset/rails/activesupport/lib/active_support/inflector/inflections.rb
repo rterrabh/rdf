@@ -22,7 +22,7 @@ module ActiveSupport
       def initialize_dup(orig) # :nodoc:
         %w(plurals singulars uncountables humans acronyms acronym_regex).each do |scope|
           #nodyna <send-1011> <SD MODERATE (array)>
-          #nodyna <instance_variable_set-1012> <not yet classified>
+          #nodyna <instance_variable_set-1012> <IVS MODERATE (array)>
           instance_variable_set("@#{scope}", orig.send(scope).dup)
         end
       end
@@ -86,7 +86,7 @@ module ActiveSupport
           when :all
             @plurals, @singulars, @uncountables, @humans = [], [], [], []
           else
-            #nodyna <instance_variable_set-1013> <not yet classified>
+            #nodyna <instance_variable_set-1013> <IVS MODERATE (change-prone variables)>
             instance_variable_set "@#{scope}", []
         end
       end

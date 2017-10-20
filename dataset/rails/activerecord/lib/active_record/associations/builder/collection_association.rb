@@ -62,7 +62,7 @@ module ActiveRecord::Associations::Builder
     def self.define_readers(mixin, name)
       super
 
-      #nodyna <class_eval-884> <not yet classified>
+      #nodyna <class_eval-884> <CE COMPLEX (define methods)>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name.to_s.singularize}_ids
           association(:#{name}).ids_reader
@@ -73,7 +73,7 @@ module ActiveRecord::Associations::Builder
     def self.define_writers(mixin, name)
       super
 
-      #nodyna <class_eval-885> <not yet classified>
+      #nodyna <class_eval-885> <CE COMPLEX (define methods)>
       mixin.class_eval <<-CODE, __FILE__, __LINE__ + 1
         def #{name.to_s.singularize}_ids=(ids)
           association(:#{name}).ids_writer(ids)

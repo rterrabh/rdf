@@ -51,7 +51,7 @@ module ActionView #:nodoc:
     delegate :formats, :formats=, :locale, :locale=, :view_paths, :view_paths=, :to => :lookup_context
 
     def assign(new_assigns) # :nodoc:
-      #nodyna <instance_variable_set-1196> <not yet classified>
+      #nodyna <instance_variable_set-1196> <IVS COMPLEX (array)>
       @_assigns = new_assigns.each { |key, value| instance_variable_set("@#{key}", value) }
     end
 

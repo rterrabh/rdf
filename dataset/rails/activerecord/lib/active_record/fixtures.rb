@@ -56,7 +56,7 @@ module ActiveRecord
       if load_instances
         fixture_set.each do |fixture_name, fixture|
           begin
-            #nodyna <instance_variable_set-793> <not yet classified>
+            #nodyna <instance_variable_set-793> <IVS COMPLEX (array)>
             object.instance_variable_set "@#{fixture_name}", fixture.find
           rescue FixtureClassNotFound
             nil

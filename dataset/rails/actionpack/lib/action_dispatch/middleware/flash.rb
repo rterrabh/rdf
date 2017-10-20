@@ -43,8 +43,8 @@ module ActionDispatch
       def self.from_session_value(value) #:nodoc:
         flash = case value
                 when FlashHash # Rails 3.1, 3.2
-                  #nodyna <instance_variable_get-1235> <not yet classified>
-                  #nodyna <instance_variable_get-1236> <not yet classified>
+                  #nodyna <instance_variable_get-1235> <IVG MODERATE (private access)>
+                  #nodyna <instance_variable_get-1236> <IVG MODERATE (private access)>
                   new(value.instance_variable_get(:@flashes), value.instance_variable_get(:@used))
                 when Hash # Rails 4.0
                   new(value['flashes'], value['discard'])

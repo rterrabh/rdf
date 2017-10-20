@@ -54,7 +54,7 @@ module ActiveSupport
   protected
 
     %w(info debug warn error fatal unknown).each do |level|
-      #nodyna <class_eval-1034> <not yet classified>
+      #nodyna <class_eval-1034> <CE MODERATE (define methods)>
       class_eval <<-METHOD, __FILE__, __LINE__ + 1
         def #{level}(progname = nil, &block)
           logger.#{level}(progname, &block) if logger

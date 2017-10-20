@@ -38,7 +38,7 @@ module ActiveRecord
 
       def with_type(type)
         dup.tap do |clone|
-          #nodyna <instance_variable_set-908> <not yet classified>
+          #nodyna <instance_variable_set-908> <IVS MODERATE (private access)>
           clone.instance_variable_set('@cast_type', type)
         end
       end

@@ -13,7 +13,7 @@ module ActiveSupport
 
       def self.compile_methods!(keys)
         keys.reject { |m| method_defined?(m) }.each do |key|
-          #nodyna <class_eval-1025> <not yet classified>
+          #nodyna <class_eval-1025> <CE COMPLEX (define methods)>
           class_eval <<-RUBY, __FILE__, __LINE__ + 1
             def #{key}; _get(#{key.inspect}); end
           RUBY
@@ -43,15 +43,15 @@ module ActiveSupport
           reader, reader_line = "def #{name}; config.#{name}; end", __LINE__
           writer, writer_line = "def #{name}=(value); config.#{name} = value; end", __LINE__
 
-          #nodyna <class_eval-1026> <not yet classified>
+          #nodyna <class_eval-1026> <CE COMPLEX (define methods)>
           singleton_class.class_eval reader, __FILE__, reader_line
-          #nodyna <class_eval-1027> <not yet classified>
+          #nodyna <class_eval-1027> <CE COMPLEX (define methods)>
           singleton_class.class_eval writer, __FILE__, writer_line
 
           unless options[:instance_accessor] == false
-            #nodyna <class_eval-1028> <not yet classified>
+            #nodyna <class_eval-1028> <CE COMPLEX (define methods)>
             class_eval reader, __FILE__, reader_line unless options[:instance_reader] == false
-            #nodyna <class_eval-1029> <not yet classified>
+            #nodyna <class_eval-1029> <CE COMPLEX (define methods)>
             class_eval writer, __FILE__, writer_line unless options[:instance_writer] == false
           end
           #nodyna <send-1030> <SD MODERATE (array)>

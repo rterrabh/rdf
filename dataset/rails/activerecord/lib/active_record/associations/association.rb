@@ -104,14 +104,14 @@ module ActiveRecord
       end
 
       def marshal_dump
-        #nodyna <instance_variable_get-906> <not yet classified>
+        #nodyna <instance_variable_get-906> <IVG COMPLEX (array)>
         ivars = (instance_variables - [:@reflection]).map { |name| [name, instance_variable_get(name)] }
         [@reflection.name, ivars]
       end
 
       def marshal_load(data)
         reflection_name, ivars = data
-        #nodyna <instance_variable_set-907> <not yet classified>
+        #nodyna <instance_variable_set-907> <IVS COMPLEX (array)>
         ivars.each { |name, val| instance_variable_set(name, val) }
         @reflection = @owner.class._reflect_on_association(reflection_name)
       end
