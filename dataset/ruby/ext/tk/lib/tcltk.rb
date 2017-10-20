@@ -84,7 +84,6 @@ class TclTkInterpreter
       elsif  _return_value() != 0
         print(res, "\n")
       end
-      #nodyna <eval-1542> <not yet classified>
       fail(%Q/can't eval "#{argstr}"/) if _return_value() != 0 #'
       return res
     end

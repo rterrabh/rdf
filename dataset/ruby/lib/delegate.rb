@@ -1,7 +1,7 @@
 
 class Delegator < BasicObject
   kernel = ::Kernel.dup
-  #nodyna <class_eval-1958> <not yet classified>
+  #nodyna <class_eval-1958> <CE MODERATE (block execution)>
   kernel.class_eval do
     alias __raise__ raise
     [:to_s,:inspect,:=~,:!~,:===,:<=>,:eql?,:hash].each do |m|
@@ -92,7 +92,7 @@ class Delegator < BasicObject
     ivars = instance_variables.reject {|var| /\A@delegate_/ =~ var}
     [
       :__v2__,
-      #nodyna <instance_variable_get-1960> <not yet classified>
+      #nodyna <instance_variable_get-1960> <IVG COMPLEX (array)>
       ivars, ivars.map{|var| instance_variable_get(var)},
       __getobj__
     ]
@@ -101,7 +101,7 @@ class Delegator < BasicObject
   def marshal_load(data)
     version, vars, values, obj = data
     if version == :__v2__
-      #nodyna <instance_variable_set-1961> <not yet classified>
+      #nodyna <instance_variable_set-1961> <IVS COMPLEX (array)>
       vars.each_with_index{|var, i| instance_variable_set(var, values[i])}
       __setobj__(obj)
     else
@@ -168,7 +168,7 @@ def DelegateClass(superclass)
   methods = superclass.instance_methods
   methods -= ::Delegator.public_api
   methods -= [:to_s,:inspect,:=~,:!~,:===]
-  #nodyna <module_eval-1964> <not yet classified>
+  #nodyna <module_eval-1964> <ME MODERATE (define methods)>
   klass.module_eval do
     def __getobj__  # :nodoc:
       unless defined?(@delegate_dc_obj)

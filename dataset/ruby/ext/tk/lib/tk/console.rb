@@ -20,14 +20,11 @@ module TkConsole
   def self.show
     tk_call_without_enc('console', 'show')
   end
-  #nodyna <eval-1804> <not yet classified>
   def self.eval(tcl_script)
-    #nodyna <eval-1805> <not yet classified>
     _fromUTF8(tk_call_without_enc('console', 'eval',
                                   _get_eval_enc_str(tcl_script)))
   end
   def self.maininterp_eval(tcl_script)
-    #nodyna <eval-1806> <not yet classified>
     _fromUTF8(tk_call_without_enc('consoleinterp', 'eval',
                                   _get_eval_enc_str(tcl_script)))
 

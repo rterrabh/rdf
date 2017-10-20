@@ -74,13 +74,13 @@ files_to_research = []
 #files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
 
 #rails
-files_to_research << "../dataset/rails/**/lib/**/*.rb"
+#files_to_research << "../dataset/rails/**/lib/**/*.rb"
 
 #rails_admin
 #files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
 
 #ruby
-#files_to_research << "../dataset/ruby/**/lib/**/*.rb"
+files_to_research << "../dataset/ruby/**/lib/**/*.rb"
 
 #spree
 #files_to_research << "../dataset/spree/**/lib/**/*.rb"

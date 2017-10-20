@@ -28,7 +28,7 @@ module RSS # :nodoc: all
       super
 
       unless klass.class == Module
-        #nodyna <module_eval-2132> <not yet classified>
+        #nodyna <module_eval-2132> <ME TRIVIAL (block execution)>
         klass.module_eval {include TrackBackUtils}
 
         klass.install_must_call_validator(TRACKBACK_PREFIX, TRACKBACK_URI)
@@ -36,7 +36,7 @@ module RSS # :nodoc: all
           var_name = "#{TRACKBACK_PREFIX}_#{name}"
           klass_name = "TrackBack#{Utils.to_class_name(name)}"
           klass.install_have_child_element(name, TRACKBACK_URI, "?", var_name)
-          #nodyna <module_eval-2133> <not yet classified>
+          #nodyna <module_eval-2133> <ME COMPLEX (define methods)>
           klass.module_eval(<<-EOC, __FILE__, __LINE__)
             remove_method :#{var_name}
             def #{var_name}
@@ -55,7 +55,7 @@ module RSS # :nodoc: all
           klass_name = "TrackBack#{Utils.to_class_name(name)}"
           klass.install_have_children_element(name, TRACKBACK_URI, "*",
                                               var_name)
-          #nodyna <module_eval-2134> <not yet classified>
+          #nodyna <module_eval-2134> <ME COMPLEX (define methods)>
           klass.module_eval(<<-EOC, __FILE__, __LINE__)
             remove_method :#{var_name}
             def #{var_name}(*args)

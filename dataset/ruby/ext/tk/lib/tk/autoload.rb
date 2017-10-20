@@ -393,7 +393,7 @@ class << Tk
   end
   def replace_topobj(sym, obj) #=> old_obj (alias_filename or object) or nil
     if old_obj = topobj_defined?(sym)
-      #nodyna <class_eval-1865> <not yet classified>
+      #nodyna <class_eval-1865> <CE MODERATE (block execution)>
       Object.class_eval{remove_const sym} rescue nil # ignore err
     end
     define_topobj(sym, obj)
@@ -401,7 +401,7 @@ class << Tk
   end
   def replace_topalias(sym, obj) #=> old_obj (alias_filename or object) or nil
     if old_obj = topalias_defined?(sym)
-      #nodyna <module_eval-1866> <not yet classified>
+      #nodyna <module_eval-1866> <CE MODERATE (block execution)>
       Tk::TOPLEVEL_ALIASES.module_eval{remove_const sym} rescue nil #ignore err
     end
     define_topalias(sym, obj)
@@ -595,15 +595,15 @@ class << Tk
       if (obj = @TOPLEVEL_ALIAS_TABLE[target][sym]).nil?
         @TOPLEVEL_ALIAS_TABLE[current].delete(sym)
         @TOPLEVEL_ALIAS_OWNER.delete(sym)
-        #nodyna <module_eval-1867> <not yet classified>
+        #nodyna <module_eval-1867> <ME MODERATE (block execution)>
         Tk::TOPLEVEL_ALIASES.module_eval{remove_const sym} if topalias_defined?(sym)
-        #nodyna <class_eval-1868> <not yet classified>
+        #nodyna <class_eval-1868> <CE MODERATE (block execution)>
         Object.class_eval{remove_const sym} if topobj_defined?(sym)
 
       elsif obj == false
         @TOPLEVEL_ALIAS_TABLE[current].delete(sym)
         @TOPLEVEL_ALIAS_OWNER[sym] = false
-        #nodyna <module_eval-1869> <not yet classified>
+        #nodyna <module_eval-1869> <ME MODERATE (block execution)>
         Tk::TOPLEVEL_ALIASES.module_eval{remove_const sym} if topalias_defined?(sym)
 
       elsif @TOPLEVEL_ALIAS_OWNER[sym] == false
@@ -625,9 +625,9 @@ class << Tk
       sym = sym.to_sym
       @TOPLEVEL_ALIAS_TABLE[current].delete(sym)
       @TOPLEVEL_ALIAS_OWNER.delete(sym)
-      #nodyna <module_eval-1870> <not yet classified>
+      #nodyna <module_eval-1870> <ME MODERATE (block execution)>
       Tk::TOPLEVEL_ALIASES.module_eval{remove_const sym} if topalias_defined?(sym)
-      #nodyna <class_eval-1871> <not yet classified>
+      #nodyna <class_eval-1871> <CE MODERATE (block execution)>
       Object.class_eval{remove_const sym} if topobj_defined?(sym)
     }
   end

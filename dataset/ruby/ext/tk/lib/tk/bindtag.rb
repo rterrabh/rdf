@@ -28,7 +28,6 @@ class TkBindTag
       return BTagID_TBL[name] if BTagID_TBL[name]
     }
 
-    #nodyna <instance_eval-1856> <not yet classified>
     self.new.instance_eval{
       BTagID_TBL.mutex.synchronize{
         BTagID_TBL.delete @id

@@ -11,7 +11,7 @@ module RSS
         klass_name = Utils.to_class_name(name)
         plural_klass_name = Utils.to_class_name(plural)
 
-        #nodyna <class_eval-2067> <not yet classified>
+        #nodyna <class_eval-2067> <CE COMPLEX (define methods)>
         klass.class_eval(<<-EOC, __FILE__, __LINE__ + 1)
           class #{plural_klass_name} < #{plural_klass_name}Base
             class #{klass_name} < #{klass_name}Base
@@ -43,7 +43,7 @@ EOC
           klass_name ||= Utils.to_class_name(name)
           atom_klass_name ||= Utils.to_class_name(name)
 
-          #nodyna <class_eval-2068> <not yet classified>
+          #nodyna <class_eval-2068> <CE COMPLEX (define methods)>
           klass.class_eval(<<-EOC, __FILE__, __LINE__ + 1)
             class #{klass_name} < #{klass_name}Base
               include #{self.name}

@@ -44,7 +44,7 @@ class RDoc::Parser::C < RDoc::Parser
     @missing_dependencies = {}
 
     @enclosure_dependencies = Hash.new { |h, k| h[k] = [] }
-    #nodyna <instance_variable_set-2021> <not yet classified>
+    #nodyna <instance_variable_set-2021> <IVS MODERATE (private access)>
     @enclosure_dependencies.instance_variable_set :@missing_dependencies,
                                                   @missing_dependencies
 

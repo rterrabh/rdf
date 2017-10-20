@@ -173,7 +173,7 @@ class DEBUGGER__
         unless obj.kind_of? Module
           stdout.print "Should be Class/Module: ", $', "\n"
         else
-          #nodyna <module_eval-2347> <not yet classified>
+          #nodyna <module_eval-2347> <ME COMPLEX (block execution)>
           var_list(obj.constants, obj.module_eval{binding()})
         end
       end

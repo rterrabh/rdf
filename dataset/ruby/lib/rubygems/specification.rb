@@ -669,13 +669,13 @@ class Gem::Specification < Gem::BasicSpecification
     array = Marshal.load str
 
     spec = Gem::Specification.new
-    #nodyna <instance_variable_set-2252> <not yet classified>
+    #nodyna <instance_variable_set-2252> <IVS MODERATE (private access)>
     spec.instance_variable_set :@specification_version, array[1]
 
     current_version = CURRENT_SPECIFICATION_VERSION
 
     field_count = if spec.specification_version > current_version then
-                    #nodyna <instance_variable_set-2253> <not yet classified>
+                    #nodyna <instance_variable_set-2253> <IVS MODERATE (private access)>
                     spec.instance_variable_set :@specification_version,
                                                current_version
                     MARSHAL_FIELDS[current_version]
@@ -690,46 +690,46 @@ class Gem::Specification < Gem::BasicSpecification
 
     array.map! { |e| e.kind_of?(YAML::PrivateType) ? nil : e }
 
-    #nodyna <instance_variable_set-2254> <not yet classified>
+    #nodyna <instance_variable_set-2254> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@rubygems_version,          array[0]
-    #nodyna <instance_variable_set-2255> <not yet classified>
+    #nodyna <instance_variable_set-2255> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@name,                      array[2]
-    #nodyna <instance_variable_set-2256> <not yet classified>
+    #nodyna <instance_variable_set-2256> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@version,                   array[3]
     spec.date =                                             array[4]
-    #nodyna <instance_variable_set-2257> <not yet classified>
+    #nodyna <instance_variable_set-2257> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@summary,                   array[5]
-    #nodyna <instance_variable_set-2258> <not yet classified>
+    #nodyna <instance_variable_set-2258> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@required_ruby_version,     array[6]
-    #nodyna <instance_variable_set-2259> <not yet classified>
+    #nodyna <instance_variable_set-2259> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@required_rubygems_version, array[7]
-    #nodyna <instance_variable_set-2260> <not yet classified>
+    #nodyna <instance_variable_set-2260> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@original_platform,         array[8]
-    #nodyna <instance_variable_set-2261> <not yet classified>
+    #nodyna <instance_variable_set-2261> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@dependencies,              array[9]
-    #nodyna <instance_variable_set-2262> <not yet classified>
+    #nodyna <instance_variable_set-2262> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@rubyforge_project,         array[10]
-    #nodyna <instance_variable_set-2263> <not yet classified>
+    #nodyna <instance_variable_set-2263> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@email,                     array[11]
-    #nodyna <instance_variable_set-2264> <not yet classified>
+    #nodyna <instance_variable_set-2264> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@authors,                   array[12]
-    #nodyna <instance_variable_set-2265> <not yet classified>
+    #nodyna <instance_variable_set-2265> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@description,               array[13]
-    #nodyna <instance_variable_set-2266> <not yet classified>
+    #nodyna <instance_variable_set-2266> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@homepage,                  array[14]
-    #nodyna <instance_variable_set-2267> <not yet classified>
+    #nodyna <instance_variable_set-2267> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@has_rdoc,                  array[15]
-    #nodyna <instance_variable_set-2268> <not yet classified>
+    #nodyna <instance_variable_set-2268> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@new_platform,              array[16]
-    #nodyna <instance_variable_set-2269> <not yet classified>
+    #nodyna <instance_variable_set-2269> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@platform,                  array[16].to_s
-    #nodyna <instance_variable_set-2270> <not yet classified>
+    #nodyna <instance_variable_set-2270> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@license,                   array[17]
-    #nodyna <instance_variable_set-2271> <not yet classified>
+    #nodyna <instance_variable_set-2271> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@metadata,                  array[18]
-    #nodyna <instance_variable_set-2272> <not yet classified>
+    #nodyna <instance_variable_set-2272> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@loaded,                    false
-    #nodyna <instance_variable_set-2273> <not yet classified>
+    #nodyna <instance_variable_set-2273> <IVS MODERATE (variable definition)>
     spec.instance_variable_set :@activated,                 false
 
     spec
@@ -1084,7 +1084,7 @@ class Gem::Specification < Gem::BasicSpecification
 
     attributes = @@attributes.map(&:to_s) - %w[name version platform]
     attributes.each do |name|
-      #nodyna <instance_variable_get-2274> <not yet classified>
+      #nodyna <instance_variable_get-2274> <IVG COMPLEX (array)>
       coder.add name, instance_variable_get("@#{name}")
     end
   end
@@ -1203,14 +1203,14 @@ class Gem::Specification < Gem::BasicSpecification
     @installed_by_version = nil
 
     @@nil_attributes.each do |key|
-      #nodyna <instance_variable_set-2275> <not yet classified>
+      #nodyna <instance_variable_set-2275> <IVS COMPLEX (array)>
       instance_variable_set "@#{key}", nil
     end
 
     @@non_nil_attributes.each do |key|
       default = default_value(key)
       value = Dupable[key] ? default.dup : default
-      #nodyna <instance_variable_set-2276> <not yet classified>
+      #nodyna <instance_variable_set-2276> <IVS COMPLEX (array)>
       instance_variable_set "@#{key}", value
     end
 
@@ -1229,10 +1229,10 @@ class Gem::Specification < Gem::BasicSpecification
       next unless other_spec.instance_variable_defined? name
 
       begin
-        #nodyna <instance_variable_get-2277> <not yet classified>
+        #nodyna <instance_variable_get-2277> <IVG COMPLEX (array)>
         val = other_spec.instance_variable_get(name)
         if val then
-          #nodyna <instance_variable_set-2278> <not yet classified>
+          #nodyna <instance_variable_set-2278> <IVS COMPLEX (array)>
           instance_variable_set name, val.dup
         elsif Gem.configuration.really_verbose
           warn "WARNING: #{full_name} has an invalid nil value for #{name}"
@@ -1619,7 +1619,7 @@ class Gem::Specification < Gem::BasicSpecification
 
       dependencies.each do |dep|
         req = dep.requirements_list.inspect
-        #nodyna <instance_variable_set-2283> <not yet classified>
+        #nodyna <instance_variable_set-2283> <IVS MODERATE (private access)>
         dep.instance_variable_set :@type, :runtime if dep.type.nil? # HACK
         result << "      s.add_#{dep.type}_dependency(%q<#{dep.name}>, #{req})"
       end
@@ -1707,7 +1707,7 @@ class Gem::Specification < Gem::BasicSpecification
     normalize
 
     nil_attributes = self.class.non_nil_attributes.find_all do |attrname|
-      #nodyna <instance_variable_get-2284> <not yet classified>
+      #nodyna <instance_variable_get-2284> <IVG COMPLEX (array)>
       instance_variable_get("@#{attrname}").nil?
     end
 
@@ -1989,7 +1989,7 @@ open-ended dependency on #{dep} is not recommended
       when "date"
         self.date = val.untaint
       else
-        #nodyna <instance_variable_set-2289> <not yet classified>
+        #nodyna <instance_variable_set-2289> <IVS COMPLEX (array)>
         instance_variable_set "@#{ivar}", val.untaint
       end
     end
@@ -2001,7 +2001,7 @@ open-ended dependency on #{dep} is not recommended
 
   def reset_nil_attributes_to_default
     nil_attributes = self.class.non_nil_attributes.find_all do |name|
-      #nodyna <instance_variable_get-2290> <not yet classified>
+      #nodyna <instance_variable_get-2290> <IVG COMPLEX (array)>
       !instance_variable_defined?("@#{name}") || instance_variable_get("@#{name}").nil?
     end
 
@@ -2013,7 +2013,7 @@ open-ended dependency on #{dep} is not recommended
               else default.dup
               end
 
-      #nodyna <instance_variable_set-2291> <not yet classified>
+      #nodyna <instance_variable_set-2291> <IVS COMPLEX (array)>
       instance_variable_set "@#{attribute}", value
     end
 

@@ -151,19 +151,16 @@ class TkNamespace < TkObject
 
     def tk_call(*args)
       args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
-      #nodyna <eval-1754> <not yet classified>
       super('namespace', 'eval', @namespace,
             TkCore::INTERP._merge_tklist(*args))
     end
     def tk_call_without_enc(*args)
       args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
-      #nodyna <eval-1755> <not yet classified>
       super('namespace', 'eval', @namespace,
             TkCore::INTERP._merge_tklist(*args))
     end
     def tk_call_with_enc(*args)
       args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
-      #nodyna <eval-1756> <not yet classified>
       super('namespace', 'eval', @namespace,
             TkCore::INTERP._merge_tklist(*args))
     end
@@ -212,19 +209,16 @@ class TkNamespace < TkObject
   alias __tk_call_with_enc    tk_call_with_enc
   def tk_call(*args)
     args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
-    #nodyna <eval-1757> <not yet classified>
     super('namespace', 'eval', @fullname,
           TkCore::INTERP._merge_tklist(*args))
   end
   def tk_call_without_enc(*args)
     args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
-    #nodyna <eval-1758> <not yet classified>
     super('namespace', 'eval', @fullname,
           TkCore::INTERP._merge_tklist(*args))
   end
   def tk_call_with_enc(*args)
     args = args.collect{|arg| (s = _get_eval_string(arg, true))? s: ''}
-    #nodyna <eval-1759> <not yet classified>
     super('namespace', 'eval', @fullname,
           TkCore::INTERP._merge_tklist(*args))
   end
@@ -269,7 +263,6 @@ class TkNamespace < TkObject
     @parent = __tk_call('namespace', 'qualifiers', @fullname)
     @name = __tk_call('namespace', 'tail', @fullname)
 
-    #nodyna <eval-1760> <not yet classified>
     __tk_call('namespace', 'eval', @fullname, '')
 
     Tk_Namespace_ID_TBL.mutex.synchronize{
@@ -298,10 +291,8 @@ class TkNamespace < TkObject
 =begin
   def code(script = Proc.new)
     if script.kind_of?(String)
-      #nodyna <instance_eval-1761> <not yet classified>
       cmd = proc{|*args| ScopeArgs.new(@fullname,*args).instance_eval(script)}
     elsif script.kind_of?(Proc)
-      #nodyna <instance_eval-1762> <not yet classified>
       cmd = proc{|*args| ScopeArgs.new(@fullname,*args).instance_eval(&script)}
     else
       fail ArgumentError, "String or Proc is expected"
@@ -402,13 +393,11 @@ class TkNamespace < TkObject
     bool(tk_call('namespace', 'ensemble', 'exists', cmd))
   end
 
-  #nodyna <eval-1766> <not yet classified>
   def self.eval(namespace, cmd = Proc.new, *args)
     #nodyna <eval-1767> <EV COMPLEX (change-prone variables)>
     TkNamespace.new(namespace).eval(cmd, *args)
   end
 =begin
-  #nodyna <eval-1768> <not yet classified>
   def eval(cmd = Proc.new, *args)
     code_obj = code(cmd)
     ret = code_obj.call(*args)
@@ -416,7 +405,6 @@ class TkNamespace < TkObject
     tk_tcl2ruby(ret)
   end
 =end
-  #nodyna <eval-1769> <not yet classified>
   def eval(cmd = Proc.new, *args)
     code_obj = code(cmd)
     ret = code_obj.call(*args)

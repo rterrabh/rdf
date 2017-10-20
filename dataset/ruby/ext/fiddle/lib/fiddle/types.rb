@@ -1,7 +1,7 @@
 module Fiddle
   module Win32Types
     def included(m) # :nodoc:
-      #nodyna <module_eval-1487> <not yet classified>
+      #nodyna <module_eval-1487> <ME COMPLEX (block execution)>
       m.module_eval{
         typealias "DWORD", "unsigned long"
         typealias "PDWORD", "unsigned long *"
@@ -31,7 +31,7 @@ module Fiddle
 
   module BasicTypes
     def included(m) # :nodoc:
-      #nodyna <module_eval-1488> <not yet classified>
+      #nodyna <module_eval-1488> <ME COMPLEX (block execution)>
       m.module_eval{
         typealias "uint", "unsigned int"
         typealias "u_int", "unsigned int"

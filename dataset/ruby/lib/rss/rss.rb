@@ -272,7 +272,7 @@ EOC
       elem_name = name.sub('_', ':')
       method_name = "#{name}_element#{postfix}"
       add_to_element_method(method_name)
-      #nodyna <module_eval-2102> <not yet classified>
+      #nodyna <module_eval-2102> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{method_name}(need_convert=true, indent='')
       end
@@ -283,7 +283,7 @@ EOC
     def inherit_convert_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
-        #nodyna <module_eval-2103> <not yet classified>
+        #nodyna <module_eval-2103> <ME COMPLEX (define methods)>
         module_eval(<<-EOC, *get_file_and_line_from_caller(2))
         def #{attr}_without_inherit
           convert(@#{attr})
@@ -304,7 +304,7 @@ EOC
     def uri_convert_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
-        #nodyna <module_eval-2104> <not yet classified>
+        #nodyna <module_eval-2104> <ME COMPLEX (define methods)>
         module_eval(<<-EOC, *get_file_and_line_from_caller(2))
         def #{attr}_without_base
           convert(@#{attr})
@@ -326,7 +326,7 @@ EOC
     def convert_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
-        #nodyna <module_eval-2105> <not yet classified>
+        #nodyna <module_eval-2105> <ME COMPLEX (define methods)>
         module_eval(<<-EOC, *get_file_and_line_from_caller(2))
         def #{attr}
           convert(@#{attr})
@@ -338,7 +338,7 @@ EOC
     def yes_clean_other_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
-        #nodyna <module_eval-2106> <not yet classified>
+        #nodyna <module_eval-2106> <ME COMPLEX (define methods)>
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           attr_reader(:#{attr})
           def #{attr}?
@@ -351,7 +351,7 @@ EOC
     def yes_other_attr_reader(*attrs)
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
-        #nodyna <module_eval-2107> <not yet classified>
+        #nodyna <module_eval-2107> <ME COMPLEX (define methods)>
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           attr_reader(:#{attr})
           def #{attr}?
@@ -370,7 +370,7 @@ EOC
       separator ||= ", "
       attrs.each do |attr|
         attr = attr.id2name if attr.kind_of?(Integer)
-        #nodyna <module_eval-2108> <not yet classified>
+        #nodyna <module_eval-2108> <ME COMPLEX (define methods)>
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           attr_reader(:#{attr})
           def #{attr}_content
@@ -385,7 +385,7 @@ EOC
     end
 
     def date_writer(name, type, disp_name=name)
-      #nodyna <module_eval-2109> <not yet classified>
+      #nodyna <module_eval-2109> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.nil?
@@ -424,7 +424,7 @@ EOC
     end
 
     def integer_writer(name, disp_name=name)
-      #nodyna <module_eval-2110> <not yet classified>
+      #nodyna <module_eval-2110> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.nil?
@@ -445,7 +445,7 @@ EOC
     end
 
     def positive_integer_writer(name, disp_name=name)
-      #nodyna <module_eval-2111> <not yet classified>
+      #nodyna <module_eval-2111> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.nil?
@@ -468,7 +468,7 @@ EOC
     end
 
     def boolean_writer(name, disp_name=name)
-      #nodyna <module_eval-2112> <not yet classified>
+      #nodyna <module_eval-2112> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.nil?
@@ -489,7 +489,7 @@ EOC
     end
 
     def text_type_writer(name, disp_name=name)
-      #nodyna <module_eval-2113> <not yet classified>
+      #nodyna <module_eval-2113> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if @do_validate and
@@ -503,7 +503,7 @@ EOC
 
     def content_writer(name, disp_name=name)
       klass_name = "self.class::#{Utils.to_class_name(name)}"
-      #nodyna <module_eval-2114> <not yet classified>
+      #nodyna <module_eval-2114> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{name}=(new_value)
         if new_value.is_a?(#{klass_name})
@@ -517,7 +517,7 @@ EOC
     end
 
     def yes_clean_other_writer(name, disp_name=name)
-      #nodyna <module_eval-2115> <not yet classified>
+      #nodyna <module_eval-2115> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         def #{name}=(value)
           value = (value ? "yes" : "no") if [true, false].include?(value)
@@ -527,7 +527,7 @@ EOC
     end
 
     def yes_other_writer(name, disp_name=name)
-      #nodyna <module_eval-2116> <not yet classified>
+      #nodyna <module_eval-2116> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         def #{name}=(new_value)
           if [true, false].include?(new_value)
@@ -539,7 +539,7 @@ EOC
     end
 
     def csv_writer(name, disp_name=name)
-      #nodyna <module_eval-2117> <not yet classified>
+      #nodyna <module_eval-2117> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         def #{name}=(new_value)
           @#{name} = Utils::CSV.parse(new_value)
@@ -548,7 +548,7 @@ EOC
     end
 
     def csv_integer_writer(name, disp_name=name)
-      #nodyna <module_eval-2118> <not yet classified>
+      #nodyna <module_eval-2118> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         def #{name}=(new_value)
           @#{name} = Utils::CSV.parse(new_value) {|v| Integer(v)}
@@ -557,7 +557,7 @@ EOC
     end
 
     def def_children_accessor(accessor_name, plural_name)
-      #nodyna <module_eval-2119> <not yet classified>
+      #nodyna <module_eval-2119> <ME COMPLEX (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(2))
       def #{plural_name}
         @#{accessor_name}
@@ -700,9 +700,9 @@ EOC
 
         tag_name = klass.name.split(/::/).last
         tag_name[0, 1] = tag_name[0, 1].downcase
-        #nodyna <instance_variable_set-2127> <not yet classified>
+        #nodyna <instance_variable_set-2127> <IVS MODERATE (private access)>
         klass.instance_variable_set(:@tag_name, tag_name)
-        #nodyna <instance_variable_set-2128> <not yet classified>
+        #nodyna <instance_variable_set-2128> <IVS MODERATE (private access)>
         klass.instance_variable_set(:@have_content, false)
       end
 
@@ -962,7 +962,7 @@ EOC
         if value
           __send__("#{variable_name}=", value)
         else
-          #nodyna <instance_variable_set-2129> <not yet classified>
+          #nodyna <instance_variable_set-2129> <IVS COMPLEX (array)>
           instance_variable_set("@#{variable_name}", nil)
         end
       end
@@ -972,7 +972,7 @@ EOC
 
     def initialize_have_children_elements
       self.class.have_children_elements.each do |variable_name, plural_name|
-        #nodyna <instance_variable_set-2130> <not yet classified>
+        #nodyna <instance_variable_set-2130> <IVS COMPLEX (array)>
         instance_variable_set("@#{variable_name}", [])
       end
     end
@@ -1095,7 +1095,7 @@ EOC
 
     def validate_attribute
       _attrs.each do |a_name, required, alias_name|
-        #nodyna <instance_variable_get-2131> <not yet classified>
+        #nodyna <instance_variable_get-2131> <IVG COMPLEX (array)>
         value = instance_variable_get("@#{alias_name || a_name}")
         if required and value.nil?
           raise MissingAttributeError.new(tag_name, a_name)

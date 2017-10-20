@@ -236,7 +236,7 @@ module Psych
           list.replace members['internal']
 
           members['ivars'].each do |ivar, v|
-            #nodyna <instance_variable_set-1467> <not yet classified>
+            #nodyna <instance_variable_set-1467> <IVS COMPLEX (array)>
             list.instance_variable_set ivar, v
           end
           list
@@ -369,7 +369,7 @@ module Psych
           end
           o.yaml_initialize c.tag, c.map
         else
-          #nodyna <instance_variable_set-1468> <not yet classified>
+          #nodyna <instance_variable_set-1468> <IVS COMPLEX (array)>
           h.each { |k,v| o.instance_variable_set(:"@#{k}", v) }
         end
         o

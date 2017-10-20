@@ -55,7 +55,7 @@ EOF
         case @main
         when Module
           #nodyna <eval-2185> <EV COMPLEX (scope)>
-          #nodyna <module_eval-2186> <not yet classified>
+          #nodyna <module_eval-2186> <ME COMPLEX (block execution)>
           @binding = eval("IRB.conf[:__MAIN__].module_eval('binding', __FILE__, __LINE__)", @binding, __FILE__, __LINE__)
         else
           begin

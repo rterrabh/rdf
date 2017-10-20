@@ -44,7 +44,7 @@ module JSON
         klass = deep_const_get(const)
         #nodyna <const_get-1524> <CG COMPLEX (array)>
         modul = generator_methods.const_get(const)
-        #nodyna <class_eval-1525> <not yet classified>
+        #nodyna <class_eval-1525> <CE COMPLEX (block execution)>
         klass.class_eval do
           instance_methods(false).each do |m|
             m.to_s == 'to_json' and remove_method m

@@ -29,22 +29,22 @@ module Rake
     DELEGATING_METHODS.each do |sym|
       if SPECIAL_RETURN.include?(sym)
         ln = __LINE__ + 1
-        #nodyna <class_eval-2036> <not yet classified>
+        #nodyna <class_eval-2036> <CE MODERATE (define methods)>
         class_eval %{
           def #{sym}(*args, &block)
             resolve
-            #nodyna <send-2037> <not yet classified>
+            #nodyna <send-2039> <SD MODERATE (change-prone variable)>
             result = @items.send(:#{sym}, *args, &block)
             FileList.new.import(result)
           end
         }, __FILE__, ln
       else
         ln = __LINE__ + 1
-        #nodyna <class_eval-2038> <not yet classified>
+        #nodyna <class_eval-2038> <CE MODERATE (define methods)>
         class_eval %{
           def #{sym}(*args, &block)
             resolve
-            #nodyna <send-2039> <not yet classified>
+            #nodyna <send-2039> <SD MODERATE (change-prone variable)>
             result = @items.send(:#{sym}, *args, &block)
             result.object_id == @items.object_id ? self : result
           end

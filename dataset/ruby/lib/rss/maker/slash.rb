@@ -17,7 +17,7 @@ module RSS
           end
         end
 
-        #nodyna <module_eval-2063> <not yet classified>
+        #nodyna <module_eval-2063> <ME COMPLEX (block execution)>
         klass.module_eval do
           alias_method(:slash_hit_parades, :slash_hit_parade)
           alias_method(:slash_hit_parades=, :slash_hit_parade=)

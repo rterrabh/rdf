@@ -38,7 +38,7 @@ class RDoc::Markup::FormatterTestCase < RDoc::TestCase
 
 
   def self.add_visitor_tests
-    #nodyna <class_eval-2028> <not yet classified>
+    #nodyna <class_eval-2028> <CE MODERATE (define methods)>
     class_eval do
 
 

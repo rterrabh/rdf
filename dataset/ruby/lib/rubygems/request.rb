@@ -157,7 +157,7 @@ class Gem::Request
             if incomplete_response.respond_to? :body=
               incomplete_response.body = data
             else
-              #nodyna <instance_variable_set-2321> <not yet classified>
+              #nodyna <instance_variable_set-2321> <IVS TRIVIAL (public variable)>
               incomplete_response.instance_variable_set(:@body, data)
             end
           end

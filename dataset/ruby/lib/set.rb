@@ -32,13 +32,13 @@ class Set
 
   def initialize_dup(orig)
     super
-    #nodyna <instance_variable_get-1986> <not yet classified>
+    #nodyna <instance_variable_get-1986> <IVG TRIVIAL (public variable)>
     @hash = orig.instance_variable_get(:@hash).dup
   end
 
   def initialize_clone(orig)
     super
-    #nodyna <instance_variable_get-1987> <not yet classified>
+    #nodyna <instance_variable_get-1987> <IVG TRIVIAL (public variable)>
     @hash = orig.instance_variable_get(:@hash).clone
   end
 
@@ -73,7 +73,7 @@ class Set
 
   def replace(enum)
     if enum.instance_of?(self.class)
-      #nodyna <instance_variable_get-1988> <not yet classified>
+      #nodyna <instance_variable_get-1988> <IVG TRIVIAL (public variable)>
       @hash.replace(enum.instance_variable_get(:@hash))
       self
     else
@@ -239,7 +239,7 @@ class Set
 
   def merge(enum)
     if enum.instance_of?(self.class)
-      #nodyna <instance_variable_get-1989> <not yet classified>
+      #nodyna <instance_variable_get-1989> <IVG TRIVIAL (public variable)>
       @hash.update(enum.instance_variable_get(:@hash))
     else
       do_with_enum(enum) { |o| add(o) }
@@ -281,7 +281,7 @@ class Set
     if self.equal?(other)
       true
     elsif other.instance_of?(self.class)
-      #nodyna <instance_variable_get-1990> <not yet classified>
+      #nodyna <instance_variable_get-1990> <IVG TRIVIAL (public variable)>
       @hash == other.instance_variable_get(:@hash)
     elsif other.is_a?(Set) && self.size == other.size
       other.all? { |o| @hash.include?(o) }
@@ -296,7 +296,7 @@ class Set
 
   def eql?(o)   # :nodoc:
     return false unless o.is_a?(Set)
-    #nodyna <instance_variable_get-1991> <not yet classified>
+    #nodyna <instance_variable_get-1991> <IVG TRIVIAL (public variable)>
     @hash.eql?(o.instance_variable_get(:@hash))
   end
 
@@ -386,14 +386,14 @@ class SortedSet < Set
     def setup   # :nodoc:
       @@setup and return
 
-      #nodyna <module_eval-1992> <not yet classified>
+      #nodyna <module_eval-1992> <ME MODERATE (block execution)>
       module_eval {
         alias old_init initialize
       }
       begin
         require 'rbtree'
 
-        #nodyna <module_eval-1993> <not yet classified>
+        #nodyna <module_eval-1993> <ME COMPLEX (define methods)>
         module_eval <<-END, __FILE__, __LINE__+1
           def initialize(*args)
             @hash = RBTree.new
@@ -407,7 +407,7 @@ class SortedSet < Set
           alias << add
         END
       rescue LoadError
-        #nodyna <module_eval-1994> <not yet classified>
+        #nodyna <module_eval-1994> <ME COMPLEX (define methods)>
         module_eval <<-END, __FILE__, __LINE__+1
           def initialize(*args)
             @keys = nil
@@ -470,7 +470,7 @@ class SortedSet < Set
           end
         END
       end
-      #nodyna <module_eval-1995> <not yet classified>
+      #nodyna <module_eval-1995> <ME MODERATE (block execution)>
       module_eval {
         remove_method :old_init
       }

@@ -22,7 +22,7 @@ module RSS
         ].each do |name, uri, required|
           klass.install_get_attribute(name, uri, required, [nil, :inherit])
         end
-        #nodyna <class_eval-2089> <not yet classified>
+        #nodyna <class_eval-2089> <CE COMPLEX (define methods)>
         klass.class_eval do
           class << self
             def required_uri
@@ -71,7 +71,7 @@ module RSS
       class  << self
         def append_features(klass)
           super
-          #nodyna <class_eval-2090> <not yet classified>
+          #nodyna <class_eval-2090> <CE COMPLEX (block execution)>
           klass.class_eval do
             @content_type = [nil, :uri]
             include(ContentModel)
@@ -83,7 +83,7 @@ module RSS
     module TextConstruct
       def self.append_features(klass)
         super
-        #nodyna <class_eval-2091> <not yet classified>
+        #nodyna <class_eval-2091> <CE COMPLEX (block execution)>
         klass.class_eval do
           [
            ["type", ""],
@@ -152,7 +152,7 @@ module RSS
 
       def self.append_features(klass)
         super
-        #nodyna <class_eval-2092> <not yet classified>
+        #nodyna <class_eval-2092> <CE COMPLEX (block execution)>
         klass.class_eval do
           [
            ["name", nil],
@@ -187,7 +187,7 @@ module RSS
     module DateConstruct
       def self.append_features(klass)
         super
-        #nodyna <class_eval-2093> <not yet classified>
+        #nodyna <class_eval-2093> <CE COMPLEX (block execution)>
         klass.class_eval do
           @content_type = :w3cdtf
           include(ContentModel)

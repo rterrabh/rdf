@@ -131,7 +131,7 @@ module Fiddle
       rescue
         file, line = __FILE__, __LINE__+3
       end
-      #nodyna <module_eval-1495> <not yet classified>
+      #nodyna <module_eval-1495> <ME COMPLEX (define methods)>
       module_eval(<<-EOS, file, line)
         def #{name}(*args, &block)
           @func_map['#{name}'].call(*args,&block)
@@ -157,7 +157,7 @@ module Fiddle
       rescue
         file, line = __FILE__, __LINE__+3
       end
-      #nodyna <module_eval-1496> <not yet classified>
+      #nodyna <module_eval-1496> <ME COMPLEX (define methods)>
       module_eval(<<-EOS, file, line)
         def #{name}(*args,&block)
           @func_map['#{name}'].call(*args,&block)

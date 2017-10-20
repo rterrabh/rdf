@@ -446,7 +446,7 @@ module Psych
           @emitter.start_mapping(nil, nil, true, Nodes::Sequence::BLOCK)
           o.instance_variables.each do |ivar|
             accept ivar
-            #nodyna <instance_variable_get-1470> <not yet classified>
+            #nodyna <instance_variable_get-1470> <IVG COMPLEX (array)>
             accept o.instance_variable_get ivar
           end
           @emitter.end_mapping
@@ -541,7 +541,7 @@ module Psych
 
         ivars.each do |iv|
           @emitter.scalar("#{iv.to_s.sub(/^@/, '')}", nil, nil, true, false, Nodes::Scalar::ANY)
-          #nodyna <instance_variable_get-1471> <not yet classified>
+          #nodyna <instance_variable_get-1471> <IVG COMPLEX (array)>
           accept target.instance_variable_get(iv)
         end
       end

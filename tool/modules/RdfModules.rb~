@@ -57,25 +57,21 @@ module RdfModules
         File.open(rbfile, 'r').each do |line|
           number += 1
           if line.include? "#nodyna"
-            begin
-              if statement and classification
-                if getStatement(line) == statement.to_sym and getClassification(line) == classification
-                  puts "#{absolutePath}.#{number}.#{getClassification(line)}.#{getID(line)}"
-                  total += 1
-                end
-              elsif statement
-                if getStatement(line) == statement.to_sym
-                  puts "#{absolutePath}.#{number}.#{getClassification(line)}.#{getID(line)}"
-                  total += 1
-                end
-              elsif classification
-                if getClassification(line) == classification
-                  puts "#{absolutePath}.#{number}.#{getClassification(line)}.#{getID(line)}"
-                  total += 1
-                end
+            if statement and classification
+              if getStatement(line) == statement.to_sym and getClassification(line) == classification
+                puts "#{absolutePath}.#{number}.#{getClassification(line)}.#{getID(line)}"
+                total += 1
               end
-            rescue
-              puts "Error in #{absolutePath}.#{number}"
+            elsif statement
+              if getStatement(line) == statement.to_sym
+                puts "#{absolutePath}.#{number}.#{getClassification(line)}.#{getID(line)}"
+                total += 1
+              end
+            elsif classification
+              if getClassification(line) == classification
+                puts "#{absolutePath}.#{number}.#{getClassification(line)}.#{getID(line)}"
+                total += 1
+              end
             end
           end
         end

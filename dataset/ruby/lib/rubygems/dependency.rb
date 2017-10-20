@@ -92,7 +92,7 @@ class Gem::Dependency
 
 
     if defined?(@version_requirement) && @version_requirement
-      #nodyna <instance_variable_get-2247> <not yet classified>
+      #nodyna <instance_variable_get-2247> <IVG COMPLEX (private access)>
       version = @version_requirement.instance_variable_get :@version
       @version_requirement  = nil
       @version_requirements = Gem::Requirement.new version

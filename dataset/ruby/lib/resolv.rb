@@ -478,7 +478,6 @@ class Resolv
         start = Time.now
         timelimit = start + tout
         begin
-          #nodyna <send-1895> <not yet classified>
           sender.send
         rescue Errno::EHOSTUNREACH, # multi-homed IPv6 may generate this
                Errno::ENETUNREACH
@@ -593,7 +592,6 @@ class Resolv
           end
           attr_reader :data
 
-          #nodyna <send-1896> <not yet classified>
           def send
             raise "@sock is nil." if @sock.nil?
             #nodyna <send-1897> <SD COMPLEX (change-prone variables)>
@@ -638,7 +636,6 @@ class Resolv
         end
 
         class Sender < Requester::Sender # :nodoc:
-          #nodyna <send-1898> <not yet classified>
           def send
             raise "@sock is nil." if @sock.nil?
             #nodyna <send-1899> <SD COMPLEX (change-prone variables)>
@@ -690,7 +687,6 @@ class Resolv
         end
 
         class Sender < Requester::Sender # :nodoc:
-          #nodyna <send-1900> <not yet classified>
           def send
             @sock.print(@msg)
             @sock.flush
@@ -1401,7 +1397,7 @@ class Resolv
           type, klass, ttl = self.get_unpack('nnN')
           typeclass = Resource.get_class(type, klass)
           res = self.get_length16 { typeclass.decode_rdata self }
-          #nodyna <instance_variable_set-1901> <not yet classified>
+          #nodyna <instance_variable_set-1901> <IVS COMPLEX (private access)>
           res.instance_variable_set :@ttl, ttl
           return name, ttl, res
         end
@@ -1444,9 +1440,9 @@ class Resolv
         o_ivars.sort!
         o_ivars.delete :@ttl
         return s_ivars == o_ivars &&
-          #nodyna <instance_variable_get-1902> <not yet classified>
+          #nodyna <instance_variable_get-1902> <IVG COMPLEX (array)>
           s_ivars.collect {|name| self.instance_variable_get name} ==
-            #nodyna <instance_variable_get-1903> <not yet classified>
+            #nodyna <instance_variable_get-1903> <IVG COMPLEX (array)>
             o_ivars.collect {|name| other.instance_variable_get name}
       end
 
@@ -1459,7 +1455,7 @@ class Resolv
         vars = self.instance_variables
         vars.delete :@ttl
         vars.each {|name|
-          #nodyna <instance_variable_get-1904> <not yet classified>
+          #nodyna <instance_variable_get-1904> <IVG COMPLEX (change-prone variable)>
           h ^= self.instance_variable_get(name).hash
         }
         return h

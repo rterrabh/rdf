@@ -4,7 +4,7 @@ require 'thread'
 
 module Mutex_m
   def Mutex_m.define_aliases(cl) # :nodoc:
-    #nodyna <module_eval-2154> <not yet classified>
+    #nodyna <module_eval-2154> <ME COMPLEX (block execution)>
     cl.module_eval %q{
       alias locked? mu_locked?
       alias lock mu_lock

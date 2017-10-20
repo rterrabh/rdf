@@ -19,7 +19,7 @@ module Gem::Deprecate
 
 
   def deprecate name, repl, year, month
-    #nodyna <class_eval-2315> <not yet classified>
+    #nodyna <class_eval-2315> <CE COMPLEX (define methods)>
     class_eval {
       old = "_deprecated_#{name}"
       alias_method old, name

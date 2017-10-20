@@ -1175,7 +1175,7 @@ module FileUtils
 
   LOW_METHODS = singleton_methods(false) - collect_method(:noop).map(&:intern)
   module LowMethods
-    #nodyna <module_eval-1966> <not yet classified>
+    #nodyna <module_eval-1966> <ME COMPLEX (define methods)>
     module_eval("private\n" + ::FileUtils::LOW_METHODS.map {|name| "def #{name}(*)end"}.join("\n"),
                 __FILE__, __LINE__)
   end
@@ -1188,7 +1188,7 @@ module FileUtils
     @fileutils_output  = $stderr
     @fileutils_label   = ''
     ::FileUtils.collect_method(:verbose).each do |name|
-      #nodyna <module_eval-1967> <not yet classified>
+      #nodyna <module_eval-1967> <ME COMPLEX (define methods)>
       module_eval(<<-EOS, __FILE__, __LINE__ + 1)
         def #{name}(*args)
           super(*fu_update_option(args, :verbose => true))
@@ -1210,7 +1210,7 @@ module FileUtils
     @fileutils_output  = $stderr
     @fileutils_label   = ''
     ::FileUtils.collect_method(:noop).each do |name|
-      #nodyna <module_eval-1968> <not yet classified>
+      #nodyna <module_eval-1968> <ME COMPLEX (define methods)>
       module_eval(<<-EOS, __FILE__, __LINE__ + 1)
         def #{name}(*args)
           super(*fu_update_option(args, :noop => true))
@@ -1232,7 +1232,7 @@ module FileUtils
     @fileutils_output  = $stderr
     @fileutils_label   = ''
     ::FileUtils.collect_method(:noop).each do |name|
-      #nodyna <module_eval-1969> <not yet classified>
+      #nodyna <module_eval-1969> <ME COMPLEX (define methods)>
       module_eval(<<-EOS, __FILE__, __LINE__ + 1)
         def #{name}(*args)
           super(*fu_update_option(args, :noop => true, :verbose => true))

@@ -165,11 +165,9 @@ module TkComm
 
 =begin
     unless Object.const_defined? gen_class_name
-      #nodyna <class_eval-1668> <not yet classified>
       Object.class_eval "class #{gen_class_name}<#{ruby_class_name}
                          end"
     end
-    #nodyna <class_eval-1669> <not yet classified>
     Object.class_eval "#{gen_class_name}.new('widgetname'=>'#{path}',
                                              'without_creating'=>true)"
 =end
@@ -177,15 +175,15 @@ module TkComm
     gen_class_name.split('::').each{|klass|
       next if klass == ''
       if base.const_defined?(klass)
-        #nodyna <class_eval-1670> <not yet classified>
+        #nodyna <class_eval-1670> <CE COMPLEX (block execution)>
         base = base.class_eval klass
       else
-        #nodyna <class_eval-1671> <not yet classified>
+        #nodyna <class_eval-1671> <CE COMPLEX (block execution)>
         base = base.class_eval "class #{klass}<#{ruby_class_name}
                                 end
       end
     }
-    #nodyna <class_eval-1672> <not yet classified>
+    #nodyna <class_eval-1672> <CE COMPLEX (block execution)>
     base.class_eval "#{gen_class_name}.new('widgetname'=>'#{path}',
                                            'without_creating'=>true)"
   end
@@ -319,7 +317,7 @@ if USE_TCLs_LIST_FUNCTIONS
       end
 
       if dst_enc != true && dst_enc != false
-        #nodyna <instance_variable_get-1673> <not yet classified>
+        #nodyna <instance_variable_get-1673> <IVG MODERATE (private access)>
         if (s_enc = s.instance_variable_get(:@encoding))
           s_enc = s_enc.to_s
         elsif TkCore::WITH_ENCODING
@@ -346,10 +344,10 @@ if USE_TCLs_LIST_FUNCTIONS
       else # without encoding
         if dst_enc.kind_of?(String)
           ret = _fromUTF8(ret, dst_enc)
-          #nodyna <instance_variable_set-1674> <not yet classified>
+          #nodyna <instance_variable_set-1674> <IVG MODERATE (private access)>
           ret.instance_variable_set(:@encoding, dst_enc)
         else
-          #nodyna <instance_variable_set-1675> <not yet classified>
+          #nodyna <instance_variable_set-1675> <IVG MODERATE(private access)>
           ret.instance_variable_set(:@encoding, 'utf-8')
         end
       end
@@ -1096,7 +1094,7 @@ module TkCore
         end
 
         interp.mainloop_abort_on_exception = true
-        #nodyna <instance_variable_set-1676> <not yet classified>
+        #nodyna <instance_variable_set-1676> <IVS COMPLEX (private access)>
         Thread.current.instance_variable_set("@interp", interp)
 
         status = [nil]
@@ -1134,7 +1132,7 @@ proc __startup_rbtk_mainloop__ {args} {
 set __initial_state_of_rubytk__ 1
 trace add variable __initial_state_of_rubytk__ unset __startup_rbtk_mainloop__
 
-#nodyna <instance_variable_get-1678> <not yet classified>
+#nodyna <instance_variable_get-1678> <IVG COMPLEX (private access)>
 ruby {TkCore::INTERP_THREAD[:interp] = TkCore::INTERP_THREAD.instance_variable_get('@interp')}
 EOS
 
@@ -1446,7 +1444,7 @@ EOS
         if TkCore::WITH_ENCODING
           msg.force_encoding('utf-8')
         else
-          #nodyna <instance_variable_set-1683> <not yet classified>
+          #nodyna <instance_variable_set-1683> <IVG MODERATE (private access)>
           msg.instance_variable_set(:@encoding, 'utf-8')
         end
       rescue Exception
@@ -1479,7 +1477,7 @@ EOS
   def after(ms, cmd=Proc.new)
     cmdid = install_cmd(proc{ret = cmd.call;uninstall_cmd(cmdid); ret})
     after_id = tk_call_without_enc("after",ms,cmdid)
-    #nodyna <instance_variable_set-1684> <not yet classified>
+    #nodyna <instance_variable_set-1684> <IVS COMPLEX (private access)>
     after_id.instance_variable_set('@cmdid', cmdid)
     after_id
   end
@@ -1500,7 +1498,7 @@ EOS
   def after_idle(cmd=Proc.new)
     cmdid = install_cmd(proc{ret = cmd.call;uninstall_cmd(cmdid); ret})
     after_id = tk_call_without_enc('after','idle',cmdid)
-    #nodyna <instance_variable_set-1685> <not yet classified>
+    #nodyna <instance_variable_set-1685> <IVS COMPLEX (private access)>
     after_id.instance_variable_set('@cmdid', cmdid)
     after_id
   end
@@ -1520,9 +1518,9 @@ EOS
 
   def after_cancel(afterId)
     tk_call_without_enc('after','cancel',afterId)
-    #nodyna <instance_variable_get-1686> <not yet classified>
+    #nodyna <instance_variable_get-1686> <IVG COMPLEX (private access)>
     if (cmdid = afterId.instance_variable_get('@cmdid'))
-      #nodyna <instance_variable_set-1687> <not yet classified>
+      #nodyna <instance_variable_set-1687> <IVS COMPLEX (private access)>
       afterId.instance_variable_set('@cmdid', nil)
       uninstall_cmd(cmdid)
     end
@@ -1566,16 +1564,13 @@ EOS
   end
 
   def appsend_deny
-    #nodyna <send-1688> <not yet classified>
     tk_call('rename', 'send', '')
   end
 
   def appsend(interp, async, *args)
     if $SAFE >= 4
-      #nodyna <send-1689> <not yet classified>
       fail SecurityError, "cannot send Tk commands at level 4"
     elsif $SAFE >= 1 && args.find{|obj| obj.tainted?}
-      #nodyna <send-1690> <not yet classified>
       fail SecurityError, "cannot send tainted Tk commands at level #{$SAFE}"
     end
     if async != true && async != false && async != nil
@@ -1583,20 +1578,16 @@ EOS
       async = false
     end
     if async
-      #nodyna <send-1691> <not yet classified>
       tk_call('send', '-async', '--', interp, *args)
     else
-      #nodyna <send-1692> <not yet classified>
       tk_call('send', '--', interp, *args)
     end
   end
 
   def rb_appsend(interp, async, *args)
     if $SAFE >= 4
-      #nodyna <send-1693> <not yet classified>
       fail SecurityError, "cannot send Ruby commands at level 4"
     elsif $SAFE >= 1 && args.find{|obj| obj.tainted?}
-      #nodyna <send-1694> <not yet classified>
       fail SecurityError, "cannot send tainted Ruby commands at level #{$SAFE}"
     end
     if async != true && async != false && async != nil
@@ -1610,10 +1601,8 @@ EOS
 
   def appsend_displayof(interp, win, async, *args)
     if $SAFE >= 4
-      #nodyna <send-1695> <not yet classified>
       fail SecurityError, "cannot send Tk commands at level 4"
     elsif $SAFE >= 1 && args.find{|obj| obj.tainted?}
-      #nodyna <send-1696> <not yet classified>
       fail SecurityError, "cannot send tainted Tk commands at level #{$SAFE}"
     end
     win = '.' if win == nil
@@ -1622,20 +1611,16 @@ EOS
       async = false
     end
     if async
-      #nodyna <send-1697> <not yet classified>
       tk_call('send', '-async', '-displayof', win, '--', interp, *args)
     else
-      #nodyna <send-1698> <not yet classified>
       tk_call('send', '-displayor', win, '--', interp, *args)
     end
   end
 
   def rb_appsend_displayof(interp, win, async, *args)
     if $SAFE >= 4
-      #nodyna <send-1699> <not yet classified>
       fail SecurityError, "cannot send Ruby commands at level 4"
     elsif $SAFE >= 1 && args.find{|obj| obj.tainted?}
-      #nodyna <send-1700> <not yet classified>
       fail SecurityError, "cannot send tainted Ruby commands at level #{$SAFE}"
     end
     win = '.' if win == nil
@@ -2527,12 +2512,12 @@ if (/^(8\.[1-9]|9\.|[1-9][0-9])/ =~ Tk::TCL_VERSION && !Tk::JAPANIZED_TK)
           if str.kind_of?(Tk::EncodedString)
             str.__instance_variable_set('@encoding', nil)
           else
-            #nodyna <instance_variable_set-1701> <not yet classified>
+            #nodyna <instance_variable_set-1701> <IVG MODERATE (private access)>
             str.instance_variable_set('@encoding', nil)
           end
           str.force_encoding('binary')
         else
-          #nodyna <instance_variable_set-1702> <not yet classified>
+          #nodyna <instance_variable_set-1702> <IVG MODERATE (private access)>
           str.instance_variable_set('@encoding', 'binary')
         end
         ret = TkCore::INTERP._invoke_without_enc('encoding', 'convertfrom',
@@ -2617,7 +2602,7 @@ if (/^(8\.[1-9]|9\.|[1-9][0-9])/ =~ Tk::TCL_VERSION && !Tk::JAPANIZED_TK)
           end
         end
 
-        #nodyna <instance_variable_get-1703> <not yet classified>
+        #nodyna <instance_variable_get-1703> <IVG MODERATE (private access)>
         enc_name ||= str.instance_variable_get(:@encoding)
 
         enc_name ||=
@@ -2649,7 +2634,7 @@ if (/^(8\.[1-9]|9\.|[1-9][0-9])/ =~ Tk::TCL_VERSION && !Tk::JAPANIZED_TK)
         encstr
       end
       def _fromUTF8(str, enc = nil)
-        #nodyna <instance_variable_get-1704> <not yet classified>
+        #nodyna <instance_variable_get-1704> <IVG MODERATE (private access)>
         enc_name = str.instance_variable_get(:@encoding)
         enc_name ||=
           Tk::Encoding::ENCODING_TABLE.get_name(str.encoding) rescue nil
@@ -2700,9 +2685,7 @@ if (/^(8\.[1-9]|9\.|[1-9][0-9])/ =~ Tk::TCL_VERSION && !Tk::JAPANIZED_TK)
         encoding = encoding.to_s
       elsif str.kind_of?(Tk::EncodedString) && str.encoding != nil
         encoding = str.encoding.to_s
-      #nodyna <instance_variable_get-1705> <not yet classified>
       elsif str.instance_variable_get(:@encoding)
-        #nodyna <instance_variable_get-1706> <not yet classified>
         encoding = str.instance_variable_get(:@encoding).to_s
       elsif defined?(@encoding) && @encoding != nil
         encoding = @encoding.to_s
@@ -2733,7 +2716,6 @@ if (/^(8\.[1-9]|9\.|[1-9][0-9])/ =~ Tk::TCL_VERSION && !Tk::JAPANIZED_TK)
         else
           __fromUTF8(str, encoding)
         end
-      #nodyna <instance_variable_get-1707> <not yet classified>
       elsif str.instance_variable_get(:@encoding).to_s == 'binary'
         str
       else
@@ -2752,13 +2734,11 @@ if (/^(8\.[1-9]|9\.|[1-9][0-9])/ =~ Tk::TCL_VERSION && !Tk::JAPANIZED_TK)
                 else
                   __eval(_toUTF8(cmd, cmd.encoding))
                 end
-              #nodyna <instance_variable_get-1708> <not yet classified>
               elsif cmd.instance_variable_get(:@encoding) == 'binary'
                 __eval(cmd)
               else
                 __eval(_toUTF8(cmd, @encoding))
               end
-        #nodyna <instance_variable_get-1709> <not yet classified>
         if ret.kind_of?(String) && ret.instance_variable_get(:@encoding) == 'binary'
           ret
         else
@@ -2779,7 +2759,6 @@ if (/^(8\.[1-9]|9\.|[1-9][0-9])/ =~ Tk::TCL_VERSION && !Tk::JAPANIZED_TK)
             else
               _toUTF8(cmd, cmd.encoding)
             end
-          #nodyna <instance_variable_get-1710> <not yet classified>
           elsif cmd.instance_variable_get(:@encoding) == 'binary'
             cmd
           else
@@ -2787,7 +2766,6 @@ if (/^(8\.[1-9]|9\.|[1-9][0-9])/ =~ Tk::TCL_VERSION && !Tk::JAPANIZED_TK)
           end
         }
         ret = __invoke(*cmds)
-        #nodyna <instance_variable_get-1711> <not yet classified>
         if ret.kind_of?(String) && ret.instance_variable_get(:@encoding) == 'binary'
           ret
         else

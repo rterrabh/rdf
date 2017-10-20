@@ -40,7 +40,6 @@ module Tk::BLT
       private :__item_boolval_optkeys
 
       def __item_listval_optkeys(id)
-        #nodyna <send-1552> <not yet classified>
         super(id) << 'send'
       end
       private :__item_listval_optkeys

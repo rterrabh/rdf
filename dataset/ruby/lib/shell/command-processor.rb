@@ -275,9 +275,9 @@ class Shell
     def self.undef_system_command(command)
       command = command.id2name if command.kind_of?(Symbol)
       remove_method(command)
-      #nodyna <module_eval-2140> <not yet classified>
+      #nodyna <module_eval-2140> <ME MODERATE (block execution)>
       Shell.module_eval{remove_method(command)}
-      #nodyna <module_eval-2141> <not yet classified>
+      #nodyna <module_eval-2141> <ME MODERATE (block execution)>
       Filter.module_eval{remove_method(command)}
       self
     end
@@ -377,17 +377,16 @@ class Shell
       if Shell.method_defined?(id)
         Shell.notify "warn: override definition of Shell##{name}."
         Shell.notify "warn: alias Shell##{name} to Shell##{name}_org.\n"
-        #nodyna <module_eval-2145> <not yet classified>
+        #nodyna <module_eval-2145> <MD COMPLEX (define methods)>
         Shell.module_eval "alias #{name}_org #{name}"
       end
       Shell.notify "method added: Shell##{name}.", Shell.debug?
-      #nodyna <module_eval-2146> <not yet classified>
+      #nodyna <module_eval-2146> <MD COMPLEX (define methods)>
       Shell.module_eval(%Q[def #{name}(*args, &block)
                             begin
                               @command_processor.__send__(:#{name}, *args, &block)
                             rescue Exception
                               $@.delete_if{|s| /:in `__getobj__'$/ =~ s} #`
-                              #nodyna <eval-2147> <not yet classified>
                               $@.delete_if{|s| /^\\(eval\\):/ =~ s}
                             raise
                             end
@@ -396,17 +395,16 @@ class Shell
       if Shell::Filter.method_defined?(id)
         Shell.notify "warn: override definition of Shell::Filter##{name}."
         Shell.notify "warn: alias Shell##{name} to Shell::Filter##{name}_org."
-        #nodyna <module_eval-2148> <not yet classified>
+        #nodyna <module_eval-2148> <MD COMPLEX (define methods)>
         Filter.module_eval "alias #{name}_org #{name}"
       end
       Shell.notify "method added: Shell::Filter##{name}.", Shell.debug?
-      #nodyna <module_eval-2149> <not yet classified>
+      #nodyna <module_eval-2149> <MD COMPLEX (define methods)>
       Filter.module_eval(%Q[def #{name}(*args, &block)
                             begin
                               self | @shell.__send__(:#{name}, *args, &block)
                             rescue Exception
                               $@.delete_if{|s| /:in `__getobj__'$/ =~ s} #`
-                              #nodyna <eval-2150> <not yet classified>
                               $@.delete_if{|s| /^\\(eval\\):/ =~ s}
                             raise
                             end

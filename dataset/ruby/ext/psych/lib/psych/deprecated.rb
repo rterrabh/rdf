@@ -75,7 +75,7 @@ module Psych
   def self.object_maker klass, hash
     warn "#{caller[0]}: object_maker is deprecated" if $VERBOSE
     klass.allocate.tap do |obj|
-      #nodyna <instance_variable_set-1481> <not yet classified>
+      #nodyna <instance_variable_set-1481> <IVS COMPLEX (array)>
       hash.each { |k,v| obj.instance_variable_set(:"@#{k}", v) }
     end
   end

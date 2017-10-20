@@ -25,7 +25,7 @@ module Rake
 end
 
 unless Rake::CpuCounter.method_defined?(:count)
-  #nodyna <class_eval-2034> <not yet classified>
+  #nodyna <class_eval-2034> <CE MODERATE (define methods)>
   Rake::CpuCounter.class_eval <<-'end;', __FILE__, __LINE__+1
     require 'rbconfig'
 

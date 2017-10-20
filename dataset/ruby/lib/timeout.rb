@@ -5,7 +5,7 @@ module Timeout
 
     def self.catch(*args)
       exc = new(*args)
-      #nodyna <instance_variable_set-2049> <not yet classified>
+      #nodyna <instance_variable_set-2049> <IVS MODERATE (private access)>
       exc.instance_variable_set(:@thread, Thread.current)
       ::Kernel.catch(exc) {yield exc}
     end

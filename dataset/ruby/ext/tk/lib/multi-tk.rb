@@ -32,7 +32,6 @@ end
 
 
 class MultiTkIp_OK < Exception
-  #nodyna <send-1714> <not yet classified>
   def self.send(thread, ret=nil)
     thread.raise self.new(ret)
   end
@@ -95,7 +94,7 @@ class MultiTkIp
     tbl_obj = TkUtil.untrust(Hash.new{|hash,key|
                                fail IndexError, "unknown command ID '#{key}'"
                              })
-    #nodyna <instance_variable_set-1716> <not yet classified>
+    #nodyna <instance_variable_set-1716> <IVS MODERATE (private access)>
     @@TK_CMD_TBL.instance_variable_set('@tbl', tbl_obj)
 
     class << @@TK_CMD_TBL
@@ -335,7 +334,6 @@ class MultiTkIp
         rescue Exception
         end
         begin
-          #nodyna <eval-1719> <not yet classified>
           ip._invoke(name, 'eval', 'destroy', '.')
         rescue Exception
         end
@@ -349,7 +347,6 @@ class MultiTkIp
 =begin
         if ip._invoke('interp', 'exists', name) == '1'
           begin
-            #nodyna <eval-1720> <not yet classified>
             ip._invoke(name, 'eval', 'exit')
           rescue Exception
           end
@@ -515,7 +512,7 @@ class MultiTkIp
         if MultiTkIp::WITH_ENCODING
           bt.force_encoding('utf-8')
         else
-          #nodyna <instance_variable_set-1721> <not yet classified>
+          #nodyna <instance_variable_set-1721> <IVS MODERATE (private access)>
           bt.instance_variable_set(:@encoding, 'utf-8')
         end
       rescue Exception
@@ -897,7 +894,6 @@ class MultiTkIp
 
 
     class << self
-      #nodyna <instance_eval-1725> <not yet classified>
       undef :instance_eval
     end
   }
@@ -1225,7 +1221,6 @@ class MultiTkIp
 =begin
         @interp_thread = Thread.new{
           Thread.current[:interp] = interp = TclTkIp.new(name, _keys2opts(tk_opts))
-          #nodyna <instance_eval-1729> <not yet classified>
           interp.instance_eval{
             @force_default_encoding ||= TkUtil.untrust([false])
             @encoding ||= TkUtil.untrust([nil])
@@ -1362,7 +1357,6 @@ class MultiTkIp
     _init_ip_internal(@@INIT_IP_ENV, @@ADD_TK_PROCS)
 
     class << self
-      #nodyna <instance_eval-1731> <not yet classified>
       undef :instance_eval
     end
 
@@ -1711,9 +1705,9 @@ class MultiTkIp
     id = @@TK_TABLE_LIST.size
     obj = Object.new
     @@TK_TABLE_LIST << obj
-    #nodyna <instance_variable_set-1732> <not yet classified>
+    #nodyna <instance_variable_set-1732> <IVS MODERATE (private access)>
     obj.instance_variable_set(:@id, id)
-    #nodyna <instance_variable_set-1733> <not yet classified>
+    #nodyna <instance_variable_set-1733> <IVS MODERATE (private access)>
     obj.instance_variable_set(:@mutex, Mutex.new)
     #nodyna <instance_eval-1734> <IEV MODERATE (method definition)>
     obj.instance_eval{
@@ -1912,7 +1906,7 @@ if (!defined?(Use_PseudoToplevel_Feature_of_MultiTkIp) ||
 
     def self.extended(mod)
       mod.__send__(:extend_object, mod)
-      #nodyna <instance_variable_set-1735> <not yet classified>
+      #nodyna <instance_variable_set-1735> <IVS MODERATE (private access)>
       mod.instance_variable_set('@pseudo_toplevel_evaluable', true)
     end
   end
@@ -1948,7 +1942,6 @@ end
 
 
 class MultiTkIp
-  #nodyna <eval-1736> <not yet classified>
   def _proc_on_safelevel(cmd=nil) # require a block for eval
     if cmd
       if cmd.kind_of?(Method)
@@ -1978,7 +1971,6 @@ class MultiTkIp
     MultiTkIp.__getip._proc_on_safelevel(cmd, &blk)
   end
 
-  #nodyna <eval-1737> <not yet classified>
   def _proc_on_current_safelevel(cmd=nil, &blk) # require a block for eval
     safe = $SAFE
     cmd = _proc_on_safelevel(cmd, &blk)
@@ -2015,7 +2007,6 @@ class MultiTkIp
 =begin
         begin
           bt = _toUTF8(e.backtrace.join("\n"))
-          #nodyna <instance_variable_set-1738> <not yet classified>
           bt.instance_variable_set(:@encoding, 'utf-8')
         rescue Exception
           bt = e.backtrace.join("\n")
@@ -2231,7 +2222,6 @@ end
   alias bg_eval_str bg_eval_string
   alias background_eval_str bg_eval_string
 
-  #nodyna <eval-1741> <not yet classified>
   def eval(*args, &blk)
     if block_given?
       eval_proc(*args, &blk)
@@ -2242,7 +2232,6 @@ end
         eval_string(*args)
       end
     else
-      #nodyna <eval-1742> <not yet classified>
       fail ArgumentError, "no argument to eval"
     end
   end
@@ -2257,7 +2246,6 @@ end
         bg_eval_string(*args)
       end
     else
-      #nodyna <eval-1743> <not yet classified>
       fail ArgumentError, "no argument to eval"
     end
   end
@@ -2290,7 +2278,6 @@ class << MultiTkIp
   alias bg_eval_str bg_eval_string
   alias background_eval_str bg_eval_string
 
-  #nodyna <eval-1744> <not yet classified>
   def eval(*args, &blk)
     #nodyna <eval-1745> <EV COMPLEX (change-prone variables)>
     __getip.eval(*args, &blk)
@@ -3043,7 +3030,6 @@ class MultiTkIp
   def delete_cmd(slave, cmd)
     raise SecurityError, "no permission to manipulate" unless self.manipulable?
     slave_invoke = @interp._invoke('list', 'rename', cmd, '')
-    #nodyna <eval-1746> <not yet classified>
     @interp._invoke('interp', 'eval', _slavearg(slave), slave_invoke)
     self
   end
@@ -3482,14 +3468,11 @@ end
 
 =begin
 class MultiTkIp
-  #nodyna <instance_variable_get-1747> <not yet classified>
   INTERP_THREAD = @@DEFAULT_MASTER.instance_variable_get('@interp_thread')
   INTERP_MUTEX  = INTERP_THREAD[:mutex]
   INTERP_ROOT_CHECK = INTERP_THREAD[:root_check]
 
-  #nodyna <instance_variable_get-1748> <not yet classified>
   undef_method :instance_variable_get
-  #nodyna <instance_variable_set-1749> <not yet classified>
   undef_method :instance_variable_set
 end
 
@@ -3510,7 +3493,7 @@ end
 if MultiTkIp::WITH_RUBY_VM &&
     ! MultiTkIp::RUN_EVENTLOOP_ON_MAIN_THREAD ### check Ruby 1.9 !!!!!!!
   class MultiTkIp
-    #nodyna <instance_variable_get-1750> <not yet classified>
+    #nodyna <instance_variable_get-1750> <IVS MODERATE (private access)>
     INTERP_THREAD = @@DEFAULT_MASTER.instance_variable_get('@interp_thread')
     INTERP_THREAD_STATUS = INTERP_THREAD[:status]
     INTERP_MUTEX  = INTERP_THREAD[:mutex]
@@ -3531,9 +3514,7 @@ if MultiTkIp::WITH_RUBY_VM &&
 end
 
 class MultiTkIp
-  #nodyna <instance_variable_get-1751> <not yet classified>
   undef_method :instance_variable_get
-  #nodyna <instance_variable_set-1752> <not yet classified>
   undef_method :instance_variable_set
 end
 

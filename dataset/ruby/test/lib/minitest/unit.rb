@@ -647,7 +647,7 @@ module MiniTest
 
 
     def _run_anything type
-      #nodyna <send-1443> <not yet classified>
+      #nodyna <send-1443> <SD MODERATE (change-prone variable)>
       suites = TestCase.send "#{type}_suites"
       return if suites.empty?
 
@@ -692,13 +692,13 @@ module MiniTest
 
     def _run_suite suite, type
       header = "#{type}_suite_header"
-      #nodyna <send-1444> <not yet classified>
+      #nodyna <send-1444> <SD MODERATE (change-prone variable)>
       puts send(header, suite) if respond_to? header
 
       filter = options[:filter] || '/./'
       filter = Regexp.new $1 if filter =~ /\/(.*)\//
 
-      #nodyna <send-1445> <not yet classified>
+      #nodyna <send-1445> <SD MODERATE (change-prone variable)>
       all_test_methods = suite.send "#{type}_methods"
 
       filtered_test_methods = all_test_methods.find_all { |m|
@@ -833,7 +833,7 @@ module MiniTest
       puts "Run options: #{help}"
 
       self.class.plugins.each do |plugin|
-        #nodyna <send-1446> <not yet classified>
+        #nodyna <send-1446> <SD COMPLEX (array)>
         send plugin
         break unless report.empty?
       end
@@ -946,7 +946,7 @@ module MiniTest
         ensure
           %w{ before_teardown teardown after_teardown }.each do |hook|
             begin
-              #nodyna <send-1447> <not yet classified>
+              #nodyna <send-1447> <SD MODERATE (array)>
               self.send hook
             rescue *PASSTHROUGH_EXCEPTIONS
               raise
@@ -995,7 +995,7 @@ module MiniTest
       def self.i_suck_and_my_tests_are_order_dependent!
         class << self
           undef_method :test_order if method_defined? :test_order
-          #nodyna <define_method-1448> <not yet classified>
+          #nodyna <define_method-1448> <DM MODERATE (events)>
           define_method :test_order do :alpha end
         end
       end
@@ -1004,7 +1004,7 @@ module MiniTest
       def self.make_my_diffs_pretty!
         require 'pp'
 
-        #nodyna <define_method-1449> <not yet classified>
+        #nodyna <define_method-1449> <DM MODERATE (events)>
         define_method :mu_pp do |o|
           o.pretty_inspect
         end

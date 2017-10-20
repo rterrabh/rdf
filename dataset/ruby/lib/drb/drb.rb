@@ -501,9 +501,9 @@ module DRb
 
     def self.new_with(uri, ref)
       it = self.allocate
-      #nodyna <instance_variable_set-2047> <not yet classified>
+      #nodyna <instance_variable_set-2047> <IVS MODERATE (private access)>
       it.instance_variable_set(:@uri, uri)
-      #nodyna <instance_variable_set-2048> <not yet classified>
+      #nodyna <instance_variable_set-2048> <IVS MODERATE (private access)>
       it.instance_variable_set(:@ref, ref)
       it
     end

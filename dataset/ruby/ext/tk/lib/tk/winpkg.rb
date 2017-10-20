@@ -67,19 +67,15 @@ module Tk::WinDDE
     tk_call('dde', 'services', service, topic)
   end
 
-  #nodyna <eval-1779> <not yet classified>
   def eval(topic, cmd, *args)
-    #nodyna <eval-1780> <not yet classified>
     tk_call('dde', 'eval', topic, cmd, *args)
   end
 
   def async_eval(topic, cmd, *args)
-    #nodyna <eval-1781> <not yet classified>
     tk_call('dde', 'eval', -async, topic, cmd, *args)
   end
 
   module_function :servername, :execute, :async_execute,
-                  #nodyna <eval-1782> <not yet classified>
                   :poke, :request, :services, :eval
 end
 

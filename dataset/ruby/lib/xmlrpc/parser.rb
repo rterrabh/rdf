@@ -121,7 +121,7 @@ module XMLRPC # :nodoc:
 
           hash.delete "___class___"
           hash.each {|key, value|
-            #nodyna <instance_variable_set-2011> <not yet classified>
+            #nodyna <instance_variable_set-2011> <IVS COMPLEX (array)>
             obj.instance_variable_set("@#{ key }", value) if key =~ /^([a-zA-Z_]\w*)$/
           }
           obj

@@ -87,15 +87,11 @@ module Tk
     end
 
     if TkCore::WITH_ENCODING
-      #nodyna <instance_variable_get-1845> <not yet classified>
       alias __instance_variable_get instance_variable_get
-      #nodyna <instance_variable_set-1846> <not yet classified>
       alias __instance_variable_set instance_variable_set
-      #nodyna <instance_eval-1847> <not yet classified>
       alias __instance_eval         instance_eval
       alias __instance_variables    instance_variables
 
-      #nodyna <instance_variable_get-1848> <not yet classified>
       def instance_variable_get(key)
         if (key.to_s == '@encoding')
           self.encoding
@@ -104,7 +100,6 @@ module Tk
         end
       end
 
-      #nodyna <instance_variable_set-1849> <not yet classified>
       def instance_variable_set(key, value)
         if (key.to_s == '@encoding')
           if value
@@ -118,7 +113,6 @@ module Tk
         end
       end
 
-      #nodyna <instance_eval-1850> <not yet classified>
       def instance_eval(*args, &b)
         old_enc = @encoding = self.encoding
 

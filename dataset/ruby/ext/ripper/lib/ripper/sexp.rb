@@ -20,14 +20,14 @@ class Ripper
 
     PARSER_EVENT_TABLE.each do |event, arity|
       if /_new\z/ =~ event.to_s and arity == 0
-        #nodyna <module_eval-1532> <not yet classified>
+        #nodyna <module_eval-1532> <ME MODERATE (define methods)>
         module_eval(<<-End, __FILE__, __LINE__ + 1)
           def on_#{event}
             []
           end
         End
       elsif /_add\z/ =~ event.to_s
-        #nodyna <module_eval-1533> <not yet classified>
+        #nodyna <module_eval-1533> <ME MODERATE (define methods)>
         module_eval(<<-End, __FILE__, __LINE__ + 1)
           def on_#{event}(list, item)
             list.push item
@@ -35,7 +35,7 @@ class Ripper
           end
         End
       else
-        #nodyna <module_eval-1534> <not yet classified>
+        #nodyna <module_eval-1534> <ME MODERATE (define methods)>
         module_eval(<<-End, __FILE__, __LINE__ + 1)
           def on_#{event}(*args)
             [:#{event}, *args]
@@ -45,7 +45,7 @@ class Ripper
     end
 
     SCANNER_EVENTS.each do |event|
-      #nodyna <module_eval-1535> <not yet classified>
+      #nodyna <module_eval-1535> <ME MODERATE (define methods)>
       module_eval(<<-End, __FILE__, __LINE__ + 1)
         def on_#{event}(tok)
           [:@#{event}, tok, [lineno(), column()]]
@@ -58,7 +58,7 @@ class Ripper
     private
 
     PARSER_EVENTS.each do |event|
-      #nodyna <module_eval-1536> <not yet classified>
+      #nodyna <module_eval-1536> <ME MODERATE (define methods)>
       module_eval(<<-End, __FILE__, __LINE__ + 1)
         def on_#{event}(*args)
           args.unshift :#{event}
@@ -68,7 +68,7 @@ class Ripper
     end
 
     SCANNER_EVENTS.each do |event|
-      #nodyna <module_eval-1537> <not yet classified>
+      #nodyna <module_eval-1537> <ME MODERATE (define methods)>
       module_eval(<<-End, __FILE__, __LINE__ + 1)
         def on_#{event}(tok)
           [:@#{event}, tok, [lineno(), column()]]

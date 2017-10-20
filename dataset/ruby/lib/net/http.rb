@@ -167,7 +167,7 @@ module Net   #:nodoc:
       @enable_post_connection_check = true
       @sspi_enabled = false
       SSL_IVNAMES.each do |ivname|
-        #nodyna <instance_variable_set-2160> <not yet classified>
+        #nodyna <instance_variable_set-2160> <IVS MODERATE (array)>
         instance_variable_set ivname, nil
       end
     end
@@ -329,7 +329,7 @@ module Net   #:nodoc:
         iv_list = instance_variables
         SSL_IVNAMES.each_with_index do |ivname, i|
           if iv_list.include?(ivname) and
-            #nodyna <instance_variable_get-2161> <not yet classified>
+            #nodyna <instance_variable_get-2161> <IVG MODERATE (array)>
             value = instance_variable_get(ivname)
             ssl_parameters[SSL_ATTRIBUTES[i]] = value if value
           end

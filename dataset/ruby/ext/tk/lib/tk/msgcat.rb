@@ -71,7 +71,7 @@ class TkMsgCatalog < TkObject
         if TkCore::WITH_ENCODING
           msg.force_encoding('utf-8')
         else
-          #nodyna <instance_variable_set-1787> <not yet classified>
+          #nodyna <instance_variable_set-1787> <IVS MODERATE (private access)>
           msg.instance_variable_set(:@encoding, 'utf-8')
         end
       rescue Exception

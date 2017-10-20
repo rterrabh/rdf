@@ -41,7 +41,7 @@ getv = Kernel32.extern "int GetVersionExA(void *)", :stdcall
 info = [ 148, 0, 0, 0, 0 ].pack('V5') + "\0" * 128
 getv.call(info)
 if info.unpack('V5')[4] == 2  # VER_PLATFORM_WIN32_NT
-  #nodyna <module_eval-1509> <not yet classified>
+  #nodyna <module_eval-1509> <ME MODERATE (define methods)>
   module_eval <<-'__EOS__', __FILE__, __LINE__+1
     TCPIP_NT = 'SYSTEM\CurrentControlSet\Services\Tcpip\Parameters'
 
@@ -119,7 +119,7 @@ if info.unpack('V5')[4] == 2  # VER_PLATFORM_WIN32_NT
     end
   __EOS__
 else
-  #nodyna <module_eval-1510> <not yet classified>
+  #nodyna <module_eval-1510> <ME COMPLEX (define methods)>
   module_eval <<-'__EOS__', __FILE__, __LINE__+1
     TCPIP_9X = 'SYSTEM\CurrentControlSet\Services\VxD\MSTCP'
     DHCP_9X = 'SYSTEM\CurrentControlSet\Services\VxD\DHCP'

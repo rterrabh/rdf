@@ -9,7 +9,7 @@ module MonitorMixin
       @monitor.__send__(:mon_check_owner)
       count = @monitor.__send__(:mon_exit_for_cond)
       begin
-        #nodyna <instance_variable_get-2353> <not yet classified>
+        #nodyna <instance_variable_get-2353> <IVG MODERATE (private access)>
         @cond.wait(@monitor.instance_variable_get(:@mon_mutex), timeout)
         return true
       ensure

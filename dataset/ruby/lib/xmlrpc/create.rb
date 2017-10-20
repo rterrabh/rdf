@@ -228,7 +228,7 @@ module XMLRPC # :nodoc:
             ret = {"___class___" => param.class.name}
             param.instance_variables.each {|v|
               name = v[1..-1]
-              #nodyna <instance_variable_get-2009> <not yet classified>
+              #nodyna <instance_variable_get-2009> <IVG COMPLEX (change-prone variable)>
               val = param.instance_variable_get(v)
 
               if val.nil?

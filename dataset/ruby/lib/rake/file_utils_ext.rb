@@ -24,7 +24,7 @@ module Rake
       end
 
       next if default_options.empty?
-      #nodyna <module_eval-2035> <not yet classified>
+      #nodyna <module_eval-2035> <ME COMPLEX (define methods)>
       module_eval(<<-EOS, __FILE__, __LINE__ + 1)
       def #{name}( *args, &block )
         super(

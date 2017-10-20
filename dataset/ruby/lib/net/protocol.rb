@@ -7,7 +7,7 @@ module Net # :nodoc:
   class Protocol   #:nodoc: internal use only
     private
     def Protocol.protocol_param(name, val)
-      #nodyna <module_eval-2168> <not yet classified>
+      #nodyna <module_eval-2168> <ME COMPLEX (define methods)>
       module_eval(<<-End, __FILE__, __LINE__ + 1)
         def #{name}
         end

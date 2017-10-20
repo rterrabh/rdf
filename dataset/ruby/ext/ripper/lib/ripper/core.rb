@@ -17,7 +17,7 @@ class Ripper
 
 
   PARSER_EVENT_TABLE.each do |id, arity|
-    #nodyna <module_eval-1538> <not yet classified>
+    #nodyna <module_eval-1538> <ME COMPLEX (define methods)>
     module_eval(<<-End, __FILE__, __LINE__ + 1)
       def on_#{id}(#{ ('a'..'z').to_a[0, arity].join(', ') })
       end
@@ -35,7 +35,7 @@ class Ripper
 
 
   SCANNER_EVENTS.each do |id|
-    #nodyna <module_eval-1539> <not yet classified>
+    #nodyna <module_eval-1539> <ME COMPLEX (define methods)>
     module_eval(<<-End, __FILE__, __LINE__ + 1)
       def on_#{id}(token)
         token

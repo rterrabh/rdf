@@ -17,7 +17,7 @@ module RSS
         klass.install_must_call_validator(DC_PREFIX, DC_URI)
         klass.install_have_children_element(name, DC_URI, "*",
                                             full_name, full_plural_name)
-        #nodyna <module_eval-2050> <not yet classified>
+        #nodyna <module_eval-2050> <ME COMPLEX (define methods)>
         klass.module_eval(<<-EOC, *get_file_and_line_from_caller(0))
           remove_method :#{full_name}
           remove_method :#{full_name}=
@@ -33,7 +33,7 @@ module RSS
           alias set_#{full_name} #{full_name}=
         EOC
       end
-      #nodyna <module_eval-2051> <not yet classified>
+      #nodyna <module_eval-2051> <ME COMPLEX (define methods)>
       klass.module_eval(<<-EOC, *get_file_and_line_from_caller(0))
         if method_defined?(:date)
           alias date_without_#{DC_PREFIX}_date= date=
@@ -86,7 +86,7 @@ module RSS
     ELEMENTS = TEXT_ELEMENTS.keys + DATE_ELEMENTS.keys
 
     ELEMENTS.each do |name, plural_name|
-      #nodyna <module_eval-2052> <not yet classified>
+      #nodyna <module_eval-2052> <ME MODERATE (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(0))
         class DublinCore#{Utils.to_class_name(name)} < Element
           include RSS10
@@ -133,7 +133,7 @@ module RSS
 
     DATE_ELEMENTS.each do |name, type|
       tag_name = "#{DC_PREFIX}:#{name}"
-      #nodyna <module_eval-2053> <not yet classified>
+      #nodyna <module_eval-2053> <ME MODERATE (block execution)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(0))
         class DublinCore#{Utils.to_class_name(name)} < Element
           remove_method(:content=)

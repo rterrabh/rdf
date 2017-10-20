@@ -861,7 +861,7 @@ class CSV
     str << " encoding:" << @encoding.name
     %w[ lineno     col_sep     row_sep
         quote_char skip_blanks ].each do |attr_name|
-      #nodyna <instance_variable_get-1930> <not yet classified>
+      #nodyna <instance_variable_get-1930> <IVG MODERATE (array)>
       if a = instance_variable_get("@#{attr_name}")
         str << " " << attr_name << ":" << a.inspect
       end
@@ -975,7 +975,7 @@ class CSV
       @unconverted_fields = options.delete(:unconverted_fields)
     end
 
-    #nodyna <instance_variable_set-1931> <not yet classified>
+    #nodyna <instance_variable_set-1931> <IVS MODERATE (change-prone variable)>
     instance_variable_set("@#{field_name}", Array.new)
 
     convert = method(field_name.to_s.sub(/ers\Z/, ""))
@@ -1015,7 +1015,7 @@ class CSV
   end
   def add_converter(var_name, const, name = nil, &converter)
     if name.nil?  # custom converter
-      #nodyna <instance_variable_get-1932> <not yet classified>
+      #nodyna <instance_variable_get-1932> <IVG MODERATE (change-prone variable)>
       instance_variable_get("@#{var_name}") << converter
     else          # named converter
       combo = const[name]
@@ -1025,7 +1025,7 @@ class CSV
           add_converter(var_name, const, converter_name)
         end
       else        # individual named converter
-        #nodyna <instance_variable_get-1933> <not yet classified>
+        #nodyna <instance_variable_get-1933> <IVG MODERATE (change-prone variable)>
         instance_variable_get("@#{var_name}") << combo
       end
     end

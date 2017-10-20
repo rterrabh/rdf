@@ -41,7 +41,7 @@ module WEBrick
 
 
       def evaluate(erb, servlet_request, servlet_response)
-        #nodyna <module_eval-2230> <not yet classified>
+        #nodyna <module_eval-2230> <ME COMPLEX (block execution)>
         Module.new.module_eval{
           servlet_request.meta_vars
           servlet_request.query

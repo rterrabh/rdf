@@ -139,7 +139,7 @@ class Gem::Requirement
 
   def yaml_initialize(tag, vals) # :nodoc:
     vals.each do |ivar, val|
-      #nodyna <instance_variable_set-2330> <not yet classified>
+      #nodyna <instance_variable_set-2330> <IVS COMPLEX (array)>
       instance_variable_set "@#{ivar}", val
     end
 

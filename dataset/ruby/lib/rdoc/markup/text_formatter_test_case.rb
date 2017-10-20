@@ -3,7 +3,7 @@ class RDoc::Markup::TextFormatterTestCase < RDoc::Markup::FormatterTestCase
 
 
   def self.add_text_tests
-    #nodyna <class_eval-2027> <not yet classified>
+    #nodyna <class_eval-2027> <CE MODERATE (define methods)>
     self.class_eval do
 
 

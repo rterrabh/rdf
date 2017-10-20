@@ -8,7 +8,7 @@ module Exception2MessageMapper
   end
 
   def bind(cl)
-    #nodyna <module_eval-1999> <not yet classified>
+    #nodyna <module_eval-1999> <ME COMPLEX (define methods)>
     self.module_eval %[
       def Raise(err = nil, *rest)
         Exception2MessageMapper.Raise(self.class, err, *rest)

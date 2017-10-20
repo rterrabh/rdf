@@ -372,7 +372,7 @@ class Object < BasicObject # :nodoc:
 end
 
 [Numeric, Symbol, FalseClass, TrueClass, NilClass, Module].each {|c|
-  #nodyna <class_eval-1997> <not yet classified>
+  #nodyna <class_eval-1997> <CE MODERATE (define methods)>
   c.class_eval {
     def pretty_print_cycle(q)
       q.text inspect
@@ -381,7 +381,7 @@ end
 }
 
 [Numeric, FalseClass, TrueClass, Module].each {|c|
-  #nodyna <class_eval-1998> <not yet classified>
+  #nodyna <class_eval-1998> <CE MODERATE (define methods)>
   c.class_eval {
     def pretty_print(q)
       q.text inspect

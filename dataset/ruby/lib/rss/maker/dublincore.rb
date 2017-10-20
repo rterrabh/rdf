@@ -14,7 +14,7 @@ module RSS
           plural_klass_name = "DublinCore#{Utils.to_class_name(plural_name)}"
           klass.def_classed_elements(full_name, "value", plural_klass_name,
                                      full_plural_name, name)
-          #nodyna <module_eval-2055> <not yet classified>
+          #nodyna <module_eval-2055> <ME COMPLEX (define methods)>
           klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             def new_#{full_name}(value=nil)
               _#{full_name} = #{full_plural_name}.new_#{name}
@@ -28,7 +28,7 @@ module RSS
           EOC
         end
 
-        #nodyna <module_eval-2056> <not yet classified>
+        #nodyna <module_eval-2056> <ME COMPLEX (block execution)>
         klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           alias #{DC_PREFIX}_rightses #{DC_PREFIX}_rights_list
         EOC
@@ -41,7 +41,7 @@ module RSS
         klass_name = Utils.to_class_name(name)
         full_klass_name = "DublinCore#{klass_name}"
         plural_klass_name = "DublinCore#{Utils.to_class_name(plural_name)}"
-        #nodyna <module_eval-2057> <not yet classified>
+        #nodyna <module_eval-2057> <ME MODERATE (define methods)>
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         class #{plural_klass_name}Base < Base
           def_array_element(#{name.dump}, #{full_plural_name.dump},
@@ -73,7 +73,7 @@ module RSS
           klass_name = Utils.to_class_name(name)
           full_klass_name = "DublinCore#{klass_name}"
           plural_klass_name = "DublinCore#{Utils.to_class_name(plural_name)}"
-          #nodyna <module_eval-2058> <not yet classified>
+          #nodyna <module_eval-2058> <ME COMPLEX (block execution)>
           klass.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           class #{plural_klass_name} < #{plural_klass_name}Base
             class #{full_klass_name} < #{full_klass_name}Base
@@ -97,7 +97,7 @@ EOC
     class TextinputBase; include DublinCoreModel; end
 
     makers.each do |maker|
-      #nodyna <module_eval-2059> <not yet classified>
+      #nodyna <module_eval-2059> <ME COMPLEX (block execution)>
       maker.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         class Channel
           DublinCoreModel.install_dublin_core(self)

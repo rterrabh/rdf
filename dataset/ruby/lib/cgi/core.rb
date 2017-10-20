@@ -311,11 +311,11 @@ class CGI
         /Content-Disposition:.* filename=(?:"(.*?)"|([^;\r\n]*))/i.match(head)
         filename = $1 || $2 || ''
         filename = CGI.unescape(filename) if unescape_filename?()
-        #nodyna <instance_variable_set-1952> <not yet classified>
+        #nodyna <instance_variable_set-1952> <IVS MODERATE (private access)>
         body.instance_variable_set(:@original_filename, filename.taint)
         /Content-Type: (.*)/i.match(head)
         (content_type = $1 || '').chomp!
-        #nodyna <instance_variable_set-1953> <not yet classified>
+        #nodyna <instance_variable_set-1953> <IVS MODERATE (private access)>
         body.instance_variable_set(:@content_type, content_type.taint)
         /Content-Disposition:.* name=(?:"(.*?)"|([^;\r\n]*))/i.match(head)
         name = $1 || $2 || ''
@@ -330,7 +330,7 @@ class CGI
               raise InvalidEncoding,"Accept-Charset encoding error"
             end
           end
-          #nodyna <class_eval-1954> <not yet classified>
+          #nodyna <class_eval-1954> <CE TRIVIAL (define methods)>
           class << params[name].last;self;end.class_eval do
             #nodyna <define_method-1955> <DM MODERATE (events)>
             define_method(:read){self}

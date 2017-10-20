@@ -51,7 +51,7 @@ module RSS
 
           add_need_initialize_variable(plural) {[]}
 
-          #nodyna <module_eval-2074> <not yet classified>
+          #nodyna <module_eval-2074> <ME MODERATE (define methods)>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             def new_#{name}
               @#{plural} << #{name}
@@ -80,7 +80,7 @@ module RSS
             #nodyna <send-2075> <SD COMPLEX (change-prone variables)>
             object.send("make_#{name}")
           end
-          #nodyna <module_eval-2076> <not yet classified>
+          #nodyna <module_eval-2076> <ME MODERATE (define methods)>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             private
             def setup_#{name}(feed, current)
@@ -96,7 +96,7 @@ module RSS
         def def_classed_element(name, class_name=nil, attribute_name=nil)
           def_classed_element_without_accessor(name, class_name)
           if attribute_name
-            #nodyna <module_eval-2077> <not yet classified>
+            #nodyna <module_eval-2077> <ME MODERATE (define methods)>
             module_eval(<<-EOC, __FILE__, __LINE__ + 1)
               def #{name}
                 if block_given?
@@ -127,7 +127,7 @@ module RSS
             additional_setup_code = yield(local_variable_name,
                                           new_value_variable_name)
           end
-          #nodyna <module_eval-2078> <not yet classified>
+          #nodyna <module_eval-2078> <ME MODERATE (define methods)>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             def #{name}
             end
@@ -145,7 +145,7 @@ module RSS
         def def_other_element_without_accessor(name)
           add_need_initialize_variable(name)
           add_other_element(name)
-          #nodyna <module_eval-2079> <not yet classified>
+          #nodyna <module_eval-2079> <ME COMPLEX (define methods)>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             def setup_#{name}(feed, current)
               if !@#{name}.nil? and current.respond_to?(:#{name}=)
@@ -162,7 +162,7 @@ module RSS
           if type == :integer
             converter = "{|v| Integer(v)}"
           end
-          #nodyna <module_eval-2080> <not yet classified>
+          #nodyna <module_eval-2080> <ME COMPLEX (define methods)>
           module_eval(<<-EOC, __FILE__, __LINE__ + 1)
             def #{name}=(value)
               @#{name} = Utils::CSV.parse(value)#{converter}
@@ -201,7 +201,7 @@ module RSS
               value = init_value
             end
           end
-          #nodyna <instance_variable_set-2082> <not yet classified>
+          #nodyna <instance_variable_set-2082> <IVS COMPLEX (array)>
           instance_variable_set("@#{variable_name}", value)
         end
       end
@@ -279,7 +279,7 @@ module RSS
       def self.append_features(klass)
         super
 
-        #nodyna <class_eval-2083> <not yet classified>
+        #nodyna <class_eval-2083> <CE COMPLEX (define methods)>
         klass.class_eval(<<-EOC, __FILE__, __LINE__ + 1)
           %w(name uri email).each do |element|
             attr_accessor element
@@ -294,7 +294,7 @@ module RSS
         class << self
           def included(base)
             super
-            #nodyna <class_eval-2084> <not yet classified>
+            #nodyna <class_eval-2084> <CE COMPLEX (define methods)>
             base.class_eval do
               %w(type content xml_content).each do |element|
                 attr_reader element
@@ -347,7 +347,7 @@ module RSS
       def self.append_features(klass)
         super
 
-        #nodyna <class_eval-2085> <not yet classified>
+        #nodyna <class_eval-2085> <CE TRIVIAL (block execution)>
         klass.class_eval do
           include EnsureXMLContent
         end
@@ -412,7 +412,7 @@ module RSS
           #nodyna <send-2086> <SD MODERATE (array)>
           object.send("make_#{element}")
         end
-        #nodyna <module_eval-2087> <not yet classified>
+        #nodyna <module_eval-2087> <ME MODERATE (define methods)>
         module_eval(<<-EOC, __FILE__, __LINE__ + 1)
           private
           def setup_#{element}(feed)

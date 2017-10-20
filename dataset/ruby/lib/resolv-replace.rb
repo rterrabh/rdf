@@ -32,9 +32,7 @@ class UDPSocket < IPSocket
     original_resolv_connect(IPSocket.getaddress(host), port)
   end
 
-  #nodyna <send-2151> <not yet classified>
   alias original_resolv_send send
-  #nodyna <send-2152> <not yet classified>
   def send(mesg, flags, *rest)
     if rest.length == 2
       host, port = rest

@@ -14,7 +14,7 @@ module Psych
       Sequence
       Mapping
     }.each do |node|
-      #nodyna <class_eval-1476> <not yet classified>
+      #nodyna <class_eval-1476> <CE MODERATE (define methods)>
       class_eval %{
         def start_#{node.downcase}(anchor, tag, implicit, style)
           n = Nodes::#{node}.new(anchor, tag, implicit, style)

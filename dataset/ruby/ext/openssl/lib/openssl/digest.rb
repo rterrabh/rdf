@@ -18,7 +18,7 @@ module OpenSSL
         define_method(:initialize, ->(data = nil) {super(name, data)})
       }
       singleton = (class << klass; self; end)
-      #nodyna <class_eval-1499> <not yet classified>
+      #nodyna <class_eval-1499> <CE MODERATE (define methods)>
       singleton.class_eval{
         #nodyna <define_method-1500> <DM MODERATE (events)>
         define_method(:digest){|data| new.digest(data) }

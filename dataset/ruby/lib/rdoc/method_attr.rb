@@ -177,7 +177,6 @@ class RDoc::MethodAttr < RDoc::CodeObject
     value.gsub!(/([A-Z:a-z0-9_]+)\.([a-z0-9_]+)(\s*\(\s*[a-z0-9_.,\s]*\s*\)\s*)?/) do
       case $2
       when 'to_s'      then $1
-      #nodyna <const_get-2025> <not yet classified>
       when 'const_get' then 'const'
       when 'new' then
         $1.split('::').last.  # ClassName => class_name

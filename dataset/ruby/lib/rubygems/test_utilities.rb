@@ -68,9 +68,9 @@ class Gem::FakeFetcher
 
     #nodyna <send-2322> <SD EASY (private methods)>
     response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
-    #nodyna <instance_variable_set-2323> <not yet classified>
+    #nodyna <instance_variable_set-2323> <IVS TRIVIAL (public variable)>
     response.instance_variable_set(:@body, body)
-    #nodyna <instance_variable_set-2324> <not yet classified>
+    #nodyna <instance_variable_set-2324> <IVS TRIVIAL (public variable)>
     response.instance_variable_set(:@read, true)
     response
   end
@@ -84,9 +84,9 @@ class Gem::FakeFetcher
 
     #nodyna <send-2325> <SD EASY (private methods)>
     response = Net::HTTPResponse.send(:response_class, code.to_s).new("1.0", code.to_s, msg)
-    #nodyna <instance_variable_set-2326> <not yet classified>
+    #nodyna <instance_variable_set-2326> <IVS TRIVIAL (public variable)>
     response.instance_variable_set(:@body, body)
-    #nodyna <instance_variable_set-2327> <not yet classified>
+    #nodyna <instance_variable_set-2327> <IVS TRIVIAL (public variable)>
     response.instance_variable_set(:@read, true)
     response
   end
@@ -244,7 +244,7 @@ class Gem::TestCase::SpecFetcherSetup
   def legacy_platform
     spec 'pl', 1 do |s|
       s.platform = Gem::Platform.new 'i386-linux'
-      #nodyna <instance_variable_set-2328> <not yet classified>
+      #nodyna <instance_variable_set-2328> <IVS MODERATE (variable definition)>
       s.instance_variable_set :@original_platform, 'i386-linux'
     end
   end

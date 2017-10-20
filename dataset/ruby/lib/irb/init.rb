@@ -278,7 +278,7 @@ module IRB # :nodoc:
       [$stdin, $stdout, $stderr].each do |io|
         io.set_encoding(extern, intern)
       end
-      #nodyna <instance_variable_set-2191> <not yet classified>
+      #nodyna <instance_variable_set-2191> <IVS MODERATE (private access)>
       @CONF[:LC_MESSAGES].instance_variable_set(:@encoding, extern)
     ensure
       $VERBOSE = verbose

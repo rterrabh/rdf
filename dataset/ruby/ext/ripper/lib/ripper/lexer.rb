@@ -29,8 +29,7 @@ class Ripper
     private
 
     SCANNER_EVENTS.each do |event|
-      #nodyna <module_eval-1530> <not yet classified>
-      #nodyna <module_eval-1531> <not yet classified>
+      #nodyna <module_eval-1530> <ME MODERATE (define methods)>
       module_eval(<<-End, __FILE__+'/module_eval', __LINE__ + 1)
         def on_#{event}(tok)
           @buf.push [[lineno(), column()], :on_#{event}, tok]

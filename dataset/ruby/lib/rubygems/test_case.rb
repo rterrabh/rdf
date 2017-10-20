@@ -228,7 +228,7 @@ class Gem::TestCase < MiniTest::Unit::TestCase
 
     @orig_ENV_HOME = ENV['HOME']
     ENV['HOME'] = @userhome
-    #nodyna <instance_variable_set-2294> <not yet classified>
+    #nodyna <instance_variable_set-2294> <IVS MODERATE (variable definition)>
     Gem.instance_variable_set :@user_home, nil
     #nodyna <send-2295> <SD EASY (private methods)>
     Gem.send :remove_instance_variable, :@ruby_version if
@@ -242,7 +242,7 @@ class Gem::TestCase < MiniTest::Unit::TestCase
 
     @default_dir = File.join @tempdir, 'default'
     @default_spec_dir = File.join @default_dir, "specifications", "default"
-    #nodyna <instance_variable_set-2296> <not yet classified>
+    #nodyna <instance_variable_set-2296> <IVS MODERATE (variable definition)>
     Gem.instance_variable_set :@default_dir, @default_dir
     FileUtils.mkdir_p @default_spec_dir
 
@@ -316,7 +316,7 @@ class Gem::TestCase < MiniTest::Unit::TestCase
       ENV.delete 'HOME'
     end
 
-    #nodyna <instance_variable_set-2297> <not yet classified>
+    #nodyna <instance_variable_set-2297> <IVS MODERATE (variable definition)>
     Gem.instance_variable_set :@default_dir, nil
 
     ENV['GEM_PRIVATE_KEY_PASSPHRASE'] = @orig_gem_private_key_passphrase
@@ -765,7 +765,6 @@ Also, a list:
       s.files = %w[lib/code.rb]
       s.require_paths = %w[lib]
       s.platform = Gem::Platform.new 'i386-linux'
-      #nodyna <instance_variable_set-2298> <not yet classified>
       s.instance_variable_set :@original_platform, 'i386-linux'
     end
 
@@ -797,9 +796,7 @@ Also, a list:
     RbConfig::CONFIG['arch'] = arch
     platform = Gem::Platform.new arch
 
-    #nodyna <instance_variable_set-2299> <not yet classified>
     Gem.instance_variable_set :@platforms, nil
-    #nodyna <instance_variable_set-2300> <not yet classified>
     Gem::Platform.instance_variable_set :@local, nil
 
     platform

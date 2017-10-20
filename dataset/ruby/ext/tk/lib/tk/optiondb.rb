@@ -126,12 +126,12 @@ module TkOptionDB
   #nodyna <const_set-1808> <CS TRIVIAL (static values)>
   @@resource_proc_class.const_set(:CARRIER, '.'.freeze)
 
-  #nodyna <instance_variable_set-1809> <not yet classified>
+  #nodyna <instance_variable_set-1809> <IVS MODERATE (private access)>
   @@resource_proc_class.instance_variable_set('@method_tbl',
                                               TkCore::INTERP.create_table)
-  #nodyna <instance_variable_set-1810> <not yet classified>
+  #nodyna <instance_variable_set-1810> <IVS MODERATE (private access)>
   @@resource_proc_class.instance_variable_set('@add_method', false)
-  #nodyna <instance_variable_set-1811> <not yet classified>
+  #nodyna <instance_variable_set-1811> <IVS MODERATE (private access)>
   @@resource_proc_class.instance_variable_set('@safe_mode', 4)
 
   class << @@resource_proc_class
@@ -186,7 +186,6 @@ module TkOptionDB
             eval("$SAFE = #{@safe_mode};\nProc.new" + proc_str)
           rescue SyntaxError=>err
             raise SyntaxError,
-              #nodyna <eval-1813> <not yet classified>
               TkCore::INTERP._toUTF8(err.message.gsub(/\(eval\):\d:/,
                                                       "(#{id.id2name}):"))
           end
@@ -220,7 +219,6 @@ module TkOptionDB
     carrier = Tk.tk_call_without_enc('frame', @path, '-class', klass)
 
     body = <<-"EOD"
-      #nodyna <module_eval-1814> <not yet classified>
       class #{klass} < TkOptionDB.module_eval('@@resource_proc_class')
         CARRIER    = '#{carrier}'.freeze
         METHOD_TBL = TkCore::INTERP.create_table
@@ -231,14 +229,10 @@ module TkOptionDB
     EOD
 
     if parent.kind_of?(Class) && parent <= @@resource_proc_class
-      #nodyna <class_eval-1815> <not yet classified>
       parent.class_eval(body)
-      #nodyna <eval-1816> <not yet classified>
       eval(parent.name + '::' + klass)
     else
-      #nodyna <eval-1817> <not yet classified>
       eval(body)
-      #nodyna <eval-1818> <not yet classified>
       eval('TkOptionDB::' + klass)
     end
   end
@@ -276,28 +270,25 @@ module TkOptionDB
     if parent.kind_of?(Class) && parent <= @@resource_proc_class
       cmd_klass = Class.new(parent)
     else
-      #nodyna <module_eval-1819> <not yet classified>
+      #nodyna <module_eval-1819> <CE COMPLEX (block execution)>
       cmd_klass = Class.new(TkOptionDB.module_eval('@@resource_proc_class'))
     end
     #nodyna <const_set-1820> <CS TRIVIAL (static values)>
     cmd_klass.const_set(:CARRIER, carrier.dup.freeze)
 
-    #nodyna <instance_variable_set-1821> <not yet classified>
+    #nodyna <instance_variable_set-1821> <IVS MODERATE (private access)>
     cmd_klass.instance_variable_set('@method_tbl', TkCore::INTERP.create_table)
-    #nodyna <instance_variable_set-1822> <not yet classified>
+    #nodyna <instance_variable_set-1822> <IVS MODERATE (private access)>
     cmd_klass.instance_variable_set('@add_method', add)
-    #nodyna <instance_variable_set-1823> <not yet classified>
+    #nodyna <instance_variable_set-1823> <IVS MODERATE (private access)>
     cmd_klass.instance_variable_set('@safe_mode', safe)
     func.each{|f|
-      #nodyna <instance_variable_get-1824> <not yet classified>
+      #nodyna <instance_variable_get-1824> <IVS MODERATE (private access)>
       cmd_klass.instance_variable_get('@method_tbl')[f.to_s.intern] = nil
     }
 =begin
-    #nodyna <const_set-1825> <not yet classified>
     cmd_klass.const_set(:METHOD_TBL, TkCore::INTERP.create_table)
-    #nodyna <const_set-1826> <not yet classified>
     cmd_klass.const_set(:ADD_METHOD, add)
-    #nodyna <const_set-1827> <not yet classified>
     cmd_klass.const_set(:SAFE_MODE, safe)
     func.each{|f| cmd_klass::METHOD_TBL[f.to_s.intern] = nil }
 =end
@@ -310,22 +301,14 @@ module TkOptionDB
   def __remove_methods_of_proc_class(klass)
     class << klass
       def __null_method(*args); nil; end
-      #nodyna <class_eval-1828> <not yet classified>
       [ :class_eval, :name, :superclass, :clone, :dup, :autoload, :autoload?,
-        #nodyna <const_set-1829> <not yet classified>
-        #nodyna <const_get-1830> <not yet classified>
         :ancestors, :const_defined?, :const_get, :const_set, :const_missing,
         :class_variables, :constants, :included_modules, :instance_methods,
-        #nodyna <module_eval-1831> <not yet classified>
         :method_defined?, :module_eval, :private_instance_methods,
         :protected_instance_methods, :public_instance_methods,
         :singleton_methods, :remove_const, :remove_method, :undef_method,
         :to_s, :inspect, :display, :method, :methods, :respond_to?,
-        #nodyna <instance_variable_get-1832> <not yet classified>
-        #nodyna <instance_variable_set-1833> <not yet classified>
         :instance_variable_get, :instance_variable_set, :instance_method,
-        #nodyna <instance_eval-1834> <not yet classified>
-        #nodyna <instance_exec-1835> <not yet classified>
         :instance_eval, :instance_exec, :instance_variables, :kind_of?, :is_a?,
         :private_methods, :protected_methods, :public_methods ].each{|m|
         alias_method(m, :__null_method)
@@ -353,7 +336,7 @@ module TkOptionDB
 
   def new_proc_class(klass, func, safe = 4, add = false, parent = nil, &b)
     new_klass = __create_new_class(klass, func, safe, add, parent)
-    #nodyna <class_eval-1836> <not yet classified>
+    #nodyna <class_eval-1836> <CE COMPLEX (block execution)>
     new_klass.class_eval(&b) if block_given?
     __remove_methods_of_proc_class(new_klass)
     new_klass.freeze
@@ -364,7 +347,7 @@ module TkOptionDB
   def eval_under_random_base(parent = nil, &b)
     new_klass = __create_new_class(__get_random_basename(),
                                    [], 4, false, parent)
-    #nodyna <class_eval-1837> <not yet classified>
+    #nodyna <class_eval-1837> <CE COMPLEX (block execution)>
     ret = new_klass.class_eval(&b) if block_given?
     __remove_methods_of_proc_class(new_klass)
     new_klass.freeze

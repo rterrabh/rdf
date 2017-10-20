@@ -313,7 +313,7 @@ class RDoc::Options
     ivars -= SPECIAL
 
     ivars.sort.each do |ivar|
-      #nodyna <instance_variable_get-2024> <not yet classified>
+      #nodyna <instance_variable_get-2024> <IVG COMPLEX (array)>
       coder.add ivar, instance_variable_get("@#{ivar}")
     end
   end

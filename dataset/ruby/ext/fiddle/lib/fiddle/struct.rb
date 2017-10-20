@@ -35,7 +35,7 @@ module Fiddle
         }
       }
       size = klass.entity_class.size(types)
-      #nodyna <module_eval-1494> <not yet classified>
+      #nodyna <module_eval-1494> <ME COMPLEX (define methods)>
       new_class.module_eval(<<-EOS, __FILE__, __LINE__+1)
         def new_class.size()
         end

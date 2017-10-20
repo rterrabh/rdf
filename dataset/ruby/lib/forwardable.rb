@@ -39,10 +39,10 @@ module Forwardable
       end
     }
     begin
-      #nodyna <module_eval-1970> <not yet classified>
+      #nodyna <module_eval-1970> <ME COMPLEX (block execution)>
       module_eval(str, __FILE__, line_no)
     rescue
-      #nodyna <instance_eval-1971> <IEV COMPLEX (private access)>
+      #nodyna <instance_eval-1971> <IEV COMPLEX (method definition)>
       instance_eval(str, __FILE__, line_no)
     end
 
@@ -82,7 +82,7 @@ module SingleForwardable
       end
     }
 
-    #nodyna <instance_eval-1972> <IEV COMPLEX (private access)>
+    #nodyna <instance_eval-1972> <IEV COMPLEX (method definition)>
     instance_eval(str, __FILE__, __LINE__)
   end
 

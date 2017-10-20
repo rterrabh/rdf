@@ -94,7 +94,7 @@ module IRB # :nodoc:
       end
 
       if load_file
-        #nodyna <eval-2207> <EV COMPLEX (method definition)>
+        #nodyna <eval-2207> <EV MODERATE (method definition)>
         line = __LINE__; eval %[
           def #{cmd_name}(*opts, &b)
             require "#{load_file}"
@@ -103,18 +103,18 @@ module IRB # :nodoc:
             args << "*opts" if arity < 0
             args << "&block"
             args = args.join(", ")
-            #nodyna <eval-2208> <not yet classified>
+            #nodyna <eval-2208> <EV MODERATE (method definition)>
             line = __LINE__; eval %[
               def #{cmd_name}(\#{args})
             ExtendCommand::#{cmd_class}.execute(irb_context, \#{args})
               end
             ], nil, __FILE__, line
-            #nodyna <send-2209> <not yet classified>
+            #nodyna <send-2209> <SD MODERATE (change-prone variable)>
             send :#{cmd_name}, *opts, &b
           end
         ], nil, __FILE__, line
       else
-        #nodyna <eval-2210> <EV COMPLEX (method definition)>
+        #nodyna <eval-2210> <EV MODERATE (method definition)>
         line = __LINE__; eval %[
           def #{cmd_name}(*opts, &b)
             ExtendCommand::#{cmd_class}.execute(irb_context, *opts, &b)
@@ -182,13 +182,13 @@ module IRB # :nodoc:
     end
 
     def self.def_extend_command(cmd_name, load_file, *aliases)
-      #nodyna <module_eval-2212> <not yet classified>
+      #nodyna <module_eval-2212> <ME COMPLEX (define methods)>
       line = __LINE__; Context.module_eval %[
         def #{cmd_name}(*opts, &b)
-          #nodyna <module_eval-2213> <not yet classified>
+          #nodyna <module_eval-2213> <ME MODERATE (block execution)>
           Context.module_eval {remove_method(:#{cmd_name})}
           require "#{load_file}"
-          #nodyna <send-2214> <not yet classified>
+          #nodyna <send-2214> <SD MODERATE (change-prone variable)>
           send :#{cmd_name}, *opts, &b
         end
         for ali in aliases
@@ -206,13 +206,13 @@ module IRB # :nodoc:
       extend_method = extend_method.to_s
 
       alias_name = new_alias_name(base_method)
-      #nodyna <module_eval-2215> <not yet classified>
+      #nodyna <module_eval-2215> <ME COMPLEX (define methods)>
       module_eval %[
         alias_method alias_name, base_method
         def #{base_method}(*opts)
-          #nodyna <send-2216> <not yet classified>
+          #nodyna <send-2216> <SD>
           send :#{extend_method}, *opts
-          #nodyna <send-2217> <not yet classified>
+          #nodyna <send-2217> <SD COMPLEX (change-prone variable)>
           send :#{alias_name}, *opts
         end
       ]
@@ -223,13 +223,13 @@ module IRB # :nodoc:
       extend_method = extend_method.to_s
 
       alias_name = new_alias_name(base_method)
-      #nodyna <module_eval-2218> <not yet classified>
+      #nodyna <module_eval-2218> <ME COMPLEX (define methods)>
       module_eval %[
         alias_method alias_name, base_method
         def #{base_method}(*opts)
-          #nodyna <send-2219> <not yet classified>
+          #nodyna <send-2219> <SD COMPLEX (change-prone variable)>
           send :#{alias_name}, *opts
-          #nodyna <send-2220> <not yet classified>
+          #nodyna <send-2220> <SD COMPLEX (change-prone variable)>
           send :#{extend_method}, *opts
         end
       ]

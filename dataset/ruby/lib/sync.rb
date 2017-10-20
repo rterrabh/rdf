@@ -33,7 +33,7 @@ module Sync_m
   end
 
   def Sync_m.define_aliases(cl)
-    #nodyna <module_eval-2221> <not yet classified>
+    #nodyna <module_eval-2221> <ME COMPLEX (block execution)>
     cl.module_eval %q{
       alias locked? sync_locked?
       alias shared? sync_shared?

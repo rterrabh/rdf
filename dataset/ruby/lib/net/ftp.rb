@@ -773,7 +773,6 @@ module Net
     end
 
     class BufferedSocket < BufferedIO
-      #nodyna <send-2157> <not yet classified>
       [:addr, :peeraddr, :send, :shutdown].each do |method|
         #nodyna <define_method-2158> <DM MODERATE (array)>
         define_method(method) { |*args|

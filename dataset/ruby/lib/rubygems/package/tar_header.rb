@@ -106,7 +106,7 @@ class Gem::Package::TarHeader
     vals[:devminor] ||= 0
 
     FIELDS.each do |name|
-      #nodyna <instance_variable_set-2248> <not yet classified>
+      #nodyna <instance_variable_set-2248> <IVS MODERATE (array)>
       instance_variable_set "@#{name}", vals[name]
     end
 
