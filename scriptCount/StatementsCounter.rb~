@@ -65,14 +65,6 @@ class StatementsCounter < SexpInterpreter
     return @projectData
   end
   
-  def nextLine(exp)
-    if(exp.line != @currentLine)
-      @projectData.loc += 1
-      @currentLine = exp.line
-      @isLineWithDynamic = false
-    end
-  end
-
   def class_defined(exp)
     save = @methodMissingImplemented
     @projectData.totalClasses += 1
@@ -102,26 +94,29 @@ class StatementsCounter < SexpInterpreter
     if(STATIC_FEATURES.include?(exp[0]))
       @projectData.totalStatements += 1
     end
-    nextLine(exp)
+    if(exp.line != @currentLine)
+      if(@isLineWithDynamic)
+        @projectData.locDynamic += 1
+      end
+      @projectData.loc += 1
+      @currentLine = exp.line
+      @isLineWithDynamic = false
+    end
     exp.map {|subtree| process(subtree) if subtree.class == Sexp}
   end
 
   def process_call(exp)
-    nextLine(exp)
     if(DYNAMIC_FEATURES.include?(exp[2]))
       @projectData.incrementDynamicStatements(exp[2])
+      @isLineWithDynamic = true
       @isMethodUsingDynamic = true
-      if(!@isLineWithDynamic)
-        @projectData.locDynamic += 1
-        @isLineWithDynamic = true
-      end
     end
     default_process(exp)
   end
 
 
   def process_defs(exp)
-    method_defined(exp)
+        method_defined(exp)
   end
 
   def process_defn(exp)

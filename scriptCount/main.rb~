@@ -2,7 +2,6 @@ require_relative 'StatementsCounter'
 require_relative 'ProjectData'
 require_relative '../util/Util'
 projects = {
-  "Test": ["target.rb"],
   "Active Admin": ["../dataset/activeadmin/**/lib/**/*.rb"],
   "Diaspora": ["../dataset/diaspora/**/lib/**/*.rb", "../dataset/diaspora/app/**/*.rb", "../dataset/diaspora/config/**/*.rb"],
   "Discourse": ["../dataset/discourse/**/lib/**/*.rb", "../dataset/discourse/app/**/*.rb", "../dataset/discourse/config/**/*.rb"],

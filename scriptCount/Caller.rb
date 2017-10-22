@@ -102,45 +102,46 @@ end
 
 if(ARGV.size >= 0)
   files_to_research = []
+
   #activeadmin
-  files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
+#  files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
 
   #diaspora
-  files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
-  files_to_research << "../dataset/diaspora/app/**/*.rb"
-  files_to_research << "../dataset/diaspora/config/**/*.rb"
+#  files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
+#  files_to_research << "../dataset/diaspora/app/**/*.rb"
+#  files_to_research << "../dataset/diaspora/config/**/*.rb"
 
   #discourse
-  files_to_research << "../dataset/discourse/**/lib/**/*.rb"
-  files_to_research << "../dataset/discourse/app/**/*.rb"
-  files_to_research << "../dataset/discourse/config/**/*.rb"
+#  files_to_research << "../dataset/discourse/**/lib/**/*.rb"
+#  files_to_research << "../dataset/discourse/app/**/*.rb"
+#  files_to_research << "../dataset/discourse/config/**/*.rb"
 
   #gitlab
-  files_to_research << "../dataset/gitlabhq/**/lib/**/*.rb"
-  files_to_research << "../dataset/gitlabhq/app/**/*.rb"
-  files_to_research << "../dataset/gitlabhq/config/**/*.rb"
+#  files_to_research << "../dataset/gitlabhq/**/lib/**/*.rb"
+#  files_to_research << "../dataset/gitlabhq/app/**/*.rb"
+#  files_to_research << "../dataset/gitlabhq/config/**/*.rb"
 
   #homebrew
-  files_to_research << "../dataset/homebrew/**/lib/**/*.rb"
+#  files_to_research << "../dataset/homebrew/**/lib/**/*.rb"
 
   #paperclip
-  files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
+#  files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
 
   #rails
-  files_to_research << "../dataset/rails/**/lib/**/*.rb"
+#  files_to_research << "../dataset/rails/**/lib/**/*.rb"
 
   #rails_admin
-  files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
+#  files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
 
   #ruby
-  files_to_research << "../dataset/ruby/**/lib/**/*.rb"
+#  files_to_research << "../dataset/ruby/**/lib/**/*.rb"
 
   #spree
   files_to_research << "../dataset/spree/**/lib/**/*.rb"
   files_to_research << "../dataset/spree/api/**/*.rb"
   files_to_research << "../dataset/spree/backend/**/*.rb"
   files_to_research << "../dataset/spree/core/**/*.rb"
-
+=begin
   #cancan
   files_to_research << "../dataset/cancan/**/lib/**/*.rb"
 
@@ -196,5 +197,6 @@ if(ARGV.size >= 0)
 
   #whenever
   files_to_research << "../dataset/whenever/**/lib/**/*.rb"
+=end
   Caller.instance.find(Util.extractFiles(files_to_research), ARGV[0])
 end
