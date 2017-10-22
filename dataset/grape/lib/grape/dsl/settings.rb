@@ -16,13 +16,13 @@ module Grape
       end
 
       def unset(type, key)
-        #nodyna <send-2818> <SD MODERATE (change-prone variable)>
+        #nodyna <send-2818> <SD MODERATE (change-prone variables)>
         setting = inheritable_setting.send(type)
         setting.delete key
       end
 
       def get_or_set(type, key, value)
-        #nodyna <send-2819> <SD MODERATE (change-prone variable)>
+        #nodyna <send-2819> <SD MODERATE (change-prone variables)>
         setting = inheritable_setting.send(type)
         if value.nil?
           setting[key]

@@ -390,7 +390,7 @@ module ActiveSupport #:nodoc:
         else
           require_or_load(expanded, qualified_name)
           raise LoadError, "Unable to autoload constant #{qualified_name}, expected #{file_path} to define it" unless from_mod.const_defined?(const_name, false)
-          #nodyna <const_get-1119> <CG MODERATE (change-prone variables)>
+          #nodyna <const_get-1119> <CG MODERATE (change-prone variable)>
           return from_mod.const_get(const_name)
         end
       elsif mod = autoload_module!(from_mod, const_name, qualified_name, path_suffix)

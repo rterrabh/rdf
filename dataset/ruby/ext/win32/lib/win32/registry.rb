@@ -204,7 +204,7 @@ For detail, see the MSDN[http://msdn.microsoft.com/library/en-us/sysinfo/base/pr
         "long RegQueryInfoKey(void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *, void *)",
       ].each do |fn|
         cfunc = extern fn, :stdcall
-        #nodyna <const_set-1515> <CS MEDIUM (array)>
+        #nodyna <const_set-1515> <CS MODERATE (array)>
         const_set cfunc.name.intern, cfunc
       end
 

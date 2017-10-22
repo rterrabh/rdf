@@ -11,7 +11,7 @@ module CarrierWave
       class ProcessingValidator < ::ActiveModel::EachValidator
 
         def validate_each(record, attribute, value)
-          #nodyna <send-2660> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2660> <SD COMPLEX (change-prone variables)>
           if e = record.send("#{attribute}_processing_error")
             message = (e.message == e.class.to_s) ? :carrierwave_processing_error : e.message
             record.errors.add(attribute, message)
@@ -22,7 +22,7 @@ module CarrierWave
       class IntegrityValidator < ::ActiveModel::EachValidator
 
         def validate_each(record, attribute, value)
-          #nodyna <send-2661> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2661> <SD COMPLEX (change-prone variables)>
           if e = record.send("#{attribute}_integrity_error")
             message = (e.message == e.class.to_s) ? :carrierwave_integrity_error : e.message
             record.errors.add(attribute, message)
@@ -33,7 +33,7 @@ module CarrierWave
       class DownloadValidator < ::ActiveModel::EachValidator
 
         def validate_each(record, attribute, value)
-          #nodyna <send-2662> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2662> <SD COMPLEX (change-prone variables)>
           if e = record.send("#{attribute}_download_error")
             message = (e.message == e.class.to_s) ? :carrierwave_download_error : e.message
             record.errors.add(attribute, message)

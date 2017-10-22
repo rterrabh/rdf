@@ -24,9 +24,9 @@ module Devise
                 def #{method}(resource_or_scope, *args)
                   scope = Devise::Mapping.find_scope!(resource_or_scope)
                   router_name = Devise.mappings[scope].router_name
-                  #nodyna <send-2768> <SD COMPLEX (change-prone variable)>
+                  #nodyna <send-2768> <SD COMPLEX (change-prone variables)>
                   context = router_name ? send(router_name) : _devise_route_context
-                  #nodyna <send-2769> <SD COMPLEX (change-prone variable)>
+                  #nodyna <send-2769> <SD COMPLEX (change-prone variables)>
                   context.send("#{action}\#{scope}_#{module_name}_#{path_or_url}", *args)
                 end
               URL_HELPERS
@@ -40,7 +40,7 @@ module Devise
       private
 
       def _devise_route_context
-        #nodyna <send-2770> <SD COMPLEX (change-prone variable)>
+        #nodyna <send-2770> <SD COMPLEX (change-prone variables)>
         @_devise_route_context ||= send(Devise.available_router_name)
       end
     end

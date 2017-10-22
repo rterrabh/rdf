@@ -203,7 +203,7 @@ module Vagrant
 
       def initialize_copy(original)
         super
-        #nodyna <instance_variable_get-3087> <IVG COMPLEX (change-prone variables)>
+        #nodyna <instance_variable_get-3087> <IVG COMPLEX (change-prone variable)>
         @ui = original.instance_variable_get(:@ui).dup
       end
 

@@ -46,7 +46,7 @@ module Agents
     end
 
     def deliver(text)
-      #nodyna <send-2920> <SD COMPLEX (change-prone variable)>
+      #nodyna <send-2920> <SD COMPLEX (change-prone variables)>
       client.send Jabber::Message::new(interpolated['jabber_receiver'], text).set_type(:chat)
     end
 

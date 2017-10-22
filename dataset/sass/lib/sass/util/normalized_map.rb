@@ -80,7 +80,7 @@ module Sass
       def dup
         d = super
         #nodyna <instance_variable_set-3039> <IVS MODERATE (private access)>
-        #nodyna <send-3040> <SD TRIVIAL (public functions)>
+        #nodyna <send-3040> <SD TRIVIAL (public methods)>
         d.send(:instance_variable_set, "@map", @map.dup)
         d
       end

@@ -45,7 +45,7 @@ module Docs
       if name.is_a? Array
         name.map &method(:filter_const)
       else
-        #nodyna <const_get-2734> <CG COMPLEX (change-prone variables)>
+        #nodyna <const_get-2734> <CG COMPLEX (change-prone variable)>
         Docs.const_get "#{name}_filter".camelize
       end
     end

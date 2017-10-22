@@ -51,7 +51,7 @@ class Hbc::Container
   def self.from_type(type)
     odebug "Determining which containers to use based on 'container :type'"
     begin
-      #nodyna <const_get-2851> <CG COMPLEX (change-prone variables)>
+      #nodyna <const_get-2851> <CG COMPLEX (change-prone variable)>
       Hbc::Container.const_get(type.to_s.split('_').map(&:capitalize).join)
     rescue NameError
       false

@@ -32,7 +32,7 @@ module Pod
         end
 
         def add_name(name, state)
-          #nodyna <send-2701> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2701> <SD COMPLEX (change-prone variables)>
           send(state) << name
         end
       end

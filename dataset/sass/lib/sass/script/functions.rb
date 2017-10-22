@@ -73,7 +73,7 @@ module Sass::Script
       end
 
       def assert_type(value, type, name = nil)
-        #nodyna <const_get-3030> <CG MODERATE (change-prone variables)>
+        #nodyna <const_get-3030> <CG MODERATE (change-prone variable)>
         klass = Sass::Script::Value.const_get(type)
         return if value.is_a?(klass)
         return if value.is_a?(Sass::Script::Value::List) && type == :Map && value.value.empty?
@@ -119,7 +119,7 @@ module Sass::Script
 
       def include(*args)
         r = super
-        #nodyna <send-3031> <SD TRIVIAL (public functions)>
+        #nodyna <send-3031> <SD TRIVIAL (public methods)>
         EvaluationContext.send :include, self
         r
       end
@@ -310,7 +310,7 @@ module Sass::Script
     def ie_hex_str(color)
       assert_type color, :Color, :color
       alpha = Sass::Util.round(color.alpha * 255).to_s(16).rjust(2, '0')
-      #nodyna <send-3032> <SD EASY (private access)>
+      #nodyna <send-3032> <SD EASY (private methods)>
       identifier("##{alpha}#{color.send(:hex_str)[1..-1]}".upcase)
     end
     declare :ie_hex_str, [:color]

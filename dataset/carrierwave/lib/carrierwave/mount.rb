@@ -15,7 +15,7 @@ module CarrierWave
       if uploader_options[column].has_key?(option)
         uploader_options[column][option]
       else
-        #nodyna <send-2665> <SD MODERATE (change-prone variable)>
+        #nodyna <send-2665> <SD MODERATE (change-prone variables)>
         uploaders[column].send(option)
       end
     end
@@ -113,7 +113,7 @@ module CarrierWave
         def store_previous_model_for_#{column}
           serialization_column = _mounter(:#{column}).serialization_column
 
-          #nodyna <send-2668> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2668> <SD COMPLEX (change-prone variables)>
           if #{column}.remove_previously_stored_files_after_update && send(:"\#{serialization_column}_changed?")
             @previous_model_for_#{column} ||= self.find_previous_model_for_#{column}
           end

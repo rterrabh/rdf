@@ -194,7 +194,7 @@ module ActiveRecord
           self.class.unscoped { self.class.find(id) }
         end
 
-      #nodyna <instance_variable_get-807> <IVS MODERATE (private access)>
+      #nodyna <instance_variable_get-807> <IVG MODERATE (private access)>
       @attributes = fresh_object.instance_variable_get('@attributes')
       @new_record = false
       self

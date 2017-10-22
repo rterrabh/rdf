@@ -414,7 +414,7 @@ class DocsScraperTest < MiniTest::Spec
 
   describe "#handle_response" do
     let :result do
-      #nodyna <send-2713> <SD EASY (private access)>
+      #nodyna <send-2713> <SD EASY (private methods)>
       scraper.send :handle_response, response
     end
 

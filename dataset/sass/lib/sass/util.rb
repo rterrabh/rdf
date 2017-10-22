@@ -323,9 +323,9 @@ module Sass
     end
 
     def av_template_class(name)
-      #nodyna <const_get-3001> <CG COMPLEX (change-prone variables)>
+      #nodyna <const_get-3001> <CG COMPLEX (change-prone variable)>
       return ActionView.const_get("Template#{name}") if ActionView.const_defined?("Template#{name}")
-      #nodyna <const_get-3002> <CG COMPLEX (change-prone variables)>
+      #nodyna <const_get-3002> <CG COMPLEX (change-prone variable)>
       ActionView::Template.const_get(name.to_s)
     end
 

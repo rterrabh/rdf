@@ -331,7 +331,7 @@ module SimpleForm
       return if SimpleForm.inputs_discovery == false && at == Object
 
       begin
-        #nodyna <const_get-3048> <CG COMPLEX (change-prone variables)>
+        #nodyna <const_get-3048> <CG COMPLEX (change-prone variable)>
         at.const_get(mapping)
       rescue NameError => e
         raise if e.message !~ /#{mapping}$/

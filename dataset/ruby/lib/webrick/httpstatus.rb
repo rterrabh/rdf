@@ -98,14 +98,14 @@ module WEBrick
       when 500...600; parent = ServerError
       end
 
-      #nodyna <const_set-2226> <CS MEDIUM (array)>
+      #nodyna <const_set-2226> <CS MODERATE (array)>
       const_set("RC_#{var_name}", code)
       err_class = Class.new(parent)
       #nodyna <instance_variable_set-2227> <IVS COMPLEX (variable definition)>
       err_class.instance_variable_set(:@code, code)
       #nodyna <instance_variable_set-2228> <IVS COMPLEX (variable definition)>
       err_class.instance_variable_set(:@reason_phrase, message)
-      #nodyna <const_set-2229> <CS MEDIUM (array)>
+      #nodyna <const_set-2229> <CS MODERATE (array)>
       const_set(err_name, err_class)
       CodeToError[code] = err_class
     }

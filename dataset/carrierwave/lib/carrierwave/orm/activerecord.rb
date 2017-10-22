@@ -32,14 +32,14 @@ module CarrierWave
       class_eval <<-RUBY, __FILE__, __LINE__+1
         def #{column}=(new_file)
           column = _mounter(:#{column}).serialization_column
-          #nodyna <send-2658> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2658> <SD COMPLEX (change-prone variables)>
           send(:"\#{column}_will_change!")
           super
         end
 
         def remote_#{column}_url=(url)
           column = _mounter(:#{column}).serialization_column
-          #nodyna <send-2659> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2659> <SD COMPLEX (change-prone variables)>
           send(:"\#{column}_will_change!")
           super
         end

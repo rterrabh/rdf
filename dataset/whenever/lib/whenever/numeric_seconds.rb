@@ -5,7 +5,7 @@ module Whenever
     attr_reader :number
 
     def self.seconds(number, units)
-      #nodyna <send-3098> <SD MEDIUM (change-prone variables)>
+      #nodyna <send-3098> <SD MODERATE (change-prone variables)>
       new(number).send(units)
     end
 

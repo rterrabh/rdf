@@ -31,9 +31,9 @@ module Whenever
       variable = variable.to_sym
       return if @pre_set_variables[variable]
 
-      #nodyna <instance_variable_set-3094> <IVS MODERATE (change-prone variables)>
+      #nodyna <instance_variable_set-3094> <IVS MODERATE (change-prone variable)>
       instance_variable_set("@#{variable}".to_sym, value)
-      #nodyna <send-3095> <SD MODERATE (private functions)>
+      #nodyna <send-3095> <SD MODERATE (private methods)>
       self.class.send(:attr_reader, variable.to_sym)
       @set_variables[variable] = value
     end
@@ -49,7 +49,7 @@ module Whenever
     end
 
     def job_type(name, template)
-      #nodyna <class_eval-3096> <CE MODERATE (method definition)>
+      #nodyna <class_eval-3096> <CE MODERATE (define methods)>
       singleton_class_shim.class_eval do
         #nodyna <define_method-3097> <DM MODERATE (events)>
         define_method(name) do |task, *args|

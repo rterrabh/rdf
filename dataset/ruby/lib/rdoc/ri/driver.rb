@@ -1038,7 +1038,7 @@ The ri pager can be set with the 'RI_PAGER' environment variable or the
 
 
   def load_method store, cache, klass, type, name
-    #nodyna <send-2032> <SD COMPLEX (change-prone variable)>
+    #nodyna <send-2032> <SD COMPLEX (change-prone variables)>
     methods = store.send(cache)[klass]
 
     return unless methods

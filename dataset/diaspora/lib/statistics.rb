@@ -176,7 +176,7 @@ SQL
   end
 
   def result_hash(type)
-    #nodyna <instance_variable_get-205> <IVS MODERATE (change-prone variable)>
+    #nodyna <instance_variable_get-205> <IVG MODERATE (change-prone variable)>
     instance_hash = self.instance_variable_get("@#{type.to_s}_hash".to_sym)
     unless instance_hash
       #nodyna <send-206> <SD MODERATE (change-prone variables)>

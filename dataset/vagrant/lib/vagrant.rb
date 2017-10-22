@@ -16,7 +16,7 @@ if ENV["VAGRANT_LOG"] && ENV["VAGRANT_LOG"] != ""
 
   level = nil
   begin
-    #nodyna <const_get-3061> <CG COMPLEX (change-prone variables)>
+    #nodyna <const_get-3061> <CG COMPLEX (change-prone variable)>
     level = Log4r.const_get(ENV["VAGRANT_LOG"].upcase)
   rescue NameError
     level = nil

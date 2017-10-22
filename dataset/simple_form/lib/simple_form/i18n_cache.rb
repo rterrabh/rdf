@@ -14,7 +14,7 @@ module SimpleForm
     end
 
     def reset_i18n_cache(key)
-      #nodyna <class_variable_set-3050> <CVS (change-prone variables)>
+      #nodyna <class_variable_set-3050> <CVS MODERATE (change-prone variables)>
       class_variable_set(:"@@#{key}", {})
     end
   end

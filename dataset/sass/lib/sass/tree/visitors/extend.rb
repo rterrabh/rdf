@@ -1,7 +1,7 @@
 class Sass::Tree::Visitors::Extend < Sass::Tree::Visitors::Base
   def self.visit(root, extends)
     return if extends.empty?
-    #nodyna <send-2994> <SD EASY (private access)>
+    #nodyna <send-2994> <SD EASY (private methods)>
     new(extends).send(:visit, root)
     check_extends_fired! extends
   end

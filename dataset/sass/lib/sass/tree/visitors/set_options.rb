@@ -1,5 +1,5 @@
 class Sass::Tree::Visitors::SetOptions < Sass::Tree::Visitors::Base
-  #nodyna <send-2991> <SD EASY (private access)>
+  #nodyna <send-2991> <SD EASY (private methods)>
   def self.visit(root, options); new(options).send(:visit, root); end
 
   protected

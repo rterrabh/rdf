@@ -72,7 +72,7 @@ module ActionView
             #nodyna <module_eval-1201> <ME COMPLEX (define methods)>
             _helpers.module_eval <<-end_eval
               def #{method}(*args, &block)                    # def current_user(*args, &block)
-                #nodyna <send-1202> <SD COMPLEX (change-prone variable)>
+                #nodyna <send-1202> <SD COMPLEX (change-prone variables)>
                 _test_case.send(%(#{method}), *args, &block)  #   _test_case.send(%(current_user), *args, &block)
               end                                             # end
             end_eval

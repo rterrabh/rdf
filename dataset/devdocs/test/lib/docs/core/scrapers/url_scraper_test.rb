@@ -24,7 +24,7 @@ class DocsUrlScraperTest < MiniTest::Spec
 
   describe "#request_one" do
     let :result do
-      #nodyna <send-2725> <SD EASY (private access)>
+      #nodyna <send-2725> <SD EASY (private methods)>
       scraper.send :request_one, 'url'
     end
 
@@ -51,7 +51,7 @@ class DocsUrlScraperTest < MiniTest::Spec
     end
 
     let :result do
-      #nodyna <send-2726> <SD EASY (private access)>
+      #nodyna <send-2726> <SD EASY (private methods)>
       scraper.send :request_all, 'urls', &block
     end
 
@@ -84,18 +84,18 @@ class DocsUrlScraperTest < MiniTest::Spec
     end
 
     let :result do
-      #nodyna <send-2727> <SD EASY (private access)>
+      #nodyna <send-2727> <SD EASY (private methods)>
       scraper.send :process_response?, response
     end
 
     it "returns false when the response isn't successful" do
-      #nodyna <send-2728> <SD EASY (private access)>
+      #nodyna <send-2728> <SD EASY (private methods)>
       response.send 'success?=', false
       refute result
     end
 
     it "returns false when the response isn't HTML" do
-      #nodyna <send-2729> <SD EASY (private access)>
+      #nodyna <send-2729> <SD EASY (private methods)>
       response.send 'html?=', false
       refute result
     end

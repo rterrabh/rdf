@@ -228,7 +228,7 @@ module Resque
   end
 
   def queue_from_class(klass)
-    #nodyna <instance_variable_get-2969> <IVG COMPLEX (change-prone variables)>
+    #nodyna <instance_variable_get-2969> <IVG COMPLEX (change-prone variable)>
     klass.instance_variable_get(:@queue) ||
       (klass.respond_to?(:queue) and klass.queue)
   end

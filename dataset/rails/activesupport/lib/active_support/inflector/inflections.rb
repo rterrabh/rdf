@@ -86,7 +86,7 @@ module ActiveSupport
           when :all
             @plurals, @singulars, @uncountables, @humans = [], [], [], []
           else
-            #nodyna <instance_variable_set-1013> <IVS MODERATE (change-prone variables)>
+            #nodyna <instance_variable_set-1013> <IVS MODERATE (change-prone variable)>
             instance_variable_set "@#{scope}", []
         end
       end

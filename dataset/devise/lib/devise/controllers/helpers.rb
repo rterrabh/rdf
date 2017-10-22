@@ -110,11 +110,11 @@ module Devise
 
         home_path = "#{scope}_root_path"
 
-        #nodyna <send-2774> <SD COMPLEX (change-prone variable)>
+        #nodyna <send-2774> <SD COMPLEX (change-prone variables)>
         context = router_name ? send(router_name) : self
 
         if context.respond_to?(home_path, true)
-          #nodyna <send-2775> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2775> <SD COMPLEX (change-prone variables)>
           context.send(home_path)
         elsif context.respond_to?(:root_path)
           context.root_path
@@ -132,7 +132,7 @@ module Devise
       def after_sign_out_path_for(resource_or_scope)
         scope = Devise::Mapping.find_scope!(resource_or_scope)
         router_name = Devise.mappings[scope].router_name
-        #nodyna <send-2776> <SD COMPLEX (change-prone variable)>
+        #nodyna <send-2776> <SD COMPLEX (change-prone variables)>
         context = router_name ? send(router_name) : self
         context.respond_to?(:root_path) ? context.root_path : "/"
       end

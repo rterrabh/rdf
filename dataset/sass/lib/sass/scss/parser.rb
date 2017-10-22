@@ -890,7 +890,7 @@ module Sass
       end
 
       @sass_script_parser = Class.new(Sass::Script::Parser)
-      #nodyna <send-2975> <SD TRIVIAL (public functions)>
+      #nodyna <send-2975> <SD TRIVIAL (public methods)>
       @sass_script_parser.send(:include, ScriptParser)
 
       class << self

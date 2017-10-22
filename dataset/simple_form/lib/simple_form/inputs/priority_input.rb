@@ -10,7 +10,7 @@ module SimpleForm
       end
 
       def input_priority
-        #nodyna <send-3056> <SD COMPLEX (change prone variables)>
+        #nodyna <send-3056> <SD COMPLEX (change-prone variables)>
         options[:priority] || SimpleForm.send(:"#{input_type}_priority")
       end
 

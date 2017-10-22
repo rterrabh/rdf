@@ -57,7 +57,7 @@ class Capybara::RackTest::Browser
     @current_port = new_uri.port
 
     reset_cache!
-    #nodyna <send-2626> <SD COMPLEX (change-prone variable)>
+    #nodyna <send-2626> <SD COMPLEX (change-prone variables)>
     send(method, new_uri.to_s, attributes, env.merge(options[:headers] || {}))
   end
 

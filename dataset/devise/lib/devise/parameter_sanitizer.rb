@@ -70,7 +70,7 @@ module Devise
 
     def default_sanitize(kind)
       if respond_to?(kind, true)
-        #nodyna <send-2760> <SD COMPLEX (change-prone variable)>
+        #nodyna <send-2760> <SD COMPLEX (change-prone variables)>
         send(kind)
       else
         raise NotImplementedError, "Devise doesn't know how to sanitize parameters for #{kind}"

@@ -89,7 +89,7 @@ class Notifier < ActionMailer::Base
 
   private
   def send_notification(type, *args)
-    #nodyna <const_get-244> <CG MODERATE (change-prone variables)>
+    #nodyna <const_get-244> <CG MODERATE (change-prone variable)>
     @notification = NotificationMailers.const_get(type.to_s.camelize).new(*args)
 
     with_recipient_locale do

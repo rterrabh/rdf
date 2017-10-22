@@ -11,7 +11,7 @@ describe DisableEmailInterceptor do
   end
 
   after do
-    #nodyna <class_variable_set-485> <IVS MODERATE (private access)>
+    #nodyna <class_variable_set-485> <CVS MODERATE (private access)>
     Mail.class_variable_set(:@@delivery_interceptors, [])
   end
 

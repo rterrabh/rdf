@@ -270,7 +270,7 @@ module TkOptionDB
     if parent.kind_of?(Class) && parent <= @@resource_proc_class
       cmd_klass = Class.new(parent)
     else
-      #nodyna <module_eval-1819> <CE COMPLEX (block execution)>
+      #nodyna <module_eval-1819> <ME COMPLEX (block execution)>
       cmd_klass = Class.new(TkOptionDB.module_eval('@@resource_proc_class'))
     end
     #nodyna <const_set-1820> <CS TRIVIAL (static values)>
@@ -283,7 +283,7 @@ module TkOptionDB
     #nodyna <instance_variable_set-1823> <IVS MODERATE (private access)>
     cmd_klass.instance_variable_set('@safe_mode', safe)
     func.each{|f|
-      #nodyna <instance_variable_get-1824> <IVS MODERATE (private access)>
+      #nodyna <instance_variable_get-1824> <IVG MODERATE (private access)>
       cmd_klass.instance_variable_get('@method_tbl')[f.to_s.intern] = nil
     }
 =begin

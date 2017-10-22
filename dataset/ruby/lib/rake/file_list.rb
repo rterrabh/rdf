@@ -33,7 +33,7 @@ module Rake
         class_eval %{
           def #{sym}(*args, &block)
             resolve
-            #nodyna <send-2039> <SD MODERATE (change-prone variable)>
+            #nodyna <send-2039> <SD MODERATE (change-prone variables)>
             result = @items.send(:#{sym}, *args, &block)
             FileList.new.import(result)
           end
@@ -44,7 +44,7 @@ module Rake
         class_eval %{
           def #{sym}(*args, &block)
             resolve
-            #nodyna <send-2039> <SD MODERATE (change-prone variable)>
+            #nodyna <send-2039> <SD MODERATE (change-prone variables)>
             result = @items.send(:#{sym}, *args, &block)
             result.object_id == @items.object_id ? self : result
           end

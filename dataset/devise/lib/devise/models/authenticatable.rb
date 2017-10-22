@@ -69,7 +69,7 @@ module Devise
       end
 
       def send_devise_notification(notification, *args)
-        #nodyna <send-2748> <SD MODERATE (change-prone variable)>
+        #nodyna <send-2748> <SD MODERATE (change-prone variables)>
         message = devise_mailer.send(notification, self, *args)
         if message.respond_to?(:deliver_now)
           message.deliver_now
@@ -91,9 +91,9 @@ module Devise
           self[attr] = self[attr].try(method)
 
         elsif respond_to?(attr) && respond_to?("#{attr}=")
-          #nodyna <send-2749> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2749> <SD COMPLEX (change-prone variables)>
           new_value = send(attr).try(method)
-          #nodyna <send-2750> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2750> <SD COMPLEX (change-prone variables)>
           send("#{attr}=", new_value)
         end
       end

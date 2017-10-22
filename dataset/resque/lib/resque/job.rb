@@ -71,7 +71,7 @@ module Resque
         args = Module.method(:const_get).arity != 1 ? [false] : []
 
         if constant.const_defined?(name, *args)
-          #nodyna <const_get-2956> <CG COMPLEX (change-prone variables)>
+          #nodyna <const_get-2956> <CG COMPLEX (change-prone variable)>
           constant = constant.const_get(name)
         else
           constant = constant.const_missing(name)

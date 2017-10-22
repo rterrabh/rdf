@@ -24,7 +24,7 @@ module Grape
           else
             mod = Module.new
             namespace_stackable(:helpers).each do |mod_to_include|
-              #nodyna <send-2821> <SD TRIVIAL (public method)>
+              #nodyna <send-2821> <SD TRIVIAL (public methods)>
               mod.send :include, mod_to_include
             end
             change!

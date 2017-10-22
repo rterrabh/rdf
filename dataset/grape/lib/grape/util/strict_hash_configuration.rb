@@ -47,7 +47,7 @@ module Grape
         setting_name_sym = setting_name.to_sym
         #nodyna <class_eval-2831> <CE MODERATE (define methods)>
         new_config_class.class_eval do
-          #nodyna <define_method-2832> <DM COMPLEX (event)>
+          #nodyna <define_method-2832> <DM COMPLEX (events)>
           define_method setting_name do |new_value|
             @settings[setting_name_sym] = new_value
           end
@@ -58,12 +58,12 @@ module Grape
         #nodyna <class_eval-2833> <CE MODERATE (define methods)>
         new_config_class.class_eval do
           setting_name.each_pair do |key, value|
-            #nodyna <define_method-2834> <DM COMPLEX (event)>
+            #nodyna <define_method-2834> <DM COMPLEX (events)>
             define_method "#{key}_context" do
               @contexts[key] ||= Grape::Util::StrictHashConfiguration.config_class(*value).new
             end
 
-            #nodyna <define_method-2835> <DM COMPLEX (event)>
+            #nodyna <define_method-2835> <DM COMPLEX (events)>
             define_method key do |&block|
               #nodyna <instance_exec-2836> <IEX COMPLEX (block execution without parameters)>
               #nodyna <send-2837> <SD COMPLEX (change-prone variables)>
@@ -71,7 +71,7 @@ module Grape
             end
           end
 
-          #nodyna <define_method-2838> <DM MODERATE (event)>
+          #nodyna <define_method-2838> <DM COMPLEX (events)>
           define_method 'to_hash' do
             #nodyna <send-2839> <SD COMPLEX (array)>
             merge_hash = setting_name.keys.each_with_object({}) { |k, hash| hash[k] = send("#{k}_context").to_hash }
@@ -92,7 +92,7 @@ module Grape
         new_module.tap do |mod|
           class_mod = create_class_mod(args)
 
-          #nodyna <const_set-2840> <CONST_SET TRIVIAL (public constants)>
+          #nodyna <const_set-2840> <CS TRIVIAL (static values)>
           mod.const_set(:ClassMethods, class_mod)
         end
       end
@@ -107,7 +107,7 @@ module Grape
         new_module.tap do |class_mod|
           new_config_class = config_class(*args)
 
-          #nodyna <define_method-2841> <DM COMPLEX (event)>
+          #nodyna <define_method-2841> <DM COMPLEX (events)>
           #nodyna <send-2842> <SD COMPLEX (private methods)>
           class_mod.send(:define_method, :config_class) do
             @config_context ||= new_config_class

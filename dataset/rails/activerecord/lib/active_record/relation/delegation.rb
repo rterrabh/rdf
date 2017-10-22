@@ -19,7 +19,7 @@ module ActiveRecord
           delegate = Class.new(klass) {
             include ClassSpecificRelation
           }
-          #nodyna <const_set-824> <CS MEDIUM (array)>
+          #nodyna <const_set-824> <CS MODERATE (array)>
           const_set klass.name.gsub('::', '_'), delegate
           cache[klass] = delegate
         end

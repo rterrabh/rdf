@@ -302,9 +302,9 @@ class FPM::Command < Clamp::Command
         flag_given = instance_variable_defined?("@#{attr}")
         input.attributes["#{attr}_given?".to_sym] = flag_given
         attr = "#{attr}?" if !respond_to?(attr) # handle boolean :flag cases
-        #nodyna <send-2796> <SD COMLEX (change-prone variable)>
+        #nodyna <send-2796> <SD COMPLEX (change-prone variables)>
         input.attributes[attr.to_sym] = send(attr) if respond_to?(attr)
-        #nodyna <send-2797> <SD COMPLEX (change-prone variable)>
+        #nodyna <send-2797> <SD COMPLEX (change-prone variables)>
         logger.debug("Setting attribute", attr.to_sym => send(attr))
       end
     end
@@ -336,13 +336,13 @@ class FPM::Command < Clamp::Command
     end
 
     set = proc do |object, attribute|
-      #nodyna <send-2798> <SD MODERATE (change-prone variable)>
-      #nodyna <send-2799> <SD MODERATE (change-prone variable)>
-      #nodyna <send-2800> <SD MODERATE (change-prone variable)>
+      #nodyna <send-2798> <SD MODERATE (change-prone variables)>
+      #nodyna <send-2799> <SD MODERATE (change-prone variables)>
+      #nodyna <send-2800> <SD MODERATE (change-prone variables)>
       if object.send(attribute).nil? || send(attribute) != send("default_#{attribute}")
         logger.info("Setting from flags: #{attribute}=#{send(attribute)}")
-        #nodyna <send-2802> <SD MODERATE (change-prone variable)>
-        #nodyna <send-2803> <SD MODERATE (change-prone variable)>
+        #nodyna <send-2802> <SD MODERATE (change-prone variables)>
+        #nodyna <send-2803> <SD MODERATE (change-prone variables)>
         object.send("#{attribute}=", send(attribute))
       end
     end
@@ -378,7 +378,7 @@ class FPM::Command < Clamp::Command
 
     script_errors = []
     setscript = proc do |scriptname|
-      #nodyna <send-2804> <SD MODERATE (change-prone variable)>
+      #nodyna <send-2804> <SD MODERATE (change-prone variables)>
       path = self.send(scriptname)
       next if path.nil?
 
@@ -410,7 +410,7 @@ class FPM::Command < Clamp::Command
     if template_scripts?
       template_value_list.each do |key, value|
         #nodyna <define_method-2805> <DM COMPLEX (array)>
-        #nodyna <send-2806> <SD MODERATE (private access)>
+        #nodyna <send-2806> <SD MODERATE (private methods)>
         (class << output; self; end).send(:define_method, key) { value }
       end
     end

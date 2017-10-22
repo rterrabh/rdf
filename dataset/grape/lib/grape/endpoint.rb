@@ -25,7 +25,7 @@ module Grape
           fail NameError.new("method #{method_name.inspect} already exists and cannot be used as an unbound method name")
         end
 
-        #nodyna <define_method-2826> <DM COMPLEX (event)>
+        #nodyna <define_method-2826> <DM COMPLEX (events)>
         define_method(method_name, &block)
         method = instance_method(method_name)
         remove_method(method_name)
@@ -285,7 +285,7 @@ module Grape
     def helpers
       mod = Module.new
       (namespace_stackable(:helpers) || []).each do |mod_to_include|
-        #nodyna <send-2827> <SD TRIVIAL (public method)>
+        #nodyna <send-2827> <SD TRIVIAL (public methods)>
         mod.send :include, mod_to_include
       end
       mod

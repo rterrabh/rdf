@@ -73,7 +73,7 @@ class Hbc::CLI
     elsif command.to_s.include?('/') and require? command.to_s
       sym = Pathname.new(command.to_s).basename('.rb').to_s.capitalize
       klass = begin
-                #nodyna <const_get-2865> <CG COMPLEX (change-prone variables)>
+                #nodyna <const_get-2865> <CG COMPLEX (change-prone variable)>
                 Hbc::CLI.const_get(sym)
               rescue NameError => e
                 nil

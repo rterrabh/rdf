@@ -14,7 +14,7 @@ module Grape
       end
 
       def [](index)
-        #nodyna <send-2829> <SD COMPLEX (change-prone variable)>
+        #nodyna <send-2829> <SD COMPLEX (change-prone variables)>
         send index
       end
 

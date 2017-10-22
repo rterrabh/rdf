@@ -109,7 +109,7 @@ module IRB # :nodoc:
             ExtendCommand::#{cmd_class}.execute(irb_context, \#{args})
               end
             ], nil, __FILE__, line
-            #nodyna <send-2209> <SD MODERATE (change-prone variable)>
+            #nodyna <send-2209> <SD MODERATE (change-prone variables)>
             send :#{cmd_name}, *opts, &b
           end
         ], nil, __FILE__, line
@@ -188,7 +188,7 @@ module IRB # :nodoc:
           #nodyna <module_eval-2213> <ME MODERATE (block execution)>
           Context.module_eval {remove_method(:#{cmd_name})}
           require "#{load_file}"
-          #nodyna <send-2214> <SD MODERATE (change-prone variable)>
+          #nodyna <send-2214> <SD MODERATE (change-prone variables)>
           send :#{cmd_name}, *opts, &b
         end
         for ali in aliases
@@ -212,7 +212,7 @@ module IRB # :nodoc:
         def #{base_method}(*opts)
           #nodyna <send-2216> <SD>
           send :#{extend_method}, *opts
-          #nodyna <send-2217> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2217> <SD COMPLEX (change-prone variables)>
           send :#{alias_name}, *opts
         end
       ]
@@ -227,9 +227,9 @@ module IRB # :nodoc:
       module_eval %[
         alias_method alias_name, base_method
         def #{base_method}(*opts)
-          #nodyna <send-2219> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2219> <SD COMPLEX (change-prone variables)>
           send :#{alias_name}, *opts
-          #nodyna <send-2220> <SD COMPLEX (change-prone variable)>
+          #nodyna <send-2220> <SD COMPLEX (change-prone variables)>
           send :#{extend_method}, *opts
         end
       ]

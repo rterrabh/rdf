@@ -13,7 +13,7 @@ class Hbc::DSL::Container
     pairs.each do |key, value|
       raise "invalid container key: '#{key.inspect}'" unless VALID_KEYS.include?(key)
       writer_method = "#{key}=".to_sym
-      #nodyna <send-2852> <SD COMPLEX (change-prone variable)>
+      #nodyna <send-2852> <SD COMPLEX (change-prone variables)>
       send(writer_method, value)
     end
   end

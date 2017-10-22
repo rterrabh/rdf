@@ -82,7 +82,7 @@ module Pod
 
       def spec_sets
         @spec_sets ||= begin
-          #nodyna <send-2704> <SD TRIVIAL (public functions)>
+          #nodyna <send-2704> <SD TRIVIAL (public methods)>
           analyzer.send(:update_repositories) unless config.skip_repo_update?
           aggregate = Source::Aggregate.new(analyzer.sources.map(&:repo))
           installed_pods.map do |pod_name|

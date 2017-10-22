@@ -13,8 +13,8 @@ module Vagrant
           [self, other].each do |obj|
             obj.instance_variables.each do |key|
               if !key.to_s.start_with?("@__")
-                #nodyna <instance_variable_get-3072> <IVG MODERATE (change-prone variables)>
-                #nodyna <instance_variable_set-3073> <IVS MODERATE (change-prone variables)>
+                #nodyna <instance_variable_get-3072> <IVG MODERATE (change-prone variable)>
+                #nodyna <instance_variable_set-3073> <IVS MODERATE (change-prone variable)>
                 result.instance_variable_set(key, obj.instance_variable_get(key))
               end
             end
@@ -36,7 +36,7 @@ module Vagrant
 
         def instance_variables_hash
           instance_variables.inject({}) do |acc, iv|
-            #nodyna <instance_variable_get-3075> <IVG COMPLEX (change-prone variables)>
+            #nodyna <instance_variable_get-3075> <IVG COMPLEX (change-prone variable)>
             acc[iv.to_s[1..-1]] = instance_variable_get(iv)
             acc
           end

@@ -7,7 +7,7 @@ module ActiveSupport
     end
 
     def self.extended(base) #:nodoc:
-      #nodyna <instance_variable_set-1134> <IVS COMPLEX (define variable)>
+      #nodyna <instance_variable_set-1134> <IVS COMPLEX (variable definition)>
       base.instance_variable_set(:@_dependencies, [])
     end
 

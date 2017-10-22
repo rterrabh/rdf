@@ -20,42 +20,42 @@ describe HuginnScheduler do
   it "should run scheduled agents" do
     mock(Agent).run_schedule('every_1h')
     mock.instance_of(IO).puts('Queuing schedule for every_1h')
-    #nodyna <send-2878> <SD EASY (private access)>
+    #nodyna <send-2878> <SD EASY (private methods)>
     @scheduler.send(:run_schedule, 'every_1h')
   end
 
   it "should propagate events" do
     mock(Agent).receive!
     stub.instance_of(IO).puts
-    #nodyna <send-2879> <SD EASY (private access)>
+    #nodyna <send-2879> <SD EASY (private methods)>
     @scheduler.send(:propagate!)
   end
 
   it "schould clean up expired events" do
     mock(Event).cleanup_expired!
     stub.instance_of(IO).puts
-    #nodyna <send-2880> <SD EASY (private access)>
+    #nodyna <send-2880> <SD EASY (private methods)>
     @scheduler.send(:cleanup_expired_events!)
   end
 
   describe "#hour_to_schedule_name" do
     it "for 0h" do
-      #nodyna <send-2881> <SD EASY (private access)>
+      #nodyna <send-2881> <SD EASY (private methods)>
       expect(@scheduler.send(:hour_to_schedule_name, 0)).to eq('midnight')
     end
 
     it "for the forenoon" do
-      #nodyna <send-2882> <SD EASY (private access)>
+      #nodyna <send-2882> <SD EASY (private methods)>
       expect(@scheduler.send(:hour_to_schedule_name, 6)).to eq('6am')
     end
 
     it "for 12h" do
-      #nodyna <send-2883> <SD EASY (private access)>
+      #nodyna <send-2883> <SD EASY (private methods)>
       expect(@scheduler.send(:hour_to_schedule_name, 12)).to eq('noon')
     end
 
     it "for the afternoon" do
-      #nodyna <send-2884> <SD EASY (private access)>
+      #nodyna <send-2884> <SD EASY (private methods)>
       expect(@scheduler.send(:hour_to_schedule_name, 17)).to eq('5pm')
     end
   end
@@ -69,9 +69,9 @@ describe HuginnScheduler do
     end
 
     it "work with set FAILED_JOBS_TO_KEEP env variable", focus: true do
-      #nodyna <send-2885> <SD EASY (private access)>
+      #nodyna <send-2885> <SD EASY (private methods)>
       expect { @scheduler.send(:cleanup_failed_jobs!) }.to change(Delayed::Job, :count).by(-1)
-      #nodyna <send-2886> <SD EASY (private access)>
+      #nodyna <send-2886> <SD EASY (private methods)>
       expect { @scheduler.send(:cleanup_failed_jobs!) }.to change(Delayed::Job, :count).by(0)
       expect(@keep.id).to eq(Delayed::Job.order(:failed_at)[0].id)
     end
@@ -80,7 +80,7 @@ describe HuginnScheduler do
     it "work without the FAILED_JOBS_TO_KEEP env variable" do
       old = ENV['FAILED_JOBS_TO_KEEP']
       ENV['FAILED_JOBS_TO_KEEP'] = nil
-      #nodyna <send-2887> <SD EASY (private access)>
+      #nodyna <send-2887> <SD EASY (private methods)>
       expect { @scheduler.send(:cleanup_failed_jobs!) }.to change(Delayed::Job, :count).by(0)
       ENV['FAILED_JOBS_TO_KEEP'] = old
     end

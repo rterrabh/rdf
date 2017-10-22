@@ -37,7 +37,7 @@ module Docs
 
   def self.find(name)
     const = name.camelize
-    #nodyna <const_get-2732> <CG COMPLEX (change-prone variables)>
+    #nodyna <const_get-2732> <CG COMPLEX (change-prone variable)>
     const_get(const)
   rescue NameError => error
     if error.name.to_s == const

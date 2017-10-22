@@ -16,7 +16,7 @@ module RSS
       super
 
       klass.install_must_call_validator(SY_PREFIX, SY_URI)
-      #nodyna <module_eval-2094> <CE COMPLEX (block execution)>
+      #nodyna <module_eval-2094> <ME COMPLEX (block execution)>
       klass.module_eval do
         [
           ["updatePeriod"],

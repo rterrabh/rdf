@@ -10,7 +10,7 @@ module CanCan
       end
 
       def self.matches_condition?(subject, name, value)
-        #nodyna <send-2617> <SD COMPLEX (change-prone variable)>
+        #nodyna <send-2617> <SD COMPLEX (change-prone variables)>
         subject_value = subject.send(name.column)
         if name.method.to_s.ends_with? "_any"
           value.any? { |v| meta_where_match? subject_value, name.method.to_s.sub("_any", ""), v }
@@ -133,7 +133,7 @@ module CanCan
       end
 
       def sanitize_sql(conditions)
-        #nodyna <send-2618> <SD EASY (private access)>
+        #nodyna <send-2618> <SD EASY (private methods)>
         @model_class.send(:sanitize_sql, conditions)
       end
 

@@ -236,7 +236,7 @@ module ActionView
         #nodyna <class_eval-1212> <CE MODERATE (define methods)>
         class_eval <<-RUBY_EVAL, __FILE__, __LINE__ + 1
           def #{selector}(method, options = {})  # def text_field(method, options = {})
-            #nodyna <send-1213> <SD COMPLEX (change-prone variable)>
+            #nodyna <send-1213> <SD COMPLEX (change-prone variables)>
             @template.send(                      #   @template.send(
               @object_name,                      #     @object_name,
               method,                            #     method,

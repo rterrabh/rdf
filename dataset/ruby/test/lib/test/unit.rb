@@ -220,7 +220,7 @@ module Test
 
       def non_options(files, options)
         if options.delete(:gc_stress)
-          #nodyna <class_eval-1426> <CE MODERATE (define method)>
+          #nodyna <class_eval-1426> <CE MODERATE (define methods)>
           MiniTest::Unit::TestCase.class_eval do
             oldrun = instance_method(:run)
             #nodyna <define_method-1427> <DM MODERATE (events)>

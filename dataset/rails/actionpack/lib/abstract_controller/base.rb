@@ -30,7 +30,7 @@ module AbstractController
 
       def inherited(klass) # :nodoc:
         unless klass.instance_variable_defined?(:@abstract)
-          #nodyna <instance_variable_set-1315> <IVS COMPLEX (define variable)>
+          #nodyna <instance_variable_set-1315> <IVS COMPLEX (variable definition)>
           klass.instance_variable_set(:@abstract, false)
         end
         super

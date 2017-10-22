@@ -60,7 +60,7 @@ module Spree
             h
           when Array
             key
-          #nodyna <const_get-2355> <CG MODERATE (change-prone variables)>
+          #nodyna <const_get-2355> <CG MODERATE (change-prone variable)>
           else Resources.const_get(key.to_s.upcase)
         end
 

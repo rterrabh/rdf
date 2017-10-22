@@ -9,7 +9,7 @@ module OpenSSL
           super(cipher_name)
         }
       }
-      #nodyna <const_set-1505> <CS MEDIUM (array)>
+      #nodyna <const_set-1505> <CS MODERATE (array)>
       const_set(name, klass)
     }
 
@@ -22,7 +22,7 @@ module OpenSSL
           super(cipher_name)
         }
       }
-      #nodyna <const_set-1507> <CS MEDIUM (array)>
+      #nodyna <const_set-1507> <CS MODERATE (array)>
       const_set("AES#{keylen}", klass)
     }
 

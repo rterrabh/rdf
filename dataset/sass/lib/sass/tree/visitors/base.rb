@@ -1,7 +1,7 @@
 module Sass::Tree::Visitors
   class Base
     def self.visit(root)
-      #nodyna <send-2989> <SD EASY (private access)>
+      #nodyna <send-2989> <SD EASY (private methods)>
       new.send(:visit, root)
     end
 

@@ -24,7 +24,7 @@ module FormConfigurable
 
   def complete_option(method)
     if self.respond_to? "complete_#{method}".to_sym
-      #nodyna <send-2930> <SD COMPLEX (change-prone variable)>
+      #nodyna <send-2930> <SD COMPLEX (change-prone variables)>
       self.send("complete_#{method}".to_sym)
     end
   end

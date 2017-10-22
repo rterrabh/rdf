@@ -113,7 +113,7 @@ class Sass::Tree::Visitors::Cssize < Sass::Tree::Visitors::Base
 
     result = node.children.dup
     if !node.resolved_value.empty? || node.children.empty?
-      #nodyna <send-2996> <SD EASY (private access)>
+      #nodyna <send-2996> <SD EASY (private methods)>
       node.send(:check!)
       result.unshift(node)
     end

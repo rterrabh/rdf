@@ -3493,7 +3493,7 @@ end
 if MultiTkIp::WITH_RUBY_VM &&
     ! MultiTkIp::RUN_EVENTLOOP_ON_MAIN_THREAD ### check Ruby 1.9 !!!!!!!
   class MultiTkIp
-    #nodyna <instance_variable_get-1750> <IVS MODERATE (private access)>
+    #nodyna <instance_variable_get-1750> <IVG MODERATE (private access)>
     INTERP_THREAD = @@DEFAULT_MASTER.instance_variable_get('@interp_thread')
     INTERP_THREAD_STATUS = INTERP_THREAD[:status]
     INTERP_MUTEX  = INTERP_THREAD[:mutex]

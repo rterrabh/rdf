@@ -108,7 +108,7 @@ module CarrierWave
           if(condition.respond_to?(:call))
             condition.call(self, :version => name, :file => file)
           else
-            #nodyna <send-2683> <SD COMPLEX (change-prone variable)>
+            #nodyna <send-2683> <SD COMPLEX (change-prone variables)>
             send(condition, file)
           end
         else
@@ -165,7 +165,7 @@ module CarrierWave
         active_versions.each do |name, v|
           next if v.cached?
 
-          #nodyna <send-2684> <SD EASY (private access)>
+          #nodyna <send-2684> <SD EASY (private methods)>
           v.send(:cache_id=, cache_id)
           if self.class.versions[name][:options] && self.class.versions[name][:options][:from_version]
             unless versions[self.class.versions[name][:options][:from_version]].cached?

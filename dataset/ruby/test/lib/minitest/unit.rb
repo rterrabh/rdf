@@ -647,7 +647,7 @@ module MiniTest
 
 
     def _run_anything type
-      #nodyna <send-1443> <SD MODERATE (change-prone variable)>
+      #nodyna <send-1443> <SD MODERATE (change-prone variables)>
       suites = TestCase.send "#{type}_suites"
       return if suites.empty?
 
@@ -692,13 +692,13 @@ module MiniTest
 
     def _run_suite suite, type
       header = "#{type}_suite_header"
-      #nodyna <send-1444> <SD MODERATE (change-prone variable)>
+      #nodyna <send-1444> <SD MODERATE (change-prone variables)>
       puts send(header, suite) if respond_to? header
 
       filter = options[:filter] || '/./'
       filter = Regexp.new $1 if filter =~ /\/(.*)\//
 
-      #nodyna <send-1445> <SD MODERATE (change-prone variable)>
+      #nodyna <send-1445> <SD MODERATE (change-prone variables)>
       all_test_methods = suite.send "#{type}_methods"
 
       filtered_test_methods = all_test_methods.find_all { |m|

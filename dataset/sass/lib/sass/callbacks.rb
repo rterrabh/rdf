@@ -1,7 +1,7 @@
 module Sass
   module Callbacks
     def self.extended(base)
-      #nodyna <send-2970> <SD TRIVIAL (public functions)>
+      #nodyna <send-2970> <SD TRIVIAL (public methods)>
       base.send(:include, InstanceMethods)
     end
 

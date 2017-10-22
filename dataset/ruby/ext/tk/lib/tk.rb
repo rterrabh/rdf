@@ -344,10 +344,10 @@ if USE_TCLs_LIST_FUNCTIONS
       else # without encoding
         if dst_enc.kind_of?(String)
           ret = _fromUTF8(ret, dst_enc)
-          #nodyna <instance_variable_set-1674> <IVG MODERATE (private access)>
+          #nodyna <instance_variable_set-1674> <IVS MODERATE (private access)>
           ret.instance_variable_set(:@encoding, dst_enc)
         else
-          #nodyna <instance_variable_set-1675> <IVG MODERATE(private access)>
+          #nodyna <instance_variable_set-1675> <IVS MODERATE (private access)>
           ret.instance_variable_set(:@encoding, 'utf-8')
         end
       end
@@ -1444,7 +1444,7 @@ EOS
         if TkCore::WITH_ENCODING
           msg.force_encoding('utf-8')
         else
-          #nodyna <instance_variable_set-1683> <IVG MODERATE (private access)>
+          #nodyna <instance_variable_set-1683> <IVS MODERATE (private access)>
           msg.instance_variable_set(:@encoding, 'utf-8')
         end
       rescue Exception
@@ -2512,12 +2512,12 @@ if (/^(8\.[1-9]|9\.|[1-9][0-9])/ =~ Tk::TCL_VERSION && !Tk::JAPANIZED_TK)
           if str.kind_of?(Tk::EncodedString)
             str.__instance_variable_set('@encoding', nil)
           else
-            #nodyna <instance_variable_set-1701> <IVG MODERATE (private access)>
+            #nodyna <instance_variable_set-1701> <IVS MODERATE (private access)>
             str.instance_variable_set('@encoding', nil)
           end
           str.force_encoding('binary')
         else
-          #nodyna <instance_variable_set-1702> <IVG MODERATE (private access)>
+          #nodyna <instance_variable_set-1702> <IVS MODERATE (private access)>
           str.instance_variable_set('@encoding', 'binary')
         end
         ret = TkCore::INTERP._invoke_without_enc('encoding', 'convertfrom',

@@ -67,7 +67,7 @@ module Devise
           mod = Devise::Models.const_get(m.to_s.classify)
 
           if mod.const_defined?("ClassMethods")
-            #nodyna <const_get-2764> <CG COMPLEX (static values)>
+            #nodyna <const_get-2764> <CG TRIVIAL (static values)>
             class_mod = mod.const_get("ClassMethods")
             extend class_mod
 

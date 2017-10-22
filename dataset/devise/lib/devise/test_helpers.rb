@@ -1,7 +1,7 @@
 module Devise
   module TestHelpers
     def self.included(base)
-      #nodyna <class_eval-2781> <CE MODERATE (private methods)>
+      #nodyna <class_eval-2781> <CE MODERATE (block execution)>
       base.class_eval do
         setup :setup_controller_for_warden, :warden if respond_to?(:setup)
       end

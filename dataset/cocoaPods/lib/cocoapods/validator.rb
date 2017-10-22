@@ -39,7 +39,7 @@ module Pod
       perform_linting
       perform_extensive_analysis(a_spec) if a_spec && !quick
 
-      #nodyna <send-2686> <SD MODERATE (change-prone variable)>
+      #nodyna <send-2686> <SD MODERATE (change-prone variables)>
       UI.puts ' -> '.send(result_color) << (a_spec ? a_spec.to_s : file.basename.to_s)
       print_results
       validated?
@@ -162,7 +162,7 @@ module Pod
       validate_documentation_url(spec)
       validate_docset_url(spec)
 
-      #nodyna <send-2687> <SD MODERATE (change-prone variable)>
+      #nodyna <send-2687> <SD MODERATE (change-prone variables)>
       valid = spec.available_platforms.send(fail_fast ? :all? : :each) do |platform|
         UI.message "\n\n#{spec} - Analyzing on #{platform} platform.".green.reversed
         @consumer = spec.consumer(platform)
@@ -183,7 +183,7 @@ module Pod
     end
 
     def perform_extensive_subspec_analysis(spec)
-      #nodyna <send-2688> <SD MODERATE (change-prone variable)>
+      #nodyna <send-2688> <SD MODERATE (change-prone variables)>
       spec.subspecs.send(fail_fast ? :all? : :each) do |subspec|
         @subspec_name = subspec.name
         perform_extensive_analysis(subspec)
@@ -365,7 +365,7 @@ module Pod
     end
 
     def _validate_header_files(attr_name)
-      #nodyna <send-2694> <SD MODERATE (change-prone variable)>
+      #nodyna <send-2694> <SD MODERATE (change-prone variables)>
       non_header_files = file_accessor.send(attr_name).
         select { |f| !Sandbox::FileAccessor::HEADER_EXTENSIONS.include?(f.extname) }.
         map { |f| f.relative_path_from file_accessor.root }

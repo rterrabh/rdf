@@ -52,7 +52,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       end.to raise_error(StandardError, 'some error')
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
-      #nodyna <send-2643> <SD EASY (private access)>
+      #nodyna <send-2643> <SD EASY (private methods)>
       expect(@session.send(:scopes)).to eq([nil])
     end
 
@@ -65,7 +65,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       end.to raise_error(Capybara::ScopeError)
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
-      #nodyna <send-2644> <SD EASY (private access)>
+      #nodyna <send-2644> <SD EASY (private methods)>
       expect(@session.send(:scopes)).to eq([nil])
     end
 
@@ -81,7 +81,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       end.to raise_error(@session.driver.no_such_window_error)
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
-      #nodyna <send-2645> <SD EASY (private access)>
+      #nodyna <send-2645> <SD EASY (private methods)>
       expect(@session.send(:scopes)).to eq([nil])
     end
   end
@@ -111,7 +111,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
       end.to raise_error(Capybara::WindowError, "Could not find a window matching block/lambda")
       expect(@session.current_window).to eq(@window)
       expect(@session).to have_css('#doesNotOpenWindows')
-      #nodyna <send-2646> <SD EASY (private access)>
+      #nodyna <send-2646> <SD EASY (private methods)>
       expect(@session.send(:scopes)).to eq([nil])
     end
 
@@ -129,7 +129,7 @@ Capybara::SpecHelper.spec '#within_window', requires: [:windows] do
         end
       end.to raise_error(StandardError, 'some error')
       expect(@session.current_window).to eq(@window)
-      #nodyna <send-2647> <SD EASY (private access)>
+      #nodyna <send-2647> <SD EASY (private methods)>
       expect(@session.send(:scopes)).to eq([nil])
     end
   end

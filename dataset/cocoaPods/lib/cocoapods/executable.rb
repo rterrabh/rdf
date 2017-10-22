@@ -1,12 +1,12 @@
 module Pod
   module Executable
     def executable(name)
-      #nodyna <define_method-2695> <DM MODERATE (event)>
+      #nodyna <define_method-2695> <DM COMPLEX (events)>
       define_method(name) do |*command|
         Executable.execute_command(name, Array(command).flatten, false)
       end
 
-      #nodyna <define_method-2696> <DM MODERATE (event)>
+      #nodyna <define_method-2696> <DM COMPLEX (events)>
       define_method(name.to_s + '!') do |*command|
         Executable.execute_command(name, Array(command).flatten, true)
       end
