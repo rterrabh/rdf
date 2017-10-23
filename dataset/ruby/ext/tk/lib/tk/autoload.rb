@@ -401,7 +401,7 @@ class << Tk
   end
   def replace_topalias(sym, obj) #=> old_obj (alias_filename or object) or nil
     if old_obj = topalias_defined?(sym)
-      #nodyna <module_eval-1866> <CE MODERATE (block execution)>
+      #nodyna <module_eval-1866> <ME MODERATE (block execution)>
       Tk::TOPLEVEL_ALIASES.module_eval{remove_const sym} rescue nil #ignore err
     end
     define_topalias(sym, obj)

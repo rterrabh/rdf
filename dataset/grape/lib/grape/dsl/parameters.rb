@@ -12,7 +12,7 @@ module Grape
           params_block = named_params.fetch(name) do
             fail "Params :#{name} not found!"
           end
-          #nodyna <instance_exec-2817> <IEX COMPLEX (block execution with parameters)>
+          #nodyna <instance_exec-2817> <IEX COMPLEX (block with parameters)>
           instance_exec(options, &params_block)
         end
       end

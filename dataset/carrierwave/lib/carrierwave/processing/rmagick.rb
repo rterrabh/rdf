@@ -130,7 +130,7 @@ module CarrierWave
       return nil unless options
       assignments = options.map { |k, v| "self.#{k} = #{v}" }
       code = "lambda { |img| " + assignments.join(";") + "}"
-      #nodyna <eval-2664> <EV COMPLEX (change-prone variable)>
+      #nodyna <eval-2664> <EV COMPLEX (change-prone variables)>
       eval code
     end
 

@@ -18,7 +18,7 @@ module LiquidDroppable
   end
 
   included do
-    #nodyna <const_set-2939> <CS COMPLEX (static values)>
+    #nodyna <const_set-2939> <CS TRIVIAL (static values)>
     const_set :Drop,
               if Kernel.const_defined?(drop_name = "#{name}Drop")
                 #nodyna <const_get-2940> <CG COMPLEX (change-prone variable)>

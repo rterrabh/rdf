@@ -52,10 +52,10 @@ module Grape
 
       def exec_handler(e, &handler)
         if handler.lambda? && handler.arity == 0
-          #nodyna <instance_exec-2809> <IEX COMPLEX (block execution without parameters)>
+          #nodyna <instance_exec-2809> <IEX COMPLEX (block without parameters)>
           instance_exec(&handler)
         else
-          #nodyna <instance_exec-2810> <IEX COMPLEX (block execution with parameters)>
+          #nodyna <instance_exec-2810> <IEX COMPLEX (block with parameters)>
           instance_exec(e, &handler)
         end
       end

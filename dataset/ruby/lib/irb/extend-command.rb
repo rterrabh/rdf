@@ -210,7 +210,7 @@ module IRB # :nodoc:
       module_eval %[
         alias_method alias_name, base_method
         def #{base_method}(*opts)
-          #nodyna <send-2216> <SD>
+          #nodyna <send-2216> <SD COMPLEX (change-prone variables)>
           send :#{extend_method}, *opts
           #nodyna <send-2217> <SD COMPLEX (change-prone variables)>
           send :#{alias_name}, *opts

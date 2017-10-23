@@ -16,11 +16,11 @@ module AssignableTypes
 
   module ClassMethods
     def load_types_in(module_name, my_name = module_name.singularize)
-      #nodyna <const_set-2932> <CS COMPLEX (static values)>
+      #nodyna <const_set-2932> <CS COMPLEX (change-prone variable)>
       const_set(:MODULE_NAME, module_name)
-      #nodyna <const_set-2933> <CS COMPLEX (static values)>
+      #nodyna <const_set-2933> <CS COMPLEX (change-prone variable)>
       const_set(:BASE_CLASS_NAME, my_name)
-      #nodyna <const_set-2934> <CS COMPLEX (static values)>
+      #nodyna <const_set-2934> <CS COMPLEX (change-prone variable)>
       const_set(:TYPES, Dir[Rails.root.join("app", "models", module_name.underscore, "*.rb")].map { |path| module_name + "::" + File.basename(path, ".rb").camelize })
     end
 

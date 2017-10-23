@@ -117,7 +117,7 @@ class DocsDocTest < MiniTest::Spec
 
     it "includes the doc's name, slug, type, version, index_path and db_path" do
       %w(name slug type version index_path db_path links).each do |attribute|
-        #nodyna <eval-2714> <EV MODERATE (array)>
+        #nodyna <eval-2714> <EV MODERATE (change-prone variables)>
         eval "stub(doc).#{attribute} { attribute }"
         assert_equal attribute, doc.as_json[attribute.to_sym]
       end

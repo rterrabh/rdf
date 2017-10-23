@@ -12,7 +12,7 @@ module Grape
           end
 
           def configure(&block)
-            #nodyna <instance_exec-2830> <IEX COMPLEX (block execution without parameters)>
+            #nodyna <instance_exec-2830> <IEX COMPLEX (block without parameters)>
             config_context.instance_exec(&block)
           end
         end
@@ -65,7 +65,7 @@ module Grape
 
             #nodyna <define_method-2835> <DM COMPLEX (events)>
             define_method key do |&block|
-              #nodyna <instance_exec-2836> <IEX COMPLEX (block execution without parameters)>
+              #nodyna <instance_exec-2836> <IEX COMPLEX (block without parameters)>
               #nodyna <send-2837> <SD COMPLEX (change-prone variables)>
               send("#{key}_context").instance_exec(&block)
             end

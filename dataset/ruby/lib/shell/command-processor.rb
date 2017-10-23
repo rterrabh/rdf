@@ -377,11 +377,11 @@ class Shell
       if Shell.method_defined?(id)
         Shell.notify "warn: override definition of Shell##{name}."
         Shell.notify "warn: alias Shell##{name} to Shell##{name}_org.\n"
-        #nodyna <module_eval-2145> <MD COMPLEX (define methods)>
+        #nodyna <module_eval-2145> <ME COMPLEX (define methods)>
         Shell.module_eval "alias #{name}_org #{name}"
       end
       Shell.notify "method added: Shell##{name}.", Shell.debug?
-      #nodyna <module_eval-2146> <MD COMPLEX (define methods)>
+      #nodyna <module_eval-2146> <ME COMPLEX (define methods)>
       Shell.module_eval(%Q[def #{name}(*args, &block)
                             begin
                               @command_processor.__send__(:#{name}, *args, &block)
@@ -395,11 +395,11 @@ class Shell
       if Shell::Filter.method_defined?(id)
         Shell.notify "warn: override definition of Shell::Filter##{name}."
         Shell.notify "warn: alias Shell##{name} to Shell::Filter##{name}_org."
-        #nodyna <module_eval-2148> <MD COMPLEX (define methods)>
+        #nodyna <module_eval-2148> <ME COMPLEX (define methods)>
         Filter.module_eval "alias #{name}_org #{name}"
       end
       Shell.notify "method added: Shell::Filter##{name}.", Shell.debug?
-      #nodyna <module_eval-2149> <MD COMPLEX (define methods)>
+      #nodyna <module_eval-2149> <ME COMPLEX (define methods)>
       Filter.module_eval(%Q[def #{name}(*args, &block)
                             begin
                               self | @shell.__send__(:#{name}, *args, &block)
