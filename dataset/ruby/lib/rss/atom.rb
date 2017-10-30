@@ -71,7 +71,7 @@ module RSS
       class  << self
         def append_features(klass)
           super
-          #nodyna <class_eval-2090> <CE COMPLEX (block execution)>
+          #nodyna <class_eval-2090> <CE COMPLEX (private access)>
           klass.class_eval do
             @content_type = [nil, :uri]
             include(ContentModel)
@@ -83,7 +83,7 @@ module RSS
     module TextConstruct
       def self.append_features(klass)
         super
-        #nodyna <class_eval-2091> <CE COMPLEX (block execution)>
+        #nodyna <class_eval-2091> <CE COMPLEX (define methods)>
         klass.class_eval do
           [
            ["type", ""],
@@ -187,7 +187,7 @@ module RSS
     module DateConstruct
       def self.append_features(klass)
         super
-        #nodyna <class_eval-2093> <CE COMPLEX (block execution)>
+        #nodyna <class_eval-2093> <CE COMPLEX (private access)>
         klass.class_eval do
           @content_type = :w3cdtf
           include(ContentModel)

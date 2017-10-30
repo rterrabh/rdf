@@ -275,9 +275,9 @@ class Shell
     def self.undef_system_command(command)
       command = command.id2name if command.kind_of?(Symbol)
       remove_method(command)
-      #nodyna <module_eval-2140> <ME MODERATE (block execution)>
+      #nodyna <module_eval-2140> <ME MODERATE (private access)>
       Shell.module_eval{remove_method(command)}
-      #nodyna <module_eval-2141> <ME MODERATE (block execution)>
+      #nodyna <module_eval-2141> <ME MODERATE (private access)>
       Filter.module_eval{remove_method(command)}
       self
     end
@@ -395,7 +395,7 @@ class Shell
       if Shell::Filter.method_defined?(id)
         Shell.notify "warn: override definition of Shell::Filter##{name}."
         Shell.notify "warn: alias Shell##{name} to Shell::Filter##{name}_org."
-        #nodyna <module_eval-2148> <ME COMPLEX (define methods)>
+        #nodyna <module_eval-2148> <ME COMPLEX (block execution)>
         Filter.module_eval "alias #{name}_org #{name}"
       end
       Shell.notify "method added: Shell::Filter##{name}.", Shell.debug?

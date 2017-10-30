@@ -128,7 +128,7 @@ if(ARGV.size >= 0)
 #  files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
 
   #rails
-  files_to_research << "../dataset/rails/**/lib/**/*.rb"
+#  files_to_research << "../dataset/rails/**/lib/**/*.rb"
 
   #rails_admin
 #  files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"

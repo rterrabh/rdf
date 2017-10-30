@@ -115,7 +115,7 @@ module ActionDispatch
         @app = app
 
         if app.respond_to?(:routes)
-          #nodyna <class_eval-1288> <CE MODERATE (block execution)>
+          #nodyna <class_eval-1288> <CE TRIVIAL (block execution)>
           singleton_class.class_eval do
             include app.routes.url_helpers
             include app.routes.mounted_helpers

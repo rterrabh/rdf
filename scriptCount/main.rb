@@ -2,7 +2,7 @@ require_relative 'StatementsCounter'
 require_relative 'ProjectData'
 require_relative '../util/Util'
 projects = {
-  "Test": ["target.rb"],
+#  "Test": ["target.rb"],
   "Active Admin": ["../dataset/activeadmin/**/lib/**/*.rb"],
   "Diaspora": ["../dataset/diaspora/**/lib/**/*.rb", "../dataset/diaspora/app/**/*.rb", "../dataset/diaspora/config/**/*.rb"],
   "Discourse": ["../dataset/discourse/**/lib/**/*.rb", "../dataset/discourse/app/**/*.rb", "../dataset/discourse/config/**/*.rb"],
@@ -33,16 +33,31 @@ projects = {
   "Whenever": ["../dataset/whenever/**/lib/**/*.rb"]
 }
 
-statements = 0
-dynamicStatements = 0
+general = ProjectData.new
 projects.each do |projectName, dirs|
+  puts "#{"=" * 25}"
   puts "#{projectName}"
+  puts "#{"=" * 25}"
   files = Util.extractFiles(dirs)
   projectData = StatementsCounter.instance.count(files)
   projectData.print
-  statements += projectData.totalStatements
-  dynamicStatements += projectData.totalDynamicStatements
+  general.totalStatements += projectData.totalStatements
+  general.totalDynamicStatements += projectData.totalDynamicStatements
+  general.loc += projectData.loc
+  general.locDynamic += projectData.locDynamic
+  general.totalClasses += projectData.totalClasses
+  general.totalClassesWithMethodMissing += projectData.totalClassesWithMethodMissing
+  general.totalMethods += projectData.totalMethods
+  general.totalMethodsUsingDynamic += projectData.totalMethodsUsingDynamic
+  projectData.dynamicStatements.each do |dynamicStatement, occurences|
+    if(!general.dynamicStatements.has_key?(dynamicStatement))
+      general.dynamicStatements[dynamicStatement] = 0
+    end
+    general.dynamicStatements[dynamicStatement] += occurences
+  end
 end
-puts "Total statements: #{statements}"
-puts "Total Dynamic Statements: #{dynamicStatements}"
+puts "#{"=" * 25}"
+puts "General"
+puts "#{"=" * 25}"
+puts general.print
 

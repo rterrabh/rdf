@@ -17,7 +17,7 @@ class Class
       ivar = "@#{name}"
 
       define_singleton_method("#{name}=") do |val|
-        #nodyna <class_eval-1080> <CE MODERATE (block execution)>
+        #nodyna <class_eval-1080> <CE MODERATE (private access)>
         singleton_class.class_eval do
           remove_possible_method(name)
           #nodyna <define_method-1081> <DM MODERATE (events)>
@@ -25,7 +25,7 @@ class Class
         end
 
         if singleton_class?
-          #nodyna <class_eval-1082> <CE MODERATE (define methods)>
+          #nodyna <class_eval-1082> <CE MODERATE (private access)>
           class_eval do
             remove_possible_method(name)
             #nodyna <define_method-1083> <DM MODERATE (events)>

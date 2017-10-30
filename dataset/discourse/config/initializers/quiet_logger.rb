@@ -1,5 +1,5 @@
 Rails.application.assets.logger = Logger.new('/dev/null')
-#nodyna <class_eval-483> <CE MODERATE (block execution)>
+#nodyna <class_eval-483> <CE MODERATE (define methods)>
 Rails::Rack::Logger.class_eval do
   def call_with_quiet_assets(env)
     previous_level = Rails.logger.level

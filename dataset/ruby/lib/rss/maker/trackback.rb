@@ -46,7 +46,7 @@ module RSS
     end
 
     makers.each do |maker|
-      #nodyna <module_eval-2088> <ME COMPLEX (block execution)>
+      #nodyna <module_eval-2088> <ME COMPLEX (define methods)>
       maker.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         class Items
           class Item

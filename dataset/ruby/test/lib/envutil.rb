@@ -178,7 +178,7 @@ module EnvUtil
   def labeled_module(name, &block)
     Module.new do
       #nodyna <define_method-1458> <DM MODERATE (events)>
-      #nodyna <class_eval-1459> <CE MODERATE (define methods)>
+      #nodyna <class_eval-1459> <CE MODERATE (private access)>
       singleton_class.class_eval {define_method(:to_s) {name}; alias inspect to_s}
       #nodyna <class_eval-1460> <CE COMPLEX (block execution)>
       class_eval(&block) if block
@@ -189,7 +189,7 @@ module EnvUtil
   def labeled_class(name, superclass = Object, &block)
     Class.new(superclass) do
       #nodyna <define_method-1461> <DM MODERATE (events)>
-      #nodyna <class_eval-1462> <CE MODERATE (define methods)>
+      #nodyna <class_eval-1462> <CE MODERATE (private access)>
       singleton_class.class_eval {define_method(:to_s) {name}; alias inspect to_s}
       #nodyna <class_eval-1463> <CE COMPLEX (block execution)>
       class_eval(&block) if block

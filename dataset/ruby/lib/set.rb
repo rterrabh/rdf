@@ -470,7 +470,7 @@ class SortedSet < Set
           end
         END
       end
-      #nodyna <module_eval-1995> <ME MODERATE (block execution)>
+      #nodyna <module_eval-1995> <ME MODERATE (private access)>
       module_eval {
         remove_method :old_init
       }

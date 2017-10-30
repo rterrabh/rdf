@@ -270,7 +270,7 @@ module TkOptionDB
     if parent.kind_of?(Class) && parent <= @@resource_proc_class
       cmd_klass = Class.new(parent)
     else
-      #nodyna <module_eval-1819> <ME COMPLEX (block execution)>
+      #nodyna <module_eval-1819> <ME COMPLEX (private access)>
       cmd_klass = Class.new(TkOptionDB.module_eval('@@resource_proc_class'))
     end
     #nodyna <const_set-1820> <CS TRIVIAL (static values)>

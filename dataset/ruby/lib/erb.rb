@@ -447,7 +447,7 @@ class ERB
   def def_method(mod, methodname, fname='(ERB)')
     src = self.src
     magic_comment = "#coding:#{@encoding}\n"
-    #nodyna <module_eval-2172> <ME COMPLEX (block execution)>
+    #nodyna <module_eval-2172> <ME COMPLEX (private access)>
     mod.module_eval do
       #nodyna <eval-2173> <EV COMPLEX (method definition)>
       eval(magic_comment + "def #{methodname}\n" + src + "\nend\n", binding, fname, -2)

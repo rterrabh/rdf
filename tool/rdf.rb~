@@ -50,99 +50,99 @@ files_to_research = []
 
 
 #activeadmin
-#files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
+files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
 
 #diaspora
-#files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
-#files_to_research << "../dataset/diaspora/app/**/*.rb"
-#files_to_research << "../dataset/diaspora/config/**/*.rb"
+files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
+files_to_research << "../dataset/diaspora/app/**/*.rb"
+files_to_research << "../dataset/diaspora/config/**/*.rb"
 
 #discourse
-#files_to_research << "../dataset/discourse/**/lib/**/*.rb"
-#files_to_research << "../dataset/discourse/app/**/*.rb"
-#files_to_research << "../dataset/discourse/config/**/*.rb"
+files_to_research << "../dataset/discourse/**/lib/**/*.rb"
+files_to_research << "../dataset/discourse/app/**/*.rb"
+files_to_research << "../dataset/discourse/config/**/*.rb"
 
 #gitlab
-#files_to_research << "../dataset/gitlabhq/**/lib/**/*.rb"
-#files_to_research << "../dataset/gitlabhq/app/**/*.rb"
-#files_to_research << "../dataset/gitlabhq/config/**/*.rb"
+files_to_research << "../dataset/gitlabhq/**/lib/**/*.rb"
+files_to_research << "../dataset/gitlabhq/app/**/*.rb"
+files_to_research << "../dataset/gitlabhq/config/**/*.rb"
 
 #homebrew
-#files_to_research << "../dataset/homebrew/**/lib/**/*.rb"
+files_to_research << "../dataset/homebrew/**/lib/**/*.rb"
 
 #paperclip
-#files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
+files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
 
 #rails
 files_to_research << "../dataset/rails/**/lib/**/*.rb"
 
 #rails_admin
-#files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
+files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
 
 #ruby
-#files_to_research << "../dataset/ruby/**/lib/**/*.rb"
+files_to_research << "../dataset/ruby/**/lib/**/*.rb"
 
 #spree
-#files_to_research << "../dataset/spree/**/lib/**/*.rb"
-#files_to_research << "../dataset/spree/api/**/*.rb"
-#files_to_research << "../dataset/spree/backend/**/*.rb"
-#files_to_research << "../dataset/spree/core/**/*.rb"
+files_to_research << "../dataset/spree/**/lib/**/*.rb"
+files_to_research << "../dataset/spree/api/**/*.rb"
+files_to_research << "../dataset/spree/backend/**/*.rb"
+files_to_research << "../dataset/spree/core/**/*.rb"
 
 #cancan
-#files_to_research << "../dataset/cancan/**/lib/**/*.rb"
+files_to_research << "../dataset/cancan/**/lib/**/*.rb"
 
 #capistrano
-#files_to_research << "../dataset/capistrano/**/lib/**/*.rb"
+files_to_research << "../dataset/capistrano/**/lib/**/*.rb"
 
 #capybara
-#files_to_research << "../dataset/capybara/**/lib/**/*.rb"
+files_to_research << "../dataset/capybara/**/lib/**/*.rb"
 
 #carrierwave
-#files_to_research << "../dataset/carrierwave/**/lib/**/*.rb"
+files_to_research << "../dataset/carrierwave/**/lib/**/*.rb"
 
 #cocoapods
-#files_to_research << "../dataset/cocoaPods/**/lib/**/*.rb"
+files_to_research << "../dataset/cocoaPods/**/lib/**/*.rb"
 
 #devdocs
-#files_to_research << "../dataset/devdocs/**/lib/**/*.rb"
+files_to_research << "../dataset/devdocs/**/lib/**/*.rb"
 
 #devise
-#files_to_research << "../dataset/devise/**/lib/**/*.rb"
-#files_to_research << "../dataset/devise/**/app/**/*.rb"
+files_to_research << "../dataset/devise/**/lib/**/*.rb"
+files_to_research << "../dataset/devise/**/app/**/*.rb"
 
 #fpm
-#files_to_research << "../dataset/fpm/**/lib/**/*.rb"
+files_to_research << "../dataset/fpm/**/lib/**/*.rb"
 
 #grape
-#files_to_research << "../dataset/grape/**/lib/**/*.rb"
+files_to_research << "../dataset/grape/**/lib/**/*.rb"
 
 #homebrew-cask
-#files_to_research << "../dataset/homebrew-cask/**/lib/**/*.rb"
+files_to_research << "../dataset/homebrew-cask/**/lib/**/*.rb"
 
 #huginn
-#files_to_research << "../dataset/huginn/**/lib/**/*.rb"
-#files_to_research << "../dataset/huginn/**/app/**/*.rb"
+files_to_research << "../dataset/huginn/**/lib/**/*.rb"
+files_to_research << "../dataset/huginn/**/app/**/*.rb"
 
 #jekyll
-#files_to_research << "../dataset/jekyll/**/lib/**/*.rb"
+files_to_research << "../dataset/jekyll/**/lib/**/*.rb"
 
 #octopress
-#files_to_research << "../dataset/octopress/**/plugins/**/*.rb"
+files_to_research << "../dataset/octopress/**/plugins/**/*.rb"
 
 #resque
-#files_to_research << "../dataset/resque/**/lib/**/*.rb"
+files_to_research << "../dataset/resque/**/lib/**/*.rb"
 
 #sass
-#files_to_research << "../dataset/sass/**/lib/**/*.rb"
+files_to_research << "../dataset/sass/**/lib/**/*.rb"
 
 #simple form
-#files_to_research << "../dataset/simple_form/**/lib/**/*.rb"
+files_to_research << "../dataset/simple_form/**/lib/**/*.rb"
 
 #vagrant
-#files_to_research << "../dataset/vagrant/**/lib/**/*.rb"
+files_to_research << "../dataset/vagrant/**/lib/**/*.rb"
 
 #whenever
-#files_to_research << "../dataset/whenever/**/lib/**/*.rb"
+files_to_research << "../dataset/whenever/**/lib/**/*.rb"
 
 rdf = Rdf.new
 rdf.execute(files_to_research, ARGV)

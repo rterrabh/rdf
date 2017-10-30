@@ -97,7 +97,7 @@ EOC
     class TextinputBase; include DublinCoreModel; end
 
     makers.each do |maker|
-      #nodyna <module_eval-2059> <ME COMPLEX (block execution)>
+      #nodyna <module_eval-2059> <ME COMPLEX (define methods)>
       maker.module_eval(<<-EOC, __FILE__, __LINE__ + 1)
         class Channel
           DublinCoreModel.install_dublin_core(self)

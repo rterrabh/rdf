@@ -30,7 +30,8 @@ class StatementsCounter < SexpInterpreter
 
   DYNAMIC_FEATURES = [:class_eval, :class_variable_get, :class_variable_set, :const_set, :const_get, 
                       :define_method, :eval, :instance_eval, :instance_exec, :instance_variable_get,
-                      :instance_variable_set, :instance_exec, :module_eval, :send, :attr_reader, :attr_writer, :attr_accessor
+                      :instance_variable_set, :instance_exec, :module_eval, :send, :attr_reader, :attr_writer, :attr_accessor,
+                      :require, :include
                      ]
 
   def initialize()
@@ -59,7 +60,7 @@ class StatementsCounter < SexpInterpreter
         #puts ast.to_s
         process(ast)
       rescue ParseError, RuntimeError => e
-        puts "Error in file #{file}"
+        #puts "Error in file #{file}"
       end
     end
     return @projectData
@@ -88,6 +89,7 @@ class StatementsCounter < SexpInterpreter
     save = @isMethodUsingDynamic
     if(exp[1] == :method_missing)
       @methodMissingImplemented = true
+      @projectData.totalDynamicStatements += 1
     end
     @projectData.totalMethods += 1
     @isMethodUsingDynamic = false

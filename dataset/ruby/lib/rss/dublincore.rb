@@ -133,7 +133,7 @@ module RSS
 
     DATE_ELEMENTS.each do |name, type|
       tag_name = "#{DC_PREFIX}:#{name}"
-      #nodyna <module_eval-2053> <ME MODERATE (block execution)>
+      #nodyna <module_eval-2053> <ME MODERATE (define methods)>
       module_eval(<<-EOC, *get_file_and_line_from_caller(0))
         class DublinCore#{Utils.to_class_name(name)} < Element
           remove_method(:content=)

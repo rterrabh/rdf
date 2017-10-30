@@ -159,7 +159,7 @@ module ActionView
       end
 
       def say_no_to_protect_against_forgery!
-        #nodyna <module_eval-1203> <ME COMPLEX (block execution)>
+        #nodyna <module_eval-1203> <ME COMPLEX (define methods)>
         _helpers.module_eval do
           remove_possible_method :protect_against_forgery?
           def protect_against_forgery?
@@ -170,7 +170,7 @@ module ActionView
 
       def make_test_case_available_to_view!
         test_case_instance = self
-        #nodyna <module_eval-1204> <ME COMPLEX (block execution)>
+        #nodyna <module_eval-1204> <ME COMPLEX (private access)>
         _helpers.module_eval do
           unless private_method_defined?(:_test_case)
             #nodyna <define_method-1205> <DM MODERATE (events)>

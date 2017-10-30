@@ -185,7 +185,7 @@ module IRB # :nodoc:
       #nodyna <module_eval-2212> <ME COMPLEX (define methods)>
       line = __LINE__; Context.module_eval %[
         def #{cmd_name}(*opts, &b)
-          #nodyna <module_eval-2213> <ME MODERATE (block execution)>
+          #nodyna <module_eval-2213> <ME MODERATE (private access)>
           Context.module_eval {remove_method(:#{cmd_name})}
           require "#{load_file}"
           #nodyna <send-2214> <SD MODERATE (change-prone variables)>

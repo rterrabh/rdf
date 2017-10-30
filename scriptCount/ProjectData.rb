@@ -2,6 +2,8 @@
 class ProjectData
 
   attr_accessor :totalStatements, :totalDynamicStatements, :totalMethods, :totalMethodsUsingDynamic, :loc, :locDynamic, :totalClasses, :totalClassesWithMethodMissing
+  attr_accessor :dynamicStatements
+
   def initialize
     @totalStatements = 0
     @totalDynamicStatements = 0
@@ -14,36 +16,29 @@ class ProjectData
     @dynamicStatements = {}
   end
 
-  def percMethodsUsingDynamic
-    if(@totalMethods != 0)
-      return ((@totalMethodsUsingDynamic.to_f / @totalMethods.to_f) * 100).round(2)
+
+  def perc(x, y)
+    if(y != 0)
+      return ((x.to_f / y.to_f) * 100).round(2)
     else
       return 0
     end
+  end
+
+  def percMethodsUsingDynamic
+    return perc(@totalMethodsUsingDynamic, @totalMethods)
   end
 
   def percDynamicStatements
-    if(@totalStatements != 0)
-      return ((@totalDynamicStatements.to_f / @totalStatements.to_f) * 100).round(2)
-    else
-      return 0
-    end
+    return perc(@totalDynamicStatements, @totalStatements)
   end
 
   def percLocDynamic()
-    if(@loc != 0)
-      return ((@locDynamic.to_f / @loc.to_f) * 100).round(2)
-    else
-      return 0
-    end
+    return perc(@locDynamic, @loc)
   end
 
   def percClassesWithMethodMissing()
-    if(@totalClasses != 0)
-      return ((@totalClassesWithMethodMissing.to_f / @totalClasses.to_f) * 100).round(2)
-    else
-      0
-    end
+    return perc(@totalClassesWithMethodMissing, @totalClasses)
   end
 
   def incrementDynamicStatements(dynamicStatement)
@@ -63,5 +58,8 @@ class ProjectData
     puts "Total Methods Using Dynamic Statements: #{@totalMethodsUsingDynamic} (#{percMethodsUsingDynamic}%)"
     puts "LOC: #{@loc}"
     puts "LOC With Dynamic Statements: #{@locDynamic} (#{percLocDynamic}%)"
+    @dynamicStatements.each do |dynamicStatement, occurences|
+      puts "#{dynamicStatement}: #{occurences} (#{perc(occurences, @totalDynamicStatements)}%)"
+    end
   end
 end
