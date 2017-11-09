@@ -128,7 +128,7 @@ if(ARGV.size >= 0)
 #  files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
 
   #rails
-  files_to_research << "../dataset/rails/**/lib/**/*.rb"
+#  files_to_research << "../dataset/rails/**/lib/**/*.rb"
 
   #rails_admin
 #  files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
@@ -161,8 +161,8 @@ if(ARGV.size >= 0)
 #  files_to_research << "../dataset/devdocs/**/lib/**/*.rb"
 
   #devise
-  files_to_research << "../dataset/devise/**/lib/**/*.rb"
-  files_to_research << "../dataset/devise/**/app/**/*.rb"
+#  files_to_research << "../dataset/devise/**/lib/**/*.rb"
+#  files_to_research << "../dataset/devise/**/app/**/*.rb"
 
   #fpm
 #  files_to_research << "../dataset/fpm/**/lib/**/*.rb"
@@ -187,7 +187,7 @@ if(ARGV.size >= 0)
 #  files_to_research << "../dataset/resque/**/lib/**/*.rb"
 
   #sass
-#  files_to_research << "../dataset/sass/**/lib/**/*.rb"
+ files_to_research << "../dataset/sass/**/lib/**/*.rb"
 
   #simple form
 #  files_to_research << "../dataset/simple_form/**/lib/**/*.rb"

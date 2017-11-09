@@ -52,42 +52,6 @@ files_to_research = []
 #activeadmin
 files_to_research << "../dataset/activeadmin/**/lib/**/*.rb"
 
-#diaspora
-files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
-files_to_research << "../dataset/diaspora/app/**/*.rb"
-files_to_research << "../dataset/diaspora/config/**/*.rb"
-
-#discourse
-files_to_research << "../dataset/discourse/**/lib/**/*.rb"
-files_to_research << "../dataset/discourse/app/**/*.rb"
-files_to_research << "../dataset/discourse/config/**/*.rb"
-
-#gitlab
-files_to_research << "../dataset/gitlabhq/**/lib/**/*.rb"
-files_to_research << "../dataset/gitlabhq/app/**/*.rb"
-files_to_research << "../dataset/gitlabhq/config/**/*.rb"
-
-#homebrew
-files_to_research << "../dataset/homebrew/**/lib/**/*.rb"
-
-#paperclip
-files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
-
-#rails
-files_to_research << "../dataset/rails/**/lib/**/*.rb"
-
-#rails_admin
-files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
-
-#ruby
-files_to_research << "../dataset/ruby/**/lib/**/*.rb"
-
-#spree
-files_to_research << "../dataset/spree/**/lib/**/*.rb"
-files_to_research << "../dataset/spree/api/**/*.rb"
-files_to_research << "../dataset/spree/backend/**/*.rb"
-files_to_research << "../dataset/spree/core/**/*.rb"
-
 #cancan
 files_to_research << "../dataset/cancan/**/lib/**/*.rb"
 
@@ -110,11 +74,29 @@ files_to_research << "../dataset/devdocs/**/lib/**/*.rb"
 files_to_research << "../dataset/devise/**/lib/**/*.rb"
 files_to_research << "../dataset/devise/**/app/**/*.rb"
 
+#diaspora
+files_to_research << "../dataset/diaspora/**/lib/**/*.rb"
+files_to_research << "../dataset/diaspora/app/**/*.rb"
+files_to_research << "../dataset/diaspora/config/**/*.rb"
+
+#discourse
+files_to_research << "../dataset/discourse/**/lib/**/*.rb"
+files_to_research << "../dataset/discourse/app/**/*.rb"
+files_to_research << "../dataset/discourse/config/**/*.rb"
+
 #fpm
 files_to_research << "../dataset/fpm/**/lib/**/*.rb"
 
+#gitlab
+files_to_research << "../dataset/gitlabhq/**/lib/**/*.rb"
+files_to_research << "../dataset/gitlabhq/app/**/*.rb"
+files_to_research << "../dataset/gitlabhq/config/**/*.rb"
+
 #grape
 files_to_research << "../dataset/grape/**/lib/**/*.rb"
+
+#homebrew
+files_to_research << "../dataset/homebrew/**/lib/**/*.rb"
 
 #homebrew-cask
 files_to_research << "../dataset/homebrew-cask/**/lib/**/*.rb"
@@ -129,8 +111,20 @@ files_to_research << "../dataset/jekyll/**/lib/**/*.rb"
 #octopress
 files_to_research << "../dataset/octopress/**/plugins/**/*.rb"
 
+#paperclip
+files_to_research << "../dataset/paperclip/**/lib/**/*.rb"
+
+#rails
+files_to_research << "../dataset/rails/**/lib/**/*.rb"
+
+#rails_admin
+files_to_research << "../dataset/rails_admin/**/lib/**/*.rb"
+
 #resque
 files_to_research << "../dataset/resque/**/lib/**/*.rb"
+
+#ruby
+files_to_research << "../dataset/ruby/**/lib/**/*.rb"
 
 #sass
 files_to_research << "../dataset/sass/**/lib/**/*.rb"
@@ -138,11 +132,20 @@ files_to_research << "../dataset/sass/**/lib/**/*.rb"
 #simple form
 files_to_research << "../dataset/simple_form/**/lib/**/*.rb"
 
+#spree
+files_to_research << "../dataset/spree/**/lib/**/*.rb"
+files_to_research << "../dataset/spree/api/**/*.rb"
+files_to_research << "../dataset/spree/backend/**/*.rb"
+files_to_research << "../dataset/spree/core/**/*.rb"
+
 #vagrant
 files_to_research << "../dataset/vagrant/**/lib/**/*.rb"
 
 #whenever
 files_to_research << "../dataset/whenever/**/lib/**/*.rb"
+
+files_to_research = []
+files_to_research << "../dataset/carrierwave/**/lib/**/*.rb"
 
 rdf = Rdf.new
 rdf.execute(files_to_research, ARGV)

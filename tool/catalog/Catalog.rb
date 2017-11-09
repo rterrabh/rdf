@@ -20,11 +20,10 @@ class Catalog
     @items[item].increaseClassification(classification)
   end
 
-  
   def showCatalog
     classifications = {}
     allClassifications = 0
-    @items.each do |key, item|
+    @items.sort.each do |key, item|
       puts "#{createTitle(key)}"
       total = 0
       item.classifications.sort.each do |classification, times|

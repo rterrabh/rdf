@@ -2,7 +2,7 @@
 class ProjectData
 
   attr_accessor :totalStatements, :totalDynamicStatements, :totalMethods, :totalMethodsUsingDynamic, :loc, :locDynamic, :totalClasses, :totalClassesWithMethodMissing
-  attr_accessor :dynamicStatements
+  attr_accessor :dynamicStatements, :rbfiles
 
   def initialize
     @totalStatements = 0
@@ -14,6 +14,7 @@ class ProjectData
     @totalClasses = 0
     @totalClassesWithMethodMissing = 0
     @dynamicStatements = {}
+    @rbfiles = 0
   end
 
 
@@ -50,16 +51,22 @@ class ProjectData
   end
 
   def print()
-    puts "Total Statements: #{@totalStatements}"
-    puts "Total Dynamic Statements: #{@totalDynamicStatements} (#{percDynamicStatements}%)"
-    puts "Total Classes/Modules: #{@totalClasses}"
-    puts "Total Classes/Modules with method_missing: #{@totalClassesWithMethodMissing} (#{percClassesWithMethodMissing}%)"
-    puts "Total Methods: #{@totalMethods}"
-    puts "Total Methods Using Dynamic Statements: #{@totalMethodsUsingDynamic} (#{percMethodsUsingDynamic}%)"
-    puts "LOC: #{@loc}"
-    puts "LOC With Dynamic Statements: #{@locDynamic} (#{percLocDynamic}%)"
-    @dynamicStatements.each do |dynamicStatement, occurences|
+    puts "Ruby Files: #{@rbfiles}"
+    puts "Statements: #{@totalDynamicStatements} / #{@totalStatements} (#{percDynamicStatements}%)"
+    puts "Method Missing: #{@totalClassesWithMethodMissing} / #{@totalClasses} (#{percClassesWithMethodMissing}%)"
+    puts "Methods: #{@totalMethodsUsingDynamic} / #{@totalMethods} (#{percMethodsUsingDynamic}%)"
+    puts "LOC: #{@locDynamic} / #{@loc} (#{percLocDynamic}%)"
+    @dynamicStatements.sort.each do |dynamicStatement, occurences|
       puts "#{dynamicStatement}: #{occurences} (#{perc(occurences, @totalDynamicStatements)}%)"
     end
+  end
+
+  def tex(projectName)
+    string = ""
+    @dynamicStatements.sort.each do |dynamicStatement, occurences|
+      string = "#{string} & #{occurences}"
+    end
+    puts "#{projectName} #{string}"
+    puts "\\\\[0.001cm]"
   end
 end

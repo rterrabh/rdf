@@ -31,7 +31,7 @@ class StatementsCounter < SexpInterpreter
   DYNAMIC_FEATURES = [:class_eval, :class_variable_get, :class_variable_set, :const_set, :const_get, 
                       :define_method, :eval, :instance_eval, :instance_exec, :instance_variable_get,
                       :instance_variable_set, :instance_exec, :module_eval, :send, :attr_reader, :attr_writer, :attr_accessor,
-                      :require, :include
+                      :require, :include, :respond_to?
                      ]
 
   def initialize()
@@ -51,6 +51,7 @@ class StatementsCounter < SexpInterpreter
 
   def count(files)
     @projectData = ProjectData.new
+    @projectData.dynamicStatements = createDynamicStatementsCounter()
     @isMethodUsingDynamic = false
     @isLineWithDynamic = false
     @currentLine = 0
@@ -58,6 +59,7 @@ class StatementsCounter < SexpInterpreter
       begin
         ast = RubyParser.new().parse(File.open(file).read)
         #puts ast.to_s
+        @projectData.rbfiles += 1
         process(ast)
       rescue ParseError, RuntimeError => e
         #puts "Error in file #{file}"
@@ -89,6 +91,10 @@ class StatementsCounter < SexpInterpreter
     save = @isMethodUsingDynamic
     if(exp[1] == :method_missing)
       @methodMissingImplemented = true
+      if(!@isLineWithDynamic)
+        @projectData.locDynamic += 1
+        @isLineWithDynamic = true
+      end
       @projectData.totalDynamicStatements += 1
     end
     @projectData.totalMethods += 1
