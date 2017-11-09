@@ -15,7 +15,7 @@ Rdf has the following functionalities:
 Import Rdf for your project (`require_relative rdf`) and then use the command `Rdf.new.execute(files_to_analyze, option)` to execute Rdf, where **files_to_analyze** is a array that contains all pathes of Ruby files that you want to analyze and **option** is a Array that contains the commands to be executed (show_locations and the instruction type, show_classifications, etc).
 
 ## Statements counter
-The folder script counter contains a basic statements (variable declaration, for, if, etc) and dynamic statements (attr_reader, method_missing, send, eval, etc.) counter. To run the script it is necessary import the class StatementsCounter (`require_relative StatementsCounter`) and then call the function StatementCounter.instance.count(**files**), where files is a list that contains the path of the files to checker.
+The folder script counter contains a basic statements (variable declaration, for, if, etc) and dynamic statements (attr_reader, method_missing, send, eval, etc.) counter. To run the script it is necessary to import the class StatementsCounter (`require_relative StatementsCounter`) and then call the function StatementCounter.instance.count(**files**), where files is a list that contains the path of the files to checker.
 
 ## Dependencies
 The statements counter uses the followings libraries:
